@@ -1,0 +1,281 @@
+import { createTheme } from "@mui/material/styles";
+
+// !!!IMPORTANT: Modules need to be declared in TS to create custom theming variables
+declare module "@mui/material/styles" {
+	interface PaletteColor {
+		100?: string;
+		200?: string;
+		300?: string;
+		400?: string;
+		500?: string;
+		600?: string;
+		700?: string;
+		800?: string;
+		900?: string;
+	}
+
+	interface SimplePaletteColorOptions {
+		100?: string;
+		200?: string;
+		300?: string;
+		400?: string;
+		500?: string;
+		600?: string;
+		700?: string;
+		800?: string;
+		900?: string;
+	}
+
+	interface Palette {
+		neutral: Palette["primary"];
+		surface: Palette["primary"];
+	}
+
+	interface PaletteOptions {
+		neutral?: PaletteOptions["primary"];
+		surface?: PaletteOptions["primary"];
+	}
+
+	interface TypographyVariants {
+		xxl: React.CSSProperties;
+		xl: React.CSSProperties;
+		lg: React.CSSProperties;
+		md: React.CSSProperties;
+		base: React.CSSProperties;
+		sm: React.CSSProperties;
+		xs: React.CSSProperties;
+	}
+
+	// allow configuration using `createTheme`
+	interface TypographyVariantsOptions {
+		xxl?: React.CSSProperties;
+		xl?: React.CSSProperties;
+		lg?: React.CSSProperties;
+		md?: React.CSSProperties;
+		base?: React.CSSProperties;
+		sm?: React.CSSProperties;
+		xs?: React.CSSProperties;
+	}
+}
+
+declare module "@mui/material/Typography" {
+	interface TypographyPropsVariantOverrides {
+		xxl: true;
+		xl: true;
+		lg: true;
+		md: true;
+		base: true;
+		sm: true;
+		xs: true;
+	}
+}
+
+declare module "@mui/material/Button" {
+	interface ButtonPropsVariantOverrides {
+		secondary: true;
+	}
+}
+
+export const darkTheme = createTheme({
+	palette: {
+		mode: "dark",
+		primary: {
+			main: "#FF6F00",
+		},
+		secondary: {
+			main: "#D32F2F",
+			100: "#364045",
+			200: "#FFFDF9",
+		},
+		neutral: {
+			100: "#FFFFFF",
+			200: "#F1F5FA",
+			300: "#D9E1ED",
+			400: "#C2CEE0",
+			500: "#7F8DA3",
+			600: "#46526A",
+			700: "#2F3E59",
+			800: "#0C1830",
+			900: "#838383",
+		},
+		surface: {
+			main: "#121212",
+			100: "#262626",
+			200: "#212121",
+			//300: "#B1B1B1",
+			//400: "#E2EEE2",
+		},
+	},
+	typography: {
+		//fontFamily: montserrat.style.fontFamily,
+		xxl: {
+			fontSize: "48px",
+			lineHeight: "56px",
+		},
+		xl: {
+			fontSize: "38px",
+			lineHeight: "50px",
+		},
+		lg: {
+			fontSize: "24px",
+			lineHeight: "34px",
+		},
+		md: {
+			fontSize: "22px",
+			lineHeight: "28px",
+		},
+		base: {
+			fontSize: "18px",
+			lineHeight: "24px",
+		},
+		sm: {
+			fontSize: "16px",
+			lineHeight: "24px",
+		},
+		xs: {
+			fontSize: "14px",
+			lineHeight: "24px",
+		},
+	},
+
+	components: {
+		MuiDrawer: {
+			styleOverrides: {
+				paper: {},
+			},
+		},
+		MuiButton: {
+			styleOverrides: {
+				root: { color: "#FFFFFF" },
+			},
+		},
+		MuiAppBar: {
+			styleOverrides: {
+				root: {
+					boxShadow: "none",
+				},
+			},
+		},
+		MuiListItemButton: {
+			styleOverrides: {
+				root: {
+					"&.Mui-selected": {
+						backgroundColor: "#FF6F00",
+						"&:hover": {
+							backgroundColor: "#FF6F00",
+						},
+					},
+				},
+			},
+		},
+		MuiDialog: {
+			styleOverrides: {
+				root: {
+					"& .MuiPaper-root": {
+						minWidth: 500,
+					},
+				},
+			},
+		},
+	},
+});
+
+export const lightTheme = createTheme({
+	palette: {
+		mode: "light",
+		primary: {
+			main: "#FF6F00",
+		},
+		secondary: {
+			main: "#D32F2F",
+			100: "#364045",
+			200: "#FFFDF9",
+		},
+		neutral: {
+			100: "#FFFFFF",
+			200: "#F1F5FA",
+			300: "#D9E1ED",
+			400: "#C2CEE0",
+			500: "#7F8DA3",
+			600: "#46526A",
+			700: "#2F3E59",
+			800: "#0C1830",
+			900: "#838383",
+		},
+		surface: {
+			main: "#121212",
+			200: "#262626",
+			//300: "#B1B1B1",
+			//400: "#E2EEE2",
+		},
+	},
+	typography: {
+		//fontFamily: montserrat.style.fontFamily,
+		xxl: {
+			fontSize: "48px",
+			lineHeight: "56px",
+		},
+		xl: {
+			fontSize: "38px",
+			lineHeight: "50px",
+		},
+		lg: {
+			fontSize: "24px",
+			lineHeight: "34px",
+		},
+		md: {
+			fontSize: "22px",
+			lineHeight: "28px",
+		},
+		base: {
+			fontSize: "18px",
+			lineHeight: "24px",
+		},
+		sm: {
+			fontSize: "16px",
+			lineHeight: "24px",
+		},
+		xs: {
+			fontSize: "14px",
+			lineHeight: "24px",
+		},
+	},
+
+	components: {
+		MuiDrawer: {
+			styleOverrides: {
+				paper: {
+					//backgroundColor: "#FF6F00",
+				},
+			},
+		},
+		MuiAppBar: {
+			styleOverrides: {
+				root: {
+					boxShadow: "none",
+				},
+			},
+		},
+		MuiListItemButton: {
+			styleOverrides: {
+				root: {
+					"&.Mui-selected": {
+						backgroundColor: "#FF6F00",
+						"&:hover": {
+							backgroundColor: "#FF6F00",
+						},
+					},
+				},
+			},
+		},
+		MuiDialog: {
+			styleOverrides: {
+				root: {
+					"& .MuiPaper-root": {
+						minWidth: 500,
+					},
+				},
+			},
+		},
+	},
+});

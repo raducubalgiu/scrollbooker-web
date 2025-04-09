@@ -1,0 +1,135 @@
+"use client";
+
+import React from "react";
+import {
+	Box,
+	Button,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
+} from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import CustomStack from "../../core/CustomStack/CustomStack";
+import DashboardBarChart from "./DashboardBarChart";
+import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
+import { useCustomQuery } from "@/hooks/useHttp";
+import DashboardCardSummary from "./DashboardCardSummary";
+import { DashboardSummaryType } from "@/models/DashboardSummaryType";
+import DashboardCardSummarySkeleton from "@/components/cutomized/Skeletons/Dashboard/DashboardCardSummarySkeleton";
+import { useDashboardReducer } from "@/hooks/useDashboardReducer";
+
+type EmployeeType = {
+	id: string;
+	username: string;
+	job: string;
+	hire_date: string;
+	followers_count: number;
+	ratings_count: number;
+	ratings_average: number;
+};
+
+type PaginatedEmployeesType = {
+	count: number;
+	results: EmployeeType[];
+};
+
+export default function DashboardModule() {
+	const { filters, handleDaily, handleMonthly, handleWeekly, PeriodEnum } =
+		useDashboardReducer();
+	const { startDate, endDate } = filters;
+
+	const { data: employees } = useCustomQuery<PaginatedEmployeesType>({
+		key: ["employees"],
+		url: "/api/employees",
+		params: { page: 1, limit: 10 },
+	});
+
+	const { data, isLoading } = useCustomQuery<DashboardSummaryType[]>({
+		key: ["dashboard", startDate, endDate],
+		url: `/api/dashboard`,
+		params: { start_date: startDate, end_date: endDate },
+	});
+
+	const dashboardSummary = data ?? [];
+
+	const buttons = [
+		{
+			title: "Astazi",
+			onClick: handleDaily,
+			selected: filters.type == PeriodEnum.DAILY,
+		},
+		{
+			title: "Last 7 Days",
+			onClick: handleWeekly,
+			selected: filters.type == PeriodEnum.WEEKLY,
+		},
+		{
+			title: "Last 30 Days",
+			onClick: handleMonthly,
+			selected: filters.type == PeriodEnum.MONTHLY,
+		},
+	];
+
+	return (
+		<Box>
+			<CustomStack sx={{ mb: 2.5 }}>
+				<CustomStack>
+					{buttons.map((btn, i) => (
+						<Button
+							key={i}
+							onClick={btn.onClick}
+							variant="contained"
+							color={btn.selected ? "primary" : "inherit"}
+							sx={{ fontWeight: "600", mr: 1.5 }}
+						>
+							{btn.title}
+						</Button>
+					))}
+				</CustomStack>
+				<FormControl sx={{ minWidth: 250 }}>
+					<InputLabel id="employees">Angajati</InputLabel>
+					<Select
+						labelId="employees"
+						id="employees"
+						value={employees?.results ? employees.results[0].id : 0}
+						label="Angajati"
+						//onChange={e => console.log(e)}
+					>
+						{employees?.results?.map((employee, i) => (
+							<MenuItem key={i} value={employee.id}>
+								{employee.username}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+			</CustomStack>
+			<Grid container spacing={3} sx={{ mb: 2.5 }}>
+				{isLoading && (
+					<>
+						{[0, 1, 2, 3].map(i => (
+							<Grid size={3} key={i}>
+								<DashboardCardSummarySkeleton />
+							</Grid>
+						))}
+					</>
+				)}
+				{dashboardSummary?.map((dashboard, i) => (
+					<DashboardCardSummary
+						key={i}
+						isLoading={isLoading}
+						dashboardSummary={dashboard}
+					/>
+				))}
+			</Grid>
+			<Grid container spacing={3}>
+				<Grid size={8}>
+					<DashboardBarChart isLoading={isLoading} />
+				</Grid>
+				<Grid size={4}>
+					<DashboardCalendarAvailability />
+				</Grid>
+			</Grid>
+		</Box>
+	);
+}
