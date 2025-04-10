@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
 	Box,
 	Button,
@@ -38,20 +38,29 @@ export default function DashboardModule() {
 	const { filters, handleDaily, handleMonthly, handleWeekly, PeriodEnum } =
 		useDashboardReducer();
 	const { startDate, endDate } = filters;
+	const [selectedEmployee, setSelectedEmployee] = useState({
+		id: 0,
+	});
 
-	const { data: employees } = useCustomQuery<PaginatedEmployeesType>({
+	const { data: employeesData } = useCustomQuery<PaginatedEmployeesType>({
 		key: ["employees"],
 		url: "/api/employees",
 		params: { page: 1, limit: 10 },
 	});
 
-	const { data, isLoading } = useCustomQuery<DashboardSummaryType[]>({
+	const { data: dashboardData, isLoading } = useCustomQuery<
+		DashboardSummaryType[]
+	>({
 		key: ["dashboard", startDate, endDate],
 		url: `/api/dashboard`,
 		params: { start_date: startDate, end_date: endDate },
 	});
 
-	const dashboardSummary = data ?? [];
+	const dashboardSummary = dashboardData ?? [];
+	const employees = [
+		{ id: 0, username: "Toti angajatii" },
+		...(employeesData?.results ?? []),
+	];
 
 	const buttons = [
 		{
@@ -92,11 +101,15 @@ export default function DashboardModule() {
 					<Select
 						labelId="employees"
 						id="employees"
-						value={employees?.results ? employees.results[0].id : 0}
+						value={selectedEmployee.id}
 						label="Angajati"
-						//onChange={e => console.log(e)}
+						onChange={e =>
+							setSelectedEmployee({
+								id: Number(e.target.value),
+							})
+						}
 					>
-						{employees?.results?.map((employee, i) => (
+						{employees?.map((employee, i) => (
 							<MenuItem key={i} value={employee.id}>
 								{employee.username}
 							</MenuItem>
@@ -105,22 +118,17 @@ export default function DashboardModule() {
 				</FormControl>
 			</CustomStack>
 			<Grid container spacing={3} sx={{ mb: 2.5 }}>
-				{isLoading && (
-					<>
-						{[0, 1, 2, 3].map(i => (
-							<Grid size={3} key={i}>
-								<DashboardCardSummarySkeleton />
-							</Grid>
-						))}
-					</>
+				{isLoading ? (
+					<DashboardCardSummarySkeleton />
+				) : (
+					dashboardSummary?.map((dashboard, i) => (
+						<DashboardCardSummary
+							key={i}
+							isLoading={isLoading}
+							dashboardSummary={dashboard}
+						/>
+					))
 				)}
-				{dashboardSummary?.map((dashboard, i) => (
-					<DashboardCardSummary
-						key={i}
-						isLoading={isLoading}
-						dashboardSummary={dashboard}
-					/>
-				))}
 			</Grid>
 			<Grid container spacing={3}>
 				<Grid size={8}>

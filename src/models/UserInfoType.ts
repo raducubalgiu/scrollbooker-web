@@ -1,5 +1,6 @@
 export type UserInfoType = {
 	id: number;
+	bio?: string;
 	fullname: string;
 	username: string;
 	avatar: string;

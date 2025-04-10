@@ -1,60 +1,131 @@
-import React from "react";
 import Modal from "../../Modal/Modal";
 import { ActionButtonType } from "../../ActionButton/ActionButton";
 import Input from "../../Input/Input";
 import InputSelect from "../../Input/InputSelect";
 import { Avatar, Stack } from "@mui/material";
-import { useFormContext } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { UserInfoType } from "@/models/UserInfoType";
+import { useEffect } from "react";
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { toast } from "react-toastify";
 
 type UserInfoEditModalProps = {
 	open: boolean;
 	handleClose: () => void;
+	user: UserInfoType | undefined;
+	refetchUserData: () => void;
+};
+
+type ProfessionType = {
+	id: string;
+	name: string;
+	active: boolean;
+	created_at: string;
+	updated_at: string;
 };
 
 export default function UserInfoEditModal({
 	open,
 	handleClose,
+	user,
+	refetchUserData,
 }: UserInfoEditModalProps) {
-	const { watch } = useFormContext();
-	const { data } = watch();
+	const methods = useForm({ defaultValues: user });
+	const { handleSubmit, reset } = methods;
+
+	const { data } = useCustomQuery<ProfessionType[]>({
+		key: ["professions"],
+		url: "/api/professions",
+	});
+
+	const { mutate: updateUser, isPending } = useMutate({
+		key: ["update-user-info"],
+		url: "/api/auth/update-user-info",
+		method: "PUT",
+		options: {
+			onSuccess: () => {
+				refetchUserData();
+				handleClose();
+				toast.success("Ți-ai editat profilul cu succes!");
+			},
+			onError: () => {
+				toast.error("Ceva nu a mers bine. Încearcă mai tarziu");
+			},
+		},
+	});
+
+	const professions = data ?? [];
+
+	const handleEditUser = (updatedUser: UserInfoType) =>
+		updateUser({
+			username: updatedUser.username,
+			fullname: updatedUser.fullname,
+			bio: updatedUser.bio,
+			profession: updatedUser.profession,
+		});
 
 	const actions: ActionButtonType[] = [
 		{
-			title: "Cancel",
-			props: { color: "inherit", onClick: handleClose },
+			title: "Renunță",
+			props: {
+				color: "inherit",
+				onClick: () => {
+					reset();
+					handleClose();
+				},
+			},
 		},
 		{
-			title: "Save",
+			title: "Salvează",
+			props: { onClick: handleSubmit(handleEditUser), loading: isPending },
 		},
 	];
 
+	useEffect(() => {
+		reset(user);
+	}, [reset, user]);
+
 	return (
 		<Modal
-			title="Edit User Data"
+			title="Editează-ți profilul"
 			open={open}
-			handleClose={handleClose}
+			handleClose={() => {
+				reset();
+				handleClose();
+			}}
 			actions={actions}
 		>
-			<Stack justifyContent="center" alignItems="center" sx={{ p: 2.5 }}>
-				<Avatar src="avatar" alt="" sx={{ width: 125, height: 125 }}>
-					<CameraAltIcon sx={{ width: 45, height: 45 }} />
-				</Avatar>
-			</Stack>
-			<Input name="data.username" label="Username" sx={{ mb: 1.5 }} />
-			<Input name="data.fullname" label="Fullname" sx={{ mb: 1.5 }} />
-			<Input
-				name="data.bio"
-				label="Biografie"
-				multiline={true}
-				minRows={3}
-				sx={{ mb: 1.5 }}
-			/>
-			<InputSelect
-				name="data.profession"
-				label="Profession"
-				options={[{ name: "Something cool", value: "1" }]}
-			/>
+			<FormProvider {...methods}>
+				<Stack justifyContent="center" alignItems="center" sx={{ p: 2.5 }}>
+					<Avatar
+						src="avatar"
+						alt={user?.avatar}
+						sx={{ width: 125, height: 125 }}
+					>
+						<CameraAltIcon sx={{ width: 45, height: 45 }} />
+					</Avatar>
+				</Stack>
+				<Input name="username" label="Username" sx={{ mb: 2.5 }} />
+				<Input name="fullname" label="Nume" sx={{ mb: 2.5 }} />
+				<Input
+					name="bio"
+					label="Biografie"
+					multiline={true}
+					minRows={3}
+					sx={{ mb: 2.5 }}
+				/>
+				<InputSelect
+					name="profession"
+					label="Profesie"
+					options={professions.map(profession => {
+						return {
+							value: profession.name,
+							name: profession.name,
+						};
+					})}
+				/>
+			</FormProvider>
 		</Modal>
 	);
 }
