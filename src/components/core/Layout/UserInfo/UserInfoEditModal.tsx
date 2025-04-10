@@ -9,6 +9,7 @@ import { UserInfoType } from "@/models/UserInfoType";
 import { useEffect } from "react";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
+import { required, minField, maxField } from "@/utils/validation-rules";
 
 type UserInfoEditModalProps = {
 	open: boolean;
@@ -106,18 +107,31 @@ export default function UserInfoEditModal({
 						<CameraAltIcon sx={{ width: 45, height: 45 }} />
 					</Avatar>
 				</Stack>
-				<Input name="username" label="Username" sx={{ mb: 2.5 }} />
-				<Input name="fullname" label="Nume" sx={{ mb: 2.5 }} />
+				<Input
+					name="username"
+					label="Username*"
+					rules={{ ...required() }}
+					sx={{ mb: 2.5 }}
+				/>
+				<Input
+					name="fullname"
+					label="Nume"
+					placeholder="Adaugă un nume.."
+					rules={{ ...minField(3), ...maxField(30) }}
+					sx={{ mb: 2.5 }}
+				/>
 				<Input
 					name="bio"
 					label="Biografie"
+					placeholder="Adaugă o biografie.."
 					multiline={true}
 					minRows={3}
 					sx={{ mb: 2.5 }}
+					rules={{ ...maxField(100) }}
 				/>
 				<InputSelect
 					name="profession"
-					label="Profesie"
+					label="Profesie*"
 					options={professions.map(profession => {
 						return {
 							value: profession.name,
