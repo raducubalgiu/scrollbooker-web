@@ -55,8 +55,8 @@ export default function Sidebar() {
 			icon: <CalendarMonthIcon />,
 		},
 		{
-			label: "Business Location",
-			route: "/business-location",
+			label: "My Business",
+			route: "/my-business",
 			icon: <PlaceOutlinedIcon />,
 		},
 		{

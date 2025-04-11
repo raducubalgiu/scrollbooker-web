@@ -1,4 +1,4 @@
-import SchedulesModule from "@/components/modules/Schedules/SchedulesModule";
+import SchedulesModule from "@/components/modules/SchedulesModule/SchedulesModule";
 import React from "react";
 import { decodeToken } from "@/lib/auth/decodeToken";
 import { get } from "@/utils/requests";
