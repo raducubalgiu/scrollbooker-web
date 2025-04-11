@@ -9,6 +9,7 @@ import {
 	responseLogger,
 } from "@/utils/axios-utils";
 import { LOG } from "@/utils/logger";
+import { redirect } from "next/navigation";
 
 const BASE_URL = process.env.BE_BASE_ENDPOINT;
 
@@ -18,6 +19,8 @@ export async function Instance() {
 	const session = await getServerSession(authOptions);
 	const spanId = random16Hex();
 	const traceId = random16Hex();
+
+	if (!session) redirect("/api/auth/signin");
 
 	const headers = new AxiosHeaders({
 		Authorization: `Bearer ${session?.accessToken}`,

@@ -7,6 +7,7 @@ import {
 	useQuery,
 } from "@tanstack/react-query";
 import axios, { AxiosRequestConfig, Method } from "axios";
+import { toast } from "react-toastify";
 
 type HTTPMethod = "GET" | "POST";
 
@@ -102,6 +103,8 @@ export function useMutate<TBody = unknown, TResponse = unknown>({
 	return useMutation<TResponse, Error, TBody, unknown>({
 		mutationKey: Array.isArray(key) ? key : [key],
 		mutationFn,
+		onError: () =>
+			toast.error("Ceva nu a mers cum trebuie. Incearca mai tarziu."),
 		...options,
 	});
 }
