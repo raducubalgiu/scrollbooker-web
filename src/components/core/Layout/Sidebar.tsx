@@ -77,12 +77,15 @@ export default function Sidebar() {
 	];
 
 	const superAdminRoutes = [
-		{ label: "Business Domains", route: "/business-domains" },
-		{ label: "Business Types", route: "/business-types" },
-		{ label: "Service Domains", route: "/service-domains" },
-		{ label: "Services", route: "/services" },
-		{ label: "Filters", route: "/filters" },
-		{ label: "Roles and Permissions", route: "/roles-and-permissions" },
+		{ label: "Business Domains", route: "/nomenclatures/business-domains" },
+		{ label: "Business Types", route: "/nomenclatures/business-types" },
+		{ label: "Service Domains", route: "/nomenclatures/service-domains" },
+		{ label: "Services", route: "/nomenclatures/services" },
+		{ label: "Filters", route: "/nomenclatures/filters" },
+		{
+			label: "Roles and Permissions",
+			route: "/nomenclatures/roles-and-permissions",
+		},
 	];
 
 	return (
@@ -121,7 +124,7 @@ export default function Sidebar() {
 						{superAdminRoutes.map((superAdmin, i) => (
 							<ListItemButton
 								key={i}
-								sx={{ pl: 4, mb: 0.5 }}
+								sx={{ pl: 4, mb: 0.5, px: 2.5 }}
 								onClick={() => router.push(superAdmin.route)}
 								selected={isLinkSelected(superAdmin.route)}
 							>

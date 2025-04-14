@@ -7,8 +7,3 @@ export type ServiceDomainsType = {
 	updated_at: string;
 	services?: ServiceType[];
 };
-
-export type PaginatedServiceDomainsType = {
-	count: number;
-	results: ServiceDomainsType[];
-};

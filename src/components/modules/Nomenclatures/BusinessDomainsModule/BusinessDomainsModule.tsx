@@ -12,6 +12,7 @@ import {
 } from "@/components/core/Table/Table";
 import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
 import { toast } from "react-toastify";
+import { businessDomainsColumns } from "./business-domains-columns";
 
 export default function BusinessDomainsModule() {
 	const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -55,30 +56,6 @@ export default function BusinessDomainsModule() {
 		},
 	});
 
-	const columns = [
-		{
-			accessorKey: "id",
-			header: "ID",
-			size: 50,
-			enableEditing: false,
-		},
-		{
-			accessorKey: "name",
-			header: "Name",
-			size: 300,
-		},
-		{
-			accessorKey: "created_at",
-			header: "Created_at",
-			enableEditing: false,
-		},
-		{
-			accessorKey: "updated_at",
-			header: "updated_at",
-			enableEditing: false,
-		},
-	];
-
 	const onCreatingRowSave: TableCreateRow<BusinessDomainType> = async ({
 		values,
 		table,
@@ -110,7 +87,7 @@ export default function BusinessDomainsModule() {
 			<Table<BusinessDomainType>
 				data={data?.results}
 				rowCount={data?.count}
-				columns={columns}
+				columns={businessDomainsColumns}
 				onDeletingRowSave={onDeletingRowSave}
 				onPaginationChange={setPagination}
 				onCreatingRowSave={onCreatingRowSave}
