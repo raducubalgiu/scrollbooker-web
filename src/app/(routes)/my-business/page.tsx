@@ -40,7 +40,7 @@ export default async function MyBusiness() {
 	});
 
 	return (
-		<MainLayout title="My Business" hideAction>
+		<MainLayout title="Afacerea mea" hideAction>
 			<MyBusinessDetails
 				description={business.description}
 				address={business.address}

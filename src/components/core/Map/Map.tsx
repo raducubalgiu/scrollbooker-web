@@ -5,11 +5,12 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { LngLatLike } from "maplibre-gl";
 import { Box } from "@mui/material";
+import { toast } from "react-toastify";
 
 type MapProps = { coordinates: LngLatLike };
 
 export default function Map({ coordinates }: MapProps) {
-	const mapContainerRef = useRef(null);
+	const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		const map = new maplibregl.Map({
@@ -44,6 +45,24 @@ export default function Map({ coordinates }: MapProps) {
 		new maplibregl.Marker({ color: "#FF6F00" })
 			.setLngLat(coordinates)
 			.addTo(map);
+
+		let tileErrorCount = 0;
+
+		map?.on("error", e => {
+			const message = e?.error?.message || "";
+			const status = e.error?.status;
+
+			if (message.includes("Failed to fetch") || status == 404) {
+				tileErrorCount++;
+				console.warn(`Map tile error (${tileErrorCount}): ${message}`);
+
+				if (tileErrorCount > 5) {
+					toast.error("The map could not be shown");
+				}
+			} else {
+				console.log("Unhandled Maplibre error:", e.error);
+			}
+		});
 
 		return () => map.remove();
 	}, [coordinates]);

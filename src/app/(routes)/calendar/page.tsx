@@ -57,7 +57,7 @@ export default function Calendar() {
 			<CalendarWrapper>
 				<FullCalendar
 					plugins={[timeGridPlugin]}
-					initialView="timeGridDay"
+					initialView={view}
 					slotMinTime="08:00:00"
 					slotMaxTime="18:00:00"
 					slotDuration="01:00:00"

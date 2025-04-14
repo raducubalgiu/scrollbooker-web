@@ -132,7 +132,7 @@ export default function UserInfoEditModal({
 				<InputSelect
 					name="profession"
 					label="Profesie*"
-					options={professions.map(profession => {
+					options={professions?.map(profession => {
 						return {
 							value: profession.name,
 							name: profession.name,

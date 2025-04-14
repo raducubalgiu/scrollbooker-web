@@ -1,20 +1,28 @@
 "use client";
 
 import React, { useState } from "react";
-import Accordion from "../../core/Accordion/Accordion";
-import { Box, Button, Chip, Stack, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
-import MyBusinessModalServices from "./MyBusinessModalServices";
 import { every } from "lodash";
+import { toast } from "react-toastify";
+import ListItemChip from "@/components/core/ListItems/ListItemChip";
+import Accordion from "@/components/core/Accordion/Accordion";
+import MyBusinessModalServices from "./MyBusinessModalServices";
 import Modal from "@/components/core/Modal/Modal";
 import { useMutate } from "@/hooks/useHttp";
-import { toast } from "react-toastify";
+import { ServiceType } from "@/models/nomenclatures/ServiceType";
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 
-const ListItem = styled("li")(({ theme }) => ({
-	margin: theme.spacing(1),
-}));
+const styles = {
+	box: {
+		display: "flex",
+		justifyContent: "center",
+		flexWrap: "wrap",
+		listStyle: "none",
+		p: 0.5,
+		m: 0,
+	},
+};
 
 type MyBusinessServicesProps = {
 	services: ServiceType[];
@@ -57,7 +65,7 @@ export default function MyBusinessServices({
 			},
 			onError: () => {
 				setDeleteModal({ open: false, serviceId: null });
-				toast.error("Ceva nu a mers cum trebuie. Incearca mai tarziu.");
+				toast.error("Ceva nu a mers cum trebuie. Incearcă mai tarziu.");
 			},
 		},
 	});
@@ -65,54 +73,40 @@ export default function MyBusinessServices({
 	const handleDelete = () =>
 		deleteService({ businessId, serviceId: deleteModal.serviceId });
 
-	const styles = {
-		box: {
-			display: "flex",
-			justifyContent: "center",
-			flexWrap: "wrap",
-			listStyle: "none",
-			p: 0.5,
-			m: 0,
+	const confirmModalActions: ActionButtonType[] = [
+		{
+			title: "NU",
+			props: {
+				color: "inherit",
+				onClick: () => setDeleteModal({ open: false, serviceId: null }),
+			},
 		},
-		chip: {
-			py: 2.5,
-			px: 1,
-			fontSize: 15.5,
-			color: "white",
-			fontWeight: "600",
+		{
+			title: "DA",
+			props: { onClick: handleDelete, loading: isPending, color: "secondary" },
 		},
-	};
+	];
+
+	const chipColor = (serviceId: number) =>
+		serviceId === deleteModal.serviceId ? "secondary" : "primary";
+
 	return (
 		<>
 			<FormProvider {...methods}>
 				<MyBusinessModalServices
+					businessId={businessId}
 					allServices={allServices}
 					savedServices={savedServices}
 					open={open}
-					handleClose={() => {
-						reset();
-						setOpen(false);
-					}}
+					handleClose={() => setOpen(false)}
 				/>
 				<Modal
-					actions={[
-						{
-							title: "NU",
-							props: {
-								color: "inherit",
-								onClick: () => setDeleteModal({ open: false, serviceId: null }),
-							},
-						},
-						{
-							title: "DA",
-							props: { onClick: handleDelete, loading: isPending },
-						},
-					]}
+					actions={confirmModalActions}
 					open={deleteModal.open}
 					handleClose={() => setDeleteModal({ open: false, serviceId: null })}
 				>
 					<Typography>
-						Esti sigur ca doresti sa elimini acest serviciu?
+						Ești sigur că dorești să elimini acest serviciu?
 					</Typography>
 				</Modal>
 				<Accordion title="Serviciile mele">
@@ -125,17 +119,14 @@ export default function MyBusinessServices({
 						{allServices?.map(service => {
 							if (service.isSelected) {
 								return (
-									<ListItem key={service.id}>
-										<Chip
-											label={service.name}
-											onDelete={() =>
-												setDeleteModal({ open: true, serviceId: service.id })
-											}
-											size="medium"
-											sx={styles.chip}
-											color="primary"
-										/>
-									</ListItem>
+									<ListItemChip
+										color={chipColor(service.id)}
+										key={service.id}
+										label={service.name}
+										onDelete={() =>
+											setDeleteModal({ open: true, serviceId: service.id })
+										}
+									/>
 								);
 							}
 						})}
