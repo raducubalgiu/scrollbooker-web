@@ -38,6 +38,7 @@ export default function UserInfoEditModal({
 	const { data } = useCustomQuery<ProfessionType[]>({
 		key: ["professions"],
 		url: "/api/professions",
+		options: { enabled: open },
 	});
 
 	const { mutate: updateUser, isPending } = useMutate({

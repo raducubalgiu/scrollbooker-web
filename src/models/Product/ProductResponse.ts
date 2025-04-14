@@ -12,8 +12,3 @@ export type ProductType = {
 	created_at: string;
 	updated_at: string;
 };
-
-export type PaginatedProductType = {
-	count: number;
-	results: ProductType[];
-};

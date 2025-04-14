@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, post, deleteRequest } from "@/utils/requests";
+import { get, post, put, deleteRequest } from "@/utils/requests";
+import { omit } from "lodash";
 
 export const GET = async (req: NextRequest) => {
 	const pagination = req.nextUrl.searchParams;
@@ -7,6 +8,19 @@ export const GET = async (req: NextRequest) => {
 	const response = (
 		await get({
 			url: `/services?${pagination}`,
+		})
+	).data;
+
+	return NextResponse.json(response);
+};
+
+export const PUT = async (req: NextRequest) => {
+	const data = await req.json();
+
+	const response = (
+		await put({
+			url: `/services/${data.id}`,
+			data: omit(data, "id"),
 		})
 	).data;
 

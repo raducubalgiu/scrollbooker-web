@@ -8,8 +8,3 @@ export type ServiceType = {
 	filters?: FilterType[];
 	isSelected?: boolean; // this is injected by FE, doesn't exist in BE
 };
-
-export type PaginatedServiceType = {
-	count: number;
-	results: ServiceType[];
-};
