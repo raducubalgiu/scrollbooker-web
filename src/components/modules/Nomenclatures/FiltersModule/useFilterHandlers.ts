@@ -10,6 +10,8 @@ import { MRT_PaginationState } from "material-react-table";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+const route = "/filters";
+
 export default function useFilterHandlers() {
 	const [pagination, setPagination] = useState<MRT_PaginationState>({
 		pageIndex: 0,
@@ -21,14 +23,14 @@ export default function useFilterHandlers() {
 		PaginatedData<FilterType>
 	>({
 		key: ["filters", pageIndex, pageSize],
-		url: `/api/nomenclatures/filters`,
+		url: `/api/nomenclatures/${route}`,
 		params: { page: pageIndex + 1, limit: pageSize },
 	});
 
 	const { mutateAsync: handleCreateFilter, isPending: isPendingCreateFilter } =
 		useMutate({
 			key: ["create-filter"],
-			url: "/api/nomenclatures/filters",
+			url: `/api/nomenclatures/${route}`,
 			options: {
 				onSuccess: () => toast.success("Datele au fost salvate cu succes"),
 			},
@@ -37,7 +39,7 @@ export default function useFilterHandlers() {
 	const { mutateAsync: handleUpdateFilter, isPending: isPendingUpdateFilter } =
 		useMutate({
 			key: ["update-filter"],
-			url: "/api/nomenclatures/services",
+			url: `/api/nomenclatures/${route}`,
 			options: {
 				onSuccess: () => toast.success("Datele au fost salvate cu succes"),
 			},
@@ -46,7 +48,7 @@ export default function useFilterHandlers() {
 	const { mutateAsync: handleDeleteFilter, isPending: isPendingDeleteFilter } =
 		useMutate({
 			key: ["delete-filter"],
-			url: "/api/nomenclatures/filters",
+			url: `/api/nomenclatures/${route}`,
 			method: "DELETE",
 			options: {
 				onSuccess: () => toast.success("Filtrul a fost sters cu succes"),

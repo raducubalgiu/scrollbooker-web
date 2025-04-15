@@ -10,6 +10,8 @@ import {
 } from "@/components/core/Table/Table";
 import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
 
+const route = "business-domains";
+
 export default function useBusinessDomainsHandlers() {
 	const [pagination, setPagination] = useState<MRT_PaginationState>({
 		pageIndex: 0,
@@ -17,18 +19,18 @@ export default function useBusinessDomainsHandlers() {
 	});
 	const { pageIndex, pageSize } = pagination;
 
-	const { data, isLoading, isRefetching, refetch } = useCustomQuery<
+	const { data, isLoading, refetch } = useCustomQuery<
 		PaginatedData<BusinessDomainType>
 	>({
-		key: ["business-domains", pageIndex, pageSize],
-		url: `/api/nomenclatures/business-domains`,
+		key: [route, pageIndex, pageSize],
+		url: `/api/nomenclatures/${route}`,
 		params: { page: pageIndex + 1, limit: pageSize },
 	});
 
 	const { mutateAsync: handleCreate, isPending: isPendingCreate } =
 		useMutate<BusinessDomainType>({
-			key: ["create-business-domain"],
-			url: "/api/nomenclatures/business-domains",
+			key: [`create-${route}`],
+			url: `/api/nomenclatures/${route}`,
 			options: {
 				onSuccess: () => toast.success("Datele au fost salvate cu succes"),
 			},
@@ -36,8 +38,8 @@ export default function useBusinessDomainsHandlers() {
 
 	const { mutateAsync: handleUpdate, isPending: isPendingUpdate } =
 		useMutate<BusinessDomainType>({
-			key: ["update-business-domain"],
-			url: "/api/nomenclatures/business-domains",
+			key: [`update-${route}`],
+			url: `/api/nomenclatures/${route}`,
 			method: "PUT",
 			options: {
 				onSuccess: () => toast.success("Datele au fost salvate cu succes"),
@@ -45,8 +47,8 @@ export default function useBusinessDomainsHandlers() {
 		});
 
 	const { mutateAsync: handleDelete, isPending: isPendingDelete } = useMutate({
-		key: ["delete-business-domain"],
-		url: "/api/nomenclatures/business-domains",
+		key: [`delete-${route}`],
+		url: `/api/nomenclatures/${route}`,
 		method: "DELETE",
 		options: {
 			onSuccess: () => toast.success("Datele au fost salvate cu succes"),
@@ -78,11 +80,7 @@ export default function useBusinessDomainsHandlers() {
 	};
 
 	const loading =
-		isLoading ||
-		isRefetching ||
-		isPendingCreate ||
-		isPendingUpdate ||
-		isPendingDelete;
+		isLoading || isPendingCreate || isPendingUpdate || isPendingDelete;
 
 	return {
 		data,

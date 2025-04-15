@@ -9,42 +9,44 @@ import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+const route = "services";
+
 export default function useServiceHandlers() {
 	const [pagination, setPagination] = useState({
 		pageIndex: 0,
 		pageSize: 10,
 	});
+	const { pageIndex, pageSize } = pagination;
 
 	const {
 		data,
 		isLoading: isLoadingServices,
-		isRefetching,
 		refetch: refetchServices,
 	} = useCustomQuery<PaginatedData<ServiceType>>({
-		key: ["services", pagination.pageIndex, pagination.pageSize],
-		url: `/api/nomenclatures/services`,
-		params: { page: pagination.pageIndex + 1, limit: pagination.pageSize },
+		key: [route, pageIndex, pageSize],
+		url: `/api/nomenclatures/${route}`,
+		params: { page: pageIndex + 1, limit: pageSize },
 	});
 
-	const { mutateAsync: handleUpdate, isPending: isPendingUpdate } = useMutate({
-		key: ["update-service"],
-		url: "/api/nomenclatures/services",
+	const { mutateAsync: handleCreate, isPending: isPendingCreate } = useMutate({
+		key: [`create-${route}`],
+		url: `/api/nomenclatures/${route}`,
 		options: {
 			onSuccess: () => toast.success("Datele au fost salvate cu succes"),
 		},
 	});
 
-	const { mutateAsync: handleSave, isPending: isPendingCreate } = useMutate({
-		key: ["create-service"],
-		url: "/api/nomenclatures/services",
+	const { mutateAsync: handleUpdate, isPending: isPendingUpdate } = useMutate({
+		key: [`update-${route}`],
+		url: `/api/nomenclatures/${route}`,
 		options: {
 			onSuccess: () => toast.success("Datele au fost salvate cu succes"),
 		},
 	});
 
 	const { mutateAsync: handleDelete, isPending: isPendingDelete } = useMutate({
-		key: ["delete-service"],
-		url: "/api/nomenclatures/services",
+		key: [`delete-${route}`],
+		url: `/api/nomenclatures/${route}`,
 		method: "DELETE",
 		options: {
 			onSuccess: () => toast.success("Serviciul a fost sters cu succes"),
@@ -55,11 +57,11 @@ export default function useServiceHandlers() {
 		values,
 		table,
 	}) => {
-		await handleSave({
+		table.setCreatingRow(null);
+		await handleCreate({
 			name: values.name,
 			keywords: [values.keywords],
 		});
-		table.setCreatingRow(null);
 		refetchServices();
 	};
 
@@ -77,11 +79,7 @@ export default function useServiceHandlers() {
 	};
 
 	const isLoading =
-		isLoadingServices ||
-		isRefetching ||
-		isPendingCreate ||
-		isPendingUpdate ||
-		isPendingDelete;
+		isLoadingServices || isPendingCreate || isPendingUpdate || isPendingDelete;
 	return {
 		data,
 		isLoading,

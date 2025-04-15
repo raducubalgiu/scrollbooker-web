@@ -10,6 +10,8 @@ import { MRT_PaginationState } from "material-react-table";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+const route = "service-domains";
+
 export default function useServiceDomainsHandlers() {
 	const [pagination, setPagination] = useState<MRT_PaginationState>({
 		pageIndex: 0,
@@ -20,22 +22,22 @@ export default function useServiceDomainsHandlers() {
 	const { data, isLoading, refetch } = useCustomQuery<
 		PaginatedData<ServiceDomainsType>
 	>({
-		key: ["service-domains", page, limit],
-		url: `/api/nomenclatures/service-domains`,
+		key: [route, page, limit],
+		url: `/api/nomenclatures/${route}`,
 		params: { page: page + 1, limit },
 	});
 
 	const { mutateAsync: handleCreate, isPending: isPendingCreate } = useMutate({
-		key: ["create-service-domain"],
-		url: "/api/nomenclatures/service-domains",
+		key: [`create-${route}`],
+		url: `/api/nomenclatures/${route}`,
 		options: {
 			onSuccess: () => toast.success("Datele au fost salvate cu succes"),
 		},
 	});
 
 	const { mutateAsync: handleUpdate, isPending: isPendingUpdate } = useMutate({
-		key: ["update-service-domains"],
-		url: "/api/nomenclatures/service-domains",
+		key: [`update-${route}`],
+		url: `/api/nomenclatures/${route}`,
 		method: "PUT",
 		options: {
 			onSuccess: () => toast.success("Datele au fost salvate cu succes"),
@@ -43,8 +45,8 @@ export default function useServiceDomainsHandlers() {
 	});
 
 	const { mutateAsync: handleDelete, isPending: isPendingDelete } = useMutate({
-		key: ["delete-service-domains"],
-		url: "/api/nomenclatures/service-domains",
+		key: [`delete-${route}`],
+		url: `/api/nomenclatures/${route}`,
 		method: "DELETE",
 		options: {
 			onSuccess: () => toast.success("Serviciul a fost sters cu succes"),

@@ -4,6 +4,7 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useCustomTheme } from "./ThemeContext";
+import { Slide } from "react-toastify";
 
 export default function ToastProvider() {
 	const { mode } = useCustomTheme();
@@ -11,7 +12,7 @@ export default function ToastProvider() {
 	return (
 		<ToastContainer
 			position="bottom-center"
-			autoClose={5000}
+			autoClose={3000}
 			hideProgressBar={true}
 			newestOnTop={false}
 			closeOnClick
@@ -19,6 +20,7 @@ export default function ToastProvider() {
 			pauseOnFocusLoss
 			draggable={false}
 			pauseOnHover
+			transition={Slide}
 			theme={mode == "dark" ? "dark" : "light"}
 		/>
 	);
