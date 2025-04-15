@@ -10,11 +10,15 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { omit } from "lodash";
 
-type UseTableHandlersProps = { route: string };
+type UseTableHandlersProps = {
+	route: string;
+	extraParams?: Record<string, string | number | boolean | undefined>;
+};
 const errorMessage = "Ceva nu a mers cum trebuie. Încearcă mai târziu";
 
 export default function useTableHandlers<T extends Record<string, unknown>>({
 	route,
+	extraParams = {},
 }: UseTableHandlersProps) {
 	const [isMutateAction, setIsMutateAction] = useState(false);
 
@@ -27,14 +31,15 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 	const { data, isLoading, refetch, isRefetching } = useCustomQuery<
 		PaginatedData<T>
 	>({
-		key: [route, page, limit],
+		key: [route, page, limit, JSON.stringify(extraParams)],
 		url: `/api/${route}`,
-		params: { page: page + 1, limit },
+		params: { page: page + 1, limit, ...extraParams },
 	});
 
 	const { mutateAsync: handleCreate, isPending: isPendingCreate } = useMutate({
 		key: [`create-${route}`],
 		url: `/api/${route}`,
+		method: "POST",
 		options: {
 			onError: () => {
 				setIsMutateAction(false);
@@ -68,7 +73,7 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 		const data = omit(values, ["id", "created_at", "updated_td"]);
 
 		setIsMutateAction(true);
-		await handleCreate(data);
+		await handleCreate({ ...data, ...extraParams });
 		await refetch().then(() => {
 			setIsMutateAction(false);
 			table.setCreatingRow(null);

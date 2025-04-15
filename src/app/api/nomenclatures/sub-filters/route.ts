@@ -3,11 +3,14 @@ import { get, post, put, deleteRequest } from "@/utils/requests";
 import { omit } from "lodash";
 
 export const GET = async (req: NextRequest) => {
-	const pagination = req.nextUrl.searchParams;
+	const params = req.nextUrl.searchParams;
+	const page = params.get("page");
+	const limit = params.get("limit");
+	const id = params.get("id");
 
 	const response = (
 		await get({
-			url: `/filters/with-sub-filters?${pagination}`,
+			url: `/filters/${id}/sub-filters?page=${page}&limit=${limit}`,
 		})
 	).data;
 
@@ -19,8 +22,8 @@ export const POST = async (req: NextRequest) => {
 
 	const response = (
 		await post({
-			url: `/filters`,
-			data,
+			url: `/sub-filters`,
+			data: { name: data.name, filter_id: data.id },
 		})
 	).data;
 
@@ -32,7 +35,7 @@ export const PUT = async (req: NextRequest) => {
 
 	const response = (
 		await put({
-			url: `/filters/${data.id}`,
+			url: `/sub-filters/${data.id}`,
 			data: omit(data, "id"),
 		})
 	).data;
@@ -45,7 +48,7 @@ export const DELETE = async (req: NextRequest) => {
 
 	const response = (
 		await deleteRequest({
-			url: `/filters/${id}`,
+			url: `/sub-filters/${id}`,
 		})
 	).data;
 

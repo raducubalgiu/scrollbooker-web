@@ -24,6 +24,7 @@ export default function BusinessDomainsModule() {
 			<Table<BusinessDomainType>
 				data={data?.results}
 				rowCount={data?.count}
+				manualPagination
 				columns={businessDomainsColumns}
 				onDeletingRowSave={onDeletingRowSave}
 				onPaginationChange={setPagination}

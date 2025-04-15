@@ -11,6 +11,8 @@ export const GET = async (req: NextRequest) => {
 		})
 	).data;
 
+	if (!user) return NextResponse.json(null);
+
 	const response = (
 		await get({
 			url: `/businesses/${user.business_id}/employees?${paginate}`,
