@@ -34,7 +34,7 @@ type TableProps<T extends Record<string, unknown>> = {
 	manualPagination?: boolean;
 	data: T[] | undefined;
 	columns: MRT_ColumnDef<T>[];
-	onDeletingRowSave: ({
+	onDeletingRowSave?: ({
 		row,
 		table,
 	}: TableRowAndTable<T>) => Promise<void> | void;
@@ -59,7 +59,7 @@ export default function Table<T extends Record<string, unknown>>({
 			key={2}
 			label="Șterge"
 			icon={<Delete />}
-			onClick={() => onDeletingRowSave({ row, table })}
+			onClick={() => onDeletingRowSave && onDeletingRowSave({ row, table })}
 			table={table}
 		/>,
 	];
