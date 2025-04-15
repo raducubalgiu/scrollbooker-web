@@ -2,7 +2,7 @@
 
 import Table from "@/components/core/Table/Table";
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
-import { servicesColumns } from "./servicesColumns";
+import { servicesColumns } from "./columns";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { ServiceType } from "@/models/nomenclatures/ServiceType";
 

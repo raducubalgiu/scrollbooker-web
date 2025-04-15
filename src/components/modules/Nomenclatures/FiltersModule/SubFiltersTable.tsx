@@ -1,7 +1,7 @@
 import React from "react";
 import Table from "@/components/core/Table/Table";
 import { SubFilterType } from "@/models/nomenclatures/SubFilterType";
-import { subFiltersColumns } from "./filtersAndSubFiltersColumns";
+import { subFiltersColumns } from "./columns";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_Row } from "material-react-table";
 import { FilterType } from "@/models/nomenclatures/FilterType";

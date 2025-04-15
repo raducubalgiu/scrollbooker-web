@@ -2,7 +2,7 @@
 
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
-import { filtersColumns } from "./filtersAndSubFiltersColumns";
+import { filtersColumns } from "./columns";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { FilterType } from "@/models/nomenclatures/FilterType";
 import SubFiltersTable from "./SubFiltersTable";

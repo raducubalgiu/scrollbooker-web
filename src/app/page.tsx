@@ -1,4 +1,4 @@
-import DashboardModule from "@/components/modules/Dashboard/DashboardModule";
+import DashboardModule from "@/components/modules/DashboardModule/DashboardModule";
 
 export default async function Home() {
 	return <DashboardModule />;

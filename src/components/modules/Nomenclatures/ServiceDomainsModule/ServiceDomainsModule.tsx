@@ -3,7 +3,7 @@
 import Table from "@/components/core/Table/Table";
 import { ServiceDomainsType } from "../../../../models/nomenclatures/ServiceDomainType";
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
-import { serviceDomainsColumns, serviceColumns } from "./serviceDomainsColumns";
+import { serviceDomainsColumns, serviceColumns } from "./columns";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 
 export default function ServiceDomainsModule() {

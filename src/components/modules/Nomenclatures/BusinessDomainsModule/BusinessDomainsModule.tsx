@@ -3,7 +3,7 @@
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
 import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
-import { businessDomainsColumns } from "./business-domains-columns";
+import { businessDomainsColumns } from "./columns";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 
 export default function BusinessDomainsModule() {
