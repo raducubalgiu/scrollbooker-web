@@ -8,7 +8,6 @@ import {
 	MRT_PaginationState,
 	MRT_Updater,
 } from "material-react-table";
-import MaterialExpandableComponent from "../../../core/Table/MaterialExpandableComponent";
 import { Box, Typography } from "@mui/material";
 import {
 	BusinessType,
@@ -83,32 +82,32 @@ export default function BusinessTypesModule() {
 				onPaginationChange={handlePagination}
 				rowCount={data?.count}
 				state={{ pagination, isLoading }}
-				renderDetailPanel={({ row }) => (
-					<>
-						<Box>
-							<Typography sx={{ fontWeight: "600", mb: 1 }}>
-								Services
-							</Typography>
-							<MaterialExpandableComponent
-								data={row.original.services}
-								columns={services_columns}
-							/>
-						</Box>
-						<Box>
-							<Typography sx={{ fontWeight: "600", my: 1 }}>Filters</Typography>
-							<MaterialExpandableComponent
-								data={row.original.filters}
-								columns={services_columns}
-								renderDetailPanel={({ row }: { row: any }) => (
-									<MaterialExpandableComponent
-										data={row.original.sub_filters}
-										columns={services_columns}
-									/>
-								)}
-							/>
-						</Box>
-					</>
-				)}
+				// renderDetailPanel={({ row }) => (
+				// 	<>
+				// 		<Box>
+				// 			<Typography sx={{ fontWeight: "600", mb: 1 }}>
+				// 				Services
+				// 			</Typography>
+				// 			<MaterialExpandableComponent
+				// 				data={row.original.services}
+				// 				columns={services_columns}
+				// 			/>
+				// 		</Box>
+				// 		<Box>
+				// 			<Typography sx={{ fontWeight: "600", my: 1 }}>Filters</Typography>
+				// 			<MaterialExpandableComponent
+				// 				data={row.original.filters}
+				// 				columns={services_columns}
+				// 				renderDetailPanel={({ row }: { row: any }) => (
+				// 					<MaterialExpandableComponent
+				// 						data={row.original.sub_filters}
+				// 						columns={services_columns}
+				// 					/>
+				// 				)}
+				// 			/>
+				// 		</Box>
+				// 	</>
+				// )}
 			/>
 		</MainLayout>
 	);

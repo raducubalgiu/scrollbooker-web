@@ -41,11 +41,11 @@ export const PUT = async (req: NextRequest) => {
 };
 
 export const DELETE = async (req: NextRequest) => {
-	const { serviceDomainsId } = await req.json();
+	const { id } = await req.json();
 
 	const response = (
 		await deleteRequest({
-			url: `/service-domains/${serviceDomainsId}`,
+			url: `/service-domains/${id}`,
 		})
 	).data;
 

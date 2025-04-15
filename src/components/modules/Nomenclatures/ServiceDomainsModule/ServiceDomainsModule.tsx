@@ -4,18 +4,20 @@ import Table from "@/components/core/Table/Table";
 import { ServiceDomainsType } from "../../../../models/nomenclatures/ServiceDomainType";
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import { serviceDomainsColumns, serviceColumns } from "./serviceDomainsColumns";
-import useServiceDomainsHandlers from "./useServiceDomainsHandlers";
+import useTableHandlers from "@/components/core/Table/useTableHandlers";
 
 export default function ServiceDomainsModule() {
 	const {
 		data,
-		pagination,
-		setPagination,
 		isLoading,
 		onCreatingRowSave,
-		onDeletingRowSave,
+		pagination,
+		setPagination,
 		onEditingRowSave,
-	} = useServiceDomainsHandlers();
+		onDeletingRowSave,
+	} = useTableHandlers<ServiceDomainsType>({
+		route: "nomenclatures/service-domains",
+	});
 
 	return (
 		<MainLayout title="Service Domains" hideAction>
