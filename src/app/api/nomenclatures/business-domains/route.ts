@@ -41,11 +41,11 @@ export const PUT = async (req: NextRequest) => {
 };
 
 export const DELETE = async (req: NextRequest) => {
-	const { businessDomainId } = await req.json();
+	const { id } = await req.json();
 
 	const response = (
 		await deleteRequest({
-			url: `/business-domains/${businessDomainId}`,
+			url: `/business-domains/${id}`,
 		})
 	).data;
 

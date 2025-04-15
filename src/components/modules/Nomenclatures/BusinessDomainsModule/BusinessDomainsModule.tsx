@@ -4,18 +4,20 @@ import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
 import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
 import { businessDomainsColumns } from "./business-domains-columns";
-import useBusinessDomainsHandlers from "./useBusinessDomainsHandlers";
+import useTableHandlers from "@/components/core/Table/useTableHandlers";
 
 export default function BusinessDomainsModule() {
 	const {
 		data,
+		isLoading,
 		pagination,
 		setPagination,
-		isLoading,
 		onCreatingRowSave,
 		onDeletingRowSave,
 		onEditingRowSave,
-	} = useBusinessDomainsHandlers();
+	} = useTableHandlers<BusinessDomainType>({
+		route: "nomenclatures/business-domains",
+	});
 
 	return (
 		<MainLayout title="Business Domains" hideAction>
