@@ -2,9 +2,6 @@
 
 import { useState } from "react";
 import { type MRT_PaginationState } from "material-react-table";
-import { ServiceDomainsType } from "../../../../models/nomenclatures/ServiceDomainType";
-import MaterialExpandableComponent from "../../../core/Table/MaterialExpandableComponent";
-import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import { useCustomQuery } from "@/hooks/useHttp";
 import Table, {
 	PaginatedData,
@@ -15,6 +12,9 @@ import Table, {
 import { useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
 import useServiceDomainsColumns from "./useServiceDomainsColumns";
+import { ServiceDomainsType } from "../../../../models/nomenclatures/ServiceDomainType";
+import MaterialExpandableComponent from "../../../core/Table/MaterialExpandableComponent";
+import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 
 export default function ServiceDomainsModule() {
 	const { serviceDomainsColumns, serviceColumns } = useServiceDomainsColumns();

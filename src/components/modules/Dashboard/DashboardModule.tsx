@@ -58,23 +58,23 @@ export default function DashboardModule() {
 
 	const dashboardSummary = dashboardData ?? [];
 	const employees = [
-		{ id: 0, username: "Toti angajatii" },
+		{ id: 0, username: "Toți angajații" },
 		...(employeesData?.results ?? []),
 	];
 
 	const buttons = [
 		{
-			title: "Astazi",
+			title: "Astăzi",
 			onClick: handleDaily,
 			selected: filters.type == PeriodEnum.DAILY,
 		},
 		{
-			title: "Last 7 Days",
+			title: "Ultimele 7 zile",
 			onClick: handleWeekly,
 			selected: filters.type == PeriodEnum.WEEKLY,
 		},
 		{
-			title: "Last 30 Days",
+			title: "Ultimele 30 de zile",
 			onClick: handleMonthly,
 			selected: filters.type == PeriodEnum.MONTHLY,
 		},
@@ -97,12 +97,12 @@ export default function DashboardModule() {
 					))}
 				</CustomStack>
 				<FormControl sx={{ minWidth: 250 }}>
-					<InputLabel id="employees">Angajati</InputLabel>
+					<InputLabel id="employees">Angajați</InputLabel>
 					<Select
 						labelId="employees"
 						id="employees"
 						value={selectedEmployee.id}
-						label="Angajati"
+						label="Angajați"
 						onChange={e =>
 							setSelectedEmployee({
 								id: Number(e.target.value),

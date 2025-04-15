@@ -11,10 +11,9 @@ import Table, {
 	TableRowAndTable,
 } from "@/components/core/Table/Table";
 import { useState } from "react";
-import useServiceColumns from "./useServiceColumns";
+import { MRT_ColumnDef } from "material-react-table";
 
 export default function ServicesModule() {
-	const { servicesColumns } = useServiceColumns();
 	const [pagination, setPagination] = useState({
 		pageIndex: 0,
 		pageSize: 10,
@@ -22,7 +21,8 @@ export default function ServicesModule() {
 
 	const {
 		data,
-		isLoading,
+		isLoading: isLoadingServices,
+		isRefetching,
 		refetch: refetchServices,
 	} = useCustomQuery<PaginatedData<ServiceType>>({
 		key: ["services", pagination.pageIndex, pagination.pageSize],
@@ -63,8 +63,8 @@ export default function ServicesModule() {
 			name: values.name,
 			keywords: [values.keywords],
 		});
-		refetchServices();
 		table.setCreatingRow(null);
+		refetchServices();
 	};
 
 	const onEditingRowSave: TableEditRow<ServiceType> = async ({
@@ -80,7 +80,34 @@ export default function ServicesModule() {
 		refetchServices();
 	};
 
-	const isSaving = isPendingCreate || isPendingUpdate || isPendingDelete;
+	const isLoading =
+		isLoadingServices ||
+		isRefetching ||
+		isPendingCreate ||
+		isPendingUpdate ||
+		isPendingDelete;
+
+	const servicesColumns: MRT_ColumnDef<ServiceType>[] = [
+		{
+			accessorKey: "id",
+			header: "ID",
+			enableEditing: false,
+			size: 50,
+		},
+		{
+			accessorKey: "name",
+			header: "Name",
+		},
+		{
+			accessorKey: "keywords",
+			header: "Keywords",
+		},
+		{
+			accessorKey: "created_at",
+			enableEditing: false,
+			header: "Created_at",
+		},
+	];
 
 	return (
 		<MainLayout title="Services" hideAction>
@@ -93,7 +120,7 @@ export default function ServicesModule() {
 				onDeletingRowSave={onDeletingRowSave}
 				manualPagination={true}
 				onPaginationChange={setPagination}
-				state={{ pagination, isLoading, isSaving }}
+				state={{ pagination, isLoading }}
 			/>
 		</MainLayout>
 	);

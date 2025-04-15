@@ -119,12 +119,17 @@ export default function Sidebar() {
 					<ListItemText primary="Super Admin" />
 					{openSuperAdmin ? <ExpandLess /> : <ExpandMore />}
 				</ListItemButton>
-				<Collapse in={openSuperAdmin} timeout="auto" unmountOnExit>
+				<Collapse
+					in={openSuperAdmin}
+					timeout="auto"
+					unmountOnExit
+					sx={{ px: 2.5 }}
+				>
 					<List component="div" disablePadding>
 						{superAdminRoutes.map((superAdmin, i) => (
 							<ListItemButton
 								key={i}
-								sx={{ pl: 4, mb: 0.5, px: 2.5 }}
+								sx={{ pl: 4, mb: 0.5 }}
 								onClick={() => router.push(superAdmin.route)}
 								selected={isLinkSelected(superAdmin.route)}
 							>

@@ -11,6 +11,7 @@ type ChildrenType = { children: React.ReactNode };
 
 export default async function RootLayout({ children }: ChildrenType) {
 	const session = await getServerSession(authOptions);
+
 	const layout = session?.accessToken ? (
 		<Layout>{children}</Layout>
 	) : (

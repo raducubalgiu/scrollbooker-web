@@ -11,9 +11,10 @@ import {
 	MRT_TableInstance,
 	MRT_RowData,
 } from "material-react-table";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { Check, Delete } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 export type TableCreateRow<T extends MRT_RowData> =
 	MRT_TableOptions<T>["onCreatingRowSave"];
@@ -37,7 +38,7 @@ type TableProps<T extends Record<string, unknown>> = {
 		row,
 		table,
 	}: TableRowAndTable<T>) => Promise<void> | void;
-	showProgressBars?: boolean;
+	topToolbarIconButton?: boolean;
 } & Partial<MRT_TableOptions<T>>;
 
 export default function Table<T extends Record<string, unknown>>({
@@ -45,6 +46,7 @@ export default function Table<T extends Record<string, unknown>>({
 	columns,
 	manualPagination = false,
 	onDeletingRowSave,
+	topToolbarIconButton,
 	...props
 }: TableProps<T>) {
 	const tableColumns = useMemo<MRT_ColumnDef<T>[]>(
@@ -66,11 +68,16 @@ export default function Table<T extends Record<string, unknown>>({
 		table,
 	}: {
 		table: MRT_TableInstance<T>;
-	}) => (
-		<Button onClick={() => table.setCreatingRow(true)} variant="contained">
-			Adaugă
-		</Button>
-	);
+	}) =>
+		topToolbarIconButton ? (
+			<IconButton onClick={() => table.setCreatingRow(true)}>
+				<AddCircleIcon color="primary" />
+			</IconButton>
+		) : (
+			<Button onClick={() => table.setCreatingRow(true)} variant="contained">
+				Adaugă
+			</Button>
+		);
 
 	const icons = {
 		SaveIcon: () => <Check color="success" />,

@@ -19,13 +19,14 @@ export default function BusinessDomainsModule() {
 		pageIndex: 0,
 		pageSize: 10,
 	});
+	const { pageIndex, pageSize } = pagination;
 
-	const { data, isLoading, refetch } = useCustomQuery<
+	const { data, isLoading, isRefetching, refetch } = useCustomQuery<
 		PaginatedData<BusinessDomainType>
 	>({
-		key: ["business-domains", pagination.pageIndex, pagination.pageSize],
+		key: ["business-domains", pageIndex, pageSize],
 		url: `/api/nomenclatures/business-domains`,
-		params: { page: pagination.pageIndex + 1, limit: pagination.pageSize },
+		params: { page: pageIndex + 1, limit: pageSize },
 	});
 
 	const { mutateAsync: handleCreate, isPending: isPendingCreate } =
@@ -80,7 +81,12 @@ export default function BusinessDomainsModule() {
 		refetch();
 	};
 
-	const isSaving = isPendingCreate || isPendingUpdate || isPendingDelete;
+	const loading =
+		isLoading ||
+		isRefetching ||
+		isPendingCreate ||
+		isPendingUpdate ||
+		isPendingDelete;
 
 	return (
 		<MainLayout title="Business Domains" hideAction>
@@ -92,7 +98,7 @@ export default function BusinessDomainsModule() {
 				onPaginationChange={setPagination}
 				onCreatingRowSave={onCreatingRowSave}
 				onEditingRowSave={onEditingRowSave}
-				state={{ pagination, isLoading, isSaving }}
+				state={{ pagination, isLoading: loading }}
 			/>
 		</MainLayout>
 	);
