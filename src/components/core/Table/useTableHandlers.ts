@@ -8,8 +8,10 @@ import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { MRT_PaginationState } from "material-react-table";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { omit } from "lodash";
 
 type UseTableHandlersProps = { route: string };
+const errorMessage = "Ceva nu a mers cum trebuie. Încearcă mai târziu";
 
 export default function useTableHandlers<T extends Record<string, unknown>>({
 	route,
@@ -30,13 +32,15 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 		params: { page: page + 1, limit },
 	});
 
-	const {
-		mutateAsync: handleCreate,
-		isPending: isPendingCreate,
-		isSuccess: isSuccessCreate,
-	} = useMutate({
+	const { mutateAsync: handleCreate, isPending: isPendingCreate } = useMutate({
 		key: [`create-${route}`],
 		url: `/api/${route}`,
+		options: {
+			onError: () => {
+				setIsMutateAction(false);
+				toast.error(errorMessage);
+			},
+		},
 	});
 
 	const { mutateAsync: handleUpdate, isPending: isPendingUpdate } = useMutate({
@@ -48,26 +52,27 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 		},
 	});
 
-	const {
-		mutateAsync: handleDelete,
-		isPending: isPendingDelete,
-		isSuccess: isSuccessDelete,
-	} = useMutate({
+	const { mutateAsync: handleDelete, isPending: isPendingDelete } = useMutate({
 		key: [`delete-${route}`],
 		url: `/api/${route}`,
 		method: "DELETE",
+		options: {
+			onError: () => {
+				setIsMutateAction(false);
+				toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu");
+			},
+		},
 	});
 
 	const onCreatingRowSave: TableCreateRow<T> = async ({ values, table }) => {
+		const data = omit(values, ["id", "created_at", "updated_td"]);
+
 		setIsMutateAction(true);
-		await handleCreate(values);
+		await handleCreate(data);
 		await refetch().then(() => {
 			setIsMutateAction(false);
 			table.setCreatingRow(null);
-
-			if (isSuccessCreate) {
-				toast.success("Datele au fost salvate cu succes");
-			}
+			toast.success("Datele au fost salvate cu succes");
 		});
 	};
 
@@ -81,9 +86,7 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 		await handleDelete({ id: row.original.id });
 		await refetch().then(() => {
 			setIsMutateAction(false);
-			if (isSuccessDelete) {
-				toast.success("Datele au fost șterse cu succes");
-			}
+			toast.success("Datele au fost șterse cu succes");
 		});
 	};
 

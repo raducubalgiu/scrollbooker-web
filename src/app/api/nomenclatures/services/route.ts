@@ -33,7 +33,7 @@ export const POST = async (req: NextRequest) => {
 	const response = (
 		await post({
 			url: "/services",
-			data,
+			data: { name: data.name, keywords: [data.keywords] },
 		})
 	).data;
 
@@ -41,11 +41,11 @@ export const POST = async (req: NextRequest) => {
 };
 
 export const DELETE = async (req: NextRequest) => {
-	const { serviceId } = await req.json();
+	const { id } = await req.json();
 
 	const response = (
 		await deleteRequest({
-			url: `/services/${serviceId}`,
+			url: `/services/${id}`,
 		})
 	).data;
 

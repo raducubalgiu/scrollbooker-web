@@ -3,22 +3,23 @@
 import Table from "@/components/core/Table/Table";
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import { servicesColumns } from "./servicesColumns";
-import useServiceHandlers from "./useServiceHandlers";
+import useTableHandlers from "@/components/core/Table/useTableHandlers";
+import { ServiceType } from "@/models/nomenclatures/ServiceType";
 
 export default function ServicesModule() {
 	const {
 		data,
+		isLoading,
 		pagination,
 		setPagination,
-		isLoading,
 		onCreatingRowSave,
-		onEditingRowSave,
 		onDeletingRowSave,
-	} = useServiceHandlers();
+		onEditingRowSave,
+	} = useTableHandlers<ServiceType>({ route: "nomenclatures/services" });
 
 	return (
 		<MainLayout title="Services" hideAction>
-			<Table
+			<Table<ServiceType>
 				data={data?.results}
 				rowCount={data?.count}
 				columns={servicesColumns}
