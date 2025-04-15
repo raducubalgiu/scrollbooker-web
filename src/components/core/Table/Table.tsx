@@ -11,10 +11,10 @@ import {
 	MRT_TableInstance,
 	MRT_RowData,
 } from "material-react-table";
-import { Button, IconButton } from "@mui/material";
+import { Button } from "@mui/material";
 import { Check, Delete } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddIconButton from "@/components/cutomized/IconButtons/AddIconButton";
 
 export type TableCreateRow<T extends MRT_RowData> =
 	MRT_TableOptions<T>["onCreatingRowSave"];
@@ -70,9 +70,7 @@ export default function Table<T extends Record<string, unknown>>({
 		table: MRT_TableInstance<T>;
 	}) =>
 		topToolbarIconButton ? (
-			<IconButton onClick={() => table.setCreatingRow(true)}>
-				<AddCircleIcon color="primary" />
-			</IconButton>
+			<AddIconButton onClick={() => table.setCreatingRow(true)} />
 		) : (
 			<Button onClick={() => table.setCreatingRow(true)} variant="contained">
 				Adaugă

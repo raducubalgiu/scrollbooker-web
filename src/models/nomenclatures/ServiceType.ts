@@ -1,7 +1,7 @@
 import { FilterType } from "./FilterType";
 
 export type ServiceType = {
-	id: number;
+	id?: number;
 	name: string;
 	active?: boolean;
 	keywords?: string[];
