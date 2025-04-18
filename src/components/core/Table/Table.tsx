@@ -96,15 +96,6 @@ export default function Table<T extends Record<string, unknown>>({
 		);
 	}
 
-	const handleCancel = ({ row, table }: TableRowAndTable<T>) => {
-		table.setEditingRow(null);
-		setTableData(prev => {
-			const newData = prev ? [...prev] : [];
-			newData[row.index] = data?.[row.index] ?? row.original;
-			return newData;
-		});
-	};
-
 	const table = useMaterialReactTable({
 		columns,
 		data: tableData ?? [],
@@ -116,7 +107,6 @@ export default function Table<T extends Record<string, unknown>>({
 		positionActionsColumn: "last",
 		renderRowActionMenuItems,
 		renderTopToolbarCustomActions,
-		onEditingRowCancel: ({ row, table }) => handleCancel({ row, table }),
 		muiEditTextFieldProps: { variant: "outlined" },
 		muiLinearProgressProps: ({ isTopToolbar }) => ({
 			sx: {

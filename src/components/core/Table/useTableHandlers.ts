@@ -69,21 +69,38 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 		},
 	});
 
-	const onCreatingRowSave: TableCreateRow<T> = async ({ values, table }) => {
+	const onCreatingRowSave: TableCreateRow<T> = async ({
+		exitCreatingMode,
+		row,
+		values,
+		table,
+	}) => {
 		const data = omit(values, ["id", "created_at", "updated_td"]);
 
 		setIsMutateAction(true);
 		await handleCreate({ ...data, ...extraParams });
 		await refetch().then(() => {
 			setIsMutateAction(false);
-			table.setCreatingRow(null);
+			Object.entries(values).forEach(([key, value]) => {
+				table.options.meta?.updateData?.(row.index, key, value);
+			});
+			exitCreatingMode();
 			toast.success("Datele au fost salvate cu succes");
 		});
 	};
 
-	const onEditingRowSave: TableEditRow<T> = async ({ values, table }) => {
+	const onEditingRowSave: TableEditRow<T> = async ({
+		exitEditingMode,
+		row,
+		values,
+		table,
+	}) => {
 		await handleUpdate(values);
-		table.setEditingRow(null);
+
+		Object.entries(values).forEach(([key, value]) => {
+			table.options.meta?.updateData?.(row.index, key, value);
+		});
+		exitEditingMode();
 	};
 
 	const onDeletingRowSave = async ({ row }: TableRowAndTable<T>) => {

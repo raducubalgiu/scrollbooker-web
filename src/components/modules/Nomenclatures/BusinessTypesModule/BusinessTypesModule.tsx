@@ -37,7 +37,7 @@ export default function BusinessTypesModule() {
 					<MR_Input
 						row={row}
 						column={column}
-						value={row.original.name}
+						value={row.getValue(column.id)}
 						required
 						minLength={3}
 						maxLength={50}
