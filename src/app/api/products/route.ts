@@ -21,7 +21,7 @@ export const POST = async (req: NextRequest) => {
 	const { product, sub_filters } = Object.entries(data).reduce(
 		(acc, [key, value]) => {
 			if (key.startsWith("filter_")) {
-				acc.sub_filters.push(value);
+				acc.sub_filters.push(value as number);
 			} else {
 				acc.product[key] = value;
 			}
