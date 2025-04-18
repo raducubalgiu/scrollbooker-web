@@ -63,12 +63,12 @@ export default function BusinessDomainsModule() {
 			<Table<BusinessDomainType>
 				data={data?.results}
 				rowCount={data?.count}
-				manualPagination
 				columns={columns}
-				onDeletingRowSave={onDeletingRowSave}
-				onPaginationChange={setPagination}
 				onCreatingRowSave={onCreatingRowSave}
 				onEditingRowSave={onEditingRowSave}
+				onDeletingRowSave={onDeletingRowSave}
+				manualPagination={true}
+				onPaginationChange={setPagination}
 				state={{ pagination, isLoading }}
 			/>
 		</MainLayout>
