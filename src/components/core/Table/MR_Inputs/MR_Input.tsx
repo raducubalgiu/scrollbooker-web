@@ -46,11 +46,11 @@ export default function MR_Input<T extends Record<string, unknown>>({
 			}
 
 			if (type === "number") {
-				const numValue = Number(value);
-				if (required && isNaN(numValue)) {
+				const numValue = Number(inputValue);
+				if (required && !numValue && numValue !== 0) {
 					message = "Acest camp este obligatoriu";
 				} else if (!isNaN(numValue)) {
-					if (typeof min === "number" && numValue < min) {
+					if (typeof min === "number" && numValue < min && numValue !== 0) {
 						message = `Valoarea minimă este ${min}`;
 					} else if (typeof max === "number" && numValue > max) {
 						message = `Valoarea maximă este ${max}`;
@@ -60,7 +60,7 @@ export default function MR_Input<T extends Record<string, unknown>>({
 
 			setError({ message });
 		},
-		[maxLength, minLength, required, min, max, type]
+		[maxLength, minLength, required, min, max, type, inputValue]
 	);
 
 	const handleChangeInput = useCallback(
@@ -91,6 +91,7 @@ export default function MR_Input<T extends Record<string, unknown>>({
 
 	return (
 		<TextField
+			type={type}
 			size="small"
 			fullWidth
 			value={inputValue}

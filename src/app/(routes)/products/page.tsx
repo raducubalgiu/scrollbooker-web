@@ -23,6 +23,10 @@ export default async function Products() {
 	const services = business.services ?? [];
 
 	return (
-		<ProductsModule services={services} available_filters={available_filters} />
+		<ProductsModule
+			services={services}
+			available_filters={available_filters}
+			business_id={business.id}
+		/>
 	);
 }

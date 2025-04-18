@@ -10,11 +10,13 @@ import { FilterType } from "@/models/nomenclatures/FilterType";
 type ProductsModuleProps = {
 	services: ServiceType[];
 	available_filters: FilterType[];
+	business_id: number;
 };
 
 export default function ProductsModule({
 	services,
 	available_filters,
+	business_id,
 }: ProductsModuleProps) {
 	const {
 		data,
@@ -24,7 +26,10 @@ export default function ProductsModule({
 		onCreatingRowSave,
 		onDeletingRowSave,
 		onEditingRowSave,
-	} = useTableHandlers<ProductType>({ route: "products" });
+	} = useTableHandlers<ProductType>({
+		route: "products",
+		extraParams: { business_id },
+	});
 
 	const durations = [
 		{ duration_minutes: 5, label: "5 minute" },
