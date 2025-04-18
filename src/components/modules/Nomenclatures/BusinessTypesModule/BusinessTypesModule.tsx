@@ -4,11 +4,12 @@ import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
 import { BusinessType } from "@/models/nomenclatures/BusinessType";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { businessTypeColumns, businessTypeServicesColumns } from "./columns";
 import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import { SubFilterType } from "@/models/nomenclatures/SubFilterType";
 import { FilterType } from "@/models/nomenclatures/FilterType";
-import { filtersColumns, subFiltersColumns } from "../FiltersModule/columns";
+import { MRT_ColumnDef } from "material-react-table";
+import { useMemo } from "react";
+import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 
 export default function BusinessTypesModule() {
 	const {
@@ -20,6 +21,98 @@ export default function BusinessTypesModule() {
 		onCreatingRowSave,
 		onEditingRowSave,
 	} = useTableHandlers<BusinessType>({ route: "nomenclatures/business-types" });
+
+	const businessTypeColumns = useMemo<MRT_ColumnDef<BusinessType>[]>(
+		() => [
+			{
+				accessorKey: "id",
+				header: "ID",
+				size: 50,
+				enableEditing: false,
+			},
+			{
+				accessorKey: "name",
+				header: "Name",
+				Edit: ({ row, column }) => (
+					<MR_Input
+						row={row}
+						column={column}
+						value={row.original.name}
+						required
+						minLength={3}
+						maxLength={50}
+					/>
+				),
+			},
+			{
+				accessorKey: "business_domain_id",
+				header: "Business Domain Id",
+				enableEditing: false,
+			},
+			{
+				accessorKey: "created_at",
+				header: "Created At",
+				enableEditing: false,
+			},
+		],
+		[]
+	);
+
+	const businessTypeServicesColumns: MRT_ColumnDef<ServiceType>[] = [
+		{
+			accessorKey: "id",
+			header: "ID",
+			size: 50,
+			enableEditing: false,
+		},
+		{
+			accessorKey: "name",
+			header: "Name",
+		},
+	];
+
+	const filtersColumns = useMemo<MRT_ColumnDef<FilterType>[]>(
+		() => [
+			{
+				accessorKey: "id",
+				header: "ID",
+				size: 50,
+				enableEditing: false,
+			},
+			{
+				accessorKey: "name",
+				header: "Name",
+			},
+			{
+				accessorKey: "created_at",
+				header: "Created_at",
+				enableEditing: false,
+			},
+			{
+				accessorKey: "updated_at",
+				header: "Updated_at",
+				enableEditing: false,
+			},
+		],
+		[]
+	);
+
+	const subFiltersColumns = useMemo<MRT_ColumnDef<SubFilterType>[]>(
+		() => [
+			{
+				accessorKey: "id",
+				header: "ID",
+				size: 50,
+				enableEditing: false,
+			},
+			{
+				accessorKey: "name",
+				header: "Name",
+				size: 300,
+			},
+		],
+		[]
+	);
 
 	return (
 		<MainLayout title="Business Types" hideAction>
