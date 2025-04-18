@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import UserInfo from "./UserInfo/UserInfo";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import { signOut } from "next-auth/react";
 
 export default function Sidebar() {
@@ -55,24 +56,29 @@ export default function Sidebar() {
 			icon: <CalendarMonthIcon />,
 		},
 		{
-			label: "My Business",
+			label: "Afacerea mea",
 			route: "/my-business",
 			icon: <PlaceOutlinedIcon />,
 		},
 		{
-			label: "Work Schedule",
+			label: "Programul de lucru",
 			route: "/schedules",
 			icon: <ScheduleIcon />,
 		},
 		{
-			label: "Products",
+			label: "Produse",
 			route: "/products",
 			icon: <ShoppingBagOutlinedIcon />,
 		},
 		{
-			label: "Employees",
+			label: "Angajați",
 			route: "/employees",
 			icon: <PeopleAltOutlinedIcon />,
+		},
+		{
+			label: "Setări",
+			route: "/settings",
+			icon: <ManageAccountsOutlinedIcon />,
 		},
 	];
 
