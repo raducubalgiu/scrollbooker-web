@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	MaterialReactTable,
 	type MRT_ColumnDef,
@@ -49,10 +49,11 @@ export default function Table<T extends Record<string, unknown>>({
 	topToolbarIconButton,
 	...props
 }: TableProps<T>) {
-	const tableColumns = useMemo<MRT_ColumnDef<T>[]>(
-		() => [...columns],
-		[columns]
-	);
+	const [tableData, setTableData] = useState<T[] | undefined>([]);
+
+	useEffect(() => {
+		setTableData(data);
+	}, [data]);
 
 	const renderRowActionMenuItems = ({ row, table }: TableRowAndTable<T>) => [
 		<MRT_ActionMenuItem
@@ -82,9 +83,31 @@ export default function Table<T extends Record<string, unknown>>({
 		CancelIcon: () => <CloseIcon color="error" />,
 	};
 
+	function updateData<T>(
+		rowIndex: number,
+		columnId: keyof T,
+		value: unknown,
+		setData: React.Dispatch<React.SetStateAction<T[] | undefined>>
+	) {
+		setData(prev =>
+			prev?.map((row, index) =>
+				index === rowIndex ? { ...row, [columnId]: value } : row
+			)
+		);
+	}
+
+	const handleCancel = ({ row, table }: TableRowAndTable<T>) => {
+		table.setEditingRow(null);
+		setTableData(prev => {
+			const newData = prev ? [...prev] : [];
+			newData[row.index] = data?.[row.index] ?? row.original;
+			return newData;
+		});
+	};
+
 	const table = useMaterialReactTable({
-		columns: tableColumns,
-		data: data ?? [],
+		columns,
+		data: tableData ?? [],
 		manualPagination,
 		enableEditing: true,
 		editDisplayMode: "row",
@@ -93,6 +116,7 @@ export default function Table<T extends Record<string, unknown>>({
 		positionActionsColumn: "last",
 		renderRowActionMenuItems,
 		renderTopToolbarCustomActions,
+		onEditingRowCancel: ({ row, table }) => handleCancel({ row, table }),
 		muiEditTextFieldProps: { variant: "outlined" },
 		muiLinearProgressProps: ({ isTopToolbar }) => ({
 			sx: {
@@ -100,6 +124,10 @@ export default function Table<T extends Record<string, unknown>>({
 			},
 		}),
 		icons,
+		meta: {
+			updateData: (rowIndex, columnId, value) =>
+				updateData(rowIndex, columnId as keyof T, value, setTableData),
+		},
 		...props,
 	});
 

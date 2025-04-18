@@ -1,3 +1,5 @@
+import { SubFilterType } from "../nomenclatures/SubFilterType";
+
 export type ProductType = {
 	id: number;
 	name: string;
@@ -11,4 +13,5 @@ export type ProductType = {
 	discount: number;
 	created_at: string;
 	updated_at: string;
+	sub_filters?: SubFilterType[];
 };

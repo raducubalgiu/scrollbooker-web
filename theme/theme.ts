@@ -168,15 +168,6 @@ export const darkTheme = createTheme({
 				},
 			},
 		},
-		MuiDialog: {
-			styleOverrides: {
-				root: {
-					"& .MuiPaper-root": {
-						minWidth: 500,
-					},
-				},
-			},
-		},
 	},
 });
 
@@ -264,15 +255,6 @@ export const lightTheme = createTheme({
 						"&:hover": {
 							backgroundColor: "#FF6F00",
 						},
-					},
-				},
-			},
-		},
-		MuiDialog: {
-			styleOverrides: {
-				root: {
-					"& .MuiPaper-root": {
-						minWidth: 500,
 					},
 				},
 			},

@@ -6,14 +6,18 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import LayoutDrawer from "./LayoutDrawer";
 import LayoutAppBar from "./LayoutAppBar";
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 
-const DRAWER_WIDTH = 350;
+const DRAWER_DESKTOP_WIDTH = 350;
+const DRAWER_PHONE_WIDTH = 300;
 
 interface LayoutProps {
 	children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
+	const { isPhone } = useBreakpoints();
+	const DRAWER_WIDTH = isPhone ? DRAWER_PHONE_WIDTH : DRAWER_DESKTOP_WIDTH;
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const [isClosing, setIsClosing] = React.useState(false);
 
