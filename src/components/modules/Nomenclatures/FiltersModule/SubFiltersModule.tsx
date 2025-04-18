@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Table from "@/components/core/Table/Table";
 import { SubFilterType } from "@/models/nomenclatures/SubFilterType";
-import { subFiltersColumns } from "./columns";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { MRT_Row } from "material-react-table";
+import { MRT_ColumnDef, MRT_Row } from "material-react-table";
 import { FilterType } from "@/models/nomenclatures/FilterType";
+import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 
-export default function SubFiltersTable({ row }: { row: MRT_Row<FilterType> }) {
+export default function SubFiltersModule({
+	row,
+}: {
+	row: MRT_Row<FilterType>;
+}) {
 	const {
 		data: subFilters,
 		isLoading: isLoadingSubFilters,
@@ -19,6 +23,33 @@ export default function SubFiltersTable({ row }: { row: MRT_Row<FilterType> }) {
 		route: "nomenclatures/sub-filters",
 		extraParams: { id: row.original.id },
 	});
+
+	const subFiltersColumns = useMemo<MRT_ColumnDef<SubFilterType>[]>(
+		() => [
+			{
+				accessorKey: "id",
+				header: "ID",
+				size: 50,
+				enableEditing: false,
+			},
+			{
+				accessorKey: "name",
+				header: "Name",
+				size: 300,
+				Edit: ({ row, column }) => (
+					<MR_Input
+						row={row}
+						column={column}
+						value={row.original.name}
+						required
+						minLength={3}
+						maxLength={50}
+					/>
+				),
+			},
+		],
+		[]
+	);
 
 	return (
 		<Table<SubFilterType>
