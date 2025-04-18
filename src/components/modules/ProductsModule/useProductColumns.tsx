@@ -41,8 +41,10 @@ export default function useProductColumns({
 			{
 				accessorKey: "name",
 				header: "Name",
-				Edit: ({ row }) => (
+				Edit: ({ row, column }) => (
 					<MR_Input
+						row={row}
+						column={column}
 						value={row.original.name}
 						required
 						minLength={3}
@@ -53,8 +55,10 @@ export default function useProductColumns({
 			{
 				accessorKey: "description",
 				header: "Description",
-				Edit: ({ row }) => (
+				Edit: ({ row, column }) => (
 					<MR_Input
+						row={row}
+						column={column}
 						value={row.original.description}
 						required
 						minLength={3}
@@ -146,8 +150,10 @@ export default function useProductColumns({
 			{
 				accessorKey: "discount",
 				header: "Discount %",
-				Edit: ({ row }) => (
+				Edit: ({ row, column }) => (
 					<MR_Input
+						row={row}
+						column={column}
 						value={row.original.discount}
 						type="number"
 						required

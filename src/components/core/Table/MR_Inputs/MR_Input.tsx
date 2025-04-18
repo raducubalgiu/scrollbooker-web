@@ -1,7 +1,10 @@
 import { TextField, TextFieldProps } from "@mui/material";
+import { MRT_Column, MRT_Row } from "material-react-table";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-type MR_Input = {
+type MR_InputProps<T extends Record<string, unknown>> = {
+	row: MRT_Row<T>;
+	column: MRT_Column<T>;
 	value: string | number;
 	required?: boolean;
 	minLength?: number;
@@ -11,7 +14,9 @@ type MR_Input = {
 	type?: "text" | "number";
 } & TextFieldProps;
 
-export default function MR_Input({
+export default function MR_Input<T extends Record<string, unknown>>({
+	row,
+	column,
 	value,
 	required,
 	minLength,
@@ -20,7 +25,7 @@ export default function MR_Input({
 	max,
 	type = "text",
 	...props
-}: MR_Input) {
+}: MR_InputProps<T>) {
 	const [error, setError] = useState<{ message: string }>({ message: "" });
 	const [inputValue, setInputValue] = useState(value);
 
@@ -78,12 +83,19 @@ export default function MR_Input({
 		};
 	}, [inputValue, runValidators]);
 
+	const handleBlur = useCallback(() => {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		row._valuesCache[column.id] = inputValue;
+	}, [column.id, inputValue, row._valuesCache]);
+
 	return (
 		<TextField
 			size="small"
 			fullWidth
 			value={inputValue}
 			onChange={handleChangeInput}
+			onBlur={handleBlur}
 			error={!!error?.message}
 			helperText={error?.message}
 			{...props}
