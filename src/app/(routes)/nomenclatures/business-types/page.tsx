@@ -3,8 +3,9 @@ import React from "react";
 import { get } from "@/utils/requests";
 import { PaginatedData } from "@/components/core/Table/Table";
 import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
+import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 
-export default async function BusinessTypes() {
+async function BusinessTypes() {
 	const businessDomains = (
 		await get<PaginatedData<BusinessDomainType>>({
 			url: `/business-domains?page=1&limit=10`,
@@ -13,3 +14,5 @@ export default async function BusinessTypes() {
 
 	return <BusinessTypesModule businessDomains={businessDomains?.results} />;
 }
+
+export default ProtectedPage(BusinessTypes, "NOMENCLATURES_VIEW");

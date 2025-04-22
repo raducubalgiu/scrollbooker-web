@@ -6,6 +6,7 @@ import { decodeToken } from "@/lib/auth/decodeToken";
 import { get } from "@/utils/requests";
 import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import { some } from "lodash";
+import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 
 type BusinessType = {
 	id: number;
@@ -17,7 +18,7 @@ type BusinessType = {
 	services: ServiceType[];
 };
 
-export default async function MyBusiness() {
+async function MyBusiness() {
 	const { user_id } = await decodeToken();
 
 	const business = (
@@ -54,3 +55,5 @@ export default async function MyBusiness() {
 		</MainLayout>
 	);
 }
+
+export default ProtectedPage(MyBusiness, "MY_BUSINESS_VIEW");

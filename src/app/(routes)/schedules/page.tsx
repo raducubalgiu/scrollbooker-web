@@ -3,8 +3,9 @@ import React from "react";
 import { decodeToken } from "@/lib/auth/decodeToken";
 import { get } from "@/utils/requests";
 import { ScheduleResponseType } from "@/models/ScheduleType";
+import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 
-export default async function Schedules() {
+async function Schedules() {
 	const { user_id } = await decodeToken();
 
 	const response = (
@@ -15,3 +16,5 @@ export default async function Schedules() {
 
 	return <SchedulesModule data={response as ScheduleResponseType[]} />;
 }
+
+export default ProtectedPage(Schedules, "SCHEDULES_VIEW");

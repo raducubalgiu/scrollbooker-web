@@ -36,7 +36,6 @@ export default function MR_Input<T extends Record<string, unknown>>({
 			let message = "";
 
 			if (type === "text") {
-				console.log("VAL!!!", val);
 				if (required && String(val).trim() === "") {
 					message = "Acest câmp este obligatoriu";
 				} else if (minLength && String(val).length < minLength) {

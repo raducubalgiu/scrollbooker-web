@@ -1,6 +1,9 @@
+import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import RolesAndPermissionsModule from "@/components/modules/RolesAndPermissionsModule/RolesAndPermissionsModule";
 import React from "react";
 
-export default function RolesAndPermissions() {
+async function RolesAndPermissions() {
 	return <RolesAndPermissionsModule />;
 }
+
+export default ProtectedPage(RolesAndPermissions, "NOMENCLATURES_VIEW");

@@ -7,6 +7,8 @@ import { LOG } from "@/utils/logger";
 import { SECOND } from "@/utils/date-utils";
 import jwt from "jsonwebtoken";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { map } from "lodash";
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -81,9 +83,12 @@ export const authOptions: AuthOptions = {
 	callbacks: {
 		async jwt({ token, user }) {
 			if (user) {
+				const permissions = await getPermissions(user.accessToken);
+
 				token.accessToken = user.accessToken;
 				token.accessTokenExpires = user.accessTokenExpires;
 				token.username = user.username;
+				token.permissions = permissions;
 
 				return token;
 			}
@@ -112,6 +117,7 @@ export const authOptions: AuthOptions = {
 		async session({ session, token }) {
 			session.accessToken = token.accessToken;
 			session.username = token.username;
+			session.permissions = token.permissions;
 
 			const expireInMillis = token["accessTokenExpires"];
 			const expiresAt = new Date(expireInMillis).toISOString();
@@ -127,3 +133,11 @@ export const authOptions: AuthOptions = {
 		signIn: "auth/signin",
 	},
 };
+
+async function getPermissions(token) {
+	const userPermissions = await axios.get(
+		`${process.env.BE_BASE_ENDPOINT}/auth/user-permissions`,
+		{ headers: { Authorization: `Bearer ${token}` } }
+	);
+	return map(userPermissions.data, "code");
+}

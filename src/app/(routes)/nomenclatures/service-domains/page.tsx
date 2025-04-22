@@ -1,5 +1,8 @@
+import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import ServiceDomainsModule from "@/components/modules/Nomenclatures/ServiceDomainsModule/ServiceDomainsModule";
 
-export default async function ServiceDomains() {
+async function ServiceDomains() {
 	return <ServiceDomainsModule />;
 }
+
+export default ProtectedPage(ServiceDomains, "NOMENCLATURES_VIEW");

@@ -4,8 +4,9 @@ import { get } from "@/utils/requests";
 import { decodeToken } from "@/lib/auth/decodeToken";
 import { FilterType } from "@/models/nomenclatures/FilterType";
 import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
+import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 
-export default async function Products() {
+async function Products() {
 	const { user_id } = await decodeToken();
 
 	const business = (
@@ -30,3 +31,5 @@ export default async function Products() {
 		/>
 	);
 }
+
+export default ProtectedPage(Products, "PRODUCTS_VIEW");

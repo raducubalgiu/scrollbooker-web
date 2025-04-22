@@ -1,5 +1,8 @@
+import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import BusinessDomainsModule from "@/components/modules/Nomenclatures/BusinessDomainsModule/BusinessDomainsModule";
 
-export default async function BusinessDomains() {
+async function BusinessDomains() {
 	return <BusinessDomainsModule />;
 }
+
+export default ProtectedPage(BusinessDomains, "NOMENCLATURES_VIEW");
