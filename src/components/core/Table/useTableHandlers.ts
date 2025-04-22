@@ -95,7 +95,7 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 		values,
 		table,
 	}) => {
-		await handleUpdate(values);
+		await handleUpdate({ id: row.original.id, ...values, ...extraParams });
 
 		Object.entries(values).forEach(([key, value]) => {
 			table.options.meta?.updateData?.(row.index, key, value);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, post, deleteRequest } from "@/utils/requests";
+import { get, post, deleteRequest, put } from "@/utils/requests";
 import { decodeToken } from "@/lib/auth/decodeToken";
+import { omit } from "lodash";
 
 export const GET = async (req: NextRequest) => {
 	const { user_id } = await decodeToken();
@@ -37,6 +38,19 @@ export const POST = async (req: NextRequest) => {
 				product,
 				sub_filters,
 			},
+		})
+	).data;
+
+	return NextResponse.json(response);
+};
+
+export const PUT = async (req: NextRequest) => {
+	const data = await req.json();
+
+	const response = (
+		await put({
+			url: `/products/${data.id}`,
+			data: omit(data, "id"),
 		})
 	).data;
 

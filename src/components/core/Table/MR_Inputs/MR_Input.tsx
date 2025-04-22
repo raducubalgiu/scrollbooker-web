@@ -32,22 +32,23 @@ export default function MR_Input<T extends Record<string, unknown>>({
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	const runValidators = useCallback(
-		(value: string | number) => {
+		(val: string | number) => {
 			let message = "";
 
 			if (type === "text") {
-				if (required && String(value).trim() === "") {
+				console.log("VAL!!!", val);
+				if (required && String(val).trim() === "") {
 					message = "Acest câmp este obligatoriu";
-				} else if (minLength && String(value).length < minLength) {
+				} else if (minLength && String(val).length < minLength) {
 					message = `Minimum length is ${minLength}`;
-				} else if (!!maxLength && String(value).length > maxLength) {
+				} else if (!!maxLength && String(val).length > maxLength) {
 					message = `Maximum length is ${maxLength}`;
 				}
 			}
 
 			if (type === "number") {
-				const numValue = Number(inputValue);
-				if (required && !numValue && numValue !== 0) {
+				const numValue = Number(val);
+				if (required && (!numValue || numValue !== 0)) {
 					message = "Acest camp este obligatoriu";
 				} else if (!isNaN(numValue)) {
 					if (typeof min === "number" && numValue < min && numValue !== 0) {
@@ -60,13 +61,14 @@ export default function MR_Input<T extends Record<string, unknown>>({
 
 			setError({ message });
 		},
-		[maxLength, minLength, required, min, max, type, inputValue]
+		[maxLength, minLength, required, min, max, type]
 	);
 
 	const handleChangeInput = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const newValue = e.target.value;
 			setInputValue(e.target.value);
+			runValidators(newValue);
 
 			if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
@@ -77,10 +79,6 @@ export default function MR_Input<T extends Record<string, unknown>>({
 
 	useEffect(() => {
 		runValidators(inputValue);
-
-		return () => {
-			if (timeoutRef.current) clearTimeout(timeoutRef.current);
-		};
 	}, [inputValue, runValidators]);
 
 	const handleBlur = useCallback(() => {

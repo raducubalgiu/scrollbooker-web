@@ -24,6 +24,7 @@ export default function useProductColumns({
 				header: "Name",
 				Edit: ({ row, column }) => (
 					<MR_Input
+						placeholder="Numele produsului"
 						row={row}
 						column={column}
 						value={row.original.name}
@@ -38,6 +39,7 @@ export default function useProductColumns({
 				header: "Description",
 				Edit: ({ row, column }) => (
 					<MR_Input
+						placeholder="Descriere"
 						row={row}
 						column={column}
 						value={row.original.description}
@@ -53,6 +55,7 @@ export default function useProductColumns({
 				header: "Serviciu",
 				Edit: ({ row, column, cell }) => (
 					<MR_Select
+						required
 						row={row}
 						column={column}
 						value={cell.getValue<number>() ?? ""}
@@ -72,6 +75,7 @@ export default function useProductColumns({
 				header: "Durata",
 				Edit: ({ row, column, cell }) => (
 					<MR_Select
+						required
 						row={row}
 						column={column}
 						value={cell.getValue<number>() ?? ""}
@@ -92,6 +96,7 @@ export default function useProductColumns({
 				Edit: ({ row, column }) => (
 					<MR_Input
 						required
+						placeholder="Adaugă un pret"
 						row={row}
 						column={column}
 						type="number"
@@ -104,11 +109,11 @@ export default function useProductColumns({
 				header: "Discount %",
 				Edit: ({ row, column }) => (
 					<MR_Input
+						placeholder="Discount"
 						row={row}
 						column={column}
 						value={row.original.discount}
 						type="number"
-						required
 						min={0}
 						max={100}
 					/>
