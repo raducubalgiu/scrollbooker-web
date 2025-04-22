@@ -1,17 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Container, Stack, TextField, Typography } from "@mui/material";
+import { Button, Container, Stack, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
+import { FormProvider, useForm } from "react-hook-form";
+import Input from "@/components/core/Input/Input";
+import { required } from "@/utils/validation-rules";
+import { toast } from "react-toastify";
 
 export default function SignIn() {
+	const methods = useForm({ defaultValues: { username: "", password: "" } });
+	const { handleSubmit } = methods;
 	const [loading, setLoading] = useState(false);
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
+	const isRequired = required();
 
-	const handleLogin = async () => {
+	const handleLogin = async (data: { username: string; password: string }) => {
+		const { username, password } = data;
 		setLoading(true);
-		if (!username || !password) return;
 
 		const result = await signIn("credentials", {
 			redirect: false,
@@ -20,8 +25,8 @@ export default function SignIn() {
 		});
 
 		if (result?.error) {
+			toast("Ceva nu a mers cum trebuie. Încearcă mai târziu");
 			setLoading(false);
-			// Do something
 		} else {
 			setLoading(false);
 			window.location.replace("/");
@@ -29,37 +34,41 @@ export default function SignIn() {
 	};
 
 	return (
-		<Stack alignItems="center" justifyContent="center" sx={{ height: "100vh" }}>
-			<Container maxWidth="sm">
-				<Stack alignItems="center" justifyContent="center">
-					<Typography sx={{ mb: 2.5, fontWeight: "700", fontSize: 25 }}>
-						Sign In
-					</Typography>
-					<TextField
-						value={username}
-						placeholder="Username"
-						onChange={e => setUsername(e.target.value)}
-						fullWidth
-						sx={{ mb: 1.5 }}
-					/>
-					<TextField
-						value={password}
-						placeholder="Password"
-						onChange={e => setPassword(e.target.value)}
-						type="password"
-						fullWidth
-						sx={{ mb: 1.5 }}
-					/>
-					<Button
-						variant="contained"
-						fullWidth
-						loading={loading}
-						onClick={handleLogin}
-					>
-						Login
-					</Button>
-				</Stack>
-			</Container>
-		</Stack>
+		<FormProvider {...methods}>
+			<Stack
+				alignItems="center"
+				justifyContent="center"
+				sx={{ height: "100vh" }}
+			>
+				<Container maxWidth="sm">
+					<Stack alignItems="center" justifyContent="center">
+						<Typography sx={{ mb: 2.5, fontWeight: "700", fontSize: 25 }}>
+							Sign In
+						</Typography>
+						<Input
+							name="username"
+							rules={isRequired}
+							placeholder="Username"
+							sx={{ mb: 1.5 }}
+						/>
+						<Input
+							name="password"
+							type="password"
+							rules={isRequired}
+							placeholder="Password"
+							sx={{ mb: 1.5 }}
+						/>
+						<Button
+							variant="contained"
+							fullWidth
+							loading={loading}
+							onClick={handleSubmit(handleLogin)}
+						>
+							Login
+						</Button>
+					</Stack>
+				</Container>
+			</Stack>
+		</FormProvider>
 	);
 }
