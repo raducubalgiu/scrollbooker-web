@@ -35,11 +35,11 @@ export default function EmployeesModule() {
 			{
 				accessorKey: "ratings_average",
 				header: "Rating",
-				Cell: ({ renderedCellValue }) => (
+				Cell: ({ row }) => (
 					<CustomStack justifyContent="flex-start">
 						<StarIcon color="primary" />
 						<Typography sx={{ fontWeight: "600", ml: 1 }}>
-							{renderedCellValue}
+							{row.original.ratings_average}
 						</Typography>
 					</CustomStack>
 				),

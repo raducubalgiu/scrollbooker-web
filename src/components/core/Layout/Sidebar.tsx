@@ -21,6 +21,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOutlined";
+import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import UserInfo from "./UserInfo/UserInfo";
@@ -28,11 +29,22 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import { signOut } from "next-auth/react";
 import Protected from "@/components/cutomized/Protected/Protected";
+import { useCustomQuery } from "@/hooks/useHttp";
+import { UserInfoType } from "@/models/UserInfoType";
 
 export default function Sidebar() {
 	const router = useRouter();
 	const pathname = usePathname();
 	const [openSuperAdmin, setOpenSuperAdmin] = useState(false);
+
+	const {
+		data: user,
+		isLoading: isLoadingUser,
+		refetch: refetchUser,
+	} = useCustomQuery<UserInfoType>({
+		key: ["user-info"],
+		url: "/api/auth/user-info",
+	});
 
 	const handleClick = () => setOpenSuperAdmin(open => !open);
 
@@ -83,6 +95,12 @@ export default function Sidebar() {
 			permission: "EMPLOYEES_VIEW",
 		},
 		{
+			label: "Cereri de angajare",
+			route: "/employment-requests",
+			icon: <ScheduleSendOutlinedIcon />,
+			permission: "EMPLOYMENT_REQUESTS_VIEW",
+		},
+		{
 			label: "Setări",
 			route: "/settings",
 			icon: <ManageAccountsOutlinedIcon />,
@@ -119,19 +137,23 @@ export default function Sidebar() {
 
 	return (
 		<Box sx={{ height: "100%" }}>
-			<UserInfo />
+			<UserInfo
+				user={user}
+				isLoadingUser={isLoadingUser}
+				refetchUser={refetchUser}
+			/>
 			<Divider sx={{ mb: 1.5 }} />
 			<List sx={{ pb: 5 }}>
-				{userRoutes.map((user, i) => (
-					<Protected key={i} permission={user.permission}>
+				{userRoutes?.map((userRoute, i) => (
+					<Protected key={i} permission={userRoute.permission} showSkeleton>
 						<ListItem disablePadding sx={{ px: 2.5 }}>
 							<ListItemButton
-								onClick={() => router.push(user.route)}
-								selected={isLinkSelected(user.route)}
+								onClick={() => router.push(userRoute.route)}
+								selected={isLinkSelected(userRoute.route)}
 								sx={{ mb: 0.5 }}
 							>
-								<ListItemIcon>{user.icon}</ListItemIcon>
-								<ListItemText>{user.label}</ListItemText>
+								<ListItemIcon>{userRoute.icon}</ListItemIcon>
+								<ListItemText>{userRoute.label}</ListItemText>
 							</ListItemButton>
 						</ListItem>
 					</Protected>

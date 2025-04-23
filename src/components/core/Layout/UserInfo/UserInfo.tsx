@@ -8,22 +8,22 @@ import UserInfoCounter from "./UserInfoCounter";
 import UserAvatar from "./UserAvatar";
 import { UserInfoType } from "@/models/UserInfoType";
 import UserInfoEditModal from "./UserInfoEditModal";
-import { useCustomQuery } from "@/hooks/useHttp";
+import { UseQueryResult } from "@tanstack/react-query";
 
 const styles = { username: { mt: 2.5, fontSize: 18, fontWeight: "700" } };
 
-export default function UserInfo() {
+type UserInfoProps = {
+	user: UserInfoType | undefined;
+	isLoadingUser: boolean;
+	refetchUser: () => Promise<UseQueryResult<UserInfoType, unknown>>;
+};
+
+export default function UserInfo({
+	user,
+	isLoadingUser,
+	refetchUser,
+}: UserInfoProps) {
 	const [openModal, setOpenModal] = useState(false);
-
-	const {
-		data: user,
-		isLoading,
-		refetch: refetchUserData,
-	} = useCustomQuery<UserInfoType>({
-		key: ["user-info"],
-		url: "/api/auth/user-info",
-	});
-
 	const { profession, counters, avatar, username } = user ?? {};
 
 	const userProfession = (
@@ -42,32 +42,32 @@ export default function UserInfo() {
 				user={user}
 				open={openModal}
 				handleClose={() => setOpenModal(false)}
-				refetchUserData={refetchUserData}
+				refetchUserData={refetchUser}
 			/>
 			<Stack alignItems="center" justifyContent="center" sx={{ my: 5 }}>
 				<UserAvatar url={avatar} onOpenModal={() => setOpenModal(true)} />
 				<Typography sx={styles.username}>
-					{isLoading ? <Skeleton width={100} /> : `@${username}`}
+					{isLoadingUser ? <Skeleton width={100} /> : `@${username}`}
 				</Typography>
 				<CustomStack sx={{ mt: 1 }}>
-					{isLoading ? <Skeleton width={150} /> : userProfession}
+					{isLoadingUser ? <Skeleton width={150} /> : userProfession}
 				</CustomStack>
 				<CustomStack sx={{ mt: 5 }}>
 					<UserInfoCounter
 						label="Urmăritori"
 						counter={counters?.followers_count}
-						isLoading={isLoading}
+						isLoading={isLoadingUser}
 					/>
 					<UserInfoCounter
 						label="Urmărești"
 						counter={counters?.followings_count}
-						isLoading={isLoading}
+						isLoading={isLoadingUser}
 						sx={{ mx: 2.5 }}
 					/>
 					<UserInfoCounter
 						label="Recenzii"
 						counter={counters?.ratings_count}
-						isLoading={isLoading}
+						isLoading={isLoadingUser}
 					/>
 				</CustomStack>
 			</Stack>
