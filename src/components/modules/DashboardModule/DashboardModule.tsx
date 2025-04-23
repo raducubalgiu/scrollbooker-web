@@ -18,6 +18,7 @@ import DashboardCardSummary from "./DashboardCardSummary";
 import { DashboardSummaryType } from "@/models/DashboardSummaryType";
 import DashboardCardSummarySkeleton from "@/components/cutomized/Skeletons/Dashboard/DashboardCardSummarySkeleton";
 import { useDashboardReducer } from "@/hooks/useDashboardReducer";
+import Protected from "@/components/cutomized/Protected/Protected";
 
 type EmployeeType = {
 	id: string;
@@ -96,26 +97,28 @@ export default function DashboardModule() {
 						</Button>
 					))}
 				</CustomStack>
-				<FormControl sx={{ minWidth: 250 }}>
-					<InputLabel id="employees">Angajați</InputLabel>
-					<Select
-						labelId="employees"
-						id="employees"
-						value={selectedEmployee.id}
-						label="Angajați"
-						onChange={e =>
-							setSelectedEmployee({
-								id: Number(e.target.value),
-							})
-						}
-					>
-						{employees?.map((employee, i) => (
-							<MenuItem key={i} value={employee.id}>
-								{employee.username}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
+				<Protected permission="EMPLOYEES_VIEW">
+					<FormControl sx={{ minWidth: 250 }}>
+						<InputLabel id="employees">Angajați</InputLabel>
+						<Select
+							labelId="employees"
+							id="employees"
+							value={selectedEmployee.id}
+							label="Angajați"
+							onChange={e =>
+								setSelectedEmployee({
+									id: Number(e.target.value),
+								})
+							}
+						>
+							{employees?.map((employee, i) => (
+								<MenuItem key={i} value={employee.id}>
+									{employee.username}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Protected>
 			</CustomStack>
 			<Grid container spacing={3} sx={{ mb: 2.5 }}>
 				{isLoading ? (

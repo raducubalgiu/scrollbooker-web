@@ -13,12 +13,14 @@ import { omit } from "lodash";
 type UseTableHandlersProps = {
 	route: string;
 	extraParams?: Record<string, string | number | boolean | undefined>;
+	manualPagination?: boolean;
 };
 const errorMessage = "Ceva nu a mers cum trebuie. Încearcă mai târziu";
 
 export default function useTableHandlers<T extends Record<string, unknown>>({
 	route,
 	extraParams = {},
+	manualPagination = true,
 }: UseTableHandlersProps) {
 	const [isMutateAction, setIsMutateAction] = useState(false);
 
@@ -121,9 +123,10 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 
 	return {
 		data,
+		refetch,
 		isLoading: loading,
-		pagination,
-		setPagination,
+		pagination: manualPagination ? pagination : undefined,
+		setPagination: manualPagination ? setPagination : undefined,
 		onEditingRowSave,
 		onCreatingRowSave,
 		onDeletingRowSave,

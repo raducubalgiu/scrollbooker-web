@@ -38,6 +38,7 @@ export default function UserInfoEditModal({
 	const { data } = useCustomQuery<ProfessionType[]>({
 		key: ["professions"],
 		url: "/api/professions",
+		params: { userId: user?.id },
 		options: { enabled: open },
 	});
 
