@@ -1,18 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import NomenclatureLayout from "../../cutomized/MainLayout/MainLayout";
-import {
-	MaterialReactTable,
-	MRT_PaginationState,
-	type MRT_ColumnDef,
-	MRT_Updater,
-} from "material-react-table";
-import { useCustomQuery } from "@/hooks/useHttp";
+import { type MRT_ColumnDef } from "material-react-table";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import { Typography } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
+import useTableHandlers from "@/components/core/Table/useTableHandlers";
+import Table from "@/components/core/Table/Table";
 
 type EmployeeType = {
 	username: string;
@@ -23,22 +18,9 @@ type EmployeeType = {
 	ratings_average: number;
 };
 
-type PaginatedEmployeesType = {
-	count: number;
-	results: EmployeeType[];
-};
-
 export default function EmployeesModule() {
-	const [pagination, setPagination] = useState<MRT_PaginationState>({
-		pageIndex: 0,
-		pageSize: 10,
-	});
-
-	const { data, isLoading } = useCustomQuery<PaginatedEmployeesType>({
-		key: ["employees"],
-		url: `/api/employees`,
-		params: { page: pagination.pageIndex + 1, limit: pagination.pageSize },
-	});
+	const { data, pagination, isLoading, setPagination } =
+		useTableHandlers<EmployeeType>({ route: "employees" });
 
 	const columns = useMemo<MRT_ColumnDef<EmployeeType>[]>(
 		() => [
@@ -64,34 +46,31 @@ export default function EmployeesModule() {
 			},
 			{
 				accessorKey: "ratings_count",
-				header: "Ratings Count",
+				header: "Total rating-uri",
 			},
 			{
 				accessorKey: "followers_count",
-				header: "Followers",
+				header: "Urmăritori",
 			},
 			{
 				accessorKey: "hire_date",
-				header: "Hire Date",
+				header: "Data angajării",
 			},
 		],
 		[]
 	);
 
-	const handlePagination = (updater: MRT_Updater<any>) => {
-		const newState = updater(pagination);
-		setPagination(newState);
-	};
-
 	return (
 		<NomenclatureLayout hideAction title="Employees">
-			<MaterialReactTable
-				data={data?.results ? data?.results : []}
+			<Table<EmployeeType>
+				data={data?.results}
 				columns={columns}
 				manualPagination={true}
-				onPaginationChange={handlePagination}
-				rowCount={data?.count}
+				onPaginationChange={setPagination}
 				state={{ pagination, isLoading }}
+				enableEditing={false}
+				enableFilters={false}
+				renderTopToolbarCustomActions={undefined}
 			/>
 		</NomenclatureLayout>
 	);

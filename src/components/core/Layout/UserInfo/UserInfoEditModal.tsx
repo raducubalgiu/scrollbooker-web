@@ -2,14 +2,15 @@ import Modal from "../../Modal/Modal";
 import { ActionButtonType } from "../../ActionButton/ActionButton";
 import Input from "../../Input/Input";
 import InputSelect from "../../Input/InputSelect";
-import { Avatar, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { UserInfoType } from "@/models/UserInfoType";
 import { useEffect } from "react";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
 import { required, minField, maxField } from "@/utils/validation-rules";
+import AvatarUploader from "@/components/cutomized/AvatarUploader/AvatarUploader";
+import Protected from "@/components/cutomized/Protected/Protected";
 
 type UserInfoEditModalProps = {
 	open: boolean;
@@ -34,6 +35,7 @@ export default function UserInfoEditModal({
 }: UserInfoEditModalProps) {
 	const methods = useForm({ defaultValues: user });
 	const { handleSubmit, reset } = methods;
+	const isRequired = required();
 
 	const { data } = useCustomQuery<ProfessionType[]>({
 		key: ["professions"],
@@ -101,18 +103,12 @@ export default function UserInfoEditModal({
 		>
 			<FormProvider {...methods}>
 				<Stack justifyContent="center" alignItems="center" sx={{ p: 2.5 }}>
-					<Avatar
-						src="avatar"
-						alt={user?.avatar}
-						sx={{ width: 125, height: 125 }}
-					>
-						<CameraAltIcon sx={{ width: 45, height: 45 }} />
-					</Avatar>
+					<AvatarUploader url={user?.avatar} />
 				</Stack>
 				<Input
 					name="username"
 					label="Username*"
-					rules={{ ...required() }}
+					rules={isRequired}
 					sx={{ mb: 2.5 }}
 				/>
 				<Input
@@ -131,16 +127,18 @@ export default function UserInfoEditModal({
 					sx={{ mb: 2.5 }}
 					rules={{ ...maxField(100) }}
 				/>
-				<InputSelect
-					name="profession"
-					label="Profesie*"
-					options={professions?.map(profession => {
-						return {
-							value: profession.name,
-							name: profession.name,
-						};
-					})}
-				/>
+				<Protected permission="USER_PROFESSION_EDIT">
+					<InputSelect
+						name="profession"
+						label="Profesie*"
+						options={professions?.map(profession => {
+							return {
+								value: profession.name,
+								name: profession.name,
+							};
+						})}
+					/>
+				</Protected>
 			</FormProvider>
 		</Modal>
 	);
