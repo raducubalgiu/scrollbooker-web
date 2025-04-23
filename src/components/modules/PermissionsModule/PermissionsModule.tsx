@@ -7,7 +7,8 @@ import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { useMutate } from "@/hooks/useHttp";
 import { Checkbox } from "@mui/material";
 import { MRT_ColumnDef, MRT_Row } from "material-react-table";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import RolesModule from "../RolesModule/RolesModule";
 
 type PermissionWithRolesType = {
 	id: number;
@@ -16,7 +17,8 @@ type PermissionWithRolesType = {
 	roles: { id: number; name: string; assigned: boolean }[];
 };
 
-export default function RolesAndPermissionsModule() {
+export default function PermissionsModule() {
+	const [openRoleModal, setOpenRoleModal] = useState(false);
 	const {
 		data,
 		refetch: refetchPermissions,
@@ -26,12 +28,12 @@ export default function RolesAndPermissionsModule() {
 		onEditingRowSave,
 		onDeletingRowSave,
 	} = useTableHandlers<PermissionWithRolesType>({
-		route: "permissions",
+		route: "nomenclatures/permissions",
 	});
 
 	const { mutate: attachPermission, isPending: isPendingAttach } = useMutate({
 		key: ["attach-permission-role"],
-		url: "/api/permissions/attach-permission-role",
+		url: "/api/nomenclatures/permissions/attach-permission-role",
 		options: {
 			onSuccess: () => refetchPermissions(),
 		},
@@ -39,7 +41,7 @@ export default function RolesAndPermissionsModule() {
 
 	const { mutate: detachPermission, isPending: isPendingDetach } = useMutate({
 		key: ["detach-permission-role"],
-		url: "/api/permissions/attach-permission-role",
+		url: "/api/nomenclatures/permissions/attach-permission-role",
 		method: "DELETE",
 		options: {
 			onSuccess: () => refetchPermissions(),
@@ -117,7 +119,18 @@ export default function RolesAndPermissionsModule() {
 	}, [allRolesNames, attachPermission, detachPermission]);
 
 	return (
-		<MainLayout title="Roluri și Permisiuni" hideAction>
+		<MainLayout
+			title="Roluri și Permisiuni"
+			actionTitle="Roluri"
+			onOpenModal={() => setOpenRoleModal(true)}
+		>
+			<RolesModule
+				open={openRoleModal}
+				handleClose={() => {
+					setOpenRoleModal(false);
+					refetchPermissions();
+				}}
+			/>
 			<Table<PermissionWithRolesType>
 				data={data?.results}
 				rowCount={data?.count}

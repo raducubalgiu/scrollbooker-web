@@ -21,7 +21,7 @@ export default function useProductColumns({
 		() => [
 			{
 				accessorKey: "name",
-				header: "Name",
+				header: "Nume*",
 				Edit: ({ row, column }) => (
 					<MR_Input
 						placeholder="Numele produsului"
@@ -36,14 +36,13 @@ export default function useProductColumns({
 			},
 			{
 				accessorKey: "description",
-				header: "Description",
+				header: "Descriere*",
 				Edit: ({ row, column }) => (
 					<MR_Input
 						placeholder="Descriere"
 						row={row}
 						column={column}
 						value={row.original.description}
-						required
 						minLength={3}
 						maxLength={255}
 						multiline
@@ -52,7 +51,7 @@ export default function useProductColumns({
 			},
 			{
 				accessorKey: "service_id",
-				header: "Serviciu",
+				header: "Serviciu*",
 				Edit: ({ row, column, cell }) => (
 					<MR_Select
 						required
@@ -72,7 +71,7 @@ export default function useProductColumns({
 			},
 			{
 				accessorKey: "duration",
-				header: "Durata",
+				header: "Durată*",
 				Edit: ({ row, column, cell }) => (
 					<MR_Select
 						required
@@ -92,7 +91,7 @@ export default function useProductColumns({
 			},
 			{
 				accessorKey: "price",
-				header: "Price",
+				header: "Preț*",
 				Edit: ({ row, column }) => (
 					<MR_Input
 						required
@@ -125,7 +124,7 @@ export default function useProductColumns({
 
 	const dynamicColumns = useMemo(() => {
 		return available_filters.map<MRT_ColumnDef<ProductType>>(filter => ({
-			header: filter.name,
+			header: `${filter.name}*`,
 			accessorKey: `filter_${filter.name}`,
 			Cell: ({ row }) => {
 				const currentSub = row.original.sub_filters?.find(

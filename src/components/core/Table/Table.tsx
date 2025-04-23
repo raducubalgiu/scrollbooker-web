@@ -11,6 +11,7 @@ import {
 	MRT_TableInstance,
 	MRT_RowData,
 } from "material-react-table";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { Button } from "@mui/material";
 import { Check, Delete } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -118,6 +119,7 @@ export default function Table<T extends Record<string, unknown>>({
 			updateData: (rowIndex, columnId, value) =>
 				updateData(rowIndex, columnId as keyof T, value, setTableData),
 		},
+		localization: MRT_Localization_RO,
 		...props,
 	});
 

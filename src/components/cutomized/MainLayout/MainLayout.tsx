@@ -3,6 +3,7 @@ import CustomStack from "../../core/CustomStack/CustomStack";
 
 type MainLayoutProps = {
 	title?: string;
+	actionTitle?: string;
 	children: React.ReactNode;
 	hideAction?: boolean;
 	onOpenModal?: () => void;
@@ -10,6 +11,7 @@ type MainLayoutProps = {
 
 export default function MainLayout({
 	title,
+	actionTitle,
 	children,
 	hideAction = false,
 	onOpenModal,
@@ -22,7 +24,7 @@ export default function MainLayout({
 				</Typography>
 				{!hideAction && (
 					<Button onClick={onOpenModal} variant="contained">
-						Adauga
+						{!!actionTitle ? actionTitle : "Adaugă"}
 					</Button>
 				)}
 			</CustomStack>

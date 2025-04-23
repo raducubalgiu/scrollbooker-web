@@ -80,6 +80,7 @@ export default function ProductsModule({
 			onEditingRowSave={!hasErrors ? onEditingRowSave : undefined}
 			onCreatingRowSave={!hasErrors ? onCreatingRowSave : undefined}
 			onPaginationChange={setPagination}
+			enableFilters={false}
 			state={{ pagination, isLoading }}
 		/>
 	);
