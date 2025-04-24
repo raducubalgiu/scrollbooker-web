@@ -5,7 +5,7 @@ import {
 	Box,
 	IconButton,
 	Badge,
-	Typography,
+	ListItemButton,
 } from "@mui/material";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import CustomStack from "../CustomStack/CustomStack";
@@ -15,6 +15,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LayoutSearch from "./LayoutSearch";
 import { useCustomTheme } from "../../../providers/ThemeContext";
 import Menu from "@mui/material/Menu";
+import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
 
 type LayoutAppBarProps = {
 	onDrawerToggle: () => void;
@@ -102,12 +103,24 @@ export default function LayoutAppBar({
 							transformOrigin={{ horizontal: "right", vertical: "top" }}
 							anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
 						>
-							<Typography>
-								Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe
-								doloremque veniam ad suscipit deserunt a ut fuga quos
-								cupiditate, consectetur doloribus voluptatem nisi omnis quam
-								odit quaerat. Id, eligendi necessitatibus!
-							</Typography>
+							<NotificationItem
+								sender="radu_balgiu"
+								message="ți-a acceptat cererea de angajare"
+								is_read={false}
+							/>
+							<NotificationItem
+								sender="cristiano"
+								message="ți-a trimis 3 mesaje"
+								is_read={true}
+							/>
+							<NotificationItem
+								sender="cristian_dumitrache"
+								message="tocmai a rezervat produsul tău"
+								is_read={true}
+							/>
+							<ListItemButton sx={{ justifyContent: "center" }} color="primary">
+								Vezi toate notificările
+							</ListItemButton>
 						</Menu>
 						<IconButton onClick={() => toggleTheme()}>
 							{mode == "dark" ? <DarkModeIcon /> : <LightModeIcon />}
