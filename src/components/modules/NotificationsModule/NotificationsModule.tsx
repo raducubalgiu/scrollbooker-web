@@ -1,49 +1,66 @@
 "use client";
 
-import { PaginatedData } from "@/components/core/Table/Table";
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeleton";
-import { useCustomQuery } from "@/hooks/useHttp";
 import { NotificationType } from "@/models/NotificationType";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
-import React, { useState } from "react";
-import { Button, Paper, Stack, Typography } from "@mui/material";
+import {
+	Button,
+	CircularProgress,
+	Paper,
+	Stack,
+	Typography,
+} from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { isEmpty } from "lodash";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { PaginatedData } from "@/components/core/Table/Table";
+
+const fetchNotifications = async ({ pageParam }: { pageParam: number }) => {
+	const { data } = await axios.get<PaginatedData<NotificationType>>(
+		`/api/notifications?page=${pageParam}&limit=5`
+	);
+	return {
+		...data,
+		page: pageParam,
+	};
+};
 
 export default function NotificationsModule() {
-	const [page, setPage] = useState(0);
-
 	const {
-		data: notifications,
-		isLoading,
+		data,
 		refetch,
-	} = useCustomQuery<PaginatedData<NotificationType>>({
-		key: ["get-notifications"],
-		url: "/api/notifications",
-		params: { page: page + 1, limit: 10 },
+		isLoading,
+		fetchNextPage,
+		hasNextPage,
+		isFetchingNextPage,
+	} = useInfiniteQuery({
+		queryKey: ["notifications"],
+		queryFn: fetchNotifications,
+		initialPageParam: 1,
+		getNextPageParam: lastPage => {
+			const { count, results, page } = lastPage;
+			return (page - 1) * 5 + results.length < count ? page + 1 : undefined;
+		},
 	});
 
-	const count = notifications?.count ?? 0;
-	const resultsCount = notifications?.results.length ?? 0;
-	const displayLoadMore = resultsCount < count;
-
-	const handlePage = () => setPage(page => page + 1);
+	const notifications = data?.pages.flatMap(p => p.results) ?? [];
 
 	return (
 		<MainLayout title="Notificări" hideAction>
 			{isLoading && <NotificationSkeleton />}
 			{!isLoading &&
-				notifications?.results.map((notication, i) => (
+				notifications?.map((notication, i) => (
 					<NotificationItem
 						key={i}
 						notification={notication}
 						refetchNotifications={refetch}
 					/>
 				))}
-			{displayLoadMore && (
+			{hasNextPage && (
 				<Stack alignItems="center" mt={2.5}>
 					<Button
-						onClick={handlePage}
+						onClick={() => fetchNextPage()}
 						sx={{
 							textTransform: "capitalize",
 							fontWeight: 600,
@@ -53,12 +70,17 @@ export default function NotificationsModule() {
 					</Button>
 				</Stack>
 			)}
-			{!isLoading && isEmpty(notifications?.results) && (
+			{!isLoading && isEmpty(notifications) && (
 				<Paper sx={{ p: 2.5 }}>
 					<Typography sx={{ textAlign: "center" }}>
 						Nu au fost găsite notificări
 					</Typography>
 				</Paper>
+			)}
+			{isFetchingNextPage && (
+				<Stack alignItems="center" justifyContent="center">
+					<CircularProgress size={20} />
+				</Stack>
 			)}
 		</MainLayout>
 	);
