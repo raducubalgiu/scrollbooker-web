@@ -19,6 +19,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOutlined";
 import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
@@ -99,6 +100,12 @@ export default function Sidebar() {
 			route: "/employment-requests",
 			icon: <ScheduleSendOutlinedIcon />,
 			permission: "EMPLOYMENT_REQUESTS_VIEW",
+		},
+		{
+			label: "Notificări",
+			route: "/notifications",
+			icon: <NotificationsNoneOutlinedIcon />,
+			permission: "NO_PROTECTION",
 		},
 		{
 			label: "Setări",

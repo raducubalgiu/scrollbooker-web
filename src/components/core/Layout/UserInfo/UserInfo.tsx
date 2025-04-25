@@ -54,13 +54,13 @@ export default function UserInfo({
 				</CustomStack>
 				<CustomStack sx={{ mt: 5 }}>
 					<UserInfoCounter
-						label="Urmăritori"
-						counter={counters?.followers_count}
+						label="Urmărești"
+						counter={counters?.followings_count}
 						isLoading={isLoadingUser}
 					/>
 					<UserInfoCounter
-						label="Urmărești"
-						counter={counters?.followings_count}
+						label="Urmăritori"
+						counter={counters?.followers_count}
 						isLoading={isLoadingUser}
 						sx={{ mx: 2.5 }}
 					/>

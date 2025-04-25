@@ -6,6 +6,7 @@ import {
 	IconButton,
 	Badge,
 	ListItemButton,
+	Paper,
 } from "@mui/material";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import CustomStack from "../CustomStack/CustomStack";
@@ -16,6 +17,11 @@ import LayoutSearch from "./LayoutSearch";
 import { useCustomTheme } from "../../../providers/ThemeContext";
 import Menu from "@mui/material/Menu";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
+import { NotificationType } from "@/models/NotificationType";
+import { PaginatedData } from "../Table/Table";
+import { useCustomQuery } from "@/hooks/useHttp";
+import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeleton";
+import { useRouter } from "next/navigation";
 
 type LayoutAppBarProps = {
 	onDrawerToggle: () => void;
@@ -27,6 +33,7 @@ export default function LayoutAppBar({
 	drawerWidth,
 }: LayoutAppBarProps) {
 	const { mode, toggleTheme } = useCustomTheme();
+	const router = useRouter();
 
 	const styles = {
 		appBar: {
@@ -50,6 +57,14 @@ export default function LayoutAppBar({
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	const { data: notifications, isLoading } = useCustomQuery<
+		PaginatedData<NotificationType>
+	>({
+		key: ["get-notifications"],
+		url: "/api/notifications",
+		params: { page: 1, limit: 5 },
+	});
 
 	return (
 		<AppBar position="fixed" sx={styles.appBar}>
@@ -103,24 +118,30 @@ export default function LayoutAppBar({
 							transformOrigin={{ horizontal: "right", vertical: "top" }}
 							anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
 						>
-							<NotificationItem
-								sender="radu_balgiu"
-								message="ți-a acceptat cererea de angajare"
-								is_read={false}
-							/>
-							<NotificationItem
-								sender="cristiano"
-								message="ți-a trimis 3 mesaje"
-								is_read={true}
-							/>
-							<NotificationItem
-								sender="cristian_dumitrache"
-								message="tocmai a rezervat produsul tău"
-								is_read={true}
-							/>
-							<ListItemButton sx={{ justifyContent: "center" }} color="primary">
-								Vezi toate notificările
-							</ListItemButton>
+							<Box sx={{ p: 2.5 }}>
+								{isLoading && <NotificationSkeleton />}
+								{!isLoading &&
+									notifications?.results.map((not, i) => (
+										<NotificationItem
+											key={i}
+											sender={not.sender.username}
+											type={not.type}
+											is_read={not.is_read}
+											sx={{
+												mb: 0,
+											}}
+										/>
+									))}
+							</Box>
+							<Paper>
+								<ListItemButton
+									onClick={() => router.push("/notifications")}
+									sx={{ justifyContent: "center" }}
+									color="primary"
+								>
+									Vezi toate notificările
+								</ListItemButton>
+							</Paper>
 						</Menu>
 						<IconButton onClick={() => toggleTheme()}>
 							{mode == "dark" ? <DarkModeIcon /> : <LightModeIcon />}

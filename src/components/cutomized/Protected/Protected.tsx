@@ -24,7 +24,7 @@ export default function Protected({
 
 	switch (true) {
 		case showSkeleton && status === "loading":
-			return <Skeleton height={47.5} sx={{ mx: 2.5 }} />;
+			return <Skeleton height={35} sx={{ mx: 2.5 }} />;
 		case visible && status !== "loading":
 			return children;
 		default:
