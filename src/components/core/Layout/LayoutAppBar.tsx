@@ -7,6 +7,7 @@ import {
 	Badge,
 	ListItemButton,
 	Paper,
+	Typography,
 } from "@mui/material";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import CustomStack from "../CustomStack/CustomStack";
@@ -22,6 +23,7 @@ import { PaginatedData } from "../Table/Table";
 import { useCustomQuery } from "@/hooks/useHttp";
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeleton";
 import { useRouter } from "next/navigation";
+import { isEmpty } from "lodash";
 
 type LayoutAppBarProps = {
 	onDrawerToggle: () => void;
@@ -58,9 +60,11 @@ export default function LayoutAppBar({
 		setAnchorEl(null);
 	};
 
-	const { data: notifications, isLoading } = useCustomQuery<
-		PaginatedData<NotificationType>
-	>({
+	const {
+		data: notifications,
+		isLoading,
+		refetch,
+	} = useCustomQuery<PaginatedData<NotificationType>>({
 		key: ["get-notifications"],
 		url: "/api/notifications",
 		params: { page: 1, limit: 5 },
@@ -121,27 +125,29 @@ export default function LayoutAppBar({
 							<Box sx={{ p: 2.5 }}>
 								{isLoading && <NotificationSkeleton />}
 								{!isLoading &&
-									notifications?.results.map((not, i) => (
+									notifications?.results.map((notification, i) => (
 										<NotificationItem
 											key={i}
-											sender={not.sender.username}
-											type={not.type}
-											is_read={not.is_read}
-											sx={{
-												mb: 0,
-											}}
+											notification={notification}
+											refetchNotifications={refetch}
+											sx={{ mb: 0 }}
 										/>
 									))}
+								{!isLoading && isEmpty(notifications?.results) && (
+									<Typography>Nu au fost găsite notificări</Typography>
+								)}
 							</Box>
-							<Paper>
-								<ListItemButton
-									onClick={() => router.push("/notifications")}
-									sx={{ justifyContent: "center" }}
-									color="primary"
-								>
-									Vezi toate notificările
-								</ListItemButton>
-							</Paper>
+							{!isEmpty(notifications?.results) && (
+								<Paper>
+									<ListItemButton
+										onClick={() => router.push("/notifications")}
+										sx={{ justifyContent: "center" }}
+										color="primary"
+									>
+										Vezi toate notificările
+									</ListItemButton>
+								</Paper>
+							)}
 						</Menu>
 						<IconButton onClick={() => toggleTheme()}>
 							{mode == "dark" ? <DarkModeIcon /> : <LightModeIcon />}

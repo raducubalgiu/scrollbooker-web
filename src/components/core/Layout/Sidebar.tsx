@@ -36,7 +36,8 @@ import { UserInfoType } from "@/models/UserInfoType";
 export default function Sidebar() {
 	const router = useRouter();
 	const pathname = usePathname();
-	const [openSuperAdmin, setOpenSuperAdmin] = useState(false);
+	const [openNomenclatures, setOpenNomenclatures] = useState(false);
+	const [openMyBusiness, setOpenMyBusiness] = useState(false);
 
 	const {
 		data: user,
@@ -47,7 +48,8 @@ export default function Sidebar() {
 		url: "/api/auth/user-info",
 	});
 
-	const handleClick = () => setOpenSuperAdmin(open => !open);
+	const handleOpenNomenclatures = () => setOpenNomenclatures(open => !open);
+	const handleOpenMyBusiness = () => setOpenMyBusiness(open => !open);
 
 	const isLinkSelected = useCallback(
 		(href: string) => {
@@ -58,24 +60,42 @@ export default function Sidebar() {
 		[pathname]
 	);
 
-	const userRoutes = [
+	const dashboardRoutes = [
 		{
 			label: "Dashboard",
 			route: "/",
 			icon: <DashboardOutlinedIcon />,
 			permission: "NO_PROTECTION",
 		},
+	];
+
+	const settingsRoutes = [
+		{
+			label: "Notificări",
+			route: "/notifications",
+			icon: <NotificationsNoneOutlinedIcon />,
+			permission: "NO_PROTECTION",
+		},
+		{
+			label: "Setări",
+			route: "/settings",
+			icon: <ManageAccountsOutlinedIcon />,
+			permission: "NO_PROTECTION",
+		},
+	];
+
+	const myBusinessRoutes = [
+		{
+			label: "Locație și servicii",
+			route: "/my-business",
+			icon: <PlaceOutlinedIcon />,
+			permission: "MY_BUSINESS_VIEW",
+		},
 		{
 			label: "Calendar",
 			route: "/calendar",
 			icon: <CalendarMonthIcon />,
 			permission: "CALENDAR_VIEW",
-		},
-		{
-			label: "Afacerea mea",
-			route: "/my-business",
-			icon: <PlaceOutlinedIcon />,
-			permission: "MY_BUSINESS_VIEW",
 		},
 		{
 			label: "Programul de lucru",
@@ -100,18 +120,6 @@ export default function Sidebar() {
 			route: "/employment-requests",
 			icon: <ScheduleSendOutlinedIcon />,
 			permission: "EMPLOYMENT_REQUESTS_VIEW",
-		},
-		{
-			label: "Notificări",
-			route: "/notifications",
-			icon: <NotificationsNoneOutlinedIcon />,
-			permission: "NO_PROTECTION",
-		},
-		{
-			label: "Setări",
-			route: "/settings",
-			icon: <ManageAccountsOutlinedIcon />,
-			permission: "NO_PROTECTION",
 		},
 	];
 
@@ -149,9 +157,54 @@ export default function Sidebar() {
 				isLoadingUser={isLoadingUser}
 				refetchUser={refetchUser}
 			/>
-			<Divider sx={{ mb: 1.5 }} />
+			<Divider sx={{ mb: 0.5 }} />
 			<List sx={{ pb: 5 }}>
-				{userRoutes?.map((userRoute, i) => (
+				{dashboardRoutes?.map((userRoute, i) => (
+					<Protected key={i} permission={userRoute.permission} showSkeleton>
+						<ListItem disablePadding sx={{ px: 2.5 }}>
+							<ListItemButton
+								onClick={() => router.push(userRoute.route)}
+								selected={isLinkSelected(userRoute.route)}
+							>
+								<ListItemIcon>{userRoute.icon}</ListItemIcon>
+								<ListItemText>{userRoute.label}</ListItemText>
+							</ListItemButton>
+						</ListItem>
+					</Protected>
+				))}
+				<Protected permission="MY_BUSINESS_ROUTES_VIEW">
+					<Divider sx={{ my: 1.5 }} />
+					<ListItemButton onClick={handleOpenMyBusiness} sx={{ mb: 1.5 }}>
+						<ListItemIcon>
+							<ShoppingBagOutlinedIcon />
+						</ListItemIcon>
+						<ListItemText primary="Afacerea mea" />
+						{openMyBusiness ? <ExpandLess /> : <ExpandMore />}
+					</ListItemButton>
+					<Collapse
+						in={openMyBusiness}
+						timeout="auto"
+						unmountOnExit
+						sx={{ px: 2.5 }}
+					>
+						<List component="div" disablePadding>
+							{myBusinessRoutes.map((businessRoute, i) => (
+								<Protected key={i} permission={businessRoute.permission}>
+									<ListItemButton
+										sx={{ pl: 4, mb: 0.5 }}
+										onClick={() => router.push(businessRoute.route)}
+										selected={isLinkSelected(businessRoute.route)}
+									>
+										<ListItemIcon>{businessRoute.icon}</ListItemIcon>
+										<ListItemText primary={businessRoute.label} />
+									</ListItemButton>
+								</Protected>
+							))}
+						</List>
+					</Collapse>
+					<Divider sx={{ my: 1.5 }} />
+				</Protected>
+				{settingsRoutes?.map((userRoute, i) => (
 					<Protected key={i} permission={userRoute.permission} showSkeleton>
 						<ListItem disablePadding sx={{ px: 2.5 }}>
 							<ListItemButton
@@ -174,15 +227,18 @@ export default function Sidebar() {
 				</ListItemButton>
 				<Protected permission="NOMENCLATURES_VIEW">
 					<Divider sx={{ mb: 1.5 }} />
-					<ListItemButton onClick={handleClick} sx={{ mb: 1.5, px: 2.5 }}>
+					<ListItemButton
+						onClick={handleOpenNomenclatures}
+						sx={{ mb: 1.5, px: 2.5 }}
+					>
 						<ListItemIcon>
 							<AdminPanelPlaylistAddCheckOutlinedIcon />
 						</ListItemIcon>
 						<ListItemText primary="Super Admin" />
-						{openSuperAdmin ? <ExpandLess /> : <ExpandMore />}
+						{openNomenclatures ? <ExpandLess /> : <ExpandMore />}
 					</ListItemButton>
 					<Collapse
-						in={openSuperAdmin}
+						in={openNomenclatures}
 						timeout="auto"
 						unmountOnExit
 						sx={{ px: 2.5 }}

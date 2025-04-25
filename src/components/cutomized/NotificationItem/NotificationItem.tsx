@@ -2,6 +2,7 @@
 
 import {
 	Avatar,
+	CircularProgress,
 	IconButton,
 	ListItem,
 	ListItemProps,
@@ -12,20 +13,30 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
+import { NotificationType } from "@/models/NotificationType";
+import { useMutate } from "@/hooks/useHttp";
 
 type NotificationItemProps = {
-	sender: string;
-	type: string;
-	is_read: boolean;
+	notification: NotificationType;
+	refetchNotifications: () => void;
 } & ListItemProps;
 
 export default function NotificationItem({
-	sender,
-	type,
-	is_read,
+	notification,
+	refetchNotifications,
 	...props
 }: NotificationItemProps) {
+	const { type, sender, is_read } = notification || {};
 	let constructedMessage = "";
+
+	const { mutate: deleteNotification, isPending } = useMutate({
+		key: ["delete-notification"],
+		url: "/api/notifications",
+		method: "DELETE",
+		options: {
+			onSuccess: refetchNotifications,
+		},
+	});
 
 	switch (true) {
 		case type === "follow":
@@ -42,7 +53,7 @@ export default function NotificationItem({
 					<CustomStack justifyContent="flex-start" maxWidth={400}>
 						<Avatar sx={{ width: 45, height: 45, mr: 1.5 }} />
 						<Stack flexWrap="wrap">
-							<Typography fontWeight={600}>{sender}</Typography>
+							<Typography fontWeight={600}>{sender.username}</Typography>
 							<Typography
 								color="neutral.900"
 								fontWeight={is_read ? 600 : 500}
@@ -52,8 +63,10 @@ export default function NotificationItem({
 							</Typography>
 						</Stack>
 					</CustomStack>
-					<IconButton>
-						<CloseIcon />
+					<IconButton
+						onClick={() => deleteNotification({ id: notification.id })}
+					>
+						{isPending ? <CircularProgress size={20} /> : <CloseIcon />}
 					</IconButton>
 				</CustomStack>
 			</Paper>
