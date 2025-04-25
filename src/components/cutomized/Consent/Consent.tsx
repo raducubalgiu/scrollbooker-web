@@ -27,7 +27,7 @@ export default function Consent({
 }: ConsentProps) {
 	return (
 		<>
-			<Paper sx={{ p: 2, maxHeight: 300, overflow: "auto", my: 2.5 }}>
+			<Paper sx={{ p: 2, height: 300, overflow: "auto", my: 2.5 }}>
 				<Typography variant="h6" gutterBottom>
 					{mainTitle}
 				</Typography>

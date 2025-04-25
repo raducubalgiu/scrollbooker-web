@@ -10,6 +10,7 @@ import { Box } from "@mui/material";
 import { isNull } from "lodash";
 import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
 import EmploymentRequestsStepOne from "./EmploymentRequestsStepOne";
+import { useMutate } from "@/hooks/useHttp";
 
 const steps = ["Selectează viitorul angajat", "Trimite cererea de angajare"];
 
@@ -26,6 +27,11 @@ export default function EmploymentRequestsModal({
 	const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 	const [stepIndex, setStepIndex] = useState<number>(0);
 
+	const { mutate: createEmploymentRequest, isPending } = useMutate({
+		key: ["create-employment-request"],
+		url: "/api/employment-requests",
+	});
+
 	const actions: ActionButtonType[] = [
 		{
 			title: "Pasul următor",
@@ -38,16 +44,22 @@ export default function EmploymentRequestsModal({
 		{
 			title: "Înapoi",
 			props: {
-				onClick: () => setStepIndex(prev => prev - 1),
+				onClick: () => {
+					setStepIndex(prev => prev - 1);
+					setSelectedUserId(null);
+				},
 				color: "inherit",
+				disabled: isPending,
 			},
 			hidden: stepIndex === 0,
 		},
 		{
 			title: "Trimite cererea",
 			props: {
-				onClick: () => {},
-				disabled: !acknowledged,
+				onClick: () =>
+					createEmploymentRequest({ selectedUserId, acknowledged }),
+				disabled: !acknowledged || isPending,
+				loading: isPending,
 			},
 			hidden: stepIndex === 0,
 		},
