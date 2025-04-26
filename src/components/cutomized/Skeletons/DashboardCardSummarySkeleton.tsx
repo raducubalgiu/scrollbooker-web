@@ -1,7 +1,7 @@
 import React from "react";
 import { Paper, Typography, Skeleton, Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import CustomStack from "../../../core/CustomStack/CustomStack";
+import CustomStack from "@/components/core/CustomStack/CustomStack";
 
 export default function DashboardCardSummarySkeleton() {
 	return (

@@ -8,11 +8,18 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import { Box } from "@mui/material";
 import { isNull } from "lodash";
-import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
 import EmploymentRequestsStepOne from "./EmploymentRequestsStepOne";
-import { useMutate } from "@/hooks/useHttp";
+import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { ConsentType } from "@/models/ConsentType";
+import EmploymentRequestsStepThree from "./EmploymentRequestsStepThree";
+import { ProfessionType } from "@/models/ProfessionType";
 
-const steps = ["Selectează viitorul angajat", "Trimite cererea de angajare"];
+const steps = [
+	"Selectează viitorul angajat",
+	"Alege poziția funcția noului angajat",
+	"Trimite cererea de angajare",
+];
 
 type EmploymentRequestsModalProps = {
 	open: boolean;
@@ -25,43 +32,82 @@ export default function EmploymentRequestsModal({
 }: EmploymentRequestsModalProps) {
 	const [acknowledged, setAcknowledged] = useState(false);
 	const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+	const [selectedProfessionId, setSelectedProfessionId] = useState<
+		number | null
+	>(null);
 	const [stepIndex, setStepIndex] = useState<number>(0);
+	const isFirstStep = stepIndex === 0;
+	const isSecondStep = stepIndex === 1;
+	const isThirdStep = stepIndex === 2;
 
 	const { mutate: createEmploymentRequest, isPending } = useMutate({
 		key: ["create-employment-request"],
 		url: "/api/employment-requests",
+		options: {
+			onSuccess: () => {
+				handleClose();
+			},
+		},
 	});
 
+	const { data: professions, isLoading: isLoadingProfessions } = useCustomQuery<
+		ProfessionType[]
+	>({
+		key: ["get-professions"],
+		url: "/api/employment-requests/professions",
+		options: { enabled: isSecondStep && open },
+	});
+
+	const { data: consent, isLoading: isLoadingConsent } =
+		useCustomQuery<ConsentType>({
+			key: ["get-consent"],
+			url: "/api/employment-requests/consent",
+			params: { consentName: "EMPLOYMENT_REQUESTS_CONSENT" },
+			options: { enabled: isThirdStep && open },
+		});
+
+	const disabledNextStep =
+		(isNull(selectedUserId) && isFirstStep) ||
+		(isNull(selectedProfessionId) && isSecondStep);
+
+	const handleBack = () => {
+		setStepIndex(prev => prev - 1);
+		setSelectedUserId(null);
+	};
+
+	const handleEmploymentRequest = () =>
+		createEmploymentRequest({
+			employee_id: selectedUserId,
+			consent_id: consent?.id,
+			profession_id: selectedProfessionId,
+		});
+
 	const actions: ActionButtonType[] = [
+		{
+			title: "Înapoi",
+			props: {
+				onClick: handleBack,
+				color: "inherit",
+				disabled: isPending,
+			},
+			hidden: isFirstStep,
+		},
 		{
 			title: "Pasul următor",
 			props: {
 				onClick: () => setStepIndex(prev => prev + 1),
-				disabled: isNull(selectedUserId),
+				disabled: disabledNextStep,
 			},
-			hidden: stepIndex === 1,
-		},
-		{
-			title: "Înapoi",
-			props: {
-				onClick: () => {
-					setStepIndex(prev => prev - 1);
-					setSelectedUserId(null);
-				},
-				color: "inherit",
-				disabled: isPending,
-			},
-			hidden: stepIndex === 0,
+			hidden: isThirdStep,
 		},
 		{
 			title: "Trimite cererea",
 			props: {
-				onClick: () =>
-					createEmploymentRequest({ selectedUserId, acknowledged }),
+				onClick: handleEmploymentRequest,
 				disabled: !acknowledged || isPending,
 				loading: isPending,
 			},
-			hidden: stepIndex === 0,
+			hidden: isFirstStep || isSecondStep,
 		},
 	];
 
@@ -80,14 +126,24 @@ export default function EmploymentRequestsModal({
 						</Step>
 					))}
 				</Stepper>
-				{stepIndex === 0 && (
+				{isFirstStep && (
 					<EmploymentRequestsStepOne
 						selectedUserId={selectedUserId}
-						setSelectedUserId={setSelectedUserId}
+						onSelectUserId={setSelectedUserId}
 					/>
 				)}
-				{stepIndex === 1 && (
+				{isSecondStep && (
 					<EmploymentRequestsStepTwo
+						selectedProfessionId={selectedProfessionId}
+						onSelectProfessionId={setSelectedProfessionId}
+						professions={professions}
+						isLoading={isLoadingProfessions}
+					/>
+				)}
+				{isThirdStep && (
+					<EmploymentRequestsStepThree
+						consent={consent}
+						isLoading={isLoadingConsent}
 						acknowledged={acknowledged}
 						setAcknowledged={setAcknowledged}
 					/>

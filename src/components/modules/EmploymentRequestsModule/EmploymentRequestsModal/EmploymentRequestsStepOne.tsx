@@ -1,27 +1,19 @@
-import CustomStack from "@/components/core/CustomStack/CustomStack";
+import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItemSkeletons";
 import UserListItem from "@/components/cutomized/UserListItem/UserListItem";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { UserInfoType } from "@/models/UserInfoType";
-import {
-	Box,
-	Divider,
-	Paper,
-	Skeleton,
-	Stack,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { Divider, Paper, Stack, TextField, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 
 type EmploymentRequestsStepOneProps = {
 	selectedUserId: number | null;
-	setSelectedUserId: (id: number | null) => void;
+	onSelectUserId: (id: number | null) => void;
 };
 
 export default function EmploymentRequestsStepOne({
 	selectedUserId,
-	setSelectedUserId,
+	onSelectUserId,
 }: EmploymentRequestsStepOneProps) {
 	const [search, setSearch] = useState("");
 	const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -51,6 +43,9 @@ export default function EmploymentRequestsStepOne({
 			"& .MuiOutlinedInput-root": {
 				borderRadius: 3.5,
 			},
+			py: 2.5,
+			px: 7.5,
+			borderRadius: 10,
 		},
 	};
 
@@ -59,15 +54,15 @@ export default function EmploymentRequestsStepOne({
 			setSearch(e.target.value);
 
 			if (selectedUserId !== null && !hasTypedAfterSelection) {
-				setSelectedUserId(null);
+				onSelectUserId(null);
 				setHasTypesAfterSelection(true);
 			}
 		},
-		[hasTypedAfterSelection, selectedUserId, setSelectedUserId]
+		[hasTypedAfterSelection, selectedUserId, onSelectUserId]
 	);
 
 	const handleUserSelect = (userId: number) => {
-		setSelectedUserId(userId);
+		onSelectUserId(userId);
 		setHasTypesAfterSelection(false);
 	};
 
@@ -77,12 +72,7 @@ export default function EmploymentRequestsStepOne({
 				<TextField
 					placeholder="Caută utilizatori"
 					onChange={handleSearch}
-					sx={{
-						py: 2.5,
-						px: 7.5,
-						borderRadius: 10,
-						...styles.input,
-					}}
+					sx={styles.input}
 				/>
 			</Stack>
 			<Divider />
@@ -97,38 +87,7 @@ export default function EmploymentRequestsStepOne({
 							name={user.fullname}
 						/>
 					))}
-				{isLoading && (
-					<>
-						<CustomStack sx={{ p: 2.5 }} justifyContent="flex-start">
-							<Skeleton variant="circular" width={50} height={50} />
-							<Box sx={{ ml: 1.5 }}>
-								<Skeleton variant="text" width={200} />
-								<Skeleton variant="text" width={200} />
-							</Box>
-						</CustomStack>
-						<CustomStack sx={{ p: 2.5 }} justifyContent="flex-start">
-							<Skeleton variant="circular" width={50} height={50} />
-							<Box sx={{ ml: 1.5 }}>
-								<Skeleton variant="text" width={200} />
-								<Skeleton variant="text" width={200} />
-							</Box>
-						</CustomStack>
-						<CustomStack sx={{ p: 2.5 }} justifyContent="flex-start">
-							<Skeleton variant="circular" width={50} height={50} />
-							<Box sx={{ ml: 1.5 }}>
-								<Skeleton variant="text" width={200} />
-								<Skeleton variant="text" width={200} />
-							</Box>
-						</CustomStack>
-						<CustomStack sx={{ p: 2.5 }} justifyContent="flex-start">
-							<Skeleton variant="circular" width={50} height={50} />
-							<Box sx={{ ml: 1.5 }}>
-								<Skeleton variant="text" width={200} />
-								<Skeleton variant="text" width={200} />
-							</Box>
-						</CustomStack>
-					</>
-				)}
+				{isLoading && <UserListItemSkeletons />}
 				{isEmpty(users) && !isLoading && (
 					<Typography sx={{ textAlign: "center" }}>
 						Nu au fost găsiți utilizatori

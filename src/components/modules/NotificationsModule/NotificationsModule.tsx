@@ -1,6 +1,6 @@
 "use client";
 
-import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeleton";
+import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
 import { NotificationType } from "@/models/NotificationType";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
 import {

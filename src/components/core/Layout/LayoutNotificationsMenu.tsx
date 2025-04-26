@@ -13,7 +13,7 @@ import {
 import { useCustomQuery } from "@/hooks/useHttp";
 import { NotificationType } from "@/models/NotificationType";
 import { PaginatedData } from "../Table/Table";
-import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeleton";
+import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
 import { isEmpty } from "lodash";
 import { useRouter } from "next/navigation";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";

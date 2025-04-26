@@ -16,7 +16,7 @@ import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
 import { useCustomQuery } from "@/hooks/useHttp";
 import DashboardCardSummary from "./DashboardCardSummary";
 import { DashboardSummaryType } from "@/models/DashboardSummaryType";
-import DashboardCardSummarySkeleton from "@/components/cutomized/Skeletons/Dashboard/DashboardCardSummarySkeleton";
+import DashboardCardSummarySkeleton from "@/components/cutomized/Skeletons/DashboardCardSummarySkeleton";
 import { useDashboardReducer } from "@/hooks/useDashboardReducer";
 import Protected from "@/components/cutomized/Protected/Protected";
 
