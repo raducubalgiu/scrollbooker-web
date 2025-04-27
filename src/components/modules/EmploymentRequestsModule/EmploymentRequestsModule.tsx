@@ -2,13 +2,21 @@
 
 import React, { useMemo, useState } from "react";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { Paper, Stack, Typography } from "@mui/material";
+import { Avatar, IconButton, Tooltip } from "@mui/material";
 import EmploymentRequestsModal from "./EmploymentRequestsModal/EmploymentRequestsModal";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { isEmpty } from "lodash";
-import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import {
+	MaterialReactTable,
+	MRT_ColumnDef,
+	MRT_Row,
+} from "material-react-table";
 import { UserInfoType } from "@/models/UserInfoType";
 import { ProfessionType } from "@/models/ProfessionType";
+import CustomStack from "@/components/core/CustomStack/CustomStack";
+import dayjs from "dayjs";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
+import { Close } from "@mui/icons-material";
+import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 
 type EmploymentRequest = {
 	id: number;
@@ -16,16 +24,40 @@ type EmploymentRequest = {
 	employee: UserInfoType;
 	employer: UserInfoType;
 	profession: ProfessionType;
+	created_at: string;
+};
+
+type OpenConfirmationState = {
+	openModal: boolean;
+	employment_request_id: null | number;
 };
 
 export default function EmploymentRequestsModule() {
 	const [open, setOpen] = useState(false);
+	const [confirmation, setConfirmation] = useState<OpenConfirmationState>({
+		openModal: false,
+		employment_request_id: null,
+	});
 
-	const { data: employmentRequests, isLoading } = useCustomQuery<
-		EmploymentRequest[]
-	>({
+	const {
+		data: employmentRequests,
+		isLoading,
+		refetch,
+	} = useCustomQuery<EmploymentRequest[]>({
 		key: ["get-employment-requests"],
 		url: "/api/employment-requests",
+	});
+
+	const { mutate: handleDelete, isPending: isLoadingDelete } = useMutate({
+		key: ["delete-employment-request"],
+		url: "/api/employment-requests",
+		method: "DELETE",
+		options: {
+			onSuccess: () => {
+				setConfirmation({ openModal: false, employment_request_id: null });
+				refetch();
+			},
+		},
 	});
 
 	const columns = useMemo<MRT_ColumnDef<EmploymentRequest>[]>(
@@ -33,10 +65,23 @@ export default function EmploymentRequestsModule() {
 			{
 				accessorKey: "employee.username",
 				header: "Viitorul angajat",
+				Cell: ({ row }) => {
+					return (
+						<CustomStack justifyContent="flex-start">
+							<Avatar sx={{ width: 30, height: 30, mr: 2.5 }} />
+							{row.original.employee.username}
+						</CustomStack>
+					);
+				},
 			},
 			{
 				accessorKey: "profession.name",
 				header: "Funcția",
+			},
+			{
+				accessorKey: "created_at",
+				header: "Data",
+				Cell: ({ row }) => dayjs(row.original.created_at).format("DD-MM-YYYY"),
 			},
 			{
 				accessorKey: "status",
@@ -47,29 +92,57 @@ export default function EmploymentRequestsModule() {
 		[]
 	);
 
+	const renderRowActions = ({ row }: { row: MRT_Row<EmploymentRequest> }) => (
+		<Tooltip title="Anulează cererea">
+			<IconButton
+				onClick={() =>
+					setConfirmation({
+						openModal: true,
+						employment_request_id: row.original.id,
+					})
+				}
+			>
+				<Close color="secondary" />
+			</IconButton>
+		</Tooltip>
+	);
+
 	return (
 		<MainLayout
 			title="Cereri de angajare în așteptare"
 			actionTitle="Trimite o cerere"
 			onOpenModal={() => setOpen(true)}
 		>
-			<EmploymentRequestsModal open={open} handleClose={() => setOpen(false)} />
-			{!isLoading && (
-				<MaterialReactTable
-					data={employmentRequests ?? []}
-					columns={columns}
-					enableFilters={false}
-				/>
-			)}
-			{!isLoading && isEmpty(employmentRequests) && (
-				<Paper sx={{ p: 2.5 }}>
-					<Stack alignItems="center">
-						<Typography>
-							Nu ai nici o cerere de angajare în așteptare
-						</Typography>
-					</Stack>
-				</Paper>
-			)}
+			<ConfirmationModal
+				open={confirmation.openModal}
+				handleClose={() =>
+					setConfirmation({ openModal: false, employment_request_id: null })
+				}
+				handleSubmit={() =>
+					handleDelete({ id: confirmation.employment_request_id })
+				}
+				message="Ești sigur ca dorești să anulezi această cerere?"
+				isLoading={isLoadingDelete}
+			/>
+			<EmploymentRequestsModal
+				open={open}
+				handleClose={() => {
+					setOpen(false);
+					refetch();
+				}}
+			/>
+			<MaterialReactTable
+				data={employmentRequests ?? []}
+				columns={columns}
+				enableFilters={false}
+				enableSorting={false}
+				enableColumnActions={false}
+				localization={MRT_Localization_RO}
+				state={{ isLoading }}
+				enableRowActions={true}
+				positionActionsColumn="last"
+				renderRowActions={renderRowActions}
+			/>
 		</MainLayout>
 	);
 }

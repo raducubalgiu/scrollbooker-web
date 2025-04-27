@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, post } from "@/utils/requests";
+import { deleteRequest, get, post } from "@/utils/requests";
 import { decodeToken } from "@/lib/auth/decodeToken";
 
 export const GET = async () => {
@@ -21,6 +21,18 @@ export const POST = async (req: NextRequest) => {
 		await post({
 			url: `/employment-requests`,
 			data,
+		})
+	).data;
+
+	return NextResponse.json(response);
+};
+
+export const DELETE = async (req: NextRequest) => {
+	const { id } = await req.json();
+
+	const response = (
+		await deleteRequest({
+			url: `/employment-requests/${id}`,
 		})
 	).data;
 
