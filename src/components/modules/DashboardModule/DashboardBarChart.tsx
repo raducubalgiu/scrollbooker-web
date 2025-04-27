@@ -24,9 +24,7 @@ ChartJS.register(
 export const options = {
 	responsive: true,
 	plugins: {
-		legend: {
-			position: "top" as const,
-		},
+		legend: { position: "top" as const },
 		title: { display: false },
 	},
 };

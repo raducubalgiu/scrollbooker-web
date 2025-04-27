@@ -1,14 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-	Box,
-	Button,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import CustomStack from "../../core/CustomStack/CustomStack";
 import DashboardBarChart from "./DashboardBarChart";
@@ -19,46 +12,45 @@ import { DashboardSummaryType } from "@/models/DashboardSummaryType";
 import DashboardCardSummarySkeleton from "@/components/cutomized/Skeletons/DashboardCardSummarySkeleton";
 import { useDashboardReducer } from "@/hooks/useDashboardReducer";
 import Protected from "@/components/cutomized/Protected/Protected";
+import { PaginatedData } from "@/components/core/Table/Table";
+import usePermission from "@/components/cutomized/Protected/usePermission";
+import DashboardEmployeesSelect from "./DashboardEmployeesSelect";
+import { UserInfoType } from "@/models/UserInfoType";
 
-type EmployeeType = {
-	id: string;
-	username: string;
-	job: string;
-	hire_date: string;
-	followers_count: number;
-	ratings_count: number;
-	ratings_average: number;
-};
+type DashboardModuleProps = { userId: number };
 
-type PaginatedEmployeesType = {
-	count: number;
-	results: EmployeeType[];
-};
-
-export default function DashboardModule() {
+export default function DashboardModule({ userId }: DashboardModuleProps) {
 	const { filters, handleDaily, handleMonthly, handleWeekly, PeriodEnum } =
 		useDashboardReducer();
 	const { startDate, endDate } = filters;
-	const [selectedEmployee, setSelectedEmployee] = useState({
-		id: 0,
-	});
+	const [selectedEmployee, setSelectedEmployee] = useState({ id: userId });
+	const { hasPermission } = usePermission({ permission: "EMPLOYEES_VIEW" });
 
-	const { data: employeesData } = useCustomQuery<PaginatedEmployeesType>({
-		key: ["employees"],
+	useEffect(() => {
+		if (hasPermission) setSelectedEmployee({ id: 0 });
+	}, [hasPermission]);
+
+	const { data: employeesData } = useCustomQuery<PaginatedData<UserInfoType>>({
+		key: ["employees", hasPermission],
 		url: "/api/employees",
 		params: { page: 1, limit: 10 },
+		options: { enabled: hasPermission },
 	});
 
 	const { data: dashboardData, isLoading } = useCustomQuery<
 		DashboardSummaryType[]
 	>({
-		key: ["dashboard", startDate, endDate],
+		key: ["dashboard", startDate, endDate, selectedEmployee.id, userId],
 		url: `/api/dashboard`,
-		params: { start_date: startDate, end_date: endDate },
+		params: {
+			start_date: startDate,
+			end_date: endDate,
+			all_employees: selectedEmployee.id === 0,
+			user_id: selectedEmployee.id === 0 ? userId : selectedEmployee.id,
+		},
 	});
 
-	const dashboardSummary = dashboardData ?? [];
-	const employees = [
+	const employeesOptions = [
 		{ id: 0, username: "Toți angajații" },
 		...(employeesData?.results ?? []),
 	];
@@ -98,40 +90,27 @@ export default function DashboardModule() {
 					))}
 				</CustomStack>
 				<Protected permission="EMPLOYEES_VIEW">
-					<FormControl sx={{ minWidth: 250 }}>
-						<InputLabel id="employees">Angajați</InputLabel>
-						<Select
-							labelId="employees"
-							id="employees"
-							value={selectedEmployee.id}
-							label="Angajați"
-							onChange={e =>
-								setSelectedEmployee({
-									id: Number(e.target.value),
-								})
-							}
-						>
-							{employees?.map((employee, i) => (
-								<MenuItem key={i} value={employee.id}>
-									{employee.username}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
+					<DashboardEmployeesSelect
+						options={employeesOptions}
+						selectedEmployeeId={selectedEmployee.id}
+						onSetSelectedEmployee={e =>
+							setSelectedEmployee({
+								id: Number(e.target.value),
+							})
+						}
+					/>
 				</Protected>
 			</CustomStack>
 			<Grid container spacing={3} sx={{ mb: 2.5 }}>
-				{isLoading ? (
-					<DashboardCardSummarySkeleton />
-				) : (
-					dashboardSummary?.map((dashboard, i) => (
+				{isLoading && <DashboardCardSummarySkeleton />}
+				{!isLoading &&
+					(dashboardData ?? []).map((dashboard, i) => (
 						<DashboardCardSummary
 							key={i}
 							isLoading={isLoading}
 							dashboardSummary={dashboard}
 						/>
-					))
-				)}
+					))}
 			</Grid>
 			<Grid container spacing={3}>
 				<Grid size={8}>

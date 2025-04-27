@@ -3,10 +3,14 @@ import { Paper, Typography, Skeleton, Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 
-export default function DashboardCardSummarySkeleton() {
+type DashboardCardSummarySkeletonProps = { count?: number };
+
+export default function DashboardCardSummarySkeleton({
+	count = 4,
+}: DashboardCardSummarySkeletonProps) {
 	return (
 		<>
-			{Array.from({ length: 4 }).map((_, i) => (
+			{Array.from({ length: count }).map((_, i) => (
 				<Grid size={3} key={i}>
 					<Paper sx={{ borderRadius: 1.5, padding: 2.5 }}>
 						<Typography>
