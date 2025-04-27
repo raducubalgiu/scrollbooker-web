@@ -17,9 +17,15 @@ import usePermission from "@/components/cutomized/Protected/usePermission";
 import DashboardEmployeesSelect from "./DashboardEmployeesSelect";
 import { UserInfoType } from "@/models/UserInfoType";
 
-type DashboardModuleProps = { userId: number };
+type DashboardModuleProps = {
+	userId: number;
+	slotDuration: number | undefined;
+};
 
-export default function DashboardModule({ userId }: DashboardModuleProps) {
+export default function DashboardModule({
+	userId,
+	slotDuration,
+}: DashboardModuleProps) {
 	const { filters, handleDaily, handleMonthly, handleWeekly, PeriodEnum } =
 		useDashboardReducer();
 	const { startDate, endDate } = filters;
@@ -117,7 +123,12 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 					<DashboardBarChart isLoading={isLoading} />
 				</Grid>
 				<Grid size={4}>
-					<DashboardCalendarAvailability />
+					<Protected permission="DASHBOARD_CALENDAR_VIEW">
+						<DashboardCalendarAvailability
+							userId={userId}
+							slotDuration={slotDuration}
+						/>
+					</Protected>
 				</Grid>
 			</Grid>
 		</Box>

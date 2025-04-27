@@ -1,139 +1,106 @@
+"use client";
+
 import * as React from "react";
 import dayjs, { Dayjs } from "dayjs";
-import Badge from "@mui/material/Badge";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { DayCalendarSkeleton } from "@mui/x-date-pickers/DayCalendarSkeleton";
-import { Box, Paper, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
+import { useCustomQuery } from "@/hooks/useHttp";
+import "dayjs/locale/ro";
+import { DashboardCalendarAvailabilityDay } from "./DashboardCalendarAvailabilityDay";
 
-function getRandomNumber(min: number, max: number) {
-	return Math.round(Math.random() * (max - min) + min);
-}
+type AvailableSlot = {
+	start_date: string;
+	end_date: string;
+};
 
-/**
- * Mimic fetch with abort controller https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
- * ⚠️ No IE11 support
- */
-function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
-	return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
-		const timeout = setTimeout(() => {
-			const daysInMonth = date.daysInMonth();
-			const daysToHighlight = [1, 2, 3].map(() =>
-				getRandomNumber(1, daysInMonth)
-			);
+type DayInfo = {
+	is_closed: boolean;
+	available_slots: AvailableSlot[];
+};
 
-			resolve({ daysToHighlight });
-		}, 500);
+type CalendarData = Record<string, DayInfo>;
 
-		signal.onabort = () => {
-			clearTimeout(timeout);
-			reject(new DOMException("aborted", "AbortError"));
-		};
+const defaultStartDate = dayjs().format("YYYY-MM-DD");
+const defaultEndDate = dayjs()
+	.add(1, "month")
+	.endOf("month")
+	.format("YYYY-MM-DD");
+
+type DashboardCalendarAvailabilityProps = {
+	userId: number;
+	slotDuration: number | undefined;
+};
+
+export default function DashboardCalendarAvailability({
+	userId,
+	slotDuration,
+}: DashboardCalendarAvailabilityProps) {
+	const [startDate, setStartDate] = React.useState(defaultStartDate);
+	const [endDate, setEndDate] = React.useState(defaultEndDate);
+
+	const { data: days, isLoading } = useCustomQuery<CalendarData>({
+		key: ["fetch-calendar", startDate, endDate],
+		url: `/api/dashboard/calendar-availability`,
+		params: { startDate, endDate, userId, slotDuration },
+		options: {
+			enabled: !!slotDuration,
+		},
 	});
-}
 
-const initialValue = dayjs("2022-04-17");
+	const handleMonthChange = React.useCallback((date: Dayjs) => {
+		let start = date.format("YYYY-MM-DD");
 
-function ServerDay(
-	props: PickersDayProps<Dayjs> & { highlightedDays?: number[] }
-) {
-	const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
-
-	const isSelected =
-		!props.outsideCurrentMonth &&
-		highlightedDays.indexOf(props.day.date()) >= 0;
-
-	return (
-		<Badge
-			key={props.day.toString()}
-			overlap="circular"
-			badgeContent={
-				isSelected ? (
-					<Box
-						sx={{
-							width: 10,
-							height: 10,
-							bgcolor: "green",
-							borderRadius: "50%",
-						}}
-					/>
-				) : undefined
-			}
-		>
-			<PickersDay
-				{...other}
-				outsideCurrentMonth={outsideCurrentMonth}
-				day={day}
-				sx={{ width: 45, height: 45 }}
-			/>
-		</Badge>
-	);
-}
-
-export default function DashboardCalendarAvailability() {
-	const requestAbortController = React.useRef<AbortController | null>(null);
-	const [isLoading, setIsLoading] = React.useState(false);
-	const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
-
-	const fetchHighlightedDays = (date: Dayjs) => {
-		const controller = new AbortController();
-		fakeFetch(date, {
-			signal: controller.signal,
-		})
-			.then(({ daysToHighlight }) => {
-				setHighlightedDays(daysToHighlight);
-				setIsLoading(false);
-			})
-			.catch(error => {
-				// ignore the error if it's caused by `controller.abort`
-				if (error.name !== "AbortError") {
-					throw error;
-				}
-			});
-
-		requestAbortController.current = controller;
-	};
-
-	React.useEffect(() => {
-		fetchHighlightedDays(initialValue);
-		// abort request on unmount
-		return () => requestAbortController.current?.abort();
-	}, []);
-
-	const handleMonthChange = (date: Dayjs) => {
-		if (requestAbortController.current) {
-			// make sure that you are aborting useless requests
-			// because it is possible to switch between months pretty quickly
-			requestAbortController.current.abort();
+		const nowStartOfMonth = dayjs().startOf("month");
+		if (date.isSame(nowStartOfMonth)) {
+			start = dayjs().format("YYYY-MM-DD");
 		}
 
-		setIsLoading(true);
-		setHighlightedDays([]);
-		fetchHighlightedDays(date);
+		const end = date.endOf("month").format("YYYY-MM-DD");
+
+		setStartDate(start);
+		setEndDate(end);
+	}, []);
+
+	const styles = {
+		day: {
+			width: 45,
+			height: 45,
+			fontSize: 12,
+		},
 	};
 
 	return (
-		<Paper sx={{ p: 2.5, pb: 7.5 }}>
-			<Typography sx={{ color: "gray", fontWeight: "600", fontSize: 14 }}>
+		<Paper sx={{ py: 2.5, pb: 10 }}>
+			<Typography
+				sx={{ color: "gray", fontWeight: "600", fontSize: 14, ml: 2.5 }}
+			>
 				Date disponibile
 			</Typography>
-			<LocalizationProvider dateAdapter={AdapterDayjs}>
+			<LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ro">
 				<DateCalendar
-					defaultValue={initialValue}
 					loading={isLoading}
 					onMonthChange={handleMonthChange}
+					disablePast={true}
 					renderLoading={() => <DayCalendarSkeleton />}
+					maxDate={dayjs().add(6, "months")}
+					showDaysOutsideCurrentMonth={true}
+					disableHighlightToday={false}
+					disabled={!slotDuration}
 					slots={{
-						day: ServerDay,
+						day: props => (
+							<DashboardCalendarAvailabilityDay {...props} days={days} />
+						),
 					}}
-					slotProps={{
-						day: {
-							highlightedDays,
-						} as any,
+					slotProps={{ day: { sx: styles.day } }}
+					sx={{
+						"& .MuiDateCalendar-root": { width: "100%" },
+						"& .MuiDayCalendar-header span": styles.day,
+						width: "100%",
 					}}
-					sx={{ width: "100%" }}
+					views={["day"]}
 				/>
 			</LocalizationProvider>
 		</Paper>
