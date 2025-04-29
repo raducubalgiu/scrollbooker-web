@@ -37,7 +37,7 @@ export default function Sidebar() {
 	const router = useRouter();
 	const pathname = usePathname();
 	const [openNomenclatures, setOpenNomenclatures] = useState(false);
-	const [openMyBusiness, setOpenMyBusiness] = useState(false);
+	const [openMyBusiness, setOpenMyBusiness] = useState(true);
 
 	const {
 		data: user,

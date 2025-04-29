@@ -81,6 +81,8 @@ export const darkTheme = createTheme({
 		mode: "dark",
 		primary: {
 			main: "#FF6F00",
+			100: "#FF8F00",
+			200: "#F0B90B",
 		},
 		secondary: {
 			main: "#D32F2F",
@@ -104,6 +106,26 @@ export const darkTheme = createTheme({
 			200: "#212121",
 			//300: "#B1B1B1",
 			//400: "#E2EEE2",
+		},
+		error: {
+			main: "#d32f2f",
+			light: "#ef5350",
+			dark: "#c62828",
+		},
+		success: {
+			main: "#2e7d32",
+			light: "#4caf50",
+			dark: "#1b5e20",
+		},
+		info: {
+			main: "#0288d1",
+			light: "#03a9f4",
+			dark: "#01579b",
+		},
+		warning: {
+			main: "#ed6c02",
+			light: "#ff9800",
+			dark: "#e65100",
 		},
 	},
 	typography: {
@@ -176,6 +198,8 @@ export const lightTheme = createTheme({
 		mode: "light",
 		primary: {
 			main: "#FF6F00",
+			100: "#FF8F00",
+			200: "#F0B90B",
 		},
 		secondary: {
 			main: "#D32F2F",
@@ -198,6 +222,26 @@ export const lightTheme = createTheme({
 			200: "#262626",
 			//300: "#B1B1B1",
 			//400: "#E2EEE2",
+		},
+		error: {
+			main: "#d32f2f",
+			light: "#ef5350",
+			dark: "#c62828",
+		},
+		success: {
+			main: "#2e7d32",
+			light: "#4caf50",
+			dark: "#1b5e20",
+		},
+		info: {
+			main: "#0288d1",
+			light: "#03a9f4",
+			dark: "#01579b",
+		},
+		warning: {
+			main: "#ed6c02",
+			light: "#ff9800",
+			dark: "#e65100",
 		},
 	},
 	typography: {

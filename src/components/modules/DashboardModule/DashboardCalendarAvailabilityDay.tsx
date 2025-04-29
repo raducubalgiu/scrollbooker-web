@@ -40,13 +40,40 @@ const RedBadge = styled(Badge)(() => ({
 	},
 }));
 
+const TransparentBadge = styled(Badge)(() => ({
+	"& .MuiBadge-badge": {
+		backgroundColor: "transparent",
+		width: 7,
+		height: 7,
+		borderRadius: "50%",
+		padding: 0,
+	},
+}));
+
 const CalendarDay: React.FC<CustomDayProps> = props => {
 	const { day, days, ...other } = props;
 	const dateString = day.format("YYYY-MM-DD");
 	const dayInfo = days?.[dateString];
 
 	if (!dayInfo) {
-		return <PickersDay day={day} {...other} hidden />;
+		return (
+			<TransparentBadge
+				overlap="circular"
+				variant="dot"
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}
+			>
+				<PickersDay
+					day={day}
+					{...other}
+					sx={{
+						textDecoration: "line-through",
+						width: 45,
+						height: 45,
+						fontSize: 13,
+					}}
+				/>
+			</TransparentBadge>
+		);
 	}
 
 	if (dayInfo.is_closed) {

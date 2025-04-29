@@ -38,7 +38,7 @@ export default function Layout({ children }: LayoutProps) {
 
 	const styles = {
 		main: {
-			p: 3,
+			p: 2.5,
 			width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
 		},
 		box: {
