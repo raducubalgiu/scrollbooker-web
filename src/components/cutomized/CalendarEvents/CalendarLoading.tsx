@@ -29,7 +29,6 @@ export default function CalendarLoading() {
 					>
 						<Stack justifyContent="center" alignItems="center">
 							<Skeleton width={100} />
-							<Skeleton width={50} />
 						</Stack>
 					</Grid>
 				))}
@@ -67,7 +66,11 @@ export default function CalendarLoading() {
 								key={i}
 								height={200}
 								borderBottom="1px solid rgba(81, 81, 81, 1)"
-							></Box>
+								p={2.5}
+							>
+								<Skeleton width={150} sx={{ mt: 1.5 }} />
+								<Skeleton width={50} />
+							</Box>
 						))}
 					</Grid>
 				))}

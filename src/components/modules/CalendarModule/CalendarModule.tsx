@@ -7,6 +7,7 @@ import { CalendarType } from "@/components/cutomized/CalendarEvents/calendar-typ
 import dayjs from "dayjs";
 import { useState } from "react";
 import { SelectChangeEvent } from "@mui/material";
+import { formatMinutesLabel } from "@/utils/formatMinutesLabel";
 
 const DEFAULT_START_DATE = dayjs().startOf("week").format("YYYY-MM-DD");
 const DEFAULT_END_DATE = dayjs().endOf("week").format("YYYY-MM-DD");
@@ -16,17 +17,26 @@ export default function CalendarModule() {
 	const [endDate, setEndDate] = useState(DEFAULT_END_DATE);
 	const [slotDuration, setSlotDuration] = useState(60);
 
-	const { data: calendar, isLoading } = useCustomQuery<CalendarType>({
-		key: ["calendar", startDate, endDate, slotDuration],
-		url: "/api/calendar",
-		params: {
-			startDate,
-			endDate,
-			userId: 55,
-			slotDuration,
-			userTimezone: "Europe/Bucharest",
-		},
+	const { data: durations, isLoading: isLoadingDurations } = useCustomQuery<
+		number[]
+	>({
+		key: ["durations"],
+		url: "/api/calendar/durations",
 	});
+
+	const { data: calendar, isLoading: isLoadingCalendar } =
+		useCustomQuery<CalendarType>({
+			key: ["calendar", startDate, endDate, slotDuration],
+			url: "/api/calendar",
+			params: {
+				startDate,
+				endDate,
+				userId: 55,
+				slotDuration,
+				userTimezone: "Europe/Bucharest",
+			},
+			options: { enabled: !!durations },
+		});
 
 	const handlePreviousWeek = useCallback(() => {
 		const newStartDate = dayjs(startDate)
@@ -59,11 +69,12 @@ export default function CalendarModule() {
 	const handleSlotDuration = (e: SelectChangeEvent<number>) =>
 		setSlotDuration(Number(e.target.value));
 
-	const durationOptions = [
-		{ value: 15, label: "15 Minute" },
-		{ value: 30, label: "30 de Minute" },
-		{ value: 60, label: "O ora" },
-	];
+	const durationOptions = durations?.map(dur => {
+		return {
+			value: dur,
+			label: formatMinutesLabel(dur),
+		};
+	});
 
 	const handleToday = () => {
 		const startDate = dayjs().startOf("week").format("YYYY-MM-DD");
@@ -77,7 +88,7 @@ export default function CalendarModule() {
 	return (
 		<CalendarEvents
 			calendar={calendar}
-			durationOptions={durationOptions}
+			durationOptions={durationOptions ?? []}
 			minSlotTime={calendar?.min_slot_time}
 			maxSlotTime={calendar?.max_slot_time}
 			onHandleNextWeek={handleNextWeek}
@@ -85,7 +96,7 @@ export default function CalendarModule() {
 			onHandleSlotDuration={handleSlotDuration}
 			onHandleToday={handleToday}
 			slotDuration={slotDuration}
-			isLoading={isLoading}
+			isLoading={isLoadingDurations || isLoadingCalendar}
 			period={period}
 		/>
 	);

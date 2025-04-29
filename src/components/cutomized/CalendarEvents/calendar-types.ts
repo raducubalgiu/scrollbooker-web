@@ -5,7 +5,7 @@ type CustomerType = {
 	avatar: string | null;
 } | null;
 
-export type Slot = {
+export type SlotType = {
 	start_date_locale: string;
 	end_date_locale: string;
 	start_date_utc: string;
@@ -18,7 +18,7 @@ export type Slot = {
 export type DayInfo = {
 	date: string;
 	is_closed: boolean;
-	slots: Slot[];
+	slots: SlotType[];
 };
 
 export type CalendarType = {

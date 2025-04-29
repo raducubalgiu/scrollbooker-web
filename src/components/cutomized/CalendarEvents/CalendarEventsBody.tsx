@@ -1,18 +1,23 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
-import { Typography, Box, Stack, Checkbox } from "@mui/material";
+import { Typography, Box, Stack } from "@mui/material";
 import dayjs from "dayjs";
-import { DayInfo } from "./calendar-types";
+import { DayInfo, SlotType } from "./calendar-types";
 import CalendarEvent from "./CalendarEvent";
 import { Theme } from "@mui/system";
+import { BlockedSlotActionEnum } from "./useCalendarEvents";
 
 type CalendarEventsBodyProps = {
+	blockedSlots: SlotType[];
 	slotHeightPerMinute: number;
 	timeSlots: string[];
 	slotDuration: number;
 	days: DayInfo[] | undefined;
 	minSlotTime: string | undefined;
-	eventBgColor: string;
+	onHandleBlockSlots: (
+		slots: SlotType[],
+		action: BlockedSlotActionEnum
+	) => void;
 };
 
 export default function CalendarEventsBody({
@@ -20,6 +25,8 @@ export default function CalendarEventsBody({
 	slotHeightPerMinute,
 	timeSlots,
 	slotDuration,
+	blockedSlots,
+	onHandleBlockSlots,
 	minSlotTime,
 }: CalendarEventsBodyProps) {
 	const styles = {
@@ -84,7 +91,6 @@ export default function CalendarEventsBody({
 								alignItems="center"
 							>
 								{day.is_closed ? "Închis" : ""}
-								{!day.is_closed && <Checkbox />}
 							</Stack>
 						))}
 
@@ -103,7 +109,9 @@ export default function CalendarEventsBody({
 									key={i}
 									slot={slot}
 									topOffset={topOffset}
-									eventHeight={eventHeight - 15}
+									eventHeight={eventHeight}
+									blockedSlots={blockedSlots}
+									onHandleBlockSlots={onHandleBlockSlots}
 								/>
 							);
 						})}

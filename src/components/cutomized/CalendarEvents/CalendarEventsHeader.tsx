@@ -1,15 +1,22 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import dayjs from "dayjs";
-import { Stack, Typography, Box, Checkbox, Tooltip } from "@mui/material";
-import { DayInfo } from "./calendar-types";
+import { Stack, Typography } from "@mui/material";
+import { DayInfo, SlotType } from "./calendar-types";
+import { every } from "lodash";
+import { BlockedSlotActionEnum } from "./useCalendarEvents";
+import CalendarEventsHeaderCheckbox from "./CalendarEventsHeaderCheckbox";
 
 type CalendarEventsHeaderProps = {
 	days: DayInfo[] | undefined;
+	onHandleBlockSlots: (
+		slots: SlotType[],
+		action: BlockedSlotActionEnum
+	) => void;
 };
 
 export default function CalendarEventsHeader({
 	days,
+	onHandleBlockSlots,
 }: CalendarEventsHeaderProps) {
 	const styles = {
 		container: { position: "sticky", top: 100, zIndex: 5, bgcolor: "#212121" },
@@ -40,21 +47,26 @@ export default function CalendarEventsHeader({
 			<Grid sx={styles.fakeCol} />
 			{(days ?? []).map((day, i) => (
 				<Grid key={i} sx={styles.day}>
-					<Stack justifyContent="center" alignItems="center">
+					<Stack
+						justifyContent="flex-end"
+						alignItems="center"
+						flexDirection="row"
+						sx={{ flexGrow: 1 }}
+					>
 						<Typography
 							variant="subtitle2"
 							fontWeight={600}
-							sx={{ textAlign: "center" }}
+							sx={{ textAlign: "center", mr: 1.5 }}
 						>
 							{dayjs(day.date).format("ddd, MMM D")}
 						</Typography>
-						<Box>
-							{!day.is_closed && (
-								<Tooltip title="Poți bloca toate sloturile disponibile din această zi">
-									<Checkbox />
-								</Tooltip>
-							)}
-						</Box>
+						{!day.is_closed && !every(day.slots, { is_booked: true }) && (
+							<CalendarEventsHeaderCheckbox
+								slots={day.slots}
+								defaultChecked={false}
+								onHandleBlockSlots={onHandleBlockSlots}
+							/>
+						)}
 					</Stack>
 				</Grid>
 			))}

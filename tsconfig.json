@@ -27,7 +27,8 @@
 		".next/types/**/*.ts",
 		"**/*.ts",
 		"**/*.tsx",
-		"i18.js"
+		"i18.js",
+		"src/app/api/calendar/durations"
 	],
 	"exclude": ["node_modules"]
 }

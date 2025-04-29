@@ -1,11 +1,22 @@
 import { useState, useCallback, useEffect } from "react";
+import { SlotType } from "./calendar-types";
 import dayjs from "dayjs";
+import { filter } from "lodash";
 
-enum DensityEnum {
-	COMPACT = 0.8,
-	COMFORTABLE = 1,
-	SPACIOUS = 1.2,
+export enum DensityEnum {
+	COMPACT = 1,
+	COMFORTABLE = 1.2,
+	SPACIOUS = 1.5,
 }
+
+export enum BlockedSlotActionEnum {
+	CREATE = "create",
+	DELETE = "delete",
+}
+
+const densityValues = Object.values(DensityEnum).filter(
+	v => typeof v === "number"
+) as number[];
 
 type useCalendarEventsProps = {
 	minTime: string | undefined;
@@ -20,6 +31,7 @@ export default function useCalendarEvents({
 }: useCalendarEventsProps) {
 	const [density, setDensity] = useState(DensityEnum.COMFORTABLE);
 	const [timeSlots, setTimeSlots] = useState<string[]>([]);
+	const [blockedSlots, setBlockedSlots] = useState<SlotType[]>([]);
 
 	const generateSlots = useCallback(() => {
 		const slots = [];
@@ -39,7 +51,29 @@ export default function useCalendarEvents({
 	}, [generateSlots]);
 
 	const handleDensity = () => {
-		setDensity(DensityEnum.SPACIOUS);
+		const currentIndex = densityValues.indexOf(density);
+		const nextIndex = (currentIndex + 1) % densityValues.length;
+		setDensity(densityValues[nextIndex]);
+	};
+
+	const handleBlockSlots = (
+		slots: SlotType[],
+		action: BlockedSlotActionEnum
+	) => {
+		const filteredSlots = filter(slots, { is_booked: false });
+
+		if (action === BlockedSlotActionEnum.CREATE) {
+			setBlockedSlots([...blockedSlots, ...filteredSlots]);
+		} else {
+			filteredSlots.map(slot => {
+				setBlockedSlots(blockedSlots =>
+					blockedSlots.filter(
+						blockedSlot =>
+							blockedSlot.start_date_locale !== slot.start_date_locale
+					)
+				);
+			});
+		}
 	};
 
 	const totalMinutes = dayjs(`1900-01-01T${maxTime}`).diff(
@@ -48,10 +82,12 @@ export default function useCalendarEvents({
 	);
 
 	return {
+		blockedSlots,
 		slotDuration,
 		density,
 		timeSlots,
 		totalMinutes,
 		handleDensity,
+		handleBlockSlots,
 	};
 }

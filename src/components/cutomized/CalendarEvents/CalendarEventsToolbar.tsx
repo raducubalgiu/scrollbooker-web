@@ -14,11 +14,15 @@ import {
 } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import DensityMediumIcon from "@mui/icons-material/DensityMedium";
+import DensityLargeOutlinedIcon from "@mui/icons-material/DensityLargeOutlined";
+import DensityMediumOutlinedIcon from "@mui/icons-material/DensityMediumOutlined";
+import DensitySmallOutlinedIcon from "@mui/icons-material/DensitySmallOutlined";
 import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { DensityEnum } from "./useCalendarEvents";
 
 type CalendarEventsHeaderProps = {
+	density: DensityEnum;
 	slotDuration: number;
 	durationOptions: { value: number; label: string }[];
 	onHandleSlotDuration: (e: SelectChangeEvent<number>) => void;
@@ -38,29 +42,45 @@ export default function CalendarEventsToolbar({
 	durationOptions,
 	onHandleToday,
 	period,
+	density,
 }: CalendarEventsHeaderProps) {
+	const getDensityIcon = () => {
+		switch (density) {
+			case DensityEnum.COMPACT:
+				return <DensitySmallOutlinedIcon />;
+			case DensityEnum.SPACIOUS:
+				return <DensityLargeOutlinedIcon />;
+			default:
+				return <DensityMediumOutlinedIcon />;
+		}
+	};
+
+	const styles = {
+		container: {
+			position: "sticky",
+			top: 0,
+			zIndex: 3,
+			height: 100,
+			bgcolor: "#212121",
+		},
+	};
+
 	return (
 		<Stack
 			flexDirection="row"
 			alignItems="center"
 			justifyContent="space-between"
 			p={2.5}
-			sx={{
-				position: "sticky",
-				top: 0,
-				zIndex: 3,
-				height: 100,
-				bgcolor: "#212121",
-			}}
+			sx={styles.container}
 		>
 			<Stack flexDirection="row" justifyContent="center" alignItems="center">
 				<FormControl fullWidth sx={{ mr: 2.5, minWidth: 200 }}>
-					<InputLabel id="slot-label">Durată</InputLabel>
+					<InputLabel id="slot-label">Durată Slot</InputLabel>
 					<Select
 						labelId="slot-label"
 						id="slot-select"
 						value={slotDuration}
-						label="Durata"
+						label="Durată"
 						onChange={onHandleSlotDuration}
 						size="small"
 					>
@@ -96,15 +116,13 @@ export default function CalendarEventsToolbar({
 					onClick={onHandleToday}
 					color="inherit"
 				>
-					Astazi
+					Astăzi
 				</Button>
-				<Tooltip title="Măreste densitatea">
-					<IconButton onClick={onHandleDensity}>
-						<DensityMediumIcon />
-					</IconButton>
+				<Tooltip title="Schimbă densitatea">
+					<IconButton onClick={onHandleDensity}>{getDensityIcon()}</IconButton>
 				</Tooltip>
-				<Tooltip title="Măreste densitatea">
-					<IconButton onClick={onHandleDensity}>
+				<Tooltip title="Schimbă pe ecran complet">
+					<IconButton onClick={() => {}}>
 						<FullscreenOutlinedIcon />
 					</IconButton>
 				</Tooltip>

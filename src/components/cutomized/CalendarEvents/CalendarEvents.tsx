@@ -43,13 +43,18 @@ export default function CalendarEvents({
 	period,
 }: CalendarEventsProps) {
 	const { width } = useWindowSize();
-	const { timeSlots, density, totalMinutes, handleDensity } = useCalendarEvents(
-		{
-			minTime: minSlotTime,
-			maxTime: maxSlotTime,
-			slotDuration,
-		}
-	);
+	const {
+		timeSlots,
+		density,
+		totalMinutes,
+		handleDensity,
+		blockedSlots,
+		handleBlockSlots,
+	} = useCalendarEvents({
+		minTime: minSlotTime,
+		maxTime: maxSlotTime,
+		slotDuration,
+	});
 
 	const BASE_SLOT_HEIGHT_PER_MINUTE = VISIBLE_MAX_HEIGHT / totalMinutes;
 	const SLOT_HEIGHT_PER_MINUTE = BASE_SLOT_HEIGHT_PER_MINUTE * density;
@@ -64,6 +69,7 @@ export default function CalendarEvents({
 		>
 			<Paper sx={{ width: calendarWidth }}>
 				<CalendarEventsToolbar
+					density={density}
 					slotDuration={slotDuration}
 					durationOptions={durationOptions}
 					onHandleSlotDuration={onHandleSlotDuration}
@@ -75,14 +81,18 @@ export default function CalendarEvents({
 				/>
 				{!isLoading && (
 					<>
-						<CalendarEventsHeader days={calendar?.data} />
+						<CalendarEventsHeader
+							days={calendar?.data}
+							onHandleBlockSlots={handleBlockSlots}
+						/>
 						<CalendarEventsBody
+							blockedSlots={blockedSlots}
+							onHandleBlockSlots={handleBlockSlots}
 							days={calendar?.data}
 							slotHeightPerMinute={SLOT_HEIGHT_PER_MINUTE}
 							timeSlots={timeSlots}
 							slotDuration={slotDuration}
 							minSlotTime={minSlotTime}
-							eventBgColor=""
 						/>
 					</>
 				)}
