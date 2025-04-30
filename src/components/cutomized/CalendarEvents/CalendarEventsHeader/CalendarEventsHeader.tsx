@@ -1,13 +1,14 @@
 import Grid from "@mui/material/Grid2";
 import dayjs from "dayjs";
 import { Stack, Typography } from "@mui/material";
-import { DayInfo, SlotType } from "./calendar-types";
-import { every } from "lodash";
-import { BlockedSlotActionEnum } from "./useCalendarEvents";
+import { DayInfo, SlotType } from "../calendar-utils/calendar-types";
+import { every, isEmpty } from "lodash";
+import { BlockedSlotActionEnum } from "../useCalendarEvents";
 import CalendarEventsHeaderCheckbox from "./CalendarEventsHeaderCheckbox";
 
 type CalendarEventsHeaderProps = {
 	days: DayInfo[] | undefined;
+	blockedSlots: SlotType[];
 	onHandleBlockSlots: (
 		slots: SlotType[],
 		action: BlockedSlotActionEnum
@@ -15,11 +16,19 @@ type CalendarEventsHeaderProps = {
 };
 
 export default function CalendarEventsHeader({
+	blockedSlots,
 	days,
 	onHandleBlockSlots,
 }: CalendarEventsHeaderProps) {
+	const topOffset = isEmpty(blockedSlots) ? 100 : 150;
+
 	const styles = {
-		container: { position: "sticky", top: 100, zIndex: 5, bgcolor: "#212121" },
+		container: {
+			position: "sticky",
+			top: topOffset,
+			zIndex: 5,
+			bgcolor: "#212121",
+		},
 		fakeCol: {
 			width: 80,
 			borderBottom: "1px solid rgba(81, 81, 81, 1)",

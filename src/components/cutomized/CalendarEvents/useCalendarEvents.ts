@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { SlotType } from "./calendar-types";
+import { SlotType } from "./calendar-utils/calendar-types";
 import dayjs from "dayjs";
 import { filter } from "lodash";
 
@@ -76,6 +76,8 @@ export default function useCalendarEvents({
 		}
 	};
 
+	const clearBlockedSlots = () => setBlockedSlots([]);
+
 	const totalMinutes = dayjs(`1900-01-01T${maxTime}`).diff(
 		dayjs(`1900-01-01T${minTime}`),
 		"minute"
@@ -89,5 +91,6 @@ export default function useCalendarEvents({
 		totalMinutes,
 		handleDensity,
 		handleBlockSlots,
+		clearBlockedSlots,
 	};
 }

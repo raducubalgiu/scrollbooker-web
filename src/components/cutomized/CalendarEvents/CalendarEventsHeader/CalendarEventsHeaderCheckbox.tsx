@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from "react";
 import { Checkbox } from "@mui/material";
-import { SlotType } from "./calendar-types";
-import { BlockedSlotActionEnum } from "./useCalendarEvents";
+import { SlotType } from "../calendar-utils/calendar-types";
+import { BlockedSlotActionEnum } from "../useCalendarEvents";
 
 type CalendarEventsHeaderCheckboxProps = {
 	slots: SlotType[];

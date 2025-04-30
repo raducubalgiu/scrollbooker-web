@@ -2,10 +2,10 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Typography, Box, Stack } from "@mui/material";
 import dayjs from "dayjs";
-import { DayInfo, SlotType } from "./calendar-types";
-import CalendarEvent from "./CalendarEvent";
+import { DayInfo, SlotType } from "../calendar-utils/calendar-types";
+import CalendarEvent from "../CalendarEvent";
 import { Theme } from "@mui/system";
-import { BlockedSlotActionEnum } from "./useCalendarEvents";
+import { BlockedSlotActionEnum } from "../useCalendarEvents";
 
 type CalendarEventsBodyProps = {
 	blockedSlots: SlotType[];
@@ -67,7 +67,7 @@ export default function CalendarEventsBody({
 						height={slotDuration * slotHeightPerMinute}
 						sx={styles.slotLeft}
 					>
-						<Typography variant="caption">{time}</Typography>
+						<Typography>{time}</Typography>
 					</Box>
 				))}
 			</Grid>

@@ -9,10 +9,9 @@ import {
 	Tooltip,
 } from "@mui/material";
 import { Theme } from "@mui/system";
-import { SlotType } from "./calendar-types";
+import { SlotType } from "./calendar-utils/calendar-types";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import { find } from "lodash";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { BlockedSlotActionEnum } from "./useCalendarEvents";
 
 type CalendarEventProps = {
@@ -142,12 +141,7 @@ export default function CalendarEvent({
 								</IconButton>
 							</Tooltip>
 						)}
-						{checked && (
-							<Stack alignItems="center">
-								<LockOutlinedIcon />
-								<Typography sx={{ mt: 0.5 }}>Slot Blocat</Typography>
-							</Stack>
-						)}
+						{checked && <Typography sx={{ mt: 2.5 }}>Slot Blocat</Typography>}
 					</Box>
 				</Box>
 			)}

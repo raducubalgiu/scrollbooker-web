@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { useCustomQuery } from "@/hooks/useHttp";
 import CalendarEvents from "@/components/cutomized/CalendarEvents/CalendarEvents";
-import { CalendarType } from "@/components/cutomized/CalendarEvents/calendar-types";
+import { CalendarType } from "@/components/cutomized/CalendarEvents/calendar-utils/calendar-types";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { SelectChangeEvent } from "@mui/material";
@@ -33,7 +33,6 @@ export default function CalendarModule() {
 				endDate,
 				userId: 55,
 				slotDuration,
-				userTimezone: "Europe/Bucharest",
 			},
 			options: { enabled: !!durations },
 		});

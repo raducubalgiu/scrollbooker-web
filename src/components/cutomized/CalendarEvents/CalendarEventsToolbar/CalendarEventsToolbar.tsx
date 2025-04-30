@@ -19,7 +19,7 @@ import DensityMediumOutlinedIcon from "@mui/icons-material/DensityMediumOutlined
 import DensitySmallOutlinedIcon from "@mui/icons-material/DensitySmallOutlined";
 import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import { DensityEnum } from "./useCalendarEvents";
+import { DensityEnum } from "../useCalendarEvents";
 
 type CalendarEventsHeaderProps = {
 	density: DensityEnum;

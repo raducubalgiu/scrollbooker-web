@@ -1,16 +1,23 @@
 "use client";
 
-import { Paper, SelectChangeEvent, TableContainer } from "@mui/material";
+import {
+	Alert,
+	Button,
+	Paper,
+	SelectChangeEvent,
+	TableContainer,
+} from "@mui/material";
 import dayjs from "dayjs";
-import CalendarEventsToolbar from "./CalendarEventsToolbar";
-import { CalendarType } from "./calendar-types";
-import CalendarEventsHeader from "./CalendarEventsHeader";
-import CalendarEventsBody from "./CalendarEventsBody";
+import CalendarEventsToolbar from "./CalendarEventsToolbar/CalendarEventsToolbar";
+import { CalendarType } from "./calendar-utils/calendar-types";
+import CalendarEventsHeader from "./CalendarEventsHeader/CalendarEventsHeader";
+import CalendarEventsBody from "./CalendarEventsBody/CalendarEventsBody";
 import useCalendarEvents from "./useCalendarEvents";
 
 import "dayjs/locale/ro";
 import CalendarLoading from "./CalendarLoading";
 import { useWindowSize } from "@/utils/useWindowSize";
+import { isEmpty } from "lodash";
 dayjs.locale("ro");
 
 type CalendarEventsProps = {
@@ -50,6 +57,7 @@ export default function CalendarEvents({
 		handleDensity,
 		blockedSlots,
 		handleBlockSlots,
+		clearBlockedSlots,
 	} = useCalendarEvents({
 		minTime: minSlotTime,
 		maxTime: maxSlotTime,
@@ -79,9 +87,45 @@ export default function CalendarEvents({
 					onHandleToday={onHandleToday}
 					period={period}
 				/>
+				{!isEmpty(blockedSlots) && (
+					<Alert
+						sx={{
+							height: 50,
+							position: "sticky",
+							top: 100,
+							left: 0,
+							zIndex: 100,
+						}}
+						severity="warning"
+						action={
+							<>
+								<Button
+									color="inherit"
+									size="small"
+									variant="contained"
+									onClick={clearBlockedSlots}
+								>
+									Renunță
+								</Button>
+								<Button
+									color="primary"
+									size="small"
+									variant="contained"
+									sx={{ ml: 2.5 }}
+								>
+									Salvează
+								</Button>
+							</>
+						}
+					>
+						Atenție! Clienții nu vor mai putea rezerva sloturile pe care ai
+						decis să le blochezi. Ești sigur că vrei să salvezi această acțiune?
+					</Alert>
+				)}
 				{!isLoading && (
 					<>
 						<CalendarEventsHeader
+							blockedSlots={blockedSlots}
 							days={calendar?.data}
 							onHandleBlockSlots={handleBlockSlots}
 						/>
