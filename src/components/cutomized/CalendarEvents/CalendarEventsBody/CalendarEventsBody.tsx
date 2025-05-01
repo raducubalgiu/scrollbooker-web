@@ -1,23 +1,18 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Grid from "@mui/material/Grid2";
 import { Typography, Box, Stack } from "@mui/material";
 import dayjs from "dayjs";
-import { DayInfo, SlotType } from "../calendar-utils/calendar-types";
-import CalendarEvent from "../CalendarEvent";
+import { DayInfo } from "../calendar-utils/calendar-types";
+import CalendarEvent from "../CalendarEvent/CalendarEvent";
 import { Theme } from "@mui/system";
-import { BlockedSlotActionEnum } from "../useCalendarEvents";
+import CalendarEventDisabled from "../CalendarEvent/CalendarEventDisabled.";
 
 type CalendarEventsBodyProps = {
-	blockedSlots: SlotType[];
 	slotHeightPerMinute: number;
 	timeSlots: string[];
 	slotDuration: number;
 	days: DayInfo[] | undefined;
 	minSlotTime: string | undefined;
-	onHandleBlockSlots: (
-		slots: SlotType[],
-		action: BlockedSlotActionEnum
-	) => void;
 };
 
 export default function CalendarEventsBody({
@@ -25,8 +20,6 @@ export default function CalendarEventsBody({
 	slotHeightPerMinute,
 	timeSlots,
 	slotDuration,
-	blockedSlots,
-	onHandleBlockSlots,
 	minSlotTime,
 }: CalendarEventsBodyProps) {
 	const styles = {
@@ -47,16 +40,41 @@ export default function CalendarEventsBody({
 		},
 	};
 
-	const getBgColor = (day: DayInfo, theme: Theme) => {
-		switch (true) {
-			case dayjs(day.date).isSame(dayjs(), "day"):
-				return "#3A2305";
-			case day.is_closed:
-				return "#1A1A1A";
-			default:
-				return theme.palette.background.default;
-		}
-	};
+	const dayStyles = useMemo(() => {
+		return (theme: Theme, day: DayInfo) => {
+			const { primary, background } = theme.palette;
+			const isToday = dayjs(day.date).isSame(dayjs(), "day");
+
+			return {
+				...styles.dayContainer,
+				backgroundColor: isToday ? primary[300] : background.default,
+			};
+		};
+	}, [styles.dayContainer]);
+
+	const renderSlots = useMemo(() => {
+		return (day: DayInfo) =>
+			day.slots.map((slot, i) => {
+				const start = dayjs(slot.start_date_locale);
+				const end = dayjs(slot.end_date_locale);
+				const durationMinutes = end.diff(start, "minute");
+
+				const topOffset =
+					start.diff(dayjs(`${day.date}T${minSlotTime}`), "minute") *
+					slotHeightPerMinute;
+				const eventHeight = durationMinutes * slotHeightPerMinute;
+
+				return (
+					<CalendarEvent
+						key={i}
+						dayDate={day.date}
+						slot={slot}
+						topOffset={topOffset}
+						eventHeight={eventHeight}
+					/>
+				);
+			});
+	}, [minSlotTime, slotHeightPerMinute]);
 
 	return (
 		<Grid container>
@@ -74,47 +92,26 @@ export default function CalendarEventsBody({
 
 			{(days ?? []).map((day, i) => {
 				return (
-					<Grid
-						key={i}
-						sx={theme => ({
-							bgcolor: getBgColor(day, theme),
-							opacity: day.is_closed ? 0.4 : 1,
-							...styles.dayContainer,
-						})}
-					>
+					<Grid key={i} sx={theme => dayStyles(theme, day)}>
 						{timeSlots.map(time => (
 							<Stack
 								key={time}
 								height={slotDuration * slotHeightPerMinute}
-								borderBottom="1px solid rgba(81, 81, 81, 1)"
+								borderBottom="1px solid"
+								borderColor="border.main"
 								justifyContent="center"
 								alignItems="center"
 							>
-								{day.is_closed ? "Închis" : ""}
+								{day.is_closed ? (
+									<CalendarEventDisabled
+										label="Inchis"
+										height={slotDuration * slotHeightPerMinute}
+									/>
+								) : null}
 							</Stack>
 						))}
 
-						{day.slots.map((slot, i) => {
-							const start = dayjs(slot.start_date_locale);
-							const end = dayjs(slot.end_date_locale);
-							const durationMinutes = end.diff(start, "minute");
-
-							const topOffset =
-								start.diff(dayjs(`${day.date}T${minSlotTime}`), "minute") *
-								slotHeightPerMinute;
-							const eventHeight = durationMinutes * slotHeightPerMinute;
-
-							return (
-								<CalendarEvent
-									key={i}
-									slot={slot}
-									topOffset={topOffset}
-									eventHeight={eventHeight}
-									blockedSlots={blockedSlots}
-									onHandleBlockSlots={onHandleBlockSlots}
-								/>
-							);
-						})}
+						{renderSlots(day)}
 					</Grid>
 				);
 			})}

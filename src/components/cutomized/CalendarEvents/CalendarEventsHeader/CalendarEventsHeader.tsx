@@ -1,53 +1,46 @@
 import Grid from "@mui/material/Grid2";
 import dayjs from "dayjs";
 import { Stack, Typography } from "@mui/material";
-import { DayInfo, SlotType } from "../calendar-utils/calendar-types";
-import { every, isEmpty } from "lodash";
-import { BlockedSlotActionEnum } from "../useCalendarEvents";
+import { DayInfo } from "../calendar-utils/calendar-types";
 import CalendarEventsHeaderCheckbox from "./CalendarEventsHeaderCheckbox";
 
 type CalendarEventsHeaderProps = {
 	days: DayInfo[] | undefined;
-	blockedSlots: SlotType[];
-	onHandleBlockSlots: (
-		slots: SlotType[],
-		action: BlockedSlotActionEnum
-	) => void;
 };
 
 export default function CalendarEventsHeader({
-	blockedSlots,
 	days,
-	onHandleBlockSlots,
 }: CalendarEventsHeaderProps) {
-	const topOffset = isEmpty(blockedSlots) ? 100 : 150;
+	//const topOffset = isEmpty(blockedSlots) ? 100 : 150;
 
 	const styles = {
 		container: {
 			position: "sticky",
-			top: topOffset,
-			zIndex: 5,
-			bgcolor: "#212121",
+			top: 100,
+			zIndex: 10,
 		},
 		fakeCol: {
 			width: 80,
-			borderBottom: "1px solid rgba(81, 81, 81, 1)",
-			bgcolor: "#212121",
+			borderBottom: "1px solid",
+			borderColor: "border.main",
+			backgroundColor: "surface.200",
 		},
 		day: {
+			backgroundColor: "surface.200",
 			position: "relative",
 			flex: 1,
 			justifyContent: "center",
 			alignItems: "center",
 			display: "flex",
-			borderTop: "1px solid rgba(81, 81, 81, 1)",
-			borderLeft: "1px solid rgba(81, 81, 81, 1)",
-			borderBottom: "1px solid rgba(81, 81, 81, 1)",
-			padding: 2.5,
+			borderTop: "1px solid",
+			borderLeft: "1px solid",
+			borderBottom: "1px solid",
+			borderColor: "border.main",
+			padding: 1,
 			"&:last-child": {
-				borderRight: "1px solid rgba(81, 81, 81, 1)",
+				borderRight: "1px solid",
+				borderColor: "border.main",
 			},
-			bgcolor: "#212121",
 		},
 	};
 
@@ -57,25 +50,23 @@ export default function CalendarEventsHeader({
 			{(days ?? []).map((day, i) => (
 				<Grid key={i} sx={styles.day}>
 					<Stack
-						justifyContent="flex-end"
+						justifyContent="space-between"
 						alignItems="center"
 						flexDirection="row"
-						sx={{ flexGrow: 1 }}
+						sx={{ flexGrow: 1, backgroundColor: "surface.200" }}
 					>
-						<Typography
-							variant="subtitle2"
-							fontWeight={600}
-							sx={{ textAlign: "center", mr: 1.5 }}
+						<Stack
+							flexDirection="row"
+							alignItems="center"
+							justifyContent="center"
+							flex={1}
+							sx={{ backgroundColor: "surface.200" }}
 						>
-							{dayjs(day.date).format("ddd, MMM D")}
-						</Typography>
-						{!day.is_closed && !every(day.slots, { is_booked: true }) && (
-							<CalendarEventsHeaderCheckbox
-								slots={day.slots}
-								defaultChecked={false}
-								onHandleBlockSlots={onHandleBlockSlots}
-							/>
-						)}
+							<Typography variant="subtitle2" fontWeight={600} sx={{ mr: 1.5 }}>
+								{dayjs(day.date).format("ddd, MMM D")}
+							</Typography>
+						</Stack>
+						<CalendarEventsHeaderCheckbox day={day} dayIndex={i} />
 					</Stack>
 				</Grid>
 			))}

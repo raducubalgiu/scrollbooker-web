@@ -29,11 +29,13 @@ declare module "@mui/material/styles" {
 	interface Palette {
 		neutral: Palette["primary"];
 		surface: Palette["primary"];
+		border: Palette["primary"];
 	}
 
 	interface PaletteOptions {
 		neutral?: PaletteOptions["primary"];
 		surface?: PaletteOptions["primary"];
+		border: PaletteOptions["primary"];
 	}
 
 	interface TypographyVariants {
@@ -83,6 +85,7 @@ export const darkTheme = createTheme({
 			main: "#FF6F00",
 			100: "#FF8F00",
 			200: "#F0B90B",
+			300: "#3A2305",
 		},
 		secondary: {
 			main: "#D32F2F",
@@ -127,6 +130,14 @@ export const darkTheme = createTheme({
 			light: "#ff9800",
 			dark: "#e65100",
 		},
+		text: {
+			primary: "#fff",
+			secondary: "rgba(255, 255, 255, 0.7)",
+			disabled: "rgba(255, 255, 255, 0.5)",
+		},
+		border: {
+			main: "rgba(81, 81, 81, 1)",
+		},
 	},
 	typography: {
 		//fontFamily: montserrat.style.fontFamily,
@@ -161,9 +172,32 @@ export const darkTheme = createTheme({
 	},
 
 	components: {
+		MuiPaper: {
+			styleOverrides: {
+				root: {
+					backgroundColor: "#212121",
+				},
+			},
+		},
+		MuiGrid2: {
+			styleOverrides: {
+				root: {
+					backgroundColor: "#212121",
+				},
+			},
+		},
+		MuiDialog: {
+			styleOverrides: {
+				root: {
+					backgroundColor: "#212121",
+				},
+			},
+		},
 		MuiDrawer: {
 			styleOverrides: {
-				paper: {},
+				paper: {
+					backgroundColor: "#121212",
+				},
 			},
 		},
 		MuiButton: {
@@ -175,6 +209,7 @@ export const darkTheme = createTheme({
 			styleOverrides: {
 				root: {
 					boxShadow: "none",
+					backgroundColor: "#121212",
 				},
 			},
 		},
@@ -242,6 +277,9 @@ export const lightTheme = createTheme({
 			main: "#ed6c02",
 			light: "#ff9800",
 			dark: "#e65100",
+		},
+		border: {
+			main: "rgba(81, 81, 81, 1)",
 		},
 	},
 	typography: {

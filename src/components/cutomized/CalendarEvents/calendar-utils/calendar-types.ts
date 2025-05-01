@@ -1,9 +1,16 @@
-type CustomerType = {
+export type AppointmentCustomerType = {
 	id: number;
 	username: string;
-	fullname: string | null;
 	avatar: string | null;
 } | null;
+
+export type AppointmentInfoType = {
+	channel: "scroll_booker" | "own_client";
+	service_name: string;
+	product_price: number;
+	currency: string;
+	customer: AppointmentCustomerType;
+};
 
 export type SlotType = {
 	start_date_locale: string;
@@ -11,8 +18,9 @@ export type SlotType = {
 	start_date_utc: string;
 	end_date_utc: string;
 	is_booked: boolean;
-	channel: "closer_app" | "own_client";
-	customer: CustomerType;
+	is_closed: boolean;
+	is_blocked: boolean;
+	info: AppointmentInfoType | null;
 };
 
 export type DayInfo = {

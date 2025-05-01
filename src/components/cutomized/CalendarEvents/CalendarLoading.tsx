@@ -4,12 +4,13 @@ import { Box, Paper, Skeleton, Stack } from "@mui/material";
 
 export default function CalendarLoading() {
 	return (
-		<Paper sx={{ width: "100%", px: 2.5 }}>
+		<Paper sx={{ width: "100%" }}>
 			<Grid container>
 				<Grid
 					sx={{
 						width: 80,
-						borderBottom: "1px solid rgba(81, 81, 81, 1)",
+						borderBottom: "1px solid",
+						borderColor: "border.main",
 					}}
 				/>
 				{Array.from({ length: 7 }).map((_, i) => (
@@ -21,9 +22,10 @@ export default function CalendarLoading() {
 							justifyContent: "center",
 							alignItems: "center",
 							display: "flex",
-							borderTop: "1px solid rgba(81, 81, 81, 1)",
-							borderLeft: "1px solid rgba(81, 81, 81, 1)",
-							borderBottom: "1px solid rgba(81, 81, 81, 1)",
+							borderTop: "1px solid",
+							borderLeft: "1px solid",
+							borderBottom: "1px solid",
+							borderColor: "border.main",
 							padding: 2.5,
 						}}
 					>
@@ -39,12 +41,13 @@ export default function CalendarLoading() {
 						<Box
 							key={i}
 							height={200}
-							borderBottom="1px solid rgba(81, 81, 81, 1)"
-							borderLeft="1px solid rgba(81, 81, 81, 1)"
 							sx={{
 								alignItems: "center",
 								justifyContent: "center",
 								display: "flex",
+								borderBottom: "1px solid",
+								borderLeft: "1px solid",
+								borderColor: "border.main",
 							}}
 						>
 							<Skeleton width={50} />
@@ -57,16 +60,21 @@ export default function CalendarLoading() {
 						key={i}
 						sx={{
 							position: "relative",
-							borderLeft: "1px solid rgba(81, 81, 81, 1)",
+							borderLeft: "1px solid",
+							borderColor: "border.main",
+							backgroundColor: "background.default",
 							flex: 1,
 						}}
 					>
 						{Array.from({ length: 8 }).map((_, i) => (
 							<Box
 								key={i}
-								height={200}
-								borderBottom="1px solid rgba(81, 81, 81, 1)"
-								p={2.5}
+								sx={{
+									height: 200,
+									p: 2.5,
+									borderBottom: "1px solid",
+									borderColor: "border.main",
+								}}
 							>
 								<Skeleton width={150} sx={{ mt: 1.5 }} />
 								<Skeleton width={50} />

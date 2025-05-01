@@ -1,9 +1,13 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import CalendarModule from "@/components/modules/CalendarModule/CalendarModule";
-import React from "react";
+import { CalendarEventsProvider } from "@/providers/CalendarEventsProvider";
 
 async function Calendar() {
-	return <CalendarModule />;
+	return (
+		<CalendarEventsProvider>
+			<CalendarModule />
+		</CalendarEventsProvider>
+	);
 }
 
 export default ProtectedPage(Calendar, "CALENDAR_VIEW");

@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import {
 	Stack,
-	Box,
 	FormControl,
 	InputLabel,
 	Select,
@@ -19,32 +18,54 @@ import DensityMediumOutlinedIcon from "@mui/icons-material/DensityMediumOutlined
 import DensitySmallOutlinedIcon from "@mui/icons-material/DensitySmallOutlined";
 import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import { DensityEnum } from "../useCalendarEvents";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
+import dayjs from "dayjs";
+import { DensityEnum } from "@/providers/CalendarEventsProvider";
 
 type CalendarEventsHeaderProps = {
 	density: DensityEnum;
-	slotDuration: number;
+	slotDuration: number | undefined;
 	durationOptions: { value: number; label: string }[];
 	onHandleSlotDuration: (e: SelectChangeEvent<number>) => void;
 	onHandleDensity: () => void;
-	onHandlePreviousWeek: () => void;
-	onHandleNextWeek: () => void;
-	onHandleToday: () => void;
-	period: string;
+	isLoading: boolean;
 };
 
 export default function CalendarEventsToolbar({
 	onHandleDensity,
-	onHandlePreviousWeek,
-	onHandleNextWeek,
 	onHandleSlotDuration,
 	slotDuration,
 	durationOptions,
-	onHandleToday,
-	period,
 	density,
+	isLoading,
 }: CalendarEventsHeaderProps) {
-	const getDensityIcon = () => {
+	const {
+		startDate,
+		endDate,
+		fullScreen,
+		handleFullScreen,
+		handleNextWeek,
+		handlePreviousWeek,
+		handleToday,
+	} = useCalendarEventsContext();
+	const period = `${dayjs(startDate).format("D MMMM")} - ${dayjs(endDate).format("D MMM YYYY")}`;
+
+	const displayTodayBgColor = useMemo(() => {
+		return () => {
+			const isTodayAfterStart = dayjs().isAfter(dayjs(startDate));
+			const isTodayBeforeEnd = dayjs().isBefore(dayjs(endDate));
+
+			if (isTodayAfterStart && isTodayBeforeEnd) {
+				return "inherit";
+			} else {
+				return "primary";
+			}
+		};
+	}, [startDate, endDate]);
+
+	const getDensityIcon = useCallback(() => {
 		switch (density) {
 			case DensityEnum.COMPACT:
 				return <DensitySmallOutlinedIcon />;
@@ -53,7 +74,7 @@ export default function CalendarEventsToolbar({
 			default:
 				return <DensityMediumOutlinedIcon />;
 		}
-	};
+	}, [density]);
 
 	const styles = {
 		container: {
@@ -61,7 +82,7 @@ export default function CalendarEventsToolbar({
 			top: 0,
 			zIndex: 3,
 			height: 100,
-			bgcolor: "#212121",
+			bgcolor: "surface.200",
 		},
 	};
 
@@ -73,8 +94,13 @@ export default function CalendarEventsToolbar({
 			p={2.5}
 			sx={styles.container}
 		>
-			<Stack flexDirection="row" justifyContent="center" alignItems="center">
-				<FormControl fullWidth sx={{ mr: 2.5, minWidth: 200 }}>
+			<Stack
+				flexDirection="row"
+				justifyContent="flex-start"
+				alignItems="center"
+				flexGrow={1}
+			>
+				<FormControl fullWidth sx={{ maxWidth: 200 }} disabled={isLoading}>
 					<InputLabel id="slot-label">Durată Slot</InputLabel>
 					<Select
 						labelId="slot-label"
@@ -91,43 +117,55 @@ export default function CalendarEventsToolbar({
 						))}
 					</Select>
 				</FormControl>
-				<Button variant="contained" fullWidth>
-					Adaugă programare
+				<Tooltip
+					title="Lista 'Durată Slot' este afișată în funcție de durata produselor tale"
+					sx={{ mx: 2.5 }}
+				>
+					<InfoOutlinedIcon color="inherit" />
+				</Tooltip>
+				<Button variant="contained" disabled={isLoading}>
+					Rezervă mai multe sloturi
 				</Button>
 			</Stack>
-			<Box></Box>
 			<Stack flexDirection="row" alignItems="center">
 				<Typography fontWeight={600} fontSize={18} mr={2.5}>
 					{period}
 				</Typography>
 				<Tooltip title="Săptămâna anterioară">
-					<IconButton onClick={onHandlePreviousWeek}>
+					<IconButton onClick={handlePreviousWeek} disabled={isLoading}>
 						<NavigateBeforeIcon />
 					</IconButton>
 				</Tooltip>
 				<Tooltip title="Următoarea săptămână">
-					<IconButton onClick={onHandleNextWeek}>
+					<IconButton onClick={handleNextWeek} disabled={isLoading}>
 						<NavigateNextIcon />
 					</IconButton>
 				</Tooltip>
 				<Button
 					sx={{ mx: 2.5 }}
 					variant="contained"
-					onClick={onHandleToday}
-					color="inherit"
+					onClick={handleToday}
+					color={displayTodayBgColor()}
+					disabled={isLoading}
 				>
 					Astăzi
 				</Button>
 				<Tooltip title="Schimbă densitatea">
-					<IconButton onClick={onHandleDensity}>{getDensityIcon()}</IconButton>
+					<IconButton onClick={onHandleDensity} disabled={isLoading}>
+						{getDensityIcon()}
+					</IconButton>
 				</Tooltip>
-				<Tooltip title="Schimbă pe ecran complet">
-					<IconButton onClick={() => {}}>
-						<FullscreenOutlinedIcon />
+				<Tooltip
+					title={
+						fullScreen ? "Ieși din ecran complet" : "Schimbă pe ecran complet"
+					}
+				>
+					<IconButton onClick={handleFullScreen} disabled={isLoading}>
+						{fullScreen ? <FullscreenExitIcon /> : <FullscreenOutlinedIcon />}
 					</IconButton>
 				</Tooltip>
 				<Tooltip title="Setări">
-					<IconButton onClick={() => {}}>
+					<IconButton onClick={() => {}} disabled={isLoading}>
 						<SettingsOutlinedIcon />
 					</IconButton>
 				</Tooltip>
