@@ -54,7 +54,7 @@ export default function CalendarEventsBody({
 
 	const renderSlots = useMemo(() => {
 		return (day: DayInfo) =>
-			day.slots.map((slot, i) => {
+			day.slots.map((slot, slotIndex) => {
 				const start = dayjs(slot.start_date_locale);
 				const end = dayjs(slot.end_date_locale);
 				const durationMinutes = end.diff(start, "minute");
@@ -66,8 +66,7 @@ export default function CalendarEventsBody({
 
 				return (
 					<CalendarEvent
-						key={i}
-						dayDate={day.date}
+						key={slotIndex}
 						slot={slot}
 						topOffset={topOffset}
 						eventHeight={eventHeight}
@@ -90,9 +89,9 @@ export default function CalendarEventsBody({
 				))}
 			</Grid>
 
-			{(days ?? []).map((day, i) => {
+			{(days ?? []).map((day, dayIndex) => {
 				return (
-					<Grid key={i} sx={theme => dayStyles(theme, day)}>
+					<Grid key={dayIndex} sx={theme => dayStyles(theme, day)}>
 						{timeSlots.map(time => (
 							<Stack
 								key={time}

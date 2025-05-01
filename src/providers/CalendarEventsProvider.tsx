@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/ro";
 import { SelectChangeEvent } from "@mui/material";
 import { SlotType } from "@/components/cutomized/CalendarEvents/calendar-utils/calendar-types";
-import { differenceBy, findIndex, unionBy } from "lodash";
 dayjs.locale("ro");
 
 export enum DensityEnum {
@@ -32,17 +31,12 @@ export type CalendarContextType = {
 	endDate: string;
 	fullScreen: boolean;
 	slotDuration: number;
-	blockedDaysSlots: BlockedDayType[];
 	handleFullScreen: () => void;
 	handleNextWeek: () => void;
 	handlePreviousWeek: () => void;
 	handleToday: () => void;
 	handleDensity: () => void;
 	handleDuration: (e: SelectChangeEvent<number>) => void;
-	handleBlockedDaysSlots: (
-		daySlots: BlockedDayType,
-		action: BlockedDayActionEnum
-	) => void;
 };
 
 export const CalendarEventsContext = createContext<
@@ -71,9 +65,6 @@ export const CalendarEventsProvider = ({
 	const [endDate, setEndDate] = useState(DEFAULT_END_DATE);
 	const [fullScreen, setFullScreen] = useState(false);
 	const [density, setDensity] = useState(DensityEnum.COMFORTABLE);
-	const [blockedDaysSlots, setBlockedDaysSlots] = useState<BlockedDayType[]>(
-		[]
-	);
 
 	const handleNextWeek = useCallback(() => {
 		const newStartDate = dayjs(startDate)
@@ -126,48 +117,6 @@ export const CalendarEventsProvider = ({
 		[]
 	);
 
-	const handleBlockedDaysSlots = (
-		blockedDay: BlockedDayType,
-		action: BlockedDayActionEnum
-	) => {
-		if (action === BlockedDayActionEnum.ADD) {
-			setBlockedDaysSlots(prev => {
-				const existingDayIndex = findIndex(prev, { day: blockedDay.day });
-
-				if (existingDayIndex !== -1) {
-					const updated = [...prev];
-					const mergedSlots = unionBy(
-						updated[existingDayIndex].slots,
-						blockedDay.slots,
-						"start_date_utc"
-					);
-					updated[existingDayIndex] = {
-						...updated[existingDayIndex],
-						slots: mergedSlots,
-					};
-				}
-
-				return [...prev, blockedDay];
-			});
-		} else if (action === BlockedDayActionEnum.REMOVE) {
-			setBlockedDaysSlots(prev => {
-				return prev
-					.map(day => {
-						if (day.day === blockedDay.day) {
-							const filteredSlots = differenceBy(
-								day.slots,
-								blockedDay.slots,
-								"start_date_utc"
-							);
-							return { ...day, slots: filteredSlots };
-						}
-						return day;
-					})
-					.filter(day => day.slots.length > 0);
-			});
-		}
-	};
-
 	return (
 		<CalendarEventsContext.Provider
 			value={{
@@ -176,14 +125,12 @@ export const CalendarEventsProvider = ({
 				fullScreen,
 				density,
 				slotDuration,
-				blockedDaysSlots,
 				handleNextWeek,
 				handlePreviousWeek,
 				handleToday,
 				handleFullScreen,
 				handleDensity,
 				handleDuration,
-				handleBlockedDaysSlots,
 			}}
 		>
 			{children}

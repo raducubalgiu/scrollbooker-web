@@ -85,7 +85,7 @@ export const darkTheme = createTheme({
 			main: "#FF6F00",
 			100: "#FF8F00",
 			200: "#F0B90B",
-			300: "#3A2305",
+			300: "#EF8D2A",
 		},
 		secondary: {
 			main: "#D32F2F",
@@ -172,27 +172,6 @@ export const darkTheme = createTheme({
 	},
 
 	components: {
-		MuiPaper: {
-			styleOverrides: {
-				root: {
-					backgroundColor: "#212121",
-				},
-			},
-		},
-		MuiGrid2: {
-			styleOverrides: {
-				root: {
-					backgroundColor: "#212121",
-				},
-			},
-		},
-		MuiDialog: {
-			styleOverrides: {
-				root: {
-					backgroundColor: "#212121",
-				},
-			},
-		},
 		MuiDrawer: {
 			styleOverrides: {
 				paper: {
@@ -203,14 +182,6 @@ export const darkTheme = createTheme({
 		MuiButton: {
 			styleOverrides: {
 				root: { color: "#FFFFFF" },
-			},
-		},
-		MuiAppBar: {
-			styleOverrides: {
-				root: {
-					boxShadow: "none",
-					backgroundColor: "#121212",
-				},
 			},
 		},
 		MuiListItemButton: {

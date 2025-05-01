@@ -26,6 +26,7 @@ export type SlotType = {
 export type DayInfo = {
 	date: string;
 	is_closed: boolean;
+	is_blocked: boolean;
 	slots: SlotType[];
 };
 

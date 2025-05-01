@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Box, Stack, Avatar, Typography } from "@mui/material";
 import { AppointmentInfoType } from "../calendar-utils/calendar-types";
+import { Theme } from "@mui/system";
 
 type CalendarBookedEventProps = {
 	info: AppointmentInfoType | null;
@@ -11,7 +12,8 @@ export default function CalendarBookedEvent({
 	info,
 	height,
 }: CalendarBookedEventProps) {
-	const { customer, service_name, product_price, currency } = info || {};
+	const { customer, service_name, product_price, currency, channel } =
+		info || {};
 
 	const styles = {
 		avatar: {
@@ -21,20 +23,23 @@ export default function CalendarBookedEvent({
 		},
 	};
 
+	const containerStyles = useMemo(() => {
+		return (theme: Theme) => ({
+			position: "absolute",
+			top: 0,
+			left: 0,
+			right: 0,
+			bottom: 0,
+			display: "flex",
+			m: 1,
+			backgroundColor:
+				channel === "scroll_booker" ? theme.palette.primary[300] : "#2E7D32",
+		});
+	}, [channel]);
+
 	return (
 		<Stack height={height}>
-			<Box
-				sx={{
-					position: "absolute",
-					top: 0,
-					left: 0,
-					right: 0,
-					bottom: 0,
-					display: "flex",
-					m: 1,
-					borderRadius: 1,
-				}}
-			>
+			<Box sx={theme => containerStyles(theme)}>
 				<Box p={1} overflow="hidden">
 					<Stack flexDirection="row" alignItems="center" sx={{ mb: 1.5 }}>
 						<Avatar sx={styles.avatar} alt="Remy Sharp" />

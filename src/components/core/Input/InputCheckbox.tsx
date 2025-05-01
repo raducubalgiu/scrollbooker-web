@@ -1,11 +1,11 @@
 import { Controller } from "react-hook-form";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Checkbox, CheckboxProps, FormControlLabel } from "@mui/material";
 
 type InputCheckboxProps = {
 	name: string;
 	label: string;
 	disabled?: boolean;
-};
+} & CheckboxProps;
 
 export default function InputCheckbox({
 	name,

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Paper, Stack, TableContainer, Typography } from "@mui/material";
+import { Box, Paper, TableContainer } from "@mui/material";
 import dayjs from "dayjs";
 import CalendarEventsToolbar from "./CalendarEventsToolbar/CalendarEventsToolbar";
 import { CalendarType } from "./calendar-utils/calendar-types";
@@ -75,43 +75,43 @@ export default function CalendarEvents({
 						isLoading={isLoading}
 					/>
 					{/* {!isEmpty(blockedSlots) && (
-					<Fade in={!isEmpty(blockedSlots)}>
-						<Alert
-							sx={{
-								height: 50,
-								position: "sticky",
-								top: 100,
-								left: 0,
-								zIndex: 100,
-							}}
-							severity="warning"
-							action={
-								<>
-									<Button
-										color="inherit"
-										size="small"
-										variant="contained"
-										onClick={clearBlockedSlots}
-									>
-										Renunță
-									</Button>
-									<Button
-										color="primary"
-										size="small"
-										variant="contained"
-										sx={{ ml: 2.5 }}
-									>
-										Salvează
-									</Button>
-								</>
-							}
-						>
-							Atenție! Clienții nu vor mai putea rezerva sloturile pe care ai
-							decis să le blochezi. Ești sigur că vrei să salvezi această
-							acțiune?
-						</Alert>
-					</Fade>
-				)} */}
+						<Fade in={!isEmpty(blockedSlots)}>
+							<Alert
+								sx={{
+									height: 50,
+									position: "sticky",
+									top: 100,
+									left: 0,
+									zIndex: 100,
+								}}
+								severity="warning"
+								action={
+									<>
+										<Button
+											color="inherit"
+											size="small"
+											variant="contained"
+											onClick={() => {}}
+										>
+											Renunță
+										</Button>
+										<Button
+											color="primary"
+											size="small"
+											variant="contained"
+											sx={{ ml: 2.5 }}
+										>
+											Salvează
+										</Button>
+									</>
+								}
+							>
+								Atenție! Clienții nu vor mai putea rezerva sloturile pe care ai
+								decis să le blochezi. Ești sigur că vrei să salvezi această
+								acțiune?
+							</Alert>
+						</Fade>
+					)} */}
 					<Box>
 						<CalendarEventsHeader days={calendar?.data} />
 						<CalendarEventsBody
@@ -123,11 +123,11 @@ export default function CalendarEvents({
 						/>
 					</Box>
 				</Fragment>
-				{!calendar && !isLoading && (
+				{/* {!calendar && !isLoading && (
 					<Stack p={2.5} alignItems="center">
 						<Typography>Calendarul nu a putut fi afișat</Typography>
 					</Stack>
-				)}
+				)} */}
 			</Paper>
 			{isLoading && <CalendarLoading />}
 		</TableContainer>

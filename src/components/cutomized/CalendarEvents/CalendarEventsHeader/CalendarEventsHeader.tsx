@@ -66,7 +66,7 @@ export default function CalendarEventsHeader({
 								{dayjs(day.date).format("ddd, MMM D")}
 							</Typography>
 						</Stack>
-						<CalendarEventsHeaderCheckbox day={day} dayIndex={i} />
+						<CalendarEventsHeaderCheckbox day={day} />
 					</Stack>
 				</Grid>
 			))}
