@@ -1,63 +1,74 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { useCustomQuery } from "@/hooks/useHttp";
 import CalendarEvents from "@/components/cutomized/CalendarEvents/CalendarEvents";
 import { CalendarType } from "@/components/cutomized/CalendarEvents/calendar-utils/calendar-types";
 import { Dialog } from "@mui/material";
-import { formatMinutesLabel } from "@/utils/formatMinutesLabel";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 
 export default function CalendarModule() {
-	const { fullScreen, startDate, endDate, slotDuration } =
-		useCalendarEventsContext();
+	const {
+		calendar,
+		fullScreen,
+		startDate,
+		endDate,
+		slotDuration,
+		updateCalendar,
+	} = useCalendarEventsContext();
 
-	const { data: durations, isLoading: isLoadingDurations } = useCustomQuery<
-		number[]
-	>({
-		key: ["durations"],
-		url: "/api/calendar/durations",
+	const { data, isLoading: isLoadingCalendar } = useCustomQuery<CalendarType>({
+		key: ["calendar", startDate, endDate, slotDuration],
+		url: "/api/calendar",
+		params: {
+			startDate,
+			endDate,
+			userId: 55,
+			slotDuration,
+		},
 	});
 
-	const { data: calendar, isLoading: isLoadingCalendar } =
-		useCustomQuery<CalendarType>({
-			key: ["calendar", startDate, endDate, slotDuration],
-			url: "/api/calendar",
-			params: {
-				startDate,
-				endDate,
-				userId: 55,
-				slotDuration,
-			},
-			options: { enabled: !!durations && !!slotDuration },
-		});
+	useEffect(() => {
+		updateCalendar(data);
+	}, [data, updateCalendar]);
 
-	const durationOptions = durations?.map(dur => {
-		return {
-			value: dur,
-			label: formatMinutesLabel(dur),
-		};
-	});
+	const durations = [
+		{ value: 15, label: "15 minute" },
+		{ value: 30, label: "30 de minute" },
+		{ value: 45, label: "45 de minute" },
+		{ value: 60, label: "1 oră" },
+		{ value: 75, label: "1 oră și 15 minute" },
+		{ value: 90, label: "1 oră și 30 de minute" },
+		{ value: 105, label: "1 oră și 45 de minute" },
+		{ value: 120, label: "2 ore" },
+		{ value: 135, label: "2 ore si 15 minute" },
+		{ value: 150, label: "2 ore si 30 de minute" },
+		{ value: 165, label: "2 ore si 45 de minute" },
+		{ value: 180, label: "3 ore" },
+	];
 
 	const displayCalendar = (
 		<CalendarEvents
 			fullScreen={fullScreen}
 			calendar={calendar}
-			durationOptions={durationOptions ?? []}
+			durationOptions={durations}
 			minSlotTime={calendar?.min_slot_time}
 			maxSlotTime={calendar?.max_slot_time}
-			isLoading={isLoadingDurations || isLoadingCalendar}
+			isLoading={isLoadingCalendar}
 		/>
 	);
 
+	console.log("CALENDAR!!!", calendar);
+
 	return (
 		<Fragment>
-			{fullScreen && (
+			{fullScreen ? (
 				<Dialog fullScreen open={fullScreen}>
 					{displayCalendar}
 				</Dialog>
+			) : (
+				displayCalendar
 			)}
-			{!fullScreen && displayCalendar}
 		</Fragment>
 	);
 }

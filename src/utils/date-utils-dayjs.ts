@@ -5,6 +5,11 @@ import utc from "dayjs/plugin/timezone";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 
+export const shortPrettyDate = (date: string) =>
+	dayjs(date).format("D MMMM YY");
+export const shortTimeFormat = (dateTime: string) =>
+	dayjs(dateTime).format("HH:mm");
+
 export const timeWithOffset = (
 	timeStr: string,
 	offsetSeconds: number,

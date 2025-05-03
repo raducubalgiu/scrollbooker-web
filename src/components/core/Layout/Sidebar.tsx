@@ -145,6 +145,10 @@ export default function Sidebar() {
 			route: "/nomenclatures/filters",
 		},
 		{
+			label: "Currencies",
+			route: "/nomenclatures/currencies",
+		},
+		{
 			label: "Roles and Permissions",
 			route: "/nomenclatures/roles-and-permissions",
 		},

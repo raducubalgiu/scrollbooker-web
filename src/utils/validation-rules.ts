@@ -24,3 +24,12 @@ export const maxField = (value: number) => {
 		},
 	};
 };
+
+export const min = (n: number) => {
+	return {
+		min: {
+			value: n,
+			message: `Acest câmp trebuie să fie mai mare ca ${n}`,
+		},
+	};
+};

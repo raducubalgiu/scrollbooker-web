@@ -3,7 +3,8 @@ import { Box } from "@mui/material";
 import { SlotType } from "../calendar-utils/calendar-types";
 import CalendarBookedEvent from "./CalendarBookedEvent";
 import CalendarUnbookedEvent from "./CalendarUnbookedEvent";
-import CalendarEventDisabled from "./CalendarEventDisabled.";
+import { Theme } from "@mui/system";
+import CalendarEventClosed from "./CalendarEventClosed";
 
 type CalendarEventProps = {
 	slot: SlotType;
@@ -18,26 +19,45 @@ export default function CalendarEvent({
 }: CalendarEventProps) {
 	const renderEvent = useMemo(() => {
 		switch (true) {
+			case slot.is_closed:
+				return <CalendarEventClosed height={eventHeight - 10} />;
 			case slot.is_blocked:
 				return <CalendarUnbookedEvent slot={slot} height={eventHeight} />;
-			case slot.is_closed:
-				return <CalendarEventDisabled label="Închis" height={eventHeight} />;
 			case slot.is_booked:
-				return <CalendarBookedEvent info={slot?.info} height={eventHeight} />;
+				return <CalendarBookedEvent info={slot?.info} />;
 			default:
 				return <CalendarUnbookedEvent slot={slot} height={eventHeight} />;
 		}
-	}, [eventHeight, slot]);
+	}, [slot, eventHeight]);
+
+	const getBackgroundColor = useMemo(() => {
+		return (theme: Theme) => {
+			switch (true) {
+				case slot.info?.channel === "scroll_booker":
+					return "#C06020";
+				case slot.info?.channel === "own_client":
+					return "#1B4D1F";
+				case slot.is_blocked:
+					return "";
+				default:
+					return theme.palette.background.paper;
+			}
+		};
+	}, [slot]);
 
 	const containerStyles = useMemo(() => {
-		return () => ({
-			top: topOffset,
+		return (theme: Theme) => ({
+			top: topOffset + 5,
 			left: 0,
 			right: 0,
 			position: "absolute",
 			overflow: "hidden",
+			mx: 1,
+			borderRadius: 0.5,
+			height: eventHeight - 10,
+			backgroundColor: getBackgroundColor(theme),
 		});
-	}, [topOffset]);
+	}, [topOffset, eventHeight, getBackgroundColor]);
 
-	return <Box sx={containerStyles}>{renderEvent}</Box>;
+	return <Box sx={(theme: Theme) => containerStyles(theme)}>{renderEvent}</Box>;
 }

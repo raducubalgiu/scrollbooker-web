@@ -1,5 +1,5 @@
 "use client";
-
+import { memo } from "react";
 import { Box, Paper, TableContainer } from "@mui/material";
 import dayjs from "dayjs";
 import CalendarEventsToolbar from "./CalendarEventsToolbar/CalendarEventsToolbar";
@@ -21,9 +21,7 @@ type CalendarEventsProps = {
 	isLoading: boolean;
 };
 
-const VISIBLE_MAX_HEIGHT = 1500;
-
-export default function CalendarEvents({
+function CalendarEvents({
 	fullScreen,
 	durationOptions,
 	calendar,
@@ -41,20 +39,32 @@ export default function CalendarEvents({
 		const end = dayjs(`2025-04-21T${calendar?.max_slot_time}`);
 
 		while (current.isBefore(end)) {
-			slots.push(current.format("HH:mm"));
-			current = current.add(slotDuration, "minute");
+			const next = current.add(slotDuration, "minute");
+
+			if (next.isAfter(end)) {
+				const diff = next.diff(end, "minute");
+				const newNext = current.add(diff, "minute");
+
+				slots.push({
+					start: current.format("HH:mm"),
+					end: newNext.format("HH:mm"),
+					height: slotDuration - diff,
+					isShortSlot: true,
+				});
+				break;
+			}
+			slots.push({
+				start: current.format("HH:mm"),
+				end: next.format("HH:mm"),
+				height: slotDuration,
+				isShortSlot: false,
+			});
+
+			current = next;
 		}
 
 		return slots;
 	}, [calendar, slotDuration]);
-
-	const totalMinutes = dayjs(`1900-01-01T${calendar?.max_slot_time}`).diff(
-		dayjs(`1900-01-01T${calendar?.min_slot_time}`),
-		"minute"
-	);
-
-	const BASE_SLOT_HEIGHT_PER_MINUTE = VISIBLE_MAX_HEIGHT / totalMinutes;
-	const SLOT_HEIGHT_PER_MINUTE = BASE_SLOT_HEIGHT_PER_MINUTE * density;
 
 	const DRAWER_DESKTOP_WIDTH = 350;
 	const calendarWidth = width ? width - DRAWER_DESKTOP_WIDTH - 85 : "100%";
@@ -112,24 +122,23 @@ export default function CalendarEvents({
 							</Alert>
 						</Fade>
 					)} */}
-					<Box>
-						<CalendarEventsHeader days={calendar?.data} />
-						<CalendarEventsBody
-							days={calendar?.data}
-							slotHeightPerMinute={SLOT_HEIGHT_PER_MINUTE}
-							timeSlots={timeSlots()}
-							slotDuration={slotDuration}
-							minSlotTime={calendar?.min_slot_time}
-						/>
-					</Box>
+					{!isLoading && (
+						<Box>
+							<CalendarEventsHeader days={calendar?.data} />
+							<CalendarEventsBody
+								days={calendar?.data}
+								timeSlots={timeSlots()}
+								slotDuration={slotDuration}
+								minSlotTime={calendar?.min_slot_time}
+								maxSlotTime={calendar?.max_slot_time}
+							/>
+						</Box>
+					)}
 				</Fragment>
-				{/* {!calendar && !isLoading && (
-					<Stack p={2.5} alignItems="center">
-						<Typography>Calendarul nu a putut fi afișat</Typography>
-					</Stack>
-				)} */}
 			</Paper>
 			{isLoading && <CalendarLoading />}
 		</TableContainer>
 	);
 }
+
+export default memo(CalendarEvents);

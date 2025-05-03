@@ -5,6 +5,7 @@ import { decodeToken } from "@/lib/auth/decodeToken";
 import { FilterType } from "@/models/nomenclatures/FilterType";
 import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
+import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
 
 async function Products() {
 	const { user_id } = await decodeToken();
@@ -12,6 +13,12 @@ async function Products() {
 	const business = (
 		await get<UserBusinessType>({
 			url: `/users/${user_id}/business`,
+		})
+	).data;
+
+	const currencies = (
+		await get<CurrencyType[]>({
+			url: `/users/${user_id}/currencies`,
 		})
 	).data;
 
@@ -26,6 +33,7 @@ async function Products() {
 	return (
 		<ProductsModule
 			services={services}
+			currencies={currencies}
 			available_filters={available_filters}
 			business_id={business.id}
 		/>

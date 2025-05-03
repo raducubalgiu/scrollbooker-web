@@ -11,6 +11,7 @@ export default function CalendarLoading() {
 						width: 80,
 						borderBottom: "1px solid",
 						borderColor: "border.main",
+						backgroundColor: "surface.200",
 					}}
 				/>
 				{Array.from({ length: 7 }).map((_, i) => (

@@ -5,15 +5,18 @@ import { useMemo } from "react";
 import { FilterType } from "@/models/nomenclatures/FilterType";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
+import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
 
 type useProductColumnsProps = {
 	services: ServiceType[];
+	currencies: CurrencyType[];
 	durations: { duration_minutes: number; label: string }[];
 	available_filters: FilterType[];
 };
 
 export default function useProductColumns({
 	services,
+	currencies,
 	durations,
 	available_filters,
 }: useProductColumnsProps) {
@@ -72,6 +75,8 @@ export default function useProductColumns({
 			{
 				accessorKey: "duration",
 				header: "Durată*",
+				Cell: ({ cell }) =>
+					durations.find(d => d.duration_minutes === cell.getValue())?.label,
 				Edit: ({ row, column, cell }) => (
 					<MR_Select
 						required
@@ -86,12 +91,25 @@ export default function useProductColumns({
 						})}
 					/>
 				),
-				Cell: ({ cell }) =>
-					durations.find(d => d.duration_minutes === cell.getValue())?.label,
 			},
 			{
 				accessorKey: "price",
 				header: "Preț*",
+				Edit: ({ row, column }) => (
+					<MR_Input
+						required
+						min={0}
+						placeholder="Adaugă un pret"
+						row={row}
+						column={column}
+						type="number"
+						value={row.original.price}
+					/>
+				),
+			},
+			{
+				accessorKey: "price_with_discount",
+				header: "Preț cu discount*",
 				Edit: ({ row, column }) => (
 					<MR_Input
 						required
@@ -100,6 +118,26 @@ export default function useProductColumns({
 						column={column}
 						type="number"
 						value={row.original.price}
+					/>
+				),
+			},
+			{
+				accessorKey: "currency_id",
+				header: "Moneda*",
+				Cell: ({ cell }) =>
+					currencies.find(currency => currency.id === cell.getValue())?.name,
+				Edit: ({ row, column, cell }) => (
+					<MR_Select
+						required
+						row={row}
+						column={column}
+						value={cell.getValue<number>() ?? ""}
+						options={currencies.map(curr => {
+							return {
+								value: curr.id,
+								name: curr.name,
+							};
+						})}
 					/>
 				),
 			},
@@ -119,7 +157,7 @@ export default function useProductColumns({
 				),
 			},
 		],
-		[durations, services]
+		[durations, services, currencies]
 	);
 
 	const dynamicColumns = useMemo(() => {

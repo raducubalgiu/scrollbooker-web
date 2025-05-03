@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import { Stack, Typography } from "@mui/material";
 import { DayInfo } from "../calendar-utils/calendar-types";
 import CalendarEventsHeaderCheckbox from "./CalendarEventsHeaderCheckbox";
+import { some } from "lodash";
+import { useMemo } from "react";
 
 type CalendarEventsHeaderProps = {
 	days: DayInfo[] | undefined;
@@ -44,6 +46,19 @@ export default function CalendarEventsHeader({
 		},
 	};
 
+	const displayCheckbox = useMemo(() => {
+		return (day: DayInfo) => {
+			if (
+				some(day.slots, { is_booked: true }) ||
+				day.is_closed ||
+				dayjs().isAfter(dayjs(day.date))
+			) {
+				return false;
+			}
+			return true;
+		};
+	}, []);
+
 	return (
 		<Grid container sx={styles.container}>
 			<Grid sx={styles.fakeCol} />
@@ -66,7 +81,7 @@ export default function CalendarEventsHeader({
 								{dayjs(day.date).format("ddd, MMM D")}
 							</Typography>
 						</Stack>
-						<CalendarEventsHeaderCheckbox day={day} />
+						{displayCheckbox(day) && <CalendarEventsHeaderCheckbox day={day} />}
 					</Stack>
 				</Grid>
 			))}

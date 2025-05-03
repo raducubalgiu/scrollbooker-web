@@ -6,15 +6,18 @@ import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import useProductColumns from "./useProductColumns";
 import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import { FilterType } from "@/models/nomenclatures/FilterType";
+import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
 
 type ProductsModuleProps = {
 	services: ServiceType[];
+	currencies: CurrencyType[];
 	available_filters: FilterType[];
 	business_id: number;
 };
 
 export default function ProductsModule({
 	services,
+	currencies,
 	available_filters,
 	business_id,
 }: ProductsModuleProps) {
@@ -66,6 +69,7 @@ export default function ProductsModule({
 
 	const { columns, hasErrors } = useProductColumns({
 		services,
+		currencies,
 		durations,
 		available_filters,
 	});

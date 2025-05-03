@@ -35,7 +35,7 @@ export default function InputSelect({
 					value={value ? value : ""}
 					options={options ? options : []}
 					error={has(errors, name as string)}
-					helperText={get(errors, name)?.message}
+					helperText={get(errors, String(name))?.message}
 					inputRef={ref}
 					disabled={disabled}
 				/>

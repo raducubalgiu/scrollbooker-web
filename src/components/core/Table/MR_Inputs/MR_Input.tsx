@@ -47,8 +47,8 @@ export default function MR_Input<T extends Record<string, unknown>>({
 
 			if (type === "number") {
 				const numValue = Number(val);
-				if (required && (!numValue || numValue !== 0)) {
-					message = "Acest camp este obligatoriu";
+				if (required && !numValue) {
+					message = "Acest câmp este obligatoriu";
 				} else if (!isNaN(numValue)) {
 					if (typeof min === "number" && numValue < min && numValue !== 0) {
 						message = `Valoarea minimă este ${min}`;
@@ -67,6 +67,7 @@ export default function MR_Input<T extends Record<string, unknown>>({
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const newValue = e.target.value;
 			setInputValue(e.target.value);
+
 			runValidators(newValue);
 
 			if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -83,8 +84,9 @@ export default function MR_Input<T extends Record<string, unknown>>({
 	const handleBlur = useCallback(() => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
-		row._valuesCache[column.id] = inputValue;
-	}, [column.id, inputValue, row._valuesCache]);
+		row._valuesCache[column.id] =
+			type === "number" ? Number(inputValue) : inputValue;
+	}, [column.id, inputValue, row._valuesCache, type]);
 
 	return (
 		<TextField

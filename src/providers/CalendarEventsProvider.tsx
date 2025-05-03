@@ -2,11 +2,14 @@
 
 import React, { useState, useCallback } from "react";
 import { createContext, useContext } from "react";
+import { SelectChangeEvent } from "@mui/material";
+import {
+	CalendarType,
+	SlotType,
+} from "@/components/cutomized/CalendarEvents/calendar-utils/calendar-types";
 import dayjs from "dayjs";
 
 import "dayjs/locale/ro";
-import { SelectChangeEvent } from "@mui/material";
-import { SlotType } from "@/components/cutomized/CalendarEvents/calendar-utils/calendar-types";
 dayjs.locale("ro");
 
 export enum DensityEnum {
@@ -26,6 +29,7 @@ const densityValues = Object.values(DensityEnum).filter(
 ) as number[];
 
 export type CalendarContextType = {
+	calendar: CalendarType | undefined;
 	density: DensityEnum;
 	startDate: string;
 	endDate: string;
@@ -37,6 +41,7 @@ export type CalendarContextType = {
 	handleToday: () => void;
 	handleDensity: () => void;
 	handleDuration: (e: SelectChangeEvent<number>) => void;
+	updateCalendar: (cal: CalendarType | undefined) => void;
 };
 
 export const CalendarEventsContext = createContext<
@@ -60,6 +65,7 @@ export const CalendarEventsProvider = ({
 }: {
 	children: React.ReactNode;
 }) => {
+	const [calendar, setCalendar] = useState<CalendarType | undefined>(undefined);
 	const [slotDuration, setSlotDuration] = useState<number>(60);
 	const [startDate, setStartDate] = useState(DEFAULT_START_DATE);
 	const [endDate, setEndDate] = useState(DEFAULT_END_DATE);
@@ -117,9 +123,15 @@ export const CalendarEventsProvider = ({
 		[]
 	);
 
+	const updateCalendar = (cal: CalendarType | undefined) => {
+		if (cal) setCalendar(cal);
+	};
+
 	return (
 		<CalendarEventsContext.Provider
 			value={{
+				calendar,
+				updateCalendar,
 				startDate,
 				endDate,
 				fullScreen,

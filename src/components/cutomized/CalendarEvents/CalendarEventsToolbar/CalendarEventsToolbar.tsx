@@ -18,7 +18,6 @@ import DensityMediumOutlinedIcon from "@mui/icons-material/DensityMediumOutlined
 import DensitySmallOutlinedIcon from "@mui/icons-material/DensitySmallOutlined";
 import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 import dayjs from "dayjs";
@@ -117,15 +116,6 @@ export default function CalendarEventsToolbar({
 						))}
 					</Select>
 				</FormControl>
-				<Tooltip
-					title="Lista 'Durată Slot' este afișată în funcție de durata produselor tale"
-					sx={{ mx: 2.5 }}
-				>
-					<InfoOutlinedIcon color="inherit" />
-				</Tooltip>
-				<Button variant="contained" disabled={isLoading}>
-					Rezervă mai multe sloturi
-				</Button>
 			</Stack>
 			<Stack flexDirection="row" alignItems="center">
 				<Typography fontWeight={600} fontSize={18} mr={2.5}>

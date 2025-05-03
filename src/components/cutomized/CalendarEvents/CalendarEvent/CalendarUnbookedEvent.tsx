@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
 	Box,
 	Stack,
@@ -9,6 +9,9 @@ import {
 } from "@mui/material";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import { SlotType } from "../calendar-utils/calendar-types";
+import CreateEventModal from "./CreateEventModal";
+import dayjs from "dayjs";
+import { shortTimeFormat } from "@/utils/date-utils-dayjs";
 
 type CalendarUnbookedEventProps = {
 	slot: SlotType;
@@ -19,56 +22,86 @@ export default function CalendarUnbookedEvent({
 	slot,
 	height,
 }: CalendarUnbookedEventProps) {
-	const { is_blocked } = slot;
+	const [open, setOpen] = useState(false);
+	const [isBlocked, setIsBlocked] = useState(slot.is_blocked);
 
 	const styles = useMemo(() => {
 		return () => ({
 			height,
 			p: 1,
 			position: "relative",
-			opacity: is_blocked ? 0.4 : 1,
-			bgcolor: is_blocked ? "surface.200" : "background.paper",
-			borderBottom: "1px solid",
-			borderColor: "border.main",
+			bgcolor: isBlocked ? "#3b1111" : "background.paper",
 		});
-	}, [is_blocked, height]);
+	}, [isBlocked, height]);
 
-	const tooltipTitle = is_blocked
+	const tooltipTitle = isBlocked
 		? "Deblochează acest slot"
 		: "Blochează acest slot";
 
+	const interval = `${shortTimeFormat(slot.start_date_locale)} - ${shortTimeFormat(slot.end_date_locale)}`;
+	const isPast = dayjs().isAfter(dayjs(slot.start_date_locale));
+
 	return (
-		<Box sx={styles}>
-			<Stack alignItems="flex-end">
-				<Tooltip title={tooltipTitle}>
-					<Checkbox checked={is_blocked} />
-				</Tooltip>
-			</Stack>
-			<Box
-				position="absolute"
-				top={0}
-				left={0}
-				right={0}
-				bottom={0}
-				display="flex"
-				flexDirection="column"
-			>
+		<>
+			<CreateEventModal
+				openCreate={open}
+				handleClose={() => setOpen(false)}
+				slot={slot}
+			/>
+			<Box sx={styles}>
 				<Stack
-					flexGrow={1}
+					flexDirection="row"
 					alignItems="center"
-					justifyContent="center"
+					justifyContent="space-between"
+				>
+					{!isPast && (
+						<>
+							<Typography fontSize={12.5} color="gray" ml={1}>
+								{interval}
+							</Typography>
+							<Tooltip title={tooltipTitle}>
+								<Checkbox
+									checked={isBlocked}
+									onChange={e => setIsBlocked(e.target.checked)}
+									color="primary"
+								/>
+							</Tooltip>
+						</>
+					)}
+				</Stack>
+				<Box
+					position="absolute"
+					top={0}
+					left={0}
+					right={0}
+					bottom={0}
+					display="flex"
 					flexDirection="column"
 				>
-					{!is_blocked && (
-						<Tooltip title="Adaugă o programare">
-							<IconButton>
-								<AddCircleOutlinedIcon fontSize="large" color="primary" />
-							</IconButton>
-						</Tooltip>
-					)}
-					{is_blocked && <Typography>Slot Blocat</Typography>}
-				</Stack>
+					<Stack
+						flexGrow={1}
+						alignItems="center"
+						justifyContent="center"
+						flexDirection="column"
+					>
+						{!isBlocked && !isPast && (
+							<Tooltip title="Adaugă o programare">
+								<IconButton onClick={() => setOpen(true)}>
+									<AddCircleOutlinedIcon fontSize="large" color="primary" />
+								</IconButton>
+							</Tooltip>
+						)}
+						{isPast && (
+							<Typography fontSize={13.5} color="gray" ml={1}>
+								Slot Vacant
+							</Typography>
+						)}
+						{isBlocked && !isPast && (
+							<Typography sx={{ opacity: 0.4 }}>Slot Blocat</Typography>
+						)}
+					</Stack>
+				</Box>
 			</Box>
-		</Box>
+		</>
 	);
 }

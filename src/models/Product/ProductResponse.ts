@@ -10,6 +10,7 @@ export type ProductType = {
 	business_id: number;
 	user_id: number;
 	price_with_discount: number;
+	currency_id: number;
 	discount: number;
 	created_at: string;
 	updated_at: string;
