@@ -14,7 +14,7 @@ export default function CalendarModule() {
 		startDate,
 		endDate,
 		slotDuration,
-		updateCalendar,
+		setCalendar,
 	} = useCalendarEventsContext();
 
 	const { data, isLoading: isLoadingCalendar } = useCustomQuery<CalendarType>({
@@ -29,8 +29,8 @@ export default function CalendarModule() {
 	});
 
 	useEffect(() => {
-		updateCalendar(data);
-	}, [data, updateCalendar]);
+		setCalendar(data);
+	}, [data, setCalendar]);
 
 	const durations = [
 		{ value: 15, label: "15 minute" },

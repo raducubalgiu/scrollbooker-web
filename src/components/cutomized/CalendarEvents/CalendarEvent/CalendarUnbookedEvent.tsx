@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
 	Box,
 	Stack,
@@ -23,7 +23,12 @@ export default function CalendarUnbookedEvent({
 	height,
 }: CalendarUnbookedEventProps) {
 	const [open, setOpen] = useState(false);
-	const [isBlocked, setIsBlocked] = useState(slot.is_blocked);
+	const [isBlocked, setIsBlocked] = useState(false);
+	const { block_message } = slot?.info || {};
+
+	useEffect(() => {
+		setIsBlocked(slot.is_blocked);
+	}, [slot.is_blocked]);
 
 	const styles = useMemo(() => {
 		return () => ({
@@ -63,7 +68,7 @@ export default function CalendarUnbookedEvent({
 								<Checkbox
 									checked={isBlocked}
 									onChange={e => setIsBlocked(e.target.checked)}
-									color="primary"
+									color="default"
 								/>
 							</Tooltip>
 						</>
@@ -83,6 +88,7 @@ export default function CalendarUnbookedEvent({
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="column"
+						sx={{ p: 1, overflow: "auto" }}
 					>
 						{!isBlocked && !isPast && (
 							<Tooltip title="Adaugă o programare">
@@ -97,7 +103,11 @@ export default function CalendarUnbookedEvent({
 							</Typography>
 						)}
 						{isBlocked && !isPast && (
-							<Typography sx={{ opacity: 0.4 }}>Slot Blocat</Typography>
+							<Typography sx={{ opacity: 0.4 }}>
+								{!block_message || block_message === "Altele"
+									? "Slot Blocat"
+									: block_message}
+							</Typography>
 						)}
 					</Stack>
 				</Box>

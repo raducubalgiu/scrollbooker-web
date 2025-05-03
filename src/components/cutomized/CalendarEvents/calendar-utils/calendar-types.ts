@@ -10,6 +10,7 @@ export type AppointmentInfoType = {
 	product_price: number;
 	currency: string;
 	customer: AppointmentCustomerType;
+	block_message: string | undefined;
 };
 
 export type SlotType = {

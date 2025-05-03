@@ -41,7 +41,9 @@ export type CalendarContextType = {
 	handleToday: () => void;
 	handleDensity: () => void;
 	handleDuration: (e: SelectChangeEvent<number>) => void;
-	updateCalendar: (cal: CalendarType | undefined) => void;
+	setCalendar: (cal: CalendarType | undefined) => void;
+	updateCalendar: (partial: Partial<CalendarType>) => void;
+	handleUpdateDaySlots: (date: string, updatedSlots: SlotType[]) => void;
 };
 
 export const CalendarEventsContext = createContext<
@@ -123,15 +125,40 @@ export const CalendarEventsProvider = ({
 		[]
 	);
 
-	const updateCalendar = (cal: CalendarType | undefined) => {
-		if (cal) setCalendar(cal);
-	};
+	const updateCalendar = useCallback((cal: Partial<CalendarType>) => {
+		setCalendar(prev => {
+			if (!prev) return prev;
+
+			return {
+				...prev,
+				cal,
+			};
+		});
+	}, []);
+
+	const handleUpdateDaySlots = useCallback(
+		(date: string, updatedSlots: SlotType[]) => {
+			setCalendar(prev => {
+				if (!prev) return prev;
+
+				return {
+					...prev,
+					data: prev.data.map(day =>
+						day.date === date ? { ...day, slots: updatedSlots } : day
+					),
+				};
+			});
+		},
+		[]
+	);
 
 	return (
 		<CalendarEventsContext.Provider
 			value={{
 				calendar,
+				setCalendar,
 				updateCalendar,
+				handleUpdateDaySlots,
 				startDate,
 				endDate,
 				fullScreen,

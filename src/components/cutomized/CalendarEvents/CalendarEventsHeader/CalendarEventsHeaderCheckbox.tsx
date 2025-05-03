@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { DayInfo } from "../calendar-utils/calendar-types";
 import { Checkbox, Tooltip } from "@mui/material";
+import dayjs from "dayjs";
+import { some, every } from "lodash";
+import CalendarEventsHeaderModal from "./CalendarEventsHeaderModal";
 
 type CalendarEventsHeaderCheckboxProps = {
 	day: DayInfo;
@@ -9,15 +12,38 @@ type CalendarEventsHeaderCheckboxProps = {
 export default function CalendarEventsHeaderCheckbox({
 	day,
 }: CalendarEventsHeaderCheckboxProps) {
-	const [isBlockedDay, setIsBlockedDay] = useState(day.is_blocked);
+	const [isBlockedDay, setIsBlockedDay] = useState(!!day.is_blocked);
+	const [open, setOpen] = useState(false);
+
+	const hideCheckbox = useMemo(() => {
+		return (
+			some(day.slots, { is_booked: true }) ||
+			every(day.slots, { is_blocked: true }) ||
+			day.is_closed ||
+			dayjs().isAfter(dayjs(day.date))
+		);
+	}, [day]);
+
+	const handleCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
+		setIsBlockedDay(e.target.checked);
+		setOpen(true);
+	};
+
+	if (hideCheckbox) return null;
 
 	return (
-		<Tooltip title="Blochează sloturile acestei zi">
-			<Checkbox
-				checked={isBlockedDay}
-				onChange={e => setIsBlockedDay(e.target.checked)}
-				color="default"
+		<>
+			<CalendarEventsHeaderModal
+				open={open}
+				day={day}
+				handleClose={() => {
+					setIsBlockedDay(false);
+					setOpen(false);
+				}}
 			/>
-		</Tooltip>
+			<Tooltip title="Blochează această zi">
+				<Checkbox checked={isBlockedDay} onChange={handleCheckbox} />
+			</Tooltip>
+		</>
 	);
 }

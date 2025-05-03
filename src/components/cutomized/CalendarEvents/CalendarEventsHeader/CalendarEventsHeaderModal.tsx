@@ -1,0 +1,130 @@
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import Modal from "@/components/core/Modal/Modal";
+import { useMutate } from "@/hooks/useHttp";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { DayInfo } from "../calendar-utils/calendar-types";
+import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
+import { FormProvider, useForm } from "react-hook-form";
+import Input from "@/components/core/Input/Input";
+import { required, minField, maxField } from "@/utils/validation-rules";
+import { IconButton, Typography } from "@mui/material";
+import InputSelect from "@/components/core/Input/InputSelect";
+import EditIcon from "@mui/icons-material/Edit";
+import CustomStack from "@/components/core/CustomStack/CustomStack";
+import dayjs from "dayjs";
+
+type CalendarEventsHeaderModalProps = {
+	day: DayInfo;
+	open: boolean;
+	handleClose: () => void;
+};
+
+export default function CalendarEventsHeaderModal({
+	day,
+	open,
+	handleClose,
+}: CalendarEventsHeaderModalProps) {
+	const [editMessage, setEditMessage] = useState(false);
+	const methods = useForm({
+		defaultValues: { block_message: "Zi legală liberă" },
+	});
+	const { setValue, watch } = methods;
+	const blockMessage = watch("block_message");
+	const isRequired = required();
+	const { handleUpdateDaySlots } = useCalendarEventsContext();
+
+	const messages = [
+		{ value: "Zi legală liberă", name: "Zi legală liberă" },
+		{ value: "Concediu de odihnă", name: "Concediu de odihnă" },
+		{ value: "Concediu medical", name: "Concediu medical" },
+		{ value: "Altele", name: "Altele" },
+	];
+
+	const { mutate: handleBlock, isPending } = useMutate({
+		key: ["block-day"],
+		url: "/api/calendar/block-appointments",
+		options: {
+			onError: () =>
+				toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu."),
+			onSuccess: () => {
+				const updatedSlots = day.slots.map(slot => {
+					return {
+						...slot,
+						is_blocked: true,
+						block_message: blockMessage,
+					};
+				});
+				handleUpdateDaySlots(day.date, updatedSlots);
+				toast.success("Datele au fost salvate cu succes!");
+				handleClose();
+			},
+		},
+	});
+
+	const actions: ActionButtonType[] = [
+		{
+			title: "Blochează",
+			props: {
+				onClick: () => {
+					const payload = day.slots.map(slot => {
+						return {
+							start_date: slot.start_date_utc,
+							end_date: slot.end_date_utc,
+							block_message: blockMessage,
+						};
+					});
+					handleBlock(payload);
+				},
+				loading: isPending,
+				disabled: !blockMessage,
+			},
+		},
+	];
+
+	return (
+		<FormProvider {...methods}>
+			<Modal
+				title={`Data: ${dayjs(day.date).format("DD MMM YYYY")}`}
+				open={open}
+				handleClose={handleClose}
+				actions={actions}
+			>
+				<Typography fontWeight={600}>
+					Ești sigur că dorești să blochezi sloturile acestei zi?
+				</Typography>
+				<Typography sx={{ mt: 5 }}>
+					{!editMessage
+						? `Te rugăm să alegi din sugestiile de mai jos`
+						: "Te rugăm să introduci un mesaj"}
+				</Typography>
+				<CustomStack sx={{ mt: 2.5 }}>
+					{!editMessage && (
+						<InputSelect
+							name="block_message"
+							rules={{ ...isRequired }}
+							options={messages}
+							placeholder="Te rugam sa selectezi"
+						/>
+					)}
+					{editMessage && (
+						<Input
+							name="block_message"
+							rules={{ ...isRequired, ...minField(3), ...maxField(100) }}
+							placeholder="Te rugăm să introduci un mesaj"
+						/>
+					)}
+					<IconButton
+						sx={{ ml: 2.5 }}
+						onClick={() => {
+							setEditMessage(edit => !edit);
+							setValue("block_message", "");
+						}}
+					>
+						<EditIcon />
+					</IconButton>
+				</CustomStack>
+			</Modal>
+		</FormProvider>
+	);
+}
