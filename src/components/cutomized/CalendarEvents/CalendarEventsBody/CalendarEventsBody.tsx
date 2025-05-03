@@ -8,7 +8,12 @@ import CalendarEvent from "../CalendarEvent/CalendarEvent";
 import CalendarEventClosed from "../CalendarEvent/CalendarEventClosed";
 
 type CalendarEventsBodyProps = {
-	timeSlots: { start: string; end: string; height: number }[];
+	timeSlots: {
+		start: string;
+		end: string;
+		height: number;
+		isShortSlot: boolean;
+	}[];
 	slotDuration: number;
 	days: DayInfo[] | undefined;
 	minSlotTime: string | undefined;
@@ -24,11 +29,12 @@ export default function CalendarEventsBody({
 }: CalendarEventsBodyProps) {
 	const styles = {
 		slotLeft: {
-			alignItems: "center",
-			justifyContent: "center",
+			alignItems: "flex-start",
+			justifyContent: "flex-start",
 			display: "flex",
 			borderLeft: "1px solid rgba(81, 81, 81, 1)",
 			borderBottom: "1px solid rgba(81, 81, 81, 1)",
+			p: 2.5,
 		},
 		dayContainer: {
 			position: "relative",
@@ -107,8 +113,9 @@ export default function CalendarEventsBody({
 									borderBottom="1px solid"
 									borderColor="border.main"
 								>
-									{day.is_closed ? (
+									{day.is_closed || slot.isShortSlot ? (
 										<CalendarEventClosed
+											message={slot.isShortSlot ? "Indisponibil" : "Închis"}
 											height={slotDuration * SLOT_HEIGHT_PER_MINUTE}
 											sx={{ m: 1 }}
 										/>

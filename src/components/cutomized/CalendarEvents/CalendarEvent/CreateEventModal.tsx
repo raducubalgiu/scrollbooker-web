@@ -17,7 +17,7 @@ import { ProductType } from "@/models/Product/ProductResponse";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import GradingOutlinedIcon from "@mui/icons-material/GradingOutlined";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 type CreateEventModalProps = {
 	openCreate: boolean;
@@ -114,7 +114,9 @@ export default function CreateEventModal({
 		};
 	});
 
-	const findPrice = e => {
+	const findPrice = (
+		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
 		const product = products?.find(prod => prod.id === Number(e.target.value));
 		return String(product?.price);
 	};

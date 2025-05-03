@@ -20,11 +20,13 @@ export default function CalendarEvent({
 	const renderEvent = useMemo(() => {
 		switch (true) {
 			case slot.is_closed:
-				return <CalendarEventClosed height={eventHeight - 10} />;
+				return (
+					<CalendarEventClosed message="Închis" height={eventHeight - 10} />
+				);
 			case slot.is_blocked:
 				return <CalendarUnbookedEvent slot={slot} height={eventHeight} />;
 			case slot.is_booked:
-				return <CalendarBookedEvent info={slot?.info} />;
+				return <CalendarBookedEvent slot={slot} />;
 			default:
 				return <CalendarUnbookedEvent slot={slot} height={eventHeight} />;
 		}

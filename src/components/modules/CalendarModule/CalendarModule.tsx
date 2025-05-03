@@ -58,8 +58,6 @@ export default function CalendarModule() {
 		/>
 	);
 
-	console.log("CALENDAR!!!", calendar);
-
 	return (
 		<Fragment>
 			{fullScreen ? (

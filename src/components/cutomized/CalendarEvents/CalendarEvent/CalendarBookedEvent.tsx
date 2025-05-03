@@ -1,14 +1,16 @@
 import { Box, Stack, Avatar, Typography } from "@mui/material";
-import { AppointmentInfoType } from "../calendar-utils/calendar-types";
+import { SlotType } from "../calendar-utils/calendar-types";
+import { shortTimeFormat } from "@/utils/date-utils-dayjs";
 
 type CalendarBookedEventProps = {
-	info: AppointmentInfoType | null;
+	slot: SlotType;
 };
 
 export default function CalendarBookedEvent({
-	info,
+	slot,
 }: CalendarBookedEventProps) {
-	const { customer, service_name, product_price, currency } = info || {};
+	const { customer, service_name, product_price, currency } = slot?.info || {};
+	const { start_date_locale, end_date_locale } = slot;
 
 	const styles = {
 		avatar: {
@@ -18,12 +20,7 @@ export default function CalendarBookedEvent({
 		},
 	};
 
-	// const containerStyles = useMemo(() => {
-	// 	return (theme: Theme) => ({
-	// 		backgroundColor:
-	// 			channel === "scroll_booker" ? theme.palette.primary[300] : "#2E7D32",
-	// 	});
-	// }, [channel]);
+	const interval = `${shortTimeFormat(start_date_locale)} - ${shortTimeFormat(end_date_locale)}`;
 
 	return (
 		<Box p={1} overflow="hidden">
@@ -39,7 +36,7 @@ export default function CalendarBookedEvent({
 				</Box>
 			</Stack>
 			<Typography fontSize={15} color="#fff">
-				Durată: 09:00 - 10:00
+				Interval: {interval}
 			</Typography>
 			<Typography fontSize={15} color="#fff">
 				Serviciu: {service_name}

@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { post } from "@/utils/requests";
 import { decodeToken } from "@/lib/auth/decodeToken";
 
+type DataType = { start_date: string; end_date: string; block_message: string };
+
 export const POST = async (req: NextRequest) => {
-	const data = await req.json();
+	const data: DataType[] = await req.json();
 	const { user_id } = await decodeToken();
 
 	const finalData = data.map(d => {

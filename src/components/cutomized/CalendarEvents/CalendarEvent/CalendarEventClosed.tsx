@@ -1,9 +1,13 @@
 import React from "react";
 import { Stack, StackProps, Typography } from "@mui/material";
 
-type CalendarEventClosedProps = { height: number } & StackProps;
+type CalendarEventClosedProps = {
+	height: number;
+	message: string;
+} & StackProps;
 
 export default function CalendarEventClosed({
+	message,
 	height,
 	...props
 }: CalendarEventClosedProps) {
@@ -15,7 +19,9 @@ export default function CalendarEventClosed({
 			bgcolor="#3b1111"
 			{...props}
 		>
-			<Typography sx={{ textAlign: "center", opacity: 0.4 }}>Închis</Typography>
+			<Typography sx={{ textAlign: "center", opacity: 0.4 }}>
+				{message}
+			</Typography>
 		</Stack>
 	);
 }

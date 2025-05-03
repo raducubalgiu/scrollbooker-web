@@ -45,6 +45,7 @@ export default function CalendarUnbookedEvent({
 
 	const interval = `${shortTimeFormat(slot.start_date_locale)} - ${shortTimeFormat(slot.end_date_locale)}`;
 	const isPast = dayjs().isAfter(dayjs(slot.start_date_locale));
+	const hasBlockMessage = !block_message || block_message === "Altele";
 
 	return (
 		<>
@@ -99,14 +100,12 @@ export default function CalendarUnbookedEvent({
 						)}
 						{isPast && (
 							<Typography fontSize={13.5} color="gray" ml={1}>
-								Slot Vacant
+								{hasBlockMessage ? "Slot Vacant" : block_message}
 							</Typography>
 						)}
 						{isBlocked && !isPast && (
 							<Typography sx={{ opacity: 0.4 }}>
-								{!block_message || block_message === "Altele"
-									? "Slot Blocat"
-									: block_message}
+								{hasBlockMessage ? "Slot Blocat" : block_message}
 							</Typography>
 						)}
 					</Stack>
