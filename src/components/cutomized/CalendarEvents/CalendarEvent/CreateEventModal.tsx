@@ -4,7 +4,7 @@ dayjs.locale("ro");
 
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
-import { Divider, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Divider, Stack, Typography } from "@mui/material";
 import { SlotType } from "../calendar-utils/calendar-types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "@/components/core/Input/Input";
@@ -15,9 +15,8 @@ import { useCustomQuery } from "@/hooks/useHttp";
 import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import { ProductType } from "@/models/Product/ProductResponse";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import GradingOutlinedIcon from "@mui/icons-material/GradingOutlined";
 import { ChangeEvent, useState } from "react";
+import EditChangeIconButton from "../../IconButtons/EditChangeIconButton";
 
 type CreateEventModalProps = {
 	openCreate: boolean;
@@ -174,26 +173,16 @@ export default function CreateEventModal({
 							placeholder="Adaugă un nume produsului"
 						/>
 					)}
-					<IconButton
-						sx={{ ml: 2.5 }}
-						size="large"
+					<EditChangeIconButton
+						title="Comută la produsele existente"
+						loading={isLoadingServices || isLoadingProducts}
+						isEdit={editProduct}
 						onClick={() => {
 							setEditProduct(edit => !edit);
 							setValue("product_id", "");
 							setValue("price", "");
 						}}
-						loading={isLoadingServices || isLoadingProducts}
-					>
-						{editProduct ? (
-							<Tooltip title="Comută la produsele existente">
-								<GradingOutlinedIcon />
-							</Tooltip>
-						) : (
-							<Tooltip title="Editează">
-								<EditOutlinedIcon />
-							</Tooltip>
-						)}
-					</IconButton>
+					/>
 				</CustomStack>
 				<Input
 					name="price"

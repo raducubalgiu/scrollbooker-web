@@ -1,3 +1,5 @@
+"use client";
+
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
 import { useMutate } from "@/hooks/useHttp";
@@ -8,22 +10,24 @@ import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "@/components/core/Input/Input";
 import { required, minField, maxField } from "@/utils/validation-rules";
-import { IconButton, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import InputSelect from "@/components/core/Input/InputSelect";
-import EditIcon from "@mui/icons-material/Edit";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import dayjs from "dayjs";
+import EditChangeIconButton from "../../IconButtons/EditChangeIconButton";
 
 type CalendarEventsHeaderModalProps = {
 	day: DayInfo;
 	open: boolean;
 	handleClose: () => void;
+	userId: number | null;
 };
 
 export default function CalendarEventsHeaderModal({
 	day,
 	open,
 	handleClose,
+	userId,
 }: CalendarEventsHeaderModalProps) {
 	const [editMessage, setEditMessage] = useState(false);
 	const methods = useForm({
@@ -67,14 +71,17 @@ export default function CalendarEventsHeaderModal({
 			title: "Blochează",
 			props: {
 				onClick: () => {
-					const payload = day.slots.map(slot => {
-						return {
-							start_date: slot.start_date_utc,
-							end_date: slot.end_date_utc,
-							block_message: blockMessage,
-						};
-					});
-					handleBlock(payload);
+					if (userId) {
+						const payload = day.slots.map(slot => {
+							return {
+								start_date: slot.start_date_utc,
+								end_date: slot.end_date_utc,
+								block_message: blockMessage,
+								user_id: userId,
+							};
+						});
+						handleBlock(payload);
+					}
 				},
 				loading: isPending,
 				disabled: !blockMessage,
@@ -114,15 +121,14 @@ export default function CalendarEventsHeaderModal({
 							placeholder="Te rugăm să introduci un mesaj"
 						/>
 					)}
-					<IconButton
-						sx={{ ml: 2.5 }}
+					<EditChangeIconButton
+						title="Comută către lista de sugestii"
+						isEdit={editMessage}
 						onClick={() => {
 							setEditMessage(edit => !edit);
 							setValue("block_message", "");
 						}}
-					>
-						<EditIcon />
-					</IconButton>
+					/>
 				</CustomStack>
 			</Modal>
 		</FormProvider>

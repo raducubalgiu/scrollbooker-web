@@ -84,11 +84,14 @@ export const authOptions: AuthOptions = {
 		async jwt({ token, user }) {
 			if (user) {
 				const permissions = await getPermissions(user.accessToken);
+				const userInfo = await getUserInfo(user.accessToken);
 
 				token.accessToken = user.accessToken;
 				token.accessTokenExpires = user.accessTokenExpires;
 				token.username = user.username;
 				token.permissions = permissions;
+				token.user_id = userInfo.id;
+				token.business_id = userInfo.business_id;
 
 				return token;
 			}
@@ -117,6 +120,8 @@ export const authOptions: AuthOptions = {
 		async session({ session, token }) {
 			session.accessToken = token.accessToken;
 			session.username = token.username;
+			session.user_id = token.user_id;
+			session.business_id = token.business_id;
 			session.permissions = token.permissions;
 
 			const expireInMillis = token["accessTokenExpires"];
@@ -140,4 +145,12 @@ async function getPermissions(token) {
 		{ headers: { Authorization: `Bearer ${token}` } }
 	);
 	return map(userPermissions.data, "code");
+}
+
+async function getUserInfo(token) {
+	const user = await axios.get(
+		`${process.env.BE_BASE_ENDPOINT}/auth/user-info`,
+		{ headers: { Authorization: `Bearer ${token}` } }
+	);
+	return user.data;
 }

@@ -4,6 +4,7 @@ import { Checkbox, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
 import { some, every } from "lodash";
 import CalendarEventsHeaderModal from "./CalendarEventsHeaderModal";
+import { useUserClientSession } from "@/utils/get-user-client";
 
 type CalendarEventsHeaderCheckboxProps = {
 	day: DayInfo;
@@ -12,6 +13,7 @@ type CalendarEventsHeaderCheckboxProps = {
 export default function CalendarEventsHeaderCheckbox({
 	day,
 }: CalendarEventsHeaderCheckboxProps) {
+	const { userId } = useUserClientSession();
 	const [isBlockedDay, setIsBlockedDay] = useState(!!day.is_blocked);
 	const [open, setOpen] = useState(false);
 
@@ -36,6 +38,7 @@ export default function CalendarEventsHeaderCheckbox({
 			<CalendarEventsHeaderModal
 				open={open}
 				day={day}
+				userId={userId}
 				handleClose={() => {
 					setIsBlockedDay(false);
 					setOpen(false);

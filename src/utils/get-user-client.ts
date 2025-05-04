@@ -1,0 +1,18 @@
+import { useSession } from "next-auth/react";
+
+export function useUserClientSession() {
+	const { data: session, status } = useSession();
+
+	const isLoading = status === "loading";
+	const isAuthenticated = status === "authenticated";
+	const userId = session?.user_id ?? null;
+	const businessId = session?.business_id ?? null;
+
+	return {
+		isLoading,
+		isAuthenticated,
+		userId,
+		businessId,
+		session,
+	};
+}

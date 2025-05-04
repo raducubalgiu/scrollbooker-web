@@ -49,12 +49,16 @@ export default function CalendarEventsToolbar({
 		handlePreviousWeek,
 		handleToday,
 	} = useCalendarEventsContext();
-	const period = `${dayjs(startDate).format("D MMMM")} - ${dayjs(endDate).format("D MMM YYYY")}`;
+	const period = `${dayjs(startDate).format("D MMM YY")} - ${dayjs(endDate).format("D MMM YY")}`;
 
 	const displayTodayBgColor = useMemo(() => {
 		return () => {
-			const isTodayAfterStart = dayjs().isAfter(dayjs(startDate));
-			const isTodayBeforeEnd = dayjs().isBefore(dayjs(endDate));
+			const isTodayAfterStart = dayjs()
+				.startOf("day")
+				.isAfter(dayjs(startDate).endOf("day"));
+			const isTodayBeforeEnd = dayjs()
+				.startOf("day")
+				.isBefore(dayjs(endDate).endOf("day"));
 
 			if (isTodayAfterStart && isTodayBeforeEnd) {
 				return "inherit";
