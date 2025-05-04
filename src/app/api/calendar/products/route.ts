@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
-import { decodeToken } from "@/lib/auth/decodeToken";
 import { ProductType } from "@/models/Product/ProductResponse";
+import { getUserServerSession } from "@/utils/get-user-server";
 
 export const GET = async (req: NextRequest) => {
-	const { user_id } = await decodeToken();
+	const { userId } = await getUserServerSession();
 	const serviceId = req.nextUrl.searchParams.get("serviceId");
 
 	const response = (
 		await get<ProductType[]>({
-			url: `/users/${user_id}/services/${serviceId}/products`,
+			url: `/users/${userId}/services/${serviceId}/products`,
 		})
 	).data;
 

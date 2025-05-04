@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, post, deleteRequest, put } from "@/utils/requests";
-import { decodeToken } from "@/lib/auth/decodeToken";
 import { omit } from "lodash";
+import { getUserServerSession } from "@/utils/get-user-server";
 
 export const GET = async (req: NextRequest) => {
-	const { user_id } = await decodeToken();
+	const { userId } = await getUserServerSession();
 	const pagination = req.nextUrl.searchParams;
 
 	const response = (
 		await get({
-			url: `/users/${user_id}/products?${pagination}`,
+			url: `/users/${userId}/products?${pagination}`,
 		})
 	).data;
 
