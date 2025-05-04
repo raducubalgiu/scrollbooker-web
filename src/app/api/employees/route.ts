@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
-import { getUserServerSession } from "@/utils/get-user-server";
+import { getUserServerSession } from "@/lib/auth/get-user-server";
 
 export const GET = async (req: NextRequest) => {
 	const { businessId } = await getUserServerSession();

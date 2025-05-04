@@ -5,7 +5,7 @@ import { FilterType } from "@/models/nomenclatures/FilterType";
 import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
-import { getUserServerSession } from "@/utils/get-user-server";
+import { getUserServerSession } from "@/lib/auth/get-user-server";
 
 async function Products() {
 	const { userId } = await getUserServerSession();

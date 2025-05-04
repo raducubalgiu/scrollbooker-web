@@ -20,7 +20,7 @@ type CalendarEventsHeaderModalProps = {
 	day: DayInfo;
 	open: boolean;
 	handleClose: () => void;
-	userId: number | null;
+	userId: number | undefined;
 };
 
 export default function CalendarEventsHeaderModal({

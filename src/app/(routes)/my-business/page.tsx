@@ -6,7 +6,7 @@ import { get } from "@/utils/requests";
 import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import { some } from "lodash";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import { getUserServerSession } from "@/utils/get-user-server";
+import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
 
 async function MyBusiness() {

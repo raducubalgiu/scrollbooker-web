@@ -3,7 +3,7 @@ import React from "react";
 import { get } from "@/utils/requests";
 import { ScheduleResponseType } from "@/models/ScheduleType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import { getUserServerSession } from "@/utils/get-user-server";
+import { getUserServerSession } from "@/lib/auth/get-user-server";
 
 async function Schedules() {
 	const { userId } = await getUserServerSession();

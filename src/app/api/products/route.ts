@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, post, deleteRequest, put } from "@/utils/requests";
 import { omit } from "lodash";
-import { getUserServerSession } from "@/utils/get-user-server";
+import { getUserServerSession } from "@/lib/auth/get-user-server";
 
 export const GET = async (req: NextRequest) => {
 	const { userId } = await getUserServerSession();

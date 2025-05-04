@@ -1,7 +1,7 @@
 import { PaginatedData } from "@/components/core/Table/Table";
 import DashboardModule from "@/components/modules/DashboardModule/DashboardModule";
 import { ProductType } from "@/models/Product/ProductResponse";
-import { getUserServerSession } from "@/utils/get-user-server";
+import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { get } from "@/utils/requests";
 import { orderBy } from "lodash";
 

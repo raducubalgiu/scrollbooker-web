@@ -4,7 +4,7 @@ import { Checkbox, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
 import { some, every } from "lodash";
 import CalendarEventsHeaderModal from "./CalendarEventsHeaderModal";
-import { useUserClientSession } from "@/utils/get-user-client";
+import { useUserClientSession } from "@/lib/auth/get-user-client";
 
 type CalendarEventsHeaderCheckboxProps = {
 	day: DayInfo;
