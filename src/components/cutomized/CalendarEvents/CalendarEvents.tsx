@@ -84,44 +84,6 @@ function CalendarEvents({
 						onHandleDensity={handleDensity}
 						isLoading={isLoading}
 					/>
-					{/* {!isEmpty(blockedSlots) && (
-						<Fade in={!isEmpty(blockedSlots)}>
-							<Alert
-								sx={{
-									height: 50,
-									position: "sticky",
-									top: 100,
-									left: 0,
-									zIndex: 100,
-								}}
-								severity="warning"
-								action={
-									<>
-										<Button
-											color="inherit"
-											size="small"
-											variant="contained"
-											onClick={() => {}}
-										>
-											Renunță
-										</Button>
-										<Button
-											color="primary"
-											size="small"
-											variant="contained"
-											sx={{ ml: 2.5 }}
-										>
-											Salvează
-										</Button>
-									</>
-								}
-							>
-								Atenție! Clienții nu vor mai putea rezerva sloturile pe care ai
-								decis să le blochezi. Ești sigur că vrei să salvezi această
-								acțiune?
-							</Alert>
-						</Fade>
-					)} */}
 					{!isLoading && (
 						<Box>
 							<CalendarEventsHeader days={calendar?.data} />

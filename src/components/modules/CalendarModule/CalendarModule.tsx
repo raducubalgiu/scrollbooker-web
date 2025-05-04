@@ -23,7 +23,6 @@ export default function CalendarModule() {
 		params: {
 			startDate,
 			endDate,
-			userId: 55,
 			slotDuration,
 		},
 	});

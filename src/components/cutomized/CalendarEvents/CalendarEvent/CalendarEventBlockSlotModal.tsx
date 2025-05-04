@@ -1,42 +1,41 @@
 "use client";
 
-import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
-import { useMutate } from "@/hooks/useHttp";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
-import { DayInfo } from "../calendar-utils/calendar-types";
-import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
-import { FormProvider, useForm } from "react-hook-form";
-import Input from "@/components/core/Input/Input";
-import { required, minField, maxField } from "@/utils/validation-rules";
-import { Typography } from "@mui/material";
-import InputSelect from "@/components/core/Input/InputSelect";
-import CustomStack from "@/components/core/CustomStack/CustomStack";
+import { SlotType } from "../calendar-utils/calendar-types";
 import dayjs from "dayjs";
+import { FormProvider, useForm } from "react-hook-form";
+import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
+import { toast } from "react-toastify";
+import { useMutate } from "@/hooks/useHttp";
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import { Typography } from "@mui/material";
+import CustomStack from "@/components/core/CustomStack/CustomStack";
+import InputSelect from "@/components/core/Input/InputSelect";
 import EditChangeIconButton from "../../IconButtons/EditChangeIconButton";
+import { maxField, minField, required } from "@/utils/validation-rules";
+import Input from "@/components/core/Input/Input";
+import { useUserClientSession } from "@/lib/auth/get-user-client";
+import { shortTimeFormat } from "@/utils/date-utils-dayjs";
 
-type CalendarEventsHeaderModalProps = {
-	day: DayInfo;
+type CalendarEventBlockSlotModalProps = {
+	slot: SlotType;
 	open: boolean;
 	handleClose: () => void;
-	userId: number | undefined;
 };
 
-export default function CalendarEventsHeaderModal({
-	day,
+export default function CalendarEventBlockSlotModal({
+	slot,
 	open,
 	handleClose,
-	userId,
-}: CalendarEventsHeaderModalProps) {
+}: CalendarEventBlockSlotModalProps) {
+	const { userId } = useUserClientSession();
 	const [editMessage, setEditMessage] = useState(false);
-	const methods = useForm({
-		defaultValues: { block_message: "Zi legală liberă" },
-	});
-	const { setValue, watch } = methods;
-	const blockMessage = watch("block_message");
+	const { handleBlockSlot } = useCalendarEventsContext();
+	const methods = useForm({ defaultValues: { blockMessage: "" } });
+	const { setValue, watch, handleSubmit } = methods;
+	const blockMessage = watch("blockMessage");
 	const isRequired = required();
-	const { handleBlockDaySlots } = useCalendarEventsContext();
 
 	const messages = [
 		{ value: "Zi legală liberă", name: "Zi legală liberă" },
@@ -52,14 +51,7 @@ export default function CalendarEventsHeaderModal({
 			onError: () =>
 				toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu."),
 			onSuccess: () => {
-				const updatedSlots = day.slots.map(slot => {
-					return {
-						...slot,
-						is_blocked: true,
-						block_message: blockMessage,
-					};
-				});
-				handleBlockDaySlots(day.date, updatedSlots);
+				handleBlockSlot(slot, blockMessage);
 				toast.success("Datele au fost salvate cu succes!");
 				handleClose();
 			},
@@ -68,21 +60,22 @@ export default function CalendarEventsHeaderModal({
 
 	const actions: ActionButtonType[] = [
 		{
+			title: "Renunță",
+			props: { onClick: handleClose, color: "inherit" },
+		},
+		{
 			title: "Blochează",
 			props: {
-				onClick: () => {
-					if (userId) {
-						const payload = day.slots.map(slot => {
-							return {
-								start_date: slot.start_date_utc,
-								end_date: slot.end_date_utc,
-								block_message: blockMessage,
-								user_id: userId,
-							};
-						});
-						handleBlock(payload);
-					}
-				},
+				onClick: handleSubmit(() =>
+					handleBlock([
+						{
+							start_date: slot.start_date_utc,
+							end_date: slot.end_date_utc,
+							user_id: userId,
+							block_message: blockMessage,
+						},
+					])
+				),
 				loading: isPending,
 				disabled: !blockMessage,
 			},
@@ -92,31 +85,27 @@ export default function CalendarEventsHeaderModal({
 	return (
 		<FormProvider {...methods}>
 			<Modal
-				title={`Data: ${dayjs(day.date).format("DD MMM YYYY")}`}
+				title={`Data: ${dayjs(slot.start_date_locale).format("DD MMM YYYY")}, Slot: ${shortTimeFormat(slot.start_date_locale)}`}
 				open={open}
 				handleClose={handleClose}
 				actions={actions}
 			>
 				<Typography fontWeight={600}>
-					Ești sigur că dorești să blochezi sloturile acestei zi?
+					Ești sigur că dorești să blochezi acest slot?
 				</Typography>
-				<Typography sx={{ mt: 5 }}>
-					{!editMessage
-						? `Te rugăm să alegi din sugestiile de mai jos`
-						: "Te rugăm să introduci un mesaj"}
-				</Typography>
+				<Typography sx={{ mt: 5 }}>Te rugăm să adaugi un mesaj</Typography>
 				<CustomStack sx={{ mt: 2.5 }}>
 					{!editMessage && (
 						<InputSelect
-							name="block_message"
+							name="blockMessage"
 							rules={{ ...isRequired }}
 							options={messages}
-							placeholder="Te rugam sa selectezi"
+							placeholder="Te rugăm sa selectezi"
 						/>
 					)}
 					{editMessage && (
 						<Input
-							name="block_message"
+							name="blockMessage"
 							rules={{ ...isRequired, ...minField(3), ...maxField(100) }}
 							placeholder="Te rugăm să introduci un mesaj"
 						/>
@@ -126,7 +115,7 @@ export default function CalendarEventsHeaderModal({
 						isEdit={editMessage}
 						onClick={() => {
 							setEditMessage(edit => !edit);
-							setValue("block_message", "");
+							setValue("blockMessage", "");
 						}}
 					/>
 				</CustomStack>

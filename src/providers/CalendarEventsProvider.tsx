@@ -43,7 +43,8 @@ export type CalendarContextType = {
 	handleDuration: (e: SelectChangeEvent<number>) => void;
 	setCalendar: (cal: CalendarType | undefined) => void;
 	updateCalendar: (partial: Partial<CalendarType>) => void;
-	handleUpdateDaySlots: (date: string, updatedSlots: SlotType[]) => void;
+	handleBlockDaySlots: (date: string, updatedSlots: SlotType[]) => void;
+	handleBlockSlot: (slot: SlotType, block_message: string | undefined) => void;
 };
 
 export const CalendarEventsContext = createContext<
@@ -136,7 +137,7 @@ export const CalendarEventsProvider = ({
 		});
 	}, []);
 
-	const handleUpdateDaySlots = useCallback(
+	const handleBlockDaySlots = useCallback(
 		(date: string, updatedSlots: SlotType[]) => {
 			setCalendar(prev => {
 				if (!prev) return prev;
@@ -152,13 +153,41 @@ export const CalendarEventsProvider = ({
 		[]
 	);
 
+	const handleBlockSlot = useCallback(
+		(slot: SlotType, block_message: string | undefined) => {
+			setCalendar(prev => {
+				if (!prev) return prev;
+
+				return {
+					...prev,
+					data: prev.data.map(day => {
+						return {
+							...day,
+							data: day.slots.map(s =>
+								s.start_date_utc === slot.start_date_utc
+									? {
+											...s,
+											is_blocked: true,
+											info: { ...s.info, block_message },
+										}
+									: s
+							),
+						};
+					}),
+				};
+			});
+		},
+		[]
+	);
+
 	return (
 		<CalendarEventsContext.Provider
 			value={{
 				calendar,
 				setCalendar,
 				updateCalendar,
-				handleUpdateDaySlots,
+				handleBlockDaySlots,
+				handleBlockSlot,
 				startDate,
 				endDate,
 				fullScreen,

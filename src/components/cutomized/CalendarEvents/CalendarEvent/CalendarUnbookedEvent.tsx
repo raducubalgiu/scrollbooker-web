@@ -12,6 +12,7 @@ import { SlotType } from "../calendar-utils/calendar-types";
 import CreateEventModal from "./CreateEventModal";
 import dayjs from "dayjs";
 import { shortTimeFormat } from "@/utils/date-utils-dayjs";
+import CalendarEventBlockSlotModal from "./CalendarEventBlockSlotModal";
 
 type CalendarUnbookedEventProps = {
 	slot: SlotType;
@@ -23,7 +24,8 @@ export default function CalendarUnbookedEvent({
 	height,
 }: CalendarUnbookedEventProps) {
 	const [open, setOpen] = useState(false);
-	const [isBlocked, setIsBlocked] = useState(false);
+	const [openBlockSlot, setOpenBlockSlot] = useState(false);
+	const [isBlocked, setIsBlocked] = useState(slot.is_blocked);
 	const { block_message } = slot?.info || {};
 
 	useEffect(() => {
@@ -35,9 +37,9 @@ export default function CalendarUnbookedEvent({
 			height,
 			p: 1,
 			position: "relative",
-			bgcolor: isBlocked ? "#3b1111" : "background.paper",
+			bgcolor: isBlocked && !openBlockSlot ? "#3b1111" : "background.paper",
 		});
-	}, [isBlocked, height]);
+	}, [isBlocked, height, openBlockSlot]);
 
 	const tooltipTitle = isBlocked
 		? "Deblochează acest slot"
@@ -54,6 +56,14 @@ export default function CalendarUnbookedEvent({
 				handleClose={() => setOpen(false)}
 				slot={slot}
 			/>
+			<CalendarEventBlockSlotModal
+				open={openBlockSlot}
+				slot={slot}
+				handleClose={() => {
+					setIsBlocked(false);
+					setOpenBlockSlot(false);
+				}}
+			/>
 			<Box sx={styles}>
 				<Stack
 					flexDirection="row"
@@ -68,7 +78,10 @@ export default function CalendarUnbookedEvent({
 							<Tooltip title={tooltipTitle}>
 								<Checkbox
 									checked={isBlocked}
-									onChange={e => setIsBlocked(e.target.checked)}
+									onChange={e => {
+										setOpenBlockSlot(true);
+										setIsBlocked(e.target.checked);
+									}}
 									color="default"
 								/>
 							</Tooltip>
