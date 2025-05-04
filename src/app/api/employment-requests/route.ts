@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteRequest, get, post } from "@/utils/requests";
-import { decodeToken } from "@/lib/auth/decodeToken";
+import { getUserServerSession } from "@/utils/get-user-server";
 
 export const GET = async () => {
-	const { user_id } = await decodeToken();
+	const { userId } = await getUserServerSession();
 
 	const response = (
 		await get({
-			url: `/users/${user_id}/employment-requests`,
+			url: `/users/${userId}/employment-requests`,
 		})
 	).data;
 
