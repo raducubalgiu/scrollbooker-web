@@ -11,7 +11,7 @@ type EmployeeOptionsType = { id: number; username: string };
 
 type DashboardEmployeesSelectProps = {
 	options: EmployeeOptionsType[];
-	selectedEmployeeId: number;
+	selectedEmployeeId: number | undefined;
 	onSetSelectedEmployee: (event: SelectChangeEvent<number>) => void;
 };
 

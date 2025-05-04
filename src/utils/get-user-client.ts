@@ -5,8 +5,8 @@ export function useUserClientSession() {
 
 	const isLoading = status === "loading";
 	const isAuthenticated = status === "authenticated";
-	const userId = session?.user_id ?? null;
-	const businessId = session?.business_id ?? null;
+	const userId = session?.user_id ?? undefined;
+	const businessId = session?.business_id ?? undefined;
 
 	return {
 		isLoading,

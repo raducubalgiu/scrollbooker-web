@@ -30,7 +30,7 @@ const defaultEndDate = dayjs()
 	.format("YYYY-MM-DD");
 
 type DashboardCalendarAvailabilityProps = {
-	userId: number;
+	userId: number | undefined;
 	slotDuration: number | undefined;
 };
 

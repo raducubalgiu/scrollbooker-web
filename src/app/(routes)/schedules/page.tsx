@@ -1,20 +1,20 @@
 import SchedulesModule from "@/components/modules/SchedulesModule/SchedulesModule";
 import React from "react";
-import { decodeToken } from "@/lib/auth/decodeToken";
 import { get } from "@/utils/requests";
 import { ScheduleResponseType } from "@/models/ScheduleType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
+import { getUserServerSession } from "@/utils/get-user-server";
 
 async function Schedules() {
-	const { user_id } = await decodeToken();
+	const { userId } = await getUserServerSession();
 
 	const response = (
-		await get({
-			url: `/users/${user_id}/schedules`,
+		await get<ScheduleResponseType[]>({
+			url: `/users/${userId}/schedules`,
 		})
 	).data;
 
-	return <SchedulesModule data={response as ScheduleResponseType[]} />;
+	return <SchedulesModule data={response} />;
 }
 
 export default ProtectedPage(Schedules, "SCHEDULES_VIEW");

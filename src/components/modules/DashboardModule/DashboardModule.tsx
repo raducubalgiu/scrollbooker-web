@@ -18,7 +18,7 @@ import DashboardEmployeesSelect from "./DashboardEmployeesSelect";
 import { UserInfoType } from "@/models/UserInfoType";
 
 type DashboardModuleProps = {
-	userId: number;
+	userId: number | undefined;
 	slotDuration: number | undefined;
 };
 
@@ -54,6 +54,7 @@ export default function DashboardModule({
 			all_employees: selectedEmployee.id === 0,
 			user_id: selectedEmployee.id === 0 ? userId : selectedEmployee.id,
 		},
+		options: { enabled: !!userId },
 	});
 
 	const employeesOptions = [
@@ -98,7 +99,7 @@ export default function DashboardModule({
 				<Protected permission="EMPLOYEES_VIEW">
 					<DashboardEmployeesSelect
 						options={employeesOptions}
-						selectedEmployeeId={selectedEmployee.id}
+						selectedEmployeeId={selectedEmployee?.id}
 						onSetSelectedEmployee={e =>
 							setSelectedEmployee({
 								id: Number(e.target.value),

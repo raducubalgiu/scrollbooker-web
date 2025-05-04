@@ -21,16 +21,10 @@ import { useState } from "react";
 import ActionButton, {
 	ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { useMutate } from "@/hooks/useHttp";
 
 type SchedulesProps = { data: ScheduleResponseType[] };
-
-const updateSchedule = async (data: ScheduleUpdateType[]) => {
-	const response = await axios.put(`/api/schedules`, data);
-	return response.data;
-};
 
 export default function SchedulesModule({ data }: SchedulesProps) {
 	const [disabled, setDisabled] = useState(true);
@@ -50,13 +44,22 @@ export default function SchedulesModule({ data }: SchedulesProps) {
 	const { watch, reset, handleSubmit } = methods;
 	const { schedules } = watch();
 
-	const { mutate, isPending } = useMutation({
-		mutationFn: updateSchedule,
-		onSuccess: () => {
-			toast.success("Ti-ai salvat cu succes programul!");
-			setDisabled(true);
+	const { mutate: handleUpdateSchedules, isPending } = useMutate<
+		ScheduleUpdateType[]
+	>({
+		key: ["update-schedules"],
+		url: "/api/schedules",
+		method: "PUT",
+		options: {
+			onSuccess: () => {
+				toast.success("Ți-ai salvat cu succes programul!");
+				setDisabled(true);
+			},
+			onError: () => {
+				reset();
+				toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu");
+			},
 		},
-		onError: () => {},
 	});
 
 	const handleSave = (new_data: { schedules: ScheduleResponseType[] }) => {
@@ -68,12 +71,12 @@ export default function SchedulesModule({ data }: SchedulesProps) {
 				end_time: end_time == "closed" ? null : end_time,
 			};
 		});
-		mutate(updated_schedules);
+		handleUpdateSchedules(updated_schedules);
 	};
 
 	const actions: ActionButtonType[] = [
 		{
-			title: "Renunta",
+			title: "Renunță",
 			hidden: disabled,
 			props: {
 				color: "inherit",
@@ -84,14 +87,14 @@ export default function SchedulesModule({ data }: SchedulesProps) {
 			},
 		},
 		{
-			title: "Editeaza",
+			title: "Editează",
 			hidden: !disabled,
 			props: {
 				onClick: () => setDisabled(false),
 			},
 		},
 		{
-			title: "Salveaza",
+			title: "Salvează",
 			hidden: disabled,
 			props: {
 				onClick: handleSubmit(handleSave),
@@ -103,17 +106,17 @@ export default function SchedulesModule({ data }: SchedulesProps) {
 	return (
 		<FormProvider {...methods}>
 			<Paper sx={{ p: 2.5 }}>
-				<Typography sx={{ fontSize: 20 }}>Programul locatiei:</Typography>
+				<Typography sx={{ fontSize: 20 }}>Programul locației:</Typography>
 				<Divider sx={{ mt: 2.5 }} />
 				<Table>
 					<TableHead>
 						<TableRow>
-							<TableCell sx={{ fontWeight: "600" }}>Ziua saptamanii</TableCell>
+							<TableCell sx={{ fontWeight: "600" }}>Ziua săptămânii</TableCell>
 							<TableCell sx={{ fontWeight: "600" }} align="center">
 								Ora de start
 							</TableCell>
 							<TableCell sx={{ fontWeight: "600" }} align="center">
-								Ora de sfarsit
+								Ora de sfârșit
 							</TableCell>
 						</TableRow>
 					</TableHead>
