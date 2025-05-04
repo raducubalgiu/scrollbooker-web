@@ -24,3 +24,8 @@ img {
 	max-width: 100%;
 	display: block;
 }
+
+#__next-build-watcher,
+.nextjs-dev-overlay {
+	display: none !important;
+}

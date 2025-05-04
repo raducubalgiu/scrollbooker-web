@@ -1,18 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Stack, Typography } from "@mui/material";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "@/components/core/Input/Input";
 import { required } from "@/utils/validation-rules";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function SignIn() {
 	const methods = useForm({ defaultValues: { username: "", password: "" } });
 	const { handleSubmit } = methods;
 	const [loading, setLoading] = useState(false);
 	const isRequired = required();
+	const router = useRouter();
+	const { status } = useSession();
 
 	const handleLogin = async (data: { username: string; password: string }) => {
 		const { username, password } = data;
@@ -29,9 +32,18 @@ export default function SignIn() {
 			setLoading(false);
 		} else {
 			setLoading(false);
-			window.location.replace("/");
 		}
 	};
+
+	useEffect(() => {
+		if (status === "authenticated") {
+			router.push("/");
+		}
+	}, [router, status]);
+
+	if (status === "loading" || status === "authenticated") {
+		return null;
+	}
 
 	return (
 		<FormProvider {...methods}>
