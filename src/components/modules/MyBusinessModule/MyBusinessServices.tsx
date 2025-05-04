@@ -32,7 +32,7 @@ type MyBusinessServicesProps = {
 
 type DeleteModal = {
 	open: boolean;
-	serviceId: number | null;
+	serviceId: number | undefined;
 };
 
 export default function MyBusinessServices({
@@ -41,10 +41,13 @@ export default function MyBusinessServices({
 	businessId,
 }: MyBusinessServicesProps) {
 	const [open, setOpen] = useState(false);
-	const [deleteModal, setDeleteModal] = useState<DeleteModal>({
+
+	const defaultDeleteState = {
 		open: false,
-		serviceId: null,
-	});
+		serviceId: undefined,
+	};
+	const [deleteModal, setDeleteModal] =
+		useState<DeleteModal>(defaultDeleteState);
 	const methods = useForm({ defaultValues: { services } });
 	const { watch, reset } = methods;
 	const allServices = watch("services");
@@ -57,14 +60,14 @@ export default function MyBusinessServices({
 			onSuccess: () => {
 				toast.success(`Ai eliminat cu succes serviciul dorit`);
 				reset({
-					services: allServices.filter(
+					services: allServices?.filter(
 						serv => serv.id !== deleteModal.serviceId
 					),
 				});
-				setDeleteModal({ open: false, serviceId: null });
+				setDeleteModal(defaultDeleteState);
 			},
 			onError: () => {
-				setDeleteModal({ open: false, serviceId: null });
+				setDeleteModal(defaultDeleteState);
 				toast.error("Ceva nu a mers cum trebuie. Incearcă mai tarziu.");
 			},
 		},
@@ -78,7 +81,7 @@ export default function MyBusinessServices({
 			title: "NU",
 			props: {
 				color: "inherit",
-				onClick: () => setDeleteModal({ open: false, serviceId: null }),
+				onClick: () => setDeleteModal(defaultDeleteState),
 			},
 		},
 		{
@@ -87,7 +90,7 @@ export default function MyBusinessServices({
 		},
 	];
 
-	const chipColor = (serviceId: number) =>
+	const chipColor = (serviceId: number | undefined) =>
 		serviceId === deleteModal.serviceId ? "secondary" : "primary";
 
 	return (
@@ -95,7 +98,7 @@ export default function MyBusinessServices({
 			<FormProvider {...methods}>
 				<MyBusinessModalServices
 					businessId={businessId}
-					allServices={allServices}
+					allServices={allServices ?? []}
 					savedServices={savedServices}
 					open={open}
 					handleClose={() => setOpen(false)}
@@ -103,7 +106,7 @@ export default function MyBusinessServices({
 				<Modal
 					actions={confirmModalActions}
 					open={deleteModal.open}
-					handleClose={() => setDeleteModal({ open: false, serviceId: null })}
+					handleClose={() => setDeleteModal(defaultDeleteState)}
 				>
 					<Typography>
 						Ești sigur că dorești să elimini acest serviciu?

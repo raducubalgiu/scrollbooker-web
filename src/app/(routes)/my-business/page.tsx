@@ -2,11 +2,11 @@ import React from "react";
 import MainLayout from "../../../components/cutomized/MainLayout/MainLayout";
 import MyBusinessDetails from "@/components/modules/MyBusinessModule/MyBusinessDetails";
 import MyBusinessServices from "@/components/modules/MyBusinessModule/MyBusinessServices";
-import { decodeToken } from "@/lib/auth/decodeToken";
 import { get } from "@/utils/requests";
 import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import { some } from "lodash";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
+import { getUserServerSession } from "@/utils/get-user-server";
 
 type BusinessType = {
 	id: number;
@@ -19,11 +19,11 @@ type BusinessType = {
 };
 
 async function MyBusiness() {
-	const { user_id } = await decodeToken();
+	const { userId } = await getUserServerSession();
 
 	const business = (
 		await get<BusinessType>({
-			url: `/users/${user_id}/business`,
+			url: `/users/${userId}/business`,
 		})
 	).data;
 
@@ -48,8 +48,8 @@ async function MyBusiness() {
 				coordinates={business.coordinates}
 			/>
 			<MyBusinessServices
-				savedServices={business.services}
-				services={servicesWithSelection}
+				savedServices={business?.services}
+				services={servicesWithSelection ?? []}
 				businessId={business.id}
 			/>
 		</MainLayout>
