@@ -7,22 +7,13 @@ import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import { some } from "lodash";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/utils/get-user-server";
-
-type BusinessType = {
-	id: number;
-	description: string;
-	address: string;
-	coordinates: [number, number];
-	owner_id: number;
-	business_type_id: number;
-	services: ServiceType[];
-};
+import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
 
 async function MyBusiness() {
 	const { userId } = await getUserServerSession();
 
 	const business = (
-		await get<BusinessType>({
+		await get<UserBusinessType>({
 			url: `/users/${userId}/business`,
 		})
 	).data;
@@ -48,7 +39,7 @@ async function MyBusiness() {
 				coordinates={business.coordinates}
 			/>
 			<MyBusinessServices
-				savedServices={business?.services}
+				savedServices={business?.services ?? []}
 				services={servicesWithSelection ?? []}
 				businessId={business.id}
 			/>

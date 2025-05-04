@@ -5,7 +5,8 @@ declare module "next-auth" {
 	interface Session extends DefaultSession {
 		accessToken: string;
 		user_id: number;
-		business_id: number;
+		business_id: number | null;
+		business_type_id: number | null;
 		username: string;
 		permissions: string[];
 	}
@@ -18,7 +19,8 @@ declare module "next-auth/jwt" {
 		accessTokenExpires: number;
 		expires_at: number;
 		user_id: number;
-		business_id: number;
+		business_id: number | null;
+		business_type_id: number | null;
 		permissions: string[];
 	}
 }

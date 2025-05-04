@@ -92,6 +92,7 @@ export const authOptions: AuthOptions = {
 				token.permissions = permissions;
 				token.user_id = userInfo.id;
 				token.business_id = userInfo.business_id;
+				token.business_type_id = userInfo.business_type_id;
 
 				return token;
 			}
@@ -122,6 +123,7 @@ export const authOptions: AuthOptions = {
 			session.username = token.username;
 			session.user_id = token.user_id;
 			session.business_id = token.business_id;
+			session.business_type_id = token.business_type_id;
 			session.permissions = token.permissions;
 
 			const expireInMillis = token["accessTokenExpires"];
