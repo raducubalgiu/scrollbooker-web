@@ -1,21 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
-import { UserInfoType } from "@/models/UserInfoType";
+import { getUserServerSession } from "@/utils/get-user-server";
 
 export const GET = async (req: NextRequest) => {
+	const { businessId } = await getUserServerSession();
 	const paginate = req.nextUrl.searchParams;
-
-	const user = (
-		await get<UserInfoType>({
-			url: `/auth/user-info`,
-		})
-	).data;
-
-	if (!user) return NextResponse.json(null);
 
 	const response = (
 		await get({
-			url: `/businesses/${user.business_id}/employees?${paginate}`,
+			url: `/businesses/${businessId}/employees?${paginate}`,
 		})
 	).data;
 

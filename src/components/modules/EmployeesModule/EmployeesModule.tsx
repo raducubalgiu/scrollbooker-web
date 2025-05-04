@@ -46,7 +46,7 @@ export default function EmployeesModule() {
 			},
 			{
 				accessorKey: "ratings_count",
-				header: "Total rating-uri",
+				header: "Număr Recenzii",
 			},
 			{
 				accessorKey: "followers_count",

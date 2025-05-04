@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, deleteRequest } from "@/utils/requests";
-import { decodeToken } from "@/lib/auth/decodeToken";
+import { getUserServerSession } from "@/utils/get-user-server";
 
 export const GET = async (req: NextRequest) => {
-	const { user_id } = await decodeToken();
+	const { userId } = await getUserServerSession();
 	const pagination = req.nextUrl.searchParams;
 
 	const response = (
 		await get({
-			url: `/users/${user_id}/notifications?${pagination}`,
+			url: `/users/${userId}/notifications?${pagination}`,
 		})
 	).data;
 

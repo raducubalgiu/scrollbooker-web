@@ -1,24 +1,24 @@
 import ProductsModule from "@/components/modules/ProductsModule/ProductsModule";
 import React from "react";
 import { get } from "@/utils/requests";
-import { decodeToken } from "@/lib/auth/decodeToken";
 import { FilterType } from "@/models/nomenclatures/FilterType";
 import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
+import { getUserServerSession } from "@/utils/get-user-server";
 
 async function Products() {
-	const { user_id } = await decodeToken();
+	const { userId } = await getUserServerSession();
 
 	const business = (
 		await get<UserBusinessType>({
-			url: `/users/${user_id}/business`,
+			url: `/users/${userId}/business`,
 		})
 	).data;
 
 	const currencies = (
 		await get<CurrencyType[]>({
-			url: `/users/${user_id}/currencies`,
+			url: `/users/${userId}/currencies`,
 		})
 	).data;
 
