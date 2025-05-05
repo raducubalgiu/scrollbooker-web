@@ -31,10 +31,10 @@ export default function CalendarEventsHeaderModal({
 }: CalendarEventsHeaderModalProps) {
 	const [editMessage, setEditMessage] = useState(false);
 	const methods = useForm({
-		defaultValues: { block_message: "Zi legală liberă" },
+		defaultValues: { message: "Zi legală liberă" },
 	});
 	const { setValue, watch } = methods;
-	const blockMessage = watch("block_message");
+	const blockMessage = watch("message");
 	const isRequired = required();
 	const { handleBlockDaySlots } = useCalendarEventsContext();
 
@@ -56,7 +56,7 @@ export default function CalendarEventsHeaderModal({
 					return {
 						...slot,
 						is_blocked: true,
-						block_message: blockMessage,
+						message: blockMessage,
 					};
 				});
 				handleBlockDaySlots(day.date, updatedSlots);
@@ -76,7 +76,7 @@ export default function CalendarEventsHeaderModal({
 							return {
 								start_date: slot.start_date_utc,
 								end_date: slot.end_date_utc,
-								block_message: blockMessage,
+								message: blockMessage,
 								user_id: userId,
 							};
 						});
@@ -108,7 +108,7 @@ export default function CalendarEventsHeaderModal({
 				<CustomStack sx={{ mt: 2.5 }}>
 					{!editMessage && (
 						<InputSelect
-							name="block_message"
+							name="message"
 							rules={{ ...isRequired }}
 							options={messages}
 							placeholder="Te rugam sa selectezi"
@@ -116,7 +116,7 @@ export default function CalendarEventsHeaderModal({
 					)}
 					{editMessage && (
 						<Input
-							name="block_message"
+							name="message"
 							rules={{ ...isRequired, ...minField(3), ...maxField(100) }}
 							placeholder="Te rugăm să introduci un mesaj"
 						/>
@@ -126,7 +126,7 @@ export default function CalendarEventsHeaderModal({
 						isEdit={editMessage}
 						onClick={() => {
 							setEditMessage(edit => !edit);
-							setValue("block_message", "");
+							setValue("message", "");
 						}}
 					/>
 				</CustomStack>

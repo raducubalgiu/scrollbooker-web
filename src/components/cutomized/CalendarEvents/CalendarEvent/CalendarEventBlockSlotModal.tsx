@@ -72,7 +72,7 @@ export default function CalendarEventBlockSlotModal({
 							start_date: slot.start_date_utc,
 							end_date: slot.end_date_utc,
 							user_id: userId,
-							block_message: blockMessage,
+							message: blockMessage,
 						},
 					])
 				),

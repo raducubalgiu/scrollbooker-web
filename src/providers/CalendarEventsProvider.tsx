@@ -44,7 +44,7 @@ export type CalendarContextType = {
 	setCalendar: (cal: CalendarType | undefined) => void;
 	updateCalendar: (partial: Partial<CalendarType>) => void;
 	handleBlockDaySlots: (date: string, updatedSlots: SlotType[]) => void;
-	handleBlockSlot: (slot: SlotType, block_message: string | undefined) => void;
+	handleBlockSlot: (slot: SlotType, message: string | undefined) => void;
 };
 
 export const CalendarEventsContext = createContext<
@@ -154,7 +154,7 @@ export const CalendarEventsProvider = ({
 	);
 
 	const handleBlockSlot = useCallback(
-		(slot: SlotType, block_message: string | undefined) => {
+		(slot: SlotType, message: string | undefined) => {
 			setCalendar(prev => {
 				if (!prev) return prev;
 
@@ -168,7 +168,7 @@ export const CalendarEventsProvider = ({
 									? {
 											...s,
 											is_blocked: true,
-											info: { ...s.info, block_message },
+											info: { ...s.info, message },
 										}
 									: s
 							),

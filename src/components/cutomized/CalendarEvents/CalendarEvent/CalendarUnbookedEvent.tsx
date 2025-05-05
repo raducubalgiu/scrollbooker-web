@@ -26,7 +26,7 @@ export default function CalendarUnbookedEvent({
 	const [open, setOpen] = useState(false);
 	const [openBlockSlot, setOpenBlockSlot] = useState(false);
 	const [isBlocked, setIsBlocked] = useState(slot.is_blocked);
-	const { block_message } = slot?.info || {};
+	const { message } = slot?.info || {};
 
 	useEffect(() => {
 		setIsBlocked(slot.is_blocked);
@@ -47,7 +47,7 @@ export default function CalendarUnbookedEvent({
 
 	const interval = `${shortTimeFormat(slot.start_date_locale)} - ${shortTimeFormat(slot.end_date_locale)}`;
 	const isPast = dayjs().isAfter(dayjs(slot.start_date_locale));
-	const hasBlockMessage = !block_message || block_message === "Altele";
+	const hasBlockMessage = !message || message === "Altele";
 
 	return (
 		<>
@@ -113,12 +113,12 @@ export default function CalendarUnbookedEvent({
 						)}
 						{isPast && (
 							<Typography fontSize={13.5} color="gray" ml={1}>
-								{hasBlockMessage ? "Slot Vacant" : block_message}
+								{hasBlockMessage ? "Slot Vacant" : message}
 							</Typography>
 						)}
 						{isBlocked && !isPast && (
 							<Typography sx={{ opacity: 0.4 }}>
-								{hasBlockMessage ? "Slot Blocat" : block_message}
+								{hasBlockMessage ? "Slot Blocat" : message}
 							</Typography>
 						)}
 					</Stack>
