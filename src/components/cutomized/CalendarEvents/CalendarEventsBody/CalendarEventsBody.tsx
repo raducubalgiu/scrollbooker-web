@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import Grid from "@mui/material/Grid2";
 import { Typography, Box, Stack } from "@mui/material";
 import dayjs from "dayjs";
-import { DayInfo } from "../calendar-utils/calendar-types";
+import { DayInfo } from "../calendar-types";
 import { Theme } from "@mui/system";
 import CalendarEvent from "../CalendarEvent/CalendarEvent";
 import CalendarEventClosed from "../CalendarEvent/CalendarEventClosed";

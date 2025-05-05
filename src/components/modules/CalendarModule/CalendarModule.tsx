@@ -3,7 +3,7 @@
 import { Fragment, useEffect } from "react";
 import { useCustomQuery } from "@/hooks/useHttp";
 import CalendarEvents from "@/components/cutomized/CalendarEvents/CalendarEvents";
-import { CalendarType } from "@/components/cutomized/CalendarEvents/calendar-utils/calendar-types";
+import { CalendarType } from "@/components/cutomized/CalendarEvents/calendar-types";
 import { Dialog } from "@mui/material";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 

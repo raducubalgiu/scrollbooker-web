@@ -1,5 +1,5 @@
 import { ChangeEvent, useMemo, useState } from "react";
-import { DayInfo } from "../calendar-utils/calendar-types";
+import { DayInfo } from "../calendar-types";
 import { Checkbox, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
 import { some, every } from "lodash";

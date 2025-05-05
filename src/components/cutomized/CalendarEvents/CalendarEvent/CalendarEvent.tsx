@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Box } from "@mui/material";
-import { SlotType } from "../calendar-utils/calendar-types";
+import { SlotType } from "../calendar-types";
 import CalendarBookedEvent from "./CalendarBookedEvent";
 import CalendarUnbookedEvent from "./CalendarUnbookedEvent";
 import { Theme } from "@mui/system";

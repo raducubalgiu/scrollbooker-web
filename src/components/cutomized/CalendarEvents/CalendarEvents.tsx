@@ -3,7 +3,7 @@ import { memo } from "react";
 import { Box, Paper, TableContainer } from "@mui/material";
 import dayjs from "dayjs";
 import CalendarEventsToolbar from "./CalendarEventsToolbar/CalendarEventsToolbar";
-import { CalendarType } from "./calendar-utils/calendar-types";
+import { CalendarType } from "./calendar-types";
 import CalendarEventsHeader from "./CalendarEventsHeader/CalendarEventsHeader";
 import CalendarEventsBody from "./CalendarEventsBody/CalendarEventsBody";
 

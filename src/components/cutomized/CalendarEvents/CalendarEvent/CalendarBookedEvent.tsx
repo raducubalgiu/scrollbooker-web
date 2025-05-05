@@ -1,5 +1,5 @@
 import { Box, Stack, Avatar, Typography } from "@mui/material";
-import { SlotType } from "../calendar-utils/calendar-types";
+import { SlotType } from "../calendar-types";
 import { shortTimeFormat } from "@/utils/date-utils-dayjs";
 
 type CalendarBookedEventProps = {

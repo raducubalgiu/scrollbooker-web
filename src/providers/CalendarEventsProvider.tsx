@@ -6,7 +6,7 @@ import { SelectChangeEvent } from "@mui/material";
 import {
 	CalendarType,
 	SlotType,
-} from "@/components/cutomized/CalendarEvents/calendar-utils/calendar-types";
+} from "@/components/cutomized/CalendarEvents/calendar-types";
 import dayjs from "dayjs";
 
 import "dayjs/locale/ro";

@@ -5,7 +5,7 @@ dayjs.locale("ro");
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
 import { Divider, Stack, Typography } from "@mui/material";
-import { SlotType } from "../calendar-utils/calendar-types";
+import { SlotType } from "../calendar-types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "@/components/core/Input/Input";
 import InputSelect from "@/components/core/Input/InputSelect";

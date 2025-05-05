@@ -2,7 +2,7 @@
 
 import Modal from "@/components/core/Modal/Modal";
 import React, { useState } from "react";
-import { SlotType } from "../calendar-utils/calendar-types";
+import { SlotType } from "../calendar-types";
 import dayjs from "dayjs";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";

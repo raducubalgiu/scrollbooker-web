@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid2";
 import dayjs from "dayjs";
 import { Stack, Typography } from "@mui/material";
-import { DayInfo } from "../calendar-utils/calendar-types";
+import { DayInfo } from "../calendar-types";
 import CalendarEventsHeaderCheckbox from "./CalendarEventsHeaderCheckbox";
 
 type CalendarEventsHeaderProps = {

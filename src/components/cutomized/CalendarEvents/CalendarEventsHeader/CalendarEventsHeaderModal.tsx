@@ -5,7 +5,7 @@ import Modal from "@/components/core/Modal/Modal";
 import { useMutate } from "@/hooks/useHttp";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { DayInfo } from "../calendar-utils/calendar-types";
+import { DayInfo } from "../calendar-types";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "@/components/core/Input/Input";

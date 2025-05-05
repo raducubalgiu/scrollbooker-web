@@ -8,7 +8,7 @@ import {
 	Checkbox,
 } from "@mui/material";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
-import { SlotType } from "../calendar-utils/calendar-types";
+import { SlotType } from "../calendar-types";
 import CreateEventModal from "./CreateEventModal";
 import dayjs from "dayjs";
 import { shortTimeFormat } from "@/utils/date-utils-dayjs";
