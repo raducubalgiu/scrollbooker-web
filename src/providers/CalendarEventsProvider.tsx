@@ -42,9 +42,8 @@ export type CalendarContextType = {
 	handleDensity: () => void;
 	handleDuration: (e: SelectChangeEvent<number>) => void;
 	setCalendar: (cal: CalendarType | undefined) => void;
-	updateCalendar: (partial: Partial<CalendarType>) => void;
-	handleBlockDaySlots: (date: string, updatedSlots: SlotType[]) => void;
-	handleBlockSlot: (slot: SlotType, message: string | undefined) => void;
+	updateDaySlots: (date: string, updatedSlots: SlotType[]) => void;
+	updateSlot: (slot: SlotType) => void;
 };
 
 export const CalendarEventsContext = createContext<
@@ -126,18 +125,7 @@ export const CalendarEventsProvider = ({
 		[]
 	);
 
-	const updateCalendar = useCallback((cal: Partial<CalendarType>) => {
-		setCalendar(prev => {
-			if (!prev) return prev;
-
-			return {
-				...prev,
-				cal,
-			};
-		});
-	}, []);
-
-	const handleBlockDaySlots = useCallback(
+	const updateDaySlots = useCallback(
 		(date: string, updatedSlots: SlotType[]) => {
 			setCalendar(prev => {
 				if (!prev) return prev;
@@ -153,41 +141,29 @@ export const CalendarEventsProvider = ({
 		[]
 	);
 
-	const handleBlockSlot = useCallback(
-		(slot: SlotType, message: string | undefined) => {
-			setCalendar(prev => {
-				if (!prev) return prev;
+	const updateSlot = useCallback((slot: SlotType) => {
+		setCalendar(prev => {
+			if (!prev) return prev;
 
-				return {
-					...prev,
-					data: prev.data.map(day => {
-						return {
-							...day,
-							data: day.slots.map(s =>
-								s.start_date_utc === slot.start_date_utc
-									? {
-											...s,
-											is_blocked: true,
-											info: { ...s.info, message },
-										}
-									: s
-							),
-						};
-					}),
-				};
-			});
-		},
-		[]
-	);
+			return {
+				...prev,
+				data: prev.data.map(day => ({
+					...day,
+					slots: day.slots.map(s =>
+						s.start_date_utc === slot.start_date_utc ? slot : s
+					),
+				})),
+			};
+		});
+	}, []);
 
 	return (
 		<CalendarEventsContext.Provider
 			value={{
 				calendar,
 				setCalendar,
-				updateCalendar,
-				handleBlockDaySlots,
-				handleBlockSlot,
+				updateDaySlots,
+				updateSlot,
 				startDate,
 				endDate,
 				fullScreen,

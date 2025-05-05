@@ -31,10 +31,10 @@ export default function CalendarEventBlockSlotModal({
 }: CalendarEventBlockSlotModalProps) {
 	const { userId } = useUserClientSession();
 	const [editMessage, setEditMessage] = useState(false);
-	const { handleBlockSlot } = useCalendarEventsContext();
-	const methods = useForm({ defaultValues: { blockMessage: "" } });
+	const { updateSlot } = useCalendarEventsContext();
+	const methods = useForm({ defaultValues: { message: "" } });
 	const { setValue, watch, handleSubmit } = methods;
-	const blockMessage = watch("blockMessage");
+	const message = watch("message");
 	const isRequired = required();
 
 	const messages = [
@@ -51,7 +51,18 @@ export default function CalendarEventBlockSlotModal({
 			onError: () =>
 				toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu."),
 			onSuccess: () => {
-				handleBlockSlot(slot, blockMessage);
+				updateSlot({
+					...slot,
+					is_blocked: true,
+					info: {
+						channel: "own_client",
+						service_name: "",
+						product_price: 0,
+						currency: "",
+						customer: null,
+						message,
+					},
+				});
 				toast.success("Datele au fost salvate cu succes!");
 				handleClose();
 			},
@@ -72,12 +83,12 @@ export default function CalendarEventBlockSlotModal({
 							start_date: slot.start_date_utc,
 							end_date: slot.end_date_utc,
 							user_id: userId,
-							message: blockMessage,
+							message,
 						},
 					])
 				),
 				loading: isPending,
-				disabled: !blockMessage,
+				disabled: !message,
 			},
 		},
 	];
@@ -97,7 +108,7 @@ export default function CalendarEventBlockSlotModal({
 				<CustomStack sx={{ mt: 2.5 }}>
 					{!editMessage && (
 						<InputSelect
-							name="blockMessage"
+							name="message"
 							rules={{ ...isRequired }}
 							options={messages}
 							placeholder="Te rugăm sa selectezi"
@@ -105,7 +116,7 @@ export default function CalendarEventBlockSlotModal({
 					)}
 					{editMessage && (
 						<Input
-							name="blockMessage"
+							name="message"
 							rules={{ ...isRequired, ...minField(3), ...maxField(100) }}
 							placeholder="Te rugăm să introduci un mesaj"
 						/>
@@ -115,7 +126,7 @@ export default function CalendarEventBlockSlotModal({
 						isEdit={editMessage}
 						onClick={() => {
 							setEditMessage(edit => !edit);
-							setValue("blockMessage", "");
+							setValue("message", "");
 						}}
 					/>
 				</CustomStack>

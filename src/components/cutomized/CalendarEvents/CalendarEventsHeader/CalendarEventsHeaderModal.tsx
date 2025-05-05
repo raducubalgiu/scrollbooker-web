@@ -36,7 +36,7 @@ export default function CalendarEventsHeaderModal({
 	const { setValue, watch } = methods;
 	const blockMessage = watch("message");
 	const isRequired = required();
-	const { handleBlockDaySlots } = useCalendarEventsContext();
+	const { updateDaySlots } = useCalendarEventsContext();
 
 	const messages = [
 		{ value: "Zi legală liberă", name: "Zi legală liberă" },
@@ -59,7 +59,7 @@ export default function CalendarEventsHeaderModal({
 						message: blockMessage,
 					};
 				});
-				handleBlockDaySlots(day.date, updatedSlots);
+				updateDaySlots(day.date, updatedSlots);
 				toast.success("Datele au fost salvate cu succes!");
 				handleClose();
 			},
