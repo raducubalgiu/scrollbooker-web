@@ -14,6 +14,7 @@ export type AppointmentInfoType = {
 };
 
 export type SlotType = {
+	id: number | null;
 	start_date_locale: string;
 	end_date_locale: string;
 	start_date_utc: string;
