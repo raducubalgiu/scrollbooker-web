@@ -5,7 +5,6 @@ import { Box, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import CustomStack from "../../core/CustomStack/CustomStack";
 import DashboardBarChart from "./DashboardBarChart";
-import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
 import { useCustomQuery } from "@/hooks/useHttp";
 import DashboardCardSummary from "./DashboardCardSummary";
 import { DashboardSummaryType } from "@/models/DashboardSummaryType";
@@ -16,16 +15,13 @@ import { PaginatedData } from "@/components/core/Table/Table";
 import usePermission from "@/components/cutomized/Protected/usePermission";
 import DashboardEmployeesSelect from "./DashboardEmployeesSelect";
 import { UserInfoType } from "@/models/UserInfoType";
+import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
 
 type DashboardModuleProps = {
 	userId: number | undefined;
-	slotDuration: number | undefined;
 };
 
-export default function DashboardModule({
-	userId,
-	slotDuration,
-}: DashboardModuleProps) {
+export default function DashboardModule({ userId }: DashboardModuleProps) {
 	const { filters, handleDaily, handleMonthly, handleWeekly, PeriodEnum } =
 		useDashboardReducer();
 	const { startDate, endDate } = filters;
@@ -49,10 +45,10 @@ export default function DashboardModule({
 		key: ["dashboard", startDate, endDate, selectedEmployee.id, userId],
 		url: `/api/dashboard`,
 		params: {
-			start_date: startDate,
-			end_date: endDate,
-			all_employees: selectedEmployee.id === 0,
-			user_id: selectedEmployee.id === 0 ? userId : selectedEmployee.id,
+			startDate,
+			endDate,
+			allEmployees: selectedEmployee.id === 0,
+			userId: selectedEmployee.id === 0 ? userId : selectedEmployee.id,
 		},
 		options: { enabled: !!userId },
 	});
@@ -125,10 +121,7 @@ export default function DashboardModule({
 				</Grid>
 				<Grid size={4}>
 					<Protected permission="DASHBOARD_CALENDAR_VIEW">
-						<DashboardCalendarAvailability
-							userId={userId}
-							slotDuration={slotDuration}
-						/>
+						<DashboardCalendarAvailability userId={userId} />
 					</Protected>
 				</Grid>
 			</Grid>
