@@ -12,7 +12,12 @@ import { SlotType } from "../calendar-types";
 import CreateEventModal from "./CreateEventModal";
 import dayjs from "dayjs";
 import { shortTimeFormat } from "@/utils/date-utils-dayjs";
-import CalendarEventBlockSlotModal from "./CalendarEventBlockSlotModal";
+import CalendarEventsBlockModal, {
+	BlockUpdater,
+} from "../CalendarEventsModals/CalendarEventsBlockModal";
+import { useUserClientSession } from "@/lib/auth/get-user-client";
+import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
+import { toast } from "react-toastify";
 
 type CalendarUnbookedEventProps = {
 	slot: SlotType;
@@ -23,6 +28,8 @@ export default function CalendarUnbookedEvent({
 	slot,
 	height,
 }: CalendarUnbookedEventProps) {
+	const { updateSlot } = useCalendarEventsContext();
+	const { userId } = useUserClientSession();
 	const [open, setOpen] = useState(false);
 	const [openBlockSlot, setOpenBlockSlot] = useState(false);
 	const [isBlocked, setIsBlocked] = useState(slot.is_blocked);
@@ -49,6 +56,35 @@ export default function CalendarUnbookedEvent({
 	const isPast = dayjs().isAfter(dayjs(slot.start_date_locale));
 	const hasBlockMessage = !message || message === "Altele";
 
+	const title = `Data: ${dayjs(slot.start_date_locale).format("DD MMM YYYY")}, Slot: ${shortTimeFormat(slot.start_date_locale)}`;
+	const updater: BlockUpdater = [
+		{ startDate: slot.start_date_utc, endDate: slot.end_date_utc, userId },
+	];
+
+	const messages = [
+		{ value: "Zi legală liberă", name: "Zi legală liberă" },
+		{ value: "Concediu de odihnă", name: "Concediu de odihnă" },
+		{ value: "Concediu medical", name: "Concediu medical" },
+		{ value: "Altele", name: "Altele" },
+	];
+
+	const handleUpdateSlot = (updatedMessage: string) => {
+		updateSlot({
+			...slot,
+			is_blocked: true,
+			info: {
+				channel: "own_client",
+				service_name: "",
+				product_price: 0,
+				currency: "",
+				customer: null,
+				message: updatedMessage,
+			},
+		});
+		toast.success("Datele au fost salvate cu succes");
+		setOpenBlockSlot(false);
+	};
+
 	return (
 		<>
 			<CreateEventModal
@@ -56,13 +92,16 @@ export default function CalendarUnbookedEvent({
 				handleClose={() => setOpen(false)}
 				slot={slot}
 			/>
-			<CalendarEventBlockSlotModal
+			<CalendarEventsBlockModal
+				title={title}
 				open={openBlockSlot}
-				slot={slot}
 				handleClose={() => {
-					setIsBlocked(false);
 					setOpenBlockSlot(false);
+					setIsBlocked(isBlocked => !isBlocked);
 				}}
+				updater={updater}
+				messages={messages}
+				onSuccessUpdate={handleUpdateSlot}
 			/>
 			<Box sx={styles}>
 				<Stack
