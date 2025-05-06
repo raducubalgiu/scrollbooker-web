@@ -63,6 +63,7 @@ export default function FiltersModule() {
 				rowCount={filters?.count}
 				columns={filtersColumns}
 				manualPagination
+				enableFilters={false}
 				onDeletingRowSave={onFilterDeletingRowSave}
 				onCreatingRowSave={onFilterCreatingRowSave}
 				onEditingRowSave={onFilterEditingRowSave}

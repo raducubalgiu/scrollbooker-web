@@ -60,6 +60,7 @@ export default function SubFiltersModule({
 			enableColumnFilters={false}
 			enableSorting={false}
 			topToolbarIconButton
+			enableFilters={false}
 			onPaginationChange={setSubFiltersPagination}
 			onCreatingRowSave={onSubFilterCreatingRowSave}
 			onEditingRowSave={onSubFilterEditingRowSave}

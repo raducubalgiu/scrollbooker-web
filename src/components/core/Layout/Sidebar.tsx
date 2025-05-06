@@ -125,31 +125,31 @@ export default function Sidebar() {
 
 	const superAdminRoutes = [
 		{
-			label: "Business Domains",
+			label: "Domeniu Business",
 			route: "/nomenclatures/business-domains",
 		},
 		{
-			label: "Business Types",
+			label: "Tip Business",
 			route: "/nomenclatures/business-types",
 		},
 		{
-			label: "Service Domains",
+			label: "Domeniu Serviciu",
 			route: "/nomenclatures/service-domains",
 		},
 		{
-			label: "Services",
+			label: "Servicii",
 			route: "/nomenclatures/services",
 		},
 		{
-			label: "Filters",
+			label: "Filtre",
 			route: "/nomenclatures/filters",
 		},
 		{
-			label: "Currencies",
+			label: "Monede",
 			route: "/nomenclatures/currencies",
 		},
 		{
-			label: "Roles and Permissions",
+			label: "Roluri și permisiuni",
 			route: "/nomenclatures/roles-and-permissions",
 		},
 	];

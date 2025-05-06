@@ -72,7 +72,10 @@ export default function Table<T extends Record<string, unknown>>({
 		table: MRT_TableInstance<T>;
 	}) =>
 		topToolbarIconButton ? (
-			<AddIconButton onClick={() => table.setCreatingRow(true)} />
+			<AddIconButton
+				onClick={() => table.setCreatingRow(true)}
+				color="primary"
+			/>
 		) : (
 			<Button onClick={() => table.setCreatingRow(true)} variant="contained">
 				Adaugă

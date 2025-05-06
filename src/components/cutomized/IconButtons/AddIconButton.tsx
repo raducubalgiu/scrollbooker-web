@@ -1,13 +1,16 @@
 import React from "react";
-import { Tooltip, IconButton } from "@mui/material";
+import { Tooltip, IconButton, IconButtonProps } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-type AddIconButtonProps = { onClick: () => void };
+type AddIconButtonProps = { onClick: () => void } & IconButtonProps;
 
-export default function AddIconButton({ onClick }: AddIconButtonProps) {
+export default function AddIconButton({
+	onClick,
+	...props
+}: AddIconButtonProps) {
 	return (
 		<Tooltip title="Adaugă">
-			<IconButton onClick={onClick}>
+			<IconButton onClick={onClick} {...props}>
 				<AddCircleIcon />
 			</IconButton>
 		</Tooltip>

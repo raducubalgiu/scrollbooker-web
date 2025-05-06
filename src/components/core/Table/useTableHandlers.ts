@@ -97,6 +97,14 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 		values,
 		table,
 	}) => {
+		if (extraParams) delete extraParams.id;
+
+		for (const key in extraParams) {
+			if (key in values) {
+				throw new Error(`Key ${key} from extraParams already exists in value`);
+			}
+		}
+
 		await handleUpdate({ id: row.original.id, ...values, ...extraParams });
 
 		Object.entries(values).forEach(([key, value]) => {
