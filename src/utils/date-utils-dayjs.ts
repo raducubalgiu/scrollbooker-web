@@ -9,6 +9,8 @@ export const shortPrettyDate = (date: string) =>
 	dayjs(date).format("D MMMM YY");
 export const shortTimeFormat = (dateTime: string) =>
 	dayjs(dateTime).format("HH:mm");
+export const timeIntervalFormat = (startTime: string, endTime: string) =>
+	`${shortTimeFormat(startTime)} - ${shortTimeFormat(endTime)}`;
 
 export const timeWithOffset = (
 	timeStr: string,

@@ -30,12 +30,18 @@ declare module "@mui/material/styles" {
 		neutral: Palette["primary"];
 		surface: Palette["primary"];
 		border: Palette["primary"];
+		slotBlocked: Palette["primary"];
+		slotBookedOwnClient: Palette["primary"];
+		slotBookedScrollBooker: Palette["primary"];
 	}
 
 	interface PaletteOptions {
 		neutral?: PaletteOptions["primary"];
 		surface?: PaletteOptions["primary"];
 		border: PaletteOptions["primary"];
+		slotBlocked: PaletteOptions["primary"];
+		slotBookedOwnClient: PaletteOptions["primary"];
+		slotBookedScrollBooker: PaletteOptions["primary"];
 	}
 
 	interface TypographyVariants {
@@ -137,6 +143,15 @@ export const darkTheme = createTheme({
 		},
 		border: {
 			main: "rgba(81, 81, 81, 1)",
+		},
+		slotBlocked: {
+			main: "#3b1111",
+		},
+		slotBookedOwnClient: {
+			main: "#1B4D1F",
+		},
+		slotBookedScrollBooker: {
+			main: "#C06020",
 		},
 	},
 	typography: {
@@ -251,6 +266,15 @@ export const lightTheme = createTheme({
 		},
 		border: {
 			main: "rgba(81, 81, 81, 1)",
+		},
+		slotBlocked: {
+			main: "#3b1111",
+		},
+		slotBookedOwnClient: {
+			main: "#1B4D1F",
+		},
+		slotBookedScrollBooker: {
+			main: "#C06020",
 		},
 	},
 	typography: {

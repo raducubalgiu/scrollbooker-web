@@ -36,11 +36,9 @@ export default function CalendarEvent({
 		return (theme: Theme) => {
 			switch (true) {
 				case slot.info?.channel === "scroll_booker":
-					return "#C06020";
+					return "slotBookedScrollBooker.main";
 				case slot.info?.channel === "own_client":
-					return "#1B4D1F";
-				case slot.is_blocked:
-					return "";
+					return "slotBookedOwnClient.main";
 				default:
 					return theme.palette.background.paper;
 			}

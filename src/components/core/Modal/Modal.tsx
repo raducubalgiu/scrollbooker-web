@@ -27,7 +27,7 @@ const ModalTitle = ({ title, onClose, ...other }: ModalTitlePropsType) => {
 	return (
 		<DialogTitle component="div" {...other}>
 			<CustomStack>
-				<Typography>{title}</Typography>
+				<Typography fontWeight={600}>{title}</Typography>
 				<Tooltip title="Close">
 					<IconButton aria-label="close" onClick={onClose}>
 						<CloseIcon />

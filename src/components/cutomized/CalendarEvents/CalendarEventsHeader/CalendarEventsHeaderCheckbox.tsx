@@ -2,7 +2,7 @@ import { ChangeEvent, useMemo, useState } from "react";
 import { Checkbox, Tooltip } from "@mui/material";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
-import { some, every } from "lodash";
+import { some } from "lodash";
 import { DayInfo } from "../calendar-types";
 import { useUserClientSession } from "@/lib/auth/get-user-client";
 import CalendarEventsBlockModal from "../CalendarEventsModals/CalendarEventsBlockModal";
@@ -23,7 +23,7 @@ export default function CalendarEventsHeaderCheckbox({
 	const hideCheckbox = useMemo(() => {
 		return (
 			some(day.slots, { is_booked: true }) ||
-			every(day.slots, { is_blocked: true }) ||
+			some(day.slots, { is_blocked: true }) ||
 			day.is_closed ||
 			dayjs().isAfter(dayjs(day.date))
 		);
@@ -74,7 +74,8 @@ export default function CalendarEventsHeaderCheckbox({
 			<CalendarEventsBlockModal
 				open={open}
 				messages={messages}
-				title="Ești sigur că dorești să blochezi sloturile acestei zi?"
+				title={`Data: ${day.date}`}
+				description="Ești sigur că dorești să blochezi sloturile acestei zi?"
 				handleClose={handleCloseModal}
 				updater={updater}
 				onSuccessUpdate={handleUpdateSlots}

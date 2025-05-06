@@ -25,6 +25,7 @@ type CalendarEventsBlockModalProps = {
 	onSuccessUpdate: (message: string) => void;
 	updater: BlockUpdater;
 	title: string;
+	description: string;
 };
 
 export default function CalendarEventsBlockModal({
@@ -34,6 +35,7 @@ export default function CalendarEventsBlockModal({
 	messages,
 	updater,
 	title,
+	description,
 }: CalendarEventsBlockModalProps) {
 	const [editMessage, setEditMessage] = useState(false);
 	const methods = useForm({ defaultValues: { message: "" } });
@@ -89,9 +91,7 @@ export default function CalendarEventsBlockModal({
 				title={title}
 				actions={actions}
 			>
-				<Typography fontWeight={600}>
-					Ești sigur că dorești să blochezi acest slot?
-				</Typography>
+				<Typography fontWeight={600}>{description}</Typography>
 				<Typography sx={{ mt: 5 }}>Te rugăm să adaugi un mesaj</Typography>
 				<CustomStack sx={{ mt: 2.5 }}>
 					{!editMessage && (

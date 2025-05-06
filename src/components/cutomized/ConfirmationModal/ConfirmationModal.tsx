@@ -6,6 +6,7 @@ import { Typography } from "@mui/material";
 import React from "react";
 
 type ConfirmationModalProps = {
+	title?: string;
 	isLoading?: boolean;
 	message: string;
 	open: boolean;
@@ -14,6 +15,7 @@ type ConfirmationModalProps = {
 };
 
 export default function ConfirmationModal({
+	title,
 	isLoading = false,
 	message,
 	open,
@@ -32,7 +34,12 @@ export default function ConfirmationModal({
 	];
 
 	return (
-		<Modal open={open} handleClose={handleClose} actions={actions}>
+		<Modal
+			title={title}
+			open={open}
+			handleClose={handleClose}
+			actions={actions}
+		>
 			<Typography>{message}</Typography>
 		</Modal>
 	);
