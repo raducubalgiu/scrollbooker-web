@@ -13,7 +13,7 @@ export default function CalendarBookedEvent({
 	slot,
 }: CalendarBookedEventProps) {
 	const [open, setOpen] = useState(false);
-	const { customer, service_name, product_price, currency } = slot?.info || {};
+	const { customer, product, currency } = slot?.info || {};
 	const { start_date_locale, end_date_locale } = slot;
 	const isPast = dayjs().isAfter(dayjs(slot.start_date_locale));
 
@@ -45,21 +45,23 @@ export default function CalendarBookedEvent({
 					<Avatar sx={styles.avatar} alt="Remy Sharp" />
 					<Box>
 						<Typography fontSize={15} sx={{ ml: 1, fontWeight: "600" }}>
-							Raducu Balgiu
+							{customer?.fullname}
 						</Typography>
-						<Typography fontSize={15} sx={{ ml: 1, color: "text.secondary" }}>
-							@{customer?.username}
-						</Typography>
+						{customer?.username && (
+							<Typography fontSize={15} sx={{ ml: 1, color: "text.secondary" }}>
+								@{customer?.username}
+							</Typography>
+						)}
 					</Box>
 				</Stack>
 				<Typography fontSize={15} color="#fff">
 					Interval: {interval}
 				</Typography>
 				<Typography fontSize={15} color="#fff">
-					Serviciu: {service_name}
+					Produs: {product?.product_name}
 				</Typography>
 				<Typography fontSize={15} color="#fff">
-					Preț: {product_price} {currency}
+					Preț: {product?.product_price_with_discount} {currency?.name}
 				</Typography>
 				{!isPast && (
 					<Stack sx={styles.cancelContainer}>

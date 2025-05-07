@@ -33,3 +33,12 @@ export const min = (n: number) => {
 		},
 	};
 };
+
+export const max = (n: number) => {
+	return {
+		max: {
+			value: n,
+			message: `Acest câmp trebuie să fie mai mic ca ${n}`,
+		},
+	};
+};

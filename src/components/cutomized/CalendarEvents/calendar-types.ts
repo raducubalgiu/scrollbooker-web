@@ -1,14 +1,27 @@
 export type AppointmentCustomerType = {
-	id: number;
-	username: string;
-	avatar: string | null;
+	id: number | undefined;
+	fullname: string;
+	username: undefined;
+	avatar: string | undefined;
 } | null;
+
+export type AppointmentCurrencyType = {
+	id: number;
+	name: string;
+};
+
+export type AppointmentProductType = {
+	product_name: string;
+	product_full_price: number;
+	product_price_with_discount: number;
+	product_discount: number;
+};
 
 export type AppointmentInfoType = {
 	channel: "scroll_booker" | "own_client";
-	service_name: string;
-	product_price: number;
-	currency: string;
+	service_name: string | undefined;
+	product: AppointmentProductType;
+	currency: AppointmentCurrencyType | null;
 	customer: AppointmentCustomerType;
 	message: string | undefined;
 };

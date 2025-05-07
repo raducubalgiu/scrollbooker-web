@@ -16,7 +16,16 @@ export default function EditChangeIconButton({
 	...props
 }: EditChangeIconButtonProps) {
 	return (
-		<IconButton onClick={onClick} size="large" sx={{ ml: 2.5 }} {...props}>
+		<IconButton
+			onClick={onClick}
+			size="large"
+			sx={{
+				ml: 2.5,
+				bgcolor: "primary.main",
+				"&:hover": { backgroundColor: "primary.main", opacity: 0.8 },
+			}}
+			{...props}
+		>
 			{isEdit ? (
 				<Tooltip title={title}>
 					<GradingOutlinedIcon />

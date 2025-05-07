@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import { SlotType } from "../calendar-types";
-import CreateEventModal from "./CreateEventModal";
 import dayjs from "dayjs";
-import { shortTimeFormat, timeIntervalFormat } from "@/utils/date-utils-dayjs";
+import { timeIntervalFormat } from "@/utils/date-utils-dayjs";
 import CalendarEventsBlockModal, {
 	BlockUpdater,
 } from "../CalendarEventsModals/CalendarEventsBlockModal";
@@ -19,13 +18,13 @@ import { useUserClientSession } from "@/lib/auth/get-user-client";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 import { toast } from "react-toastify";
 import ConfirmationModal from "../../ConfirmationModal/ConfirmationModal";
+import CalendarEventsCreateModal from "../CalendarEventsModals/CreateEventsCreateModal";
 import { useMutate } from "@/hooks/useHttp";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 
 const messages = [
-	{ value: "Zi legală liberă", name: "Zi legală liberă" },
-	{ value: "Concediu de odihnă", name: "Concediu de odihnă" },
-	{ value: "Concediu medical", name: "Concediu medical" },
+	{ value: "Am o programare la medic", name: "Am o programare la medic" },
+	{ value: "Probleme personale", name: "Probleme personale" },
 	{ value: "Altele", name: "Altele" },
 ];
 
@@ -66,7 +65,7 @@ function CalendarUnbookedEvent({ slot, height }: CalendarUnbookedEventProps) {
 	const isPast = dayjs().isAfter(dayjs(start_date_locale));
 	const hasBlockMessage = !message || message === "Altele";
 
-	const title = `Data: ${dayjs(start_date_locale).format("DD MMM YYYY")}, Slot: ${shortTimeFormat(start_date_locale)}`;
+	const title = `Data: ${dayjs(start_date_locale).format("DD MMM YYYY")}, Slot: ${timeIntervalFormat(start_date_locale, end_date_locale)}`;
 	const updater: BlockUpdater = [
 		{ startDate: start_date_utc, endDate: end_date_utc, userId },
 	];
@@ -95,8 +94,13 @@ function CalendarUnbookedEvent({ slot, height }: CalendarUnbookedEventProps) {
 			info: {
 				channel: "own_client",
 				service_name: "",
-				product_price: 0,
-				currency: "",
+				product: {
+					product_name: "",
+					product_discount: 0,
+					product_full_price: 0,
+					product_price_with_discount: 0,
+				},
+				currency: null,
 				customer: null,
 				message: updatedMessage,
 			},
@@ -142,7 +146,7 @@ function CalendarUnbookedEvent({ slot, height }: CalendarUnbookedEventProps) {
 				message="Ești sigur că dorești să deblochezi acest slot?"
 				isLoading={isPending}
 			/>
-			<CreateEventModal
+			<CalendarEventsCreateModal
 				openCreate={open}
 				handleClose={() => setOpen(false)}
 				slot={slot}
