@@ -168,6 +168,7 @@ export default function CalendarEventsCreateModal({
 			onSuccess: (response: AppointmentCreateResponseType) => {
 				updateSlot({
 					...slot,
+					is_booked: true,
 					info: {
 						...slot.info,
 						product: {

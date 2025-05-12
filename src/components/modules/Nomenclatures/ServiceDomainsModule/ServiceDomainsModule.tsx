@@ -6,8 +6,8 @@ import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
+import ServicesByServiceDomainModule from "./ServicesByServiceDomainModule";
 
 export default function ServiceDomainsModule() {
 	const {
@@ -59,22 +59,6 @@ export default function ServiceDomainsModule() {
 		[]
 	);
 
-	const serviceColumns = useMemo<MRT_ColumnDef<ServiceType>[]>(
-		() => [
-			{
-				accessorKey: "id",
-				header: "ID",
-				size: 50,
-			},
-			{
-				accessorKey: "name",
-				header: "Name",
-				size: 300,
-			},
-		],
-		[]
-	);
-
 	return (
 		<MainLayout title="Service Domains" hideAction>
 			<Table<ServiceDomainsType>
@@ -88,18 +72,7 @@ export default function ServiceDomainsModule() {
 				state={{ pagination, isLoading }}
 				onPaginationChange={setPagination}
 				renderDetailPanel={({ row }) => (
-					<Table
-						data={row.original.services}
-						columns={serviceColumns}
-						enableTopToolbar={false}
-						enableEditing={false}
-						muiTableHeadCellProps={{
-							sx: {
-								bgcolor: "surface.main",
-								color: "neutral.100",
-							},
-						}}
-					/>
+					<ServicesByServiceDomainModule row={row} />
 				)}
 			/>
 		</MainLayout>

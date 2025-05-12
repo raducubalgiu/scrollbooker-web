@@ -7,7 +7,7 @@ export const GET = async (req: NextRequest) => {
 
 	const response = (
 		await get({
-			url: `/service-domains/with-services?${pagination}`,
+			url: `/service-domains?${pagination}`,
 		})
 	).data;
 
