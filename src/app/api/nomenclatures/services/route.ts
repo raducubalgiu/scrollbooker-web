@@ -33,7 +33,10 @@ export const POST = async (req: NextRequest) => {
 	const response = (
 		await post({
 			url: "/services",
-			data: { name: data.name, keywords: [data.keywords] },
+			data: {
+				...data,
+				keywords: [data.keywords],
+			},
 		})
 	).data;
 

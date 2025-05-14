@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, post, put, deleteRequest } from "@/utils/requests";
-import { omit } from "lodash";
+import { get, post, deleteRequest } from "@/utils/requests";
 
 export const GET = async (req: NextRequest) => {
-	const pagination = req.nextUrl.searchParams;
+	const serviceId = req.nextUrl.searchParams.get("serviceId");
 
 	const response = (
 		await get({
-			url: `/filters?${pagination}`,
+			url: `/services/${serviceId}/business-types`,
 		})
 	).data;
 
@@ -16,24 +15,12 @@ export const GET = async (req: NextRequest) => {
 
 export const POST = async (req: NextRequest) => {
 	const data = await req.json();
+	const { serviceId, businessTypeId } = data;
 
 	const response = (
 		await post({
-			url: `/filters`,
-			data,
-		})
-	).data;
-
-	return NextResponse.json(response);
-};
-
-export const PUT = async (req: NextRequest) => {
-	const data = await req.json();
-
-	const response = (
-		await put({
-			url: `/filters/${data.id}`,
-			data: omit(data, "id"),
+			url: `/services/${serviceId}/business-types/${businessTypeId}`,
+			data: {},
 		})
 	).data;
 
@@ -41,11 +28,12 @@ export const PUT = async (req: NextRequest) => {
 };
 
 export const DELETE = async (req: NextRequest) => {
-	const { id } = await req.json();
+	const data = await req.json();
+	const { serviceId, businessTypeId } = data;
 
 	const response = (
 		await deleteRequest({
-			url: `/filters/${id}`,
+			url: `/services/${serviceId}/business-types/${businessTypeId}`,
 		})
 	).data;
 

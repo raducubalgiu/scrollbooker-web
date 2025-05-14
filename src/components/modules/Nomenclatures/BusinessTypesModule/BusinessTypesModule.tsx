@@ -78,61 +78,61 @@ export default function BusinessTypesModule({
 		[businessDomains]
 	);
 
-	const businessTypeServicesColumns: MRT_ColumnDef<ServiceType>[] = [
-		{
-			accessorKey: "id",
-			header: "ID",
-			size: 50,
-			enableEditing: false,
-		},
-		{
-			accessorKey: "name",
-			header: "Name",
-		},
-	];
+	// const businessTypeServicesColumns: MRT_ColumnDef<ServiceType>[] = [
+	// 	{
+	// 		accessorKey: "id",
+	// 		header: "ID",
+	// 		size: 50,
+	// 		enableEditing: false,
+	// 	},
+	// 	{
+	// 		accessorKey: "name",
+	// 		header: "Name",
+	// 	},
+	// ];
 
-	const filtersColumns = useMemo<MRT_ColumnDef<FilterType>[]>(
-		() => [
-			{
-				accessorKey: "id",
-				header: "ID",
-				size: 50,
-				enableEditing: false,
-			},
-			{
-				accessorKey: "name",
-				header: "Name",
-			},
-			{
-				accessorKey: "created_at",
-				header: "Created_at",
-				enableEditing: false,
-			},
-			{
-				accessorKey: "updated_at",
-				header: "Updated_at",
-				enableEditing: false,
-			},
-		],
-		[]
-	);
+	// const filtersColumns = useMemo<MRT_ColumnDef<FilterType>[]>(
+	// 	() => [
+	// 		{
+	// 			accessorKey: "id",
+	// 			header: "ID",
+	// 			size: 50,
+	// 			enableEditing: false,
+	// 		},
+	// 		{
+	// 			accessorKey: "name",
+	// 			header: "Name",
+	// 		},
+	// 		{
+	// 			accessorKey: "created_at",
+	// 			header: "Created_at",
+	// 			enableEditing: false,
+	// 		},
+	// 		{
+	// 			accessorKey: "updated_at",
+	// 			header: "Updated_at",
+	// 			enableEditing: false,
+	// 		},
+	// 	],
+	// 	[]
+	// );
 
-	const subFiltersColumns = useMemo<MRT_ColumnDef<SubFilterType>[]>(
-		() => [
-			{
-				accessorKey: "id",
-				header: "ID",
-				size: 50,
-				enableEditing: false,
-			},
-			{
-				accessorKey: "name",
-				header: "Name",
-				size: 300,
-			},
-		],
-		[]
-	);
+	// const subFiltersColumns = useMemo<MRT_ColumnDef<SubFilterType>[]>(
+	// 	() => [
+	// 		{
+	// 			accessorKey: "id",
+	// 			header: "ID",
+	// 			size: 50,
+	// 			enableEditing: false,
+	// 		},
+	// 		{
+	// 			accessorKey: "name",
+	// 			header: "Name",
+	// 			size: 300,
+	// 		},
+	// 	],
+	// 	[]
+	// );
 
 	return (
 		<MainLayout title="Business Types" hideAction>
@@ -146,51 +146,51 @@ export default function BusinessTypesModule({
 				onEditingRowSave={onEditingRowSave}
 				onDeletingRowSave={onDeletingRowSave}
 				state={{ pagination, isLoading }}
-				renderDetailPanel={({ row }) => (
-					<>
-						<Table<ServiceType>
-							data={row.original.services}
-							manualPagination={false}
-							columns={businessTypeServicesColumns}
-							enableEditing={false}
-							enableTopToolbar={false}
-							muiTableHeadCellProps={{
-								sx: {
-									bgcolor: "surface.main",
-									color: "neutral.100",
-								},
-							}}
-						/>
-						<Table<FilterType>
-							data={row.original.filters}
-							manualPagination={false}
-							columns={filtersColumns}
-							enableEditing={false}
-							enableTopToolbar={false}
-							muiTableHeadCellProps={{
-								sx: {
-									bgcolor: "surface.main",
-									color: "neutral.100",
-								},
-							}}
-							renderDetailPanel={({ row }) => (
-								<Table<SubFilterType>
-									data={row.original.sub_filters}
-									columns={subFiltersColumns}
-									manualPagination={false}
-									enableEditing={false}
-									enableTopToolbar={false}
-									muiTableHeadCellProps={{
-										sx: {
-											bgcolor: "surface.main",
-											color: "neutral.100",
-										},
-									}}
-								/>
-							)}
-						/>
-					</>
-				)}
+				// renderDetailPanel={({ row }) => (
+				// 	<>
+				// 		<Table<ServiceType>
+				// 			data={row.original.services}
+				// 			manualPagination={false}
+				// 			columns={businessTypeServicesColumns}
+				// 			enableEditing={false}
+				// 			enableTopToolbar={false}
+				// 			muiTableHeadCellProps={{
+				// 				sx: {
+				// 					bgcolor: "surface.main",
+				// 					color: "neutral.100",
+				// 				},
+				// 			}}
+				// 		/>
+				// 		<Table<FilterType>
+				// 			data={row.original.filters}
+				// 			manualPagination={false}
+				// 			columns={filtersColumns}
+				// 			enableEditing={false}
+				// 			enableTopToolbar={false}
+				// 			muiTableHeadCellProps={{
+				// 				sx: {
+				// 					bgcolor: "surface.main",
+				// 					color: "neutral.100",
+				// 				},
+				// 			}}
+				// 			renderDetailPanel={({ row }) => (
+				// 				<Table<SubFilterType>
+				// 					data={row.original.sub_filters}
+				// 					columns={subFiltersColumns}
+				// 					manualPagination={false}
+				// 					enableEditing={false}
+				// 					enableTopToolbar={false}
+				// 					muiTableHeadCellProps={{
+				// 						sx: {
+				// 							bgcolor: "surface.main",
+				// 							color: "neutral.100",
+				// 						},
+				// 					}}
+				// 				/>
+				// 			)}
+				// 		/>
+				// 	</>
+				// )}
 			/>
 		</MainLayout>
 	);

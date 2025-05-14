@@ -7,7 +7,7 @@ export const GET = async (req: NextRequest) => {
 
 	const response = (
 		await get({
-			url: `/business-types/with-services-and-filters?${pagination}`,
+			url: `/business-types?${pagination}`,
 		})
 	).data;
 

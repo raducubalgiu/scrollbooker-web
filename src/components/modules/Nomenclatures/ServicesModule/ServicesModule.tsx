@@ -7,8 +7,17 @@ import { ServiceType } from "@/models/nomenclatures/ServiceType";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
+import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
+import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
+import ServiceBusinessDomains from "./ServiceBusinessDomains";
 
-export default function ServicesModule() {
+type ServicesModuleProps = {
+	businessDomains: BusinessDomainType[];
+};
+
+export default function ServicesModule({
+	businessDomains,
+}: ServicesModuleProps) {
 	const {
 		data,
 		isLoading,
@@ -56,12 +65,31 @@ export default function ServicesModule() {
 				),
 			},
 			{
+				accessorKey: "business_domain_id",
+				header: "Business Domain Id",
+				Edit: ({ row, column, cell }) => (
+					<MR_Select
+						row={row}
+						column={column}
+						value={Number(cell.getValue()) ?? ""}
+						options={businessDomains?.map(bd => {
+							return {
+								value: bd.id,
+								name: bd.name,
+							};
+						})}
+					/>
+				),
+				Cell: ({ cell }) =>
+					businessDomains?.find(bd => bd.id === cell.getValue())?.name,
+			},
+			{
 				accessorKey: "created_at",
 				enableEditing: false,
 				header: "Created_at",
 			},
 		],
-		[]
+		[businessDomains]
 	);
 
 	return (
@@ -76,6 +104,15 @@ export default function ServicesModule() {
 				manualPagination={true}
 				onPaginationChange={setPagination}
 				state={{ pagination, isLoading }}
+				renderDetailPanel={({ row }) =>
+					!!row.original.id && (
+						<ServiceBusinessDomains
+							serviceId={row.original.id}
+							serviceName={row.original.name}
+							businessDomainId={row.original.business_domain_id}
+						/>
+					)
+				}
 			/>
 		</MainLayout>
 	);
