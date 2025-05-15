@@ -123,7 +123,11 @@ export default function Sidebar() {
 		},
 	];
 
-	const superAdminRoutes = [
+	const nomenclaturesRoutes = [
+		{
+			label: "Roluri și permisiuni",
+			route: "/nomenclatures/roles-and-permissions",
+		},
 		{
 			label: "Domeniu Business",
 			route: "/nomenclatures/business-domains",
@@ -131,6 +135,10 @@ export default function Sidebar() {
 		{
 			label: "Tip Business",
 			route: "/nomenclatures/business-types",
+		},
+		{
+			label: "Profesii",
+			route: "/nomenclatures/professions",
 		},
 		{
 			label: "Domeniu Serviciu",
@@ -147,10 +155,6 @@ export default function Sidebar() {
 		{
 			label: "Monede",
 			route: "/nomenclatures/currencies",
-		},
-		{
-			label: "Roluri și permisiuni",
-			route: "/nomenclatures/roles-and-permissions",
 		},
 	];
 
@@ -248,7 +252,7 @@ export default function Sidebar() {
 						sx={{ px: 2.5 }}
 					>
 						<List component="div" disablePadding>
-							{superAdminRoutes.map((superAdmin, i) => (
+							{nomenclaturesRoutes.map((superAdmin, i) => (
 								<ListItemButton
 									key={i}
 									sx={{ pl: 4, mb: 0.5 }}

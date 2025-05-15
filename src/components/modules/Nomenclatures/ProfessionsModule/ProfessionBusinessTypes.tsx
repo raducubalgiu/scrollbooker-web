@@ -1,21 +1,21 @@
-import Table from "@/components/core/Table/Table";
+import React, { useMemo } from "react";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { BusinessType } from "@/models/nomenclatures/BusinessType";
 import { MRT_ColumnDef } from "material-react-table";
-import React, { useMemo } from "react";
-import ServiceBusinessTypeCheckbox from "./ServiceBusinessTypeCheckbox";
+import Table from "@/components/core/Table/Table";
+import ProfessionBusinessTypesCheckbox from "./ProfessionBusinessTypeCheckbox";
 
-type ServiceBusinessDomainsProps = {
-	serviceId: number | undefined;
-	serviceName: string;
+type ProfessionBusinessTypesProps = {
 	businessDomainId: number;
+	professionId: number;
+	professionName: string;
 };
 
-export default function ServiceBusinessDomains({
-	serviceId,
-	serviceName,
+export default function ProfessionBusinessTypes({
 	businessDomainId,
-}: ServiceBusinessDomainsProps) {
+	professionId,
+	professionName,
+}: ProfessionBusinessTypesProps) {
 	const {
 		data,
 		isLoading,
@@ -46,15 +46,15 @@ export default function ServiceBusinessDomains({
 				accessorKey: "relation",
 				header: "Atasat",
 				Cell: ({ row }) => (
-					<ServiceBusinessTypeCheckbox
+					<ProfessionBusinessTypesCheckbox
 						row={row}
-						serviceId={serviceId}
-						serviceName={serviceName}
+						professionId={professionId}
+						professionName={professionName}
 					/>
 				),
 			},
 		],
-		[serviceId, serviceName]
+		[professionId, professionName]
 	);
 
 	return (

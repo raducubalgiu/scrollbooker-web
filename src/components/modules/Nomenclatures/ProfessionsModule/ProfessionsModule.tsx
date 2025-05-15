@@ -1,32 +1,34 @@
 "use client";
 
-import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
-import { BusinessType } from "@/models/nomenclatures/BusinessType";
+import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
+import { ProfessionType } from "@/models/ProfessionType";
 import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
-import BusinessTypeServicesModule from "./BusinessTypeServicesModule";
+import ProfessionBusinessTypes from "./ProfessionBusinessTypes";
 
-type BusinessTypesModuleProps = { businessDomains: BusinessDomainType[] };
+type ProfessionsModuleProps = { businessDomains: BusinessDomainType[] };
 
-export default function BusinessTypesModule({
+export default function ProfessionsModule({
 	businessDomains,
-}: BusinessTypesModuleProps) {
+}: ProfessionsModuleProps) {
 	const {
 		data,
 		isLoading,
+		onCreatingRowSave,
 		pagination,
 		setPagination,
-		onDeletingRowSave,
-		onCreatingRowSave,
 		onEditingRowSave,
-	} = useTableHandlers<BusinessType>({ route: "nomenclatures/business-types" });
+		onDeletingRowSave,
+	} = useTableHandlers<ProfessionType>({
+		route: "nomenclatures/professions",
+	});
 
-	const businessTypeColumns = useMemo<MRT_ColumnDef<BusinessType>[]>(
+	const columns = useMemo<MRT_ColumnDef<ProfessionType>[]>(
 		() => [
 			{
 				accessorKey: "id",
@@ -41,10 +43,10 @@ export default function BusinessTypesModule({
 					<MR_Input
 						row={row}
 						column={column}
-						value={row.getValue(column.id)}
+						value={row.original.name}
 						required
 						minLength={3}
-						maxLength={50}
+						maxLength={100}
 					/>
 				),
 			},
@@ -69,71 +71,32 @@ export default function BusinessTypesModule({
 			},
 			{
 				accessorKey: "created_at",
-				header: "Created At",
+				header: "Created_at",
 				enableEditing: false,
 			},
 		],
 		[businessDomains]
 	);
 
-	// const filtersColumns = useMemo<MRT_ColumnDef<FilterType>[]>(
-	// 	() => [
-	// 		{
-	// 			accessorKey: "id",
-	// 			header: "ID",
-	// 			size: 50,
-	// 			enableEditing: false,
-	// 		},
-	// 		{
-	// 			accessorKey: "name",
-	// 			header: "Name",
-	// 		},
-	// 		{
-	// 			accessorKey: "created_at",
-	// 			header: "Created_at",
-	// 			enableEditing: false,
-	// 		},
-	// 		{
-	// 			accessorKey: "updated_at",
-	// 			header: "Updated_at",
-	// 			enableEditing: false,
-	// 		},
-	// 	],
-	// 	[]
-	// );
-
-	// const subFiltersColumns = useMemo<MRT_ColumnDef<SubFilterType>[]>(
-	// 	() => [
-	// 		{
-	// 			accessorKey: "id",
-	// 			header: "ID",
-	// 			size: 50,
-	// 			enableEditing: false,
-	// 		},
-	// 		{
-	// 			accessorKey: "name",
-	// 			header: "Name",
-	// 			size: 300,
-	// 		},
-	// 	],
-	// 	[]
-	// );
-
 	return (
-		<MainLayout title="Tip Business" hideAction>
-			<Table<BusinessType>
+		<MainLayout title="Profesii" hideAction>
+			<Table<ProfessionType>
 				data={data?.results}
 				rowCount={data?.count}
-				columns={businessTypeColumns}
+				columns={columns}
 				manualPagination
-				onPaginationChange={setPagination}
 				onCreatingRowSave={onCreatingRowSave}
 				onEditingRowSave={onEditingRowSave}
 				onDeletingRowSave={onDeletingRowSave}
+				onPaginationChange={setPagination}
 				state={{ pagination, isLoading }}
 				renderDetailPanel={({ row }) =>
 					row.original.id && (
-						<BusinessTypeServicesModule businessTypeId={row.original.id} />
+						<ProfessionBusinessTypes
+							professionId={row.original.id}
+							professionName={row.original.name}
+							businessDomainId={row.original.business_domain_id}
+						/>
 					)
 				}
 			/>

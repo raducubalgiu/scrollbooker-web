@@ -5,25 +5,25 @@ import { MRT_Row } from "material-react-table";
 import { BusinessType } from "@/models/nomenclatures/BusinessType";
 import { find } from "lodash";
 
-type ServiceBusinessTypeCheckboxProps = {
+type ProfessionBusinessTypesCheckboxProps = {
 	row: MRT_Row<BusinessType>;
-	serviceId: number | undefined;
-	serviceName: string;
+	professionId: number | undefined;
+	professionName: string;
 };
 
-export default function ServiceBusinessTypeCheckbox({
+export default function ProfessionBusinessTypesCheckbox({
 	row,
-	serviceId,
-	serviceName,
-}: ServiceBusinessTypeCheckboxProps) {
+	professionId,
+	professionName,
+}: ProfessionBusinessTypesCheckboxProps) {
 	const {
 		data: attachedBusinessTypes,
 		isLoading: isLoadingAttached,
 		refetch: refetchAttached,
 	} = useCustomQuery<BusinessType[]>({
-		key: ["business-types-attached", serviceId],
-		url: "/api/nomenclatures/services/business-types",
-		params: { serviceId },
+		key: ["profession-business-types", professionId],
+		url: "/api/nomenclatures/professions/business-types",
+		params: { professionId },
 	});
 
 	const [checked, setChecked] = useState(true);
@@ -34,7 +34,7 @@ export default function ServiceBusinessTypeCheckbox({
 
 	const { mutateAsync: handleAttach, isPending: isPendingAttach } = useMutate({
 		key: ["attach"],
-		url: "/api/nomenclatures/services/business-types/attached",
+		url: "/api/nomenclatures/professions/business-types",
 		options: {
 			onError: () => setChecked(false),
 		},
@@ -42,7 +42,7 @@ export default function ServiceBusinessTypeCheckbox({
 
 	const { mutateAsync: handleDetach, isPending: isPendingDetach } = useMutate({
 		key: ["detach"],
-		url: "/api/nomenclatures/services/business-types/attached",
+		url: "/api/nomenclatures/professions/business-types",
 		method: "DELETE",
 		options: {
 			onError: () => setChecked(true),
@@ -52,21 +52,23 @@ export default function ServiceBusinessTypeCheckbox({
 	const handleCheckbox = useCallback(
 		async (e: React.ChangeEvent<HTMLInputElement>, businessTypeId: number) => {
 			if (e.target.checked) {
-				await handleAttach({ serviceId, businessTypeId });
+				await handleAttach({ professionId, businessTypeId });
 			} else {
-				await handleDetach({ serviceId, businessTypeId });
+				await handleDetach({ professionId, businessTypeId });
 			}
 
 			await refetchAttached();
 		},
-		[refetchAttached, handleAttach, serviceId, handleDetach]
+		[refetchAttached, handleAttach, professionId, handleDetach]
 	);
 
 	const isLoading = isPendingAttach || isPendingDetach || isLoadingAttached;
 	const action = !checked ? "Creaază" : "Elimină";
 
 	return (
-		<Tooltip title={`${action} relația ${serviceName} - ${row.original.name}`}>
+		<Tooltip
+			title={`${action} relația ${professionName} - ${row.original.name}`}
+		>
 			{!isLoading ? (
 				<Checkbox
 					checked={checked}
