@@ -15,6 +15,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import AdminPanelPlaylistAddCheckOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
@@ -108,6 +109,12 @@ export default function Sidebar() {
 			route: "/products",
 			icon: <ShoppingBagOutlinedIcon />,
 			permission: "PRODUCTS_VIEW",
+		},
+		{
+			label: "Modalități de plată",
+			route: "/currencies",
+			icon: <AccountBalanceWalletOutlinedIcon />,
+			permission: "USER_CURRENCIES_VIEW",
 		},
 		{
 			label: "Angajați",
