@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Box, Button, SxProps, Typography } from "@mui/material";
 import CustomStack from "../../core/CustomStack/CustomStack";
 
 type MainLayoutProps = {
@@ -7,6 +7,7 @@ type MainLayoutProps = {
 	children: React.ReactNode;
 	hideAction?: boolean;
 	onOpenModal?: () => void;
+	sx?: SxProps;
 };
 
 export default function MainLayout({
@@ -15,9 +16,10 @@ export default function MainLayout({
 	children,
 	hideAction = false,
 	onOpenModal,
+	sx,
 }: MainLayoutProps) {
 	return (
-		<>
+		<Box sx={sx}>
 			<CustomStack sx={{ mb: 2.5 }}>
 				<Typography sx={{ fontWeight: "600", fontSize: 20 }}>
 					{title}
@@ -29,6 +31,6 @@ export default function MainLayout({
 				)}
 			</CustomStack>
 			{children}
-		</>
+		</Box>
 	);
 }

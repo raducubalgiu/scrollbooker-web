@@ -8,6 +8,7 @@ import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import SubFiltersModule from "./SubFiltersModule";
+import FiltersBusinessTypesModule from "./FiltersBusinessTypesModule";
 
 export default function FiltersModule() {
 	const {
@@ -69,7 +70,12 @@ export default function FiltersModule() {
 				onEditingRowSave={onFilterEditingRowSave}
 				onPaginationChange={setFiltersPagination}
 				state={{ pagination: filtersPagination, isLoading: isLoadingFilters }}
-				renderDetailPanel={({ row }) => <SubFiltersModule row={row} />}
+				renderDetailPanel={({ row }) => (
+					<>
+						<SubFiltersModule row={row} />
+						<FiltersBusinessTypesModule filterRow={row} />
+					</>
+				)}
 			/>
 		</MainLayout>
 	);
