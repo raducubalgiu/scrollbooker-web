@@ -5,17 +5,17 @@ import { MRT_ColumnDef } from "material-react-table";
 import React, { useMemo } from "react";
 import ServiceBusinessTypeCheckbox from "./ServiceBusinessTypeCheckbox";
 
-type ServiceBusinessDomainsProps = {
+type ServiceBusinessTypesProps = {
 	serviceId: number | undefined;
 	serviceName: string;
 	businessDomainId: number;
 };
 
-export default function ServiceBusinessDomains({
+export default function ServiceBusinessTypes({
 	serviceId,
 	serviceName,
 	businessDomainId,
-}: ServiceBusinessDomainsProps) {
+}: ServiceBusinessTypesProps) {
 	const {
 		data,
 		isLoading,

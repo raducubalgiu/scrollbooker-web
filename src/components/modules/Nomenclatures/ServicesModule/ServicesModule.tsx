@@ -9,7 +9,7 @@ import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
-import ServiceBusinessDomains from "./ServiceBusinessDomains";
+import ServiceBusinessTypes from "./ServiceBusinessTypes";
 
 type ServicesModuleProps = {
 	businessDomains: BusinessDomainType[];
@@ -93,7 +93,7 @@ export default function ServicesModule({
 	);
 
 	return (
-		<MainLayout title="Services" hideAction>
+		<MainLayout title="Servicii" hideAction>
 			<Table<ServiceType>
 				data={data?.results}
 				rowCount={data?.count}
@@ -106,7 +106,7 @@ export default function ServicesModule({
 				state={{ pagination, isLoading }}
 				renderDetailPanel={({ row }) =>
 					!!row.original.id && (
-						<ServiceBusinessDomains
+						<ServiceBusinessTypes
 							serviceId={row.original.id}
 							serviceName={row.original.name}
 							businessDomainId={row.original.business_domain_id}

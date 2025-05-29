@@ -21,7 +21,7 @@ export default function ServiceBusinessTypeCheckbox({
 		isLoading: isLoadingAttached,
 		refetch: refetchAttached,
 	} = useCustomQuery<BusinessType[]>({
-		key: ["business-types-attached", serviceId],
+		key: ["business-types", serviceId],
 		url: "/api/nomenclatures/services/business-types",
 		params: { serviceId },
 	});
@@ -33,16 +33,16 @@ export default function ServiceBusinessTypeCheckbox({
 	}, [attachedBusinessTypes, row.original.id, isLoadingAttached]);
 
 	const { mutateAsync: handleAttach, isPending: isPendingAttach } = useMutate({
-		key: ["attach"],
-		url: "/api/nomenclatures/services/business-types/attached",
+		key: ["attach-business-types"],
+		url: "/api/nomenclatures/services/business-types",
 		options: {
 			onError: () => setChecked(false),
 		},
 	});
 
 	const { mutateAsync: handleDetach, isPending: isPendingDetach } = useMutate({
-		key: ["detach"],
-		url: "/api/nomenclatures/services/business-types/attached",
+		key: ["detach-business-types"],
+		url: "/api/nomenclatures/services/business-types",
 		method: "DELETE",
 		options: {
 			onError: () => setChecked(true),

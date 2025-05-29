@@ -59,7 +59,7 @@ export default function BusinessDomainsModule() {
 	);
 
 	return (
-		<MainLayout title="Business Domains" hideAction>
+		<MainLayout title="Domeniu Business" hideAction>
 			<Table<BusinessDomainType>
 				data={data?.results}
 				rowCount={data?.count}

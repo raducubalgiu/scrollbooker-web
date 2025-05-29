@@ -56,7 +56,7 @@ export default function CurrenciesModule() {
 	);
 
 	return (
-		<MainLayout title="Services" hideAction>
+		<MainLayout title="Monede" hideAction>
 			<Table<CurrencyType>
 				data={data?.results}
 				rowCount={data?.count}
