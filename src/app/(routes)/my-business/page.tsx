@@ -8,6 +8,7 @@ import { some } from "lodash";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
+import { PermissionEnum } from "@/models/enums/PermissionsEnum";
 
 async function MyBusiness() {
 	const { userId } = await getUserServerSession();
@@ -47,4 +48,4 @@ async function MyBusiness() {
 	);
 }
 
-export default ProtectedPage(MyBusiness, "MY_BUSINESS_VIEW");
+export default ProtectedPage(MyBusiness, PermissionEnum.MY_BUSINESS_LOCATION_VIEW);

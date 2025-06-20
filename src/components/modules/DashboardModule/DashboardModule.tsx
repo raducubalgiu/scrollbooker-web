@@ -16,6 +16,7 @@ import usePermission from "@/components/cutomized/Protected/usePermission";
 import DashboardEmployeesSelect from "./DashboardEmployeesSelect";
 import { UserInfoType } from "@/models/UserInfoType";
 import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
+import { PermissionEnum } from "@/models/enums/PermissionsEnum";
 
 type DashboardModuleProps = {
 	userId: number | undefined;
@@ -92,7 +93,7 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 						</Button>
 					))}
 				</CustomStack>
-				<Protected permission="EMPLOYEES_VIEW">
+				<Protected permission={PermissionEnum.MY_EMPLOYEES_VIEW}>
 					<DashboardEmployeesSelect
 						options={employeesOptions}
 						selectedEmployeeId={selectedEmployee?.id}
@@ -120,7 +121,7 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 					<DashboardBarChart isLoading={isLoading} />
 				</Grid>
 				<Grid size={4}>
-					<Protected permission="DASHBOARD_CALENDAR_VIEW">
+					<Protected permission={PermissionEnum.MY_CALENDAR_VIEW}>
 						<DashboardCalendarAvailability userId={userId} />
 					</Protected>
 				</Grid>

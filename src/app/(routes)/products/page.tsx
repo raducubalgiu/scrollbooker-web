@@ -6,6 +6,7 @@ import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { PermissionEnum } from "@/models/enums/PermissionsEnum";
 
 async function Products() {
 	const { userId } = await getUserServerSession();
@@ -40,4 +41,4 @@ async function Products() {
 	);
 }
 
-export default ProtectedPage(Products, "PRODUCTS_VIEW");
+export default ProtectedPage(Products, PermissionEnum.MY_PRODUCTS_VIEW);

@@ -4,18 +4,18 @@ import Input from "../../Input/Input";
 import InputSelect from "../../Input/InputSelect";
 import { Stack } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
-import { UserInfoType } from "@/models/UserInfoType";
 import { useEffect } from "react";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
 import { required, minField, maxField } from "@/utils/validation-rules";
 import AvatarUploader from "@/components/cutomized/AvatarUploader/AvatarUploader";
 import Protected from "@/components/cutomized/Protected/Protected";
+import { UserProfileType } from "@/models/UserProfileType";
 
 type UserInfoEditModalProps = {
 	open: boolean;
 	handleClose: () => void;
-	user: UserInfoType | undefined;
+	user: UserProfileType | undefined;
 	refetchUserData: () => void;
 };
 
@@ -62,7 +62,7 @@ export default function UserInfoEditModal({
 
 	const professions = data ?? [];
 
-	const handleEditUser = (updatedUser: UserInfoType) =>
+	const handleEditUser = (updatedUser: UserProfileType) =>
 		updateUser({
 			username: updatedUser.username,
 			fullname: updatedUser.fullname,

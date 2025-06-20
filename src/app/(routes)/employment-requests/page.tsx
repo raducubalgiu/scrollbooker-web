@@ -1,6 +1,10 @@
 import React from "react";
 import EmploymentRequestsModule from "@/components/modules/EmploymentRequestsModule/EmploymentRequestsModule";
+import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
+import { PermissionEnum } from "@/models/enums/PermissionsEnum";
 
-export default async function EmploymentRequests() {
+async function EmploymentRequests() {
 	return <EmploymentRequestsModule />;
 }
+
+export default ProtectedPage(EmploymentRequests, PermissionEnum.MY_EMPLOYMENT_REQUESTS_VIEW);

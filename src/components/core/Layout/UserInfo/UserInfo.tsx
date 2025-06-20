@@ -6,16 +6,16 @@ import StarIcon from "@mui/icons-material/Star";
 import CustomStack from "../../CustomStack/CustomStack";
 import UserInfoCounter from "./UserInfoCounter";
 import UserAvatar from "./UserAvatar";
-import { UserInfoType } from "@/models/UserInfoType";
 import UserInfoEditModal from "./UserInfoEditModal";
 import { UseQueryResult } from "@tanstack/react-query";
+import { UserProfileType } from "@/models/UserProfileType";
 
 const styles = { username: { mt: 2.5, fontSize: 18, fontWeight: "700" } };
 
 type UserInfoProps = {
-	user: UserInfoType | undefined;
+	user: UserProfileType | undefined;
 	isLoadingUser: boolean;
-	refetchUser: () => Promise<UseQueryResult<UserInfoType, unknown>>;
+	refetchUser: () => Promise<UseQueryResult<UserProfileType, unknown>>;
 };
 
 export default function UserInfo({

@@ -33,6 +33,8 @@ import { signOut } from "next-auth/react";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { UserInfoType } from "@/models/UserInfoType";
+import { PermissionEnum } from "@/models/enums/PermissionsEnum";
+import { UserProfileType } from "@/models/UserProfileType";
 
 export default function Sidebar() {
 	const router = useRouter();
@@ -44,9 +46,9 @@ export default function Sidebar() {
 		data: user,
 		isLoading: isLoadingUser,
 		refetch: refetchUser,
-	} = useCustomQuery<UserInfoType>({
-		key: ["user-info"],
-		url: "/api/auth/user-info",
+	} = useCustomQuery<UserProfileType>({
+		key: ["user-profile"],
+		url: "/api/profile",
 	});
 
 	const handleOpenNomenclatures = () => setOpenNomenclatures(open => !open);
@@ -66,7 +68,7 @@ export default function Sidebar() {
 			label: "Dashboard",
 			route: "/",
 			icon: <DashboardOutlinedIcon />,
-			permission: "NO_PROTECTION",
+			permission: PermissionEnum.NO_PROTECTION,
 		},
 	];
 
@@ -75,13 +77,13 @@ export default function Sidebar() {
 			label: "Notificări",
 			route: "/notifications",
 			icon: <NotificationsNoneOutlinedIcon />,
-			permission: "NO_PROTECTION",
+			permission: PermissionEnum.NO_PROTECTION,
 		},
 		{
 			label: "Setări",
 			route: "/settings",
 			icon: <ManageAccountsOutlinedIcon />,
-			permission: "NO_PROTECTION",
+			permission: PermissionEnum.NO_PROTECTION,
 		},
 	];
 
@@ -90,43 +92,43 @@ export default function Sidebar() {
 			label: "Locație și servicii",
 			route: "/my-business",
 			icon: <PlaceOutlinedIcon />,
-			permission: "MY_BUSINESS_VIEW",
+			permission: PermissionEnum.MY_BUSINESS_LOCATION_VIEW,
 		},
 		{
 			label: "Calendar",
 			route: "/calendar",
 			icon: <CalendarMonthIcon />,
-			permission: "CALENDAR_VIEW",
+			permission: PermissionEnum.MY_CALENDAR_VIEW,
 		},
 		{
 			label: "Programul de lucru",
 			route: "/schedules",
 			icon: <ScheduleIcon />,
-			permission: "SCHEDULES_VIEW",
+			permission: PermissionEnum.MY_SCHEDULES_VIEW,
 		},
 		{
 			label: "Produse",
 			route: "/products",
 			icon: <ShoppingBagOutlinedIcon />,
-			permission: "PRODUCTS_VIEW",
+			permission: PermissionEnum.MY_PRODUCTS_VIEW,
 		},
 		{
 			label: "Modalități de plată",
 			route: "/currencies",
 			icon: <AccountBalanceWalletOutlinedIcon />,
-			permission: "USER_CURRENCIES_VIEW",
+			permission: PermissionEnum.MY_CURRENCIES_VIEW,
 		},
 		{
 			label: "Angajați",
 			route: "/employees",
 			icon: <PeopleAltOutlinedIcon />,
-			permission: "EMPLOYEES_VIEW",
+			permission: PermissionEnum.MY_EMPLOYEES_VIEW,
 		},
 		{
 			label: "Cereri de angajare",
 			route: "/employment-requests",
 			icon: <ScheduleSendOutlinedIcon />,
-			permission: "EMPLOYMENT_REQUESTS_VIEW",
+			permission: PermissionEnum.MY_EMPLOYMENT_REQUESTS_VIEW,
 		},
 	];
 

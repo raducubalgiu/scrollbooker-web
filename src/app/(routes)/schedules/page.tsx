@@ -4,6 +4,7 @@ import { get } from "@/utils/requests";
 import { ScheduleResponseType } from "@/models/ScheduleType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { PermissionEnum } from "@/models/enums/PermissionsEnum";
 
 async function Schedules() {
 	const { userId } = await getUserServerSession();
@@ -17,4 +18,4 @@ async function Schedules() {
 	return <SchedulesModule data={response} />;
 }
 
-export default ProtectedPage(Schedules, "SCHEDULES_VIEW");
+export default ProtectedPage(Schedules, PermissionEnum.MY_SCHEDULES_VIEW);
