@@ -1,7 +1,7 @@
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import InputCheckbox from "@/components/core/Input/InputCheckbox";
 import Modal from "@/components/core/Modal/Modal";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { FormControl } from "@mui/material";
 import { FieldValues, useFormContext } from "react-hook-form";
 import { some, filter } from "lodash";

@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Tooltip, Checkbox, CircularProgress } from "@mui/material";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { MRT_Row } from "material-react-table";
-import { BusinessType } from "@/models/nomenclatures/BusinessType";
+import { BusinessType } from "@/ts/models/nomenclatures/BusinessType";
 import { find } from "lodash";
-import { FilterType } from "@/models/nomenclatures/FilterType";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import { toast } from "react-toastify";
 
 type FilterBusinessTypeCheckboxProps = {

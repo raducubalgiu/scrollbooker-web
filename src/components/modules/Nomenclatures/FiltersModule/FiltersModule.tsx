@@ -3,7 +3,7 @@
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { FilterType } from "@/models/nomenclatures/FilterType";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";

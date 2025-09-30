@@ -7,7 +7,7 @@ import CustomStack from "../../core/CustomStack/CustomStack";
 import DashboardBarChart from "./DashboardBarChart";
 import { useCustomQuery } from "@/hooks/useHttp";
 import DashboardCardSummary from "./DashboardCardSummary";
-import { DashboardSummaryType } from "@/models/DashboardSummaryType";
+import { DashboardSummaryType } from "@/ts/models/DashboardSummaryType";
 import DashboardCardSummarySkeleton from "@/components/cutomized/Skeletons/DashboardCardSummarySkeleton";
 import { useDashboardReducer } from "@/hooks/useDashboardReducer";
 import Protected from "@/components/cutomized/Protected/Protected";
@@ -15,8 +15,8 @@ import { PaginatedData } from "@/components/core/Table/Table";
 import usePermission from "@/components/cutomized/Protected/usePermission";
 import DashboardEmployeesSelect from "./DashboardEmployeesSelect";
 import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
-import { PermissionEnum } from "@/models/enums/PermissionsEnum";
-import { UserMiniType } from "@/models/UserMiniType";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { UserMiniType } from "@/ts/models/User/UserMiniType";
 
 type DashboardModuleProps = {
 	userId: number | undefined;

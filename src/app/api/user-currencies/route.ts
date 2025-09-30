@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, post, put } from "@/utils/requests";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
+import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
 
 export const GET = async () => {
 	const { userId } = await getUserServerSession();

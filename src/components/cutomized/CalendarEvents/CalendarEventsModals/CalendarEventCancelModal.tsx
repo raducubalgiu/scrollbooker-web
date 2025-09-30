@@ -9,12 +9,12 @@ import CustomStack from "@/components/core/CustomStack/CustomStack";
 import EditChangeIconButton from "../../IconButtons/EditChangeIconButton";
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import { useMutate } from "@/hooks/useHttp";
-import { SlotType } from "../calendar-types";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 import { toast } from "react-toastify";
+import { CalendarEventsSlotType } from "@/ts/models/Calendar/CalendarEventsType";
 
 type CalendarEventCancelModalProps = {
-	slot: SlotType;
+	slot: CalendarEventsSlotType;
 	open: boolean;
 	handleClose: () => void;
 };

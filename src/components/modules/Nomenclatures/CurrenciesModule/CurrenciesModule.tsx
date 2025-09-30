@@ -3,7 +3,7 @@
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
+import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
 import Table from "@/components/core/Table/Table";
 import { MRT_ColumnDef } from "material-react-table";
 import React, { useMemo } from "react";

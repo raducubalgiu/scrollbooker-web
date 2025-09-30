@@ -3,9 +3,10 @@ import { AuthOptions, User } from "next-auth";
 import { LOG } from "@/utils/logger";
 import { SECOND } from "@/utils/date-utils";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { map } from "lodash";
 import { JWT } from "next-auth/jwt";
+import { PermissionType } from "@/ts/models/Permission/PermissionType";
 
 type DecodedTokenType = {
 	id: number,
@@ -170,7 +171,7 @@ async function verifyToken(token: string): Promise<DecodedTokenType | null> {
 }
 
 async function getPermissions(token: string): Promise<string[]> {
-	const userPermissions = await axios.get(
+	const userPermissions: AxiosResponse<PermissionType[]> = await axios.get(
 		`${process.env.BE_BASE_ENDPOINT}/auth/user-permissions`,
 		{ headers: { Authorization: `Bearer ${token}` } }
 	);

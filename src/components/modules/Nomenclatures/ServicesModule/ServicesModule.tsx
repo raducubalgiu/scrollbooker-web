@@ -3,11 +3,11 @@
 import Table from "@/components/core/Table/Table";
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
-import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 import ServiceBusinessTypes from "./ServiceBusinessTypes";
 

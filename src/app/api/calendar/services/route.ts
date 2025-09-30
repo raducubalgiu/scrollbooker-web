@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { get } from "@/utils/requests";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 
 export const GET = async () => {

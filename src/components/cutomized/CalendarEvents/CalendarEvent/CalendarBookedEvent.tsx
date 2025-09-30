@@ -1,12 +1,12 @@
 import { Box, Stack, Avatar, Typography, Button } from "@mui/material";
 import { shortTimeFormat } from "@/utils/date-utils-dayjs";
 import { useState } from "react";
-import { SlotType } from "../calendar-types";
 import CalendarEventCancelModal from "../CalendarEventsModals/CalendarEventCancelModal";
 import dayjs from "dayjs";
+import { CalendarEventsSlotType } from "@/ts/models/Calendar/CalendarEventsType";
 
 type CalendarBookedEventProps = {
-	slot: SlotType;
+	slot: CalendarEventsSlotType;
 };
 
 export default function CalendarBookedEvent({

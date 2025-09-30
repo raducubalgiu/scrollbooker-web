@@ -1,7 +1,7 @@
 import BusinessTypesModule from "@/components/modules/Nomenclatures/BusinessTypesModule/BusinessTypesModule";
 import React from "react";
 import { get } from "@/utils/requests";
-import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 
 async function BusinessTypes() {

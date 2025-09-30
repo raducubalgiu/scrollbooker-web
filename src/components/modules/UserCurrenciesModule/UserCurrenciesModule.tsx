@@ -2,7 +2,7 @@ import { Paper, Typography } from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import React from "react";
 import UserCurrenciesItem from "./UserCurrenciesItem";
-import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
+import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
 
 type UserCurrenciesModuleProps = { currencies: CurrencyType[] };
 

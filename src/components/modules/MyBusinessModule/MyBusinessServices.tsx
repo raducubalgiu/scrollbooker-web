@@ -10,7 +10,7 @@ import Accordion from "@/components/core/Accordion/Accordion";
 import MyBusinessModalServices from "./MyBusinessModalServices";
 import Modal from "@/components/core/Modal/Modal";
 import { useMutate } from "@/hooks/useHttp";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 
 const styles = {

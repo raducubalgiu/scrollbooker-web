@@ -1,11 +1,11 @@
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
-import { ProductType } from "@/models/Product/ProductResponse";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
+import { ProductType } from "@/ts/models/Product/ProductResponse";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
-import { FilterType } from "@/models/nomenclatures/FilterType";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
-import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
+import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
 
 type useProductColumnsProps = {
 	services: ServiceType[];

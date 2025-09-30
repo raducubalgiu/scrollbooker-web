@@ -1,7 +1,7 @@
 import React from "react";
 import { Paper } from "@mui/material";
 import ProfessionListItem from "@/components/cutomized/ProfessionListItem/ProfessionListItem";
-import { ProfessionType } from "@/models/ProfessionType";
+import { ProfessionType } from "@/ts/models/Profession/ProfessionType";
 import ProfessionListItemSkeletons from "@/components/cutomized/Skeletons/ProfessionListItemSkeletons";
 
 type EmploymentRequestsStepTwoProps = {

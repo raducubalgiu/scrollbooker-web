@@ -1,11 +1,11 @@
 import Grid from "@mui/material/Grid2";
 import dayjs from "dayjs";
 import { Stack, Typography } from "@mui/material";
-import { DayInfo } from "../calendar-types";
 import CalendarEventsHeaderCheckbox from "./CalendarEventsHeaderCheckbox";
+import { CalendarEventsDayType } from "@/ts/models/Calendar/CalendarEventsType";
 
 type CalendarEventsHeaderProps = {
-	days: DayInfo[] | undefined;
+	days: CalendarEventsDayType[] | undefined;
 };
 
 export default function CalendarEventsHeader({
@@ -63,7 +63,7 @@ export default function CalendarEventsHeader({
 							sx={{ backgroundColor: "surface.200" }}
 						>
 							<Typography variant="subtitle2" fontWeight={600} sx={{ mr: 1.5 }}>
-								{dayjs(day.date).format("ddd, MMM D")}
+								{dayjs(day.day).format("ddd, MMM D")}
 							</Typography>
 						</Stack>
 						<CalendarEventsHeaderCheckbox day={day} />

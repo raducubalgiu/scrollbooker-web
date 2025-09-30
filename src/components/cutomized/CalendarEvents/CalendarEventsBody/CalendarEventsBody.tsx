@@ -2,10 +2,10 @@ import React, { useMemo } from "react";
 import Grid from "@mui/material/Grid2";
 import { Typography, Box, Stack } from "@mui/material";
 import dayjs from "dayjs";
-import { DayInfo } from "../calendar-types";
 import { Theme } from "@mui/system";
 import CalendarEvent from "../CalendarEvent/CalendarEvent";
 import CalendarEventClosed from "../CalendarEvent/CalendarEventClosed";
+import { CalendarEventsDayType } from "@/ts/models/Calendar/CalendarEventsType";
 
 type CalendarEventsBodyProps = {
 	timeSlots: {
@@ -15,7 +15,7 @@ type CalendarEventsBodyProps = {
 		isShortSlot: boolean;
 	}[];
 	slotDuration: number;
-	days: DayInfo[] | undefined;
+	days: CalendarEventsDayType[] | undefined;
 	minSlotTime: string | undefined;
 	maxSlotTime: string | undefined;
 };
@@ -56,7 +56,7 @@ export default function CalendarEventsBody({
 	const SLOT_HEIGHT_PER_MINUTE = BASE_SLOT_HEIGHT_PER_MINUTE;
 
 	const dayStyles = useMemo(() => {
-		return (theme: Theme, day: DayInfo) => {
+		return (theme: Theme, day: CalendarEventsDayType) => {
 			//const { primary, background } = theme.palette;
 			const isToday = dayjs(day.day).isSame(dayjs(), "day");
 
@@ -67,7 +67,7 @@ export default function CalendarEventsBody({
 		};
 	}, [styles.dayContainer]);
 
-	const renderSlots = (day: DayInfo) =>
+	const renderSlots = (day: CalendarEventsDayType) =>
 		day.slots.map((slot, slotIndex) => {
 			const start = dayjs(slot.start_date_locale);
 			const end = dayjs(slot.end_date_locale);

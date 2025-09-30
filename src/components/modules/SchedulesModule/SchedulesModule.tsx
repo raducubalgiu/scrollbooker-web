@@ -14,7 +14,7 @@ import {
 import {
 	ScheduleResponseType,
 	ScheduleUpdateType,
-} from "@/models/ScheduleType";
+} from "@/ts/models/Schedules/ScheduleType";
 import SchedulesSelectHours from "./SchedulesSelectHours";
 import { FormProvider, useForm } from "react-hook-form";
 import { useState } from "react";

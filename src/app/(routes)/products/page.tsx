@@ -1,12 +1,12 @@
 import ProductsModule from "@/components/modules/ProductsModule/ProductsModule";
 import React from "react";
 import { get } from "@/utils/requests";
-import { FilterType } from "@/models/nomenclatures/FilterType";
-import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
+import { UserBusinessType } from "@/ts/models/UserBusiness/UserBusinessType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
+import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { PermissionEnum } from "@/models/enums/PermissionsEnum";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 async function Products() {
 	const { userId } = await getUserServerSession();

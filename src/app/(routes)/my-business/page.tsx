@@ -3,12 +3,12 @@ import MainLayout from "../../../components/cutomized/MainLayout/MainLayout";
 import MyBusinessDetails from "@/components/modules/MyBusinessModule/MyBusinessDetails";
 import MyBusinessServices from "@/components/modules/MyBusinessModule/MyBusinessServices";
 import { get } from "@/utils/requests";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { some } from "lodash";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { UserBusinessType } from "@/models/UserBusiness/UserBusinessType";
-import { PermissionEnum } from "@/models/enums/PermissionsEnum";
+import { UserBusinessType } from "@/ts/models/UserBusiness/UserBusinessType";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 async function MyBusiness() {
 	const { userId } = await getUserServerSession();

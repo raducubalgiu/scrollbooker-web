@@ -3,7 +3,6 @@ import { memo } from "react";
 import { Box, Paper, TableContainer } from "@mui/material";
 import dayjs from "dayjs";
 import CalendarEventsToolbar from "./CalendarEventsToolbar/CalendarEventsToolbar";
-import { CalendarType } from "./calendar-types";
 import CalendarEventsHeader from "./CalendarEventsHeader/CalendarEventsHeader";
 import CalendarEventsBody from "./CalendarEventsBody/CalendarEventsBody";
 
@@ -11,10 +10,11 @@ import CalendarLoading from "./CalendarLoading";
 import { useWindowSize } from "@/utils/useWindowSize";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 import { Fragment, useCallback } from "react";
+import { CalendarEventsType } from "@/ts/models/Calendar/CalendarEventsType";
 
 type CalendarEventsProps = {
 	fullScreen: boolean;
-	calendar: CalendarType | undefined;
+	calendar: CalendarEventsType | undefined;
 	durationOptions: { value: number; label: string }[];
 	minSlotTime: string | undefined;
 	maxSlotTime: string | undefined;

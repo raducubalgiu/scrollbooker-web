@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { BusinessType } from "@/models/nomenclatures/BusinessType";
+import { BusinessType } from "@/ts/models/nomenclatures/BusinessType";
 import { MRT_ColumnDef } from "material-react-table";
 import Table from "@/components/core/Table/Table";
 import ProfessionBusinessTypesCheckbox from "./ProfessionBusinessTypeCheckbox";

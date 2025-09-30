@@ -1,13 +1,13 @@
 import React, { useMemo } from "react";
 import { Box } from "@mui/material";
-import { SlotType } from "../calendar-types";
 import CalendarBookedEvent from "./CalendarBookedEvent";
 import CalendarUnbookedEvent from "./CalendarUnbookedEvent";
 import { Theme } from "@mui/system";
 import CalendarEventClosed from "./CalendarEventClosed";
+import { CalendarEventsSlotType } from "@/ts/models/Calendar/CalendarEventsType";
 
 type CalendarEventProps = {
-	slot: SlotType;
+	slot: CalendarEventsSlotType;
 	eventHeight: number;
 	topOffset: number;
 };

@@ -5,28 +5,28 @@ export type AppointmentCustomerType = {
 	avatar: string | undefined;
 } | null;
 
-export type AppointmentCurrencyType = {
+export type CalendarEventsCurrencyType = {
 	id: number;
 	name: string;
 };
 
-export type AppointmentProductType = {
+export type CalendarEventsProductType = {
 	product_name: string;
 	product_full_price: number;
 	product_price_with_discount: number;
 	product_discount: number;
 };
 
-export type AppointmentInfoType = {
+export type CalendarEventsInfoType = {
 	channel: "scroll_booker" | "own_client";
 	service_name: string | undefined;
-	product: AppointmentProductType;
-	currency: AppointmentCurrencyType | null;
+	product: CalendarEventsProductType;
+	currency: CalendarEventsCurrencyType | null;
 	customer: AppointmentCustomerType;
 	message: string | undefined;
 };
 
-export type SlotType = {
+export type CalendarEventsSlotType = {
 	id: number | null;
 	start_date_locale: string;
 	end_date_locale: string;
@@ -35,18 +35,18 @@ export type SlotType = {
 	is_booked: boolean;
 	is_closed: boolean;
 	is_blocked: boolean;
-	info: AppointmentInfoType | null;
+	info: CalendarEventsInfoType | null;
 };
 
-export type DayInfo = {
+export type CalendarEventsDayType = {
 	day: string;
 	is_closed: boolean;
 	is_blocked: boolean;
-	slots: SlotType[];
+	slots: CalendarEventsSlotType[];
 };
 
-export type CalendarType = {
+export type CalendarEventsType = {
 	min_slot_time: string;
 	max_slot_time: string;
-	days: DayInfo[];
+	days: CalendarEventsDayType[];
 };

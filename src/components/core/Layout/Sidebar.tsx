@@ -32,8 +32,8 @@ import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlin
 import { signOut } from "next-auth/react";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { PermissionEnum } from "@/models/enums/PermissionsEnum";
-import { UserProfileType } from "@/models/UserProfileType";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { UserProfileType } from "@/ts/models/User/UserProfileType";
 
 export default function Sidebar() {
 	const router = useRouter();

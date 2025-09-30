@@ -3,9 +3,9 @@
 import { Fragment, useEffect } from "react";
 import { useCustomQuery } from "@/hooks/useHttp";
 import CalendarEvents from "@/components/cutomized/CalendarEvents/CalendarEvents";
-import { CalendarType } from "@/components/cutomized/CalendarEvents/calendar-types";
 import { Dialog } from "@mui/material";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
+import { CalendarEventsType } from "@/ts/models/Calendar/CalendarEventsType";
 
 export default function CalendarModule() {
 	const {
@@ -17,7 +17,7 @@ export default function CalendarModule() {
 		setCalendar,
 	} = useCalendarEventsContext();
 
-	const { data, isLoading: isLoadingCalendar } = useCustomQuery<CalendarType>({
+	const { data, isLoading: isLoadingCalendar } = useCustomQuery<CalendarEventsType>({
 		key: ["calendar", startDate, endDate, slotDuration],
 		url: "/api/calendar",
 		params: {

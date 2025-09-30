@@ -1,6 +1,6 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import ProfessionsModule from "@/components/modules/Nomenclatures/ProfessionsModule/ProfessionsModule";
-import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
 import { get } from "@/utils/requests";
 import React from "react";
 

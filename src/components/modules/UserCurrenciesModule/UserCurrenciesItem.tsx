@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { find } from "lodash";
-import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
+import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import { toast } from "react-toastify";
 

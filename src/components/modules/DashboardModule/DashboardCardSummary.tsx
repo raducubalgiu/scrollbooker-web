@@ -4,7 +4,7 @@ import CustomStack from "../../core/CustomStack/CustomStack";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import Grid from "@mui/material/Grid2";
-import { DashboardSummaryType } from "@/models/DashboardSummaryType";
+import { DashboardSummaryType } from "@/ts/models/DashboardSummaryType";
 
 type DashboardSummaryProps = {
 	dashboardSummary: DashboardSummaryType | null;

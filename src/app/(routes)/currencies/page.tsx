@@ -2,8 +2,8 @@ import React from "react";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import UserCurrenciesModule from "@/components/modules/UserCurrenciesModule/UserCurrenciesModule";
 import { get } from "@/utils/requests";
-import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
-import { PermissionEnum } from "@/models/enums/PermissionsEnum";
+import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 async function Currencies() {
 	const response = (

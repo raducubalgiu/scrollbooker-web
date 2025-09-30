@@ -11,13 +11,13 @@ import {
 	MRT_Row,
 } from "material-react-table";
 
-import { ProfessionType } from "@/models/ProfessionType";
+import { ProfessionType } from "@/ts/models/Profession/ProfessionType";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import dayjs from "dayjs";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { Close } from "@mui/icons-material";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
-import { UserMiniType } from "@/models/UserMiniType";
+import { UserMiniType } from "@/ts/models/User/UserMiniType";
 
 type EmploymentRequest = {
 	id: number;

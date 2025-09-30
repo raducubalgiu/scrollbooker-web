@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import Table from "@/components/core/Table/Table";
-import { SubFilterType } from "@/models/nomenclatures/SubFilterType";
+import { SubFilterType } from "@/ts/models/nomenclatures/SubFilterType";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef, MRT_Row } from "material-react-table";
-import { FilterType } from "@/models/nomenclatures/FilterType";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 
 export default function SubFiltersModule({

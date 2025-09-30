@@ -1,8 +1,8 @@
 import Table from "@/components/core/Table/Table";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { BusinessType } from "@/models/nomenclatures/BusinessType";
-import { FilterType } from "@/models/nomenclatures/FilterType";
+import { BusinessType } from "@/ts/models/nomenclatures/BusinessType";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import { MRT_ColumnDef, MRT_Row } from "material-react-table";
 import React, { useMemo } from "react";
 import FilterBusinessTypeCheckbox from "./FilterBusinessTypeCheckbox";

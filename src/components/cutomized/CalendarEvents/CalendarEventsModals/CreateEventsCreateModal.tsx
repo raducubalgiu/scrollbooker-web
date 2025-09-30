@@ -5,7 +5,6 @@ dayjs.locale("ro");
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
 import { Divider, Paper, Stack, TextField, Typography } from "@mui/material";
-import { SlotType } from "../calendar-types";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "@/components/core/Input/Input";
 import InputSelect from "@/components/core/Input/InputSelect";
@@ -18,21 +17,22 @@ import {
 } from "@/utils/validation-rules";
 import { shortPrettyDate, shortTimeFormat } from "@/utils/date-utils-dayjs";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
-import { ProductType } from "@/models/Product/ProductResponse";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import { ChangeEvent, useState } from "react";
 import EditChangeIconButton from "../../IconButtons/EditChangeIconButton";
 import { useUserClientSession } from "@/lib/auth/get-user-client";
 import { find, get } from "lodash";
 import { toast } from "react-toastify";
-import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
+import { CalendarEventsSlotType } from "@/ts/models/Calendar/CalendarEventsType";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
+import { ProductType } from "@/ts/models/Product/ProductResponse";
+import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
 
 type CreateEventModalProps = {
 	openCreate: boolean;
 	handleClose: () => void;
-	slot: SlotType;
+	slot: CalendarEventsSlotType;
 };
 
 type AppointmentCreateResponseType = {

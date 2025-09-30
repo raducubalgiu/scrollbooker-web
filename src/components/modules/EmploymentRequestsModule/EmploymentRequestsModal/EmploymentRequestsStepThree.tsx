@@ -1,7 +1,7 @@
 "use client";
 
 import Consent from "@/components/cutomized/Consent/Consent";
-import { ConsentType } from "@/models/ConsentType";
+import { ConsentType } from "@/ts/models/Consent/ConsentType";
 
 type EmploymentRequestsStepThreeProps = {
 	consent: ConsentType | undefined;

@@ -8,7 +8,6 @@ import {
 	Checkbox,
 } from "@mui/material";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
-import { SlotType } from "../calendar-types";
 import dayjs from "dayjs";
 import { timeIntervalFormat } from "@/utils/date-utils-dayjs";
 import CalendarEventsBlockModal, {
@@ -21,6 +20,7 @@ import ConfirmationModal from "../../ConfirmationModal/ConfirmationModal";
 import CalendarEventsCreateModal from "../CalendarEventsModals/CreateEventsCreateModal";
 import { useMutate } from "@/hooks/useHttp";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
+import { CalendarEventsSlotType } from "@/ts/models/Calendar/CalendarEventsType";
 
 const messages = [
 	{ value: "Am o programare la medic", name: "Am o programare la medic" },
@@ -29,7 +29,7 @@ const messages = [
 ];
 
 type CalendarUnbookedEventProps = {
-	slot: SlotType;
+	slot: CalendarEventsSlotType;
 	height: number;
 };
 

@@ -1,7 +1,7 @@
 import React from "react";
 import EmploymentRequestsModule from "@/components/modules/EmploymentRequestsModule/EmploymentRequestsModule";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import { PermissionEnum } from "@/models/enums/PermissionsEnum";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 async function EmploymentRequests() {
 	return <EmploymentRequestsModule />;

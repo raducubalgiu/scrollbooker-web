@@ -6,8 +6,8 @@ import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
-import { ProfessionType } from "@/models/ProfessionType";
-import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
+import { ProfessionType } from "@/ts/models/Profession/ProfessionType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 import ProfessionBusinessTypes from "./ProfessionBusinessTypes";
 

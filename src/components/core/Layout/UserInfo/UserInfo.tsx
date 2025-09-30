@@ -8,7 +8,7 @@ import UserInfoCounter from "./UserInfoCounter";
 import UserAvatar from "./UserAvatar";
 import UserInfoEditModal from "./UserInfoEditModal";
 import { UseQueryResult } from "@tanstack/react-query";
-import { UserProfileType } from "@/models/UserProfileType";
+import { UserProfileType } from "@/ts/models/User/UserProfileType";
 
 const styles = { username: { mt: 2.5, fontSize: 18, fontWeight: "700" } };
 

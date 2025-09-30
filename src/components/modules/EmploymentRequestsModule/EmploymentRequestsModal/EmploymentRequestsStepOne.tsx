@@ -1,7 +1,7 @@
 import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItemSkeletons";
 import UserListItem from "@/components/cutomized/UserListItem/UserListItem";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { UserMiniType } from "@/models/UserMiniType";
+import { UserMiniType } from "@/ts/models/User/UserMiniType";
 import { Divider, Paper, Stack, TextField, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useState } from "react";

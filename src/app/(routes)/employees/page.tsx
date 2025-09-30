@@ -1,6 +1,6 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import EmployeesModule from "@/components/modules/EmployeesModule/EmployeesModule";
-import { PermissionEnum } from "@/models/enums/PermissionsEnum";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import React from "react";
 
 async function Employees() {

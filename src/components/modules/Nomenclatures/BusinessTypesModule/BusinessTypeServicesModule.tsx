@@ -1,6 +1,6 @@
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { MRT_ColumnDef } from "material-react-table";
 import React from "react";
 import Table from "@/components/core/Table/Table";

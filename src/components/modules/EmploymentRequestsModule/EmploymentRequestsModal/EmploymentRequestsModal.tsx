@@ -11,9 +11,9 @@ import { isNull } from "lodash";
 import EmploymentRequestsStepOne from "./EmploymentRequestsStepOne";
 import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { ConsentType } from "@/models/ConsentType";
+import { ConsentType } from "@/ts/models/Consent/ConsentType";
 import EmploymentRequestsStepThree from "./EmploymentRequestsStepThree";
-import { ProfessionType } from "@/models/ProfessionType";
+import { ProfessionType } from "@/ts/models/Profession/ProfessionType";
 
 const steps = [
 	"Selectează viitorul angajat",

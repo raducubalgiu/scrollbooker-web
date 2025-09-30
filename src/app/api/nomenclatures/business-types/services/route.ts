@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
 import { PaginatedData } from "@/components/core/Table/Table";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 
 export const GET = async (req: NextRequest) => {
 	const businessTypeId = req.nextUrl.searchParams.get("businessTypeId");

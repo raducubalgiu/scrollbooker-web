@@ -1,12 +1,12 @@
 "use client";
 
-import { ProductType } from "@/models/Product/ProductResponse";
+import { ProductType } from "@/ts/models/Product/ProductResponse";
 import Table from "@/components/core/Table/Table";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import useProductColumns from "./useProductColumns";
-import { ServiceType } from "@/models/nomenclatures/ServiceType";
-import { FilterType } from "@/models/nomenclatures/FilterType";
-import { CurrencyType } from "@/models/nomenclatures/CurrencyType";
+import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
+import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
 
 type ProductsModuleProps = {
 	services: ServiceType[];

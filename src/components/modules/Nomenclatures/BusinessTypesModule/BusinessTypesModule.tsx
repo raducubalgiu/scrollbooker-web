@@ -2,12 +2,12 @@
 
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
-import { BusinessType } from "@/models/nomenclatures/BusinessType";
+import { BusinessType } from "@/ts/models/nomenclatures/BusinessType";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
-import { BusinessDomainType } from "@/models/nomenclatures/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 import BusinessTypeServicesModule from "./BusinessTypeServicesModule";
 

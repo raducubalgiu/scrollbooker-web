@@ -2,7 +2,7 @@ import Modal from "@/components/core/Modal/Modal";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import Table from "@/components/core/Table/Table";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { RoleType } from "@/models/RoleType";
+import { RoleType } from "@/ts/models/Role/RoleType";
 import { Paper } from "@mui/material";
 import { MRT_ColumnDef } from "material-react-table";
 import React, { useMemo } from "react";
