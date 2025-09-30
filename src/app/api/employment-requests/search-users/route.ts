@@ -6,7 +6,7 @@ export const GET = async (req: NextRequest) => {
 
 	const response = (
 		await get({
-			url: `/users/search?q=${search}`,
+			url: `/search/users?query=${search}&role_client=true`,
 		})
 	).data;
 
