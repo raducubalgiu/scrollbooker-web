@@ -32,7 +32,6 @@ import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlin
 import { signOut } from "next-auth/react";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { UserInfoType } from "@/models/UserInfoType";
 import { PermissionEnum } from "@/models/enums/PermissionsEnum";
 import { UserProfileType } from "@/models/UserProfileType";
 

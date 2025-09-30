@@ -1,4 +1,4 @@
-import { UserInfoType } from "./UserInfoType";
+import { UserMiniType } from "./UserMiniType";
 
 export type NotificationType = {
 	id: number;
@@ -9,5 +9,5 @@ export type NotificationType = {
 	message: null;
 	is_read: false;
 	is_deleted: false;
-	sender: UserInfoType;
+	sender: UserMiniType;
 };

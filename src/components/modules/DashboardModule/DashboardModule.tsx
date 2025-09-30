@@ -14,9 +14,9 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import { PaginatedData } from "@/components/core/Table/Table";
 import usePermission from "@/components/cutomized/Protected/usePermission";
 import DashboardEmployeesSelect from "./DashboardEmployeesSelect";
-import { UserInfoType } from "@/models/UserInfoType";
 import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
 import { PermissionEnum } from "@/models/enums/PermissionsEnum";
+import { UserMiniType } from "@/models/UserMiniType";
 
 type DashboardModuleProps = {
 	userId: number | undefined;
@@ -33,7 +33,7 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 		if (hasPermission) setSelectedEmployee({ id: 0 });
 	}, [hasPermission]);
 
-	const { data: employeesData } = useCustomQuery<PaginatedData<UserInfoType>>({
+	const { data: employeesData } = useCustomQuery<PaginatedData<UserMiniType>>({
 		key: ["employees", hasPermission],
 		url: "/api/employees",
 		params: { page: 1, limit: 10 },

@@ -10,19 +10,20 @@ import {
 	MRT_ColumnDef,
 	MRT_Row,
 } from "material-react-table";
-import { UserInfoType } from "@/models/UserInfoType";
+
 import { ProfessionType } from "@/models/ProfessionType";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import dayjs from "dayjs";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { Close } from "@mui/icons-material";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
+import { UserMiniType } from "@/models/UserMiniType";
 
 type EmploymentRequest = {
 	id: number;
 	status: string;
-	employee: UserInfoType;
-	employer: UserInfoType;
+	employee: UserMiniType;
+	employer: UserMiniType;
 	profession: ProfessionType;
 	created_at: string;
 };

@@ -44,6 +44,20 @@ export default function BusinessTypesModule({
 						value={row.getValue(column.id)}
 						required
 						minLength={3}
+						maxLength={100}
+					/>
+				),
+			},
+			{
+				accessorKey: "plural",
+				header: "Plural",
+				Edit: ({ row, column }) => (
+					<MR_Input
+						row={row}
+						column={column}
+						value={row.getValue(column.id)}
+						required
+						minLength={3}
 						maxLength={50}
 					/>
 				),

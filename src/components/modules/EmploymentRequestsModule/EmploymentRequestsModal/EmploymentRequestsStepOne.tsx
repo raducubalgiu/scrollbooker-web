@@ -1,7 +1,7 @@
 import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItemSkeletons";
 import UserListItem from "@/components/cutomized/UserListItem/UserListItem";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { UserInfoType } from "@/models/UserInfoType";
+import { UserMiniType } from "@/models/UserMiniType";
 import { Divider, Paper, Stack, TextField, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export default function EmploymentRequestsStepOne({
 	const [debouncedSearch, setDebouncedSearch] = useState("");
 	const [hasTypedAfterSelection, setHasTypesAfterSelection] = useState(false);
 
-	const { data: users, isLoading } = useCustomQuery<UserInfoType[]>({
+	const { data: users, isLoading } = useCustomQuery<UserMiniType[]>({
 		key: ["search-users", debouncedSearch],
 		url: "/api/employment-requests/search-users",
 		params: { search },

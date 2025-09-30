@@ -39,7 +39,7 @@ export type SlotType = {
 };
 
 export type DayInfo = {
-	date: string;
+	day: string;
 	is_closed: boolean;
 	is_blocked: boolean;
 	slots: SlotType[];
@@ -48,5 +48,5 @@ export type DayInfo = {
 export type CalendarType = {
 	min_slot_time: string;
 	max_slot_time: string;
-	data: DayInfo[];
+	days: DayInfo[];
 };

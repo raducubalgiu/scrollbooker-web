@@ -58,7 +58,7 @@ export default function CalendarEventsBody({
 	const dayStyles = useMemo(() => {
 		return (theme: Theme, day: DayInfo) => {
 			//const { primary, background } = theme.palette;
-			const isToday = dayjs(day.date).isSame(dayjs(), "day");
+			const isToday = dayjs(day.day).isSame(dayjs(), "day");
 
 			return {
 				...styles.dayContainer,
@@ -74,7 +74,7 @@ export default function CalendarEventsBody({
 			const durationMinutes = end.diff(start, "minute");
 
 			const topOffset =
-				start.diff(dayjs(`${day.date}T${minSlotTime}`), "minute") *
+				start.diff(dayjs(`${day.day}T${minSlotTime}`), "minute") *
 				SLOT_HEIGHT_PER_MINUTE;
 			const eventHeight = durationMinutes * SLOT_HEIGHT_PER_MINUTE;
 

@@ -86,9 +86,9 @@ function CalendarEvents({
 					/>
 					{!isLoading && (
 						<Box>
-							<CalendarEventsHeader days={calendar?.data} />
+							<CalendarEventsHeader days={calendar?.days} />
 							<CalendarEventsBody
-								days={calendar?.data}
+								days={calendar?.days}
 								timeSlots={timeSlots()}
 								slotDuration={slotDuration}
 								minSlotTime={calendar?.min_slot_time}
