@@ -1,4 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ScrollBooker Web
+
+**The ScrollBooker Web UI designed for Businesses and Employees.**
+This UI helps them to manage schedules, appointments, statistics, and more.
+
+---
+
+## 🚀 Tech Stack
+
+- [Next.js](https://nextjs.org/) – React framework for building server-rendered apps
+- [NextAuth.js](https://next-auth.js.org/) – Authentication & refresh tokens
+- [React Hook Form](https://react-hook-form.com/) – Form management
+- [Material UI](https://mui.com/) – UI components library
+- [React Server Components](https://react.dev/reference/rsc)
+- [TypeScript](https://www.typescriptlang.org/) – Type safety
+
+---
 
 ## Getting Started
 
