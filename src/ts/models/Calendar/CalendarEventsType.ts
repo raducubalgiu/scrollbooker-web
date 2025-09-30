@@ -1,14 +1,12 @@
+import { AppointmentChannelEnum } from "@/ts/enums/AppointmentChannelEnum";
+import { CurrencyType } from "../nomenclatures/CurrencyType";
+
 export type AppointmentCustomerType = {
 	id: number | undefined;
 	fullname: string;
 	username: undefined;
 	avatar: string | undefined;
 } | null;
-
-export type CalendarEventsCurrencyType = {
-	id: number;
-	name: string;
-};
 
 export type CalendarEventsProductType = {
 	product_name: string;
@@ -18,10 +16,10 @@ export type CalendarEventsProductType = {
 };
 
 export type CalendarEventsInfoType = {
-	channel: "scroll_booker" | "own_client";
+	channel: AppointmentChannelEnum;
 	service_name: string | undefined;
 	product: CalendarEventsProductType;
-	currency: CalendarEventsCurrencyType | null;
+	currency: CurrencyType | null;
 	customer: AppointmentCustomerType;
 	message: string | undefined;
 };

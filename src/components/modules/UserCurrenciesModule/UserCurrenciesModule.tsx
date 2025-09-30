@@ -10,7 +10,7 @@ export default function UserCurrenciesModule({
 	currencies,
 }: UserCurrenciesModuleProps) {
 	return (
-		<MainLayout title="Modalități de plată" hideAction>
+		<MainLayout title="Valute acceptate" hideAction>
 			<Paper sx={{ p: 2.5 }}>
 				<Typography mb={3.5} fontWeight={600}>
 					Poți alege să primești comenzi în una sau mai multe din monedele de
