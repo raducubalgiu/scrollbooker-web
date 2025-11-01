@@ -111,7 +111,7 @@ export default function CalendarEventsBody({
 									key={i}
 									height={slot.height * SLOT_HEIGHT_PER_MINUTE}
 									borderBottom="1px solid"
-									borderColor="border.main"
+									borderColor="divider"
 								>
 									{day.is_closed || slot.isShortSlot ? (
 										<CalendarEventClosed

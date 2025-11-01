@@ -11,13 +11,13 @@ import {
 	Typography,
 } from "@mui/material";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { NotificationType } from "@/models/NotificationType";
 import { PaginatedData } from "../Table/Table";
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
 import { isEmpty } from "lodash";
 import { useRouter } from "next/navigation";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import { NotificationType } from "@/ts/models/Notification/NotificationType";
 
 export default function LayoutNotificationsMenu() {
 	const router = useRouter();

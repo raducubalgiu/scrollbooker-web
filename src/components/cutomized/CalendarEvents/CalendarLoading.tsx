@@ -10,7 +10,7 @@ export default function CalendarLoading() {
 					sx={{
 						width: 80,
 						borderBottom: "1px solid",
-						borderColor: "border.main",
+						borderColor: "divider",
 						backgroundColor: "surface.200",
 					}}
 				/>
@@ -26,7 +26,7 @@ export default function CalendarLoading() {
 							borderTop: "1px solid",
 							borderLeft: "1px solid",
 							borderBottom: "1px solid",
-							borderColor: "border.main",
+							borderColor: "divider",
 							padding: 2.5,
 						}}
 					>
@@ -48,7 +48,7 @@ export default function CalendarLoading() {
 								display: "flex",
 								borderBottom: "1px solid",
 								borderLeft: "1px solid",
-								borderColor: "border.main",
+								borderColor: "divider",
 							}}
 						>
 							<Skeleton width={50} />
@@ -62,7 +62,7 @@ export default function CalendarLoading() {
 						sx={{
 							position: "relative",
 							borderLeft: "1px solid",
-							borderColor: "border.main",
+							borderColor: "divider",
 							backgroundColor: "background.default",
 							flex: 1,
 						}}
@@ -74,7 +74,7 @@ export default function CalendarLoading() {
 									height: 200,
 									p: 2.5,
 									borderBottom: "1px solid",
-									borderColor: "border.main",
+									borderColor: "divider",
 								}}
 							>
 								<Skeleton width={150} sx={{ mt: 1.5 }} />

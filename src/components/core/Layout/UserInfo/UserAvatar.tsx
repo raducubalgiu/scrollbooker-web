@@ -1,10 +1,12 @@
 import React from "react";
-import { Badge, IconButton, Avatar } from "@mui/material";
+import { Badge, IconButton, Avatar, useTheme } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 
 type UserAvatarProps = { url: string | undefined; onOpenModal: () => void };
 
 export default function UserAvatar({ url, onOpenModal }: UserAvatarProps) {
+	const theme = useTheme()
+	
 	const badgeContent = (
 		<IconButton
 			size="small"
@@ -22,7 +24,7 @@ export default function UserAvatar({ url, onOpenModal }: UserAvatarProps) {
 			anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
 			badgeContent={badgeContent}
 		>
-			<Avatar sx={{ width: 90, height: 90 }} alt="" src={url} />
+			<Avatar sx={{ width: 90, height: 90, border: `1px solid ${theme.palette.divider}` }} alt="" src={url} />
 		</Badge>
 	);
 }

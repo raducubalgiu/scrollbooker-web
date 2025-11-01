@@ -25,7 +25,7 @@ export default function MainLayout({
 					{title}
 				</Typography>
 				{!hideAction && (
-					<Button onClick={onOpenModal} variant="contained">
+					<Button onClick={onOpenModal} variant="contained" color="primary">
 						{!!actionTitle ? actionTitle : "Adaugă"}
 					</Button>
 				)}

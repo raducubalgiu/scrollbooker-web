@@ -3,7 +3,7 @@ import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import Table from "@/components/core/Table/Table";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { RoleType } from "@/ts/models/Role/RoleType";
-import { Paper } from "@mui/material";
+import { Paper, useTheme } from "@mui/material";
 import { MRT_ColumnDef } from "material-react-table";
 import React, { useMemo } from "react";
 
@@ -19,6 +19,7 @@ export default function RolesModule({ open, handleClose }: RolesModuleProps) {
 		onDeletingRowSave,
 		onEditingRowSave,
 	} = useTableHandlers<RoleType>({ route: "nomenclatures/roles" });
+	const theme = useTheme()
 
 	const columns = useMemo<MRT_ColumnDef<RoleType>[]>(
 		() => [
@@ -56,6 +57,7 @@ export default function RolesModule({ open, handleClose }: RolesModuleProps) {
 						pagination,
 						isLoading,
 					}}
+					bgColor={theme.palette.background.default}
 				/>
 			</Paper>
 		</Modal>

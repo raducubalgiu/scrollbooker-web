@@ -22,7 +22,7 @@ export default function CalendarEventsHeader({
 		fakeCol: {
 			width: 80,
 			borderBottom: "1px solid",
-			borderColor: "border.main",
+			borderColor: "divider",
 			backgroundColor: "surface.200",
 		},
 		day: {
@@ -35,11 +35,11 @@ export default function CalendarEventsHeader({
 			borderTop: "1px solid",
 			borderLeft: "1px solid",
 			borderBottom: "1px solid",
-			borderColor: "border.main",
+			borderColor: "divider",
 			padding: 1,
 			"&:last-child": {
 				borderRight: "1px solid",
-				borderColor: "border.main",
+				borderColor: "divider",
 			},
 		},
 	};

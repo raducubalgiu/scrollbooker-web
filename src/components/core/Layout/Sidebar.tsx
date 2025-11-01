@@ -173,7 +173,7 @@ export default function Sidebar() {
 				isLoadingUser={isLoadingUser}
 				refetchUser={refetchUser}
 			/>
-			<Divider sx={{ mb: 0.5 }} />
+			<Divider sx={{ mb: 0.5}} />
 			<List sx={{ pb: 5 }}>
 				{dashboardRoutes?.map((userRoute, i) => (
 					<Protected key={i} permission={userRoute.permission} showSkeleton>
@@ -194,7 +194,11 @@ export default function Sidebar() {
 						<ListItemIcon>
 							<ShoppingBagOutlinedIcon />
 						</ListItemIcon>
-						<ListItemText primary="Afacerea mea" />
+						<ListItemText 
+							primary="Afacerea mea" 
+							slotProps={{
+								primary: { sx: { fontWeight: 'bold' } }
+							}} />
 						{openMyBusiness ? <ExpandLess /> : <ExpandMore />}
 					</ListItemButton>
 					<Collapse
@@ -237,9 +241,12 @@ export default function Sidebar() {
 				<Divider sx={{ my: 1.5 }} />
 				<ListItemButton onClick={() => signOut()} sx={{ mb: 1.5, px: 2.5 }}>
 					<ListItemIcon>
-						<LogoutIcon />
+						<LogoutIcon color="error" />
 					</ListItemIcon>
-					<ListItemText primary="Log Out" />
+					<ListItemText 
+						primary="Log Out" 
+						slotProps={{ primary: { sx: { color: 'error.main' }}}} 
+					/>
 				</ListItemButton>
 				<Protected permission="NOMENCLATURES_VIEW">
 					<Divider sx={{ mb: 1.5 }} />
@@ -250,7 +257,12 @@ export default function Sidebar() {
 						<ListItemIcon>
 							<AdminPanelPlaylistAddCheckOutlinedIcon />
 						</ListItemIcon>
-						<ListItemText primary="Super Admin" />
+						<ListItemText 
+							primary="Super Admin"
+							slotProps={{
+								primary: { sx: { fontWeight: 'bold' } }
+							}}  
+						/>
 						{openNomenclatures ? <ExpandLess /> : <ExpandMore />}
 					</ListItemButton>
 					<Collapse

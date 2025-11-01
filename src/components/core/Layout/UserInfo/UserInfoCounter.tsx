@@ -13,13 +13,9 @@ export default function UserInfoCounter({
 	isLoading,
 	...props
 }: UserInfoCounterProps) {
-	const styles = {
-		label: { fontWeight: "500", mb: 1.5 },
-	};
-
 	return (
 		<Stack alignItems="center" {...props}>
-			<Typography sx={styles.label}>{label}</Typography>
+			<Typography sx={{ mb: 1.5 }}>{label}</Typography>
 			<Typography sx={{ fontWeight: "600" }}>
 				{isLoading ? (
 					<Skeleton width={12.5} height={10} sx={{ py: 1 }} />

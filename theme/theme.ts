@@ -1,6 +1,5 @@
 import { createTheme } from "@mui/material/styles";
 
-// !!!IMPORTANT: Modules need to be declared in TS to create custom theming variables
 declare module "@mui/material/styles" {
 	interface PaletteColor {
 		100?: string;
@@ -29,7 +28,6 @@ declare module "@mui/material/styles" {
 	interface Palette {
 		neutral: Palette["primary"];
 		surface: Palette["primary"];
-		border: Palette["primary"];
 		slotBlocked: Palette["primary"];
 		slotBookedOwnClient: Palette["primary"];
 		slotBookedScrollBooker: Palette["primary"];
@@ -38,43 +36,9 @@ declare module "@mui/material/styles" {
 	interface PaletteOptions {
 		neutral?: PaletteOptions["primary"];
 		surface?: PaletteOptions["primary"];
-		border: PaletteOptions["primary"];
 		slotBlocked: PaletteOptions["primary"];
 		slotBookedOwnClient: PaletteOptions["primary"];
 		slotBookedScrollBooker: PaletteOptions["primary"];
-	}
-
-	interface TypographyVariants {
-		xxl: React.CSSProperties;
-		xl: React.CSSProperties;
-		lg: React.CSSProperties;
-		md: React.CSSProperties;
-		base: React.CSSProperties;
-		sm: React.CSSProperties;
-		xs: React.CSSProperties;
-	}
-
-	// allow configuration using `createTheme`
-	interface TypographyVariantsOptions {
-		xxl?: React.CSSProperties;
-		xl?: React.CSSProperties;
-		lg?: React.CSSProperties;
-		md?: React.CSSProperties;
-		base?: React.CSSProperties;
-		sm?: React.CSSProperties;
-		xs?: React.CSSProperties;
-	}
-}
-
-declare module "@mui/material/Typography" {
-	interface TypographyPropsVariantOverrides {
-		xxl: true;
-		xl: true;
-		lg: true;
-		md: true;
-		base: true;
-		sm: true;
-		xs: true;
 	}
 }
 
@@ -98,51 +62,9 @@ export const darkTheme = createTheme({
 			100: "#364045",
 			200: "#FFFDF9",
 		},
-		neutral: {
-			100: "#FFFFFF",
-			200: "#F1F5FA",
-			300: "#D9E1ED",
-			400: "#C2CEE0",
-			500: "#7F8DA3",
-			600: "#46526A",
-			700: "#2F3E59",
-			800: "#0C1830",
-			900: "#838383",
-		},
-		surface: {
-			main: "#121212",
-			100: "#262626",
-			200: "#212121",
-			//300: "#B1B1B1",
-			//400: "#E2EEE2",
-		},
-		error: {
-			main: "#d32f2f",
-			light: "#ef5350",
-			dark: "#c62828",
-		},
-		success: {
-			main: "#2e7d32",
-			light: "#4caf50",
-			dark: "#1b5e20",
-		},
-		info: {
-			main: "#0288d1",
-			light: "#03a9f4",
-			dark: "#01579b",
-		},
-		warning: {
-			main: "#ed6c02",
-			light: "#ff9800",
-			dark: "#e65100",
-		},
-		text: {
-			primary: "#fff",
-			secondary: "rgba(255, 255, 255, 0.7)",
-			disabled: "rgba(255, 255, 255, 0.5)",
-		},
-		border: {
-			main: "rgba(81, 81, 81, 1)",
+		background: {
+			default: "#121212",
+			paper: "#1B1B1B"
 		},
 		slotBlocked: {
 			main: "#3b1111",
@@ -154,61 +76,48 @@ export const darkTheme = createTheme({
 			main: "#C06020",
 		},
 	},
-	typography: {
-		//fontFamily: montserrat.style.fontFamily,
-		xxl: {
-			fontSize: "48px",
-			lineHeight: "56px",
-		},
-		xl: {
-			fontSize: "38px",
-			lineHeight: "50px",
-		},
-		lg: {
-			fontSize: "24px",
-			lineHeight: "34px",
-		},
-		md: {
-			fontSize: "22px",
-			lineHeight: "28px",
-		},
-		base: {
-			fontSize: "18px",
-			lineHeight: "24px",
-		},
-		sm: {
-			fontSize: "16px",
-			lineHeight: "24px",
-		},
-		xs: {
-			fontSize: "14px",
-			lineHeight: "24px",
-		},
-	},
 
 	components: {
+		MuiAppBar: {
+			styleOverrides: {
+				root: ({theme}) => ({
+					borderRadius: 0,
+					backgroundColor: theme.palette.background.paper
+				})
+			}
+		},
 		MuiDrawer: {
 			styleOverrides: {
-				paper: {
-					backgroundColor: "#121212",
-				},
+				paper: ({theme}) => ({
+					borderRadius: 0,
+					backgroundColor: theme.palette.background.default
+				}),
 			},
+		},
+		MuiPaper: {
+			styleOverrides: {
+				root: ({theme}) => ({
+					borderRadius: 10,
+					backgroundColor: theme.palette.background.paper
+				})
+			}
 		},
 		MuiButton: {
 			styleOverrides: {
-				root: { color: "#FFFFFF" },
-			},
+				root: {
+					fontWeight: "bold",
+					color: "#fff",
+					borderRadius: 50
+				},
+			}
 		},
 		MuiListItemButton: {
 			styleOverrides: {
-				root: {
+				root: ({theme}) => ({
 					"&.Mui-selected": {
-						backgroundColor: "#FF6F00",
-						"&:hover": {
-							backgroundColor: "#FF6F00",
-						},
+						backgroundColor: theme.palette.primary,
 					},
-				},
+				}),
 			},
 		},
 	},
@@ -227,45 +136,9 @@ export const lightTheme = createTheme({
 			100: "#364045",
 			200: "#FFFDF9",
 		},
-		neutral: {
-			100: "#FFFFFF",
-			200: "#F1F5FA",
-			300: "#D9E1ED",
-			400: "#C2CEE0",
-			500: "#7F8DA3",
-			600: "#46526A",
-			700: "#2F3E59",
-			800: "#0C1830",
-			900: "#838383",
-		},
-		surface: {
-			main: "#121212",
-			200: "#262626",
-			//300: "#B1B1B1",
-			//400: "#E2EEE2",
-		},
-		error: {
-			main: "#d32f2f",
-			light: "#ef5350",
-			dark: "#c62828",
-		},
-		success: {
-			main: "#2e7d32",
-			light: "#4caf50",
-			dark: "#1b5e20",
-		},
-		info: {
-			main: "#0288d1",
-			light: "#03a9f4",
-			dark: "#01579b",
-		},
-		warning: {
-			main: "#ed6c02",
-			light: "#ff9800",
-			dark: "#e65100",
-		},
-		border: {
-			main: "rgba(81, 81, 81, 1)",
+		background: {
+			default: "#f1f1f1",
+			paper: "#fff"
 		},
 		slotBlocked: {
 			main: "#3b1111",
@@ -277,63 +150,52 @@ export const lightTheme = createTheme({
 			main: "#C06020",
 		},
 	},
-	typography: {
-		//fontFamily: montserrat.style.fontFamily,
-		xxl: {
-			fontSize: "48px",
-			lineHeight: "56px",
-		},
-		xl: {
-			fontSize: "38px",
-			lineHeight: "50px",
-		},
-		lg: {
-			fontSize: "24px",
-			lineHeight: "34px",
-		},
-		md: {
-			fontSize: "22px",
-			lineHeight: "28px",
-		},
-		base: {
-			fontSize: "18px",
-			lineHeight: "24px",
-		},
-		sm: {
-			fontSize: "16px",
-			lineHeight: "24px",
-		},
-		xs: {
-			fontSize: "14px",
-			lineHeight: "24px",
-		},
-	},
 
 	components: {
+		MuiAppBar: {
+			styleOverrides: {
+				root: ({theme}) => ({
+					backgroundColor: theme.palette.background.paper,
+					boxShadow: "none",
+					borderRadius: 0
+				}),
+			},
+		},
 		MuiDrawer: {
 			styleOverrides: {
 				paper: {
-					//backgroundColor: "#FF6F00",
+					boxShadow: "0 px 24px rgba(0, 0, 0, 0.06)",
+					borderRadius: 0
 				},
 			},
 		},
-		MuiAppBar: {
+		MuiPaper: {
+			defaultProps: {
+				elevation: 0
+			},
 			styleOverrides: {
 				root: {
-					boxShadow: "none",
+					boxShadow: "0 px 24px rgba(0, 0, 0, 0.06)",
+					borderRadius: 10
 				},
-			},
+			}
+		},
+		MuiButton: {
+			styleOverrides: {
+				root: {
+					fontWeight: "bold",
+					color: "#fff",
+					borderRadius: 50
+				},
+			}
 		},
 		MuiListItemButton: {
 			styleOverrides: {
-				root: {
+				root: ({theme}) => ({
 					"&.Mui-selected": {
-						backgroundColor: "#FF6F00",
-						"&:hover": {
-							backgroundColor: "#FF6F00",
-						},
+						backgroundColor: theme.palette.primary,
 					},
-				},
+				}),
 			},
 		},
 	},

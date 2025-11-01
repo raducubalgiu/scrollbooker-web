@@ -50,7 +50,7 @@ export default function SignIn() {
 			<Stack
 				alignItems="center"
 				justifyContent="center"
-				sx={{ height: "100vh" }}
+				sx={{ height: "100vh", backgroundColor: 'background.paper' }}
 			>
 				<Container maxWidth="sm">
 					<Stack alignItems="center" justifyContent="center">
@@ -58,12 +58,14 @@ export default function SignIn() {
 							Sign In
 						</Typography>
 						<Input
+							label='Nume'
 							name="username"
 							rules={isRequired}
 							placeholder="Username"
 							sx={{ mb: 1.5 }}
 						/>
 						<Input
+							label='Parola'
 							name="password"
 							type="password"
 							rules={isRequired}

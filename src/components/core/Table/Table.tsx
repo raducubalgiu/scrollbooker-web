@@ -40,6 +40,7 @@ type TableProps<T extends Record<string, unknown>> = {
 		table,
 	}: TableRowAndTable<T>) => Promise<void> | void;
 	topToolbarIconButton?: boolean;
+	bgColor?: string
 } & Partial<MRT_TableOptions<T>>;
 
 export default function Table<T extends Record<string, unknown>>({
@@ -48,6 +49,7 @@ export default function Table<T extends Record<string, unknown>>({
 	manualPagination = false,
 	onDeletingRowSave,
 	topToolbarIconButton,
+	bgColor,
 	...props
 }: TableProps<T>) {
 	const [tableData, setTableData] = useState<T[] | undefined>([]);
@@ -123,9 +125,19 @@ export default function Table<T extends Record<string, unknown>>({
 			updateData: (rowIndex, columnId, value) =>
 				updateData(rowIndex, columnId as keyof T, value, setTableData),
 		},
+		muiTablePaperProps: {
+			elevation: 0,
+			sx: {
+				borderRadius: 2.5,
+				boxShadow: "0 px 24px rgba(0, 0, 0, 0.06)"
+			},
+		},
+		mrtTheme: (theme) => ({
+			baseBackgroundColor: bgColor ?? theme.palette.background.paper,
+		}),
 		localization: MRT_Localization_RO,
 		...props,
 	});
 
-	return <MaterialReactTable table={table} />;
+	return <MaterialReactTable table={table} />
 }

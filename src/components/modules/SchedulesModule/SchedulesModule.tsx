@@ -106,7 +106,7 @@ export default function SchedulesModule({ data }: SchedulesProps) {
 	return (
 		<FormProvider {...methods}>
 			<Paper sx={{ p: 2.5 }}>
-				<Typography sx={{ fontSize: 20 }}>Programul locației:</Typography>
+				<Typography sx={{ fontSize: 20, fontWeight: 600 }}>Programul locației:</Typography>
 				<Divider sx={{ mt: 2.5 }} />
 				<Table>
 					<TableHead>

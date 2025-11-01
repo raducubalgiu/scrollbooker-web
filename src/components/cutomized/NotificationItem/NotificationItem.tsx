@@ -13,8 +13,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
-import { NotificationType } from "@/models/NotificationType";
 import { useMutate } from "@/hooks/useHttp";
+import { NotificationType } from "@/ts/models/Notification/NotificationType";
 
 type NotificationItemProps = {
 	notification: NotificationType;
@@ -48,7 +48,7 @@ export default function NotificationItem({
 
 	return (
 		<ListItem sx={{ p: 0, mb: 2.5 }} {...props}>
-			<Paper sx={{ flexGrow: 1 }}>
+			<Paper sx={{ flexGrow: 1, borderRadius: 5 }}>
 				<CustomStack p={2.5} flexGrow={1}>
 					<CustomStack justifyContent="flex-start" maxWidth={400}>
 						<Avatar sx={{ width: 45, height: 45, mr: 1.5 }} />
