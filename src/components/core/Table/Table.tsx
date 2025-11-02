@@ -107,7 +107,7 @@ export default function Table<T extends Record<string, unknown>>({
 		data: tableData ?? [],
 		manualPagination,
 		enableEditing: true,
-		enableFilters: false,
+		enableFilters: true,
 		editDisplayMode: "row",
 		createDisplayMode: "row",
 		getRowId: row => String(row.id),

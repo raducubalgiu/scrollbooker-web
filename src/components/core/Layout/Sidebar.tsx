@@ -133,6 +133,10 @@ export default function Sidebar() {
 
 	const nomenclaturesRoutes = [
 		{
+			label: "Validează afacerea",
+			route: "/businesses/approve",
+		},
+		{
 			label: "Roluri și permisiuni",
 			route: "/nomenclatures/roles-and-permissions",
 		},

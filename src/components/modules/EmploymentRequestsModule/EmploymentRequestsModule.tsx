@@ -122,7 +122,8 @@ export default function EmploymentRequestsModule() {
 				handleSubmit={() =>
 					handleDelete({ id: confirmation.employment_request_id })
 				}
-				message="Ești sigur ca dorești să anulezi această cerere?"
+				title="Ești sigur?"
+				message="Ești sigur că dorești să anulezi această cerere?"
 				isLoading={isLoadingDelete}
 			/>
 			<EmploymentRequestsModal
