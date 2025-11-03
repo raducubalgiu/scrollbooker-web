@@ -3,11 +3,12 @@ import { get } from "@/utils/requests";
 
 export const GET = async (req: NextRequest) => {
 	const userId = req.nextUrl.searchParams.get("userId");
-	const month = req.nextUrl.searchParams.get("month");
+	const startDate = req.nextUrl.searchParams.get("startDate");
+	const endDate = req.nextUrl.searchParams.get("endDate");
 
 	const response = (
 		await get({
-			url: `/appointments/calendar-available-days?month=${month}&user_id=${userId}`,
+			url: `/appointments/calendar-available-days?user_id=${userId}&start_date=${startDate}&end_date=${endDate}`,
 		})
 	).data;
 

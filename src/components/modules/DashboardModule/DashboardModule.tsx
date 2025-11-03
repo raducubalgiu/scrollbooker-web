@@ -33,31 +33,31 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 		if (hasPermission) setSelectedEmployee({ id: 0 });
 	}, [hasPermission]);
 
-	const { data: employeesData } = useCustomQuery<PaginatedData<UserMiniType>>({
-		key: ["employees", hasPermission],
-		url: "/api/employees",
-		params: { page: 1, limit: 10 },
-		options: { enabled: hasPermission },
-	});
+	// const { data: employeesData } = useCustomQuery<PaginatedData<UserMiniType>>({
+	// 	key: ["employees", hasPermission],
+	// 	url: "/api/employees",
+	// 	params: { page: 1, limit: 10 },
+	// 	options: { enabled: hasPermission },
+	// });
 
-	const { data: dashboardData, isLoading } = useCustomQuery<
-		DashboardSummaryType[]
-	>({
-		key: ["dashboard", startDate, endDate, selectedEmployee.id, userId],
-		url: `/api/dashboard`,
-		params: {
-			startDate,
-			endDate,
-			allEmployees: selectedEmployee.id === 0,
-			userId: selectedEmployee.id === 0 ? userId : selectedEmployee.id,
-		},
-		options: { enabled: !!userId },
-	});
+	// const { data: dashboardData, isLoading } = useCustomQuery<
+	// 	DashboardSummaryType[]
+	// >({
+	// 	key: ["dashboard", startDate, endDate, selectedEmployee.id, userId],
+	// 	url: `/api/dashboard`,
+	// 	params: {
+	// 		startDate,
+	// 		endDate,
+	// 		allEmployees: selectedEmployee.id === 0,
+	// 		userId: selectedEmployee.id === 0 ? userId : selectedEmployee.id,
+	// 	},
+	// 	options: { enabled: !!userId },
+	// });
 
-	const employeesOptions = [
-		{ id: 0, username: "Toți angajații" },
-		...(employeesData?.results ?? []),
-	];
+	// const employeesOptions = [
+	// 	{ id: 0, username: "Toți angajații" },
+	// 	...(employeesData?.results ?? []),
+	// ];
 
 	const buttons = [
 		{
@@ -93,7 +93,7 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 						</Button>
 					))}
 				</CustomStack>
-				<Protected permission={PermissionEnum.MY_EMPLOYEES_VIEW}>
+				{/* <Protected permission={PermissionEnum.MY_EMPLOYEES_VIEW}>
 					<DashboardEmployeesSelect
 						options={employeesOptions}
 						selectedEmployeeId={selectedEmployee?.id}
@@ -103,9 +103,9 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 							})
 						}
 					/>
-				</Protected>
+				</Protected> */}
 			</CustomStack>
-			<Grid container spacing={3} sx={{ mb: 2.5 }}>
+			{/* <Grid container spacing={3} sx={{ mb: 2.5 }}>
 				{isLoading && <DashboardCardSummarySkeleton />}
 				{!isLoading &&
 					(dashboardData ?? []).map((dashboard, i) => (
@@ -115,10 +115,10 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 							dashboardSummary={dashboard}
 						/>
 					))}
-			</Grid>
+			</Grid> */}
 			<Grid container spacing={3}>
 				<Grid size={8}>
-					<DashboardBarChart isLoading={isLoading} />
+					{/* <DashboardBarChart isLoading={isLoading} /> */}
 				</Grid>
 				<Grid size={4}>
 					<Protected permission={PermissionEnum.MY_CALENDAR_VIEW}>

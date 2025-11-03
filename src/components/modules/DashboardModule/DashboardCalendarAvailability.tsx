@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Paper } from "@mui/material";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import CalendarAvailability from "@/components/cutomized/CalendarAvailability/CalendarAvailability";
 import { useCustomQuery } from "@/hooks/useHttp";
 
@@ -11,25 +11,29 @@ export default function DashboardCalendarAvailability({
 }: DashboardCalendarAvailabilityProps) {
 	const [currentMonth, setCurrentMonth] = useState<string>(
 		dayjs().startOf("month").format("YYYY-MM")
+	)
+
+	const [startDate, setStartDate] = useState<string>(
+		dayjs().startOf("month").format("YYYY-MM-DD")
+	);
+	const [endDate, setEndDate] = useState<string>(
+		dayjs().endOf("month").format("YYYY-MM-DD")
 	);
 
 	const { data: availableDays, isLoading: isLoadingMonth } = useCustomQuery<
 		string[]
 	>({
-		key: ["get-calendar-availability", userId, currentMonth],
+		key: ["get-calendar-availability", userId, startDate, endDate],
 		url: "/api/dashboard/calendar-availability",
-		params: { userId, month: currentMonth },
-		options: { enabled: !!userId && !!currentMonth },
+		params: { userId, startDate, endDate },
+		options: { enabled: !!userId && !!startDate && !!endDate },
 	});
 
-	const handlePreMonth = () => {
-		const preMonth = dayjs(currentMonth).subtract(1, "month");
-		setCurrentMonth(preMonth.format("YYYY-MM"));
-	};
-	const handleNextMonth = () => {
-		const nextMonth = dayjs(currentMonth).add(1, "month");
-		setCurrentMonth(nextMonth.format("YYYY-MM"));
-	};
+	const updateMonth = (month: Dayjs) => {
+		setCurrentMonth(month.format("YYYY-MM"));
+		setStartDate(month.startOf("month").format("YYYY-MM-DD"))
+		setEndDate(month.endOf("month").format("YYYY-MM-DD"))
+	}
 
 	return (
 		<Paper sx={{ p: 2.5 }}>
@@ -37,8 +41,8 @@ export default function DashboardCalendarAvailability({
 				countryCode="RO"
 				availableDates={availableDays}
 				currentMonth={currentMonth}
-				onHandlePreMonth={handlePreMonth}
-				onHandleNextMonth={handleNextMonth}
+				onHandlePreMonth={() => updateMonth(dayjs(currentMonth).subtract(1, "month"))}
+				onHandleNextMonth={() => updateMonth(dayjs(currentMonth).add(1, "month"))}
 				isLoading={isLoadingMonth}
 			/>
 		</Paper>

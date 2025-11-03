@@ -154,7 +154,7 @@ export const lightTheme = createTheme({
 	components: {
 		MuiAppBar: {
 			styleOverrides: {
-				root: ({theme}) => ({
+				root: ({ theme }) => ({
 					backgroundColor: theme.palette.background.paper,
 					boxShadow: "none",
 					borderRadius: 0
@@ -164,7 +164,7 @@ export const lightTheme = createTheme({
 		MuiDrawer: {
 			styleOverrides: {
 				paper: {
-					boxShadow: "0 px 24px rgba(0, 0, 0, 0.06)",
+					boxShadow: "0 8px 24px rgba(0, 0, 0, 0.06)",
 					borderRadius: 0
 				},
 			},
@@ -175,7 +175,7 @@ export const lightTheme = createTheme({
 			},
 			styleOverrides: {
 				root: {
-					boxShadow: "0 px 24px rgba(0, 0, 0, 0.06)",
+					boxShadow: "0 8px 24px rgba(0, 0, 0, 0.06)",
 					borderRadius: 10
 				},
 			}

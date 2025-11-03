@@ -49,7 +49,7 @@ export default function PermissionsModule() {
 	});
 
 	const allRolesNames = useMemo(() => {
-		if (data?.results?.length === 0) return [];
+		if (data?.results?.length === 0 || data?.results == undefined) return [];
 		return data?.results[0].roles.map(role => role.name);
 	}, [data]);
 

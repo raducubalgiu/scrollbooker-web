@@ -149,10 +149,6 @@ export default function Sidebar() {
 			route: "/nomenclatures/business-types",
 		},
 		{
-			label: "Profesii",
-			route: "/nomenclatures/professions",
-		},
-		{
 			label: "Domeniu Serviciu",
 			route: "/nomenclatures/service-domains",
 		},
@@ -163,6 +159,10 @@ export default function Sidebar() {
 		{
 			label: "Filtre",
 			route: "/nomenclatures/filters",
+		},
+				{
+			label: "Profesii",
+			route: "/nomenclatures/professions",
 		},
 		{
 			label: "Monede",

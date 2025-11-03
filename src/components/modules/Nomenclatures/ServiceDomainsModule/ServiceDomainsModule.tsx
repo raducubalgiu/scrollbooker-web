@@ -1,7 +1,7 @@
 "use client";
 
 import Table from "@/components/core/Table/Table";
-import { ServiceDomainsType } from "../../../../ts/models/nomenclatures/ServiceDomainType";
+import { ServiceDomainsResponse } from "../../../../ts/models/nomenclatures/ServiceDomainType";
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
@@ -18,11 +18,11 @@ export default function ServiceDomainsModule() {
 		setPagination,
 		onEditingRowSave,
 		onDeletingRowSave,
-	} = useTableHandlers<ServiceDomainsType>({
+	} = useTableHandlers<ServiceDomainsResponse>({
 		route: "nomenclatures/service-domains",
 	});
 
-	const serviceDomainsColumns = useMemo<MRT_ColumnDef<ServiceDomainsType>[]>(
+	const serviceDomainsColumns = useMemo<MRT_ColumnDef<ServiceDomainsResponse>[]>(
 		() => [
 			{
 				accessorKey: "id",
@@ -46,13 +46,12 @@ export default function ServiceDomainsModule() {
 				),
 			},
 			{
-				accessorKey: "created_at",
-				header: "Created_at",
-				enableEditing: false,
+				accessorKey: "business_domain.name",
+				header: "Domeniu Business",
 			},
 			{
-				accessorKey: "updated_at",
-				header: "updated_at",
+				accessorKey: "created_at",
+				header: "Created_at",
 				enableEditing: false,
 			},
 		],
@@ -61,7 +60,7 @@ export default function ServiceDomainsModule() {
 
 	return (
 		<MainLayout title="Service Domains" hideAction>
-			<Table<ServiceDomainsType>
+			<Table<ServiceDomainsResponse>
 				data={data?.results}
 				rowCount={data?.count}
 				columns={serviceDomainsColumns}
