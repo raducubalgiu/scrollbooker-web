@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { ServiceDomainsType } from "@/ts/models/nomenclatures/ServiceDomainType";
 import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { MRT_ColumnDef, MRT_Row } from "material-react-table";
 import Table from "@/components/core/Table/Table";
+import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/ServiceDomainType";
 
-type ServicesByServiceDomainModuleType = { row: MRT_Row<ServiceDomainsType> };
+type ServicesByServiceDomainModuleType = { row: MRT_Row<ServiceDomainsResponse> };
 
 export default function ServicesByServiceDomainModule({
 	row,
@@ -54,12 +54,7 @@ export default function ServicesByServiceDomainModule({
 			onEditingRowSave={onEditingRowSave}
 			onDeletingRowSave={onDeletingRowSave}
 			state={{ pagination, isLoading }}
-			muiTableHeadCellProps={{
-				sx: {
-					bgcolor: "surface.main",
-					color: "neutral.100",
-				},
-			}}
+			muiTableHeadCellProps={{ sx: { bgcolor: "background.default" } }}
 		/>
 	);
 }

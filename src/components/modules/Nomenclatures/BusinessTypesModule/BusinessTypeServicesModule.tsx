@@ -50,12 +50,7 @@ export default function BusinessTypeServicesModule({
 				onEditingRowSave={onEditingRowSave}
 				onDeletingRowSave={onDeletingRowSave}
 				state={{ pagination, isLoading }}
-				muiTableHeadCellProps={{
-					sx: {
-						bgcolor: "surface.main",
-						color: "neutral.100",
-					},
-				}}
+				muiTableHeadCellProps={{ sx: { bgcolor: "background.default" } }}
 			/>
 		</MainLayout>
 	);

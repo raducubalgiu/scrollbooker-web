@@ -69,12 +69,7 @@ export default function SubFiltersModule({
 				pagination: subFiltersPagination,
 				isLoading: isLoadingSubFilters,
 			}}
-			muiTableHeadCellProps={{
-				sx: {
-					bgcolor: "surface.main",
-					color: "neutral.100",
-				},
-			}}
+			muiTableHeadCellProps={{ sx: { bgcolor: "background.default" } }}
 		/>
 	);
 }

@@ -70,12 +70,7 @@ export default function ProfessionBusinessTypes({
 			enableTopToolbar={false}
 			enableEditing={false}
 			state={{ pagination, isLoading }}
-			muiTableHeadCellProps={{
-				sx: {
-					bgcolor: "surface.main",
-					color: "neutral.100",
-				},
-			}}
+			muiTableHeadCellProps={{ sx: { bgcolor: "background.default" } }}
 		/>
 	);
 }

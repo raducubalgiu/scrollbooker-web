@@ -10,13 +10,16 @@ import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 import ServiceBusinessTypes from "./ServiceBusinessTypes";
+import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/ServiceDomainType";
 
 type ServicesModuleProps = {
 	businessDomains: BusinessDomainType[];
+	serviceDomains: ServiceDomainsResponse[];
 };
 
 export default function ServicesModule({
 	businessDomains,
+	serviceDomains
 }: ServicesModuleProps) {
 	const {
 		data,
@@ -51,22 +54,8 @@ export default function ServicesModule({
 				),
 			},
 			{
-				accessorKey: "keywords",
-				header: "Keywords",
-				Edit: ({ row, column }) => (
-					<MR_Input
-						row={row}
-						column={column}
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						value={row.original.keywords}
-						required
-					/>
-				),
-			},
-			{
 				accessorKey: "business_domain_id",
-				header: "Business Domain Id",
+				header: "Business Domain",
 				Edit: ({ row, column, cell }) => (
 					<MR_Select
 						row={row}
@@ -84,12 +73,26 @@ export default function ServicesModule({
 					businessDomains?.find(bd => bd.id === cell.getValue())?.name,
 			},
 			{
-				accessorKey: "created_at",
-				enableEditing: false,
-				header: "Created_at",
+				accessorKey: "service_domain_id",
+				header: "Service Domain",
+				Edit: ({ row, column, cell }) => (
+					<MR_Select
+						row={row}
+						column={column}
+						value={Number(cell.getValue()) ?? ""}
+						options={serviceDomains?.map(bd => {
+							return {
+								value: bd.id,
+								name: bd.name,
+							};
+						})}
+					/>
+				),
+				Cell: ({ cell }) =>
+					serviceDomains?.find(sd => sd.id === cell.getValue())?.name,
 			},
 		],
-		[businessDomains]
+		[businessDomains, serviceDomains]
 	);
 
 	return (
