@@ -11,15 +11,20 @@ import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 import ServiceBusinessTypes from "./ServiceBusinessTypes";
 import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/ServiceDomainType";
+import { Typography } from "@mui/material";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
+import ServiceFilters from "./ServiceFilters";
 
 type ServicesModuleProps = {
 	businessDomains: BusinessDomainType[];
 	serviceDomains: ServiceDomainsResponse[];
+	filters: FilterType[]
 };
 
 export default function ServicesModule({
 	businessDomains,
-	serviceDomains
+	serviceDomains,
+	filters
 }: ServicesModuleProps) {
 	const {
 		data,
@@ -109,11 +114,18 @@ export default function ServicesModule({
 				state={{ pagination, isLoading }}
 				renderDetailPanel={({ row }) =>
 					!!row.original.id && (
-						<ServiceBusinessTypes
-							serviceId={row.original.id}
-							serviceName={row.original.name}
-							businessDomainId={row.original.business_domain_id}
-						/>
+						<>
+							<ServiceFilters
+								serviceId={row.original.id}
+								serviceName={row.original.name}
+								filters={filters}
+							/>
+							<ServiceBusinessTypes
+								serviceId={row.original.id}
+								serviceName={row.original.name}
+								businessDomainId={row.original.business_domain_id}
+							/>
+						</>
 					)
 				}
 			/>

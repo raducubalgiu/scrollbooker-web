@@ -2,50 +2,58 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Tooltip, Checkbox, CircularProgress } from "@mui/material";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { MRT_Row } from "material-react-table";
-import { BusinessType } from "@/ts/models/nomenclatures/BusinessType";
-import { find } from "lodash";
+import { includes } from "lodash";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 
-type ServiceBusinessTypeCheckboxProps = {
-	row: MRT_Row<BusinessType>;
+type ServiceFilterTypeCheckboxProps = {
+	row: MRT_Row<FilterType>;
 	serviceId: number | undefined;
 	serviceName: string;
-	isExpanded: boolean
+    isExpanded: boolean
 };
 
-export default function ServiceBusinessTypeCheckbox({
+type ServiceFilterRelationType = {
+    service_id: number,
+    filter_id: number;
+}
+
+export default function ServiceFilterCheckbox({
 	row,
 	serviceId,
 	serviceName,
-	isExpanded
-}: ServiceBusinessTypeCheckboxProps) {
+    isExpanded
+}: ServiceFilterTypeCheckboxProps) {
+    const filterId = row.original.id
+
 	const {
-		data: attachedBusinessTypes,
+		data: attachedFilters,
 		isLoading: isLoadingAttached,
 		refetch: refetchAttached,
-	} = useCustomQuery<BusinessType[]>({
-		key: ["business-types", serviceId],
-		url: "/api/nomenclatures/services/business-types",
-		params: { serviceId },
-		options: { enabled: isExpanded }
+	} = useCustomQuery<ServiceFilterRelationType[]>({
+		key: ["service-filters", serviceId, filterId, isExpanded],
+		url: "/api/nomenclatures/services/filters",
+		params: { serviceId, filterId },
+        options: { enabled: isExpanded }
 	});
 
 	const [checked, setChecked] = useState(true);
 
 	useEffect(() => {
-		setChecked(!!find(attachedBusinessTypes, ["id", row.original.id]));
-	}, [attachedBusinessTypes, row.original.id, isLoadingAttached]);
+        const filterIds = attachedFilters?.map(f => f.filter_id)
+        setChecked(includes(filterIds, row.original.id))
+	}, [attachedFilters, row.original.id, isLoadingAttached]);
 
 	const { mutateAsync: handleAttach, isPending: isPendingAttach } = useMutate({
-		key: ["attach-business-types"],
-		url: "/api/nomenclatures/services/business-types",
+		key: ["attach-filters"],
+		url: "/api/nomenclatures/services/filters",
 		options: {
 			onError: () => setChecked(false),
 		},
 	});
 
 	const { mutateAsync: handleDetach, isPending: isPendingDetach } = useMutate({
-		key: ["detach-business-types"],
-		url: "/api/nomenclatures/services/business-types",
+		key: ["detach-filters"],
+		url: "/api/nomenclatures/services/filters",
 		method: "DELETE",
 		options: {
 			onError: () => setChecked(true),
@@ -53,11 +61,11 @@ export default function ServiceBusinessTypeCheckbox({
 	});
 
 	const handleCheckbox = useCallback(
-		async (e: React.ChangeEvent<HTMLInputElement>, businessTypeId: number) => {
+		async (e: React.ChangeEvent<HTMLInputElement>, filterId: number) => {
 			if (e.target.checked) {
-				await handleAttach({ serviceId, businessTypeId });
+				await handleAttach({ serviceId, filterId });
 			} else {
-				await handleDetach({ serviceId, businessTypeId });
+				await handleDetach({ serviceId, filterId });
 			}
 
 			await refetchAttached();
@@ -66,7 +74,7 @@ export default function ServiceBusinessTypeCheckbox({
 	);
 
 	const isLoading = isPendingAttach || isPendingDetach || isLoadingAttached;
-	const action = !checked ? "Creaază" : "Elimină";
+	const action = !checked ? "Creează" : "Elimină";
 
 	return (
 		<Tooltip title={`${action} relația ${serviceName} - ${row.original.name}`}>

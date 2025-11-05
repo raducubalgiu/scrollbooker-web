@@ -21,6 +21,7 @@ export default function Accordion({
 	...props
 }: MUIAccordionProps) {
 	const [expanded, setExpanded] = useState(true);
+	
 	return (
 		<MUIAccordion
 			expanded={expanded}

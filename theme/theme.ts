@@ -94,6 +94,22 @@ export const darkTheme = createTheme({
 				}),
 			},
 		},
+		MuiAccordion: {
+			styleOverrides: {
+				root: {
+					borderRadius: 10,
+					'&:not(.Mui-expanded)': {
+						borderRadius: 10,
+					},
+					'&.Mui-Expanded': {
+						borderRadius: 10,
+					},
+					'&::before': {
+						display: 'none'
+					}
+				}
+			}
+		},
 		MuiPaper: {
 			styleOverrides: {
 				root: ({theme}) => ({
@@ -168,6 +184,23 @@ export const lightTheme = createTheme({
 					borderRadius: 0
 				},
 			},
+		},
+		MuiAccordion: {
+			styleOverrides: {
+				root: {
+					borderRadius: 10,
+					boxShadow: "0 8px 24px rgba(0, 0, 0, 0.06)",
+					'&:not(.Mui-expanded)': {
+						borderRadius: 10,
+					},
+					'&.Mui-Expanded': {
+						borderRadius: 10,
+					},
+					'&::before': {
+						display: 'none'
+					}
+				}
+			}
 		},
 		MuiPaper: {
 			defaultProps: {
