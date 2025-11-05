@@ -45,7 +45,7 @@ export default function ServiceFilters({
                 ),
             },
         ],
-        [serviceId, serviceName]
+        [serviceId, serviceName, isExpanded]
     );
 
     return (

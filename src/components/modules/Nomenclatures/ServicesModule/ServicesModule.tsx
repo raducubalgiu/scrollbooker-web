@@ -11,7 +11,6 @@ import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 import ServiceBusinessTypes from "./ServiceBusinessTypes";
 import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/ServiceDomainType";
-import { Typography } from "@mui/material";
 import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import ServiceFilters from "./ServiceFilters";
 

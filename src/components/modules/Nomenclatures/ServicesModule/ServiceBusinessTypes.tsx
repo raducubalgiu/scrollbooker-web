@@ -59,7 +59,7 @@ export default function ServiceBusinessTypes({
 				),
 			},
 		],
-		[serviceId, serviceName]
+		[serviceId, serviceName, isExpanded]
 	);
 
 	return (
