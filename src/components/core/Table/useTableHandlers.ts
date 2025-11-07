@@ -14,6 +14,7 @@ type UseTableHandlersProps = {
 	route: string;
 	extraParams?: Record<string, string | number | boolean | undefined>;
 	manualPagination?: boolean;
+	enabled?: boolean;
 };
 const errorMessage = "Ceva nu a mers cum trebuie. Încearcă mai târziu";
 
@@ -21,6 +22,7 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 	route,
 	extraParams = {},
 	manualPagination = true,
+	enabled = true
 }: UseTableHandlersProps) {
 	const [isMutateAction, setIsMutateAction] = useState(false);
 
@@ -36,6 +38,7 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
 		key: [route, page, limit, JSON.stringify(extraParams)],
 		url: `/api/${route}`,
 		params: { page: page + 1, limit, ...extraParams },
+		options: { enabled }
 	});
 
 	const { mutateAsync: handleCreate, isPending: isPendingCreate } = useMutate({

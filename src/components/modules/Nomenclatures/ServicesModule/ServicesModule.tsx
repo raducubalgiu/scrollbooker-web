@@ -95,6 +95,11 @@ export default function ServicesModule({
 				Cell: ({ cell }) =>
 					serviceDomains?.find(sd => sd.id === cell.getValue())?.name,
 			},
+			{
+				accessorKey: "order_index",
+				header: "Order Index",
+				size: 50,
+			},
 		],
 		[businessDomains, serviceDomains]
 	);

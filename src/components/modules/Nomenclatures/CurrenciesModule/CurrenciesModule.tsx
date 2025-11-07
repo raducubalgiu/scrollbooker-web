@@ -7,6 +7,7 @@ import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
 import Table from "@/components/core/Table/Table";
 import { MRT_ColumnDef } from "material-react-table";
 import React, { useMemo } from "react";
+import { Switch } from "@mui/material";
 
 export default function CurrenciesModule() {
 	const {
@@ -44,7 +45,7 @@ export default function CurrenciesModule() {
 			{
 				accessorKey: "active",
 				header: "Active",
-				Cell: ({ row }) => (row.original.active ? "True" : "False"),
+				Cell: ({ row }) => <Switch checked={row.original.active} disabled={true} />,
 			},
 			{
 				accessorKey: "created_at",

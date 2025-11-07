@@ -146,9 +146,7 @@ export default function BusinessTypesModule({
 				onDeletingRowSave={onDeletingRowSave}
 				state={{ pagination, isLoading }}
 				renderDetailPanel={({ row }) =>
-					row.original.id && (
-						<BusinessTypeServicesModule businessTypeId={row.original.id} />
-					)
+					<BusinessTypeServicesModule businessTypeId={row.original.id} />
 				}
 			/>
 		</MainLayout>

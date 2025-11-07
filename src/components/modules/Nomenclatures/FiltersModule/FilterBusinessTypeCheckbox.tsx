@@ -10,11 +10,13 @@ import { toast } from "react-toastify";
 type FilterBusinessTypeCheckboxProps = {
 	filterRow: MRT_Row<FilterType>;
 	businessTypeRow: MRT_Row<BusinessType>;
+	isExpanded: boolean
 };
 
 export default function FilterBusinessTypeCheckbox({
 	filterRow,
 	businessTypeRow,
+	isExpanded
 }: FilterBusinessTypeCheckboxProps) {
 	const { id: filterId, name: filterName } = filterRow.original;
 	const { id: businessTypeId, name: businessTypeName } =
@@ -28,6 +30,7 @@ export default function FilterBusinessTypeCheckbox({
 		key: ["business-types-attached", filterId],
 		url: "/api/nomenclatures/filters/business-types",
 		params: { filterId },
+		options: { enabled: isExpanded }
 	});
 
 	const [checked, setChecked] = useState(true);
