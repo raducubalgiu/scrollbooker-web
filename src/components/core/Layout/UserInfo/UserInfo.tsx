@@ -24,15 +24,19 @@ export default function UserInfo({
 	refetchUser,
 }: UserInfoProps) {
 	const [openModal, setOpenModal] = useState(false);
-	const { profession, counters, avatar, username } = user ?? {};
+	const { profession, counters, avatar, username, is_business_or_employee } = user ?? {};
 
 	const userProfession = (
 		<>
 			<Typography sx={{ fontSize: 16 }}>{profession}</Typography>
-			<StarIcon color="primary" sx={{ ml: 1.5, mr: 0.5 }} />
-			<Typography sx={{ fontWeight: "600" }}>
-				{counters?.ratings_average}
-			</Typography>
+			{is_business_or_employee && (
+				<>
+					<StarIcon color="primary" sx={{ ml: 1.5, mr: 0.5 }} />
+					<Typography sx={{ fontWeight: "600" }}>
+						{counters?.ratings_average}
+					</Typography>
+				</>
+			)}
 		</>
 	);
 

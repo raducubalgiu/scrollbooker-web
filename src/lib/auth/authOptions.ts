@@ -23,6 +23,16 @@ type AuthResponseType = {
 	token_type: string
 }
 
+type UserInfoType = {
+	id: number,
+	username: string,
+	fullname: string,
+	business_id?: number,
+	business_type_id?: number,
+	is_validated: boolean,
+	registration_step?: string
+}
+
 export const authOptions: AuthOptions = {
 	providers: [
 		CredentialsProvider({
@@ -68,8 +78,10 @@ export const authOptions: AuthOptions = {
 	callbacks: {
 		async jwt({ token, user }): Promise<JWT> {
 			if (user) {
-				const permissions = await getPermissions(user.accessToken);
-				const userInfo = await getUserInfo(user.accessToken);
+				const [permissions, userInfo] = await Promise.all([
+					getPermissions(user.accessToken),
+					getUserInfo(user.accessToken)
+				])
 
 				return {
 					accessToken: user.accessToken,

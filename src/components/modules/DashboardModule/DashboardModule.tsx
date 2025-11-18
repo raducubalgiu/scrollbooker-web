@@ -22,6 +22,37 @@ type DashboardModuleProps = {
 	userId: number | undefined;
 };
 
+const dummySummary: DashboardSummaryType[] = [
+	{
+		title: 'Total rezervari',
+		amount: 250,
+		trend: 'up',
+		percentage: '10%',
+		days_diff: 15
+	},
+	{
+		title: 'Clienti proprii',
+		amount: 0,
+		trend: 'no_change',
+		percentage: '0%',
+		days_diff: 15
+	},
+	{
+		title: 'Clienti ScrollBooker',
+		amount: 0,
+		trend: 'no_change',
+		percentage: '0%',
+		days_diff: 15
+	},
+	{
+		title: 'Incasari totale',
+		amount: 5250,
+		trend: 'up',
+		percentage: '10%',
+		days_diff: 15
+	}
+]
+
 export default function DashboardModule({ userId }: DashboardModuleProps) {
 	const { filters, handleDaily, handleMonthly, handleWeekly, PeriodEnum } =
 		useDashboardReducer();
@@ -86,6 +117,7 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 							key={i}
 							onClick={btn.onClick}
 							variant="contained"
+
 							color={btn.selected ? "primary" : "inherit"}
 							sx={{ fontWeight: "600", mr: 1.5 }}
 						>
@@ -105,20 +137,16 @@ export default function DashboardModule({ userId }: DashboardModuleProps) {
 					/>
 				</Protected> */}
 			</CustomStack>
-			{/* <Grid container spacing={3} sx={{ mb: 2.5 }}>
-				{isLoading && <DashboardCardSummarySkeleton />}
-				{!isLoading &&
-					(dashboardData ?? []).map((dashboard, i) => (
-						<DashboardCardSummary
-							key={i}
-							isLoading={isLoading}
-							dashboardSummary={dashboard}
-						/>
-					))}
-			</Grid> */}
+			<Grid container spacing={3} sx={{ mb: 2.5 }}>
+				{/* {isLoading && <DashboardCardSummarySkeleton />} */}
+				{dummySummary?.map((summary, i) => <DashboardCardSummary
+					key={i}
+					summary={summary}
+				/>)}
+			</Grid>
 			<Grid container spacing={3}>
 				<Grid size={8}>
-					{/* <DashboardBarChart isLoading={isLoading} /> */}
+					<DashboardBarChart isLoading={false} />
 				</Grid>
 				<Grid size={4}>
 					<Protected permission={PermissionEnum.MY_CALENDAR_VIEW}>

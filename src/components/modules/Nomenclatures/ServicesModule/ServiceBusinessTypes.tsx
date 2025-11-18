@@ -66,6 +66,7 @@ export default function ServiceBusinessTypes({
 		<Accordion
 			expanded={isExpanded}
 			onChange={() => setIsExpanded(expanded => !expanded)}
+			sx={{mb: 1.5}}
 		>
 			<AccordionSummary
 				expandIcon={<ExpandMoreIcon />}

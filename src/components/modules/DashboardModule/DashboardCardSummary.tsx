@@ -7,15 +7,12 @@ import Grid from "@mui/material/Grid2";
 import { DashboardSummaryType } from "@/ts/models/DashboardSummaryType";
 
 type DashboardSummaryProps = {
-	dashboardSummary: DashboardSummaryType | null;
-	isLoading: boolean;
+	summary: DashboardSummaryType | null;
 };
 
-export default function DashboardCardSummary({
-	dashboardSummary,
-}: DashboardSummaryProps) {
+export default function DashboardCardSummary({ summary }: DashboardSummaryProps) {
 	const { title, amount, trend, percentage, days_diff } =
-		dashboardSummary || {};
+		summary || {};
 
 	return (
 		<Grid size={3}>
