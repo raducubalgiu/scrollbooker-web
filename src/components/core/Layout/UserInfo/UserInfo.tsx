@@ -24,7 +24,7 @@ export default function UserInfo({
 	refetchUser,
 }: UserInfoProps) {
 	const [openModal, setOpenModal] = useState(false);
-	const { profession, counters, avatar, username, is_business_or_employee } = user ?? {};
+	const { profession, counters, avatar, fullname, is_business_or_employee } = user ?? {};
 
 	const userProfession = (
 		<>
@@ -49,9 +49,13 @@ export default function UserInfo({
 				refetchUserData={refetchUser}
 			/>
 			<Stack alignItems="center" justifyContent="center" sx={{ my: 5 }}>
-				<UserAvatar url={avatar} onOpenModal={() => setOpenModal(true)} />
+				<UserAvatar 
+					isBusinessOrEmployee={is_business_or_employee}
+					url={avatar} 
+					onOpenModal={() => setOpenModal(true)} 
+				/>
 				<Typography sx={styles.username}>
-					{isLoadingUser ? <Skeleton width={100} /> : `@${username}`}
+					{isLoadingUser ? <Skeleton width={100} /> : `${fullname}`}
 				</Typography>
 				<CustomStack sx={{ mt: 1 }}>
 					{isLoadingUser ? <Skeleton width={150} /> : userProfession}
