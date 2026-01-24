@@ -2,7 +2,7 @@ import DashboardModule from "@/components/modules/DashboardModule/DashboardModul
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 
 export default async function Home() {
-	const { userId } = await getUserServerSession();
+  const { userId } = await getUserServerSession();
 
-	return <DashboardModule userId={userId} />;
+  return <DashboardModule userId={userId} />;
 }
