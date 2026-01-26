@@ -1,8 +1,14 @@
-import DashboardModule from "@/components/modules/DashboardModule/DashboardModule";
-import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
+import CalendarModule from "@/components/modules/CalendarModule/CalendarModule";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { CalendarEventsProvider } from "@/providers/CalendarEventsProvider";
 
-export default async function Home() {
-  const { userId } = await getUserServerSession();
-
-  return <DashboardModule userId={userId} />;
+async function Calendar() {
+  return (
+    <CalendarEventsProvider>
+      <CalendarModule />
+    </CalendarEventsProvider>
+  );
 }
+
+export default ProtectedPage(Calendar, PermissionEnum.MY_CALENDAR_VIEW);
