@@ -1,4 +1,4 @@
-import { FilterType } from "./FilterType";
+import { FilterType } from "../FilterType";
 
 export type ServiceType = {
   id?: number;
@@ -10,5 +10,4 @@ export type ServiceType = {
   business_domain_id: number;
   service_domain_id: number;
   filters?: FilterType[];
-  isSelected?: boolean; // this is injected by FE, doesn't exist in BE
 };

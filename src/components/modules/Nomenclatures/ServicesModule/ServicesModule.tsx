@@ -3,7 +3,6 @@
 import Table from "@/components/core/Table/Table";
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
@@ -13,6 +12,8 @@ import ServiceBusinessTypes from "./ServiceBusinessTypes";
 import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/ServiceDomainType";
 import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import ServiceFilters from "./ServiceFilters";
+import { ServiceType } from "@/ts/models/nomenclatures/service/ServiceType";
+import ServiceActiveCheckbox from "./ServiceActiveCheckbox";
 
 type ServicesModuleProps = {
   businessDomains: BusinessDomainType[];
@@ -112,6 +113,16 @@ export default function ServicesModule({
       {
         accessorKey: "type",
         header: "Service Type",
+      },
+      {
+        accessorKey: "active",
+        header: "Active",
+        Cell: ({ row }) => (
+          <ServiceActiveCheckbox
+            serviceId={row.original.id}
+            active={row.original.active}
+          />
+        ),
       },
       {
         accessorKey: "order_index",

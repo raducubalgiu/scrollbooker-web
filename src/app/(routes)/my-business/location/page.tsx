@@ -1,12 +1,11 @@
 import React from "react";
 import { get } from "@/utils/requests";
-import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { some } from "lodash";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { UserBusinessType } from "@/ts/models/UserBusiness/UserBusinessType";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { Typography } from "@mui/material";
+import { Box, Paper, Tab, Tabs, Typography } from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 
 async function MyBusiness() {
@@ -37,9 +36,26 @@ async function MyBusiness() {
 
   //   console.log("ALL SERVICES WITH SELECTION!!!", servicesWithSelection);
 
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    //setValue(newValue);
+  };
+
   return (
     <MainLayout title="Afacerea mea" hideAction>
       <Typography>Hello</Typography>
+      <Tabs
+        value={0}
+        onChange={() => {}}
+        aria-label="wrapped label tabs example"
+      >
+        <Tab
+          value="one"
+          label="New Arrivals in the Longest Text of Nonfiction that should appear in the next line"
+          wrapped
+        />
+        <Tab value="two" label="Item Two" />
+        <Tab value="three" label="Item Three" />
+      </Tabs>
       {/* <MyBusinessDetails
 				description={business.description}
 				address={business.address}
