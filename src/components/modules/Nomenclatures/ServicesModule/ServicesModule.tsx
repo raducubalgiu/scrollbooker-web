@@ -9,7 +9,7 @@ import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 import ServiceBusinessTypes from "./ServiceBusinessTypes";
-import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/ServiceDomainType";
+import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import ServiceFilters from "./ServiceFilters";
 import { ServiceType } from "@/ts/models/nomenclatures/service/ServiceType";

@@ -3,7 +3,7 @@ import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { MRT_ColumnDef, MRT_Row } from "material-react-table";
 import Table from "@/components/core/Table/Table";
-import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/ServiceDomainType";
+import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import {
   Accordion,
   AccordionDetails,

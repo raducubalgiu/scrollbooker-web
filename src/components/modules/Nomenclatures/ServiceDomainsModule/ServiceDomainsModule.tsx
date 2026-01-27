@@ -1,7 +1,7 @@
 "use client";
 
 import Table from "@/components/core/Table/Table";
-import { ServiceDomainsResponse } from "../../../../ts/models/nomenclatures/ServiceDomainType";
+import { ServiceDomainsResponse } from "../../../../ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import MainLayout from "../../../cutomized/MainLayout/MainLayout";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
@@ -9,7 +9,6 @@ import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import ServicesByServiceDomainModule from "./ServicesByServiceDomainModule";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
-import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 
 type ServiceDomainsModuleProps = { businessDomains: BusinessDomainType[] };
 
@@ -65,25 +64,6 @@ export default function ServiceDomainsModule({
             maxLength={100}
           />
         ),
-      },
-      {
-        accessorKey: "business_domain_id",
-        header: "Domeniu Business",
-        Edit: ({ row, column, cell }) => (
-          <MR_Select
-            row={row}
-            column={column}
-            value={Number(cell.getValue()) ?? ""}
-            options={businessDomains.map((bd) => {
-              return {
-                value: bd.id,
-                name: bd.name,
-              };
-            })}
-          />
-        ),
-        Cell: ({ cell }) =>
-          businessDomains?.find((bd) => bd.id === cell.getValue())?.name,
       },
     ],
     [businessDomains]
