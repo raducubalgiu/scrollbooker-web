@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Divider,
   Paper,
   Stack,
   Table,
@@ -9,7 +8,6 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 import {
   ScheduleResponseType,
@@ -66,12 +64,14 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
   const handleSave = (new_data: { schedules: ScheduleResponseType[] }) => {
     const updated_schedules = new_data.schedules.map((schedule) => {
       const { id, start_time, end_time } = schedule;
+
       return {
         id,
         start_time: start_time == "closed" ? null : start_time,
         end_time: end_time == "closed" ? null : end_time,
       };
     });
+
     handleUpdateSchedules(updated_schedules);
   };
 
@@ -81,6 +81,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
       hidden: disabled,
       props: {
         color: "inherit",
+        variant: "outlined",
         onClick: () => {
           reset();
           setDisabled(true);
@@ -107,8 +108,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
   return (
     <FormProvider {...methods}>
       <MainLayout title="Programul locației" hideAction>
-        <Paper>
-          <Divider sx={{ mt: 2.5 }} />
+        <Paper sx={{ p: 2.5 }}>
           <Table>
             <TableHead>
               <TableRow>
