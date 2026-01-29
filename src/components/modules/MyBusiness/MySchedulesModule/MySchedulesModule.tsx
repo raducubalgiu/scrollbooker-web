@@ -112,14 +112,12 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: "600" }}>
-                  Ziua săptămânii
+                <TableCell sx={{ fontWeight: "600" }}>Ziua</TableCell>
+                <TableCell sx={{ fontWeight: "600" }} align="center">
+                  Start
                 </TableCell>
                 <TableCell sx={{ fontWeight: "600" }} align="center">
-                  Ora de start
-                </TableCell>
-                <TableCell sx={{ fontWeight: "600" }} align="center">
-                  Ora de sfârșit
+                  Sfârșit
                 </TableCell>
               </TableRow>
             </TableHead>

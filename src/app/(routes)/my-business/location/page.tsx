@@ -7,6 +7,7 @@ import { UserBusinessType } from "@/ts/models/UserBusiness/UserBusinessType";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Box, Paper, Tab, Tabs, Typography } from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
+import LocationTabs from "@/components/modules/MyBusiness/LocationModule/LocationTabs";
 
 async function MyBusiness() {
   const { userId } = await getUserServerSession();
@@ -36,26 +37,14 @@ async function MyBusiness() {
 
   //   console.log("ALL SERVICES WITH SELECTION!!!", servicesWithSelection);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    //setValue(newValue);
-  };
+  //const [value, setValue] = React.useState("1");
 
   return (
     <MainLayout title="Afacerea mea" hideAction>
       <Typography>Hello</Typography>
-      <Tabs
-        value={0}
-        onChange={() => {}}
-        aria-label="wrapped label tabs example"
-      >
-        <Tab
-          value="one"
-          label="New Arrivals in the Longest Text of Nonfiction that should appear in the next line"
-          wrapped
-        />
-        <Tab value="two" label="Item Two" />
-        <Tab value="three" label="Item Three" />
-      </Tabs>
+
+      <LocationTabs />
+
       {/* <MyBusinessDetails
 				description={business.description}
 				address={business.address}

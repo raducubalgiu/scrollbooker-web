@@ -1,26 +1,26 @@
 "use client";
 
-import { ProductType } from "@/ts/models/Product/ProductResponse";
-import Table from "@/components/core/Table/Table";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import useProductColumns from "./useProductColumns";
-import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
+import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import { ServiceType } from "@/ts/models/nomenclatures/service/ServiceType";
+import { ProductType } from "@/ts/models/Product/ProductResponse";
+import useProductColumns from "../MyProductsModule/useProductColumns";
+import Table from "@/components/core/Table/Table";
 
-type ProductsModuleProps = {
+type MyProductsModuleProps = {
   services: ServiceType[];
   currencies: CurrencyType[];
   available_filters: FilterType[];
   business_id: number;
 };
 
-export default function ProductsModule({
+export default function MyProductsModule({
   services,
   currencies,
   available_filters,
   business_id,
-}: ProductsModuleProps) {
+}: MyProductsModuleProps) {
   const {
     data,
     isLoading,

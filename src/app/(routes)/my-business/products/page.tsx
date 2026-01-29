@@ -1,4 +1,4 @@
-import ProductsModule from "@/components/modules/MyBusiness/ProductsModule/ProductsModule";
+import MyProductsModule from "@/components/modules/MyBusiness/MyProductsModule/MyProductsModule";
 import React from "react";
 import { get } from "@/utils/requests";
 import { FilterType } from "@/ts/models/nomenclatures/FilterType";
@@ -32,7 +32,7 @@ async function Products() {
   const services = business.services ?? [];
 
   return (
-    <ProductsModule
+    <MyProductsModule
       services={services}
       currencies={currencies}
       available_filters={available_filters}
