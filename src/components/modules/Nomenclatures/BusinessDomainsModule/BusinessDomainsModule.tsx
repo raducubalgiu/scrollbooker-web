@@ -7,6 +7,7 @@ import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { useMemo } from "react";
 import { MRT_ColumnDef } from "material-react-table";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
+import BusinessDomainsServiceDomains from "./BusinessDomainsServiceDomains";
 
 export default function BusinessDomainsModule() {
   const {
@@ -60,18 +61,6 @@ export default function BusinessDomainsModule() {
         ),
       },
       {
-        accessorKey: "order_index",
-        header: "Order Index",
-        Edit: ({ row, column }) => (
-          <MR_Input
-            row={row}
-            column={column}
-            value={row.original.order_index}
-            required
-          />
-        ),
-      },
-      {
         accessorKey: "created_at",
         header: "Created_at",
         enableEditing: false,
@@ -97,6 +86,9 @@ export default function BusinessDomainsModule() {
         manualPagination={true}
         onPaginationChange={setPagination}
         state={{ pagination, isLoading }}
+        renderDetailPanel={({ row }) => (
+          <BusinessDomainsServiceDomains data={row.original.service_domains} />
+        )}
       />
     </MainLayout>
   );
