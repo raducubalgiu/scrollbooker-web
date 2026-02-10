@@ -58,20 +58,6 @@ export default function ServiceDomainsModule({
           />
         ),
       },
-      {
-        accessorKey: "order_index",
-        header: "Order Index",
-        Edit: ({ row, column }) => (
-          <MR_Input
-            row={row}
-            column={column}
-            value={row.original.order_index}
-            required
-            minLength={3}
-            maxLength={100}
-          />
-        ),
-      },
     ],
     [businessDomains]
   );
