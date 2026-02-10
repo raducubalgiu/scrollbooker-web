@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import {
-	MaterialReactTable,
-	type MRT_ColumnDef,
-	MRT_ActionMenuItem,
-	MRT_TableOptions,
-	useMaterialReactTable,
-	MRT_Row,
-	MRT_TableInstance,
-	MRT_RowData,
+  MaterialReactTable,
+  type MRT_ColumnDef,
+  MRT_ActionMenuItem,
+  MRT_TableOptions,
+  useMaterialReactTable,
+  MRT_Row,
+  MRT_TableInstance,
+  MRT_RowData,
 } from "material-react-table";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { Button } from "@mui/material";
@@ -18,126 +18,126 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddIconButton from "@/components/cutomized/IconButtons/AddIconButton";
 
 export type TableCreateRow<T extends MRT_RowData> =
-	MRT_TableOptions<T>["onCreatingRowSave"];
+  MRT_TableOptions<T>["onCreatingRowSave"];
 export type TableEditRow<T extends MRT_RowData> =
-	MRT_TableOptions<T>["onEditingRowSave"];
+  MRT_TableOptions<T>["onEditingRowSave"];
 
 export type PaginatedData<T> = {
-	count: number;
-	results: T[];
+  count: number;
+  results: T[];
 };
 export type TableRowAndTable<T extends Record<string, unknown>> = {
-	row: MRT_Row<T>;
-	table: MRT_TableInstance<T>;
+  row: MRT_Row<T>;
+  table: MRT_TableInstance<T>;
 };
 
 type TableProps<T extends Record<string, unknown>> = {
-	manualPagination?: boolean;
-	data: T[] | undefined;
-	columns: MRT_ColumnDef<T>[];
-	onDeletingRowSave?: ({
-		row,
-		table,
-	}: TableRowAndTable<T>) => Promise<void> | void;
-	topToolbarIconButton?: boolean;
-	bgColor?: string
+  manualPagination?: boolean;
+  data: T[] | undefined;
+  columns: MRT_ColumnDef<T>[];
+  onDeletingRowSave?: ({
+    row,
+    table,
+  }: TableRowAndTable<T>) => Promise<void> | void;
+  topToolbarIconButton?: boolean;
+  bgColor?: string;
 } & Partial<MRT_TableOptions<T>>;
 
 export default function Table<T extends Record<string, unknown>>({
-	data,
-	columns,
-	manualPagination = false,
-	onDeletingRowSave,
-	topToolbarIconButton,
-	bgColor,
-	...props
+  data,
+  columns,
+  manualPagination = false,
+  onDeletingRowSave,
+  topToolbarIconButton,
+  bgColor,
+  ...props
 }: TableProps<T>) {
-	const [tableData, setTableData] = useState<T[] | undefined>([]);
+  const [tableData, setTableData] = useState<T[] | undefined>([]);
 
-	useEffect(() => {
-		setTableData(data);
-	}, [data]);
+  useEffect(() => {
+    setTableData(data);
+  }, [data]);
 
-	const renderRowActionMenuItems = ({ row, table }: TableRowAndTable<T>) => [
-		<MRT_ActionMenuItem
-			key={2}
-			label="Șterge"
-			icon={<Delete />}
-			onClick={() => onDeletingRowSave && onDeletingRowSave({ row, table })}
-			table={table}
-		/>,
-	];
+  const renderRowActionMenuItems = ({ row, table }: TableRowAndTable<T>) => [
+    <MRT_ActionMenuItem
+      key={2}
+      label="Șterge"
+      icon={<Delete />}
+      onClick={() => onDeletingRowSave && onDeletingRowSave({ row, table })}
+      table={table}
+    />,
+  ];
 
-	const renderTopToolbarCustomActions = ({
-		table,
-	}: {
-		table: MRT_TableInstance<T>;
-	}) =>
-		topToolbarIconButton ? (
-			<AddIconButton
-				onClick={() => table.setCreatingRow(true)}
-				color="primary"
-			/>
-		) : (
-			<Button onClick={() => table.setCreatingRow(true)} variant="contained">
-				Adaugă
-			</Button>
-		);
+  const renderTopToolbarCustomActions = ({
+    table,
+  }: {
+    table: MRT_TableInstance<T>;
+  }) =>
+    topToolbarIconButton ? (
+      <AddIconButton
+        onClick={() => table.setCreatingRow(true)}
+        color="primary"
+      />
+    ) : (
+      <Button onClick={() => table.setCreatingRow(true)} variant="contained">
+        Adaugă
+      </Button>
+    );
 
-	const icons = {
-		SaveIcon: () => <Check color="success" />,
-		CancelIcon: () => <CloseIcon color="error" />,
-	};
+  const icons = {
+    SaveIcon: () => <Check color="success" />,
+    CancelIcon: () => <CloseIcon color="error" />,
+  };
 
-	function updateData<T>(
-		rowIndex: number,
-		columnId: keyof T,
-		value: unknown,
-		setData: React.Dispatch<React.SetStateAction<T[] | undefined>>
-	) {
-		setData(prev =>
-			prev?.map((row, index) =>
-				index === rowIndex ? { ...row, [columnId]: value } : row
-			)
-		);
-	}
+  function updateData<T>(
+    rowIndex: number,
+    columnId: keyof T,
+    value: unknown,
+    setData: React.Dispatch<React.SetStateAction<T[] | undefined>>
+  ) {
+    setData((prev) =>
+      prev?.map((row, index) =>
+        index === rowIndex ? { ...row, [columnId]: value } : row
+      )
+    );
+  }
 
-	const table = useMaterialReactTable({
-		columns,
-		data: tableData ?? [],
-		manualPagination,
-		enableEditing: true,
-		enableFilters: true,
-		editDisplayMode: "row",
-		createDisplayMode: "row",
-		getRowId: row => String(row.id),
-		positionActionsColumn: "last",
-		renderRowActionMenuItems,
-		renderTopToolbarCustomActions,
-		muiEditTextFieldProps: { variant: "outlined" },
-		muiLinearProgressProps: ({ isTopToolbar }) => ({
-			sx: {
-				display: isTopToolbar ? "block" : "none",
-			},
-		}),
-		icons,
-		meta: {
-			updateData: (rowIndex, columnId, value) =>
-				updateData(rowIndex, columnId as keyof T, value, setTableData),
-		},
-		muiTablePaperProps: {
-			elevation: 0,
-			sx: {
-				borderRadius: 2.5,
-				boxShadow: "0 px 24px rgba(0, 0, 0, 0.06)"
-			},
-		},
-		mrtTheme: (theme) => ({
-			baseBackgroundColor: bgColor ?? theme.palette.background.paper,
-		}),
-		localization: MRT_Localization_RO,
-		...props,
-	});
+  const table = useMaterialReactTable({
+    columns,
+    data: tableData ?? [],
+    manualPagination,
+    enableEditing: true,
+    enableFilters: true,
+    editDisplayMode: "row",
+    createDisplayMode: "row",
+    getRowId: (row) => String(row.id),
+    positionActionsColumn: "last",
+    renderRowActionMenuItems,
+    renderTopToolbarCustomActions,
+    muiEditTextFieldProps: { variant: "outlined" },
+    muiLinearProgressProps: ({ isTopToolbar }) => ({
+      sx: {
+        display: isTopToolbar ? "block" : "none",
+      },
+    }),
+    icons,
+    meta: {
+      updateData: (rowIndex, columnId, value) =>
+        updateData(rowIndex, columnId as keyof T, value, setTableData),
+    },
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: 2.5,
+        boxShadow: "0 px 24px rgba(0, 0, 0, 0.06)",
+      },
+    },
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: bgColor ?? theme.palette.background.paper,
+    }),
+    localization: MRT_Localization_RO,
+    ...props,
+  });
 
-	return <MaterialReactTable table={table} />
+  return <MaterialReactTable table={table} />;
 }
