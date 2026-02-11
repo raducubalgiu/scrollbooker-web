@@ -13,7 +13,6 @@ import Modal from "@/components/core/Modal/Modal";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
-import ServiceDomainBusinessTypes from "./ServiceDomainBusinessTypes";
 
 type ServiceDomainsModuleProps = { businessDomains: BusinessDomainType[] };
 
@@ -156,10 +155,7 @@ export default function ServiceDomainsModule({
         state={{ pagination, isLoading }}
         onPaginationChange={setPagination}
         renderDetailPanel={({ row }) => (
-          <>
-            <ServicesByServiceDomainModule row={row} />
-            <ServiceDomainBusinessTypes row={row} />
-          </>
+          <ServicesByServiceDomainModule row={row} />
         )}
       />
     </MainLayout>

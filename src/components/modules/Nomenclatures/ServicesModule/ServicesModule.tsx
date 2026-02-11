@@ -124,11 +124,6 @@ export default function ServicesModule({
           />
         ),
       },
-      {
-        accessorKey: "order_index",
-        header: "Order Index",
-        size: 50,
-      },
     ],
     [businessDomains, serviceDomains]
   );

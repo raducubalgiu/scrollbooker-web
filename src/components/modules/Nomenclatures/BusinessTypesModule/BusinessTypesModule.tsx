@@ -9,6 +9,7 @@ import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
+import BusinessTypeServiceDomain from "./BusinessTypeServiceDomain";
 
 type BusinessTypesModuleProps = { businessDomains: BusinessDomainType[] };
 
@@ -101,6 +102,9 @@ export default function BusinessTypesModule({
         onEditingRowSave={onEditingRowSave}
         onDeletingRowSave={onDeletingRowSave}
         state={{ pagination, isLoading }}
+        renderDetailPanel={({ row }) => (
+          <BusinessTypeServiceDomain data={row.original.service_domains} />
+        )}
       />
     </MainLayout>
   );

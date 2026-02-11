@@ -14,7 +14,7 @@ type BusinessDomainsServiceDomainsModuleType = {
   data: ServiceDomainsResponse[];
 };
 
-const BusinessDomainsServiceDomains = ({
+const BusinessTypeServiceDomains = ({
   data,
 }: BusinessDomainsServiceDomainsModuleType) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -71,4 +71,4 @@ const BusinessDomainsServiceDomains = ({
   );
 };
 
-export default memo(BusinessDomainsServiceDomains);
+export default memo(BusinessTypeServiceDomains);
