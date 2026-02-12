@@ -59,13 +59,13 @@ export default function ServicesModule({
         ),
       },
       {
-        accessorKey: "display_name",
-        header: "Display Name",
+        accessorKey: "short_name",
+        header: "Short Name",
         Edit: ({ row, column }) => (
           <MR_Input
             row={row}
             column={column}
-            value={row.original.display_name}
+            value={row.original.short_name}
             required
             minLength={3}
             maxLength={50}

@@ -3,7 +3,7 @@ import { FilterType } from "../FilterType";
 export type ServiceType = {
   id?: number;
   name: string;
-  display_name: string;
+  short_name: string;
   active?: boolean;
   keywords?: string[];
   type: string;

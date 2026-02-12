@@ -10,13 +10,13 @@ import { MRT_ColumnDef } from "material-react-table";
 import React, { memo, useMemo, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-type BusinessDomainsServiceDomainsModuleType = {
+type BusinessTypeServiceDomainsModuleType = {
   data: ServiceDomainsResponse[];
 };
 
 const BusinessTypeServiceDomains = ({
   data,
-}: BusinessDomainsServiceDomainsModuleType) => {
+}: BusinessTypeServiceDomainsModuleType) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const columns = useMemo<MRT_ColumnDef<ServiceDomainsResponse>[]>(

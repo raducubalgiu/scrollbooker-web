@@ -1,8 +1,6 @@
-import React, { useMemo, useState } from "react";
-import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { MRT_ColumnDef, MRT_Row } from "material-react-table";
+import React, { memo, useMemo, useState } from "react";
+import { MRT_ColumnDef } from "material-react-table";
 import Table from "@/components/core/Table/Table";
-import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import {
   Accordion,
   AccordionDetails,
@@ -13,27 +11,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ServiceType } from "@/ts/models/nomenclatures/service/ServiceType";
 
 type ServicesByServiceDomainModuleType = {
-  row: MRT_Row<ServiceDomainsResponse>;
+  services: ServiceType[];
 };
 
-export default function ServicesByServiceDomainModule({
-  row,
-}: ServicesByServiceDomainModuleType) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const {
-    data: services,
-    isLoading,
-    onCreatingRowSave,
-    pagination,
-    setPagination,
-    onEditingRowSave,
-    onDeletingRowSave,
-  } = useTableHandlers<ServiceType>({
-    route: "nomenclatures/service-domains/services",
-    extraParams: { id: row.original.id },
-    enabled: isExpanded,
-  });
+const ServicesByServiceDomainModule = ({
+  services,
+}: ServicesByServiceDomainModuleType) => {
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const columns = useMemo<MRT_ColumnDef<ServiceType>[]>(
     () => [
@@ -68,22 +52,21 @@ export default function ServicesByServiceDomainModule({
       </AccordionSummary>
       <AccordionDetails>
         <Table<ServiceType>
-          data={services?.results}
-          rowCount={services?.count}
+          data={services}
           columns={columns}
-          manualPagination={true}
+          manualPagination={false}
+          enablePagination={false}
           enableColumnFilters={false}
           enableSorting={false}
           topToolbarIconButton
           enableFilters={false}
-          onPaginationChange={setPagination}
-          onCreatingRowSave={onCreatingRowSave}
-          onEditingRowSave={onEditingRowSave}
-          onDeletingRowSave={onDeletingRowSave}
-          state={{ pagination, isLoading }}
-          muiTableHeadCellProps={{ sx: { bgcolor: "background.default" } }}
+          enableColumnActions={false}
+          enableEditing={false}
+          enableTopToolbar={false}
         />
       </AccordionDetails>
     </Accordion>
   );
-}
+};
+
+export default memo(ServicesByServiceDomainModule);

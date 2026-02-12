@@ -57,6 +57,16 @@ export default function ServiceDomainsModule({
           />
         ),
       },
+      {
+        accessorKey: "created_at",
+        header: "Created_at",
+        enableEditing: false,
+      },
+      {
+        accessorKey: "updated_at",
+        header: "updated_at",
+        enableEditing: false,
+      },
     ],
     [businessDomains]
   );
@@ -155,7 +165,7 @@ export default function ServiceDomainsModule({
         state={{ pagination, isLoading }}
         onPaginationChange={setPagination}
         renderDetailPanel={({ row }) => (
-          <ServicesByServiceDomainModule row={row} />
+          <ServicesByServiceDomainModule services={row.original.services} />
         )}
       />
     </MainLayout>
