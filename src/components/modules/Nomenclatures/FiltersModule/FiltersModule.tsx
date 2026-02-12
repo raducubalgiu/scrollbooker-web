@@ -86,7 +86,7 @@ export default function FiltersModule() {
         renderDetailPanel={({ row }) => (
           <>
             {row.original.type !== FilterTypeEnum.RANGE && (
-              <SubFiltersModule row={row} />
+              <SubFiltersModule subFilters={row.original.sub_filters} />
             )}
           </>
         )}
