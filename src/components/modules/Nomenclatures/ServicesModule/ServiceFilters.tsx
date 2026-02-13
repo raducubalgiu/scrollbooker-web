@@ -1,80 +1,74 @@
-import Table from "@/components/core/Table/Table";
+import React, { memo, useMemo, useState } from "react";
 import { MRT_ColumnDef } from "material-react-table";
-import React, { useMemo, useState } from "react";
-import { FilterType } from "@/ts/models/nomenclatures/FilterType";
-import ServiceFilterCheckbox from "./ServiceFilterCheckbox";
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import Table from "@/components/core/Table/Table";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ServiceFilterType } from "@/ts/models/nomenclatures/service/ServiceType";
+import FilterSubFilters from "./FilterSubFilters";
 
-type ServiceFiltersProps = {
-    serviceId: number | undefined;
-    serviceName: string;
-    filters: FilterType[];
+type ServicesFiltersType = {
+  filters: ServiceFilterType[] | undefined;
 };
 
-export default function ServiceFilters({
-    serviceId,
-    serviceName,
-    filters
-}: ServiceFiltersProps) {
-    const [isExpanded, setIsExpanded] = useState(false)
+const ServiceFilters = ({ filters }: ServicesFiltersType) => {
+  const [isExpanded, setIsExpanded] = useState(true);
 
-    const columns = useMemo<MRT_ColumnDef<FilterType>[]>(
-        () => [
-            {
-                accessorKey: "id",
-                header: "ID",
-                enableEditing: false,
-                size: 50,
-            },
-            {
-                accessorKey: "name",
-                header: "Name",
-                enableEditing: false,
-            },
-            {
-                accessorKey: "relation",
-                header: "Atasat",
-                Cell: ({ row }) => (
-                    <ServiceFilterCheckbox
-                        row={row}
-                        serviceId={serviceId}
-                        serviceName={serviceName}
-                        isExpanded={isExpanded}
-                    />
-                ),
-            },
-        ],
-        [serviceId, serviceName, isExpanded]
-    );
+  const columns = useMemo<MRT_ColumnDef<ServiceFilterType>[]>(
+    () => [
+      {
+        accessorKey: "id",
+        header: "ID",
+        size: 50,
+      },
+      {
+        accessorKey: "name",
+        header: "Name",
+        size: 300,
+      },
+    ],
+    []
+  );
 
-    return (
-        <Accordion
-			expanded={isExpanded}
-			onChange={() => setIsExpanded(expanded => !expanded)}
-            sx={{mb: 1.5}}
-		>
-			<AccordionSummary
-				expandIcon={<ExpandMoreIcon />}
-				aria-controls="panel1-content"
-				id="panel1-header"
-			>
-				<Typography component="span" sx={{ fontWeight: "600" }}>
-					Filtre:
-				</Typography>
-			</AccordionSummary>
-			<AccordionDetails>
-                <Table<FilterType>
-                data={filters}
-                rowCount={0}
-                columns={columns}
-                manualPagination
-                enableFilters={false}
-                enableEditing={false}
-                enableTopToolbar={false}
-                muiTableHeadCellProps={{ sx: { bgcolor: "background.default" } }}
-            />
-            </AccordionDetails>
-		</Accordion>
-    );
-}
+  return (
+    <Accordion
+      expanded={isExpanded}
+      onChange={() => setIsExpanded((expanded) => !expanded)}
+      sx={{ mb: 1.5 }}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1-content"
+        id="panel1-header"
+      >
+        <Typography component="span" sx={{ fontWeight: "600" }}>
+          Filtre:
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Table<ServiceFilterType>
+          data={filters}
+          columns={columns}
+          manualPagination={false}
+          enablePagination={false}
+          enableColumnFilters={false}
+          enableSorting={false}
+          topToolbarIconButton
+          enableFilters={false}
+          enableColumnActions={false}
+          enableEditing={false}
+          enableTopToolbar={false}
+          renderDetailPanel={({ row }) => (
+            <FilterSubFilters sub_filters={row.original.sub_filters} />
+          )}
+        />
+      </AccordionDetails>
+    </Accordion>
+  );
+};
+
+export default memo(ServiceFilters);

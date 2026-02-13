@@ -1,4 +1,13 @@
-import { FilterType } from "../FilterType";
+export type FilterSubfilterType = {
+  id: number;
+  name: string;
+};
+
+export type ServiceFilterType = {
+  id: number;
+  name: string;
+  sub_filters: FilterSubfilterType[];
+};
 
 export type ServiceType = {
   id?: number;
@@ -8,6 +17,5 @@ export type ServiceType = {
   keywords?: string[];
   type: string;
   business_domain_id: number;
-  service_domain_id: number;
-  filters?: FilterType[];
+  filters?: ServiceFilterType[];
 };

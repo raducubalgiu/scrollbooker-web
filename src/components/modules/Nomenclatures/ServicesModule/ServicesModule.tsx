@@ -8,23 +8,19 @@ import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/BusinessDomainType";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
-import ServiceBusinessTypes from "./ServiceBusinessTypes";
 import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
-import { FilterType } from "@/ts/models/nomenclatures/FilterType";
-import ServiceFilters from "./ServiceFilters";
 import { ServiceType } from "@/ts/models/nomenclatures/service/ServiceType";
 import ServiceActiveCheckbox from "./ServiceActiveCheckbox";
+import ServiceFilters from "./ServiceFilters";
 
 type ServicesModuleProps = {
   businessDomains: BusinessDomainType[];
   serviceDomains: ServiceDomainsResponse[];
-  filters: FilterType[];
 };
 
 export default function ServicesModule({
   businessDomains,
   serviceDomains,
-  filters,
 }: ServicesModuleProps) {
   const {
     data,
@@ -92,25 +88,6 @@ export default function ServicesModule({
           businessDomains?.find((bd) => bd.id === cell.getValue())?.name,
       },
       {
-        accessorKey: "service_domain_id",
-        header: "Service Domain",
-        Edit: ({ row, column, cell }) => (
-          <MR_Select
-            row={row}
-            column={column}
-            value={Number(cell.getValue()) ?? ""}
-            options={serviceDomains?.map((bd) => {
-              return {
-                value: bd.id,
-                name: bd.name,
-              };
-            })}
-          />
-        ),
-        Cell: ({ cell }) =>
-          serviceDomains?.find((sd) => sd.id === cell.getValue())?.name,
-      },
-      {
         accessorKey: "type",
         header: "Service Type",
       },
@@ -140,22 +117,9 @@ export default function ServicesModule({
         manualPagination={true}
         onPaginationChange={setPagination}
         state={{ pagination, isLoading }}
-        renderDetailPanel={({ row }) =>
-          !!row.original.id && (
-            <>
-              <ServiceFilters
-                serviceId={row.original.id}
-                serviceName={row.original.name}
-                filters={filters}
-              />
-              <ServiceBusinessTypes
-                serviceId={row.original.id}
-                serviceName={row.original.name}
-                businessDomainId={row.original.business_domain_id}
-              />
-            </>
-          )
-        }
+        renderDetailPanel={({ row }) => (
+          <ServiceFilters filters={row.original.filters} />
+        )}
       />
     </MainLayout>
   );
