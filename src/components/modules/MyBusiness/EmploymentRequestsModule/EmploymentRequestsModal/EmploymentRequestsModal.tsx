@@ -14,141 +14,155 @@ import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { ConsentType } from "@/ts/models/Consent/ConsentType";
 import EmploymentRequestsStepThree from "./EmploymentRequestsStepThree";
 import { ProfessionType } from "@/ts/models/Profession/ProfessionType";
+import { ConsentEnum } from "@/ts/models/Consent/ConsentEnum";
 
 const steps = [
-	"Selectează viitorul angajat",
-	"Alege poziția funcția noului angajat",
-	"Trimite cererea de angajare",
+  "Selectează viitorul angajat",
+  "Alege poziția funcția noului angajat",
+  "Trimite cererea de angajare",
 ];
 
 type EmploymentRequestsModalProps = {
-	open: boolean;
-	handleClose: () => void;
+  open: boolean;
+  handleClose: () => void;
 };
 
 export default function EmploymentRequestsModal({
-	open,
-	handleClose,
+  open,
+  handleClose,
 }: EmploymentRequestsModalProps) {
-	const [acknowledged, setAcknowledged] = useState(false);
-	const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-	const [selectedProfessionId, setSelectedProfessionId] = useState<
-		number | null
-	>(null);
-	const [stepIndex, setStepIndex] = useState<number>(0);
-	const isFirstStep = stepIndex === 0;
-	const isSecondStep = stepIndex === 1;
-	const isThirdStep = stepIndex === 2;
+  const [acknowledged, setAcknowledged] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedProfessionId, setSelectedProfessionId] = useState<
+    number | null
+  >(null);
+  const [stepIndex, setStepIndex] = useState<number>(0);
 
-	const { mutate: createEmploymentRequest, isPending } = useMutate({
-		key: ["create-employment-request"],
-		url: "/api/employment-requests",
-		options: {
-			onSuccess: () => {
-				handleClose();
-			},
-		},
-	});
+  const isFirstStep = stepIndex === 0;
+  const isSecondStep = stepIndex === 1;
+  const isThirdStep = stepIndex === 2;
 
-	const { data: professions, isLoading: isLoadingProfessions } = useCustomQuery<
-		ProfessionType[]
-	>({
-		key: ["get-professions"],
-		url: "/api/employment-requests/professions",
-		options: { enabled: isSecondStep && open },
-	});
+  const { mutate: createEmploymentRequest, isPending } = useMutate({
+    key: ["create-employment-request"],
+    url: "/api/employment-requests",
+    options: {
+      onSuccess: () => {
+        handleClose();
+      },
+    },
+  });
 
-	const { data: consent, isLoading: isLoadingConsent } =
-		useCustomQuery<ConsentType>({
-			key: ["get-consent"],
-			url: "/api/employment-requests/consent",
-			params: { consentName: "EMPLOYMENT_REQUESTS_CONSENT" },
-			options: { enabled: isThirdStep && open },
-		});
+  const { data: professions, isLoading: isLoadingProfessions } = useCustomQuery<
+    ProfessionType[]
+  >({
+    key: ["get-professions"],
+    url: "/api/employment-requests/professions",
+    options: { enabled: isSecondStep && open },
+  });
 
-	const disabledNextStep =
-		(isNull(selectedUserId) && isFirstStep) ||
-		(isNull(selectedProfessionId) && isSecondStep);
+  const { data: consent, isLoading: isLoadingConsent } =
+    useCustomQuery<ConsentType>({
+      key: ["get-consent"],
+      url: "/api/employment-requests/consent",
+      params: { consentName: ConsentEnum.EMPLOYMENT_REQUESTS_INITIATION },
+      options: { enabled: isThirdStep && open },
+    });
 
-	const handleBack = () => {
-		setStepIndex(prev => prev - 1);
-		setSelectedUserId(null);
-	};
+  const disabledNextStep =
+    (isNull(selectedUserId) && isFirstStep) ||
+    (isNull(selectedProfessionId) && isSecondStep);
 
-	const handleEmploymentRequest = () =>
-		createEmploymentRequest({
-			employee_id: selectedUserId,
-			consent_id: consent?.id,
-			profession_id: selectedProfessionId,
-		});
+  const handleBack = () => {
+    setStepIndex((prev) => prev - 1);
+    setSelectedUserId(null);
+  };
 
-	const actions: ActionButtonType[] = [
-		{
-			title: "Înapoi",
-			props: {
-				onClick: handleBack,
-				color: "inherit",
-				disabled: isPending,
-			},
-			hidden: isFirstStep,
-		},
-		{
-			title: "Pasul următor",
-			props: {
-				onClick: () => setStepIndex(prev => prev + 1),
-				disabled: disabledNextStep,
-			},
-			hidden: isThirdStep,
-		},
-		{
-			title: "Trimite cererea",
-			props: {
-				onClick: handleEmploymentRequest,
-				disabled: !acknowledged || isPending,
-				loading: isPending,
-			},
-			hidden: isFirstStep || isSecondStep,
-		},
-	];
+  const handleEmploymentRequest = () =>
+    createEmploymentRequest({
+      employee_id: selectedUserId,
+      consent_id: consent?.id,
+      profession_id: selectedProfessionId,
+    });
 
-	return (
-		<Modal
-			title="Trimite o cerere de angajare"
-			open={open}
-			handleClose={handleClose}
-			actions={actions}
-		>
-			<Box sx={{ minWidth: 700 }}>
-				<Stepper activeStep={stepIndex} alternativeLabel>
-					{steps.map(label => (
-						<Step key={label}>
-							<StepLabel>{label}</StepLabel>
-						</Step>
-					))}
-				</Stepper>
-				{isFirstStep && (
-					<EmploymentRequestsStepOne
-						selectedUserId={selectedUserId}
-						onSelectUserId={setSelectedUserId}
-					/>
-				)}
-				{isSecondStep && (
-					<EmploymentRequestsStepTwo
-						selectedProfessionId={selectedProfessionId}
-						onSelectProfessionId={setSelectedProfessionId}
-						professions={professions}
-						isLoading={isLoadingProfessions}
-					/>
-				)}
-				{isThirdStep && (
-					<EmploymentRequestsStepThree
-						consent={consent}
-						isLoading={isLoadingConsent}
-						acknowledged={acknowledged}
-						setAcknowledged={setAcknowledged}
-					/>
-				)}
-			</Box>
-		</Modal>
-	);
+  const actions: ActionButtonType[] = [
+    {
+      title: "Înapoi",
+      props: {
+        onClick: handleBack,
+        color: "inherit",
+        disabled: isPending,
+      },
+      hidden: isFirstStep,
+    },
+    {
+      title: "Pasul următor",
+      props: {
+        onClick: () => setStepIndex((prev) => prev + 1),
+        disabled: disabledNextStep,
+      },
+      hidden: isThirdStep,
+    },
+    {
+      title: "Trimite cererea",
+      props: {
+        onClick: handleEmploymentRequest,
+        disabled: !acknowledged || isPending,
+        loading: isPending,
+      },
+      hidden: isFirstStep || isSecondStep,
+    },
+  ];
+
+  const stepContent = () => {
+    switch (stepIndex) {
+      case 0:
+        return (
+          <EmploymentRequestsStepOne
+            selectedUserId={selectedUserId}
+            onSelectUserId={setSelectedUserId}
+          />
+        );
+      case 1:
+        return (
+          <EmploymentRequestsStepTwo
+            selectedProfessionId={selectedProfessionId}
+            onSelectProfessionId={setSelectedProfessionId}
+            professions={professions}
+            isLoading={isLoadingProfessions}
+          />
+        );
+      case 2:
+        return (
+          <EmploymentRequestsStepThree
+            consent={consent}
+            isLoading={isLoadingConsent}
+            acknowledged={acknowledged}
+            setAcknowledged={setAcknowledged}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Modal
+      title="Trimite o cerere de angajare"
+      open={open}
+      handleClose={handleClose}
+      actions={actions}
+    >
+      <Box sx={{ minWidth: 700 }}>
+        <Stepper activeStep={stepIndex} alternativeLabel>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+
+        {stepContent()}
+      </Box>
+    </Modal>
+  );
 }

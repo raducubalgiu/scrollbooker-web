@@ -1,5 +1,13 @@
 import { ServiceType } from "../service/ServiceType";
 
+export type ServiceDomainCreate = {
+  name: string;
+};
+
+export type ServiceDomainUpdate = {
+  name: string;
+};
+
 export type ServiceDomainsResponse = {
   id: number;
   name: string;
