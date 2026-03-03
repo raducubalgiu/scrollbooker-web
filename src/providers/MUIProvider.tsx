@@ -1,21 +1,17 @@
 "use client";
 
 import React from "react";
-import { CssBaseline } from "@mui/material";
 import NextAppDirEmotionCacheProvider from "../../theme/EmotionCache";
-import { CustomThemeProvider } from "./ThemeContext";
+import { ThemeModeProvider } from "./ThemeContext";
 
 export default function MUIProvider({
-	children,
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	return (
-		<NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
-			<CustomThemeProvider>
-				<CssBaseline enableColorScheme={true} />
-				{children}
-			</CustomThemeProvider>
-		</NextAppDirEmotionCacheProvider>
-	);
+  return (
+    <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
+      <ThemeModeProvider>{children}</ThemeModeProvider>
+    </NextAppDirEmotionCacheProvider>
+  );
 }

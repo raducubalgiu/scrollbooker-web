@@ -9,19 +9,19 @@ import TopLoadingBar from "@/components/core/TopLoadingBar/TopLoadingBar";
 type ChildrenType = { children: React.ReactNode };
 
 export default function RootLayout({ children }: ChildrenType) {
-	return (
-		<html lang="en">
-			<body>
-				<SessionProvider>
-					<MUIProvider>
-						<ToastProvider />
-						<QueryClientProvider>
-							<TopLoadingBar />
-							<LayoutWrapper>{children}</LayoutWrapper>
-						</QueryClientProvider>
-					</MUIProvider>
-				</SessionProvider>
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en">
+      <body>
+        <SessionProvider>
+          <MUIProvider>
+            <ToastProvider />
+            <QueryClientProvider>
+              <TopLoadingBar />
+              <LayoutWrapper>{children}</LayoutWrapper>
+            </QueryClientProvider>
+          </MUIProvider>
+        </SessionProvider>
+      </body>
+    </html>
+  );
 }
