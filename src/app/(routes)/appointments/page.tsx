@@ -1,0 +1,8 @@
+import AppointmentsModule from "@/components/modules/AppointmentsModule/AppointmentsModule";
+import { getUserServerSession } from "@/lib/auth/get-user-server";
+
+export default async function Appointments() {
+  const { userId } = await getUserServerSession();
+
+  return <AppointmentsModule />;
+}

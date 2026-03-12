@@ -1,4 +1,6 @@
 import { CurrencyResponse } from "../../nomenclatures/currency/CurrencyResponse";
+import { AppointmentChannelEnum } from "./AppointmentChannelEnum";
+import { AppointmentStatusEnum } from "./AppointmentStatusEnum";
 
 type AppointmentProductsResponse = {
   id?: number;
@@ -37,10 +39,10 @@ type AppointmentWrittenReview = {
 
 export type AppointmentResponse = {
   id: number;
-  start_time: string;
-  end_time: string;
-  channel: string;
-  status: string;
+  start_date: string;
+  end_date: string;
+  channel: AppointmentChannelEnum;
+  status: AppointmentStatusEnum;
   message?: string;
   is_customer: boolean;
   products: AppointmentProductsResponse[];

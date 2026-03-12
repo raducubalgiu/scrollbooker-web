@@ -15,8 +15,10 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import AdminPanelPlaylistAddCheckOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
+import StoreIcon from "@mui/icons-material/Store";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
@@ -68,6 +70,18 @@ export default function Sidebar() {
       icon: <CalendarMonthIcon />,
       permission: PermissionEnum.MY_CALENDAR_VIEW,
     },
+    {
+      label: "Dashboard",
+      route: "/my-business/dashboard",
+      icon: <DashboardOutlinedIcon />,
+      permission: PermissionEnum.NO_PROTECTION,
+    },
+    {
+      label: "Programări",
+      route: "/appointments",
+      icon: <EventAvailableIcon />,
+      permission: PermissionEnum.NO_PROTECTION,
+    },
   ];
 
   const settingsRoutes = [
@@ -86,12 +100,6 @@ export default function Sidebar() {
   ];
 
   const myBusinessRoutes = [
-    {
-      label: "Dashboard",
-      route: "/my-business/dashboard",
-      icon: <DashboardOutlinedIcon />,
-      permission: PermissionEnum.NO_PROTECTION,
-    },
     {
       label: "Locație",
       route: "/my-business/location",
@@ -195,7 +203,7 @@ export default function Sidebar() {
           <Divider sx={{ my: 1.5 }} />
           <ListItemButton onClick={handleOpenMyBusiness} sx={{ mb: 1.5 }}>
             <ListItemIcon>
-              <ShoppingBagOutlinedIcon />
+              <StoreIcon />
             </ListItemIcon>
             <ListItemText
               primary="Afacerea mea"
