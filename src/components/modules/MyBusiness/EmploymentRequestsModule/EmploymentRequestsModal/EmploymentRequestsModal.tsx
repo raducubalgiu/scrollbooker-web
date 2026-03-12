@@ -11,10 +11,10 @@ import { isNull } from "lodash";
 import EmploymentRequestsStepOne from "./EmploymentRequestsStepOne";
 import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { ConsentType } from "@/ts/models/Consent/ConsentType";
+import { ConsentType } from "@/ts/models/nomenclatures/consent/ConsentType";
 import EmploymentRequestsStepThree from "./EmploymentRequestsStepThree";
-import { ProfessionType } from "@/ts/models/Profession/ProfessionType";
-import { ConsentEnum } from "@/ts/models/Consent/ConsentEnum";
+import { ProfessionType } from "@/ts/models/nomenclatures/profession/ProfessionType";
+import { ConsentEnum } from "@/ts/models/nomenclatures/consent/ConsentEnum";
 
 const steps = [
   "Selectează viitorul angajat",

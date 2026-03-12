@@ -1,7 +1,7 @@
 "use client";
 
 import { TableCell, TableRow } from "@mui/material";
-import { ScheduleResponseType } from "@/ts/models/Schedules/ScheduleType";
+import { ScheduleResponseType } from "@/ts/models/booking/schedule/ScheduleType";
 import InputSelect from "@/components/core/Input/InputSelect";
 import { useTimeSlots } from "@/hooks/useTimeSlots";
 import { useFormContext } from "react-hook-form";

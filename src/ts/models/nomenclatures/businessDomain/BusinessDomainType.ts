@@ -1,4 +1,4 @@
-import { ServiceDomainsResponse } from "./serviceDomain/ServiceDomainType";
+import { ServiceDomainsResponse } from "../serviceDomain/ServiceDomainType";
 
 export type BusinessDomainType = {
   id?: number;

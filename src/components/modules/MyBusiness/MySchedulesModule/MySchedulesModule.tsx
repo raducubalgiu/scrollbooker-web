@@ -12,7 +12,7 @@ import {
 import {
   ScheduleResponseType,
   ScheduleUpdateType,
-} from "@/ts/models/Schedules/ScheduleType";
+} from "@/ts/models/booking/schedule/ScheduleType";
 import SchedulesSelectHours from "./SchedulesSelectHours";
 import { FormProvider, useForm } from "react-hook-form";
 import { useState } from "react";

@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import { useMutate } from "@/hooks/useHttp";
-import { NotificationType } from "@/ts/models/Notification/NotificationType";
+import { NotificationType } from "@/ts/models/user/NotificationType";
 
 type NotificationItemProps = {
   notification: NotificationType;

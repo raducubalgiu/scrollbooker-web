@@ -6,7 +6,7 @@ import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
-import { ProfessionType } from "@/ts/models/Profession/ProfessionType";
+import { ProfessionType } from "@/ts/models/nomenclatures/profession/ProfessionType";
 
 export default function ProfessionsModule() {
   const {

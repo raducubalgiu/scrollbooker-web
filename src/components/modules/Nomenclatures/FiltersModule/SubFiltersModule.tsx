@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useState } from "react";
 import Table from "@/components/core/Table/Table";
-import { SubFilterType } from "@/ts/models/nomenclatures/SubFilterType";
+import { SubFilterType } from "@/ts/models/nomenclatures/subFilter/SubFilterType";
 import { MRT_ColumnDef } from "material-react-table";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import {

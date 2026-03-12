@@ -1,30 +1,30 @@
 "use client";
 
 import Consent from "@/components/cutomized/Consent/Consent";
-import { ConsentType } from "@/ts/models/Consent/ConsentType";
+import { ConsentType } from "@/ts/models/nomenclatures/consent/ConsentType";
 
 type EmploymentRequestsStepThreeProps = {
-	consent: ConsentType | undefined;
-	isLoading: boolean;
-	acknowledged: boolean;
-	setAcknowledged: (e: boolean) => void;
+  consent: ConsentType | undefined;
+  isLoading: boolean;
+  acknowledged: boolean;
+  setAcknowledged: (e: boolean) => void;
 };
 
 export default function EmploymentRequestsStepThree({
-	consent,
-	isLoading,
-	acknowledged,
-	setAcknowledged,
+  consent,
+  isLoading,
+  acknowledged,
+  setAcknowledged,
 }: EmploymentRequestsStepThreeProps) {
-	const sections = consent?.text?.split(/\n(?=\d+\. )/);
+  const sections = consent?.text?.split(/\n(?=\d+\. )/);
 
-	return (
-		<Consent
-			mainTitle="Confirmare cerere angajare"
-			sections={sections ?? []}
-			acknowledged={acknowledged}
-			setAcknowledged={setAcknowledged}
-			isLoading={isLoading}
-		/>
-	);
+  return (
+    <Consent
+      mainTitle="Confirmare cerere angajare"
+      sections={sections ?? []}
+      acknowledged={acknowledged}
+      setAcknowledged={setAcknowledged}
+      isLoading={isLoading}
+    />
+  );
 }

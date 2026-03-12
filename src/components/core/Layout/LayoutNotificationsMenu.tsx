@@ -17,7 +17,7 @@ import { isEmpty } from "lodash";
 import { useRouter } from "next/navigation";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import { NotificationType } from "@/ts/models/Notification/NotificationType";
+import { NotificationType } from "@/ts/models/user/NotificationType";
 
 export default function LayoutNotificationsMenu() {
   const router = useRouter();

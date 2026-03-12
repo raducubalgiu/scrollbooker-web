@@ -1,7 +1,7 @@
 "use client";
 
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { CurrencyType } from "@/ts/models/nomenclatures/CurrencyType";
+import { CurrencyType } from "@/ts/models/nomenclatures/currency/CurrencyType";
 import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import { ServiceType } from "@/ts/models/nomenclatures/service/ServiceType";
 import { ProductType } from "@/ts/models/Product/ProductResponse";
