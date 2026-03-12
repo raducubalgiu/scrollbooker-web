@@ -3,7 +3,7 @@
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { CurrencyType } from "@/ts/models/nomenclatures/currency/CurrencyType";
+import { CurrencyResponse } from "@/ts/models/nomenclatures/currency/CurrencyResponse";
 import Table from "@/components/core/Table/Table";
 import { MRT_ColumnDef } from "material-react-table";
 import React, { useMemo } from "react";
@@ -18,9 +18,9 @@ export default function CurrenciesModule() {
     onCreatingRowSave,
     onDeletingRowSave,
     onEditingRowSave,
-  } = useTableHandlers<CurrencyType>({ route: "nomenclatures/currencies" });
+  } = useTableHandlers<CurrencyResponse>({ route: "nomenclatures/currencies" });
 
-  const columns = useMemo<MRT_ColumnDef<CurrencyType>[]>(
+  const columns = useMemo<MRT_ColumnDef<CurrencyResponse>[]>(
     () => [
       {
         accessorKey: "id",
@@ -60,7 +60,7 @@ export default function CurrenciesModule() {
 
   return (
     <MainLayout title="Monede" hideAction>
-      <Table<CurrencyType>
+      <Table<CurrencyResponse>
         data={data?.results}
         rowCount={data?.count}
         columns={columns}

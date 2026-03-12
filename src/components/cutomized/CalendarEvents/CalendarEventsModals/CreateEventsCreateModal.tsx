@@ -27,7 +27,7 @@ import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 import { CalendarEventsSlotType } from "@/ts/models/Calendar/CalendarEventsType";
 import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { ProductType } from "@/ts/models/Product/ProductResponse";
-import { CurrencyType } from "@/ts/models/nomenclatures/currency/CurrencyType";
+import { CurrencyType } from "@/ts/models/nomenclatures/currency/CurrencyResponse";
 
 type CreateEventModalProps = {
   openCreate: boolean;

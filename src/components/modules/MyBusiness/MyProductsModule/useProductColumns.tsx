@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { FilterType } from "@/ts/models/nomenclatures/FilterType";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
-import { CurrencyType } from "@/ts/models/nomenclatures/currency/CurrencyType";
+import { CurrencyType } from "@/ts/models/nomenclatures/currency/CurrencyResponse";
 
 type useProductColumnsProps = {
   services: ServiceType[];
