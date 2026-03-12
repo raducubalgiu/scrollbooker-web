@@ -1,6 +1,6 @@
-import { ServiceType } from "../nomenclatures/service/ServiceType";
+import { ServiceType } from "../../nomenclatures/service/ServiceType";
 
-export type UserBusinessType = {
+export type BusinessResponse = {
   description: string;
   address: string;
   coordinates: [number, number];

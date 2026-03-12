@@ -3,7 +3,7 @@ import { get } from "@/utils/requests";
 import { some } from "lodash";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { UserBusinessType } from "@/ts/models/UserBusiness/UserBusinessType";
+import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Box, Paper, Tab, Tabs, Typography } from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
