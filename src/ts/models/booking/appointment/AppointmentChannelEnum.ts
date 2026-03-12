@@ -30,3 +30,9 @@ export function getAppointmentChannelLabel(
       return key ? key.charAt(0).toUpperCase() + key.slice(1) : "";
   }
 }
+
+export namespace AppointmentChannelEnum {
+  export const all: AppointmentChannelEnum[] = Object.values(
+    AppointmentChannelEnum
+  ).filter((v): v is AppointmentChannelEnum => typeof v === "string");
+}

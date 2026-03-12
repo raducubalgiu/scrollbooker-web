@@ -21,7 +21,7 @@ export default function MainLayout({
   return (
     <Box sx={sx}>
       <CustomStack sx={{ mb: 2.5 }}>
-        <Typography fontWeight={600} variant="h5">
+        <Typography fontWeight={600} variant="h4">
           {title}
         </Typography>
         {!hideAction && (

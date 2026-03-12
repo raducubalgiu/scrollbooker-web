@@ -1,7 +1,7 @@
 export enum AppointmentStatusEnum {
   FINISHED = "finished",
-  CONFIRMED = "confirmed",
-  CANCELLED = "cancelled",
+  IN_PROGRESS = "in_progress",
+  CANCELED = "canceled",
 }
 
 export function fromKey(key: string): AppointmentStatusEnum | null {
@@ -25,11 +25,17 @@ export function getAppointmentStatusLabel(
   switch (key) {
     case AppointmentStatusEnum.FINISHED:
       return "Finalizat";
-    case AppointmentStatusEnum.CONFIRMED:
+    case AppointmentStatusEnum.IN_PROGRESS:
       return "Confirmat";
-    case AppointmentStatusEnum.CANCELLED:
+    case AppointmentStatusEnum.CANCELED:
       return "Anulat";
     default:
       return key ? key.charAt(0).toUpperCase() + key.slice(1) : "";
   }
+}
+
+export namespace AppointmentStatusEnum {
+  export const all: AppointmentStatusEnum[] = Object.values(
+    AppointmentStatusEnum
+  ).filter((v): v is AppointmentStatusEnum => typeof v === "string");
 }
