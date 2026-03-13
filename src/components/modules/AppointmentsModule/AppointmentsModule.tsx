@@ -2,38 +2,50 @@
 
 import Table, { TableRowAndTable } from "@/components/core/Table/Table";
 import { AppointmentResponse } from "@/ts/models/booking/appointment/AppointmentResponse";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { useTheme } from "@mui/material/styles";
 import { Label } from "@/components/cutomized/Label/Label";
 import { getAppointmentStatusLabel } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { MRT_ActionMenuItem, MRT_ColumnDef } from "material-react-table";
 import {
   Avatar,
   Box,
   Button,
-  Divider,
   MenuItem,
   Stack,
   Typography,
+  Popover,
 } from "@mui/material";
 import {
   AppointmentChannelEnum,
   getAppointmentChannelLabel,
 } from "@/ts/models/booking/appointment/AppointmentChannelEnum";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { Delete } from "@mui/icons-material";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { DropdownMenu } from "@/components/cutomized/DropdownMenu/DropdownMenu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import {
+  getChannelColor,
+  getStatusButtonColor,
+  getStatusColor,
+} from "./appointment-utils";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 
 const AppointmentsModule = () => {
   const [status, setStatus] = useState<AppointmentStatusEnum | null>(null);
   const [channel, setChannel] = useState<AppointmentChannelEnum | null>(null);
-  const [startDate, setStartDate] = useState<string | null>(null);
-  const [endDate, setEndDate] = useState<string | null>(null);
+  const [date, setDate] = React.useState<Dayjs | null>(null);
+  const [dateAnchorEl, setDateAnchorEl] = React.useState<null | HTMLElement>(
+    null
+  );
+  const theme = useTheme();
 
   const { data, isLoading, pagination, setPagination } =
     useTableHandlers<AppointmentResponse>({
@@ -42,72 +54,10 @@ const AppointmentsModule = () => {
         asCustomer: false,
         status: status ?? undefined,
         channel: channel ?? undefined,
-        start_date: startDate ?? undefined,
-        end_date: endDate ?? undefined,
+        start_date: date?.startOf("day").format("YYYY-MM-DD") ?? undefined,
+        end_date: date?.endOf("day").format("YYYY-MM-DD") ?? undefined,
       },
     });
-
-  const theme = useTheme();
-
-  const getStatusColor = (
-    status: AppointmentStatusEnum | string | undefined
-  ): string => {
-    const key = (status ?? "").toString().toLowerCase();
-    switch (key) {
-      case AppointmentStatusEnum.IN_PROGRESS:
-        return theme.palette.success.main;
-      case AppointmentStatusEnum.FINISHED:
-        return (
-          (theme.palette.grey && theme.palette.grey[600]) ||
-          (theme.palette.text && theme.palette.text.secondary) ||
-          "#999"
-        );
-      case AppointmentStatusEnum.CANCELED:
-        return theme.palette.secondary.main;
-      default:
-        return theme.palette.primary.main;
-    }
-  };
-
-  const getStatusButtonColor = (
-    status: AppointmentStatusEnum | string | undefined
-  ):
-    | "inherit"
-    | "primary"
-    | "secondary"
-    | "error"
-    | "info"
-    | "success"
-    | "warning" => {
-    const key = (status ?? "").toString().toLowerCase();
-    switch (key) {
-      case AppointmentStatusEnum.IN_PROGRESS:
-        return "success";
-      case AppointmentStatusEnum.FINISHED:
-        return "primary";
-      case AppointmentStatusEnum.CANCELED:
-        return "error";
-      default:
-        return "inherit";
-    }
-  };
-
-  const getChannelColor = (
-    channel: AppointmentChannelEnum | string | undefined
-  ) => {
-    const key = (channel ?? "").toString().toLowerCase();
-    switch (key) {
-      case AppointmentChannelEnum.SCROLL_BOOKER:
-        return theme.palette.primary.main;
-      case AppointmentChannelEnum.OWN_CLIENT:
-        return (
-          (theme.palette.grey && theme.palette.grey[600]) ||
-          theme.palette.text.secondary
-        );
-      default:
-        return theme.palette.primary.main;
-    }
-  };
 
   const columns = useMemo<MRT_ColumnDef<AppointmentResponse>[]>(
     () => [
@@ -217,7 +167,7 @@ const AppointmentsModule = () => {
         Cell: ({ row }) => (
           <Label
             title={getAppointmentChannelLabel(row.original.channel)}
-            color={getChannelColor(row.original.channel)}
+            color={getChannelColor(row.original.channel, theme)}
           />
         ),
       },
@@ -228,7 +178,7 @@ const AppointmentsModule = () => {
         Cell: ({ row }) => (
           <Label
             title={getAppointmentStatusLabel(row.original.status)}
-            color={getStatusColor(row.original.status)}
+            color={getStatusColor(row.original.status, theme)}
           />
         ),
       },
@@ -236,24 +186,6 @@ const AppointmentsModule = () => {
     [theme]
   );
 
-  const renderRowActionMenuItems = ({
-    row,
-    table,
-  }: TableRowAndTable<AppointmentResponse>) => {
-    if (row.original.status !== AppointmentStatusEnum.IN_PROGRESS) return [];
-
-    return [
-      <MRT_ActionMenuItem
-        key={2}
-        label="Anulează programarea"
-        icon={<Delete />}
-        onClick={() => {}}
-        table={table}
-      />,
-    ];
-  };
-
-  // Separate anchors for status and channel dropdowns
   const [anchorStatusEl, setAnchorStatusEl] =
     React.useState<null | HTMLElement>(null);
   const [anchorChannelEl, setAnchorChannelEl] =
@@ -261,13 +193,240 @@ const AppointmentsModule = () => {
   const statusOpen = Boolean(anchorStatusEl);
   const channelOpen = Boolean(anchorChannelEl);
 
-  const handleStatusClick = (event: React.MouseEvent<HTMLElement>) =>
+  const handleStatusClick = (event: React.MouseEvent<HTMLElement>) => {
+    setDateAnchorEl(null);
     setAnchorStatusEl(event.currentTarget);
+  };
   const handleStatusClose = () => setAnchorStatusEl(null);
 
-  const handleChannelClick = (event: React.MouseEvent<HTMLElement>) =>
+  const handleChannelClick = (event: React.MouseEvent<HTMLElement>) => {
+    setDateAnchorEl(null);
     setAnchorChannelEl(event.currentTarget);
+  };
   const handleChannelClose = () => setAnchorChannelEl(null);
+
+  React.useEffect(() => {
+    if (anchorStatusEl || anchorChannelEl) setDateAnchorEl(null);
+  }, [anchorStatusEl, anchorChannelEl]);
+
+  React.useEffect(() => {
+    if (dateAnchorEl) {
+      setAnchorStatusEl(null);
+      setAnchorChannelEl(null);
+    }
+  }, [dateAnchorEl]);
+
+  const getToolbarCustomActions = React.useCallback(() => {
+    return (
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <Button
+          variant="contained"
+          size="large"
+          disableElevation
+          onClick={() => setDate(null)}
+        >
+          Oricand
+        </Button>
+        <Button
+          variant="outlined"
+          size="large"
+          color="inherit"
+          disableElevation
+          onClick={() => setDate(dayjs())}
+        >
+          Astazi
+        </Button>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Button
+            id="date-filter-button"
+            aria-controls={dateAnchorEl ? "date-popover" : undefined}
+            aria-haspopup="true"
+            aria-expanded={dateAnchorEl ? "true" : undefined}
+            variant="outlined"
+            color="inherit"
+            size="large"
+            disableElevation
+            onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
+              e.preventDefault();
+              setAnchorStatusEl(null);
+              setAnchorChannelEl(null);
+              setDateAnchorEl(e.currentTarget);
+            }}
+            startIcon={<DateRangeIcon />}
+            endIcon={<KeyboardArrowDownIcon />}
+          >
+            {date ? date.format("DD.MM.YYYY") : "Custom"}
+          </Button>
+          <Popover
+            id="date-popover"
+            open={Boolean(dateAnchorEl) && !anchorStatusEl && !anchorChannelEl}
+            anchorEl={dateAnchorEl}
+            onClose={() => setDateAnchorEl(null)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            transformOrigin={{ vertical: "top", horizontal: "left" }}
+          >
+            <Box sx={{ p: 1 }}>
+              <DateCalendar
+                value={date}
+                disableFuture
+                onChange={(newDate) => {
+                  setDate(newDate as any);
+                  setDateAnchorEl(null);
+                }}
+              />
+            </Box>
+          </Popover>
+        </LocalizationProvider>
+        <div>
+          <Button
+            id="status-filter-button"
+            aria-controls={statusOpen ? "status-filter-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={statusOpen ? "true" : undefined}
+            variant="outlined"
+            size="large"
+            color={getStatusButtonColor(status ?? undefined)}
+            disableElevation
+            onClick={handleStatusClick}
+            endIcon={<KeyboardArrowDownIcon />}
+          >
+            {status ? getAppointmentStatusLabel(status) : "Status"}
+          </Button>
+          <DropdownMenu
+            id="status-filter-menu"
+            slotProps={{
+              list: { "aria-labelledby": "status-filter-button" },
+              paper: {
+                sx: {
+                  backgroundColor: theme.palette.background.default,
+                },
+              },
+            }}
+            anchorEl={anchorStatusEl}
+            open={statusOpen}
+            onClose={handleStatusClose}
+          >
+            <MenuItem
+              onClick={() => {
+                setStatus(null);
+                handleStatusClose();
+              }}
+              selected={status === null}
+              disableRipple
+            >
+              Toate statusurile
+            </MenuItem>
+
+            {AppointmentStatusEnum.all.map((s) => (
+              <MenuItem
+                key={s}
+                onClick={() => {
+                  setStatus(s);
+                  handleStatusClose();
+                }}
+                selected={status === s}
+                disableRipple
+              >
+                {getAppointmentStatusLabel(s)}
+              </MenuItem>
+            ))}
+          </DropdownMenu>
+        </div>
+        <div>
+          <Button
+            id="channel-filter-button"
+            aria-controls={channelOpen ? "channel-filter-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={channelOpen ? "true" : undefined}
+            variant="outlined"
+            size="large"
+            color={channel ? "primary" : "inherit"}
+            disableElevation
+            onClick={handleChannelClick}
+            endIcon={<KeyboardArrowDownIcon />}
+          >
+            {channel ? getAppointmentChannelLabel(channel) : "Canal"}
+          </Button>
+          <DropdownMenu
+            id="channel-filter-menu"
+            slotProps={{
+              list: { "aria-labelledby": "channel-filter-button" },
+              paper: {
+                sx: {
+                  backgroundColor: theme.palette.background.default,
+                },
+              },
+            }}
+            anchorEl={anchorChannelEl}
+            open={channelOpen}
+            onClose={handleChannelClose}
+          >
+            <MenuItem
+              onClick={() => {
+                setChannel(null);
+                handleChannelClose();
+              }}
+              selected={channel === null}
+              disableRipple
+            >
+              Toate canalele
+            </MenuItem>
+
+            {AppointmentChannelEnum.all.map((s) => (
+              <MenuItem
+                key={s}
+                onClick={() => {
+                  setChannel(s);
+                  handleChannelClose();
+                }}
+                selected={channel === s}
+                disableRipple
+              >
+                {getAppointmentChannelLabel(s)}
+              </MenuItem>
+            ))}
+          </DropdownMenu>
+        </div>
+      </Stack>
+    );
+  }, [
+    status,
+    channel,
+    date,
+    dateAnchorEl,
+    anchorStatusEl,
+    anchorChannelEl,
+    statusOpen,
+    channelOpen,
+    theme,
+  ]);
+
+  const renderRowActionMenuItems = useCallback(
+    ({ row, table }: TableRowAndTable<AppointmentResponse>) => {
+      return [
+        <MRT_ActionMenuItem
+          key="details"
+          label="Detalii programare"
+          icon={<RemoveRedEyeOutlinedIcon />}
+          onClick={() => {
+            // TODO: implement view details action
+          }}
+          table={table}
+        />,
+        <MRT_ActionMenuItem
+          key="cancel"
+          label="Anulează programarea"
+          icon={<DeleteOutlineOutlinedIcon />}
+          onClick={() => {
+            // TODO: implement cancel action
+          }}
+          table={table}
+          disabled={row?.original?.status !== AppointmentStatusEnum.IN_PROGRESS}
+        />,
+      ];
+    },
+    []
+  );
 
   return (
     <MainLayout title="Rezervări" hideAction>
@@ -278,158 +437,10 @@ const AppointmentsModule = () => {
         manualPagination={true}
         onPaginationChange={setPagination}
         state={{ pagination, isLoading }}
-        renderTopToolbarCustomActions={() => (
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={() => {
-                setStartDate(null);
-                setEndDate(null);
-              }}
-            >
-              Oricand
-            </Button>
-            <Button
-              variant="outlined"
-              color="inherit"
-              disableElevation
-              onClick={() => {
-                setStartDate(dayjs().startOf("day").format("YYYY-MM-DD"));
-                setEndDate(dayjs().endOf("day").format("YYYY-MM-DD"));
-              }}
-            >
-              Astazi
-            </Button>
-            <Button
-              variant="outlined"
-              color="inherit"
-              disableElevation
-              onClick={() => {}}
-              startIcon={<DateRangeIcon />}
-              endIcon={<KeyboardArrowDownIcon />}
-            >
-              Custom
-            </Button>
-            <div>
-              <Button
-                id="status-filter-button"
-                aria-controls={statusOpen ? "status-filter-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={statusOpen ? "true" : undefined}
-                variant="outlined"
-                color={getStatusButtonColor(status ?? undefined)}
-                disableElevation
-                onClick={handleStatusClick}
-                endIcon={<KeyboardArrowDownIcon />}
-              >
-                {status ? getAppointmentStatusLabel(status) : "Status"}
-              </Button>
-              <DropdownMenu
-                id="status-filter-menu"
-                slotProps={{
-                  list: { "aria-labelledby": "status-filter-button" },
-                  paper: {
-                    sx: {
-                      backgroundColor: theme.palette.background.default,
-                    },
-                  },
-                }}
-                anchorEl={anchorStatusEl}
-                open={statusOpen}
-                onClose={handleStatusClose}
-              >
-                <MenuItem
-                  onClick={() => {
-                    setStatus(null);
-                    handleStatusClose();
-                  }}
-                  selected={status === null}
-                  disableRipple
-                  sx={{ fontWeight: 600 }}
-                >
-                  Toate
-                </MenuItem>
-
-                <Divider />
-
-                {AppointmentStatusEnum.all.map((s) => (
-                  <MenuItem
-                    key={s}
-                    onClick={() => {
-                      setStatus(s);
-                      handleStatusClose();
-                    }}
-                    selected={status === s}
-                    disableRipple
-                  >
-                    {getAppointmentStatusLabel(s)}
-                  </MenuItem>
-                ))}
-              </DropdownMenu>
-            </div>
-            <div>
-              <Button
-                id="channel-filter-button"
-                aria-controls={channelOpen ? "channel-filter-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={channelOpen ? "true" : undefined}
-                variant="outlined"
-                color={channel ? "primary" : "inherit"}
-                disableElevation
-                onClick={handleChannelClick}
-                endIcon={<KeyboardArrowDownIcon />}
-              >
-                {channel ? getAppointmentChannelLabel(channel) : "Canal"}
-              </Button>
-              <DropdownMenu
-                id="channel-filter-menu"
-                slotProps={{
-                  list: { "aria-labelledby": "channel-filter-button" },
-                  paper: {
-                    sx: {
-                      backgroundColor: theme.palette.background.default,
-                    },
-                  },
-                }}
-                anchorEl={anchorChannelEl}
-                open={channelOpen}
-                onClose={handleChannelClose}
-              >
-                <MenuItem
-                  onClick={() => {
-                    setChannel(null);
-                    handleChannelClose();
-                  }}
-                  selected={channel === null}
-                  disableRipple
-                  sx={{ fontWeight: 600 }}
-                >
-                  Toate
-                </MenuItem>
-
-                <Divider />
-
-                {AppointmentChannelEnum.all.map((s) => (
-                  <MenuItem
-                    key={s}
-                    onClick={() => {
-                      setChannel(s);
-                      handleChannelClose();
-                    }}
-                    selected={channel === s}
-                    disableRipple
-                  >
-                    {getAppointmentChannelLabel(s)}
-                  </MenuItem>
-                ))}
-              </DropdownMenu>
-            </div>
-          </Stack>
-        )}
+        renderTopToolbarCustomActions={getToolbarCustomActions}
+        renderRowActionMenuItems={renderRowActionMenuItems}
         enableRowActions={true}
         enableEditing={false}
-        renderRowActionMenuItems={renderRowActionMenuItems}
         enableFilters={false}
         enableColumnFilters={false}
         enableSorting={false}

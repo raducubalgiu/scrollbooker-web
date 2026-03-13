@@ -5,17 +5,17 @@ import React from "react";
 import Layout from "./Layout";
 
 export default function LayoutWrapper({
-	children,
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
 
-	if (status === "loading") return null;
+  if (status === "loading") return null;
 
-	if (session?.accessToken) {
-		return <Layout>{children}</Layout>;
-	}
+  if (session?.accessToken) {
+    return <Layout>{children}</Layout>;
+  }
 
-	return <>{children}</>;
+  return <>{children}</>;
 }

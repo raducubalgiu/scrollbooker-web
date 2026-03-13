@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   MaterialReactTable,
   type MRT_ColumnDef,
@@ -58,31 +58,33 @@ export default function Table<T extends Record<string, unknown>>({
     setTableData(data);
   }, [data]);
 
-  const renderRowActionMenuItems = ({ row, table }: TableRowAndTable<T>) => [
-    <MRT_ActionMenuItem
-      key={2}
-      label="Șterge"
-      icon={<Delete />}
-      onClick={() => onDeletingRowSave && onDeletingRowSave({ row, table })}
-      table={table}
-    />,
-  ];
+  const renderRowActionMenuItems = useCallback(
+    ({ row, table }: TableRowAndTable<T>) => [
+      <MRT_ActionMenuItem
+        key={2}
+        label="Șterge"
+        icon={<Delete />}
+        onClick={() => onDeletingRowSave && onDeletingRowSave({ row, table })}
+        table={table}
+      />,
+    ],
+    [onDeletingRowSave]
+  );
 
-  const renderTopToolbarCustomActions = ({
-    table,
-  }: {
-    table: MRT_TableInstance<T>;
-  }) =>
-    topToolbarIconButton ? (
-      <AddIconButton
-        onClick={() => table.setCreatingRow(true)}
-        color="primary"
-      />
-    ) : (
-      <Button onClick={() => table.setCreatingRow(true)} variant="contained">
-        Adaugă
-      </Button>
-    );
+  const renderTopToolbarCustomActions = useCallback(
+    ({ table }: { table: MRT_TableInstance<T> }) =>
+      topToolbarIconButton ? (
+        <AddIconButton
+          onClick={() => table.setCreatingRow(true)}
+          color="primary"
+        />
+      ) : (
+        <Button onClick={() => table.setCreatingRow(true)} variant="contained">
+          Adaugă
+        </Button>
+      ),
+    [topToolbarIconButton]
+  );
 
   const icons = {
     SaveIcon: () => <Check color="success" />,
