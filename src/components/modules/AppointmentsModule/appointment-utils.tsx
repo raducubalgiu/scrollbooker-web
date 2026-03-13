@@ -60,6 +60,6 @@ export const getStatusButtonColor = (
     case AppointmentStatusEnum.CANCELED:
       return "error";
     default:
-      return "inherit";
+      return "secondary";
   }
 };

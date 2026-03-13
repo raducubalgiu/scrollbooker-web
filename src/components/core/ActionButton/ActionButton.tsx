@@ -18,6 +18,7 @@ const ActionButton = ({ actions, sx }: ActionButtonProps) => {
         <Button
           key={index}
           variant="contained"
+          size="large"
           sx={{
             ml: 2,
             mt: 2,

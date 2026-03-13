@@ -5,6 +5,9 @@ import { AppointmentResponse } from "@/ts/models/booking/appointment/Appointment
 export const GET = async (req: NextRequest) => {
   const page = req.nextUrl.searchParams.get("page");
   const limit = req.nextUrl.searchParams.get("limit");
+
+  const businessId = req.nextUrl.searchParams.get("business_id");
+  const employeeId = req.nextUrl.searchParams.get("employee_id");
   const asCustomer = req.nextUrl.searchParams.get("asCustomer");
   const status = req.nextUrl.searchParams.get("status");
   const channel = req.nextUrl.searchParams.get("channel");
@@ -16,8 +19,10 @@ export const GET = async (req: NextRequest) => {
       url: (() => {
         const params: string[] = [];
 
-        if (page !== null) params.push(`page=${encodeURIComponent(page)}`);
-        if (limit !== null) params.push(`limit=${encodeURIComponent(limit)}`);
+        if (businessId != null)
+          params.push(`business_id=${encodeURIComponent(businessId)}`);
+        if (employeeId !== null)
+          params.push(`employee_id=${encodeURIComponent(employeeId)}`);
         if (asCustomer !== null)
           params.push(`as_customer=${encodeURIComponent(asCustomer)}`);
         if (status !== null)
@@ -28,6 +33,9 @@ export const GET = async (req: NextRequest) => {
           params.push(`start_date=${encodeURIComponent(startDate)}`);
         if (endDate !== null)
           params.push(`end_date=${encodeURIComponent(endDate)}`);
+
+        if (page !== null) params.push(`page=${encodeURIComponent(page)}`);
+        if (limit !== null) params.push(`limit=${encodeURIComponent(limit)}`);
 
         return `/appointments${params.length ? `?${params.join("&")}` : ""}`;
       })(),

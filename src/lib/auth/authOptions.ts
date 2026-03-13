@@ -29,6 +29,8 @@ type UserInfoType = {
   fullname: string;
   business_id?: number;
   business_type_id?: number;
+  has_employees: boolean;
+  is_employee: boolean;
   is_validated: boolean;
   registration_step?: string;
 };
@@ -95,6 +97,8 @@ export const authOptions: AuthOptions = {
           user_id: userInfo.id,
           business_id: userInfo.business_id,
           business_type_id: userInfo.business_type_id,
+          has_employees: userInfo.has_employees,
+          is_employee: userInfo.is_employee,
         };
       }
       if (token) {
@@ -124,6 +128,8 @@ export const authOptions: AuthOptions = {
         session.business_id = token.business_id;
         session.business_type_id = token.business_type_id;
         session.permissions = token.permissions;
+        session.has_employees = token.has_employees;
+        session.is_employee = token.is_employee;
       }
 
       const expireInMillis = token.accessTokenExpires;
@@ -226,6 +232,8 @@ async function refreshToken(refreshToken: string): Promise<JWT> {
       user_id: userInfo.id,
       business_id: userInfo.business_id,
       business_type_id: userInfo.business_type_id,
+      has_employees: userInfo.has_employees,
+      is_employee: userInfo.is_employee,
     };
   } catch (e) {
     LOG.error("Token cannot be refreshed! Session will be terminated");

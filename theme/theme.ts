@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles";
+import { alpha, createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
   interface PaletteColor {
@@ -54,11 +54,9 @@ export const darkTheme = createTheme({
     primary: {
       main: "#FF6F00",
       100: "#FF8F00",
-      200: "#F0B90B",
-      300: "#EF8D2A",
     },
     secondary: {
-      main: "#D32F2F",
+      main: "#1C1C1C",
       100: "#364045",
       200: "#FFFDF9",
     },
@@ -122,11 +120,34 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: "bold",
-          color: "#fff",
           borderRadius: 50,
+          "&.Mui-disabled": {
+            pointerEvents: "auto",
+          },
+        },
+        sizeLarge: {
+          padding: "10px 20px",
+          minHeight: 44,
         },
         containedPrimary: ({ theme }) => ({
           color: theme.palette.common.white,
+        }),
+        containedSecondary: ({ theme }) => ({
+          color: theme.palette.text.secondary,
+        }),
+        outlinedPrimary: ({ theme }) => ({
+          color: theme.palette.text.primary,
+          "&:hover": {
+            color: theme.palette.text.primary + "90",
+          },
+        }),
+        outlinedSecondary: ({ theme }) => ({
+          borderColor: theme.palette.divider,
+          color: theme.palette.text.primary,
+          "&:hover": {
+            color: theme.palette.text.primary + "90",
+            borderColor: theme.palette.divider,
+          },
         }),
       },
     },
@@ -135,6 +156,35 @@ export const darkTheme = createTheme({
         root: ({ theme }) => ({
           "&.Mui-selected": {
             backgroundColor: theme.palette.primary,
+          },
+        }),
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          borderRadius: 12,
+          boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
+          padding: "6px 0",
+          minWidth: 230,
+          backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
+        }),
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          padding: "8px 16px",
+          gap: 8,
+          minHeight: 50,
+          alignItems: "center",
+          borderRadius: 8,
+          "&:hover": {
+            backgroundColor: alpha(theme.palette.primary.main, 0.06),
+          },
+          "&.Mui-selected": {
+            backgroundColor: alpha(theme.palette.primary.main, 0.12),
           },
         }),
       },
@@ -151,9 +201,7 @@ export const lightTheme = createTheme({
       200: "#F0B90B",
     },
     secondary: {
-      main: "#D32F2F",
-      100: "#364045",
-      200: "#FFFDF9",
+      main: "#F1F1F1",
     },
     background: {
       default: "#f1f1f1",
@@ -221,16 +269,33 @@ export const lightTheme = createTheme({
         root: {
           fontWeight: "bold",
           borderRadius: 50,
+          "&.Mui-disabled": {
+            pointerEvents: "auto",
+          },
+        },
+        sizeLarge: {
+          padding: "10px 20px",
+          minHeight: 44,
         },
         containedPrimary: ({ theme }) => ({
           color: theme.palette.common.white,
         }),
-        containedInherit: ({ theme }) => ({
-          backgroundColor: theme.palette.background.paper,
-          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.06)",
+        containedSecondary: ({ theme }) => ({
+          color: theme.palette.text.secondary,
+        }),
+        outlinedPrimary: ({ theme }) => ({
+          color: theme.palette.text.primary,
+          borderWidth: 2,
           "&:hover": {
-            backgroundColor: theme.palette.background.default + "20",
-            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.10)",
+            color: theme.palette.text.primary + "90",
+          },
+        }),
+        outlinedSecondary: ({ theme }) => ({
+          borderColor: theme.palette.grey[500],
+          color: theme.palette.text.primary,
+          "&:hover": {
+            color: theme.palette.text.primary + "90",
+            borderColor: theme.palette.grey[300],
           },
         }),
       },
@@ -240,6 +305,35 @@ export const lightTheme = createTheme({
         root: ({ theme }) => ({
           "&.Mui-selected": {
             backgroundColor: theme.palette.primary,
+          },
+        }),
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          borderRadius: 12,
+          boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
+          padding: "6px 0",
+          minWidth: 230,
+          backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
+        }),
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          padding: "16px 24px",
+          gap: 8,
+          minHeight: 50,
+          alignItems: "center",
+          borderRadius: 8,
+          "&:hover": {
+            backgroundColor: alpha(theme.palette.primary.main, 0.04),
+          },
+          "&.Mui-selected": {
+            backgroundColor: alpha(theme.palette.primary.main, 0.12),
           },
         }),
       },

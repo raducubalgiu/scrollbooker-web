@@ -113,6 +113,7 @@ export default function MyDashboardModule({ userId }: DashboardModuleProps) {
               onClick={btn.onClick}
               variant="contained"
               color={btn.selected ? "primary" : "inherit"}
+              size="large"
               sx={{ fontWeight: "600", mr: 1.5 }}
             >
               {btn.title}
