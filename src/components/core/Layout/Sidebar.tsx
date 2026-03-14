@@ -193,7 +193,9 @@ export default function Sidebar() {
                 onClick={() => router.push(userRoute.route)}
                 selected={isLinkSelected(userRoute.route)}
               >
-                <ListItemIcon>{userRoute.icon}</ListItemIcon>
+                <ListItemIcon sx={{ color: "text.primary" }}>
+                  {userRoute.icon}
+                </ListItemIcon>
                 <ListItemText>{userRoute.label}</ListItemText>
               </ListItemButton>
             </ListItem>
@@ -227,7 +229,9 @@ export default function Sidebar() {
                     onClick={() => router.push(businessRoute.route)}
                     selected={isLinkSelected(businessRoute.route)}
                   >
-                    <ListItemIcon>{businessRoute.icon}</ListItemIcon>
+                    <ListItemIcon sx={{ color: "text.primary" }}>
+                      {businessRoute.icon}
+                    </ListItemIcon>
                     <ListItemText primary={businessRoute.label} />
                   </ListItemButton>
                 </Protected>
@@ -244,8 +248,12 @@ export default function Sidebar() {
                 selected={isLinkSelected(userRoute.route)}
                 sx={{ mb: 0.5 }}
               >
-                <ListItemIcon>{userRoute.icon}</ListItemIcon>
-                <ListItemText>{userRoute.label}</ListItemText>
+                <ListItemIcon sx={{ color: "text.primary" }}>
+                  {userRoute.icon}
+                </ListItemIcon>
+                <ListItemText sx={{ color: "text.primary" }}>
+                  {userRoute.label}
+                </ListItemText>
               </ListItemButton>
             </ListItem>
           </Protected>
@@ -297,7 +305,9 @@ export default function Sidebar() {
           </ListItemIcon>
           <ListItemText
             primary="Log Out"
-            slotProps={{ primary: { sx: { color: "error.main" } } }}
+            slotProps={{
+              primary: { sx: { color: "error.main", fontWeight: 600 } },
+            }}
           />
         </ListItemButton>
       </List>

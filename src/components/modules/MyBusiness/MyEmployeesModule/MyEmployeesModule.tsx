@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { type MRT_ColumnDef } from "material-react-table";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import { Avatar, Button, Typography } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
+import GradeIcon from "@mui/icons-material/Grade";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import Table from "@/components/core/Table/Table";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
@@ -23,7 +23,7 @@ export default function MyEmployeesModule() {
             <CustomStack justifyContent="flex-start">
               <Avatar
                 src={row.original.avatar}
-                sx={{ width: 35, height: 35, mr: 2.5 }}
+                sx={{ width: 40, height: 40, mr: 2.5 }}
               />
               {row.original.fullname}
             </CustomStack>
@@ -39,20 +39,12 @@ export default function MyEmployeesModule() {
         header: "Rating",
         Cell: ({ row }) => (
           <CustomStack justifyContent="flex-start">
-            <StarIcon color="primary" />
+            <GradeIcon color="primary" />
             <Typography sx={{ fontWeight: "600", ml: 1 }}>
-              {row.original.ratings_average.toFixed(1)}
+              {row.original.ratings_average.toFixed(1)} (
+              {row.original.ratings_count})
             </Typography>
           </CustomStack>
-        ),
-      },
-      {
-        accessorKey: "ratings_count",
-        header: "Recenzii",
-        Cell: ({ row }) => (
-          <Typography sx={{ fontWeight: 600 }}>
-            {row.original.ratings_count}
-          </Typography>
         ),
       },
       {

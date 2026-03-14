@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Divider, Skeleton, Stack, Typography } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
+import GradeIcon from "@mui/icons-material/Grade";
 import CustomStack from "../../CustomStack/CustomStack";
 import UserInfoCounter from "./UserInfoCounter";
 import UserAvatar from "./UserAvatar";
@@ -32,7 +32,7 @@ export default function UserInfo({
       <Typography sx={{ fontSize: 16 }}>{profession}</Typography>
       {is_business_or_employee && (
         <>
-          <StarIcon color="primary" sx={{ ml: 1.5, mr: 0.5 }} />
+          <GradeIcon color="primary" sx={{ ml: 1.5, mr: 0.5 }} />
           <Typography sx={{ fontWeight: "600" }}>
             {counters?.ratings_average}
           </Typography>
