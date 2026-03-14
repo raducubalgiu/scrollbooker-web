@@ -1,29 +1,22 @@
-"use client";
-
-import React, { useMemo, useState } from "react";
-import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { Avatar, IconButton, Tooltip } from "@mui/material";
-import EmploymentRequestsModal from "./EmploymentRequestsModal/EmploymentRequestsModal";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import {
-  MaterialReactTable,
-  MRT_ColumnDef,
-  MRT_Row,
-} from "material-react-table";
-
 import CustomStack from "@/components/core/CustomStack/CustomStack";
-import dayjs from "dayjs";
-import { MRT_Localization_RO } from "material-react-table/locales/ro";
-import { Close } from "@mui/icons-material";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { EmploymentRequestType } from "@/ts/models/booking/employmentRequest/EmploymentRequestType";
+import { Close } from "@mui/icons-material";
+import { Avatar, Button, IconButton, Tooltip } from "@mui/material";
+import dayjs from "dayjs";
+import { MRT_ColumnDef, MRT_Row } from "material-react-table";
+import React, { useMemo, useState } from "react";
+import EmploymentRequestsModal from "./EmploymentRequestsModal/EmploymentRequestsModal";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
+import Table from "@/components/core/Table/Table";
 
 type OpenConfirmationState = {
   openModal: boolean;
   employment_request_id: null | number;
 };
 
-export default function EmploymentRequestsModule() {
+const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState<OpenConfirmationState>({
     openModal: false,
@@ -37,6 +30,9 @@ export default function EmploymentRequestsModule() {
   } = useCustomQuery<EmploymentRequestType[]>({
     key: ["get-employment-requests"],
     url: "/api/employment-requests",
+    options: {
+      enabled: isEnabled,
+    },
   });
 
   const { mutate: handleDelete, isPending: isLoadingDelete } = useMutate({
@@ -100,17 +96,26 @@ export default function EmploymentRequestsModule() {
           })
         }
       >
-        <Close color="secondary" />
+        <Close color="error" />
       </IconButton>
     </Tooltip>
   );
 
+  const getToolbarCustomActions = React.useCallback(() => {
+    return (
+      <Button
+        variant="outlined"
+        size="large"
+        disableElevation
+        onClick={() => setOpen(true)}
+      >
+        Trimite o cerere
+      </Button>
+    );
+  }, []);
+
   return (
-    <MainLayout
-      title="Cereri de angajare în așteptare"
-      actionTitle="Trimite o cerere"
-      onOpenModal={() => setOpen(true)}
-    >
+    <>
       <ConfirmationModal
         open={confirmation.openModal}
         handleClose={() =>
@@ -130,18 +135,22 @@ export default function EmploymentRequestsModule() {
           refetch();
         }}
       />
-      <MaterialReactTable
+      <Table
         data={employmentRequests ?? []}
         columns={columns}
         enableFilters={false}
         enableSorting={false}
         enableColumnActions={false}
+        enablePagination={false}
         localization={MRT_Localization_RO}
         state={{ isLoading }}
         enableRowActions={true}
         positionActionsColumn="last"
         renderRowActions={renderRowActions}
+        renderTopToolbarCustomActions={getToolbarCustomActions}
       />
-    </MainLayout>
+    </>
   );
-}
+};
+
+export default EmploymentRequestsTab;

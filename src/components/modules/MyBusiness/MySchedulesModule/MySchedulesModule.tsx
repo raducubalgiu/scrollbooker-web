@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Box,
   Paper,
   Stack,
   Table,
@@ -21,7 +22,6 @@ import ActionButton, {
 } from "@/components/core/ActionButton/ActionButton";
 import { toast } from "react-toastify";
 import { useMutate } from "@/hooks/useHttp";
-import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 
 type SchedulesProps = { data: ScheduleResponseType[] };
 
@@ -107,56 +107,50 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
 
   return (
     <FormProvider {...methods}>
-      <MainLayout
-        title="Programul locației"
-        description="Selectează intervalele orare în care locația ta este deschisă pentru clienți"
-        hideAction
-      >
-        <Paper sx={{ p: 3 }}>
-          <Table size="medium">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  component="th"
-                  scope="col"
-                  sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-                >
-                  Ziua
-                </TableCell>
-                <TableCell
-                  component="th"
-                  scope="col"
-                  align="center"
-                  sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-                >
-                  Start
-                </TableCell>
-                <TableCell
-                  component="th"
-                  scope="col"
-                  align="center"
-                  sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-                >
-                  Sfârșit
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {schedules?.map((schedule, i) => (
-                <SchedulesSelectHours
-                  key={i}
-                  schedule={schedule}
-                  namePath={`schedules.${i}`}
-                  disabled={disabled}
-                />
-              ))}
-            </TableBody>
-          </Table>
-          <Stack alignItems="flex-end" sx={{ py: 1.5 }}>
-            <ActionButton actions={actions} />
-          </Stack>
-        </Paper>
-      </MainLayout>
+      <Box>
+        <Table size="medium">
+          <TableHead>
+            <TableRow>
+              <TableCell
+                component="th"
+                scope="col"
+                sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
+              >
+                Ziua
+              </TableCell>
+              <TableCell
+                component="th"
+                scope="col"
+                align="center"
+                sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
+              >
+                Start
+              </TableCell>
+              <TableCell
+                component="th"
+                scope="col"
+                align="center"
+                sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
+              >
+                Sfârșit
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {schedules?.map((schedule, i) => (
+              <SchedulesSelectHours
+                key={i}
+                schedule={schedule}
+                namePath={`schedules.${i}`}
+                disabled={disabled}
+              />
+            ))}
+          </TableBody>
+        </Table>
+        <Stack alignItems="flex-end" sx={{ py: 1.5 }}>
+          <ActionButton actions={actions} />
+        </Stack>
+      </Box>
     </FormProvider>
   );
 }

@@ -1,60 +1,24 @@
 import React from "react";
-import { get } from "@/utils/requests";
-import { some } from "lodash";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { Box, Paper, Tab, Tabs, Typography } from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import LocationTabs from "@/components/modules/MyBusiness/LocationModule/LocationTabs";
+import LocationTabsClient from "@/components/modules/MyBusiness/LocationModule/LocationTabsClient";
+import { ScheduleResponseType } from "@/ts/models/booking/schedule/ScheduleType";
+import { get } from "@/utils/requests";
 
 async function MyBusiness() {
   const { userId } = await getUserServerSession();
 
-  //   const business = (
-  //     await get<UserBusinessType>({
-  //       url: `/users/${userId}/business`,
-  //     })
-  //   ).data;
-
-  //   console.log("BUSINESS!!!", business);
-
-  //   const allServices = (
-  //     await get<ServiceType[]>({
-  //       url: `/business-types/${business.business_type_id}/services`,
-  //     })
-  //   ).data;
-
-  //   console.log("ALL SERVICES!!!", allServices);
-
-  //   const servicesWithSelection = allServices.map((service) => {
-  //     return {
-  //       ...service,
-  //       isSelected: some(business.services, { id: service.id }),
-  //     };
-  //   });
-
-  //   console.log("ALL SERVICES WITH SELECTION!!!", servicesWithSelection);
-
-  //const [value, setValue] = React.useState("1");
+  const response = (
+    await get<ScheduleResponseType[]>({
+      url: `/users/${userId}/schedules`,
+    })
+  ).data;
 
   return (
-    <MainLayout title="Afacerea mea" hideAction>
-      <Typography>Hello</Typography>
-
-      <LocationTabs />
-
-      {/* <MyBusinessDetails
-				description={business.description}
-				address={business.address}
-				coordinates={business.coordinates}
-			/>
-			<MyBusinessServices
-				savedServices={business?.services ?? []}
-				services={servicesWithSelection ?? []}
-				businessId={business.id}
-			/> */}
+    <MainLayout title="Detalii locatie" hideAction>
+      <LocationTabsClient schedules={response} />
     </MainLayout>
   );
 }

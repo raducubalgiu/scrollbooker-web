@@ -24,7 +24,6 @@ import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOutlined";
-import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import UserInfo from "./UserInfo/UserInfo";
@@ -101,7 +100,7 @@ export default function Sidebar() {
 
   const myBusinessRoutes = [
     {
-      label: "Locație",
+      label: "Detalii Locație",
       route: "/my-business/location",
       icon: <PlaceOutlinedIcon />,
       permission: PermissionEnum.MY_BUSINESS_LOCATION_VIEW,
@@ -129,12 +128,6 @@ export default function Sidebar() {
       route: "/my-business/employees",
       icon: <PeopleAltOutlinedIcon />,
       permission: PermissionEnum.MY_EMPLOYEES_VIEW,
-    },
-    {
-      label: "Cereri de angajare",
-      route: "/my-business/employment-requests",
-      icon: <ScheduleSendOutlinedIcon />,
-      permission: PermissionEnum.MY_EMPLOYMENT_REQUESTS_VIEW,
     },
   ];
 

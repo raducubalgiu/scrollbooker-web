@@ -270,6 +270,7 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
         open={openCancelModal}
         onClose={() => setOpenCancelModal(false)}
       />
+
       <Table<AppointmentResponse>
         data={data?.results}
         rowCount={data?.count}

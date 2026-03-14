@@ -212,17 +212,17 @@ export const darkTheme = createTheme({
               duration: theme.transitions.duration.short,
             }
           ),
-          "&:hover": {
+          "&:not(.Mui-disabled):hover": {
             backgroundColor: alpha(
               theme.palette.common.white,
               theme.palette.mode === "dark" ? 0.02 : 0.04
             ),
           },
-          "&.Mui-focused": {
+          "&:not(.Mui-disabled).Mui-focused": {
             boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
             backgroundColor: theme.palette.secondary.main,
           },
-          "&.Mui-focusVisible": {
+          "&:not(.Mui-disabled).Mui-focusVisible": {
             boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.16)}`,
           },
           "& input:-webkit-autofill, & textarea:-webkit-autofill, & select:-webkit-autofill":
@@ -408,14 +408,15 @@ export const lightTheme = createTheme({
               duration: theme.transitions.duration.short,
             }
           ),
-          "&:hover": {
+          "&:not(.Mui-disabled):hover": {
             backgroundColor: alpha(theme.palette.common.black, 0.02),
           },
-          "&.Mui-focused": {
+
+          ":not(.Mui-disabled).Mui-focused": {
             boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
             backgroundColor: theme.palette.secondary.main,
           },
-          "&.Mui-focusVisible": {
+          ":not(.Mui-disabled).Mui-focusVisible": {
             boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.16)}`,
           },
           "& input:-webkit-autofill, & textarea:-webkit-autofill, & select:-webkit-autofill":

@@ -1,90 +1,96 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { type MRT_ColumnDef } from "material-react-table";
-import CustomStack from "@/components/core/CustomStack/CustomStack";
-import { Avatar, Button, Typography } from "@mui/material";
-import GradeIcon from "@mui/icons-material/Grade";
-import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import Table from "@/components/core/Table/Table";
+import React, { useState } from "react";
+import { alpha, Box, Paper, Tab, Tabs } from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
+import EmployeesTab from "./EmployeesTab";
+import EmploymentRequestsTab from "./EmploymentRequestsTab";
+import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 
 export default function MyEmployeesModule() {
-  const { data, pagination, isLoading, setPagination } =
-    useTableHandlers<BusinessEmployeeResponse>({ route: "employees" });
+  const [value, setValue] = useState(0);
 
-  const columns = useMemo<MRT_ColumnDef<BusinessEmployeeResponse>[]>(
-    () => [
-      {
-        accessorKey: "fullname",
-        header: "Angajat",
-        Cell: ({ row }) => {
-          return (
-            <CustomStack justifyContent="flex-start">
-              <Avatar
-                src={row.original.avatar}
-                sx={{ width: 40, height: 40, mr: 2.5 }}
-              />
-              {row.original.fullname}
-            </CustomStack>
-          );
-        },
-      },
-      {
-        accessorKey: "job",
-        header: "Job",
-      },
-      {
-        accessorKey: "ratings_average",
-        header: "Rating",
-        Cell: ({ row }) => (
-          <CustomStack justifyContent="flex-start">
-            <GradeIcon color="primary" />
-            <Typography sx={{ fontWeight: "600", ml: 1 }}>
-              {row.original.ratings_average.toFixed(1)} (
-              {row.original.ratings_count})
-            </Typography>
-          </CustomStack>
-        ),
-      },
-      {
-        accessorKey: "products_count",
-        header: "Produse",
-        Cell: ({ row }) => (
-          <Typography sx={{ fontWeight: 600 }}>
-            {row.original.products_count}
-          </Typography>
-        ),
-      },
-      {
-        accessorKey: "hire_date",
-        header: "Data angajării",
-      },
-    ],
-    []
-  );
+  const tabs = [
+    {
+      key: 0,
+      label: "Angajati",
+      icon: <PeopleAltOutlinedIcon color="inherit" />,
+    },
+    {
+      key: 1,
+      label: "Cereri de angajare",
+      icon: <ScheduleSendOutlinedIcon color="inherit" />,
+    },
+  ];
 
   return (
     <MainLayout hideAction title="Angajați">
-      <Table<BusinessEmployeeResponse>
-        data={data?.results}
-        columns={columns}
-        manualPagination={true}
-        onPaginationChange={setPagination}
-        state={{ pagination, isLoading }}
-        enableFilters={false}
-        renderTopToolbarCustomActions={undefined}
-        renderRowActions={({ row }) => [
-          <Button
-            key={row.original.id}
-            variant="contained"
-            color="error"
-            size="small"
+      <Box>
+        <Paper
+          elevation={0}
+          sx={{
+            display: "inline-block",
+            bgcolor: "transparent",
+            p: 0.25,
+            boxShadow: "none",
+            borderRadius: 3,
+          }}
+        >
+          <Tabs
+            value={value}
+            onChange={(_, v) => setValue(v)}
+            variant="standard"
+            sx={{
+              display: "flex",
+              "& .MuiTabs-indicator": { display: "none" },
+            }}
           >
-            Demite
-          </Button>,
-        ]}
-      />
+            {tabs.map((t) => (
+              <Tab
+                key={t.key}
+                label={t.label}
+                iconPosition="start"
+                icon={t.icon}
+                sx={{
+                  textTransform: "none",
+                  px: 5,
+                  py: 0.25,
+                  minHeight: 50,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  mr: 0.75,
+                  minWidth: "auto",
+                  borderRadius: 50,
+                  bgcolor: "background.paper",
+                  color: "text.secondary",
+                  "& .MuiTab-iconWrapper": {
+                    display: "inline-flex",
+                    alignItems: "center",
+                    mr: 1,
+                    "& svg": { width: 18, height: 18 },
+                  },
+                  "&.Mui-selected": {
+                    bgcolor: "primary.main",
+                    color: "common.white",
+                    fontWeight: 700,
+                  },
+                  "&:hover": { opacity: 0.92 },
+                  "&.Mui-focusVisible": {
+                    boxShadow: (theme) =>
+                      `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
+                  },
+                }}
+              />
+            ))}
+          </Tabs>
+        </Paper>
+
+        <Box sx={{ mt: 2.5 }}>
+          {value === 0 && <EmployeesTab isEnabled={value === 0} />}
+          {value === 1 && <EmploymentRequestsTab isEnabled={value === 1} />}
+        </Box>
+      </Box>
     </MainLayout>
   );
 }

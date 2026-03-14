@@ -5,6 +5,8 @@ import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import MySchedulesModule from "@/components/modules/MyBusiness/MySchedulesModule/MySchedulesModule";
+import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
+import { Paper } from "@mui/material";
 
 async function Schedules() {
   const { userId } = await getUserServerSession();
@@ -15,7 +17,17 @@ async function Schedules() {
     })
   ).data;
 
-  return <MySchedulesModule data={response} />;
+  return (
+    <MainLayout
+      title="Programul de lucru"
+      description="Setează-ți programul de lucru pentru a primi programări"
+      hideAction
+    >
+      <Paper>
+        <MySchedulesModule data={response} />
+      </Paper>
+    </MainLayout>
+  );
 }
 
 export default ProtectedPage(Schedules, PermissionEnum.MY_SCHEDULES_VIEW);

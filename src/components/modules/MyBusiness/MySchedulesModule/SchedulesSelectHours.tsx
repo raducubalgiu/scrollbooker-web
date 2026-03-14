@@ -51,7 +51,7 @@ export default function SchedulesSelectHours({
           name={`${namePath}.start_time`}
           options={[closed, ...slots]}
           disabled={disabled}
-          size="medium"
+          size="small"
           variant="outlined"
           label={undefined}
         />
@@ -61,7 +61,7 @@ export default function SchedulesSelectHours({
           name={`${namePath}.end_time`}
           options={[closed, ...slots]}
           disabled={disabled}
-          size="medium"
+          size="small"
           rules={isGreatherThan()}
           variant="outlined"
           label={undefined}

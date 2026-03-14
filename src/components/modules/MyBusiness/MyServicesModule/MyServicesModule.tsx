@@ -108,12 +108,7 @@ export const MyServicesModule = () => {
   ];
 
   return (
-    <MainLayout
-      title="Serviciile mele"
-      description="Selectează categoriile de servicii pe care le
-              desfășori la locație"
-      hideAction
-    >
+    <MainLayout title="Serviciile mele" hideAction>
       {isLoading && <MyServicesSkeleton />}
       {data?.map((serviceDomain) => (
         <Accordion
