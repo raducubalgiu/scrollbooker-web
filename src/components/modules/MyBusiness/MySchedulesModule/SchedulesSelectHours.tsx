@@ -51,7 +51,9 @@ export default function SchedulesSelectHours({
           name={`${namePath}.start_time`}
           options={[closed, ...slots]}
           disabled={disabled}
-          size="small"
+          size="medium"
+          variant="outlined"
+          label={undefined}
         />
       </TableCell>
       <TableCell align="center">
@@ -59,8 +61,10 @@ export default function SchedulesSelectHours({
           name={`${namePath}.end_time`}
           options={[closed, ...slots]}
           disabled={disabled}
-          size="small"
+          size="medium"
           rules={isGreatherThan()}
+          variant="outlined"
+          label={undefined}
         />
       </TableCell>
     </TableRow>

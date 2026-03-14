@@ -3,6 +3,7 @@ import CustomStack from "../../core/CustomStack/CustomStack";
 
 type MainLayoutProps = {
   title?: string;
+  description?: string;
   actionTitle?: string;
   children: React.ReactNode;
   hideAction?: boolean;
@@ -12,6 +13,7 @@ type MainLayoutProps = {
 
 export default function MainLayout({
   title,
+  description,
   actionTitle,
   children,
   hideAction = false,
@@ -21,9 +23,16 @@ export default function MainLayout({
   return (
     <Box sx={sx}>
       <CustomStack sx={{ mb: 2.5 }}>
-        <Typography fontWeight={600} variant="h4">
-          {title}
-        </Typography>
+        <Box>
+          <Typography fontWeight={600} variant="h4">
+            {title}
+          </Typography>
+          {description && (
+            <Typography variant="body1" color="text.secondary">
+              {description}
+            </Typography>
+          )}
+        </Box>
         {!hideAction && (
           <Button onClick={onOpenModal} variant="contained" color="primary">
             {!!actionTitle ? actionTitle : "Adaugă"}

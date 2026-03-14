@@ -198,6 +198,49 @@ export const darkTheme = createTheme({
         }),
       },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        notchedOutline: {
+          border: "none",
+        },
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.secondary.main,
+          borderRadius: 8,
+          transition: theme.transitions.create(
+            ["background-color", "box-shadow"],
+            {
+              duration: theme.transitions.duration.short,
+            }
+          ),
+          "&:hover": {
+            backgroundColor: alpha(
+              theme.palette.common.white,
+              theme.palette.mode === "dark" ? 0.02 : 0.04
+            ),
+          },
+          "&.Mui-focused": {
+            boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
+            backgroundColor: theme.palette.secondary.main,
+          },
+          "&.Mui-focusVisible": {
+            boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.16)}`,
+          },
+          "& input:-webkit-autofill, & textarea:-webkit-autofill, & select:-webkit-autofill":
+            {
+              WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+              boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+              WebkitTextFillColor: theme.palette.text.primary,
+              transition: "background-color 5000s ease-in-out 0s",
+            },
+          "& input:-webkit-autofill:focus, & textarea:-webkit-autofill:focus, & select:-webkit-autofill:focus":
+            {
+              WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+              boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+              WebkitTextFillColor: theme.palette.text.primary,
+            },
+        }),
+      },
+    },
   },
 });
 
@@ -348,6 +391,46 @@ export const lightTheme = createTheme({
           "&.Mui-selected": {
             backgroundColor: alpha(theme.palette.primary.main, 0.12),
           },
+        }),
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        notchedOutline: {
+          border: "none",
+        },
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.secondary.main,
+          borderRadius: 8,
+          transition: theme.transitions.create(
+            ["background-color", "box-shadow"],
+            {
+              duration: theme.transitions.duration.short,
+            }
+          ),
+          "&:hover": {
+            backgroundColor: alpha(theme.palette.common.black, 0.02),
+          },
+          "&.Mui-focused": {
+            boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
+            backgroundColor: theme.palette.secondary.main,
+          },
+          "&.Mui-focusVisible": {
+            boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.16)}`,
+          },
+          "& input:-webkit-autofill, & textarea:-webkit-autofill, & select:-webkit-autofill":
+            {
+              WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+              boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+              WebkitTextFillColor: theme.palette.text.primary,
+              transition: "background-color 5000s ease-in-out 0s",
+            },
+          "& input:-webkit-autofill:focus, & textarea:-webkit-autofill:focus, & select:-webkit-autofill:focus":
+            {
+              WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+              boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+              WebkitTextFillColor: theme.palette.text.primary,
+            },
         }),
       },
     },

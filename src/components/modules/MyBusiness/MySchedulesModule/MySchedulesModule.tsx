@@ -107,16 +107,36 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
 
   return (
     <FormProvider {...methods}>
-      <MainLayout title="Programul locației" hideAction>
-        <Paper sx={{ p: 2.5 }}>
-          <Table>
+      <MainLayout
+        title="Programul locației"
+        description="Selectează intervalele orare în care locația ta este deschisă pentru clienți"
+        hideAction
+      >
+        <Paper sx={{ p: 3 }}>
+          <Table size="medium">
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: "600" }}>Ziua</TableCell>
-                <TableCell sx={{ fontWeight: "600" }} align="center">
+                <TableCell
+                  component="th"
+                  scope="col"
+                  sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
+                >
+                  Ziua
+                </TableCell>
+                <TableCell
+                  component="th"
+                  scope="col"
+                  align="center"
+                  sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
+                >
                   Start
                 </TableCell>
-                <TableCell sx={{ fontWeight: "600" }} align="center">
+                <TableCell
+                  component="th"
+                  scope="col"
+                  align="center"
+                  sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
+                >
                   Sfârșit
                 </TableCell>
               </TableRow>
