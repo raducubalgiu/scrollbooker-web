@@ -28,6 +28,7 @@ declare module "@mui/material/styles" {
   interface Palette {
     neutral: Palette["primary"];
     surface: Palette["primary"];
+    table: Palette["primary"];
     slotBlocked: Palette["primary"];
     slotBookedOwnClient: Palette["primary"];
     slotBookedScrollBooker: Palette["primary"];
@@ -36,9 +37,10 @@ declare module "@mui/material/styles" {
   interface PaletteOptions {
     neutral?: PaletteOptions["primary"];
     surface?: PaletteOptions["primary"];
-    slotBlocked: PaletteOptions["primary"];
-    slotBookedOwnClient: PaletteOptions["primary"];
-    slotBookedScrollBooker: PaletteOptions["primary"];
+    table?: PaletteOptions["primary"];
+    slotBlocked?: PaletteOptions["primary"];
+    slotBookedOwnClient?: PaletteOptions["primary"];
+    slotBookedScrollBooker?: PaletteOptions["primary"];
   }
 }
 
@@ -62,7 +64,10 @@ export const darkTheme = createTheme({
     },
     background: {
       default: "#121212",
-      paper: "#1B1B1B",
+      paper: "#262626",
+    },
+    table: {
+      main: "#1E1E1E",
     },
     slotBlocked: {
       main: "#3b1111",
@@ -81,6 +86,7 @@ export const darkTheme = createTheme({
         root: ({ theme }) => ({
           borderRadius: 0,
           backgroundColor: theme.palette.background.paper,
+          backgroundImage: "none",
         }),
       },
     },
@@ -113,6 +119,7 @@ export const darkTheme = createTheme({
         root: ({ theme }) => ({
           borderRadius: 10,
           backgroundColor: theme.palette.background.paper,
+          backgroundImage: "none",
         }),
       },
     },
@@ -164,24 +171,26 @@ export const darkTheme = createTheme({
       styleOverrides: {
         paper: ({ theme }) => ({
           borderRadius: 12,
-          boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
           padding: "6px 0",
           minWidth: 230,
           backgroundColor: theme.palette.background.paper,
+          backgroundImage: "none",
           color: theme.palette.text.primary,
+          border: `1px solid ${theme.palette.divider}`,
         }),
       },
     },
     MuiMenuItem: {
       styleOverrides: {
         root: ({ theme }) => ({
-          padding: "8px 16px",
+          padding: "16px 24px",
           gap: 8,
           minHeight: 50,
           alignItems: "center",
           borderRadius: 8,
           "&:hover": {
-            backgroundColor: alpha(theme.palette.primary.main, 0.06),
+            backgroundColor: alpha(theme.palette.primary.main, 0.04),
           },
           "&.Mui-selected": {
             backgroundColor: alpha(theme.palette.primary.main, 0.12),
@@ -205,7 +214,10 @@ export const lightTheme = createTheme({
     },
     background: {
       default: "#f1f1f1",
-      paper: "#fff",
+      paper: "#FFFFFF",
+    },
+    table: {
+      main: "#FFFFFF",
     },
     slotBlocked: {
       main: "#3b1111",
@@ -317,6 +329,7 @@ export const lightTheme = createTheme({
           padding: "6px 0",
           minWidth: 230,
           backgroundColor: theme.palette.background.paper,
+          backgroundImage: "none",
           color: theme.palette.text.primary,
         }),
       },
@@ -324,7 +337,7 @@ export const lightTheme = createTheme({
     MuiMenuItem: {
       styleOverrides: {
         root: ({ theme }) => ({
-          padding: "16px 24px",
+          padding: "12px 16px",
           gap: 8,
           minHeight: 50,
           alignItems: "center",

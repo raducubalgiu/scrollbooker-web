@@ -20,7 +20,6 @@ import LayoutSearch from "./LayoutSearch";
 import LayoutNotificationsMenu from "./LayoutNotificationsMenu";
 import { useThemeMode } from "@/providers/ThemeContext";
 import { ThemeModeEnum } from "@/providers/ThemeModeEnum";
-import { Theme } from "@mui/material/styles";
 import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
 
 type LayoutAppBarProps = {
@@ -38,65 +37,6 @@ export default function LayoutAppBar({
     appBar: {
       width: { sm: `calc(100% - ${drawerWidth}px)` },
       ml: { sm: `${drawerWidth}px` },
-    },
-  };
-
-  const themeMenuItemSx = {
-    borderRadius: 2,
-    margin: "2px 8px",
-    padding: "10px 16px",
-    transition: "all 0.2s ease",
-    color: (theme: Theme) =>
-      theme.palette.mode === "dark"
-        ? theme.palette.text.secondary
-        : theme.palette.text.primary,
-    "&:hover": {
-      backgroundColor: (theme: Theme) => {
-        const tertiary =
-          ((theme.palette as any).tertiary?.main as string) ??
-          theme.palette.primary.main;
-        return theme.palette.mode === "dark"
-          ? tertiary + "20"
-          : tertiary + "0A";
-      },
-    },
-    "&.Mui-selected": {
-      backgroundColor: (theme: Theme) => {
-        const tertiary =
-          ((theme.palette as any).tertiary?.main as string) ??
-          theme.palette.primary.main;
-        return theme.palette.mode === "dark"
-          ? tertiary + "10"
-          : tertiary + "14";
-      },
-      color: (theme: Theme) => {
-        const tertiary =
-          ((theme.palette as any).tertiary?.main as string) ??
-          theme.palette.primary.main;
-        return theme.palette.mode === "dark"
-          ? theme.palette.text.secondary
-          : tertiary;
-      },
-      "& .MuiListItemIcon-root": {
-        color: (theme: Theme) => {
-          const tertiary =
-            ((theme.palette as any).tertiary?.main as string) ??
-            theme.palette.primary.main;
-          return theme.palette.mode === "dark"
-            ? theme.palette.text.primary
-            : tertiary;
-        },
-      },
-      "&:hover": {
-        backgroundColor: (theme: Theme) => {
-          const tertiary =
-            ((theme.palette as any).tertiary?.main as string) ??
-            theme.palette.primary.main;
-          return theme.palette.mode === "dark"
-            ? tertiary + "35"
-            : tertiary + "20";
-        },
-      },
     },
   };
 
@@ -163,19 +103,19 @@ export default function LayoutAppBar({
               onClose={handleThemeMenuClose}
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               transformOrigin={{ vertical: "top", horizontal: "right" }}
-              PaperProps={{
-                sx: {
-                  mt: 1,
-                  width: 220,
-                  borderRadius: 2,
-                  border: (theme) => `1px solid ${theme.palette.divider}`,
-                  boxShadow: (theme) => theme.shadows[6],
+              slotProps={{
+                paper: {
+                  sx: {
+                    mt: 1,
+                    minWidth: 300,
+                    borderRadius: 5,
+                  },
                 },
               }}
             >
               <Box sx={{ px: 2, py: 1.25 }}>
                 <Typography
-                  variant="subtitle2"
+                  variant="subtitle1"
                   color="text.secondary"
                   sx={{ fontWeight: 700 }}
                 >
@@ -187,7 +127,6 @@ export default function LayoutAppBar({
                 <MenuItem
                   selected={mode === ThemeModeEnum.SYSTEM}
                   onClick={() => handleThemeSelect(ThemeModeEnum.SYSTEM)}
-                  sx={themeMenuItemSx}
                 >
                   <ListItemIcon>
                     <SettingsBrightnessIcon />
@@ -197,7 +136,6 @@ export default function LayoutAppBar({
                 <MenuItem
                   selected={mode === ThemeModeEnum.LIGHT}
                   onClick={() => handleThemeSelect(ThemeModeEnum.LIGHT)}
-                  sx={themeMenuItemSx}
                 >
                   <ListItemIcon>
                     <LightModeIcon />
@@ -207,7 +145,6 @@ export default function LayoutAppBar({
                 <MenuItem
                   selected={mode === ThemeModeEnum.DARK}
                   onClick={() => handleThemeSelect(ThemeModeEnum.DARK)}
-                  sx={themeMenuItemSx}
                 >
                   <ListItemIcon>
                     <DarkModeIcon />

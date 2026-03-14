@@ -135,7 +135,7 @@ export default function Table<T extends Record<string, unknown>>({
       },
     },
     mrtTheme: (theme) => ({
-      baseBackgroundColor: bgColor ?? theme.palette.background.paper,
+      baseBackgroundColor: bgColor ?? theme.palette.table.main,
     }),
     localization: MRT_Localization_RO,
     ...props,

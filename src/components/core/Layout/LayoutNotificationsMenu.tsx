@@ -76,7 +76,7 @@ export default function LayoutNotificationsMenu() {
   return (
     <Box sx={{ mr: 2.5 }}>
       <IconButton onClick={handleClick}>
-        <Badge color="secondary" variant="dot" sx={styles.badge}>
+        <Badge color="error" variant="dot" sx={styles.badge}>
           <NotificationsNoneOutlinedIcon sx={{ width: 30, height: 30 }} />
         </Badge>
       </IconButton>

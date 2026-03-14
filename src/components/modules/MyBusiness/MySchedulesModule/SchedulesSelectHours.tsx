@@ -43,7 +43,7 @@ export default function SchedulesSelectHours({
 
   return (
     <TableRow>
-      <TableCell>
+      <TableCell sx={{ fontWeight: "600" }}>
         {dayOfWeekMap.get(schedule.day_of_week.toLowerCase())}
       </TableCell>
       <TableCell align="center">
