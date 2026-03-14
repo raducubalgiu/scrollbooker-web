@@ -25,6 +25,7 @@ import EmployeeButton from "./EmployeeButton";
 import { Session } from "next-auth/core/types";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import AsCustomerButton from "./AsCustomerButton";
+import AppointmentCancelModal from "./AppointmentCancelModal";
 
 const AppointmentsModule = ({ session }: { session: Session | null }) => {
   const [asCustomer, setAsCustomer] = useState<boolean | null>(null);
@@ -32,6 +33,7 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
   const [channel, setChannel] = useState<AppointmentChannelEnum | null>(null);
   const [date, setDate] = React.useState<Dayjs | null>(null);
   const [employee, setEmployee] = React.useState<number | null>(null);
+  const [openCancelModal, setOpenCancelModal] = useState(false);
   const theme = useTheme();
 
   const { data, isLoading, pagination, setPagination } =
@@ -211,25 +213,19 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
           color={date == null ? "primary" : "secondary"}
           size="large"
           disableElevation
-          onClick={() => {
-            setDate(null);
-          }}
+          onClick={() => setDate(null)}
         >
-          Oricand
+          Oricând
         </Button>
         <PickerButton date={date} onSetDate={setDate} />
         <StatusButton
           status={status}
-          onSetStatus={(s) => {
-            setStatus(s);
-          }}
+          onSetStatus={(s) => setStatus(s)}
           theme={theme}
         />
         <ChannelButton
           channel={channel}
-          onSetChannel={(s) => {
-            setChannel(s);
-          }}
+          onSetChannel={(s) => setChannel(s)}
           theme={theme}
         />
         {session?.is_employee && (
@@ -259,9 +255,7 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
           key="cancel"
           label="Anulează programarea"
           icon={<DeleteOutlineOutlinedIcon />}
-          onClick={() => {
-            // TODO: implement cancel action
-          }}
+          onClick={() => setOpenCancelModal(true)}
           table={table}
           disabled={row?.original?.status !== AppointmentStatusEnum.IN_PROGRESS}
         />,
@@ -272,6 +266,10 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
 
   return (
     <MainLayout title="Rezervări" hideAction>
+      <AppointmentCancelModal
+        open={openCancelModal}
+        onClose={() => setOpenCancelModal(false)}
+      />
       <Table<AppointmentResponse>
         data={data?.results}
         rowCount={data?.count}
