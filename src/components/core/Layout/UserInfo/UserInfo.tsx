@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Skeleton, Stack, Typography } from "@mui/material";
+import { Divider, Skeleton, Stack, Typography } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import CustomStack from "../../CustomStack/CustomStack";
 import UserInfoCounter from "./UserInfoCounter";
@@ -61,24 +61,42 @@ export default function UserInfo({
         <CustomStack sx={{ mt: 1 }}>
           {isLoadingUser ? <Skeleton width={150} /> : userProfession}
         </CustomStack>
-        <CustomStack sx={{ mt: 5 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+          sx={{ mt: 5, gap: 2 }}
+        >
           <UserInfoCounter
             label="Urmărești"
             counter={counters?.followings_count}
             isLoading={isLoadingUser}
           />
+
+          <Divider
+            orientation="vertical"
+            flexItem
+            sx={{ height: 30, mx: 0.5, alignSelf: "center" }}
+          />
+
           <UserInfoCounter
             label="Urmăritori"
             counter={counters?.followers_count}
             isLoading={isLoadingUser}
-            sx={{ mx: 2.5 }}
           />
+
+          <Divider
+            orientation="vertical"
+            flexItem
+            sx={{ height: 30, mx: 0.5, alignSelf: "center" }}
+          />
+
           <UserInfoCounter
             label="Recenzii"
             counter={counters?.ratings_count}
             isLoading={isLoadingUser}
           />
-        </CustomStack>
+        </Stack>
       </Stack>
     </>
   );
