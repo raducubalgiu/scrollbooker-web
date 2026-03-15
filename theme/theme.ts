@@ -198,6 +198,45 @@ export const darkTheme = createTheme({
         }),
       },
     },
+    MuiCssBaseline: {
+      styleOverrides: (theme) => ({
+        "textarea, .MuiTextareaAutosize-root": {
+          backgroundColor: theme.palette.secondary.main,
+          borderRadius: 8,
+          padding: "12px 16px",
+          boxSizing: "border-box",
+          minHeight: 44,
+          color: theme.palette.text.primary,
+          transition: theme.transitions.create(
+            ["background-color", "box-shadow"],
+            {
+              duration: theme.transitions.duration.short,
+            }
+          ),
+          "&:not(.Mui-disabled):hover": {
+            backgroundColor: alpha(
+              theme.palette.common.white,
+              theme.palette.mode === "dark" ? 0.02 : 0.04
+            ),
+          },
+          "&:focus, &:focus-visible": {
+            outline: "none",
+            boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
+          },
+          "&:-webkit-autofill": {
+            WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            WebkitTextFillColor: theme.palette.text.primary,
+            transition: "background-color 5000s ease-in-out 0s",
+          },
+          "&:-webkit-autofill:focus": {
+            WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            WebkitTextFillColor: theme.palette.text.primary,
+          },
+        },
+      }),
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         notchedOutline: {
@@ -393,6 +432,42 @@ export const lightTheme = createTheme({
           },
         }),
       },
+    },
+    MuiCssBaseline: {
+      styleOverrides: (theme) => ({
+        "textarea, .MuiTextareaAutosize-root": {
+          backgroundColor: theme.palette.secondary.main,
+          borderRadius: 8,
+          padding: "12px 16px",
+          boxSizing: "border-box",
+          minHeight: 44,
+          color: theme.palette.text.primary,
+          transition: theme.transitions.create(
+            ["background-color", "box-shadow"],
+            {
+              duration: theme.transitions.duration.short,
+            }
+          ),
+          "&:not(.Mui-disabled):hover": {
+            backgroundColor: alpha(theme.palette.common.black, 0.02),
+          },
+          "&:focus, &:focus-visible": {
+            outline: "none",
+            boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
+          },
+          "&:-webkit-autofill": {
+            WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            WebkitTextFillColor: theme.palette.text.primary,
+            transition: "background-color 5000s ease-in-out 0s",
+          },
+          "&:-webkit-autofill:focus": {
+            WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            WebkitTextFillColor: theme.palette.text.primary,
+          },
+        },
+      }),
     },
     MuiOutlinedInput: {
       styleOverrides: {
