@@ -142,6 +142,7 @@ const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
         enableSorting={false}
         enableColumnActions={false}
         enablePagination={false}
+        enableHiding={false}
         localization={MRT_Localization_RO}
         state={{ isLoading }}
         enableRowActions={true}

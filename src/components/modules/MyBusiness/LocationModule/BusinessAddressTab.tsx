@@ -59,6 +59,7 @@ const BusinessAddressTab = ({
                     variant={map_url ? "contained" : "outlined"}
                     onClick={handleOpenInNewTab}
                     disabled={!map_url}
+                    disableElevation
                   >
                     Direcții
                   </Button>

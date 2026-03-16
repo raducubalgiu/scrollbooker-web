@@ -1,5 +1,5 @@
 import React from "react";
-import { Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import ProfessionListItem from "@/components/cutomized/ProfessionListItem/ProfessionListItem";
 import { ProfessionType } from "@/ts/models/nomenclatures/profession/ProfessionType";
 import ProfessionListItemSkeletons from "@/components/cutomized/Skeletons/ProfessionListItemSkeletons";
@@ -18,7 +18,16 @@ export default function EmploymentRequestsStepTwo({
   isLoading,
 }: EmploymentRequestsStepTwoProps) {
   return (
-    <Paper sx={{ height: 300, my: 2.5, p: 2.5, overflow: "auto" }}>
+    <Box
+      sx={{
+        height: 300,
+        my: 2.5,
+        p: 2.5,
+        overflow: "auto",
+        bgcolor: "secondary.main",
+        borderRadius: 2,
+      }}
+    >
       {!isLoading &&
         professions?.map((profession) => (
           <ProfessionListItem
@@ -29,6 +38,6 @@ export default function EmploymentRequestsStepTwo({
           />
         ))}
       {isLoading && <ProfessionListItemSkeletons />}
-    </Paper>
+    </Box>
   );
 }

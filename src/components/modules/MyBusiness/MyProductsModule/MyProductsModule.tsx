@@ -165,6 +165,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
       <Stack direction="row" alignItems="center" spacing={1}>
         <Button
           variant="contained"
+          disableElevation
           size="large"
           onClick={() => setOpenAddModal(true)}
         >

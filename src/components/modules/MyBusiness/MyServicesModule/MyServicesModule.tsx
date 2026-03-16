@@ -89,8 +89,8 @@ export const MyServicesModule = () => {
     {
       title: "Reset",
       props: {
-        color: "inherit",
         variant: "outlined",
+        color: "secondary",
         disabled: isDisabled,
         onClick: () => {
           setSelectedServices(new Set(defaultServicesIds));

@@ -113,6 +113,7 @@ export default function MyDashboardModule({ userId }: DashboardModuleProps) {
               onClick={btn.onClick}
               variant="contained"
               color={btn.selected ? "primary" : "inherit"}
+              disableElevation
               size="large"
               sx={{ fontWeight: "600", mr: 1.5 }}
             >

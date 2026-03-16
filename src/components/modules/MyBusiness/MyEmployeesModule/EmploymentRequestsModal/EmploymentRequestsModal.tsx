@@ -89,7 +89,8 @@ export default function EmploymentRequestsModal({
       title: "Înapoi",
       props: {
         onClick: handleBack,
-        color: "inherit",
+        variant: "outlined",
+        color: "secondary",
         disabled: isPending,
       },
       hidden: isFirstStep,

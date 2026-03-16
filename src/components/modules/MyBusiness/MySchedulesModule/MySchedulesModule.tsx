@@ -81,12 +81,13 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
       title: "Renunță",
       hidden: disabled,
       props: {
-        color: "inherit",
         variant: "outlined",
+        color: "secondary",
         onClick: () => {
           reset();
           setDisabled(true);
         },
+        disableElevation: true,
       },
     },
     {
@@ -94,6 +95,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
       hidden: !disabled,
       props: {
         onClick: () => setDisabled(false),
+        disableElevation: true,
       },
     },
     {
@@ -102,6 +104,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
       props: {
         onClick: handleSubmit(handleSave),
         loading: isPending,
+        disableElevation: true,
       },
     },
   ];

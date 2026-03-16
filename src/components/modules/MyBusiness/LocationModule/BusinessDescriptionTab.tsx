@@ -28,6 +28,7 @@ function DescriptionForm({ defaultDescription }: DescriptionFormProps) {
           title: "Renunță",
           props: {
             variant: "outlined",
+            color: "secondary",
             onClick: () => {
               reset({ description: defaultDescription ?? "" });
               setIsDisabled(true);
@@ -37,6 +38,7 @@ function DescriptionForm({ defaultDescription }: DescriptionFormProps) {
       ];
 
   const actions: ActionButtonType[] = [
+    ...cancel,
     {
       title: isDisabled ? "Editează" : "Salvează",
       props: {
@@ -48,9 +50,9 @@ function DescriptionForm({ defaultDescription }: DescriptionFormProps) {
             setIsDisabled(true);
           }
         },
+        disableElevation: true,
       },
     },
-    ...cancel,
   ];
 
   const onSubmit = (data: { description: string }) => {

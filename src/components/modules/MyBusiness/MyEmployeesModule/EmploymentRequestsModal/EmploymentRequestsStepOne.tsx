@@ -2,7 +2,14 @@ import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItem
 import UserListItem from "@/components/cutomized/UserListItem/UserListItem";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { UserMiniType } from "@/ts/models/user/UserMiniType";
-import { Divider, Paper, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 
@@ -67,7 +74,7 @@ export default function EmploymentRequestsStepOne({
   };
 
   return (
-    <Paper sx={{ my: 2.5, px: 2.5 }}>
+    <Box sx={{ my: 2.5, px: 2.5 }}>
       <Stack justifyContent="center">
         <TextField
           placeholder="Caută utilizatori"
@@ -76,7 +83,15 @@ export default function EmploymentRequestsStepOne({
         />
       </Stack>
       <Divider />
-      <Paper sx={{ height: 300, overflow: "auto", pb: 2.5 }}>
+      <Box
+        sx={{
+          height: 300,
+          overflow: "auto",
+          pb: 2.5,
+          bgcolor: "secondary.main",
+          borderRadius: 2,
+        }}
+      >
         {!isLoading &&
           users?.map((user) => (
             <UserListItem
@@ -93,7 +108,7 @@ export default function EmploymentRequestsStepOne({
             Nu au fost găsiți utilizatori
           </Typography>
         )}
-      </Paper>
-    </Paper>
+      </Box>
+    </Box>
   );
 }

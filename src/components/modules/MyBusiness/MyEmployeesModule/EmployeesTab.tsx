@@ -70,9 +70,13 @@ const EmployeesTab = ({ isEnabled }: { isEnabled: boolean }) => {
       data={data?.results}
       columns={columns}
       manualPagination={true}
+      enableFilters={false}
+      enableSorting={false}
+      enableColumnActions={false}
+      enablePagination={false}
+      enableHiding={false}
       onPaginationChange={setPagination}
       state={{ pagination, isLoading }}
-      enableFilters={false}
       renderTopToolbarCustomActions={undefined}
       renderRowActions={({ row }) => [
         <Button
@@ -80,6 +84,7 @@ const EmployeesTab = ({ isEnabled }: { isEnabled: boolean }) => {
           variant="contained"
           color="error"
           size="small"
+          disableElevation
         >
           Demite
         </Button>,

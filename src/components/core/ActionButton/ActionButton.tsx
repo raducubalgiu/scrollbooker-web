@@ -20,7 +20,7 @@ const ActionButton = ({ actions, sx }: ActionButtonProps) => {
           variant="contained"
           size="large"
           sx={{
-            ml: 2,
+            ml: 1,
             mt: 2,
             fontWeight: 600,
             "&:nth-child(1)": { ml: 0 },
