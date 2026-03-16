@@ -3,19 +3,17 @@ import {
   ProductTypeEnum,
 } from "@/ts/enums/ProductTypeEnum";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Button, Menu, MenuItem, Theme } from "@mui/material";
+import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 
 type ProductTypeButtonProps = {
   type: ProductTypeEnum | null;
   onSetType: (s: ProductTypeEnum | null) => void;
-  theme: Theme;
 };
 
 const ProductTypeButton: React.FC<ProductTypeButtonProps> = ({
   type,
   onSetType,
-  theme,
 }) => {
   const [anchorTypeEl, setAnchorTypeEl] = React.useState<null | HTMLElement>(
     null

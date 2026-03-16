@@ -21,13 +21,11 @@ const EMPLOYEES = [
 type EmployeeButtonProps = {
   employee: number | null;
   onSetEmployee: (s: number | null) => void;
-  theme: Theme;
 };
 
 const EmployeeButton: React.FC<EmployeeButtonProps> = ({
   employee,
   onSetEmployee,
-  theme,
 }) => {
   const [anchorEmployeeEl, setAnchorEmployeeEl] =
     React.useState<null | HTMLElement>(null);

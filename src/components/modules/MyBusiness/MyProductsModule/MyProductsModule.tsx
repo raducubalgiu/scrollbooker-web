@@ -166,17 +166,12 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
           <EmployeeButton
             employee={employeeId}
             onSetEmployee={(id) => setEmployeeId(id)}
-            theme={theme}
           />
         )}
-        <ProductTypeButton
-          type={productType}
-          onSetType={setProductType}
-          theme={theme}
-        />
+        <ProductTypeButton type={productType} onSetType={setProductType} />
       </Stack>
     );
-  }, [session, theme, productType, employeeId]);
+  }, [session, productType, employeeId]);
 
   const renderRowActionMenuItems = React.useCallback(
     ({ row, table }: TableRowAndTable<ProductResponse>) => {

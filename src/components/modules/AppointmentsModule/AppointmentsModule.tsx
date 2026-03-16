@@ -205,7 +205,6 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
           <EmployeeButton
             employee={employee}
             onSetEmployee={(id) => setEmployee(id)}
-            theme={theme}
           />
         )}
         <Button
@@ -223,21 +222,16 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
           onSetStatus={(s) => setStatus(s)}
           theme={theme}
         />
-        <ChannelButton
-          channel={channel}
-          onSetChannel={(s) => setChannel(s)}
-          theme={theme}
-        />
+        <ChannelButton channel={channel} onSetChannel={(s) => setChannel(s)} />
         {session?.is_employee && (
           <AsCustomerButton
             asCustomer={asCustomer}
             onSetAsCustomer={(v) => setAsCustomer(v)}
-            theme={theme}
           />
         )}
       </Stack>
     );
-  }, [asCustomer, employee, status, channel, date, theme]);
+  }, [asCustomer, employee, status, channel, date]);
 
   const renderRowActionMenuItems = useCallback(
     ({ row, table }: TableRowAndTable<AppointmentResponse>) => {

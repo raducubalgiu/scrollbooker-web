@@ -10,13 +10,11 @@ import React from "react";
 type ChannelButtonProps = {
   channel: AppointmentChannelEnum | null;
   onSetChannel: (s: AppointmentChannelEnum | null) => void;
-  theme: Theme;
 };
 
 const ChannelButton: React.FC<ChannelButtonProps> = ({
   channel,
   onSetChannel,
-  theme,
 }) => {
   const [anchorChannelEl, setAnchorChannelEl] =
     React.useState<null | HTMLElement>(null);

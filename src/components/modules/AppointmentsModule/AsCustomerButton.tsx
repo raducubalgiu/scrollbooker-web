@@ -1,4 +1,3 @@
-import { DropdownMenu } from "@/components/cutomized/DropdownMenu/DropdownMenu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Button, Menu, MenuItem, Theme } from "@mui/material";
 import React from "react";
@@ -6,13 +5,11 @@ import React from "react";
 type AsCustomerButtonProps = {
   asCustomer: boolean | null;
   onSetAsCustomer: (s: boolean | null) => void;
-  theme: Theme;
 };
 
 const AsCustomerButton: React.FC<AsCustomerButtonProps> = ({
   asCustomer,
   onSetAsCustomer,
-  theme,
 }) => {
   const [anchorAsCustomerEl, setAnchorAsCustomerEl] =
     React.useState<null | HTMLElement>(null);
