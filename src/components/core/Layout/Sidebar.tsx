@@ -106,8 +106,8 @@ export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
 
   const myBusinessRoutes = [
     {
-      label: "Detalii Locație",
-      route: "/my-business/location",
+      label: "Detalii Business",
+      route: "/my-business/business-details",
       icon: <PlaceOutlinedIcon />,
       permission: PermissionEnum.MY_BUSINESS_LOCATION_VIEW,
     },

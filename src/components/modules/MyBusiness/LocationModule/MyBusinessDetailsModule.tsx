@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from "react";
 import { Box, Paper, Typography } from "@mui/material";
 import MySchedulesModule from "../MySchedulesModule/MySchedulesModule";
-import { ScheduleResponseType } from "@/ts/models/booking/schedule/ScheduleType";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
@@ -11,9 +10,8 @@ import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse"
 import BusinessDescriptionTab from "./BusinessDescriptionTab";
 import BusinessAddressTab from "./BusinessAddressTab";
 
-type LocationTabsClientProps = {
+type MyBusinessDetailsProps = {
   business: BusinessResponse;
-  schedules: ScheduleResponseType[];
 };
 
 const TABS: CustomTabType[] = [
@@ -23,10 +21,9 @@ const TABS: CustomTabType[] = [
   { key: 3, label: "Program" },
 ];
 
-export default function MyLocationModule({
+export default function MyBusinessDetailsModule({
   business,
-  schedules,
-}: LocationTabsClientProps) {
+}: MyBusinessDetailsProps) {
   const [currentTab, setCurrentTab] = useState(0);
 
   const sections = useMemo(() => {
@@ -44,11 +41,11 @@ export default function MyLocationModule({
       case 2:
         return <Typography>Conținut: Galerie foto</Typography>;
       case 3:
-        return <MySchedulesModule data={schedules} />;
+        return <MySchedulesModule data={business.schedules} />;
       default:
         return null;
     }
-  }, [currentTab, schedules, business]);
+  }, [currentTab, business]);
 
   return (
     <Box>

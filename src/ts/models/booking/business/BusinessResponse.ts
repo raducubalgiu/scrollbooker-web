@@ -1,4 +1,5 @@
 import { ServiceType } from "../../nomenclatures/service/ServiceType";
+import { ScheduleResponseType } from "../schedule/ScheduleType";
 
 export type BusinessCoordinatesType = {
   lat: number;
@@ -18,5 +19,6 @@ export type BusinessResponse = {
   country_code: string;
   map_url: string;
   services: ServiceType[];
+  schedules: ScheduleResponseType[];
   has_employees: boolean;
 };

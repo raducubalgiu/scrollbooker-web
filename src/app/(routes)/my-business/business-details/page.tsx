@@ -3,19 +3,12 @@ import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { ScheduleResponseType } from "@/ts/models/booking/schedule/ScheduleType";
 import { get } from "@/utils/requests";
-import MyLocationModule from "@/components/modules/MyBusiness/LocationModule/MyLocationModule";
 import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse";
+import MyBusinessDetailsModule from "@/components/modules/MyBusiness/LocationModule/MyBusinessDetailsModule";
 
 async function MyBusiness() {
   const { userId } = await getUserServerSession();
-
-  const response = (
-    await get<ScheduleResponseType[]>({
-      url: `/users/${userId}/schedules`,
-    })
-  ).data;
 
   const business = (
     await get<BusinessResponse>({
@@ -25,7 +18,7 @@ async function MyBusiness() {
 
   return (
     <MainLayout title="Detalii locatie" hideAction>
-      <MyLocationModule business={business} schedules={response} />
+      <MyBusinessDetailsModule business={business} />
     </MainLayout>
   );
 }

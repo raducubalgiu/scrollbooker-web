@@ -10,18 +10,21 @@ type FormJoditEditorProps = {
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
-  className?: string;
+  isDisabled?: boolean;
 };
 
 export default function FormJoditEditor({
   value = "",
   onChange,
   placeholder,
+  isDisabled = false,
 }: FormJoditEditorProps) {
   const theme = useTheme();
   const isDarkTheme = theme.palette.mode === "dark";
   const containerColor = theme.palette.background.paper;
-  const contentColor = theme.palette.text.primary;
+  const contentColor = isDisabled
+    ? theme.palette.text.disabled
+    : theme.palette.text.primary;
   const fontFamily = theme.typography.fontFamily;
 
   const config = React.useMemo(
@@ -32,7 +35,7 @@ export default function FormJoditEditor({
         color: contentColor,
         fontFamily: fontFamily,
       },
-      readonly: false,
+      readonly: isDisabled,
       height: 260,
       toolbarSticky: false,
       placeholder: placeholder || "",
@@ -50,7 +53,7 @@ export default function FormJoditEditor({
         "redo",
       ],
     }),
-    [placeholder]
+    [placeholder, isDarkTheme, containerColor, contentColor, isDisabled]
   );
 
   return (

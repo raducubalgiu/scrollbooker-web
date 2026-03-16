@@ -1,26 +1,59 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller, FormProvider } from "react-hook-form";
-import { Box, Typography, Stack, Button } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import FormJoditEditor from "@/components/core/Input/FormJoditEditor";
+import ActionButton, {
+  ActionButtonType,
+} from "@/components/core/ActionButton/ActionButton";
 
-type Props = { description?: string };
+type BusinessDescriptionTabProps = { description?: string };
+type DescriptionFormProps = { defaultDescription?: string };
 
-function DescriptionForm({
-  defaultDescription,
-}: {
-  defaultDescription?: string;
-}) {
+function DescriptionForm({ defaultDescription }: DescriptionFormProps) {
+  const [isDisabled, setIsDisabled] = useState(true);
+
   const methods = useForm<{ description: string }>({
     defaultValues: { description: defaultDescription ?? "" },
     mode: "onBlur",
   });
 
-  const { handleSubmit, reset, control, formState } = methods;
+  const { handleSubmit, reset, control } = methods;
+
+  const cancel: ActionButtonType[] = isDisabled
+    ? []
+    : [
+        {
+          title: "Renunță",
+          props: {
+            variant: "outlined",
+            onClick: () => {
+              reset({ description: defaultDescription ?? "" });
+              setIsDisabled(true);
+            },
+          },
+        },
+      ];
+
+  const actions: ActionButtonType[] = [
+    {
+      title: isDisabled ? "Editează" : "Salvează",
+      props: {
+        onClick: () => {
+          if (isDisabled) {
+            setIsDisabled(false);
+          } else {
+            reset({ description: defaultDescription ?? "" });
+            setIsDisabled(true);
+          }
+        },
+      },
+    },
+    ...cancel,
+  ];
 
   const onSubmit = (data: { description: string }) => {
-    // placeholder: call save API
     console.log("save description", data.description);
   };
 
@@ -35,35 +68,23 @@ function DescriptionForm({
               value={field.value}
               onChange={field.onChange}
               placeholder="Descrie locația, serviciile, politici etc."
+              isDisabled={isDisabled}
             />
           )}
         />
 
-        <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={!formState.isDirty}
-          >
-            Salvează
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => reset({ description: defaultDescription ?? "" })}
-            disabled={!formState.isDirty}
-          >
-            Resetează
-          </Button>
-        </Stack>
+        <ActionButton actions={actions} />
       </Box>
     </FormProvider>
   );
 }
 
-export default function BusinessDescriptionTab({ description }: Props) {
+export default function BusinessDescriptionTab({
+  description,
+}: BusinessDescriptionTabProps) {
   return (
     <Box>
-      <Typography variant="h5" fontWeight={600} sx={{ mb: 2 }}>
+      <Typography variant="h5" fontWeight={600} sx={{ mb: 5 }}>
         Descriere locație
       </Typography>
       <DescriptionForm defaultDescription={description} />
