@@ -20,6 +20,8 @@ import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutl
 import ProductTypeButton from "./ProductTypeButton";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 import AddProductModal from "./AddProductModal";
+import ServiceDomainButton from "./ServiceDomainButton";
+import ServiceButton from "./ServiceButton";
 
 type MyProductsModuleProps = {
   session: Session | null;
@@ -34,6 +36,10 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
     null
   );
   const [employeeId, setEmployeeId] = React.useState<number | null>(null);
+  const [serviceDomainId, setServiceDomainId] = React.useState<number | null>(
+    null
+  );
+  const [serviceId, setServiceId] = React.useState<number | null>(null);
 
   const { data, isLoading, pagination, setPagination } =
     useTableHandlers<ProductResponse>({
@@ -41,6 +47,8 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
       extraParams: {
         employee_id: employeeId ?? undefined,
         product_type: productType ?? undefined,
+        service_domain_id: serviceDomainId ?? undefined,
+        service_id: serviceId ?? undefined,
       },
     });
 
@@ -73,13 +81,13 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
       },
       {
         accessorKey: "service_domain_id",
-        header: "Service Domain",
+        header: "Categoria",
         size: 150,
         Cell: ({ row }) => <span>Tuns si Barba</span>,
       },
       {
         accessorKey: "service_id",
-        header: "Tuns",
+        header: "Serviciu",
         size: 150,
         Cell: ({ row }) => <span>Tuns</span>,
       },
@@ -169,9 +177,14 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
           />
         )}
         <ProductTypeButton type={productType} onSetType={setProductType} />
+        <ServiceDomainButton
+          serviceDomainId={serviceDomainId}
+          onSetServiceDomain={setServiceDomainId}
+        />
+        <ServiceButton serviceId={serviceId} onSetService={setServiceId} />
       </Stack>
     );
-  }, [session, productType, employeeId]);
+  }, [session, productType, employeeId, serviceDomainId, serviceId]);
 
   const renderRowActionMenuItems = React.useCallback(
     ({ row, table }: TableRowAndTable<ProductResponse>) => {

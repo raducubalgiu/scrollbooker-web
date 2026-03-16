@@ -8,6 +8,8 @@ export const GET = async (req: NextRequest) => {
   const page = req.nextUrl.searchParams.get("page");
 
   const limit = req.nextUrl.searchParams.get("limit");
+  const serviceDomainId = req.nextUrl.searchParams.get("service_domain_id");
+  const serviceId = req.nextUrl.searchParams.get("service_id");
   const employeeId = req.nextUrl.searchParams.get("employee_id");
   const productType = req.nextUrl.searchParams.get("product_type");
 
@@ -15,6 +17,14 @@ export const GET = async (req: NextRequest) => {
     await get<ProductResponse[]>({
       url: (() => {
         const params: string[] = [];
+
+        if (serviceId !== null)
+          params.push(`service_id=${encodeURIComponent(serviceId)}`);
+
+        if (serviceDomainId !== null)
+          params.push(
+            `service_domain_id=${encodeURIComponent(serviceDomainId)}`
+          );
 
         if (employeeId !== null)
           params.push(`employee_id=${encodeURIComponent(employeeId)}`);
