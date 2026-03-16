@@ -7,8 +7,12 @@ import { ScheduleResponseType } from "@/ts/models/booking/schedule/ScheduleType"
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
+import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse";
+import BusinessDescriptionTab from "./BusinessDescriptionTab";
+import BusinessAddressTab from "./BusinessAddressTab";
 
 type LocationTabsClientProps = {
+  business: BusinessResponse;
   schedules: ScheduleResponseType[];
 };
 
@@ -20,6 +24,7 @@ const TABS: CustomTabType[] = [
 ];
 
 export default function MyLocationModule({
+  business,
   schedules,
 }: LocationTabsClientProps) {
   const [currentTab, setCurrentTab] = useState(0);
@@ -27,9 +32,15 @@ export default function MyLocationModule({
   const sections = useMemo(() => {
     switch (currentTab) {
       case 0:
-        return <Typography>Conținut: Detalii</Typography>;
+        return (
+          <BusinessAddressTab
+            address={business.formatted_address}
+            map_url={business.map_url}
+            has_employees={business.has_employees}
+          />
+        );
       case 1:
-        return <Typography>Conținut: Descriere</Typography>;
+        return <BusinessDescriptionTab description={business.description} />;
       case 2:
         return <Typography>Conținut: Galerie foto</Typography>;
       case 3:
@@ -37,7 +48,7 @@ export default function MyLocationModule({
       default:
         return null;
     }
-  }, [currentTab, schedules]);
+  }, [currentTab, schedules, business]);
 
   return (
     <Box>
@@ -46,7 +57,7 @@ export default function MyLocationModule({
         setValue={setCurrentTab}
         tabs={TABS}
       />
-      <Paper sx={{ mt: 3, p: 5 }}>{sections}</Paper>
+      <Paper sx={{ mt: 3, p: 2.5 }}>{sections}</Paper>
     </Box>
   );
 }

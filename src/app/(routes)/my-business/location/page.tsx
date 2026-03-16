@@ -3,10 +3,10 @@ import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import LocationTabsClient from "@/components/modules/MyBusiness/LocationModule/MyLocationModule";
 import { ScheduleResponseType } from "@/ts/models/booking/schedule/ScheduleType";
 import { get } from "@/utils/requests";
 import MyLocationModule from "@/components/modules/MyBusiness/LocationModule/MyLocationModule";
+import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse";
 
 async function MyBusiness() {
   const { userId } = await getUserServerSession();
@@ -17,9 +17,15 @@ async function MyBusiness() {
     })
   ).data;
 
+  const business = (
+    await get<BusinessResponse>({
+      url: `/users/${userId}/businesses`,
+    })
+  ).data;
+
   return (
     <MainLayout title="Detalii locatie" hideAction>
-      <MyLocationModule schedules={response} />
+      <MyLocationModule business={business} schedules={response} />
     </MainLayout>
   );
 }

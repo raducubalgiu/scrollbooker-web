@@ -1,11 +1,22 @@
 import { ServiceType } from "../../nomenclatures/service/ServiceType";
 
+export type BusinessCoordinatesType = {
+  lat: number;
+  lng: number;
+};
+
 export type BusinessResponse = {
-  description: string;
-  address: string;
-  coordinates: [number, number];
-  owner_id: number;
-  business_type_id: number;
   id: number;
-  services?: ServiceType[];
+  business_type_id: number;
+  owner_id: number;
+  description: string;
+  timezone: string;
+  address: string;
+  formatted_address: string;
+  coordinates: BusinessCoordinatesType;
+  city: string;
+  country_code: string;
+  map_url: string;
+  services: ServiceType[];
+  has_employees: boolean;
 };

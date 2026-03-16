@@ -28,6 +28,8 @@
 		"chart.js": "^4.4.8",
 		"dayjs": "^1.11.13",
 		"i18next": "^24.2.3",
+		"jodit": "^4.11.13",
+		"jodit-react": "^5.3.21",
 		"jsonwebtoken": "^9.0.2",
 		"lodash": "^4.17.21",
 		"material-react-table": "^3.2.1",
