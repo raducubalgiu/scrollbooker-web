@@ -7,7 +7,6 @@ import {
   Typography,
   Card,
   CardContent,
-  CardActions,
   Button,
   Stack,
 } from "@mui/material";
@@ -31,74 +30,88 @@ const BusinessAddressTab = ({
 
   return (
     <Box>
-      <Typography variant="h5" fontWeight={600} sx={{ mb: 2 }}>
+      <Typography variant="h6" sx={{ mb: 2 }}>
         Adresă
       </Typography>
 
       <Card elevation={0} sx={{ borderRadius: 2, mb: 2, boxShadow: 0 }}>
         <CardContent>
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={2}
-            alignItems="flex-start"
+          <Box
+            sx={{
+              display: "grid",
+              gap: 2,
+              gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+              alignItems: "stretch",
+            }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <LocationOnIcon color="primary" />
+            <Box sx={{ mb: 2.5 }}>
+              <Stack spacing={3} sx={{ height: "100%" }}>
+                <Stack flexDirection="row" gap={1}>
+                  <LocationOnIcon color="primary" />
+                  <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
+                    {address || "Adresa nu este setată."}
+                  </Typography>
+                </Stack>
+
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    size="small"
+                    variant={map_url ? "contained" : "outlined"}
+                    onClick={handleOpenInNewTab}
+                    disabled={!map_url}
+                  >
+                    Direcții
+                  </Button>
+
+                  <Button size="small" startIcon={<EditLocationIcon />}>
+                    Editează adresă
+                  </Button>
+                </Stack>
+              </Stack>
             </Box>
 
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
-                {address || "Adresa nu este setată."}
-              </Typography>
+            <Box>
+              {map_url ? (
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: { xs: 220, sm: 280, md: 360 },
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    border: (theme) => `1px solid ${theme.palette.divider}`,
+                  }}
+                >
+                  <Image
+                    src={map_url}
+                    alt="Map preview"
+                    width={640}
+                    height={360}
+                    style={{
+                      display: "block",
+                      objectFit: "cover",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    priority={false}
+                  />
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    p: 2,
+                    borderRadius: 1,
+                    border: (theme) => `1px dashed ${theme.palette.divider}`,
+                  }}
+                >
+                  <Typography color="text.secondary">
+                    Nu este disponibil un link către hartă.
+                  </Typography>
+                </Box>
+              )}
             </Box>
-          </Stack>
+          </Box>
         </CardContent>
-
-        <CardActions sx={{ px: 2, py: 1 }}>
-          <Stack direction="row" spacing={1}>
-            <Button
-              size="small"
-              variant={map_url ? "contained" : "outlined"}
-              onClick={handleOpenInNewTab}
-              disabled={!map_url}
-            >
-              Direcții
-            </Button>
-
-            <Button size="small" startIcon={<EditLocationIcon />}>
-              Editează adresă
-            </Button>
-          </Stack>
-        </CardActions>
       </Card>
-
-      {/* Inline Map preview */}
-      {map_url ? (
-        <Box
-          sx={{
-            width: 640,
-            height: 360,
-            borderRadius: 2,
-            overflow: "hidden",
-            border: (theme) => `1px solid ${theme.palette.divider}`,
-          }}
-        >
-          <Image
-            src={map_url}
-            alt="Map preview"
-            width={640}
-            height={360}
-            style={{ display: "block", objectFit: "cover" }}
-            priority={false}
-          />
-        </Box>
-      ) : (
-        <Box sx={{ p: 2 }}>
-          <Typography color="text.secondary">
-            Nu este disponibil un link către hartă.
-          </Typography>
-        </Box>
-      )}
     </Box>
   );
 };

@@ -60,18 +60,20 @@ function DescriptionForm({ defaultDescription }: DescriptionFormProps) {
   return (
     <FormProvider {...methods}>
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          name="description"
-          control={control}
-          render={({ field }) => (
-            <FormJoditEditor
-              value={field.value}
-              onChange={field.onChange}
-              placeholder="Descrie locația, serviciile, politici etc."
-              isDisabled={isDisabled}
-            />
-          )}
-        />
+        <Box sx={{ minHeight: 260 }}>
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <FormJoditEditor
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Descrie locația, serviciile, politici etc."
+                isDisabled={isDisabled}
+              />
+            )}
+          />
+        </Box>
 
         <ActionButton actions={actions} />
       </Box>
@@ -84,7 +86,7 @@ export default function BusinessDescriptionTab({
 }: BusinessDescriptionTabProps) {
   return (
     <Box>
-      <Typography variant="h5" fontWeight={600} sx={{ mb: 5 }}>
+      <Typography variant="h6" sx={{ mb: 2.5 }}>
         Descriere locație
       </Typography>
       <DescriptionForm defaultDescription={description} />

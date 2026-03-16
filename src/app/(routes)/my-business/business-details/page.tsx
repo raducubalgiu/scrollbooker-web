@@ -17,7 +17,7 @@ async function MyBusiness() {
   ).data;
 
   return (
-    <MainLayout title="Detalii locatie" hideAction>
+    <MainLayout title="Detalii Business" hideAction>
       <MyBusinessDetailsModule business={business} />
     </MainLayout>
   );

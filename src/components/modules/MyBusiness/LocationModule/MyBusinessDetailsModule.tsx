@@ -9,6 +9,7 @@ import CustomTabs, {
 import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse";
 import BusinessDescriptionTab from "./BusinessDescriptionTab";
 import BusinessAddressTab from "./BusinessAddressTab";
+import BusinessGalleryTab from "./BusinessGalleryTab";
 
 type MyBusinessDetailsProps = {
   business: BusinessResponse;
@@ -39,9 +40,18 @@ export default function MyBusinessDetailsModule({
       case 1:
         return <BusinessDescriptionTab description={business.description} />;
       case 2:
-        return <Typography>Conținut: Galerie foto</Typography>;
+        return (
+          <BusinessGalleryTab businessId={business.id} initialImages={[]} />
+        );
       case 3:
-        return <MySchedulesModule data={business.schedules} />;
+        return (
+          <>
+            <Typography variant="h6" sx={{ mb: 2.5 }}>
+              Programul locației
+            </Typography>
+            <MySchedulesModule data={business.schedules} />
+          </>
+        );
       default:
         return null;
     }
