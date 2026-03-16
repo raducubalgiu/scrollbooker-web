@@ -27,7 +27,7 @@ export default function ConfirmationModal({
       title: "NU",
       props: {
         onClick: handleClose,
-        color: "inherit",
+        color: "secondary",
         variant: "outlined",
       },
     },
