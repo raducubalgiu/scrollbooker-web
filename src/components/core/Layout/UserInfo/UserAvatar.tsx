@@ -1,8 +1,9 @@
-import React from "react";
-import { Badge, Avatar, useTheme, styled } from "@mui/material";
+import React, { useMemo } from "react";
+import { Badge, Avatar, useTheme } from "@mui/material";
 
 type UserAvatarProps = {
   isBusinessOrEmployee: boolean | undefined;
+  openNow?: boolean | undefined;
   url: string | undefined;
   onOpenModal: () => void;
   small?: boolean;
@@ -13,13 +14,36 @@ export default function UserAvatar({
   url,
   onOpenModal,
   small,
+  openNow,
 }: UserAvatarProps) {
   const theme = useTheme();
+  const offlineGray =
+    theme.palette.mode === "light"
+      ? theme.palette.grey[500]
+      : theme.palette.grey[600];
+  const color = openNow ? theme.palette.success.main : offlineGray;
 
-  const StyledBadge = styled(Badge)(({ theme }) => ({
+  const size = small ? 40 : 95;
+
+  const avatar = useMemo(
+    () => (
+      <Avatar
+        sx={{
+          width: size,
+          height: size,
+          border: `1px solid ${theme.palette.divider}`,
+        }}
+        alt="User Avatar"
+        src={url}
+      />
+    ),
+    [url, size, theme.palette.divider]
+  );
+
+  const badgeSx = {
     "& .MuiBadge-badge": {
-      backgroundColor: "#44b700",
-      color: "#44b700",
+      backgroundColor: color,
+      color: color,
       width: 17.5,
       height: 17.5,
       borderRadius: "50%",
@@ -34,41 +58,19 @@ export default function UserAvatar({
         content: '""',
       },
     },
-    "@keyframes ripple": {
-      "0%": {
-        transform: "scale(.8)",
-        opacity: 1,
-      },
-      "100%": {
-        transform: "scale(2.4)",
-        opacity: 0,
-      },
-    },
-  }));
-
-  const size = small ? 40 : 95;
-  const avatar = (
-    <Avatar
-      sx={{
-        width: size,
-        height: size,
-        border: `1px solid ${theme.palette.divider}`,
-      }}
-      alt="Remy Sharp"
-      src={url}
-    />
-  );
+  } as const;
 
   return (
     <>
       {!!isBusinessOrEmployee ? (
-        <StyledBadge
+        <Badge
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           variant="dot"
+          sx={badgeSx}
         >
           {avatar}
-        </StyledBadge>
+        </Badge>
       ) : (
         avatar
       )}

@@ -33,8 +33,15 @@ export default function UserInfo({
   collapsed,
 }: UserInfoProps) {
   const [openModal, setOpenModal] = useState(false);
-  const { profession, counters, avatar, fullname, is_business_or_employee } =
-    user ?? {};
+  const {
+    profession,
+    counters,
+    avatar,
+    fullname,
+    is_business_or_employee,
+    opening_hours,
+  } = user ?? {};
+  const { open_now } = opening_hours ?? {};
 
   const userProfession = (
     <>
@@ -65,6 +72,7 @@ export default function UserInfo({
       >
         <UserAvatar
           isBusinessOrEmployee={is_business_or_employee}
+          openNow={open_now}
           url={avatar}
           onOpenModal={() => setOpenModal(true)}
           small={collapsed}
