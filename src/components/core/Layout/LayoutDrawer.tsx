@@ -7,6 +7,8 @@ type LayoutDrawerProps = {
   onCloseDrawer: () => void;
   onTransitionDrawerEnd: () => void;
   drawerWidth: number;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 };
 
 export default function LayoutDrawer({
@@ -14,6 +16,8 @@ export default function LayoutDrawer({
   onCloseDrawer,
   onTransitionDrawerEnd,
   drawerWidth,
+  collapsed,
+  onToggleCollapse,
 }: LayoutDrawerProps) {
   const styles = {
     drawerDesktop: {
@@ -21,9 +25,17 @@ export default function LayoutDrawer({
       "& .MuiDrawer-paper": {
         boxSizing: "border-box",
         width: drawerWidth,
+        transition: "width 200ms ease",
       },
     },
     drawerMobile: {
+      root: { keepMounted: true },
+      paper: {
+        sx: {
+          borderRadius: 0,
+          backgroundImage: "none",
+        },
+      },
       display: { xs: "block", sm: "none" },
       "& .MuiDrawer-paper": {
         boxSizing: "border-box",
@@ -46,21 +58,11 @@ export default function LayoutDrawer({
         onTransitionEnd={onTransitionDrawerEnd}
         onClose={onCloseDrawer}
         sx={styles.drawerMobile}
-        slotProps={{
-          root: { keepMounted: true },
-          paper: {
-            sx: {
-              bgcolor: "background.paper",
-              borderRadius: 0,
-              backgroundImage: "none",
-            },
-          },
-        }}
       >
         <Sidebar />
       </Drawer>
       <Drawer variant="permanent" sx={styles.drawerDesktop} open>
-        <Sidebar />
+        <Sidebar collapsed={collapsed} onToggleCollapse={onToggleCollapse} />
       </Drawer>
     </Box>
   );

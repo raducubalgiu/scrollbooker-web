@@ -324,10 +324,11 @@ export const lightTheme = createTheme({
     },
     MuiDrawer: {
       styleOverrides: {
-        paper: {
-          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.06)",
+        paper: ({ theme }) => ({
+          backgroundColor: theme.palette.background.paper,
+          backgroundImage: "none",
           borderRadius: 0,
-        },
+        }),
       },
     },
     MuiAccordion: {

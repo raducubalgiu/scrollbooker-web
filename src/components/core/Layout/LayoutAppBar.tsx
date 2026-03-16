@@ -9,11 +9,15 @@ import LayoutThemeToggle from "./LayoutThemeToggle";
 type LayoutAppBarProps = {
   onDrawerToggle: () => void;
   drawerWidth: number;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 };
 
 export default function LayoutAppBar({
   onDrawerToggle,
   drawerWidth,
+  collapsed,
+  onToggleCollapse,
 }: LayoutAppBarProps) {
   const styles = {
     appBar: {
@@ -26,7 +30,7 @@ export default function LayoutAppBar({
     <AppBar position="fixed" sx={styles.appBar}>
       <Toolbar>
         <CustomStack sx={{ width: "100%", flex: 1 }}>
-          <Box>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
               color="default"
               edge="start"
@@ -35,6 +39,16 @@ export default function LayoutAppBar({
             >
               <MenuIcon />
             </IconButton>
+            {onToggleCollapse && (
+              <IconButton
+                color="default"
+                edge="start"
+                onClick={onToggleCollapse}
+                sx={{ mr: 2, display: { xs: "none", sm: "inline-flex" } }}
+              >
+                {collapsed ? <MenuIcon /> : <MenuIcon />}
+              </IconButton>
+            )}
           </Box>
           <LayoutSearch />
           <CustomStack>

@@ -18,11 +18,7 @@ async function Schedules() {
   ).data;
 
   return (
-    <MainLayout
-      title="Programul de lucru"
-      description="Setează-ți programul de lucru pentru a primi programări"
-      hideAction
-    >
+    <MainLayout title="Programul de lucru" hideAction>
       <Paper>
         <MySchedulesModule data={response} />
       </Paper>

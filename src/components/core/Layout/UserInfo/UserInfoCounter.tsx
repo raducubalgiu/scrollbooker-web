@@ -16,7 +16,7 @@ export default function UserInfoCounter({
   return (
     <Stack alignItems="center" {...props}>
       <Typography sx={{ mb: 1.5 }}>{label}</Typography>
-      <Typography variant="h6" sx={{ fontWeight: "600" }}>
+      <Typography sx={{ fontWeight: "600" }}>
         {isLoading ? (
           <Skeleton width={12.5} height={10} sx={{ py: 1 }} />
         ) : (

@@ -12,58 +12,74 @@ const DRAWER_DESKTOP_WIDTH = 350;
 const DRAWER_PHONE_WIDTH = 300;
 
 interface LayoutProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
-	const { isPhone } = useBreakpoints();
-	const DRAWER_WIDTH = isPhone ? DRAWER_PHONE_WIDTH : DRAWER_DESKTOP_WIDTH;
-	const [mobileOpen, setMobileOpen] = React.useState(false);
-	const [isClosing, setIsClosing] = React.useState(false);
+  const { isPhone } = useBreakpoints();
+  const [collapsed, setCollapsed] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isClosing, setIsClosing] = React.useState(false);
 
-	const handleDrawerClose = () => {
-		setIsClosing(true);
-		setMobileOpen(false);
-	};
+  const COLLAPSED_WIDTH = 80;
+  const DRAWER_WIDTH = React.useMemo(() => {
+    return isPhone
+      ? DRAWER_PHONE_WIDTH
+      : collapsed
+        ? COLLAPSED_WIDTH
+        : DRAWER_DESKTOP_WIDTH;
+  }, [isPhone, collapsed]);
 
-	const handleDrawerTransitionEnd = () => {
-		setIsClosing(false);
-	};
+  const handleDrawerClose = () => {
+    setIsClosing(true);
+    setMobileOpen(false);
+  };
 
-	const handleDrawerToggle = () => {
-		if (!isClosing) {
-			setMobileOpen(!mobileOpen);
-		}
-	};
+  const handleDrawerTransitionEnd = () => {
+    setIsClosing(false);
+  };
 
-	const styles = {
-		main: {
-			p: 2.5,
-			width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-		},
-		box: {
-			display: "flex",
-			minHeight: "100vh",
-		},
-	};
+  const handleDrawerToggle = () => {
+    if (!isClosing) {
+      setMobileOpen(!mobileOpen);
+    }
+  };
 
-	return (
-		<Box sx={styles.box}>
-			<CssBaseline />
-			<LayoutAppBar
-				onDrawerToggle={handleDrawerToggle}
-				drawerWidth={DRAWER_WIDTH}
-			/>
-			<LayoutDrawer
-				mobileOpen={mobileOpen}
-				onCloseDrawer={handleDrawerClose}
-				onTransitionDrawerEnd={handleDrawerTransitionEnd}
-				drawerWidth={DRAWER_WIDTH}
-			/>
-			<Box component="main" sx={styles.main}>
-				<Toolbar />
-				{children}
-			</Box>
-		</Box>
-	);
+  const styles = React.useMemo(
+    () => ({
+      main: {
+        p: 2.5,
+        width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+      },
+      box: {
+        display: "flex",
+        minHeight: "100vh",
+      },
+    }),
+    [DRAWER_WIDTH]
+  );
+
+  return (
+    <Box sx={styles.box}>
+      <CssBaseline />
+      <LayoutAppBar
+        onDrawerToggle={handleDrawerToggle}
+        drawerWidth={DRAWER_WIDTH}
+        collapsed={collapsed}
+        onToggleCollapse={() => setCollapsed((c) => !c)}
+      />
+      <LayoutDrawer
+        mobileOpen={mobileOpen}
+        onCloseDrawer={handleDrawerClose}
+        onTransitionDrawerEnd={handleDrawerTransitionEnd}
+        drawerWidth={DRAWER_WIDTH}
+        collapsed={collapsed}
+        onToggleCollapse={() => setCollapsed((c) => !c)}
+      />
+      <Box component="main" sx={styles.main}>
+        <Toolbar />
+        {children}
+      </Box>
+    </Box>
+  );
 }

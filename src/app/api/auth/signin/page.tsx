@@ -50,7 +50,7 @@ export default function SignIn() {
       <Stack
         alignItems="center"
         justifyContent="center"
-        sx={{ height: "100vh", backgroundColor: "background.paper" }}
+        sx={{ height: "100vh" }}
       >
         <Container maxWidth="sm">
           <Stack alignItems="center" justifyContent="center">
