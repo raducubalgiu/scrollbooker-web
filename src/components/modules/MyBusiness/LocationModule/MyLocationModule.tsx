@@ -19,7 +19,7 @@ const TABS: CustomTabType[] = [
   { key: 3, label: "Program" },
 ];
 
-export default function LocationTabsClient({
+export default function MyLocationModule({
   schedules,
 }: LocationTabsClientProps) {
   const [currentTab, setCurrentTab] = useState(0);

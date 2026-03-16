@@ -76,9 +76,13 @@ export default function SignIn() {
             />
             <Button
               variant="contained"
+              size="large"
               fullWidth
               loading={loading}
               onClick={handleSubmit(handleLogin)}
+              sx={{
+                fontWeight: 600,
+              }}
             >
               Login
             </Button>
