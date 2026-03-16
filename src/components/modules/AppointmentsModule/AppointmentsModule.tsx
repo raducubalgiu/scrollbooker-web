@@ -201,7 +201,7 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
   const getToolbarCustomActions = React.useCallback(() => {
     return (
       <Stack direction="row" alignItems="center" spacing={1}>
-        {!session?.is_employee && (
+        {!session?.is_employee && session?.has_employees && (
           <EmployeeButton
             employee={employee}
             onSetEmployee={(id) => setEmployee(id)}

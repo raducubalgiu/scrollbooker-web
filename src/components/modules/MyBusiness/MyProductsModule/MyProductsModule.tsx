@@ -19,6 +19,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import ProductTypeButton from "./ProductTypeButton";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
+import AddProductModal from "./AddProductModal";
 
 type MyProductsModuleProps = {
   session: Session | null;
@@ -27,6 +28,7 @@ type MyProductsModuleProps = {
 export default function MyProductsModule({ session }: MyProductsModuleProps) {
   const theme = useTheme();
   const [openDeleteConfirm, setOpenDeleteConfirm] = React.useState(false);
+  const [openAddModal, setOpenAddModal] = React.useState(false);
 
   const [productType, setProductType] = React.useState<ProductTypeEnum | null>(
     null
@@ -38,6 +40,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
       route: "/my-business/products",
       extraParams: {
         employee_id: employeeId ?? undefined,
+        product_type: productType ?? undefined,
       },
     });
 
@@ -152,7 +155,11 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
   const getToolbarCustomActions = React.useCallback(() => {
     return (
       <Stack direction="row" alignItems="center" spacing={1}>
-        <Button variant="contained" size="large">
+        <Button
+          variant="contained"
+          size="large"
+          onClick={() => setOpenAddModal(true)}
+        >
           Adaugă produs
         </Button>
         {!session?.is_employee && (
@@ -203,6 +210,10 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
         message="Ești sigur că vrei să ștergi acest produs? Această acțiune nu poate fi anulată."
         handleClose={() => setOpenDeleteConfirm(false)}
         handleSubmit={() => {}}
+      />
+      <AddProductModal
+        open={openAddModal}
+        handleClose={() => setOpenAddModal(false)}
       />
       <Table<ProductResponse>
         data={data?.results}

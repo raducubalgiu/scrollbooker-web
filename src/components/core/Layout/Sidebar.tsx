@@ -30,11 +30,12 @@ import { usePathname } from "next/navigation";
 import UserInfo from "./UserInfo/UserInfo";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { UserProfileType } from "@/ts/models/user/UserProfileType";
+import { authOptions } from "@/lib/auth/authOptions";
 
 type SidebarProps = {
   collapsed?: boolean;
@@ -43,6 +44,7 @@ type SidebarProps = {
 
 export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
   const router = useRouter();
+  const session = useSession();
   const pathname = usePathname();
   const [openNomenclatures, setOpenNomenclatures] = useState(false);
   const [openMyBusiness, setOpenMyBusiness] = useState(true);
@@ -271,31 +273,41 @@ export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
           </ListItemButton>
           <Collapse in={openMyBusiness} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {myBusinessRoutes.map((businessRoute, i) => (
-                <Protected key={i} permission={businessRoute.permission}>
-                  <ListItemButton
-                    sx={{
-                      mb: 0.5,
-                      justifyContent: "center",
-                    }}
-                    onClick={() => router.push(businessRoute.route)}
-                    selected={isLinkSelected(businessRoute.route)}
-                  >
-                    <ListItemIcon
+              {myBusinessRoutes.map((businessRoute, i) => {
+                // Skip "Angajați" route when the business doesn't have employees according to session
+                if (
+                  businessRoute.route === "/my-business/employees" &&
+                  !session?.data?.has_employees
+                ) {
+                  return null;
+                }
+
+                return (
+                  <Protected key={i} permission={businessRoute.permission}>
+                    <ListItemButton
                       sx={{
-                        minWidth: collapsed ? 0 : undefined,
+                        mb: 0.5,
                         justifyContent: "center",
                       }}
+                      onClick={() => router.push(businessRoute.route)}
+                      selected={isLinkSelected(businessRoute.route)}
                     >
-                      {businessRoute.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={businessRoute.label}
-                      sx={{ display: collapsed ? "none" : "block" }}
-                    />
-                  </ListItemButton>
-                </Protected>
-              ))}
+                      <ListItemIcon
+                        sx={{
+                          minWidth: collapsed ? 0 : undefined,
+                          justifyContent: "center",
+                        }}
+                      >
+                        {businessRoute.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={businessRoute.label}
+                        sx={{ display: collapsed ? "none" : "block" }}
+                      />
+                    </ListItemButton>
+                  </Protected>
+                );
+              })}
             </List>
           </Collapse>
           <Divider sx={{ my: 1.5 }} />

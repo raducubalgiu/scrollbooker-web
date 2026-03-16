@@ -9,6 +9,7 @@ export const GET = async (req: NextRequest) => {
 
   const limit = req.nextUrl.searchParams.get("limit");
   const employeeId = req.nextUrl.searchParams.get("employee_id");
+  const productType = req.nextUrl.searchParams.get("product_type");
 
   const response = (
     await get<ProductResponse[]>({
@@ -17,6 +18,9 @@ export const GET = async (req: NextRequest) => {
 
         if (employeeId !== null)
           params.push(`employee_id=${encodeURIComponent(employeeId)}`);
+
+        if (productType !== null)
+          params.push(`product_type=${encodeURIComponent(productType)}`);
 
         if (page !== null) params.push(`page=${encodeURIComponent(page)}`);
         if (limit !== null) params.push(`limit=${encodeURIComponent(limit)}`);
