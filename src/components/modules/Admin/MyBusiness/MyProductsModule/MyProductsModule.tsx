@@ -41,14 +41,24 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
   );
   const [serviceId, setServiceId] = React.useState<number | null>(null);
 
+  const extraParams = React.useMemo(
+    () => ({
+      employee_id: employeeId ?? undefined,
+      product_type: productType ?? undefined,
+      service_domain_id: serviceDomainId ?? undefined,
+      service_id: serviceId ?? undefined,
+    }),
+    [employeeId, productType, serviceDomainId, serviceId]
+  );
+
   const { data, isLoading, pagination, setPagination } =
     useTableHandlers<ProductResponse>({
       route: "/my-business/products",
-      extraParams: {
-        employee_id: employeeId ?? undefined,
-        product_type: productType ?? undefined,
-        service_domain_id: serviceDomainId ?? undefined,
-        service_id: serviceId ?? undefined,
+      extraParams,
+      queryOptions: {
+        keepPreviousData: true,
+        staleTime: 30000,
+        refetchOnWindowFocus: false,
       },
     });
 

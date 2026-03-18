@@ -10,50 +10,57 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
+import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import Protected from "@/components/cutomized/Protected/Protected";
 
 const MarketplaceSidebar = () => {
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
+
   const pathname = usePathname() || "/";
   const router = useRouter();
 
-  const items = [
-    { label: "Home", route: "/", icon: <HomeIcon /> },
-    {
-      label: "Explorează",
-      route: "/explore",
-      icon: <ExploreOutlinedIcon />,
-    },
-    {
-      label: "Notificări",
-      route: "/notifications",
-      icon: <NotificationsNoneOutlinedIcon />,
-    },
-    {
-      label: "Rezervari",
-      route: "/appointments",
-      icon: <QueryBuilderOutlinedIcon />,
-    },
-    {
-      label: "Profil",
-      route: "/profile",
-      icon: <PersonOutlineOutlinedIcon />,
-    },
-    {
-      label: "Setari",
-      route: "/settings",
-      icon: <ManageAccountsOutlinedIcon />,
-    },
-  ];
+  const items = React.useMemo(
+    () => [
+      { label: "Caută", route: "/", icon: <SearchOutlinedIcon /> },
+      {
+        label: "Explorează",
+        route: "/explore",
+        icon: <VideoLibraryOutlinedIcon />,
+      },
+      {
+        label: "Notificări",
+        route: "/notifications",
+        icon: <NotificationsNoneOutlinedIcon />,
+      },
+      {
+        label: "Rezervări",
+        route: "/appointments",
+        icon: <QueryBuilderOutlinedIcon />,
+      },
+      {
+        label: "Profil",
+        route: "/profile",
+        icon: <PersonOutlineOutlinedIcon />,
+      },
+      { label: "Mai mult", route: "/more", icon: <MoreHorizOutlinedIcon /> },
+    ],
+    []
+  );
 
-  const navigate = (route: string) => {
-    if (pathname !== route) router.push(route);
-  };
+  const navigate = React.useCallback(
+    (route: string) => {
+      if (pathname !== route) router.push(route);
+    },
+    [pathname, router]
+  );
 
   return (
     <Box>
@@ -98,7 +105,7 @@ const MarketplaceSidebar = () => {
                   <Typography
                     sx={{
                       fontSize: 20,
-                      fontWeight: selected ? 700 : 600,
+                      fontWeight: 600,
                       color: selected ? "primary.main" : "text.secondary",
                     }}
                   >
@@ -111,15 +118,31 @@ const MarketplaceSidebar = () => {
         );
       })}
 
-      <Button
-        variant="contained"
-        size="large"
-        fullWidth
-        sx={{ mt: 2.5, fontWeight: 700 }}
-        onClick={() => router.push("/auth/signin")}
-      >
-        Conectare
-      </Button>
+      {!isAuthenticated && (
+        <Button
+          variant="contained"
+          size="large"
+          fullWidth
+          sx={{ mt: 2.5, fontWeight: 700 }}
+          onClick={() => router.push("/api/auth/signin")}
+        >
+          Conectare
+        </Button>
+      )}
+
+      {isAuthenticated && (
+        <Protected permission="ADMIN_BUTTON_VIEW">
+          <Button
+            variant="outlined"
+            size="large"
+            fullWidth
+            sx={{ mt: 2.5, fontWeight: 700 }}
+            onClick={() => router.push("/admin/calendar")}
+          >
+            Admin panel
+          </Button>
+        </Protected>
+      )}
     </Box>
   );
 };

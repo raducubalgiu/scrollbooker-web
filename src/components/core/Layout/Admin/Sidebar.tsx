@@ -10,6 +10,7 @@ import {
   ListItemText,
   Box,
   Collapse,
+  Button,
 } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -35,6 +36,7 @@ import { useCustomQuery } from "@/hooks/useHttp";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { UserProfileType } from "@/ts/models/user/UserProfileType";
 import UserInfo from "./UserInfo/UserInfo";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 
 type SidebarProps = {
   collapsed?: boolean;
@@ -192,6 +194,16 @@ export default function Sidebar({
 
   return (
     <Box sx={{ height: "100%", width: collapsed ? 80 : "auto" }}>
+      <Button
+        sx={{ mt: 2.5, ml: 2.5, textTransform: "capitalize" }}
+        size="large"
+        variant="outlined"
+        startIcon={<ArrowBackOutlinedIcon />}
+        onClick={() => router.push("/")}
+      >
+        Marketplace
+      </Button>
+
       <UserInfo
         user={user}
         isLoadingUser={isLoadingUser}

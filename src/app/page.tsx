@@ -4,7 +4,7 @@ import { Box, Container, Typography, Button } from "@mui/material";
 export default async function HomePage() {
   return (
     <Container maxWidth="md">
-      <Box
+      {/* <Box
         sx={{
           minHeight: "60vh",
           display: "flex",
@@ -32,7 +32,7 @@ export default async function HomePage() {
             </Button>
           </Link>
         </Box>
-      </Box>
+      </Box> */}
     </Container>
   );
 }

@@ -11,7 +11,7 @@ const MarketplaceDrawer = () => {
         component="div"
         fontWeight={600}
         fontSize={30}
-        sx={{ mb: 5 }}
+        sx={{ mb: 2.5 }}
       >
         ScrollBooker
       </Typography>
