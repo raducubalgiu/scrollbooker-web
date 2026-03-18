@@ -19,29 +19,14 @@ export default function LayoutDrawer({
   collapsed,
   onToggleCollapse,
 }: LayoutDrawerProps) {
-  const styles = {
-    drawerDesktop: {
-      display: { xs: "none", sm: "block" },
-      "& .MuiDrawer-paper": {
-        boxSizing: "border-box",
-        width: drawerWidth,
-        transition: "width 200ms ease",
-      },
-    },
-    drawerMobile: {
-      root: { keepMounted: true },
-      paper: {
-        sx: {
-          borderRadius: 0,
-          backgroundImage: "none",
-        },
-      },
-      display: { xs: "block", sm: "none" },
-      "& .MuiDrawer-paper": {
-        boxSizing: "border-box",
-        width: drawerWidth,
-      },
-    },
+  const desktopSx = {
+    display: { xs: "none", sm: "block" },
+  };
+
+  const mobilePaperSx = {
+    borderRadius: 0,
+    backgroundImage: "none",
+    width: drawerWidth,
   };
 
   return (
@@ -57,11 +42,26 @@ export default function LayoutDrawer({
         open={mobileOpen}
         onTransitionEnd={onTransitionDrawerEnd}
         onClose={onCloseDrawer}
-        sx={styles.drawerMobile}
+        ModalProps={{ keepMounted: true }}
+        sx={{ display: { xs: "block", sm: "none" } }}
+        slotProps={{ paper: { sx: mobilePaperSx } }}
       >
-        <Sidebar />
+        <Sidebar collapsed={false} onToggleCollapse={onToggleCollapse} />
       </Drawer>
-      <Drawer variant="permanent" sx={styles.drawerDesktop} open>
+      <Drawer
+        variant="permanent"
+        sx={desktopSx}
+        open
+        slotProps={{
+          paper: {
+            sx: {
+              boxSizing: "border-box",
+              width: drawerWidth,
+              transition: "width 200ms ease",
+            },
+          },
+        }}
+      >
         <Sidebar collapsed={collapsed} onToggleCollapse={onToggleCollapse} />
       </Drawer>
     </Box>

@@ -49,7 +49,10 @@ export default function Layout({ children }: LayoutProps) {
     () => ({
       main: {
         p: 2.5,
-        width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+        // use left margin on desktop to account for permanent drawer width
+        // this prevents an extra empty area on the right caused by width calc
+        ml: { sm: `${DRAWER_WIDTH}px` },
+        width: { xs: "100%", sm: `calc(100% - ${DRAWER_WIDTH}px)` },
       },
       box: {
         display: "flex",

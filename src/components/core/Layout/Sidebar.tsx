@@ -40,9 +40,14 @@ import { authOptions } from "@/lib/auth/authOptions";
 type SidebarProps = {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
+  onCloseDrawer?: () => void;
 };
 
-export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
+export default function Sidebar({
+  collapsed,
+  onToggleCollapse,
+  onCloseDrawer,
+}: SidebarProps) {
   const router = useRouter();
   const session = useSession();
   const pathname = usePathname();
@@ -69,6 +74,14 @@ export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
     },
     [pathname]
   );
+
+  const navigateTo = (href: string) => {
+    if (onCloseDrawer) {
+      // close the drawer first (mobile)
+      onCloseDrawer();
+    }
+    router.push(href);
+  };
 
   const dashboardRoutes = [
     {
@@ -207,7 +220,7 @@ export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
           <Protected key={i} permission={userRoute.permission} showSkeleton>
             <ListItem disablePadding sx={{ px: 0 }}>
               <ListItemButton
-                onClick={() => router.push(userRoute.route)}
+                onClick={() => navigateTo(userRoute.route)}
                 selected={isLinkSelected(userRoute.route)}
                 sx={{
                   px: collapsed ? 0 : 2.5,
@@ -289,7 +302,7 @@ export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
                         mb: 0.5,
                         justifyContent: "center",
                       }}
-                      onClick={() => router.push(businessRoute.route)}
+                      onClick={() => navigateTo(businessRoute.route)}
                       selected={isLinkSelected(businessRoute.route)}
                     >
                       <ListItemIcon
@@ -316,7 +329,7 @@ export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
           <Protected key={i} permission={userRoute.permission} showSkeleton>
             <ListItem disablePadding sx={{ px: 0 }}>
               <ListItemButton
-                onClick={() => router.push(userRoute.route)}
+                onClick={() => navigateTo(userRoute.route)}
                 selected={isLinkSelected(userRoute.route)}
                 sx={{
                   mb: 0.5,
@@ -395,7 +408,7 @@ export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
                     mb: 0.5,
                     justifyContent: "center",
                   }}
-                  onClick={() => router.push(superAdmin.route)}
+                  onClick={() => navigateTo(superAdmin.route)}
                   selected={isLinkSelected(superAdmin.route)}
                 >
                   <ListItemIcon
@@ -417,7 +430,10 @@ export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
         </Protected>
         <Divider sx={{ my: 1.5 }} />
         <ListItemButton
-          onClick={() => signOut()}
+          onClick={() => {
+            if (onCloseDrawer) onCloseDrawer();
+            signOut();
+          }}
           sx={{
             mb: 1.5,
             px: collapsed ? 0 : 2.5,
