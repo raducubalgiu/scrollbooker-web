@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import ProfessionsModule from "@/components/modules/Nomenclatures/ProfessionsModule/ProfessionsModule";
+import ProfessionsModule from "@/components/modules/Admin/Nomenclatures/ProfessionsModule/ProfessionsModule";
 import React from "react";
 
 async function Professions() {

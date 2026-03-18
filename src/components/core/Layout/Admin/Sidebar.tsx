@@ -27,7 +27,6 @@ import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOu
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import UserInfo from "./UserInfo/UserInfo";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import { signOut, useSession } from "next-auth/react";
@@ -35,6 +34,7 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { UserProfileType } from "@/ts/models/user/UserProfileType";
+import UserInfo from "./UserInfo/UserInfo";
 
 type SidebarProps = {
   collapsed?: boolean;

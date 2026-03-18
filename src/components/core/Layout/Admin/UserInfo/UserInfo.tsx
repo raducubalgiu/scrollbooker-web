@@ -10,7 +10,7 @@ import {
   Box,
 } from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
-import CustomStack from "../../CustomStack/CustomStack";
+import CustomStack from "../../../CustomStack/CustomStack";
 import UserInfoCounter from "./UserInfoCounter";
 import UserAvatar from "./UserAvatar";
 import UserInfoEditModal from "./UserInfoEditModal";

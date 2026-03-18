@@ -4,7 +4,7 @@ import { ScheduleResponseType } from "@/ts/models/booking/schedule/ScheduleType"
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import MySchedulesModule from "@/components/modules/MyBusiness/MySchedulesModule/MySchedulesModule";
+import MySchedulesModule from "@/components/modules/Admin/MyBusiness/MySchedulesModule/MySchedulesModule";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { Paper } from "@mui/material";
 

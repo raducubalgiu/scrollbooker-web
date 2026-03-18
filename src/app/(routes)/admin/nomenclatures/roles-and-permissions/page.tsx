@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import PermissionsModule from "@/components/modules/PermissionsModule/PermissionsModule";
+import PermissionsModule from "@/components/modules/Admin/PermissionsModule/PermissionsModule";
 import React from "react";
 
 async function RolesAndPermissions() {

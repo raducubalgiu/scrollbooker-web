@@ -4,8 +4,8 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
-import LayoutDrawer from "./LayoutDrawer";
-import LayoutAppBar from "./LayoutAppBar";
+import AdminDrawer from "./AdminDrawer";
+import LayoutAppBar from "./AdminAppBar";
 import { useBreakpoints } from "@/hooks/useBreakpoints";
 
 const DRAWER_DESKTOP_WIDTH = 350;
@@ -15,7 +15,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function AdminLayout({ children }: LayoutProps) {
   const { isPhone } = useBreakpoints();
   const [collapsed, setCollapsed] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -73,7 +73,7 @@ export default function Layout({ children }: LayoutProps) {
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed((c) => !c)}
       />
-      <LayoutDrawer
+      <AdminDrawer
         mobileOpen={mobileOpen}
         onCloseDrawer={handleDrawerClose}
         onTransitionDrawerEnd={handleDrawerTransitionEnd}

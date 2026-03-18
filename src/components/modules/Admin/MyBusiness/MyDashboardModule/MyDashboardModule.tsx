@@ -10,8 +10,8 @@ import usePermission from "@/components/cutomized/Protected/usePermission";
 import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
-import DashboardCardSummary from "@/components/modules/MyBusiness/MyDashboardModule/DashboardCardSummary";
-import DashboardBarChart from "@/components/modules/MyBusiness/MyDashboardModule/DashboardBarChart";
+import DashboardCardSummary from "@/components/modules/Admin/MyBusiness/MyDashboardModule/DashboardCardSummary";
+import DashboardBarChart from "@/components/modules/Admin/MyBusiness/MyDashboardModule/DashboardBarChart";
 
 type DashboardModuleProps = {
   userId: number | undefined;

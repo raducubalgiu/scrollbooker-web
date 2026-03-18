@@ -1,6 +1,6 @@
 "use client";
 
-import MainLayout from "../../../cutomized/MainLayout/MainLayout";
+import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { FilterType } from "@/ts/models/nomenclatures/FilterType";

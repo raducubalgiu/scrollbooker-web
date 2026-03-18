@@ -2,8 +2,8 @@
 
 import { useSession } from "next-auth/react";
 import React from "react";
-import Layout from "./Layout";
 import { usePathname } from "next/navigation";
+import AdminLayout from "./Admin/AdminLayout";
 
 export default function LayoutWrapper({
   children,
@@ -30,7 +30,7 @@ export default function LayoutWrapper({
   const isAdminArea = adminPrefixes.some((p) => pathname.startsWith(p));
 
   if (isAdminArea) {
-    return <Layout>{children}</Layout>;
+    return <AdminLayout>{children}</AdminLayout>;
   }
 
   return <>{children}</>;

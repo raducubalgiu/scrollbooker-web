@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import MyEmployeesModule from "@/components/modules/MyBusiness/MyEmployeesModule/MyEmployeesModule";
+import MyEmployeesModule from "@/components/modules/Admin/MyBusiness/MyEmployeesModule/MyEmployeesModule";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import React from "react";
 

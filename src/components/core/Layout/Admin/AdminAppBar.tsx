@@ -1,24 +1,24 @@
 import React from "react";
 import { AppBar, Toolbar, Box, IconButton } from "@mui/material";
-import CustomStack from "../CustomStack/CustomStack";
+import CustomStack from "../../CustomStack/CustomStack";
 import MenuIcon from "@mui/icons-material/Menu";
 import LayoutSearch from "./LayoutSearch";
 import LayoutNotificationsMenu from "./LayoutNotificationsMenu";
 import LayoutThemeToggle from "./LayoutThemeToggle";
 
-type LayoutAppBarProps = {
+type AdminAppBarProps = {
   onDrawerToggle: () => void;
   drawerWidth: number;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
 };
 
-export default function LayoutAppBar({
+export default function AdminAppBar({
   onDrawerToggle,
   drawerWidth,
   collapsed,
   onToggleCollapse,
-}: LayoutAppBarProps) {
+}: AdminAppBarProps) {
   const styles = {
     appBar: {
       width: { sm: `calc(100% - ${drawerWidth}px)` },

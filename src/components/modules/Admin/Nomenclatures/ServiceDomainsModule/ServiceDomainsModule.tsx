@@ -1,8 +1,8 @@
 "use client";
 
 import Table from "@/components/core/Table/Table";
-import { ServiceDomainsResponse } from "../../../../ts/models/nomenclatures/serviceDomain/ServiceDomainType";
-import MainLayout from "../../../cutomized/MainLayout/MainLayout";
+import { ServiceDomainsResponse } from "../../../../../ts/models/nomenclatures/serviceDomain/ServiceDomainType";
+import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo, useRef, useState } from "react";

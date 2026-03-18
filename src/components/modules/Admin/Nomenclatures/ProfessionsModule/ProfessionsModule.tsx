@@ -1,7 +1,7 @@
 "use client";
 
 import Table from "@/components/core/Table/Table";
-import MainLayout from "../../../cutomized/MainLayout/MainLayout";
+import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";

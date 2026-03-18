@@ -1,6 +1,6 @@
 import { get } from "@/utils/requests";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import ServicesModule from "@/components/modules/Nomenclatures/ServicesModule/ServicesModule";
+import ServicesModule from "@/components/modules/Admin/Nomenclatures/ServicesModule/ServicesModule";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
 import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 

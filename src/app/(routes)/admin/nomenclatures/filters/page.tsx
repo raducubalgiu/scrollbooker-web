@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import FiltersModule from "@/components/modules/Nomenclatures/FiltersModule/FiltersModule";
+import FiltersModule from "@/components/modules/Admin/Nomenclatures/FiltersModule/FiltersModule";
 import React from "react";
 
 async function Filters() {

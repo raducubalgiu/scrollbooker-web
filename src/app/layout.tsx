@@ -14,10 +14,6 @@ type ChildrenType = { children: React.ReactNode };
 export default async function RootLayout({ children }: ChildrenType) {
   const session = await getServerSession(authOptions);
 
-  // determine which top-level area we are rendering based on path — default to admin for my-business routes on server
-  // Note: In app router nested layouts will still apply; this is a simple top-level splitting approach.
-  // We can't access request pathname easily here without server props, so we rely on nested layouts under /admin and /marketplace.
-
   return (
     <html lang="en">
       <body>

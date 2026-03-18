@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import CalendarModule from "@/components/modules/CalendarModule/CalendarModule";
+import CalendarModule from "@/components/modules/Admin/CalendarModule/CalendarModule";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { CalendarEventsProvider } from "@/providers/CalendarEventsProvider";
 import { useCallback } from "react";

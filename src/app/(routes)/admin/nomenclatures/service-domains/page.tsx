@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import ServiceDomainsModule from "@/components/modules/Nomenclatures/ServiceDomainsModule/ServiceDomainsModule";
+import ServiceDomainsModule from "@/components/modules/Admin/Nomenclatures/ServiceDomainsModule/ServiceDomainsModule";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
 import { get } from "@/utils/requests";
 

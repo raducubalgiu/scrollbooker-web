@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import { MyServicesModule } from "@/components/modules/MyBusiness/MyServicesModule/MyServicesModule";
+import { MyServicesModule } from "@/components/modules/Admin/MyBusiness/MyServicesModule/MyServicesModule";
 
 async function Services() {
   return <MyServicesModule />;

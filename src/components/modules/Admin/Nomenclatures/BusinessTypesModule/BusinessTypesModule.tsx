@@ -1,6 +1,6 @@
 "use client";
 
-import MainLayout from "../../../cutomized/MainLayout/MainLayout";
+import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
 import { BusinessType } from "@/ts/models/nomenclatures/BusinessType";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";

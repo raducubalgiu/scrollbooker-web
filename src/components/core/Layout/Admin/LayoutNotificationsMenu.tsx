@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { PaginatedData } from "../Table/Table";
+import { PaginatedData } from "../../Table/Table";
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
 import { isEmpty } from "lodash";
 import { useRouter } from "next/navigation";

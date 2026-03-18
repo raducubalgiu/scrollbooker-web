@@ -1,7 +1,7 @@
-import Modal from "../../Modal/Modal";
-import { ActionButtonType } from "../../ActionButton/ActionButton";
-import Input from "../../Input/Input";
-import InputSelect from "../../Input/InputSelect";
+import Modal from "../../../Modal/Modal";
+import { ActionButtonType } from "../../../ActionButton/ActionButton";
+import Input from "../../../Input/Input";
+import InputSelect from "../../../Input/InputSelect";
 import { Stack } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { useEffect } from "react";

@@ -1,4 +1,4 @@
-import BusinessTypesModule from "@/components/modules/Nomenclatures/BusinessTypesModule/BusinessTypesModule";
+import BusinessTypesModule from "@/components/modules/Admin/Nomenclatures/BusinessTypesModule/BusinessTypesModule";
 import React from "react";
 import { get } from "@/utils/requests";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";

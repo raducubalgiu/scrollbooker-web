@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Drawer } from "@mui/material";
 import Sidebar from "./Sidebar";
 
-type LayoutDrawerProps = {
+type AdminDrawerProps = {
   mobileOpen: boolean;
   onCloseDrawer: () => void;
   onTransitionDrawerEnd: () => void;
@@ -11,14 +11,14 @@ type LayoutDrawerProps = {
   onToggleCollapse?: () => void;
 };
 
-export default function LayoutDrawer({
+export default function AdminDrawer({
   mobileOpen,
   onCloseDrawer,
   onTransitionDrawerEnd,
   drawerWidth,
   collapsed,
   onToggleCollapse,
-}: LayoutDrawerProps) {
+}: AdminDrawerProps) {
   const desktopSx = {
     display: { xs: "none", sm: "block" },
   };

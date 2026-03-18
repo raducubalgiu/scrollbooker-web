@@ -5,7 +5,7 @@ import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { get } from "@/utils/requests";
 import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse";
-import MyBusinessDetailsModule from "@/components/modules/MyBusiness/LocationModule/MyBusinessDetailsModule";
+import MyBusinessDetailsModule from "@/components/modules/Admin/MyBusiness/LocationModule/MyBusinessDetailsModule";
 
 async function MyBusiness() {
   const { userId } = await getUserServerSession();

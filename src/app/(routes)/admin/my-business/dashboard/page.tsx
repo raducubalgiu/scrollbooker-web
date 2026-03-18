@@ -1,4 +1,4 @@
-import MyDashboardModule from "@/components/modules/MyBusiness/MyDashboardModule/MyDashboardModule";
+import MyDashboardModule from "@/components/modules/Admin/MyBusiness/MyDashboardModule/MyDashboardModule";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 
 export default async function Dashboard() {
