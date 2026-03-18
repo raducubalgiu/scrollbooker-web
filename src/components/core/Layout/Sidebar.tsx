@@ -35,7 +35,6 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { UserProfileType } from "@/ts/models/user/UserProfileType";
-import { authOptions } from "@/lib/auth/authOptions";
 
 type SidebarProps = {
   collapsed?: boolean;
@@ -85,20 +84,20 @@ export default function Sidebar({
 
   const dashboardRoutes = [
     {
-      label: "Calendar",
-      route: "/",
+      label: "Calendarul meu",
+      route: "/admin/calendar",
       icon: <CalendarMonthIcon />,
       permission: PermissionEnum.MY_CALENDAR_VIEW,
     },
     {
       label: "Dashboard",
-      route: "/my-business/dashboard",
+      route: "/admin/my-business/dashboard",
       icon: <DashboardOutlinedIcon />,
       permission: PermissionEnum.NO_PROTECTION,
     },
     {
       label: "Programări",
-      route: "/appointments",
+      route: "/admin/appointments",
       icon: <EventAvailableIcon />,
       permission: PermissionEnum.NO_PROTECTION,
     },
@@ -107,13 +106,13 @@ export default function Sidebar({
   const settingsRoutes = [
     {
       label: "Notificări",
-      route: "/notifications",
+      route: "/admin/notifications",
       icon: <NotificationsNoneOutlinedIcon />,
       permission: PermissionEnum.NO_PROTECTION,
     },
     {
       label: "Setări",
-      route: "/settings",
+      route: "/admin/settings",
       icon: <ManageAccountsOutlinedIcon />,
       permission: PermissionEnum.NO_PROTECTION,
     },
@@ -122,31 +121,31 @@ export default function Sidebar({
   const myBusinessRoutes = [
     {
       label: "Detalii Business",
-      route: "/my-business/business-details",
+      route: "/admin/my-business/business-details",
       icon: <PlaceOutlinedIcon />,
       permission: PermissionEnum.MY_BUSINESS_LOCATION_VIEW,
     },
     {
       label: "Programul de lucru",
-      route: "/my-business/schedules",
+      route: "/admin/my-business/schedules",
       icon: <ScheduleIcon />,
       permission: PermissionEnum.MY_SCHEDULES_VIEW,
     },
     {
       label: "Servicii",
-      route: "/my-business/services",
+      route: "/admin/my-business/services",
       icon: <AssignmentTurnedInOutlinedIcon />,
       permission: PermissionEnum.MY_SERVICES_VIEW,
     },
     {
       label: "Produse",
-      route: "/my-business/products",
+      route: "/admin/my-business/products",
       icon: <ShoppingBagOutlinedIcon />,
       permission: PermissionEnum.MY_PRODUCTS_VIEW,
     },
     {
       label: "Angajați",
-      route: "/my-business/employees",
+      route: "/admin/my-business/employees",
       icon: <PeopleAltOutlinedIcon />,
       permission: PermissionEnum.MY_EMPLOYEES_VIEW,
     },
@@ -155,39 +154,39 @@ export default function Sidebar({
   const nomenclaturesRoutes = [
     {
       label: "Validează afacerea",
-      route: "/businesses/approve",
+      route: "/admin/businesses/approve",
     },
     {
       label: "Roluri și permisiuni",
-      route: "/nomenclatures/roles-and-permissions",
+      route: "/admin/nomenclatures/roles-and-permissions",
     },
     {
       label: "Domeniu Business",
-      route: "/nomenclatures/business-domains",
+      route: "/admin/nomenclatures/business-domains",
     },
     {
       label: "Tip Business",
-      route: "/nomenclatures/business-types",
+      route: "/admin/nomenclatures/business-types",
     },
     {
       label: "Domeniu Serviciu",
-      route: "/nomenclatures/service-domains",
+      route: "/admin/nomenclatures/service-domains",
     },
     {
       label: "Servicii",
-      route: "/nomenclatures/services",
+      route: "/admin/nomenclatures/services",
     },
     {
       label: "Filtre",
-      route: "/nomenclatures/filters",
+      route: "/admin/nomenclatures/filters",
     },
     {
       label: "Profesii",
-      route: "/nomenclatures/professions",
+      route: "/admin/nomenclatures/professions",
     },
     {
       label: "Monede",
-      route: "/nomenclatures/currencies",
+      route: "/admin/nomenclatures/currencies",
     },
   ];
 
@@ -289,7 +288,7 @@ export default function Sidebar({
               {myBusinessRoutes.map((businessRoute, i) => {
                 // Skip "Angajați" route when the business doesn't have employees according to session
                 if (
-                  businessRoute.route === "/my-business/employees" &&
+                  businessRoute.route === "/admin/my-business/employees" &&
                   !session?.data?.has_employees
                 ) {
                   return null;

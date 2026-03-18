@@ -3,7 +3,7 @@ import PermissionsModule from "@/components/modules/PermissionsModule/Permission
 import React from "react";
 
 async function RolesAndPermissions() {
-	return <PermissionsModule />;
+  return <PermissionsModule />;
 }
 
 export default ProtectedPage(RolesAndPermissions, "NOMENCLATURES_VIEW");

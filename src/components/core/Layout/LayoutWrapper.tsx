@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import React from "react";
 import Layout from "./Layout";
+import { usePathname } from "next/navigation";
 
 export default function LayoutWrapper({
   children,
@@ -10,10 +11,25 @@ export default function LayoutWrapper({
   children: React.ReactNode;
 }) {
   const { data: session, status } = useSession();
+  const pathname = usePathname() || "";
 
   if (status === "loading") return null;
 
-  if (session?.accessToken) {
+  const adminPrefixes = [
+    "/admin",
+    "/calendar",
+    "/my-business",
+    "/appointments",
+    "/businesses",
+    "/nomenclatures",
+    "/settings",
+    "/notifications",
+    "/onboarding",
+  ];
+
+  const isAdminArea = adminPrefixes.some((p) => pathname.startsWith(p));
+
+  if (isAdminArea) {
     return <Layout>{children}</Layout>;
   }
 

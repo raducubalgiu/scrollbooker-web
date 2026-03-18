@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { Box, Container, Typography, Button } from "@mui/material";
+import Link from "next/link";
 
-export default async function HomePage() {
+export default function UnauthorizedPage() {
   return (
     <Container maxWidth="md">
       <Box
@@ -16,19 +16,14 @@ export default async function HomePage() {
           py: 8,
         }}
       >
-        <Typography variant="h3" component="h1">
-          ScrollBooker
+        <Typography variant="h4">Accesul interzis</Typography>
+        <Typography color="text.secondary">
+          Nu ai permisiunea necesară pentru a accesa această pagină.
         </Typography>
-
-        <Typography variant="body1" color="text.secondary">
-          Bine ai venit! Aceasta este pagina principală publică. Pentru a intra
-          în zona administrativă apasă butonul de mai jos.
-        </Typography>
-
         <Box sx={{ display: "flex", gap: 2 }}>
-          <Link href="/admin">
-            <Button variant="contained" color="primary">
-              Admin
+          <Link href="/">
+            <Button variant="contained" component="a">
+              Înapoi la pagina principală
             </Button>
           </Link>
         </Box>

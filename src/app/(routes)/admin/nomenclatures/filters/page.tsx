@@ -3,7 +3,7 @@ import FiltersModule from "@/components/modules/Nomenclatures/FiltersModule/Filt
 import React from "react";
 
 async function Filters() {
-	return <FiltersModule />;
+  return <FiltersModule />;
 }
 
 export default ProtectedPage(Filters, "NOMENCLATURES_VIEW");

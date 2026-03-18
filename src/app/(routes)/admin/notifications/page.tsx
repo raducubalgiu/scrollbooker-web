@@ -2,5 +2,5 @@ import NotificationsModule from "@/components/modules/NotificationsModule/Notifi
 import React from "react";
 
 export default async function Notifications() {
-	return <NotificationsModule />;
+  return <NotificationsModule />;
 }
