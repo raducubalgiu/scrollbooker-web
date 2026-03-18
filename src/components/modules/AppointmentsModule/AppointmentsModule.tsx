@@ -26,6 +26,8 @@ import { Session } from "next-auth/core/types";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import AsCustomerButton from "./AsCustomerButton";
 import AppointmentCancelModal from "./AppointmentCancelModal";
+import { useMutate } from "@/hooks/useHttp";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AppointmentsModule = ({ session }: { session: Session | null }) => {
   const [asCustomer, setAsCustomer] = useState<boolean | null>(null);
@@ -34,23 +36,95 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
   const [date, setDate] = React.useState<Dayjs | null>(null);
   const [employee, setEmployee] = React.useState<number | null>(null);
   const [openCancelModal, setOpenCancelModal] = useState(false);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<
+    number | null
+  >(null);
   const theme = useTheme();
+
+  const extraParams = React.useMemo(
+    () => ({
+      business_id: session?.business_id ?? undefined,
+      employee_id: session?.is_employee
+        ? session.user_id
+        : (employee ?? undefined),
+      asCustomer: asCustomer ?? undefined,
+      status: status ?? undefined,
+      channel: channel ?? undefined,
+      start_date: date?.startOf("day").format("YYYY-MM-DD") ?? undefined,
+      end_date: date?.endOf("day").format("YYYY-MM-DD") ?? undefined,
+    }),
+    [
+      session?.business_id,
+      session?.is_employee,
+      session?.user_id,
+      employee,
+      asCustomer,
+      status,
+      channel,
+      date,
+    ]
+  );
 
   const { data, isLoading, pagination, setPagination } =
     useTableHandlers<AppointmentResponse>({
       route: "/appointments",
-      extraParams: {
-        business_id: session?.business_id ?? undefined,
-        employee_id: session?.is_employee
-          ? session.user_id
-          : (employee ?? undefined),
-        asCustomer: asCustomer ?? undefined,
-        status: status ?? undefined,
-        channel: channel ?? undefined,
-        start_date: date?.startOf("day").format("YYYY-MM-DD") ?? undefined,
-        end_date: date?.endOf("day").format("YYYY-MM-DD") ?? undefined,
+      extraParams,
+      queryOptions: {
+        keepPreviousData: true,
+        staleTime: 30000,
+        refetchOnWindowFocus: false,
       },
     });
+
+  // Optimistic cancel mutation example
+  const queryClient = useQueryClient();
+  const appointmentsQueryKey = React.useMemo(
+    () => [
+      "/appointments",
+      pagination?.pageIndex,
+      pagination?.pageSize,
+      JSON.stringify(extraParams),
+    ],
+    [pagination?.pageIndex, pagination?.pageSize, extraParams]
+  );
+
+  const { mutate: cancelMutate } = useMutate<{ id: number }, unknown>({
+    key: "cancel-appointment",
+    url: "/api/appointments",
+    method: "PUT",
+    options: {
+      // optimistic update
+      onMutate: async (variables) => {
+        await queryClient.cancelQueries({
+          queryKey: appointmentsQueryKey as any,
+        });
+        const previous = queryClient.getQueryData(appointmentsQueryKey as any);
+        queryClient.setQueryData(appointmentsQueryKey as any, (old: any) => {
+          if (!old) return old;
+          return {
+            ...old,
+            results: old.results.map((r: any) =>
+              r.id === variables.id ? { ...r, status: "canceled" } : r
+            ),
+          };
+        });
+        return { previous };
+      },
+      onError: (_err, _vars, context: any) => {
+        if (context?.previous) {
+          queryClient.setQueryData(
+            appointmentsQueryKey as any,
+            context.previous
+          );
+        }
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: appointmentsQueryKey as any,
+        });
+      },
+    },
+  });
 
   const columns = useMemo<MRT_ColumnDef<AppointmentResponse>[]>(() => {
     const cols: MRT_ColumnDef<AppointmentResponse>[] = [
@@ -201,12 +275,6 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
   const getToolbarCustomActions = React.useCallback(() => {
     return (
       <Stack direction="row" alignItems="center" spacing={1}>
-        {!session?.is_employee && session?.has_employees && (
-          <EmployeeButton
-            employee={employee}
-            onSetEmployee={(id) => setEmployee(id)}
-          />
-        )}
         <Button
           variant={date == null ? "contained" : "outlined"}
           color={date == null ? "primary" : "secondary"}
@@ -217,6 +285,12 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
           Oricând
         </Button>
         <PickerButton date={date} onSetDate={setDate} />
+        {!session?.is_employee && session?.has_employees && (
+          <EmployeeButton
+            employee={employee}
+            onSetEmployee={(id) => setEmployee(id)}
+          />
+        )}
         <StatusButton
           status={status}
           onSetStatus={(s) => setStatus(s)}
@@ -249,7 +323,10 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
           key="cancel"
           label="Anulează programarea"
           icon={<DeleteOutlineOutlinedIcon />}
-          onClick={() => setOpenCancelModal(true)}
+          onClick={() => {
+            setSelectedAppointmentId(row.original.id);
+            setOpenCancelModal(true);
+          }}
           table={table}
           disabled={row?.original?.status !== AppointmentStatusEnum.IN_PROGRESS}
         />,
@@ -262,7 +339,15 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
     <MainLayout title="Rezervări" hideAction>
       <AppointmentCancelModal
         open={openCancelModal}
-        onClose={() => setOpenCancelModal(false)}
+        onClose={() => {
+          setOpenCancelModal(false);
+          setSelectedAppointmentId(null);
+        }}
+        onConfirm={() => {
+          if (selectedAppointmentId) {
+            cancelMutate({ id: selectedAppointmentId });
+          }
+        }}
       />
 
       <Table<AppointmentResponse>

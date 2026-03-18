@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get } from "@/utils/requests";
+import { get, put } from "@/utils/requests";
 import { AppointmentResponse } from "@/ts/models/booking/appointment/AppointmentResponse";
+import { omit } from "lodash";
 
 export const GET = async (req: NextRequest) => {
   const page = req.nextUrl.searchParams.get("page");
@@ -39,6 +40,19 @@ export const GET = async (req: NextRequest) => {
 
         return `/appointments${params.length ? `?${params.join("&")}` : ""}`;
       })(),
+    })
+  ).data;
+
+  return NextResponse.json(response);
+};
+
+export const PUT = async (req: NextRequest) => {
+  const data = await req.json();
+
+  const response = (
+    await put({
+      url: `/appointments/${data.id}/cancel-appointment`,
+      data: omit(data, "id"),
     })
   ).data;
 

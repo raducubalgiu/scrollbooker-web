@@ -6,11 +6,13 @@ import React from "react";
 type AppointmentCancelModalProps = {
   open: boolean;
   onClose: () => void;
+  onConfirm?: (reason?: string) => void;
 };
 
 const AppointmentCancelModal: React.FC<AppointmentCancelModalProps> = ({
   open,
   onClose,
+  onConfirm,
 }) => {
   const actions: ActionButtonType[] = [
     {
@@ -24,7 +26,10 @@ const AppointmentCancelModal: React.FC<AppointmentCancelModalProps> = ({
     {
       title: "Confirmă",
       props: {
-        onClick: () => {},
+        onClick: () => {
+          if (onConfirm) onConfirm();
+          onClose();
+        },
         variant: "contained",
       },
     },
@@ -43,11 +48,11 @@ const AppointmentCancelModal: React.FC<AppointmentCancelModalProps> = ({
         minRows={4}
         placeholder="Motiv anulare..."
         style={{
-          width: "100%", // ocupă lățimea containerului
-          minWidth: 420, // minWidth dorit
+          width: "100%",
+          minWidth: 420,
           padding: 12,
           borderRadius: 8,
-          resize: "vertical", // permită doar redimensionare verticală
+          resize: "vertical",
           fontFamily: "inherit",
           border: "none",
         }}
