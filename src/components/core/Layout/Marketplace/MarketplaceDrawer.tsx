@@ -3,6 +3,7 @@
 import React from "react";
 import {
   Box,
+  Divider,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -48,7 +49,7 @@ const MarketplaceDrawer = () => {
       },
       {
         label: "Profil",
-        route: "/profile",
+        route: "/profile/1",
         icon: <PersonOutlineOutlinedIcon />,
       },
       { label: "Mai mult", route: "/more", icon: <MoreHorizOutlinedIcon /> },
@@ -157,6 +158,7 @@ const MarketplaceDrawer = () => {
           <CButton
             onClick={() => router.push("/api/auth/signin")}
             label="Conectare"
+            variant="outlined"
             sx={{ mt: 2.5 }}
           />
         )}
@@ -171,6 +173,8 @@ const MarketplaceDrawer = () => {
             />
           </Protected>
         )}
+
+        <Divider sx={{ my: 2.5 }} />
       </Box>
     </Box>
   );

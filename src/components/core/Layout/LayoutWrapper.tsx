@@ -8,11 +8,9 @@ import MarketplaceLayout from "./Marketplace/MarketplaceLayout";
 
 const ADMIN_PREFIXES = ["/admin"];
 
-export default function LayoutWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+type LayoutWrapperProps = { children: React.ReactNode };
+
+export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const { status } = useSession();
   const pathname = usePathname() || "";
 

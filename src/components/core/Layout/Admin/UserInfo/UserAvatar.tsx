@@ -5,25 +5,24 @@ type UserAvatarProps = {
   isBusinessOrEmployee: boolean | undefined;
   openNow?: boolean | undefined;
   url: string | undefined;
-  onOpenModal: () => void;
   small?: boolean;
+  defaultSize?: number;
+  badgeSize?: number;
 };
 
 export default function UserAvatar({
   isBusinessOrEmployee,
   url,
-  onOpenModal,
   small,
   openNow,
+  defaultSize = 95,
+  badgeSize = 17.5,
 }: UserAvatarProps) {
   const theme = useTheme();
-  const offlineGray =
-    theme.palette.mode === "light"
-      ? theme.palette.grey[500]
-      : theme.palette.grey[600];
-  const color = openNow ? theme.palette.success.main : offlineGray;
+  const color = openNow ? theme.palette.success.main : theme.palette.grey[500];
+  const boxShadow = `0 0 0 2px ${theme.palette.background.paper}`;
 
-  const size = small ? 40 : 95;
+  const size = small ? 40 : defaultSize;
 
   const avatar = useMemo(
     () => (
@@ -40,25 +39,28 @@ export default function UserAvatar({
     [url, size, theme.palette.divider]
   );
 
-  const badgeSx = {
-    "& .MuiBadge-badge": {
-      backgroundColor: color,
-      color: color,
-      width: 17.5,
-      height: 17.5,
-      borderRadius: "50%",
-      boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-      "&::after": {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: 17.5,
-        height: 17.5,
+  const badgeSx = useMemo(
+    () => ({
+      "& .MuiBadge-badge": {
+        backgroundColor: color,
+        color: color,
+        width: badgeSize,
+        height: badgeSize,
         borderRadius: "50%",
-        content: '""',
+        boxShadow,
+        "&::after": {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: badgeSize,
+          height: badgeSize,
+          borderRadius: "50%",
+          content: '""',
+        },
       },
-    },
-  } as const;
+    }),
+    [color, boxShadow, badgeSize]
+  );
 
   return (
     <>

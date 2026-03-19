@@ -180,10 +180,10 @@ async function verifyToken(token: string): Promise<DecodedTokenType | null> {
       return null;
     }
 
-    if (decoded.role == process.env.UNATHORIZED_ROLE) {
-      LOG.error(`This role is not authorized to login. Role: ${decoded.role}`);
-      return null;
-    }
+    // if (decoded.role == process.env.UNATHORIZED_ROLE) {
+    //   LOG.error(`This role is not authorized to login. Role: ${decoded.role}`);
+    //   return null;
+    // }
 
     return decoded;
   } catch (err) {
