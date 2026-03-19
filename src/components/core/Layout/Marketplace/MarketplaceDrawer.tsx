@@ -23,7 +23,7 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import CButton from "../../CButton/CButton";
 
 const MarketplaceDrawer = () => {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
 
   const pathname = usePathname() || "/";
@@ -49,7 +49,7 @@ const MarketplaceDrawer = () => {
       },
       {
         label: "Profil",
-        route: "/profile/1",
+        route: `/profile/${session?.user_id}`,
         icon: <PersonOutlineOutlinedIcon />,
       },
       { label: "Mai mult", route: "/more", icon: <MoreHorizOutlinedIcon /> },
