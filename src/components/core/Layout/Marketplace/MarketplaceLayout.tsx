@@ -18,23 +18,30 @@ export default function MarketplaceLayout({
   children,
 }: MarketplaceLayoutProps) {
   const theme = useTheme();
+  const bgColor =
+    theme.palette.mode === "dark" ? "background.default" : "background.paper";
 
   const styles = React.useMemo(
     () => ({
       main: {
         p: 2.5,
         width: "100%",
-        bgcolor:
-          theme.palette.mode === "dark"
-            ? "background.default"
-            : "background.paper",
+        bgcolor: bgColor,
       },
       box: {
         display: "flex",
         minHeight: "100vh",
       },
+      paper: {
+        bgcolor: bgColor,
+        boxSizing: "border-box",
+        width: DRAWER_WIDTH,
+        transition: "width 200ms ease",
+        boxShadow: "none",
+        border: 0,
+      },
     }),
-    [DRAWER_WIDTH, theme]
+    [DRAWER_WIDTH, theme, bgColor]
   );
 
   return (
@@ -51,17 +58,7 @@ export default function MarketplaceLayout({
         <Drawer
           variant="permanent"
           open
-          slotProps={{
-            paper: {
-              sx: {
-                boxSizing: "border-box",
-                width: DRAWER_WIDTH,
-                transition: "width 200ms ease",
-                boxShadow: "none",
-                border: 0,
-              },
-            },
-          }}
+          slotProps={{ paper: { sx: styles.paper } }}
         >
           <MarketplaceDrawer />
         </Drawer>
