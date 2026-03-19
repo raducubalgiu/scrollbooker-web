@@ -4,7 +4,7 @@ import {
   Avatar,
   CircularProgress,
   IconButton,
-  ListItem,
+  ListItemButton,
   ListItemProps,
   Paper,
   Stack,
@@ -15,6 +15,7 @@ import React from "react";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import { useMutate } from "@/hooks/useHttp";
 import { NotificationType } from "@/ts/models/user/NotificationType";
+import { useRouter } from "next/navigation";
 
 type NotificationItemProps = {
   notification: NotificationType;
@@ -28,6 +29,7 @@ export default function NotificationItem({
 }: NotificationItemProps) {
   const { type, sender, is_read } = notification || {};
   let constructedMessage = "";
+  const router = useRouter();
 
   const { mutate: deleteNotification, isPending } = useMutate({
     key: ["delete-notification"],
@@ -47,16 +49,21 @@ export default function NotificationItem({
   }
 
   return (
-    <ListItem sx={{ p: 0, mb: 1.5 }} {...props}>
+    <ListItemButton
+      component="div"
+      onClick={() => sender?.id && router.push(`/profile/${sender.id}`)}
+      sx={{ p: 0, mb: 1.5 }}
+      {...props}
+    >
       <Paper sx={{ flexGrow: 1, borderRadius: 5 }}>
         <CustomStack p={2.5} flexGrow={1}>
           <CustomStack justifyContent="flex-start" maxWidth={400}>
             <Avatar
-              src={sender.avatar}
+              src={sender?.avatar}
               sx={{ width: 45, height: 45, mr: 1.5 }}
             />
             <Stack flexWrap="wrap">
-              <Typography fontWeight={600}>{sender.username}</Typography>
+              <Typography fontWeight={600}>{sender?.username ?? ""}</Typography>
               <Typography
                 color="neutral.900"
                 fontWeight={is_read ? 600 : 500}
@@ -67,12 +74,15 @@ export default function NotificationItem({
             </Stack>
           </CustomStack>
           <IconButton
-            onClick={() => deleteNotification({ id: notification.id })}
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteNotification({ id: notification.id });
+            }}
           >
             {isPending ? <CircularProgress size={20} /> : <CloseIcon />}
           </IconButton>
         </CustomStack>
       </Paper>
-    </ListItem>
+    </ListItemButton>
   );
 }
