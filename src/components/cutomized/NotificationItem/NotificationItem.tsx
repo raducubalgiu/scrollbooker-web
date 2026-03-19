@@ -49,13 +49,13 @@ export default function NotificationItem({
   }
 
   return (
-    <ListItemButton
-      component="div"
-      onClick={() => sender?.id && router.push(`/profile/${sender.id}`)}
-      sx={{ p: 0, mb: 1.5 }}
-      {...props}
-    >
-      <Paper sx={{ flexGrow: 1, borderRadius: 5 }}>
+    <Paper sx={{ flexGrow: 1, borderRadius: 5 }}>
+      <ListItemButton
+        component="div"
+        onClick={() => sender?.id && router.push(`/profile/${sender.username}`)}
+        sx={{ p: 0, mb: 1.5, borderRadius: 5 }}
+        {...props}
+      >
         <CustomStack p={2.5} flexGrow={1}>
           <CustomStack justifyContent="flex-start" maxWidth={400}>
             <Avatar
@@ -82,7 +82,7 @@ export default function NotificationItem({
             {isPending ? <CircularProgress size={20} /> : <CloseIcon />}
           </IconButton>
         </CustomStack>
-      </Paper>
-    </ListItemButton>
+      </ListItemButton>
+    </Paper>
   );
 }

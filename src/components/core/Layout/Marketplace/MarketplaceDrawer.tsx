@@ -49,7 +49,7 @@ const MarketplaceDrawer = () => {
       },
       {
         label: "Profil",
-        route: `/profile/${session?.user_id}`,
+        route: `/profile/${session?.username}`,
         icon: <PersonOutlineOutlinedIcon />,
       },
       { label: "Mai mult", route: "/more", icon: <MoreHorizOutlinedIcon /> },
