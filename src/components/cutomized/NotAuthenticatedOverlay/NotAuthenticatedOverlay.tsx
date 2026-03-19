@@ -16,6 +16,7 @@ const NotAuthenticatedOverlay = ({
   const theme = useTheme();
   const overlaySx = useMemo(() => {
     const isDark = theme.palette.mode === "dark";
+    const topBelowModal = Math.max((theme.zIndex?.modal ?? 1300) - 1, 0);
 
     if (isDark) {
       return {
@@ -32,7 +33,7 @@ const NotAuthenticatedOverlay = ({
         pt: 6,
         px: 2,
         pb: 2,
-        zIndex: 2000,
+        zIndex: topBelowModal,
         pointerEvents: "auto",
         borderRadius: 2,
       };
@@ -52,7 +53,7 @@ const NotAuthenticatedOverlay = ({
       pt: 6,
       px: 2,
       pb: 2,
-      zIndex: 2000,
+      zIndex: topBelowModal,
       pointerEvents: "auto",
       borderRadius: 2,
     };

@@ -22,7 +22,7 @@ export type UserProfileType = {
   is_business_or_employee: boolean;
 };
 
-type UserCountersType = {
+export type UserCountersType = {
   user_id: number;
   followings_count: number;
   followers_count: number;

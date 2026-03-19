@@ -16,6 +16,7 @@ import ActionButton from "../ActionButton/ActionButton";
 type ModalPropsType = DialogProps & {
   handleClose: () => void;
   actions: ActionButtonType[];
+  dividers?: boolean;
 };
 
 type ModalTitlePropsType = {
@@ -31,8 +32,8 @@ const ModalTitle = ({ title, onClose, ...other }: ModalTitlePropsType) => {
           {title}
         </Typography>
         <Tooltip title="Close">
-          <IconButton aria-label="close" onClick={onClose}>
-            <CloseIcon />
+          <IconButton aria-label="close" onClick={onClose} size="large">
+            <CloseIcon fontSize="large" />
           </IconButton>
         </Tooltip>
       </CustomStack>
@@ -52,6 +53,7 @@ export default function Modal({
   children,
   open,
   actions,
+  dividers = true,
   ...others
 }: ModalPropsType) {
   return (
@@ -63,7 +65,7 @@ export default function Modal({
       {...others}
     >
       <ModalTitle title={title} onClose={handleClose} />
-      <DialogContent dividers>{children}</DialogContent>
+      <DialogContent dividers={dividers}>{children}</DialogContent>
       <ModalFooter actions={actions} />
     </Dialog>
   );

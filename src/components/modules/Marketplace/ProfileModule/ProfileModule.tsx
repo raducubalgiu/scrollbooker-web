@@ -1,17 +1,20 @@
 "use client";
 
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { UserProfileType } from "@/ts/models/user/UserProfileType";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
 import ProfileTabs from "./tabs/ProfileTabs";
+import ProfileSocialModal from "./ProfileSocialModal";
 
 type ProfileModuleProps = {
   profile: UserProfileType | undefined;
 };
 
 const ProfileModule = ({ profile }: ProfileModuleProps) => {
+  const [isSocialModalOpen, setSocialModalOpen] = useState(false);
+
   if (!profile) return null;
 
   const {
@@ -27,10 +30,14 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
 
   return (
     <Box>
+      <ProfileSocialModal
+        open={isSocialModalOpen}
+        handleClose={() => setSocialModalOpen(false)}
+      />
+
       <ProfileCounters
-        ratings_count={counters.ratings_count}
-        followers_count={counters.followers_count}
-        followings_count={counters.followings_count}
+        onClick={(type) => setSocialModalOpen(true)}
+        counters={counters}
       />
 
       <ProfileUserInfo

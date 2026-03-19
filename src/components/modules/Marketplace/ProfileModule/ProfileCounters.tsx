@@ -1,17 +1,21 @@
+import { UserCountersType } from "@/ts/models/user/UserProfileType";
 import { Divider, ListItemButton, Stack, Typography } from "@mui/material";
 import React from "react";
 
+enum CounterType {
+  Ratings = "ratings",
+  Followers = "followers",
+  Followings = "followings",
+}
+
 type ProfileCountersProps = {
-  ratings_count: number;
-  followers_count: number;
-  followings_count: number;
+  counters: UserCountersType;
+  onClick: (type: CounterType) => void;
 };
 
-const ProfileCounters = ({
-  ratings_count,
-  followers_count,
-  followings_count,
-}: ProfileCountersProps) => {
+const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
+  const { ratings_count, followers_count, followings_count } = counters;
+
   const styles = {
     button: {
       flex: 1,
@@ -34,7 +38,10 @@ const ProfileCounters = ({
       justifyContent="center"
       sx={{ width: "100%" }}
     >
-      <ListItemButton sx={styles.button}>
+      <ListItemButton
+        sx={styles.button}
+        onClick={() => onClick(CounterType.Ratings)}
+      >
         <Stack alignItems="center" spacing={1}>
           <Typography variant="h6" sx={{ color: "text.secondary" }}>
             Recenzii
@@ -51,7 +58,10 @@ const ProfileCounters = ({
         sx={{ height: 40, alignSelf: "center" }}
       />
 
-      <ListItemButton sx={styles.button}>
+      <ListItemButton
+        sx={styles.button}
+        onClick={() => onClick(CounterType.Followers)}
+      >
         <Stack alignItems="center" spacing={1}>
           <Typography variant="h6" sx={{ color: "text.secondary" }}>
             Urmaritori
@@ -68,7 +78,10 @@ const ProfileCounters = ({
         sx={{ height: 40, alignSelf: "center" }}
       />
 
-      <ListItemButton sx={styles.button}>
+      <ListItemButton
+        sx={styles.button}
+        onClick={() => onClick(CounterType.Followings)}
+      >
         <Stack alignItems="center" spacing={1}>
           <Typography variant="h6" sx={{ color: "text.secondary" }}>
             Urmaresti
