@@ -47,7 +47,7 @@ export default function NotificationItem({
   }
 
   return (
-    <ListItem sx={{ p: 0, mb: 2.5 }} {...props}>
+    <ListItem sx={{ p: 0, mb: 1.5 }} {...props}>
       <Paper sx={{ flexGrow: 1, borderRadius: 5 }}>
         <CustomStack p={2.5} flexGrow={1}>
           <CustomStack justifyContent="flex-start" maxWidth={400}>

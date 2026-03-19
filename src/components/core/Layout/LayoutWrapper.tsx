@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import AdminLayout from "./Admin/AdminLayout";
 import MarketplaceLayout from "./Marketplace/MarketplaceLayout";
 
+const ADMIN_PREFIXES = ["/admin"];
+
 export default function LayoutWrapper({
   children,
 }: {
@@ -14,29 +16,29 @@ export default function LayoutWrapper({
   const { status } = useSession();
   const pathname = usePathname() || "";
 
+  const isAdminArea = React.useMemo(
+    () => ADMIN_PREFIXES.some((p) => pathname.startsWith(p)),
+    [pathname]
+  );
+
+  const isLoginPage = React.useMemo(
+    () => pathname === "/api/auth/signin",
+    [pathname]
+  );
+
+  const LayoutComp = React.useMemo(
+    () => (isAdminArea ? AdminLayout : MarketplaceLayout),
+    [isAdminArea]
+  );
+
   if (status === "loading") return null;
 
-  const adminPrefixes = [
-    "/admin",
-    "/calendar",
-    "/my-business",
-    "/appointments",
-    "/businesses",
-    "/nomenclatures",
-    "/settings",
-    "/notifications",
-    "/onboarding",
-  ];
-
-  const isAdminArea = adminPrefixes.some((p) => pathname.startsWith(p));
-  const isLoginPage = pathname === "/api/auth/signin";
-
   if (isAdminArea) {
-    return <AdminLayout>{children}</AdminLayout>;
+    return <LayoutComp>{children}</LayoutComp>;
   }
   if (isLoginPage) {
     return <>{children}</>;
   }
 
-  return <MarketplaceLayout>{children}</MarketplaceLayout>;
+  return <LayoutComp>{children}</LayoutComp>;
 }

@@ -6,6 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { Drawer } from "@mui/material";
 import MarketplaceDrawer from "./MarketplaceDrawer";
 import MarketplaceBottomBar from "./MarketplaceBottomBar";
+import { useTheme } from "@mui/material/styles";
 
 const DRAWER_WIDTH = 300;
 
@@ -16,18 +17,24 @@ interface MarketplaceLayoutProps {
 export default function MarketplaceLayout({
   children,
 }: MarketplaceLayoutProps) {
+  const theme = useTheme();
+
   const styles = React.useMemo(
     () => ({
       main: {
         p: 2.5,
-        ml: { sm: `${DRAWER_WIDTH}px` },
+        width: "100%",
+        bgcolor:
+          theme.palette.mode === "dark"
+            ? "background.default"
+            : "background.paper",
       },
       box: {
         display: "flex",
         minHeight: "100vh",
       },
     }),
-    [DRAWER_WIDTH]
+    [DRAWER_WIDTH, theme]
   );
 
   return (
@@ -50,6 +57,8 @@ export default function MarketplaceLayout({
                 boxSizing: "border-box",
                 width: DRAWER_WIDTH,
                 transition: "width 200ms ease",
+                boxShadow: "none",
+                border: 0,
               },
             },
           }}

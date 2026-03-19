@@ -18,7 +18,7 @@ import { PaginatedData } from "@/components/core/Table/Table";
 
 const fetchNotifications = async ({ pageParam }: { pageParam: number }) => {
   const { data } = await axios.get<PaginatedData<NotificationType>>(
-    `/api/notifications?page=${pageParam}&limit=5`
+    `/api/notifications?page=${pageParam}&limit=10`
   );
   return {
     ...data,
@@ -58,8 +58,9 @@ export default function NotificationsModule() {
           />
         ))}
       {hasNextPage && (
-        <Stack alignItems="center" mt={2.5}>
+        <Stack alignItems="center" mt={1.5}>
           <Button
+            variant="outlined"
             onClick={() => fetchNextPage()}
             sx={{
               textTransform: "capitalize",
