@@ -1,11 +1,12 @@
 import UserAvatar from "@/components/core/Layout/Admin/UserInfo/UserAvatar";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
-import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
-import React from "react";
+import React, { useMemo } from "react";
 import { OpeningHoursType } from "@/ts/models/user/UserProfileType";
+import OwnProfileActions from "./OwnProfileActions";
+import UserProfileActions from "./UserProfileActions";
 
 type ProfileUserInfoProps = {
   fullname: string;
@@ -14,6 +15,8 @@ type ProfileUserInfoProps = {
   profession: string;
   ratings_average: number;
   is_business_or_employee: boolean;
+  is_own_profile: boolean;
+  is_follow: boolean;
   opening_hours: OpeningHoursType;
 };
 
@@ -24,8 +27,25 @@ const ProfileUserInfo = ({
   profession,
   ratings_average,
   is_business_or_employee,
+  is_own_profile,
+  is_follow,
   opening_hours,
 }: ProfileUserInfoProps) => {
+  const actions = useMemo(() => {
+    if (is_own_profile) {
+      return (
+        <OwnProfileActions is_business_or_employee={is_business_or_employee} />
+      );
+    }
+
+    return (
+      <UserProfileActions
+        is_business_or_employee={is_business_or_employee}
+        is_follow={is_follow}
+      />
+    );
+  }, [is_business_or_employee, is_own_profile, is_follow]);
+
   return (
     <Stack flexDirection="row" alignItems="center">
       <UserAvatar
@@ -87,26 +107,7 @@ const ProfileUserInfo = ({
         </Stack>
 
         <Stack flexDirection="row" alignItems="center" sx={{ mt: 1.5 }}>
-          <Button
-            variant="contained"
-            onClick={() => {}}
-            size="large"
-            disableElevation
-            sx={{ mr: 1.5, textTransform: "capitalize" }}
-          >
-            Urmareste
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => {}}
-            size="large"
-            disableElevation
-            startIcon={<DateRangeOutlinedIcon />}
-            sx={{ textTransform: "capitalize" }}
-          >
-            Calendar
-          </Button>
+          {actions}
         </Stack>
       </Box>
     </Stack>

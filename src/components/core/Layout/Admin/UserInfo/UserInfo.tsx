@@ -74,7 +74,6 @@ export default function UserInfo({
           isBusinessOrEmployee={is_business_or_employee}
           openNow={open_now}
           url={avatar}
-          onOpenModal={() => setOpenModal(true)}
           small={collapsed}
         />
 

@@ -25,6 +25,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
     counters,
     is_business_or_employee,
     is_own_profile,
+    is_follow,
     opening_hours,
   } = profile;
 
@@ -47,6 +48,8 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
         profession={profession}
         ratings_average={counters.ratings_average}
         is_business_or_employee={is_business_or_employee}
+        is_own_profile={is_own_profile}
+        is_follow={is_follow}
         opening_hours={opening_hours}
       />
 

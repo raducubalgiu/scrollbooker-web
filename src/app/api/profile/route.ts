@@ -3,13 +3,13 @@ import { get } from "@/utils/requests";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
-    const { userId } = await getUserServerSession()
+  const { session } = await getUserServerSession();
 
-    const response = (
-        await get({
-            url: `/users/${userId}/user-profile`,
-        })
-    ).data;
+  const response = (
+    await get({
+      url: `/users/${session?.username}/user-profile`,
+    })
+  ).data;
 
-    return NextResponse.json(response);
+  return NextResponse.json(response);
 };
