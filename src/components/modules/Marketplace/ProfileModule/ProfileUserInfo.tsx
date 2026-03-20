@@ -31,6 +31,40 @@ const ProfileUserInfo = ({
   is_follow,
   opening_hours,
 }: ProfileUserInfoProps) => {
+  const openingStatus = useMemo(() => {
+    if (!opening_hours) return null;
+
+    const daysMap: Record<string, string> = {
+      Monday: "Luni",
+      Tuesday: "Marți",
+      Wednesday: "Miercuri",
+      Thursday: "Joi",
+      Friday: "Vineri",
+      Saturday: "Sâmbătă",
+      Sunday: "Duminică",
+    };
+
+    const localizeDay = (dayEn?: string) => {
+      if (!dayEn) return null;
+      return daysMap[dayEn] ?? dayEn;
+    };
+
+    if (opening_hours.open_now) {
+      if (opening_hours.closing_time) {
+        return `Închide la ${opening_hours.closing_time}`;
+      }
+      return `Deschis`;
+    }
+
+    const nextDay = localizeDay(opening_hours.next_open_day);
+    const nextTime = opening_hours.next_open_time;
+    if (nextDay && nextTime) {
+      return `Deschide ${nextDay.toLowerCase()} la ${nextTime}`;
+    }
+
+    return `Închis`;
+  }, [opening_hours]);
+
   const actions = useMemo(() => {
     if (is_own_profile) {
       return (
@@ -94,8 +128,8 @@ const ProfileUserInfo = ({
                   color="action"
                   sx={{ fontSize: 25, mr: 0.5 }}
                 />
-                <Typography sx={{ ml: 0.5, mr: 1 }} fontWeight={600}>
-                  Inchide la {opening_hours.closing_time}
+                <Typography sx={{ ml: 0.5, mr: 1, color: "text.secondary" }}>
+                  {openingStatus}
                 </Typography>
                 <ExpandMoreOutlinedIcon
                   color="action"
