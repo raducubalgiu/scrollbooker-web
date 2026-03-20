@@ -1,7 +1,8 @@
+import ExploreModule from "@/components/modules/Marketplace/ExploreModule/ExploreModule";
 import React from "react";
 
-const Page = () => {
-  return <div>Explore</div>;
-};
+async function Explore() {
+	return <ExploreModule />;
+}
 
-export default Page;
+export default Explore;
