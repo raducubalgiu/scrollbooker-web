@@ -3,14 +3,10 @@
 //import CustomTabs from "@/components/core/CustomTabs/CustomTabs";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
-import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
-import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import PlaceRoundedIcon from "@mui/icons-material/PlaceRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
 import {
-	Avatar,
 	Box,
 	Button,
 	Chip,
@@ -23,6 +19,9 @@ import {
 	Typography,
 } from "@mui/material";
 import React from "react";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import TextsmsIcon from "@mui/icons-material/Textsms";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 const SERVICES = [
 	{
@@ -285,18 +284,16 @@ export default function ExploreModule() {
 								}}
 							>
 								<Stack direction="row" spacing={1.25} alignItems="center">
-									<Avatar
-										sx={{ width: 44, height: 44, bgcolor: "primary.main" }}
-									>
-										SB
-									</Avatar>
 									<Box>
 										<Typography variant="subtitle1" fontWeight={800}>
-											Scroll Barber Studio
+											Frizeria Figaro
 										</Typography>
-										<Typography variant="body2" sx={{ opacity: 0.92 }}>
-											@scroll.barber • transformări rapide pentru feed-first
-											booking
+										<Typography
+											variant="body2"
+											color="primary"
+											sx={{ opacity: 0.92, fontWeight: 600 }}
+										>
+											Frizerie
 										</Typography>
 									</Box>
 								</Stack>
@@ -337,23 +334,23 @@ export default function ExploreModule() {
 						{[
 							{
 								key: "like",
-								icon: <FavoriteBorderRoundedIcon fontSize="small" />,
+								icon: <FavoriteIcon fontSize="large" />,
 							},
 							{
 								key: "comments",
-								icon: <ChatBubbleOutlineRoundedIcon fontSize="small" />,
+								icon: <TextsmsIcon fontSize="large" />,
 							},
 							{
 								key: "save",
-								icon: <BookmarkBorderRoundedIcon fontSize="small" />,
+								icon: <BookmarkIcon fontSize="large" />,
 							},
-							{ key: "share", icon: <ShareRoundedIcon fontSize="small" /> },
+							{ key: "share", icon: <ShareRoundedIcon fontSize="large" /> },
 						].map(action => (
 							<Box
 								key={action.key}
 								sx={{
-									width: 44,
-									height: 44,
+									width: 60,
+									height: 60,
 									borderRadius: "50%",
 									bgcolor: "rgba(15,23,42,0.72)",
 									display: "flex",
@@ -369,7 +366,7 @@ export default function ExploreModule() {
 						))}
 					</Box>
 
-					{/* <Paper
+					<Paper
 						elevation={0}
 						sx={{
 							display: { xs: "none", lg: "flex" },
@@ -613,7 +610,7 @@ export default function ExploreModule() {
 								</Button>
 							</Stack>
 						</Box>
-					</Paper> */}
+					</Paper>
 				</Box>
 			</Container>
 		</>
