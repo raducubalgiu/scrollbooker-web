@@ -10,6 +10,7 @@ import ProfileProductsTab from "./ProfileProductsTab";
 import ProfileEmployeesTab from "./ProfileEmployeesTab";
 import ProfileBookmarksTab from "./ProfileBookmarksTab";
 import ProfileInfoTab from "./ProfileInfoTab";
+import { useSession } from "next-auth/react";
 
 enum ProfileTabEnum {
   POSTS,
@@ -74,6 +75,9 @@ const ProfileTabs = ({
   isBusinessOrEmployee?: boolean;
   isMyProfile?: boolean;
 }) => {
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
+
   const tabs = useMemo<ProfileTabType[]>(
     () => getTabs(isBusinessOrEmployee, isMyProfile),
     [isBusinessOrEmployee, isMyProfile]
@@ -99,19 +103,19 @@ const ProfileTabs = ({
   const tabsContent = useMemo(() => {
     switch (currentTab) {
       case ProfileTabEnum.POSTS:
-        return <ProfilePostsTab />;
+        return <ProfilePostsTab isAuthenticated={isAuthenticated} />;
       case ProfileTabEnum.PRODUCTS:
         return <ProfileProductsTab />;
       case ProfileTabEnum.EMPLOYEES:
         return <ProfileEmployeesTab />;
       case ProfileTabEnum.BOOKMARKS:
-        return <ProfileBookmarksTab />;
+        return <ProfileBookmarksTab isAuthenticated={isAuthenticated} />;
       case ProfileTabEnum.INFO:
         return <ProfileInfoTab />;
       default:
         return null;
     }
-  }, [currentTab]);
+  }, [currentTab, isAuthenticated]);
 
   const styles = {
     container: {
