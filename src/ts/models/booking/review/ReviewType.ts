@@ -5,7 +5,7 @@ export type ReviewType = {
   rating: number;
   review: string;
   product_business_owner: ReviewProductBusinessOwnerType;
-  customer: ReviewServiceType;
+  customer: ReviewCustomerType;
   service: ReviewServiceType;
   product: ReviewProductType;
   like_count: number;
@@ -18,14 +18,14 @@ export type ReviewProductBusinessOwnerType = {
   id: number;
   fullname: string;
   username: string;
-  avatar: string | null;
+  avatar: string | undefined;
 };
 
 export type ReviewCustomerType = {
   id: number;
   fullname: string;
   username: string;
-  avatar: string | null;
+  avatar: string | undefined;
 };
 
 export type ReviewServiceType = {

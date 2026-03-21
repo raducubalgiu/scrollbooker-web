@@ -61,7 +61,7 @@ const VideoReviewsTab = ({
 
   return (
     <>
-      {!isLoadingVideoReviews && reviews.length === 0 && (
+      {/* {!isLoadingVideoReviews && reviews.length === 0 && (
         <Typography variant="h6" color="text.secondary" align="center" mt={4}>
           Nu există recenzii video.
         </Typography>
@@ -86,7 +86,7 @@ const VideoReviewsTab = ({
         <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
           <CircularProgress size={24} />
         </Box>
-      )}
+      )} */}
     </>
   );
 };

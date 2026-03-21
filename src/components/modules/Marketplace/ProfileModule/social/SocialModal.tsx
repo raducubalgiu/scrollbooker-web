@@ -135,7 +135,7 @@ const SocialModal = ({
       mx: 1,
       flex: 1,
       overflowY: "auto",
-      pt: 1,
+      pt: 0,
       scrollbarWidth: "none",
       msOverflowStyle: "none",
       "&::-webkit-scrollbar": {
@@ -188,8 +188,8 @@ const SocialModal = ({
       dividers={false}
       showFooter={false}
       title={`@${socialModal?.username}`}
-      maxWidth="md"
-      fullWidth
+      //maxWidth="md"
+      //fullWidth
     >
       <Box
         sx={{

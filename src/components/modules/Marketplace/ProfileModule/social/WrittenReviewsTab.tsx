@@ -1,6 +1,7 @@
 import { useInfiniteReviews } from "@/hooks/infiniteQuery/useInfiniteReviews";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import React, { memo, useEffect, useRef } from "react";
+import ReviewCard from "./ReviewCard";
 
 type WrittenReviewsTabProps = {
   userId: number | undefined;
@@ -73,17 +74,7 @@ const WrittenReviewsTab = ({
 
       {!isLoadingWrittenReviews &&
         !isLoadingSummary &&
-        reviews.map((review) => (
-          <Box
-            key={review.id}
-            sx={{ mb: 2, p: 2, border: "1px solid #ccc", borderRadius: 2 }}
-          >
-            <Typography variant="subtitle1" fontWeight={600}>
-              {review.review}
-            </Typography>
-            <Typography variant="body1">{review.created_at}</Typography>
-          </Box>
-        ))}
+        reviews.map((review) => <ReviewCard key={review.id} review={review} />)}
 
       <div ref={sentinelRef} aria-hidden style={{ height: 1 }} />
 

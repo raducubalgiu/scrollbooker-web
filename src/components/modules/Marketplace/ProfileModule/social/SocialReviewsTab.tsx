@@ -85,6 +85,7 @@ const SocialReviewsTab = ({
       zIndex: 8,
       backgroundColor: "background.paper",
       py: 1,
+      borderTop: "1px solid transparent",
       display: "flex",
       justifyContent: "center",
     },
