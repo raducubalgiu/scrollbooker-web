@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 type OwnProfileActionsProps = {
   is_business_or_employee: boolean;
@@ -9,6 +10,8 @@ type OwnProfileActionsProps = {
 const OwnProfileActions = ({
   is_business_or_employee,
 }: OwnProfileActionsProps) => {
+  const router = useRouter();
+
   return (
     <>
       <Button
@@ -25,7 +28,7 @@ const OwnProfileActions = ({
         <Button
           variant="outlined"
           color="secondary"
-          onClick={() => {}}
+          onClick={() => router.push("/admin/calendar")}
           size="large"
           disableElevation
           startIcon={<DateRangeOutlinedIcon />}
