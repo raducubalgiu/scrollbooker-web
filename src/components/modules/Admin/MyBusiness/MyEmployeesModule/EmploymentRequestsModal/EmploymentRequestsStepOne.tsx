@@ -1,5 +1,5 @@
 import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItemSkeletons";
-import UserListItem from "@/components/cutomized/UserListItem/UserListItem";
+import UserListItem from "@/components/cutomized/UserItem/UserItem";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { UserMiniType } from "@/ts/models/user/UserMiniType";
 import {
@@ -94,13 +94,14 @@ export default function EmploymentRequestsStepOne({
       >
         {!isLoading &&
           users?.map((user) => (
-            <UserListItem
-              onClick={() => handleUserSelect(user.id)}
-              isSelected={user.id === selectedUserId}
-              key={user.id}
-              username={user.username}
-              name={user.fullname}
-            />
+            <></>
+            // <UserListItem
+            //   onClick={() => handleUserSelect(user.id)}
+            //   isSelected={user.id === selectedUserId}
+            //   key={user.id}
+            //   username={user.username}
+            //   name={user.fullname}
+            // />
           ))}
         {isLoading && <UserListItemSkeletons />}
         {isEmpty(users) && !isLoading && (

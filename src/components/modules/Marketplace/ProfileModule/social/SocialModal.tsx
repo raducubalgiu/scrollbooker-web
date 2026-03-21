@@ -1,50 +1,17 @@
 import Modal from "@/components/core/Modal/Modal";
-import {
-  Avatar,
-  Box,
-  Button,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import SocialReviewsTab from "./SocialReviewsTab";
 import SocialFollowersTab from "./SocialFollowersTab";
 import SocialFollowingsTab from "./SocialFollowingsTab";
 import { SocialTabEnum } from "./SocialTabEnum";
 import { SocialModalProps } from "../ProfileModule";
-
-const UItem = () => {
-  return (
-    <Stack
-      flexDirection="row"
-      alignItems="center"
-      justifyContent="space-between"
-      sx={{ py: 2.5 }}
-    >
-      <Stack flexDirection="row" alignItems="center">
-        <Avatar sx={{ width: 70, height: 70 }} />
-        <Box sx={{ ml: 2.5 }}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            Raducu Balgiu
-          </Typography>
-          <Typography color="text.secondary">@radu_balgiu</Typography>
-        </Box>
-      </Stack>
-
-      <Button
-        variant="outlined"
-        color="secondary"
-        onClick={() => {}}
-        size="large"
-        disableElevation
-      >
-        Urmaresti
-      </Button>
-    </Stack>
-  );
-};
 
 type ProfileSocialModalProps = {
   open: boolean;
@@ -78,6 +45,39 @@ const SocialModal = ({
   const [currentTab, setCurrentTab] = useState<SocialTabEnum>(
     socialModal?.selectedTab ?? tabs[0].route
   );
+
+  const scrollRootRef = useRef<HTMLDivElement | null>(null);
+  const positionsRef = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    if (!open) return;
+    positionsRef.current = {};
+  }, [open, socialModal?.userId]);
+
+  const handleTabChange = useCallback(
+    (_: React.SyntheticEvent, newValue: SocialTabEnum) => {
+      const root = scrollRootRef.current;
+      try {
+        if (root) {
+          positionsRef.current[String(currentTab)] = root.scrollTop;
+        }
+      } catch (e) {}
+
+      setCurrentTab(newValue);
+    },
+    [currentTab]
+  );
+
+  useEffect(() => {
+    const root = scrollRootRef.current;
+    if (!root) return;
+    const saved = positionsRef.current[String(currentTab)];
+    requestAnimationFrame(() => {
+      try {
+        root.scrollTop = saved ?? 0;
+      } catch (e) {}
+    });
+  }, [currentTab]);
 
   useEffect(() => {
     const available = tabs.map((t) => t.route);
@@ -133,25 +133,41 @@ const SocialModal = ({
     },
   };
 
-  const handleChange = useCallback(
-    (_: React.SyntheticEvent, newValue: SocialTabEnum) => {
-      setCurrentTab(newValue);
-    },
-    []
-  );
+  const handleChange = handleTabChange;
 
   const tabsContent = useMemo(() => {
+    const saved = positionsRef.current[String(currentTab)];
+    const allowImmediateIntersection = typeof saved === "number" && saved > 0;
+
     switch (currentTab) {
       case SocialTabEnum.REVIEWS:
-        return <SocialReviewsTab />;
+        return (
+          <SocialReviewsTab
+            userId={socialModal?.userId}
+            rootRef={scrollRootRef}
+            disableInitialIgnore={allowImmediateIntersection}
+          />
+        );
       case SocialTabEnum.FOLLOWERS:
-        return <SocialFollowersTab />;
+        return (
+          <SocialFollowersTab
+            userId={socialModal?.userId}
+            rootRef={scrollRootRef}
+            disableInitialIgnore={allowImmediateIntersection}
+          />
+        );
       case SocialTabEnum.FOLLOWINGS:
-        return <SocialFollowingsTab />;
+        return (
+          <SocialFollowingsTab
+            userId={socialModal?.userId}
+            rootRef={scrollRootRef}
+            disableInitialIgnore={allowImmediateIntersection}
+          />
+        );
       default:
         return null;
     }
-  }, [currentTab]);
+  }, [currentTab, socialModal?.userId]);
 
   return (
     <Modal
@@ -159,6 +175,7 @@ const SocialModal = ({
       handleClose={handleClose}
       actions={[]}
       dividers={false}
+      showFooter={false}
       title={`@${socialModal?.username}`}
       maxWidth="xl"
     >
@@ -176,7 +193,9 @@ const SocialModal = ({
           </Tabs>
         </Box>
 
-        <Box sx={styles.tabsContent}>{tabsContent}</Box>
+        <Box sx={styles.tabsContent} ref={scrollRootRef}>
+          {tabsContent}
+        </Box>
       </Box>
     </Modal>
   );

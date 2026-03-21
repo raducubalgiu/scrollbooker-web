@@ -12,11 +12,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import CustomStack from "../CustomStack/CustomStack";
 import { ActionButtonType } from "../ActionButton/ActionButton";
 import ActionButton from "../ActionButton/ActionButton";
+import { isEmpty } from "lodash";
 
 type ModalPropsType = DialogProps & {
   handleClose: () => void;
-  actions: ActionButtonType[];
+  actions?: ActionButtonType[];
   dividers?: boolean;
+  showFooter?: boolean;
 };
 
 type ModalTitlePropsType = {
@@ -43,7 +45,7 @@ const ModalTitle = ({ title, onClose, ...other }: ModalTitlePropsType) => {
 
 const ModalFooter = ({ actions }: { actions: ActionButtonType[] }) => (
   <DialogActions>
-    <ActionButton actions={actions} />
+    {!isEmpty(actions) && <ActionButton actions={actions} />}
   </DialogActions>
 );
 
@@ -52,8 +54,9 @@ export default function Modal({
   title,
   children,
   open,
-  actions,
+  actions = [],
   dividers = true,
+  showFooter = true,
   ...others
 }: ModalPropsType) {
   return (
@@ -65,8 +68,15 @@ export default function Modal({
       {...others}
     >
       <ModalTitle title={title} onClose={handleClose} />
-      <DialogContent dividers={dividers}>{children}</DialogContent>
-      <ModalFooter actions={actions} />
+      <DialogContent
+        dividers={dividers}
+        sx={{
+          pb: showFooter ? undefined : 0,
+        }}
+      >
+        {children}
+      </DialogContent>
+      {showFooter && <ModalFooter actions={actions} />}
     </Dialog>
   );
 }

@@ -20,8 +20,8 @@ export type SocialModalProps = {
 };
 
 const ProfileModule = ({ profile }: ProfileModuleProps) => {
-  const [isSocialModalOpen, setSocialModalOpen] = useState(false);
   const [socialModal, setSocialModal] = useState<SocialModalProps | null>(null);
+  const isSocialModalOpen = socialModal !== null;
 
   if (!profile) return null;
 
@@ -42,7 +42,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
       <SocialModal
         open={isSocialModalOpen}
         socialModal={socialModal}
-        handleClose={() => setSocialModalOpen(false)}
+        handleClose={() => setSocialModal(null)}
       />
 
       <ProfileCounters
@@ -52,7 +52,6 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
             userId: profile.id,
             username: profile.username,
           });
-          setSocialModalOpen(true);
         }}
         counters={counters}
       />
