@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
 const ProfileInfoTab = () => {
-  return <div>Info</div>;
+  return <></>;
 };
 
 export default memo(ProfileInfoTab);

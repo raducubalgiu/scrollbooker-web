@@ -6,14 +6,22 @@ import { UserProfileType } from "@/ts/models/user/UserProfileType";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
 import ProfileTabs from "./tabs/ProfileTabs";
-import ProfileSocialModal from "./ProfileSocialModal";
+import SocialModal from "./social/SocialModal";
+import { SocialTabEnum } from "./social/SocialTabEnum";
 
-type ProfileModuleProps = {
+export type ProfileModuleProps = {
   profile: UserProfileType | undefined;
+};
+
+export type SocialModalProps = {
+  selectedTab: SocialTabEnum;
+  userId: number;
+  username: string;
 };
 
 const ProfileModule = ({ profile }: ProfileModuleProps) => {
   const [isSocialModalOpen, setSocialModalOpen] = useState(false);
+  const [socialModal, setSocialModal] = useState<SocialModalProps | null>(null);
 
   if (!profile) return null;
 
@@ -31,13 +39,21 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
 
   return (
     <Box>
-      <ProfileSocialModal
+      <SocialModal
         open={isSocialModalOpen}
+        socialModal={socialModal}
         handleClose={() => setSocialModalOpen(false)}
       />
 
       <ProfileCounters
-        onClick={(type) => setSocialModalOpen(true)}
+        onClick={(tab) => {
+          setSocialModal({
+            selectedTab: tab,
+            userId: profile.id,
+            username: profile.username,
+          });
+          setSocialModalOpen(true);
+        }}
         counters={counters}
       />
 

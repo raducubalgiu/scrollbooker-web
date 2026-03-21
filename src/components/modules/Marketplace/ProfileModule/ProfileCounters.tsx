@@ -1,16 +1,11 @@
 import { UserCountersType } from "@/ts/models/user/UserProfileType";
 import { Divider, ListItemButton, Stack, Typography } from "@mui/material";
 import React from "react";
-
-enum CounterType {
-  Ratings = "ratings",
-  Followers = "followers",
-  Followings = "followings",
-}
+import { SocialTabEnum } from "./social/SocialTabEnum";
 
 type ProfileCountersProps = {
   counters: UserCountersType;
-  onClick: (type: CounterType) => void;
+  onClick: (tab: SocialTabEnum) => void;
 };
 
 const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
@@ -40,7 +35,7 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
     >
       <ListItemButton
         sx={styles.button}
-        onClick={() => onClick(CounterType.Ratings)}
+        onClick={() => onClick(SocialTabEnum.REVIEWS)}
       >
         <Stack alignItems="center" spacing={1}>
           <Typography variant="h6" sx={{ color: "text.secondary" }}>
@@ -60,7 +55,7 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
 
       <ListItemButton
         sx={styles.button}
-        onClick={() => onClick(CounterType.Followers)}
+        onClick={() => onClick(SocialTabEnum.FOLLOWERS)}
       >
         <Stack alignItems="center" spacing={1}>
           <Typography variant="h6" sx={{ color: "text.secondary" }}>
@@ -80,7 +75,7 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
 
       <ListItemButton
         sx={styles.button}
-        onClick={() => onClick(CounterType.Followings)}
+        onClick={() => onClick(SocialTabEnum.FOLLOWINGS)}
       >
         <Stack alignItems="center" spacing={1}>
           <Typography variant="h6" sx={{ color: "text.secondary" }}>
