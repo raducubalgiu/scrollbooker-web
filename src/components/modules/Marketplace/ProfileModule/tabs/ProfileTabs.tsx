@@ -68,13 +68,17 @@ const getTabs = (
   ];
 };
 
+type ProfileTabsProps = {
+  isBusinessOrEmployee?: boolean;
+  isMyProfile?: boolean;
+  userId: number;
+};
+
 const ProfileTabs = ({
   isBusinessOrEmployee = false,
   isMyProfile = false,
-}: {
-  isBusinessOrEmployee?: boolean;
-  isMyProfile?: boolean;
-}) => {
+  userId,
+}: ProfileTabsProps) => {
   const { status } = useSession();
   const isAuthenticated = status === "authenticated";
 
@@ -111,7 +115,7 @@ const ProfileTabs = ({
       case ProfileTabEnum.BOOKMARKS:
         return <ProfileBookmarksTab isAuthenticated={isAuthenticated} />;
       case ProfileTabEnum.INFO:
-        return <ProfileInfoTab />;
+        return <ProfileInfoTab userId={userId} />;
       default:
         return null;
     }

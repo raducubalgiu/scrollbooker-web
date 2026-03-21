@@ -79,10 +79,12 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
         is_own_profile={is_own_profile}
         is_follow={is_follow}
         opening_hours={opening_hours}
+        business_owner={profile.business_owner}
         onOpenScheduleModal={() => setOpenScheduleModal(true)}
       />
 
       <ProfileTabs
+        userId={profile.id}
         isBusinessOrEmployee={is_business_or_employee}
         isMyProfile={is_own_profile}
       />

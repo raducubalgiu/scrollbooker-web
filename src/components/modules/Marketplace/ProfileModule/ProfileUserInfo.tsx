@@ -1,12 +1,16 @@
 import UserAvatar from "@/components/core/Layout/Admin/UserInfo/UserAvatar";
-import { Box, ButtonBase, Stack, Typography } from "@mui/material";
+import { Avatar, Box, ButtonBase, Stack, Typography } from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import React, { useMemo } from "react";
-import { OpeningHoursType } from "@/ts/models/user/UserProfileType";
+import {
+  BusinessOwnerType,
+  OpeningHoursType,
+} from "@/ts/models/user/UserProfileType";
 import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
+import CachedIcon from "@mui/icons-material/Cached";
 
 type ProfileUserInfoProps = {
   fullname: string;
@@ -18,6 +22,7 @@ type ProfileUserInfoProps = {
   is_own_profile: boolean;
   is_follow: boolean;
   opening_hours: OpeningHoursType;
+  business_owner: BusinessOwnerType | undefined;
   onOpenScheduleModal: () => void;
 };
 
@@ -31,6 +36,7 @@ const ProfileUserInfo = ({
   is_own_profile,
   is_follow,
   opening_hours,
+  business_owner,
   onOpenScheduleModal,
 }: ProfileUserInfoProps) => {
   const openingStatus = useMemo(() => {
@@ -147,7 +153,30 @@ const ProfileUserInfo = ({
           )}
         </Stack>
 
-        <Stack flexDirection="row" alignItems="center" sx={{ mt: 1.5 }}>
+        {business_owner && (
+          <Stack flexDirection="row" alignItems="center">
+            <CachedIcon />
+
+            <Stack
+              flexDirection="row"
+              alignItems="center"
+              sx={{ ml: 1.5 }}
+              gap={1}
+            >
+              <Avatar
+                src={business_owner?.avatar}
+                sx={{ border: 1, borderColor: "text.secondary" }}
+              />
+              <ButtonBase>
+                <Typography variant="body1" color="primary" fontWeight={600}>
+                  @{business_owner?.username}
+                </Typography>
+              </ButtonBase>
+            </Stack>
+          </Stack>
+        )}
+
+        <Stack flexDirection="row" alignItems="center" sx={{ mt: 2.5 }}>
           {actions}
         </Stack>
       </Box>

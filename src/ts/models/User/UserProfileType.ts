@@ -39,7 +39,7 @@ export type OpeningHoursType = {
   next_open_time?: string;
 };
 
-type BusinessOwnerType = {
+export type BusinessOwnerType = {
   id: number;
   fullname: string;
   username: string;
