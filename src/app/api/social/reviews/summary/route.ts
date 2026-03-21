@@ -1,4 +1,4 @@
-import { ReviewsSummaryResponse } from "@/ts/models/booking/reviews/ReviewsSummaryType";
+import { ReviewsSummaryResponse } from "@/ts/models/booking/review/ReviewsSummaryType";
 import { get } from "@/utils/requests";
 import { NextResponse, NextRequest } from "next/server";
 

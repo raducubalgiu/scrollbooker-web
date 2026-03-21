@@ -188,9 +188,16 @@ const SocialModal = ({
       dividers={false}
       showFooter={false}
       title={`@${socialModal?.username}`}
-      maxWidth="xl"
+      maxWidth="md"
+      fullWidth
     >
-      <Box sx={{ display: "flex", flexDirection: "column", height: "80vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          height: "80vh",
+        }}
+      >
         <Box sx={styles.container}>
           <Tabs value={currentTab} onChange={handleChange} sx={styles.tabs}>
             {tabs.map((tab) => {

@@ -1,14 +1,14 @@
 import React, { useMemo, memo } from "react";
 import { Box, Checkbox, Stack, styled, Typography } from "@mui/material";
-import type { ReviewsSummaryType } from "@/ts/models/booking/reviews/ReviewsSummaryType";
+import type { ReviewsSummaryType } from "@/ts/models/booking/review/ReviewsSummaryType";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 
 type RatingsDistributionProps = {
   summary: ReviewsSummaryType | undefined;
-  selectedRatings?: Set<number>;
-  onRatingClick?: (rating: number) => void;
+  selectedRatings: Set<number>;
+  onRatingClick: (rating: number) => void;
 };
 
 const RatingsDistribution = ({
