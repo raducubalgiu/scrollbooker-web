@@ -8,7 +8,11 @@ interface Props {
 }
 
 export default async function UserProfile({ params }: Props) {
-  const { username } = params;
+  const { username } = await Promise.resolve(params);
+
+  if (!username) {
+    return <ProfileModule profile={undefined} />;
+  }
 
   const profile = (
     await get<UserProfileType | undefined>({
