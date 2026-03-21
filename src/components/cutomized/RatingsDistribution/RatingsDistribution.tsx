@@ -44,7 +44,7 @@ const RatingsDistribution = ({
   }, [breakdown]);
 
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 10,
+    height: 7.5,
     [`&.${linearProgressClasses.colorPrimary}`]: {
       backgroundColor: theme.palette.grey[200],
       ...theme.applyStyles("dark", {
