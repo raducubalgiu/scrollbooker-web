@@ -21,7 +21,7 @@ const UserProfileActions = ({
           disableElevation
           sx={{ mr: 1.5, textTransform: "capitalize" }}
         >
-          Rezervă
+          Rezervă acum
         </Button>
       )}
       <Button

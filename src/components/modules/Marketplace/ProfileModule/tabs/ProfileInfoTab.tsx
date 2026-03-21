@@ -33,7 +33,7 @@ const ProfileInfoTab = ({ userId }: ProfileInfoTabProps) => {
           <CircularProgress />
         </Stack>
       ) : (
-        <Box maxWidth="sm" sx={{ py: 2 }}>
+        <Box maxWidth="md" sx={{ py: 2 }}>
           <Typography variant="h6" gutterBottom fontWeight={600}>
             Descrierea locatiei
           </Typography>

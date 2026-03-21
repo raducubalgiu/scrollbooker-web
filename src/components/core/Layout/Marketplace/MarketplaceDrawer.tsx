@@ -15,6 +15,7 @@ import {
   ClickAwayListener,
   List,
   ListItemText as MuiListItemText,
+  Badge,
 } from "@mui/material";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
@@ -50,12 +51,20 @@ const MarketplaceDrawer = () => {
       {
         label: "Notificări",
         route: "/notifications",
-        icon: <NotificationsNoneOutlinedIcon />,
+        icon: (
+          <Badge badgeContent={4} color="error">
+            <NotificationsNoneOutlinedIcon />
+          </Badge>
+        ),
       },
       {
         label: "Rezervări",
         route: "/appointments",
-        icon: <QueryBuilderOutlinedIcon />,
+        icon: (
+          <Badge badgeContent={2} color="error">
+            <QueryBuilderOutlinedIcon />
+          </Badge>
+        ),
       },
       {
         label: "Profil",
