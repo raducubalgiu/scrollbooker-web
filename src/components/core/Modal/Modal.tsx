@@ -3,7 +3,6 @@ import {
   DialogContent,
   DialogTitle,
   DialogProps,
-  Tooltip,
   IconButton,
   Typography,
   DialogActions,
@@ -33,11 +32,9 @@ const ModalTitle = ({ title, onClose, ...other }: ModalTitlePropsType) => {
         <Typography variant="h5" fontWeight={600}>
           {title}
         </Typography>
-        <Tooltip title="Close">
-          <IconButton aria-label="close" onClick={onClose} size="large">
-            <CloseIcon fontSize="large" />
-          </IconButton>
-        </Tooltip>
+        <IconButton aria-label="close" onClick={onClose} size="large">
+          <CloseIcon fontSize="large" />
+        </IconButton>
       </CustomStack>
     </DialogTitle>
   );

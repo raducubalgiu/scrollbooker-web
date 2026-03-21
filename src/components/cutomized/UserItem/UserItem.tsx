@@ -88,7 +88,7 @@ const UserItem = ({ user }: { user: UserMiniType }) => {
         {user_avatar}
 
         <Box sx={{ ml: 2.5 }}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
             {fullname}
           </Typography>
           <Typography color="text.secondary">
