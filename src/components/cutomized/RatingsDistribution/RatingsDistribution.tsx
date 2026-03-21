@@ -1,29 +1,47 @@
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import { Box, Checkbox, Stack, styled, Typography } from "@mui/material";
+import type { ReviewsSummaryType } from "@/ts/models/booking/reviews/ReviewsSummaryType";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 
 type RatingsDistributionProps = {
-  // keys 1..5
-  counts?: Record<number, number>;
-};
-
-const DEFAULT_COUNTS: Record<number, number> = {
-  5: 120,
-  4: 45,
-  3: 20,
-  2: 8,
-  1: 3,
+  summary: ReviewsSummaryType | undefined;
+  selectedRatings?: Set<number>;
+  onRatingClick?: (rating: number) => void;
 };
 
 const RatingsDistribution = ({
-  counts = DEFAULT_COUNTS,
+  summary,
+  selectedRatings,
+  onRatingClick,
 }: RatingsDistributionProps) => {
-  const total = useMemo(
-    () => Object.values(counts).reduce((a, b) => a + b, 0),
-    [counts]
-  );
+  const breakdown = useMemo(() => {
+    if (!summary || !Array.isArray(summary.breakdown))
+      return [] as ReviewsSummaryType["breakdown"];
+    return [...summary.breakdown].sort((a, b) => b.rating - a.rating);
+  }, [summary]);
+
+  const counts = useMemo(() => {
+    const map: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    breakdown.forEach((b) => {
+      if (typeof b.rating === "number" && typeof b.count === "number") {
+        map[b.rating] = b.count;
+      }
+    });
+    return map;
+  }, [breakdown]);
+
+  const total = useMemo(() => {
+    if (summary && typeof summary.ratings_count === "number")
+      return summary.ratings_count;
+    return Object.values(counts).reduce((a, b) => a + b, 0);
+  }, [summary, counts]);
+
+  const maxCount = useMemo(() => {
+    if (!breakdown || breakdown.length === 0) return 1;
+    return Math.max(...breakdown.map((b) => b.count), 1);
+  }, [breakdown]);
 
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -51,19 +69,24 @@ const RatingsDistribution = ({
 
   return (
     <Box>
-      {[5, 4, 3, 2, 1].map((star) => {
-        const count = counts[star] ?? 0;
-        const percent = total > 0 ? (count / total) * 100 : 0;
+      {breakdown.map((b) => {
+        const count = counts[b.rating] ?? 0;
+        const percent = total > 0 ? (count / maxCount) * 100 : 0;
+        const checked = selectedRatings?.has(b.rating) ?? false;
 
         return (
-          <Stack key={star} direction="row" alignItems="center" spacing={2}>
-            <StyledCheckbox size="large" checked={false} />
+          <Stack key={b.rating} direction="row" alignItems="center" spacing={2}>
+            <StyledCheckbox
+              size="large"
+              checked={checked}
+              onChange={() => onRatingClick?.(b.rating)}
+            />
 
             <Typography
               variant="h6"
               sx={{ width: 28, textAlign: "center", fontWeight: 600 }}
             >
-              {star}
+              {b.rating}
             </Typography>
 
             <Box sx={{ flex: 1, mx: 1 }}>
@@ -83,4 +106,39 @@ const RatingsDistribution = ({
   );
 };
 
-export default RatingsDistribution;
+function areEqual(
+  prev: Readonly<React.ComponentProps<typeof RatingsDistribution>>,
+  next: Readonly<React.ComponentProps<typeof RatingsDistribution>>
+) {
+  const prevSummary = prev.summary;
+  const nextSummary = next.summary;
+
+  if (prevSummary === nextSummary) {
+    // same reference, still need to check selectedRatings and handler
+  } else {
+    if (!prevSummary || !nextSummary) return false;
+
+    if (prevSummary.ratings_count !== nextSummary.ratings_count) return false;
+    const prevBreak = prevSummary.breakdown || [];
+    const nextBreak = nextSummary.breakdown || [];
+    if (prevBreak.length !== nextBreak.length) return false;
+    for (let i = 0; i < prevBreak.length; i++) {
+      if (
+        prevBreak[i].rating !== nextBreak[i].rating ||
+        prevBreak[i].count !== nextBreak[i].count
+      )
+        return false;
+    }
+  }
+
+  const prevSel = prev.selectedRatings;
+  const nextSel = next.selectedRatings;
+  if (prevSel === nextSel) return prev.onRatingClick === next.onRatingClick;
+  if (!prevSel || !nextSel) return false;
+  if (prevSel.size !== nextSel.size) return false;
+  for (const v of prevSel) if (!nextSel.has(v)) return false;
+
+  return prev.onRatingClick === next.onRatingClick;
+}
+
+export default memo(RatingsDistribution, areEqual);
