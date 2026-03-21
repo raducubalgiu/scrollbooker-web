@@ -1,4 +1,5 @@
 import Modal from "@/components/core/Modal/Modal";
+import SchedulesSection from "@/components/cutomized/SchedulesSection/SchedulesSection";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { ScheduleResponse } from "@/ts/models/booking/schedule/ScheduleType";
 import React from "react";
@@ -19,19 +20,14 @@ const ScheduleModal = ({ userId, open, handleClose }: ScheduleModalProps) => {
   });
 
   return (
-    <Modal open={open} handleClose={handleClose} title="Programul de lucru">
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {data?.map((schedule) => (
-            <li key={schedule.id}>
-              {schedule.day_of_week}: {schedule.start_time} -{" "}
-              {schedule.end_time}
-            </li>
-          ))}
-        </ul>
-      )}
+    <Modal
+      open={open}
+      handleClose={handleClose}
+      title="Programul de lucru"
+      maxWidth="sm"
+      fullWidth
+    >
+      {isLoading ? <p>Loading...</p> : <SchedulesSection schedules={data} />}
     </Modal>
   );
 };
