@@ -8,6 +8,7 @@ import ProfileUserInfo from "./ProfileUserInfo";
 import ProfileTabs from "./tabs/ProfileTabs";
 import SocialModal from "./social/SocialModal";
 import { SocialTabEnum } from "./social/SocialTabEnum";
+import ScheduleModal from "./ScheduleModal";
 
 export type ProfileModuleProps = {
   profile: UserProfileType | undefined;
@@ -19,7 +20,12 @@ export type SocialModalProps = {
   username: string;
 };
 
+export type ScheduleModalProps = {
+  userId: number;
+};
+
 const ProfileModule = ({ profile }: ProfileModuleProps) => {
+  const [openScheduleModal, setOpenScheduleModal] = useState<boolean>(false);
   const [socialModal, setSocialModal] = useState<SocialModalProps | null>(null);
   const isSocialModalOpen = socialModal !== null;
 
@@ -46,6 +52,12 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
         handleClose={() => setSocialModal(null)}
       />
 
+      <ScheduleModal
+        open={openScheduleModal}
+        userId={profile.id}
+        handleClose={() => setOpenScheduleModal(false)}
+      />
+
       <ProfileCounters
         onClick={(tab) => {
           setSocialModal({
@@ -67,6 +79,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
         is_own_profile={is_own_profile}
         is_follow={is_follow}
         opening_hours={opening_hours}
+        onOpenScheduleModal={() => setOpenScheduleModal(true)}
       />
 
       <ProfileTabs

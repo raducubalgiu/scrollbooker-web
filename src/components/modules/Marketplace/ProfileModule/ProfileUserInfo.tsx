@@ -1,5 +1,5 @@
 import UserAvatar from "@/components/core/Layout/Admin/UserInfo/UserAvatar";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
@@ -18,6 +18,7 @@ type ProfileUserInfoProps = {
   is_own_profile: boolean;
   is_follow: boolean;
   opening_hours: OpeningHoursType;
+  onOpenScheduleModal: () => void;
 };
 
 const ProfileUserInfo = ({
@@ -30,6 +31,7 @@ const ProfileUserInfo = ({
   is_own_profile,
   is_follow,
   opening_hours,
+  onOpenScheduleModal,
 }: ProfileUserInfoProps) => {
   const openingStatus = useMemo(() => {
     if (!opening_hours) return null;
@@ -123,19 +125,24 @@ const ProfileUserInfo = ({
                 &#x2022;
               </Typography>
 
-              <Stack flexDirection="row" alignItems="center">
-                <QueryBuilderOutlinedIcon
-                  color="action"
-                  sx={{ fontSize: 25, mr: 0.5 }}
-                />
-                <Typography sx={{ ml: 0.5, mr: 1, color: "text.secondary" }}>
-                  {openingStatus}
-                </Typography>
-                <ExpandMoreOutlinedIcon
-                  color="action"
-                  sx={{ fontSize: 30, mr: 0.5 }}
-                />
-              </Stack>
+              <ButtonBase
+                sx={{ borderRadius: 5 }}
+                onClick={onOpenScheduleModal}
+              >
+                <Stack flexDirection="row" alignItems="center">
+                  <QueryBuilderOutlinedIcon
+                    color="action"
+                    sx={{ fontSize: 25, mr: 0.5 }}
+                  />
+                  <Typography sx={{ ml: 0.5, mr: 1, color: "text.secondary" }}>
+                    {openingStatus}
+                  </Typography>
+                  <ExpandMoreOutlinedIcon
+                    color="action"
+                    sx={{ fontSize: 30, mr: 0.5 }}
+                  />
+                </Stack>
+              </ButtonBase>
             </>
           )}
         </Stack>

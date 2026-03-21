@@ -9,10 +9,9 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 import {
-  ScheduleResponseType,
+  ScheduleType,
   ScheduleUpdateType,
 } from "@/ts/models/booking/schedule/ScheduleType";
 import SchedulesSelectHours from "./SchedulesSelectHours";
@@ -24,7 +23,7 @@ import ActionButton, {
 import { toast } from "react-toastify";
 import { useMutate } from "@/hooks/useHttp";
 
-type SchedulesProps = { data: ScheduleResponseType[] };
+type SchedulesProps = { data: ScheduleType[] };
 
 export default function MySchedulesModule({ data }: SchedulesProps) {
   const [disabled, setDisabled] = useState(true);
@@ -62,7 +61,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
     },
   });
 
-  const handleSave = (new_data: { schedules: ScheduleResponseType[] }) => {
+  const handleSave = (new_data: { schedules: ScheduleType[] }) => {
     const updated_schedules = new_data.schedules.map((schedule) => {
       const { id, start_time, end_time } = schedule;
 

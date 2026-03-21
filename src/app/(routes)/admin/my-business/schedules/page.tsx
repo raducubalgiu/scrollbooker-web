@@ -1,6 +1,6 @@
 import React from "react";
 import { get } from "@/utils/requests";
-import { ScheduleResponseType } from "@/ts/models/booking/schedule/ScheduleType";
+import { ScheduleResponse } from "@/ts/models/booking/schedule/ScheduleType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
@@ -12,7 +12,7 @@ async function Schedules() {
   const { userId } = await getUserServerSession();
 
   const response = (
-    await get<ScheduleResponseType[]>({
+    await get<ScheduleResponse>({
       url: `/users/${userId}/schedules`,
     })
   ).data;
