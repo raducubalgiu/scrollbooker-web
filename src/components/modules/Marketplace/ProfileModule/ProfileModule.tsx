@@ -41,6 +41,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
     <Box>
       <SocialModal
         open={isSocialModalOpen}
+        counters={counters}
         socialModal={socialModal}
         handleClose={() => setSocialModal(null)}
       />

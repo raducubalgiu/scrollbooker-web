@@ -12,30 +12,42 @@ import SocialFollowersTab from "./SocialFollowersTab";
 import SocialFollowingsTab from "./SocialFollowingsTab";
 import { SocialTabEnum } from "./SocialTabEnum";
 import { SocialModalProps } from "../ProfileModule";
+import { UserCountersType } from "@/ts/models/user/UserProfileType";
 
 type ProfileSocialModalProps = {
   open: boolean;
+  counters: UserCountersType;
   socialModal: SocialModalProps | null;
   handleClose: () => void;
 };
 
 const SocialModal = ({
   open,
+  counters,
   socialModal,
   handleClose,
 }: ProfileSocialModalProps) => {
-  const tabs = useMemo(
+  type TabDef = {
+    route: SocialTabEnum;
+    key: keyof UserCountersType;
+    label: string;
+  };
+
+  const tabs = useMemo<TabDef[]>(
     () => [
       {
         route: SocialTabEnum.REVIEWS,
+        key: "ratings_count",
         label: "Recenzii",
       },
       {
         route: SocialTabEnum.FOLLOWERS,
+        key: "followers_count",
         label: "Urmaritori",
       },
       {
         route: SocialTabEnum.FOLLOWINGS,
+        key: "followings_count",
         label: "Urmaresti",
       },
     ],
@@ -173,7 +185,6 @@ const SocialModal = ({
     <Modal
       open={open}
       handleClose={handleClose}
-      actions={[]}
       dividers={false}
       showFooter={false}
       title={`@${socialModal?.username}`}
@@ -182,14 +193,20 @@ const SocialModal = ({
       <Box sx={{ display: "flex", flexDirection: "column", height: "80vh" }}>
         <Box sx={styles.container}>
           <Tabs value={currentTab} onChange={handleChange} sx={styles.tabs}>
-            {tabs.map((tab) => (
-              <Tab
-                key={tab.route}
-                value={tab.route}
-                label={<Typography sx={styles.label}>{tab.label}</Typography>}
-                sx={{ minWidth: 200 }}
-              />
-            ))}
+            {tabs.map((tab) => {
+              return (
+                <Tab
+                  key={tab.route}
+                  value={tab.route}
+                  label={
+                    <Typography sx={styles.label}>
+                      {tab.label} {counters[tab.key]}
+                    </Typography>
+                  }
+                  sx={{ minWidth: 200 }}
+                />
+              );
+            })}
           </Tabs>
         </Box>
 
