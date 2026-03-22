@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   ButtonBase,
-  Container,
   Divider,
   Stack,
   Typography,
@@ -24,6 +23,7 @@ import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
 import CachedIcon from "@mui/icons-material/Cached";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 type ProfileUserInfoProps = {
   fullname: string;
@@ -181,32 +181,55 @@ const ProfileUserInfo = ({
         </Stack>
 
         {business_owner && (
-          <Stack flexDirection="row" alignItems="center">
-            <CachedIcon />
+          <Stack flexDirection="row" alignItems="center" mt={0.5}>
+            {business_owner.id !== userId && (
+              <>
+                <Stack flexDirection="row" alignItems="center">
+                  <CachedIcon />
 
-            <Stack flexDirection="row" alignItems="center" ml={1.5}>
-              <ButtonBase>
-                <Avatar
-                  src={business_owner?.avatar}
-                  sx={{ border: 1, borderColor: "text.secondary" }}
+                  <ButtonBase>
+                    <Avatar
+                      src={business_owner?.avatar}
+                      sx={{ border: 1, borderColor: "text.secondary", ml: 1.5 }}
+                    />
+                    <Typography
+                      variant="body1"
+                      color="primary"
+                      fontWeight={600}
+                      sx={{ ml: 1 }}
+                    >
+                      @{business_owner?.username}
+                    </Typography>
+                  </ButtonBase>
+                </Stack>
+
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{
+                    ml: 1.5,
+                    mr: 1,
+                    borderColor: "divider",
+                    height: 15,
+                    alignSelf: "center",
+                  }}
                 />
-                <Typography
-                  variant="body1"
-                  color="primary"
-                  fontWeight={600}
-                  sx={{ ml: 1 }}
-                >
-                  @{business_owner?.username}
-                </Typography>
-              </ButtonBase>
-            </Stack>
+              </>
+            )}
+
+            <Button
+              size="medium"
+              sx={{ textTransform: "capitalize", color: "text.primary" }}
+              startIcon={<LocationOnOutlinedIcon color="primary" />}
+            >
+              Locatie
+            </Button>
 
             <Divider
               orientation="vertical"
               flexItem
               sx={{
-                ml: 1.5,
-                mr: 1,
+                mx: 1,
                 borderColor: "divider",
                 height: 15,
                 alignSelf: "center",
@@ -263,7 +286,7 @@ const ProfileUserInfo = ({
 
         <Box sx={{ maxWidth: "sm", mt: 1.5 }}>{bio}</Box>
 
-        <Stack flexDirection="row" alignItems="center" sx={{ mt: 2.5 }}>
+        <Stack flexDirection="row" alignItems="center" sx={{ mt: 1.5 }}>
           {actions}
         </Stack>
       </Box>
