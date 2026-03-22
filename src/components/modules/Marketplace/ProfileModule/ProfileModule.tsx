@@ -102,6 +102,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
         opening_hours={opening_hours}
         userId={profile.id}
         business_owner={profile.business_owner}
+        bio={profile.bio}
         onOpenScheduleModal={() => setOpenScheduleModal(true)}
         onUpdateFollows={handleUpdateFollows}
       />

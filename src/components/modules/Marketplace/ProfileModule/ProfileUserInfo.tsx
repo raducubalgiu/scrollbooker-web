@@ -1,9 +1,21 @@
 import UserAvatar from "@/components/core/Layout/Admin/UserInfo/UserAvatar";
-import { Avatar, Box, ButtonBase, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonBase,
+  Container,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import React, { useMemo } from "react";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
+import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import {
   BusinessOwnerType,
   OpeningHoursType,
@@ -25,6 +37,7 @@ type ProfileUserInfoProps = {
   opening_hours: OpeningHoursType;
   userId: number;
   business_owner: BusinessOwnerType | undefined;
+  bio: string | undefined;
   onOpenScheduleModal: () => void;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
 };
@@ -41,6 +54,7 @@ const ProfileUserInfo = ({
   opening_hours,
   userId,
   business_owner,
+  bio,
   onOpenScheduleModal,
   onUpdateFollows,
 }: ProfileUserInfoProps) => {
@@ -170,24 +184,84 @@ const ProfileUserInfo = ({
           <Stack flexDirection="row" alignItems="center">
             <CachedIcon />
 
-            <Stack
-              flexDirection="row"
-              alignItems="center"
-              sx={{ ml: 1.5 }}
-              gap={1}
-            >
-              <Avatar
-                src={business_owner?.avatar}
-                sx={{ border: 1, borderColor: "text.secondary" }}
-              />
+            <Stack flexDirection="row" alignItems="center" ml={1.5}>
               <ButtonBase>
-                <Typography variant="body1" color="primary" fontWeight={600}>
+                <Avatar
+                  src={business_owner?.avatar}
+                  sx={{ border: 1, borderColor: "text.secondary" }}
+                />
+                <Typography
+                  variant="body1"
+                  color="primary"
+                  fontWeight={600}
+                  sx={{ ml: 1 }}
+                >
                   @{business_owner?.username}
                 </Typography>
               </ButtonBase>
             </Stack>
+
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                ml: 1.5,
+                mr: 1,
+                borderColor: "divider",
+                height: 15,
+                alignSelf: "center",
+              }}
+            />
+
+            <Button
+              size="medium"
+              sx={{ textTransform: "capitalize", color: "text.primary" }}
+              startIcon={<LocalPhoneOutlinedIcon color="primary" />}
+            >
+              Telefon
+            </Button>
+
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                mx: 1,
+                borderColor: "divider",
+                height: 15,
+                alignSelf: "center",
+              }}
+            />
+
+            <Button
+              size="medium"
+              sx={{ textTransform: "capitalize", color: "text.primary" }}
+              startIcon={<EmailOutlinedIcon color="primary" />}
+            >
+              Email
+            </Button>
+
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                mx: 1,
+                borderColor: "divider",
+                height: 15,
+                alignSelf: "center",
+              }}
+            />
+
+            <Button
+              size="medium"
+              sx={{ textTransform: "capitalize", color: "text.primary" }}
+              startIcon={<LanguageOutlinedIcon color="primary" />}
+            >
+              Website
+            </Button>
           </Stack>
         )}
+
+        <Box sx={{ maxWidth: "sm", mt: 1.5 }}>{bio}</Box>
 
         <Stack flexDirection="row" alignItems="center" sx={{ mt: 2.5 }}>
           {actions}
