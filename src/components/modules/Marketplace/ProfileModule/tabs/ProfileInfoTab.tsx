@@ -5,6 +5,7 @@ import React, { memo } from "react";
 import { UserProfileInfoResponse } from "@/ts/models/user/UserProfileInfo";
 import SchedulesSection from "@/components/cutomized/SchedulesSection/SchedulesSection";
 import Image from "next/image";
+import Grid from "@mui/material/Grid2";
 
 type ProfileInfoTabProps = {
   userId: number;
@@ -33,42 +34,49 @@ const ProfileInfoTab = ({ userId }: ProfileInfoTabProps) => {
           <CircularProgress />
         </Stack>
       ) : (
-        <Box maxWidth="md" sx={{ py: 2 }}>
-          <Typography variant="h6" gutterBottom fontWeight={600}>
-            Descrierea locatiei
-          </Typography>
-          <Typography variant="body1">
-            {description || "Acest utilizator nu a adăugat o descriere."}
-          </Typography>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box maxWidth="md" sx={{ py: 2 }}>
+              <Typography variant="h6" gutterBottom fontWeight={600}>
+                Descrierea locatiei
+              </Typography>
+              <Typography variant="body1">
+                {description || "Acest utilizator nu a adăugat o descriere."}
+              </Typography>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} mt={4}>
-            Programul de lucru
-          </Typography>
+              <Stack direction="row" alignItems="center" sx={{ mb: 3 }}>
+                <LocationOnOutlinedIcon />
+                <Typography variant="body1" ml={1}>
+                  {location?.formatted_address || "Adresă necunoscută"}
+                </Typography>
+              </Stack>
 
-          <SchedulesSection schedules={schedules || []} />
+              {location?.map_url && (
+                <Image
+                  src={location.map_url}
+                  alt="Map"
+                  layout="responsive"
+                  width={500}
+                  height={300}
+                  style={{ borderRadius: 20 }}
+                />
+              )}
 
-          <Typography variant="h6" gutterBottom fontWeight={600} mt={4}>
-            Adresa locatiei
-          </Typography>
+              <Typography variant="h6" gutterBottom fontWeight={600} mt={4}>
+                Programul de lucru
+              </Typography>
 
-          <Stack direction="row" alignItems="center" sx={{ mb: 3 }}>
-            <LocationOnOutlinedIcon />
-            <Typography variant="body1" ml={1}>
-              {location?.formatted_address || "Adresă necunoscută"}
-            </Typography>
-          </Stack>
+              <SchedulesSection schedules={schedules || []} />
 
-          {location?.map_url && (
-            <Image
-              src={location.map_url}
-              alt="Map"
-              layout="responsive"
-              width={500}
-              height={300}
-              style={{ borderRadius: 20 }}
-            />
-          )}
-        </Box>
+              <Typography variant="h6" gutterBottom fontWeight={600} mt={4}>
+                Adresa locatiei
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Typography>Right</Typography>
+          </Grid>
+        </Grid>
       )}
     </>
   );

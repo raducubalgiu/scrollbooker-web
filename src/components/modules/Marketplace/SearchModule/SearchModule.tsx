@@ -3,12 +3,18 @@
 import * as React from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useTheme } from "@mui/material/styles";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
+const MAPBOX_STYLE_LIGHT = process.env.NEXT_PUBLIC_MAPBOX_STYLE_LIGHT ?? "";
+const MAPBOX_STYLE_DARK = process.env.NEXT_PUBLIC_MAPBOX_STYLE_DARK ?? "";
 
 export default function SearchModule() {
   const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
   const mapRef = React.useRef<mapboxgl.Map | null>(null);
+  const theme = useTheme();
+  const mapStyle =
+    theme.palette.mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT;
 
   React.useEffect(() => {
     if (!mapContainerRef.current || mapRef.current || !MAPBOX_TOKEN) {
@@ -19,7 +25,7 @@ export default function SearchModule() {
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: "",
+      style: mapStyle,
       center: [26.1025, 44.4268],
       zoom: 10,
     });
@@ -36,7 +42,7 @@ export default function SearchModule() {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [mapStyle]);
 
   return (
     <div style={{ width: "100%" }}>
