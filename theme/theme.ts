@@ -386,11 +386,13 @@ export const lightTheme = createTheme({
           },
         }),
         outlinedSecondary: ({ theme }) => ({
-          borderColor: theme.palette.grey[500],
+          borderWidth: 1.25,
+          borderColor: theme.palette.grey[400],
           color: theme.palette.text.primary,
           "&:hover": {
             color: theme.palette.text.primary + "90",
-            borderColor: theme.palette.grey[300],
+            borderColor: theme.palette.grey[500],
+            backgroundColor: alpha(theme.palette.grey[400], 0.2),
           },
         }),
       },

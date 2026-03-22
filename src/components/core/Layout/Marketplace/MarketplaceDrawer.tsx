@@ -3,7 +3,6 @@
 import React from "react";
 import {
   Box,
-  Divider,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -61,7 +60,7 @@ const MarketplaceDrawer = () => {
         label: "Rezervări",
         route: "/appointments",
         icon: (
-          <Badge badgeContent={2} color="error">
+          <Badge badgeContent={0} color="error">
             <QueryBuilderOutlinedIcon />
           </Badge>
         ),
@@ -356,8 +355,6 @@ const MarketplaceDrawer = () => {
             />
           </Protected>
         )}
-
-        <Divider sx={{ my: 2.5 }} />
       </Box>
     </Box>
   );
