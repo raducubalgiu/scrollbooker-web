@@ -145,7 +145,7 @@ export default function SearchModule() {
                   sx={{
                     position: "relative",
                     width: "100%",
-                    height: 300,
+                    height: 280,
                   }}
                 >
                   <Image
