@@ -6,13 +6,14 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid2";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import { Box, Stack, Button, Typography, Chip } from "@mui/material";
+import { Box, Stack, Button, Typography, Chip, Rating } from "@mui/material";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import SearchHeader from "./SearchHeader";
 import { busineses_for_map } from "./searchMockData";
 import StarIcon from "@mui/icons-material/Star";
 import Image from "next/image";
 import { formatRating } from "@/utils/formatters";
+import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
 const MAPBOX_STYLE_LIGHT = process.env.NEXT_PUBLIC_MAPBOX_STYLE_LIGHT ?? "";
@@ -112,7 +113,7 @@ export default function SearchModule() {
             size="large"
             disableElevation
             sx={{ py: 1.5, px: 3 }}
-            startIcon={<MapOutlinedIcon />}
+            startIcon={<TuneOutlinedIcon />}
           >
             Filtre
           </Button>
@@ -174,7 +175,7 @@ export default function SearchModule() {
                       {formatRating(b.owner.ratings_average)}
                     </Typography>
                     <Typography color="text.secondary" fontWeight={400}>
-                      ({100})
+                      ({b.owner.ratings_count})
                     </Typography>
                   </Stack>
                 </Stack>
@@ -192,41 +193,49 @@ export default function SearchModule() {
                   {b.address}
                 </Typography>
 
-                <Box
-                  sx={{
-                    p: 2,
-                    borderRadius: 5,
-                    mb: 1.5,
-                    bgcolor: "secondary.main",
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Consultatie Standard 150 RON`}
-                >
-                  <Stack spacing={0.5}>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                        Consultatie Standard
-                      </Typography>
-                      <Typography sx={{ fontWeight: 700 }}>150 RON</Typography>
-                    </Stack>
+                {b.products.map((prod) => (
+                  <Box
+                    key={prod.id}
+                    sx={{
+                      p: 2,
+                      borderRadius: 5,
+                      mb: 1.5,
+                      bgcolor: "secondary.main",
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`prod.name ${prod.name} price ${prod.price} RON duration ${prod.duration} minutes`}
+                  >
+                    <Stack spacing={0.5}>
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: 700 }}
+                        >
+                          {prod.name}
+                        </Typography>
+                        <Typography sx={{ fontWeight: 700 }}>
+                          {prod.price_with_discount} RON
+                        </Typography>
+                      </Stack>
 
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <Chip
-                        size="small"
-                        icon={<AccessTimeOutlinedIcon />}
-                        label="30 min"
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        Caini & Pisici • Standard
-                      </Typography>
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Chip
+                          size="small"
+                          icon={<AccessTimeOutlinedIcon />}
+                          label={`${prod.duration} min`}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          Caini & Pisici • Standard
+                        </Typography>
+                      </Stack>
                     </Stack>
-                  </Stack>
-                </Box>
+                  </Box>
+                ))}
 
                 <Box
                   sx={{
