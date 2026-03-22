@@ -11,6 +11,7 @@ import ProfileEmployeesTab from "./ProfileEmployeesTab";
 import ProfileBookmarksTab from "./ProfileBookmarksTab";
 import ProfileInfoTab from "./ProfileInfoTab";
 import { useSession } from "next-auth/react";
+import { Theme } from "@mui/system";
 
 enum ProfileTabEnum {
   POSTS,
@@ -123,26 +124,33 @@ const ProfileTabs = ({
     }
   }, [currentTab, isAuthenticated]);
 
-  const styles = {
-    container: {
-      width: "100%",
-      bgcolor: "transparent",
-      mt: 5,
-      borderBottom: 1,
-      borderColor: "divider",
-    },
-    tabs: {
-      "& .MuiTabs-indicator": {
-        height: 3,
-        borderRadius: 2,
+  const styles = useMemo(
+    () => ({
+      container: {
+        width: "100%",
+        position: "sticky",
+        top: 0,
+        zIndex: 1200,
+        bgcolor: "background.paper",
+        mt: 5,
+        borderBottom: 1,
+        borderColor: "divider",
+        boxShadow: (theme: Theme) => `0 1px 0 ${theme.palette.divider}`,
       },
-      "& .MuiTab-root": {
-        textTransform: "none",
-        minHeight: 56,
+      tabs: {
+        "& .MuiTabs-indicator": {
+          height: 3,
+          borderRadius: 2,
+        },
+        "& .MuiTab-root": {
+          textTransform: "none",
+          minHeight: 56,
+        },
       },
-    },
-    label: { fontSize: 20, fontWeight: 600 },
-  };
+      label: { fontSize: 20, fontWeight: 600 },
+    }),
+    []
+  );
 
   return (
     <>

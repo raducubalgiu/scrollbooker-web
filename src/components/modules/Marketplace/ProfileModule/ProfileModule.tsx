@@ -52,18 +52,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
     [setUpdatedCounters]
   );
 
-  const {
-    fullname,
-    username,
-    avatar,
-    profession,
-    counters,
-    is_business_or_employee,
-    is_own_profile,
-    is_follow,
-    opening_hours,
-    business_id,
-  } = profile;
+  const { is_business_or_employee, is_own_profile, business_id } = profile;
 
   return (
     <Box>
@@ -92,18 +81,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
       />
 
       <ProfileUserInfo
-        fullname={fullname}
-        username={username}
-        avatar={avatar}
-        profession={profession}
-        ratings_average={counters.ratings_average}
-        is_business_or_employee={is_business_or_employee}
-        is_own_profile={is_own_profile}
-        is_follow={is_follow}
-        opening_hours={opening_hours}
-        userId={profile.id}
-        business_owner={profile.business_owner}
-        bio={profile.bio}
+        profile={profile}
         onOpenScheduleModal={() => setOpenScheduleModal(true)}
         onUpdateFollows={handleUpdateFollows}
       />

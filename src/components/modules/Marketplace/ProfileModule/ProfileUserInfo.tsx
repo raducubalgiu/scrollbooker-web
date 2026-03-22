@@ -15,10 +15,7 @@ import React, { useMemo } from "react";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import {
-  BusinessOwnerType,
-  OpeningHoursType,
-} from "@/ts/models/user/UserProfileType";
+import { UserProfileType } from "@/ts/models/user/UserProfileType";
 import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
 import CachedIcon from "@mui/icons-material/Cached";
@@ -26,38 +23,31 @@ import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 type ProfileUserInfoProps = {
-  fullname: string;
-  username: string;
-  avatar?: string | undefined;
-  profession: string;
-  ratings_average: number;
-  is_business_or_employee: boolean;
-  is_own_profile: boolean;
-  is_follow: boolean;
-  opening_hours: OpeningHoursType;
-  userId: number;
-  business_owner: BusinessOwnerType | undefined;
-  bio: string | undefined;
+  profile: UserProfileType;
   onOpenScheduleModal: () => void;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
 };
 
 const ProfileUserInfo = ({
-  fullname,
-  username,
-  avatar,
-  profession,
-  ratings_average,
-  is_business_or_employee,
-  is_own_profile,
-  is_follow,
-  opening_hours,
-  userId,
-  business_owner,
-  bio,
+  profile,
   onOpenScheduleModal,
   onUpdateFollows,
 }: ProfileUserInfoProps) => {
+  const {
+    id,
+    fullname,
+    username,
+    avatar,
+    profession,
+    bio,
+    is_business_or_employee,
+    is_own_profile,
+    is_follow,
+    counters,
+    opening_hours,
+    business_owner,
+  } = profile || {};
+
   const openingStatus = useMemo(() => {
     if (!opening_hours) return null;
 
@@ -101,19 +91,13 @@ const ProfileUserInfo = ({
 
     return (
       <UserProfileActions
-        userId={userId}
+        userId={id}
         is_business_or_employee={is_business_or_employee}
         is_follow={is_follow}
         onUpdateFollows={onUpdateFollows}
       />
     );
-  }, [
-    is_business_or_employee,
-    is_own_profile,
-    is_follow,
-    userId,
-    onUpdateFollows,
-  ]);
+  }, [is_business_or_employee, is_own_profile, is_follow, id, onUpdateFollows]);
 
   return (
     <Stack flexDirection="row" alignItems="center">
@@ -148,7 +132,7 @@ const ProfileUserInfo = ({
               <Stack flexDirection="row" alignItems="center">
                 <GradeIcon color="primary" sx={{ fontSize: 30, mr: 0.5 }} />
                 <Typography variant="h6" sx={{ fontWeight: 600, fontSize: 25 }}>
-                  {ratings_average}
+                  {counters.ratings_average}
                 </Typography>
               </Stack>
 
@@ -182,7 +166,7 @@ const ProfileUserInfo = ({
 
         {business_owner && (
           <Stack flexDirection="row" alignItems="center" mt={0.5}>
-            {business_owner.id !== userId && (
+            {business_owner.id !== id && (
               <>
                 <Stack flexDirection="row" alignItems="center">
                   <CachedIcon />
