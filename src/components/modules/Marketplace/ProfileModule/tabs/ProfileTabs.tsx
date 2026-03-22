@@ -72,12 +72,14 @@ type ProfileTabsProps = {
   isBusinessOrEmployee?: boolean;
   isMyProfile?: boolean;
   userId: number;
+  businessId: number | undefined;
 };
 
 const ProfileTabs = ({
   isBusinessOrEmployee = false,
   isMyProfile = false,
   userId,
+  businessId,
 }: ProfileTabsProps) => {
   const { status } = useSession();
   const isAuthenticated = status === "authenticated";
@@ -111,7 +113,7 @@ const ProfileTabs = ({
       case ProfileTabEnum.PRODUCTS:
         return <ProfileProductsTab />;
       case ProfileTabEnum.EMPLOYEES:
-        return <ProfileEmployeesTab />;
+        return <ProfileEmployeesTab businessId={businessId} />;
       case ProfileTabEnum.BOOKMARKS:
         return <ProfileBookmarksTab isAuthenticated={isAuthenticated} />;
       case ProfileTabEnum.INFO:

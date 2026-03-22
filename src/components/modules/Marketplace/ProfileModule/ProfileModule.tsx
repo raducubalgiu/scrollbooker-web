@@ -62,6 +62,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
     is_own_profile,
     is_follow,
     opening_hours,
+    business_id,
   } = profile;
 
   return (
@@ -109,6 +110,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
 
       <ProfileTabs
         userId={profile.id}
+        businessId={business_id}
         isBusinessOrEmployee={is_business_or_employee}
         isMyProfile={is_own_profile}
       />

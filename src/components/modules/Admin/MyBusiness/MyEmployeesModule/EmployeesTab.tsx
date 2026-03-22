@@ -6,11 +6,15 @@ import GradeIcon from "@mui/icons-material/Grade";
 import React, { useMemo } from "react";
 import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployeeResponse";
 import Table from "@/components/core/Table/Table";
+import { useSession } from "next-auth/react";
 
 const EmployeesTab = ({ isEnabled }: { isEnabled: boolean }) => {
+  const { data: session } = useSession();
+
   const { data, pagination, isLoading, setPagination } =
     useTableHandlers<BusinessEmployeeResponse>({
-      route: "employees",
+      route: "/employees",
+      extraParams: { businessId: session?.business_id ?? undefined },
       enabled: isEnabled,
     });
 
