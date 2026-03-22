@@ -1,8 +1,9 @@
 import React, { memo } from "react";
-import { Box } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployeeResponse";
 import { PaginatedData } from "@/components/core/Table/Table";
+import EmployeeItem from "../EmployeeItem";
 
 type ProfileEmployeesTabProps = {
   businessId: number | undefined;
@@ -20,10 +21,19 @@ const ProfileEmployeesTab = ({ businessId }: ProfileEmployeesTabProps) => {
 
   return (
     <Box sx={{ maxWidth: "md" }}>
-      {data?.results.map((employee) => (
-        // <UserItem key={employee.id} user={employee} />
-        <Box key={employee.id}>{employee.fullname}</Box>
-      ))}
+      {isLoading && (
+        <Stack
+          alignItems="center"
+          justifyContent="center"
+          sx={{ mt: 10, width: "100%" }}
+        >
+          <CircularProgress />
+        </Stack>
+      )}
+      {!isLoading &&
+        data?.results.map((employee) => (
+          <EmployeeItem key={employee.id} employee={employee} />
+        ))}
     </Box>
   );
 };

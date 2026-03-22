@@ -113,7 +113,7 @@ const UserProfileActions = ({
           onClick={() => {}}
           size="large"
           disableElevation
-          sx={{ mr: 1.5, textTransform: "capitalize" }}
+          sx={{ mr: 1.5, textTransform: "none" }}
         >
           Rezervă acum
         </Button>

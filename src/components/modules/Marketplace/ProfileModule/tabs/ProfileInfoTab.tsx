@@ -24,7 +24,7 @@ const ProfileInfoTab = ({ userId }: ProfileInfoTabProps) => {
 
   return (
     <>
-      {isLoading || isRefetching ? (
+      {isLoading ? (
         <Stack
           alignItems="center"
           justifyContent="center"
@@ -71,42 +71,6 @@ const ProfileInfoTab = ({ userId }: ProfileInfoTabProps) => {
         </Box>
       )}
     </>
-    // <Box maxWidth="sm" sx={{ py: 2 }}>
-    //   <Typography variant="h6" gutterBottom fontWeight={600}>
-    //     Descrierea locatiei
-    //   </Typography>
-    //   <Typography variant="body1">
-    //     {description || "Acest utilizator nu a adăugat o descriere."}
-    //   </Typography>
-
-    //   <Typography variant="h6" gutterBottom fontWeight={600} mt={4}>
-    //     Programul de lucru
-    //   </Typography>
-
-    //   <SchedulesSection schedules={schedules || []} />
-
-    //   <Typography variant="h6" gutterBottom fontWeight={600} mt={4}>
-    //     Adresa locatiei
-    //   </Typography>
-
-    //   <Stack direction="row" alignItems="center" sx={{ mb: 3 }}>
-    //     <LocationOnOutlinedIcon />
-    //     <Typography variant="body1" ml={1}>
-    //       {location?.formatted_address || "Adresă necunoscută"}
-    //     </Typography>
-    //   </Stack>
-
-    //   {location?.map_url && (
-    //     <Image
-    //       src={location.map_url}
-    //       alt="Map"
-    //       layout="responsive"
-    //       width={500}
-    //       height={300}
-    //       style={{ borderRadius: 20 }}
-    //     />
-    //   )}
-    // </Box>
   );
 };
 
