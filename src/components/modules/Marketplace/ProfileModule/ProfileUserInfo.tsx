@@ -11,6 +11,7 @@ import {
 import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
 import CachedIcon from "@mui/icons-material/Cached";
+import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 
 type ProfileUserInfoProps = {
   fullname: string;
@@ -22,8 +23,10 @@ type ProfileUserInfoProps = {
   is_own_profile: boolean;
   is_follow: boolean;
   opening_hours: OpeningHoursType;
+  userId: number;
   business_owner: BusinessOwnerType | undefined;
   onOpenScheduleModal: () => void;
+  onUpdateFollows: (action: UpdateFollowersAction) => void;
 };
 
 const ProfileUserInfo = ({
@@ -36,8 +39,10 @@ const ProfileUserInfo = ({
   is_own_profile,
   is_follow,
   opening_hours,
+  userId,
   business_owner,
   onOpenScheduleModal,
+  onUpdateFollows,
 }: ProfileUserInfoProps) => {
   const openingStatus = useMemo(() => {
     if (!opening_hours) return null;
@@ -82,11 +87,19 @@ const ProfileUserInfo = ({
 
     return (
       <UserProfileActions
+        userId={userId}
         is_business_or_employee={is_business_or_employee}
         is_follow={is_follow}
+        onUpdateFollows={onUpdateFollows}
       />
     );
-  }, [is_business_or_employee, is_own_profile, is_follow]);
+  }, [
+    is_business_or_employee,
+    is_own_profile,
+    is_follow,
+    userId,
+    onUpdateFollows,
+  ]);
 
   return (
     <Stack flexDirection="row" alignItems="center">

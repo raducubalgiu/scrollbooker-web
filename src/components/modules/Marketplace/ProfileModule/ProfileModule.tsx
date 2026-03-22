@@ -1,7 +1,7 @@
 "use client";
 
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { UserProfileType } from "@/ts/models/user/UserProfileType";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
@@ -9,6 +9,7 @@ import ProfileTabs from "./tabs/ProfileTabs";
 import SocialModal from "./social/SocialModal";
 import { SocialTabEnum } from "./social/SocialTabEnum";
 import ScheduleModal from "./ScheduleModal";
+import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 
 export type ProfileModuleProps = {
   profile: UserProfileType | undefined;
@@ -31,6 +32,26 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
 
   if (!profile) return null;
 
+  const [updatedCounters, setUpdatedCounters] = useState(profile.counters);
+
+  useEffect(() => {
+    setUpdatedCounters(profile.counters);
+  }, [profile.counters]);
+
+  const handleUpdateFollows = useCallback(
+    (action: UpdateFollowersAction) => {
+      setUpdatedCounters((prev) => {
+        if (!prev) return prev;
+        const delta = action === UpdateFollowersAction.FOLLOW ? 1 : -1;
+
+        const nextCount = Math.max(0, (prev.followers_count ?? 0) + delta);
+
+        return { ...prev, followers_count: nextCount };
+      });
+    },
+    [setUpdatedCounters]
+  );
+
   const {
     fullname,
     username,
@@ -47,7 +68,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
     <Box>
       <SocialModal
         open={isSocialModalOpen}
-        counters={counters}
+        counters={updatedCounters}
         socialModal={socialModal}
         handleClose={() => setSocialModal(null)}
       />
@@ -66,7 +87,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
             username: profile.username,
           });
         }}
-        counters={counters}
+        counters={updatedCounters}
       />
 
       <ProfileUserInfo
@@ -79,8 +100,10 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
         is_own_profile={is_own_profile}
         is_follow={is_follow}
         opening_hours={opening_hours}
+        userId={profile.id}
         business_owner={profile.business_owner}
         onOpenScheduleModal={() => setOpenScheduleModal(true)}
+        onUpdateFollows={handleUpdateFollows}
       />
 
       <ProfileTabs
