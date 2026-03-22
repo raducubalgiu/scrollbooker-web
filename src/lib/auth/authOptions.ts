@@ -160,10 +160,26 @@ async function login(
     );
     return response.data;
   } catch (error: unknown) {
-    if (error instanceof Error) {
+    // Enhanced logging to aid debugging 401/500 responses from backend
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const errAny: any = error;
+    if (errAny && errAny.response) {
+      try {
+        LOG.error(
+          `Login request failed: status=${errAny.response.status}, data=${JSON.stringify(
+            errAny.response.data
+          )}`
+        );
+      } catch (e) {
+        LOG.error(`Login request failed: ${errAny.response.status}`);
+      }
+    } else if (error instanceof Error) {
       LOG.error(`Login Error: ${error.message}`);
-      throw new Error(`Authentication Error: ${error.message}`);
+    } else {
+      LOG.error(`Login Error: unknown error`);
     }
+
+    // return null so authorize treats login as failure (previous behavior)
     return null;
   }
 }
