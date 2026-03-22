@@ -37,7 +37,7 @@ const ProfileEmployeesTab = () => {
   return (
     <Box sx={{ maxWidth: "md" }}>
       {employees.map((employee) => (
-        <UserItem user={employee} />
+        <UserItem key={employee.id} user={employee} />
       ))}
     </Box>
   );
