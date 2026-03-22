@@ -1,9 +1,9 @@
-import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployeeResponse";
+import { BusinessEmployeeType } from "@/ts/models/booking/business/BusinessEmployeeResponse";
 import { Avatar, Badge, Box, Button, Stack, Typography } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { formatRating } from "@/utils/formatters";
 
-const EmployeeItem = ({ employee }: { employee: BusinessEmployeeResponse }) => {
+const EmployeeItem = ({ employee }: { employee: BusinessEmployeeType }) => {
   const styles = {
     badge: {
       "& .MuiBadge-badge": {

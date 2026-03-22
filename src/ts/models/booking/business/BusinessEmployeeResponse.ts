@@ -1,4 +1,6 @@
-export type BusinessEmployeeResponse = {
+import { PaginatedData } from "@/components/core/Table/Table";
+
+export type BusinessEmployeeType = {
   id: number;
   username: string;
   fullname: string;
@@ -10,3 +12,5 @@ export type BusinessEmployeeResponse = {
   ratings_average: number;
   products_count: number;
 };
+
+export type BusinessEmployeeResponse = PaginatedData<BusinessEmployeeType>;

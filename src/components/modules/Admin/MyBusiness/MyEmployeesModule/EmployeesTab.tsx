@@ -4,7 +4,7 @@ import { Avatar, Button, Typography } from "@mui/material";
 import { MRT_ColumnDef } from "material-react-table";
 import GradeIcon from "@mui/icons-material/Grade";
 import React, { useMemo } from "react";
-import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployeeResponse";
+import { BusinessEmployeeType } from "@/ts/models/booking/business/BusinessEmployeeResponse";
 import Table from "@/components/core/Table/Table";
 import { useSession } from "next-auth/react";
 
@@ -12,13 +12,13 @@ const EmployeesTab = ({ isEnabled }: { isEnabled: boolean }) => {
   const { data: session } = useSession();
 
   const { data, pagination, isLoading, setPagination } =
-    useTableHandlers<BusinessEmployeeResponse>({
+    useTableHandlers<BusinessEmployeeType>({
       route: "/employees",
       extraParams: { businessId: session?.business_id ?? undefined },
       enabled: isEnabled,
     });
 
-  const columns = useMemo<MRT_ColumnDef<BusinessEmployeeResponse>[]>(
+  const columns = useMemo<MRT_ColumnDef<BusinessEmployeeType>[]>(
     () => [
       {
         accessorKey: "fullname",
@@ -70,7 +70,7 @@ const EmployeesTab = ({ isEnabled }: { isEnabled: boolean }) => {
   );
 
   return (
-    <Table<BusinessEmployeeResponse>
+    <Table<BusinessEmployeeType>
       data={data?.results}
       columns={columns}
       manualPagination={true}
