@@ -1,11 +1,4 @@
-import { FilterType } from "./FilterType";
-
 export type SubFilterType = {
-	id: number;
-	name: string;
-	filter_id: number;
-	active: boolean;
-	created_at: string;
-	updated_at: string;
-	filter?: FilterType;
+  id: number;
+  name: string;
 };

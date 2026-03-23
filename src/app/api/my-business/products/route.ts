@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { ProductResponse } from "@/ts/models/booking/product/ProductResponse";
+import { ProductResponse } from "@/ts/models/booking/product/Product";
 
 export const GET = async (req: NextRequest) => {
   const session = await getUserServerSession();
@@ -14,7 +14,7 @@ export const GET = async (req: NextRequest) => {
   const productType = req.nextUrl.searchParams.get("product_type");
 
   const response = (
-    await get<ProductResponse[]>({
+    await get<ProductResponse>({
       url: (() => {
         const params: string[] = [];
 

@@ -7,7 +7,7 @@ import {
   getProductTypeLabel,
   ProductTypeEnum,
 } from "@/ts/enums/ProductTypeEnum";
-import { ProductResponse } from "@/ts/models/booking/product/ProductResponse";
+import { ProductType } from "@/ts/models/booking/product/Product";
 import { Button, Checkbox, Stack } from "@mui/material";
 import dayjs from "dayjs";
 import { MRT_ActionMenuItem, MRT_ColumnDef } from "material-react-table";
@@ -52,7 +52,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
   );
 
   const { data, isLoading, pagination, setPagination } =
-    useTableHandlers<ProductResponse>({
+    useTableHandlers<ProductType>({
       route: "/my-business/products",
       extraParams,
       queryOptions: {
@@ -62,7 +62,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
       },
     });
 
-  const columns = React.useMemo<MRT_ColumnDef<ProductResponse>[]>(
+  const columns = React.useMemo<MRT_ColumnDef<ProductType>[]>(
     () => [
       {
         accessorKey: "id",
@@ -198,7 +198,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
   }, [session, productType, employeeId, serviceDomainId, serviceId]);
 
   const renderRowActionMenuItems = React.useCallback(
-    ({ row, table }: TableRowAndTable<ProductResponse>) => {
+    ({ row, table }: TableRowAndTable<ProductType>) => {
       return [
         <MRT_ActionMenuItem
           key="edit"
@@ -234,7 +234,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
         open={openAddModal}
         handleClose={() => setOpenAddModal(false)}
       />
-      <Table<ProductResponse>
+      <Table<ProductType>
         data={data?.results}
         rowCount={data?.count}
         columns={columns}
