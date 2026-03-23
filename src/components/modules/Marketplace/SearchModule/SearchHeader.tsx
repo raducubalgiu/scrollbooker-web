@@ -15,14 +15,18 @@ import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 
 type SearchHeaderProps = {
 	isMapVisible: boolean;
+	onOpenFilters: () => void;
 	onToggleMap: () => void;
 	onHeightChange?: (height: number) => void;
+	mainPagePadding?: number | string;
 };
 
 const SearchHeader = ({
 	isMapVisible,
+	onOpenFilters,
 	onToggleMap,
 	onHeightChange,
+	mainPagePadding = 0,
 }: SearchHeaderProps) => {
 	const containerRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -53,9 +57,10 @@ const SearchHeader = ({
 			sx={{
 				position: "sticky",
 				top: 0,
+				mt: `calc(-1 * ${mainPagePadding})`,
 				zIndex: theme => theme.zIndex.appBar - 1,
 				backgroundColor: "background.paper",
-				pt: 1,
+				pt: theme => `calc(${mainPagePadding} + ${theme.spacing(1)})`,
 				pb: 2.5,
 			}}
 		>
@@ -210,6 +215,7 @@ const SearchHeader = ({
 						disableElevation
 						sx={{ py: 1.5, px: 3 }}
 						startIcon={<TuneOutlinedIcon />}
+						onClick={onOpenFilters}
 					>
 						Filtre
 					</Button>

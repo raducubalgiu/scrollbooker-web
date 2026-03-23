@@ -5,11 +5,12 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid2";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import SearchHeader from "./SearchHeader";
 import { busineses_for_map, markers } from "./searchMockData";
 import BusinessCard from "./BusinessCard";
 import { BusinessMarkerType } from "@/ts/models/booking/business/BusinessMarker";
+import FiltersModal from "./FiltersModal";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
 const MAPBOX_STYLE_LIGHT = process.env.NEXT_PUBLIC_MAPBOX_STYLE_LIGHT ?? "";
@@ -21,12 +22,14 @@ export default function SearchModule() {
 	const theme = useTheme();
 	const mapStyle =
 		theme.palette.mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT;
+	const mainPagePadding = theme.spacing(2.5);
 	const mapBottomGap = theme.spacing(2.5);
 
 	const [isMapVisible, setIsMapVisible] = React.useState(true);
+	const [openFilters, setOpenFilters] = React.useState(false);
 	const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
 	const mapTopOffset = searchHeaderHeight;
-	const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapBottomGap})`;
+	const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mainPagePadding} - ${mapBottomGap})`;
 
 	const leftGridSize = isMapVisible ? 7 : 12;
 
@@ -125,19 +128,21 @@ export default function SearchModule() {
 
 	return (
 		<Box>
+			<FiltersModal open={openFilters} onClose={() => setOpenFilters(false)} />
+
 			<SearchHeader
 				isMapVisible={isMapVisible}
 				onToggleMap={() => setIsMapVisible(prev => !prev)}
 				onHeightChange={setSearchHeaderHeight}
+				onOpenFilters={() => setOpenFilters(true)}
+				mainPagePadding={mainPagePadding}
 			/>
 
 			<Grid container spacing={5}>
 				<Grid size={leftGridSize}>
-					<Stack justifyContent="center" alignItems="flex-start">
-						<Typography color="text.secondary" my={2.5}>
-							100 de rezultate in zona
-						</Typography>
-					</Stack>
+					<Typography color="text.secondary" my={2.5}>
+						100 de rezultate in zona
+					</Typography>
 
 					<Box
 						sx={{

@@ -24,7 +24,7 @@ export default function MarketplaceLayout({
 	const styles = React.useMemo(
 		() => ({
 			main: {
-				//p: 2.5,
+				p: 2.5,
 				width: "100%",
 				bgcolor: bgColor,
 			},
