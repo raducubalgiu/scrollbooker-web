@@ -23,13 +23,14 @@ export default function SearchModule() {
 	const mapStyle =
 		theme.palette.mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT;
 	const mainPagePadding = theme.spacing(2.5);
+	const mapTopGap = theme.spacing(0.5);
 	const mapBottomGap = theme.spacing(2.5);
 
 	const [isMapVisible, setIsMapVisible] = React.useState(true);
 	const [openFilters, setOpenFilters] = React.useState(false);
 	const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
-	const mapTopOffset = searchHeaderHeight;
-	const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mainPagePadding} - ${mapBottomGap})`;
+	const mapTopOffset = `calc(${searchHeaderHeight}px + ${mapTopGap})`;
+	const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapTopGap} - ${mainPagePadding} - ${mapBottomGap})`;
 
 	const leftGridSize = isMapVisible ? 7 : 12;
 
@@ -115,6 +116,7 @@ export default function SearchModule() {
 						height: mapHeight,
 						bgcolor: "background.default",
 						borderRadius: 5,
+						overflow: "hidden",
 					}}
 				>
 					<Box
@@ -151,7 +153,7 @@ export default function SearchModule() {
 								xs: "1fr",
 								sm: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
 							},
-							gap: 2.5,
+							gap: 5,
 							px: { xs: 1, md: 0 },
 						}}
 					>
