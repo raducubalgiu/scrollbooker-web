@@ -2,12 +2,19 @@ import { Box, Button, Stack } from "@mui/material";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import React from "react";
+import {
+  BusinessDomainsResponse,
+  BusinessDomainType,
+} from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
 
 type BusinessDomainsTabsProps = {
   isExpanded: boolean;
   isMapVisible: boolean;
   onOpenFilters: () => void;
   onToggleMap: () => void;
+  businessDomains?: BusinessDomainsResponse;
+  selectedBusinessDomain: BusinessDomainType | null;
+  onSetSelectedBusinessDomain: (domain: BusinessDomainType) => void;
 };
 
 const BusinessDomainsTabs = ({
@@ -15,6 +22,9 @@ const BusinessDomainsTabs = ({
   isMapVisible,
   onOpenFilters,
   onToggleMap,
+  businessDomains,
+  selectedBusinessDomain,
+  onSetSelectedBusinessDomain,
 }: BusinessDomainsTabsProps) => {
   return (
     <Box
@@ -31,41 +41,34 @@ const BusinessDomainsTabs = ({
         sx={{ mt: 2.5 }}
       >
         <Stack flexDirection="row" alignItems="center" gap={1}>
-          <Button
-            variant="contained"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-          >
-            Toate
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-          >
-            Beauty
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-          >
-            Medical
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-          >
-            Auto
-          </Button>
+          {businessDomains &&
+            businessDomains.length > 0 &&
+            [
+              {
+                id: 0,
+                name: "Toate",
+                short_name: "Toate",
+                active: false,
+                service_domains: [],
+              },
+              ...businessDomains,
+            ].map((d) => {
+              const isSelected = d.id === selectedBusinessDomain?.id;
+
+              return (
+                <Button
+                  key={d.id}
+                  variant={isSelected ? "contained" : "outlined"}
+                  color={isSelected ? "primary" : "secondary"}
+                  size="large"
+                  disableElevation
+                  sx={{ py: 1.5, px: 3 }}
+                  onClick={() => onSetSelectedBusinessDomain(d)}
+                >
+                  {d.short_name}
+                </Button>
+              );
+            })}
         </Stack>
         <Stack
           flexDirection="row"

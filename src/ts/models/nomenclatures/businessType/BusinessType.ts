@@ -1,5 +1,5 @@
-import { FilterType } from "./FilterType";
-import { ServiceDomainsResponse } from "./serviceDomain/ServiceDomainType";
+import { FilterType } from "../filter/FilterType";
+import { ServiceDomainsType } from "../serviceDomain/ServiceDomainType";
 
 export type BusinessType = {
   id?: number;
@@ -7,6 +7,6 @@ export type BusinessType = {
   active?: boolean;
   created_at?: string;
   updated_at?: string;
-  service_domains: ServiceDomainsResponse[];
+  service_domains: ServiceDomainsType[];
   filters?: FilterType[];
 };

@@ -8,7 +8,7 @@ export type ServiceDomainUpdate = {
   name: string;
 };
 
-export type ServiceDomainsResponse = {
+export type ServiceDomainsType = {
   id: number;
   name: string;
   description?: string;
@@ -18,3 +18,5 @@ export type ServiceDomainsResponse = {
   created_at: string;
   updated_at: string;
 };
+
+export type ServiceDomainsResponse = ServiceDomainsType[];

@@ -11,6 +11,7 @@ import { busineses_for_map, markers } from "./searchMockData";
 import BusinessCard from "./BusinessCard";
 import { BusinessMarkerType } from "@/ts/models/booking/business/BusinessMarker";
 import FiltersModal from "./FiltersModal";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
 const MAPBOX_STYLE_LIGHT = process.env.NEXT_PUBLIC_MAPBOX_STYLE_LIGHT ?? "";
@@ -26,12 +27,19 @@ export default function SearchModule() {
   const mapTopGap = theme.spacing(0.5);
   const mapBottomGap = theme.spacing(2.5);
 
+  const [selectedBusinessDomain, setSelectedBusinessDomain] =
+    React.useState<BusinessDomainType>({
+      id: 0,
+      name: "Toate",
+      short_name: "Toate",
+      active: false,
+      service_domains: [],
+    });
   const [isMapVisible, setIsMapVisible] = React.useState(true);
   const [openFilters, setOpenFilters] = React.useState(false);
   const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
   const mapTopOffset = `calc(${searchHeaderHeight}px + ${mapTopGap})`;
   const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapTopGap} - ${mainPagePadding} - ${mapBottomGap})`;
-
   const leftGridSize = isMapVisible ? 7 : 12;
 
   React.useEffect(() => {
@@ -138,6 +146,10 @@ export default function SearchModule() {
         onHeightChange={setSearchHeaderHeight}
         onOpenFilters={() => setOpenFilters(true)}
         mainPagePadding={mainPagePadding}
+        selectedBusinessDomain={selectedBusinessDomain}
+        onSetSelectedBusinessDomain={(bDomain) =>
+          setSelectedBusinessDomain(bDomain)
+        }
       />
 
       <Grid container spacing={5}>

@@ -5,6 +5,11 @@ import BusinessDomainsTabs from "../BusinessDomainsTabs";
 import { SearchHeaderSectionType } from "@/components/modules/Marketplace/SearchModule/SearchHeaderSectionEnum";
 import SearchPopperSections from "./SearchPopperSections";
 import SearchHeaderBar from "./SearchHeaderBar";
+import { useCustomQuery } from "@/hooks/useHttp";
+import {
+  BusinessDomainsResponse,
+  BusinessDomainType,
+} from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
 
 type SearchHeaderProps = {
   isMapVisible: boolean;
@@ -12,6 +17,8 @@ type SearchHeaderProps = {
   onToggleMap: () => void;
   onHeightChange?: (height: number) => void;
   mainPagePadding?: number | string;
+  selectedBusinessDomain: BusinessDomainType | null;
+  onSetSelectedBusinessDomain: (domain: BusinessDomainType) => void;
 };
 
 const SearchHeader = ({
@@ -20,6 +27,8 @@ const SearchHeader = ({
   onToggleMap,
   onHeightChange,
   mainPagePadding = 0,
+  selectedBusinessDomain,
+  onSetSelectedBusinessDomain,
 }: SearchHeaderProps) => {
   const theme = useTheme();
 
@@ -39,6 +48,30 @@ const SearchHeader = ({
   const toggle = React.useCallback((section: SearchHeaderSectionType) => {
     setActiveSection((prev) => (prev === section ? null : section));
   }, []);
+
+  // Fetch business domains here (best-practice combined): server can pass initialData later
+  const STALE_TIME = 24 * 60 * 60 * 1000; // 24h
+  const { data: rawBusinessDomains } = useCustomQuery<
+    BusinessDomainsResponse | any
+  >({
+    key: ["businessDomains"],
+    url: "/api/nomenclatures/business-domains",
+    options: {
+      staleTime: STALE_TIME,
+      refetchOnWindowFocus: false,
+    },
+  });
+
+  const businessDomains = React.useMemo<BusinessDomainsResponse>(() => {
+    const d = rawBusinessDomains as any;
+    if (!d) return [];
+    if (Array.isArray(d)) return d;
+    if (Array.isArray(d.results)) return d.results;
+    if (Array.isArray(d.data)) return d.data;
+    // eslint-disable-next-line no-console
+    console.warn("SearchHeader: unexpected businessDomains shape", d);
+    return [];
+  }, [rawBusinessDomains]);
 
   React.useEffect(() => {
     const element = containerRef.current;
@@ -133,6 +166,7 @@ const SearchHeader = ({
               popperRef={popperRef}
               activeSection={activeSection}
               popperId="search-popper"
+              businessDomains={businessDomains}
             />
           </Box>
         </Stack>
@@ -142,6 +176,9 @@ const SearchHeader = ({
           isMapVisible={isMapVisible}
           onOpenFilters={onOpenFilters}
           onToggleMap={onToggleMap}
+          businessDomains={businessDomains}
+          selectedBusinessDomain={selectedBusinessDomain}
+          onSetSelectedBusinessDomain={onSetSelectedBusinessDomain}
         />
       </Box>
     </>

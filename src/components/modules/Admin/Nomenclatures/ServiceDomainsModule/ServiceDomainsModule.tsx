@@ -1,7 +1,7 @@
 "use client";
 
 import Table from "@/components/core/Table/Table";
-import { ServiceDomainsResponse } from "../../../../../ts/models/nomenclatures/serviceDomain/ServiceDomainType";
+import { ServiceDomainsType } from "../../../../../ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
@@ -29,13 +29,11 @@ export default function ServiceDomainsModule({
     setPagination,
     onEditingRowSave,
     onDeletingRowSave,
-  } = useTableHandlers<ServiceDomainsResponse>({
+  } = useTableHandlers<ServiceDomainsType>({
     route: "nomenclatures/service-domains",
   });
 
-  const serviceDomainsColumns = useMemo<
-    MRT_ColumnDef<ServiceDomainsResponse>[]
-  >(
+  const serviceDomainsColumns = useMemo<MRT_ColumnDef<ServiceDomainsType>[]>(
     () => [
       {
         accessorKey: "id",
@@ -154,7 +152,7 @@ export default function ServiceDomainsModule({
         />
       </Modal>
 
-      <Table<ServiceDomainsResponse>
+      <Table<ServiceDomainsType>
         data={data?.results}
         rowCount={data?.count}
         columns={serviceDomainsColumns}

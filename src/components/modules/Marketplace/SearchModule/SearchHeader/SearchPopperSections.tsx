@@ -4,6 +4,7 @@ import {
   SearchHeaderSectionEnum,
   SearchHeaderSectionType,
 } from "../SearchHeaderSectionEnum";
+import { BusinessDomainsResponse } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
 
 const SearchServicesSection = React.lazy(
   () => import("./SearchServicesSection")
@@ -16,6 +17,7 @@ const SearchDateTimeSection = React.lazy(
 );
 
 type SearchPopperSectionsProps = {
+  businessDomains?: BusinessDomainsResponse | null;
   isExpanded: boolean;
   pillRef: React.RefObject<HTMLDivElement | null>;
   popperRef: React.RefObject<HTMLDivElement | null>;
@@ -26,6 +28,7 @@ type SearchPopperSectionsProps = {
 const POPPER_MODIFIERS = [{ name: "offset", options: { offset: [0, 12] } }];
 
 const SearchPopperSections = ({
+  businessDomains,
   isExpanded,
   pillRef,
   popperRef,
@@ -43,7 +46,8 @@ const SearchPopperSections = ({
               </Box>
             }
           >
-            <SearchServicesSection />
+            {/* forward businessDomains so child may use it as initialData */}
+            <SearchServicesSection businessDomains={businessDomains} />
           </Suspense>
         );
       case SearchHeaderSectionEnum.Location:
@@ -73,7 +77,7 @@ const SearchPopperSections = ({
       default:
         return null;
     }
-  }, [activeSection]);
+  }, [activeSection, businessDomains]);
 
   return (
     <Popper
