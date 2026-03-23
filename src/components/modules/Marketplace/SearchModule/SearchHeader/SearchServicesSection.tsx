@@ -1,38 +1,44 @@
 import { Box, Chip, Stack, Typography, CircularProgress } from "@mui/material";
 import React from "react";
 import { BusinessDomainsResponse } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
-import { useCustomQuery } from "@/hooks/useHttp";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-type Props = {
-  businessDomains?: BusinessDomainsResponse | null;
+type SearchServicesSectionProps = {
+  businessDomains?: BusinessDomainsResponse | null | undefined;
 };
 
-const STALE_TIME = 24 * 60 * 60 * 1000; // 24 hours
+const STALE_TIME = 24 * 60 * 60 * 1000;
 
-const SearchServicesSection = ({ businessDomains }: Props) => {
-  const { data, isLoading, isError } = useCustomQuery<BusinessDomainsResponse>({
-    key: ["businessDomains"],
-    url: "/api/nomenclatures/business-domains",
-    options: {
-      staleTime: STALE_TIME,
-      refetchOnWindowFocus: false,
-      // if server already provided data, use it as initialData to avoid client refetch
-      initialData: businessDomains ?? undefined,
+const SearchServicesSection = ({
+  businessDomains,
+}: SearchServicesSectionProps) => {
+  const { data, isLoading, isError } = useQuery<unknown, Error>({
+    queryKey: ["businessDomains"],
+    queryFn: async () => {
+      const res = await axios.get<unknown>(
+        "/api/nomenclatures/business-domains"
+      );
+      return res.data;
     },
+    staleTime: STALE_TIME,
+    refetchOnWindowFocus: false,
+    initialData: businessDomains ?? undefined,
   });
 
   const domains = React.useMemo<BusinessDomainsResponse>(() => {
     if (!data) return [];
-    if (Array.isArray(data)) return data;
-    // support common envelope shapes: { results: [...] } or { data: [...] }
-    if (Array.isArray((data as any).results)) return (data as any).results;
-    if (Array.isArray((data as any).data)) return (data as any).data;
-    // unexpected shape
-    // eslint-disable-next-line no-console
-    console.warn(
-      "SearchServicesSection: unexpected businessDomains shape",
-      data
-    );
+    if (Array.isArray(data)) return data as BusinessDomainsResponse;
+
+    if (typeof data === "object" && data !== null) {
+      const rec = data as Record<string, unknown>;
+      const maybeResults = (rec as { results?: unknown }).results;
+      if (Array.isArray(maybeResults))
+        return maybeResults as BusinessDomainsResponse;
+      const maybeData = (rec as { data?: unknown }).data;
+      if (Array.isArray(maybeData)) return maybeData as BusinessDomainsResponse;
+    }
+
     return [];
   }, [data]);
 

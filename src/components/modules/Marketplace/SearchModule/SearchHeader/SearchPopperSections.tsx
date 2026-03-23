@@ -46,7 +46,6 @@ const SearchPopperSections = ({
               </Box>
             }
           >
-            {/* forward businessDomains so child may use it as initialData */}
             <SearchServicesSection businessDomains={businessDomains} />
           </Suspense>
         );

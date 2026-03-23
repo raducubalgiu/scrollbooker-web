@@ -49,10 +49,9 @@ const SearchHeader = ({
     setActiveSection((prev) => (prev === section ? null : section));
   }, []);
 
-  // Fetch business domains here (best-practice combined): server can pass initialData later
   const STALE_TIME = 24 * 60 * 60 * 1000; // 24h
   const { data: rawBusinessDomains } = useCustomQuery<
-    BusinessDomainsResponse | any
+    BusinessDomainsResponse | unknown
   >({
     key: ["businessDomains"],
     url: "/api/nomenclatures/business-domains",
@@ -63,12 +62,18 @@ const SearchHeader = ({
   });
 
   const businessDomains = React.useMemo<BusinessDomainsResponse>(() => {
-    const d = rawBusinessDomains as any;
+    const d = rawBusinessDomains as unknown;
     if (!d) return [];
-    if (Array.isArray(d)) return d;
-    if (Array.isArray(d.results)) return d.results;
-    if (Array.isArray(d.data)) return d.data;
-    // eslint-disable-next-line no-console
+    if (Array.isArray(d)) return d as BusinessDomainsResponse;
+
+    if (typeof d === "object" && d !== null) {
+      const rec = d as Record<string, unknown>;
+      if (Array.isArray(rec.results))
+        return rec.results as BusinessDomainsResponse;
+      if (Array.isArray(rec.data)) return rec.data as BusinessDomainsResponse;
+    }
+
+     
     console.warn("SearchHeader: unexpected businessDomains shape", d);
     return [];
   }, [rawBusinessDomains]);
@@ -139,14 +144,14 @@ const SearchHeader = ({
             sx={{
               position: "fixed",
               inset: 0,
-              zIndex: (theme) => theme.zIndex.drawer + 1,
+              zIndex: theme.zIndex.drawer + 1,
               bgcolor: "rgba(0,0,0,0.28)",
             }}
           />
         )}
       </Portal>
     ),
-    [isExpanded, closeSection]
+    [isExpanded, closeSection, theme.zIndex]
   );
 
   const containerSx = React.useMemo(() => {
@@ -160,12 +165,12 @@ const SearchHeader = ({
       position: "sticky",
       top: 0,
       mt: `calc(-1 * ${mainPagePadding})`,
-      zIndex: (theme: any) => theme.zIndex.drawer + 2,
+      zIndex: theme.zIndex.drawer + 2,
       backgroundColor: bg,
-      pt: (theme: any) => `calc(${mainPagePadding} + ${theme.spacing(1)})`,
+      pt: `calc(${mainPagePadding} + ${theme.spacing(1)})`,
       pb: 2.5,
     } as const;
-  }, [isExpanded, mainPagePadding, theme.palette.mode]);
+  }, [isExpanded, mainPagePadding, theme.palette.mode, theme.zIndex]);
 
   const pillSx = React.useMemo(() => ({ position: "relative" }), []);
 
