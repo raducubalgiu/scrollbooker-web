@@ -21,10 +21,13 @@ export default function SearchModule() {
 	const theme = useTheme();
 	const mapStyle =
 		theme.palette.mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT;
+	const mapBottomGap = theme.spacing(5);
 
 	const [isMapVisible, setIsMapVisible] = React.useState(true);
+	const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
+	const mapTopOffset = searchHeaderHeight;
+	const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapBottomGap})`;
 
-	// left grid size depends on map visibility: when map hidden, left should take full width
 	const leftGridSize = isMapVisible ? 7 : 12;
 
 	React.useEffect(() => {
@@ -93,31 +96,41 @@ export default function SearchModule() {
 		};
 	}, [mapStyle, isMapVisible]);
 
+	React.useEffect(() => {
+		if (!isMapVisible || !mapRef.current) return;
+
+		mapRef.current.resize();
+	}, [isMapVisible, mapHeight, mapTopOffset]);
+
 	const map = React.useMemo(() => {
 		return (
 			<Grid size={5}>
 				<Box
 					sx={{
 						position: "sticky",
-						top: { xs: 88, md: 88 },
-						height: "80vh",
+						top: mapTopOffset,
+						height: mapHeight,
+						bgcolor: "background.default",
+						borderRadius: 5,
 					}}
 				>
 					<Box
 						ref={mapContainerRef}
-						sx={{ width: "100%", height: "75vh", borderRadius: 5 }}
+						sx={{ width: "100%", height: "100%", borderRadius: 5 }}
 					/>
 				</Box>
 			</Grid>
 		);
-	}, [mapContainerRef]);
+	}, [mapContainerRef, mapHeight, mapTopOffset]);
 
 	return (
 		<Box>
 			<SearchHeader
 				isMapVisible={isMapVisible}
 				onToggleMap={() => setIsMapVisible(prev => !prev)}
+				onHeightChange={setSearchHeaderHeight}
 			/>
+
 			<Grid container spacing={5}>
 				<Grid size={leftGridSize}>
 					<Box
