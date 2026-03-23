@@ -5,15 +5,10 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid2";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import { Box, Stack, Button, Typography, Chip, Rating } from "@mui/material";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import { Box } from "@mui/material";
 import SearchHeader from "./SearchHeader";
-import { busineses_for_map } from "./searchMockData";
-import StarIcon from "@mui/icons-material/Star";
-import Image from "next/image";
-import { formatRating } from "@/utils/formatters";
-import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
+import { busineses_for_map, markers } from "./searchMockData";
+import BusinessCard from "./BusinessCard";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
 const MAPBOX_STYLE_LIGHT = process.env.NEXT_PUBLIC_MAPBOX_STYLE_LIGHT ?? "";
@@ -26,7 +21,15 @@ export default function SearchModule() {
   const mapStyle =
     theme.palette.mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT;
 
+  const [isMapVisible, setIsMapVisible] = React.useState(true);
+
+  // left grid size depends on map visibility: when map hidden, left should take full width
+  const leftGridSize = isMapVisible ? 7 : 12;
+
   React.useEffect(() => {
+    // if map is hidden, ensure we don't initialize it
+    if (!isMapVisible) return;
+
     if (!mapContainerRef.current || mapRef.current || !MAPBOX_TOKEN) {
       return;
     }
@@ -40,255 +43,97 @@ export default function SearchModule() {
       zoom: 12,
     });
 
-    map.addControl(new mapboxgl.NavigationControl(), "top-right");
+    // add controls immediately (no harm)
+    //map.addControl(new mapboxgl.NavigationControl(), "top-right");
 
-    new mapboxgl.Marker({ color: "#ef4444" })
-      .setLngLat([26.1025, 44.4268])
-      .addTo(map);
+    // we'll add markers only after the style has loaded to avoid race conditions
+    const createdMarkers: mapboxgl.Marker[] = [];
+
+    const onLoad = () => {
+      // static center marker (only after load)
+      const centerMarker = new mapboxgl.Marker({ color: "#ef4444" })
+        .setLngLat([26.1025, 44.4268])
+        .addTo(map);
+      createdMarkers.push(centerMarker);
+
+      // markers in the mock are exposed as an object with a `results` array
+      const markerItems = (markers as any)?.results ?? [];
+      if (Array.isArray(markerItems)) {
+        markerItems.forEach((m: any) => {
+          const lat = m?.coordinates?.lat ?? m?.lat ?? null;
+          const lng = m?.coordinates?.lng ?? m?.lng ?? null;
+          if (lat == null || lng == null) return;
+
+          const marker = new mapboxgl.Marker({ color: "#1976d2" })
+            .setLngLat([lng, lat])
+            .addTo(map);
+
+          createdMarkers.push(marker);
+        });
+      }
+    };
+
+    map.on("load", onLoad);
 
     mapRef.current = map;
 
     return () => {
+      // remove the load listener and created markers explicitly
+      try {
+        map.off("load", onLoad);
+      } catch (e) {
+        // ignore if map already destroyed
+      }
+      createdMarkers.forEach((mk) => mk.remove());
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [mapStyle]);
+  }, [mapStyle, isMapVisible]);
+
+  const map = React.useMemo(() => {
+    return (
+      <Grid size={5}>
+        <Box
+          sx={{
+            position: "sticky",
+            top: { xs: 88, md: 88 },
+            height: "80vh",
+          }}
+        >
+          <Box
+            ref={mapContainerRef}
+            sx={{ width: "100%", height: "75vh", borderRadius: 5 }}
+          />
+        </Box>
+      </Grid>
+    );
+  }, [mapContainerRef, isMapVisible]);
 
   return (
     <Box>
-      <SearchHeader />
-
-      <Stack
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ my: 5 }}
-      >
-        <Stack flexDirection="row" alignItems="center" gap={1}>
-          <Button
-            variant="contained"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-          >
-            Toate
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-          >
-            Beauty
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-          >
-            Medical
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-          >
-            Auto
-          </Button>
-        </Stack>
-        <Stack
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="flex-end"
-          gap={1}
-        >
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-            startIcon={<TuneOutlinedIcon />}
-          >
-            Filtre
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            disableElevation
-            sx={{ py: 1.5, px: 3 }}
-            startIcon={<MapOutlinedIcon />}
-          >
-            Ascunde harta
-          </Button>
-        </Stack>
-      </Stack>
-
+      <SearchHeader
+        isMapVisible={isMapVisible}
+        onToggleMap={() => setIsMapVisible((prev) => !prev)}
+      />
       <Grid container spacing={5}>
-        <Grid size={7}>
+        <Grid size={leftGridSize}>
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
+              },
               gap: 5,
               px: { xs: 1, md: 0 },
             }}
           >
             {busineses_for_map.results.map((b) => (
-              <Box key={b.id} sx={{ overflow: "hidden", borderRadius: 2 }}>
-                <Box
-                  sx={{
-                    position: "relative",
-                    width: "100%",
-                    height: 280,
-                  }}
-                >
-                  <Image
-                    src={b.media_files[0].url}
-                    alt={b.owner.fullname}
-                    fill
-                    style={{ objectFit: "cover", borderRadius: 20 }}
-                  />
-                </Box>
-
-                <Stack
-                  flexDirection="row"
-                  justifyContent="space-between"
-                  alignItems="flex-start"
-                  mt={1.5}
-                >
-                  <Box>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      {b.owner.fullname}
-                    </Typography>
-                  </Box>
-
-                  <Stack flexDirection="row" alignItems="center" gap={1}>
-                    <StarIcon fontSize="small" color="primary" />
-                    <Typography variant="h6" fontWeight={600}>
-                      {formatRating(b.owner.ratings_average)}
-                    </Typography>
-                    <Typography color="text.secondary" fontWeight={400}>
-                      ({b.owner.ratings_count})
-                    </Typography>
-                  </Stack>
-                </Stack>
-
-                <Typography color="text.secondary">
-                  {b.owner.profession}
-                </Typography>
-
-                <Typography
-                  color="text.secondary"
-                  fontWeight={400}
-                  mt={1.5}
-                  mb={2.5}
-                >
-                  {b.address}
-                </Typography>
-
-                {b.products.map((prod) => (
-                  <Box
-                    key={prod.id}
-                    sx={{
-                      p: 2,
-                      borderRadius: 5,
-                      mb: 1.5,
-                      bgcolor: "secondary.main",
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`prod.name ${prod.name} price ${prod.price} RON duration ${prod.duration} minutes`}
-                  >
-                    <Stack spacing={0.5}>
-                      <Stack
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                      >
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: 700 }}
-                        >
-                          {prod.name}
-                        </Typography>
-                        <Typography sx={{ fontWeight: 700 }}>
-                          {prod.price_with_discount} RON
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" alignItems="center" spacing={1}>
-                        <Chip
-                          size="small"
-                          icon={<AccessTimeOutlinedIcon />}
-                          label={`${prod.duration} min`}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          Caini & Pisici • Standard
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </Box>
-                ))}
-
-                <Box
-                  sx={{
-                    p: 2,
-                    borderRadius: 5,
-                    bgcolor: "secondary.main",
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Consultatie Standard 150 RON`}
-                >
-                  <Stack spacing={0.5}>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                        Consultatie Standard
-                      </Typography>
-                      <Typography sx={{ fontWeight: 700 }}>150 RON</Typography>
-                    </Stack>
-
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <Chip
-                        size="small"
-                        icon={<AccessTimeOutlinedIcon />}
-                        label="30 min"
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        Caini & Pisici • Standard
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </Box>
-              </Box>
+              <BusinessCard key={b.id} business={b} />
             ))}
           </Box>
         </Grid>
-        <Grid size={5}>
-          <Box
-            sx={{
-              position: "sticky",
-              top: { xs: 88, md: 88 },
-              height: "80vh",
-            }}
-          >
-            <Box
-              ref={mapContainerRef}
-              sx={{ width: "100%", height: "75vh", borderRadius: 5 }}
-            />
-          </Box>
-        </Grid>
+        {isMapVisible && map}
       </Grid>
     </Box>
   );
