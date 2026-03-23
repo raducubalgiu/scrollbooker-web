@@ -101,6 +101,35 @@ const SearchHeader = ({
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, []);
 
+  React.useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const prevBodyPaddingRight = body.style.paddingRight;
+
+    if (!isExpanded)
+      return () => {
+        html.style.overflow = prevHtmlOverflow;
+        body.style.overflow = prevBodyOverflow;
+        body.style.paddingRight = prevBodyPaddingRight;
+      };
+
+    const scrollBarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    if (scrollBarWidth > 0) body.style.paddingRight = `${scrollBarWidth}px`;
+
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      body.style.paddingRight = prevBodyPaddingRight;
+    };
+  }, [isExpanded]);
+
   const backDrop = React.useMemo(
     () => (
       <Portal>
