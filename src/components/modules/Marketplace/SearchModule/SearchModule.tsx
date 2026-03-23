@@ -5,7 +5,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid2";
-import { Box } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import SearchHeader from "./SearchHeader";
 import { busineses_for_map, markers } from "./searchMockData";
 import BusinessCard from "./BusinessCard";
@@ -21,7 +21,7 @@ export default function SearchModule() {
 	const theme = useTheme();
 	const mapStyle =
 		theme.palette.mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT;
-	const mapBottomGap = theme.spacing(5);
+	const mapBottomGap = theme.spacing(2.5);
 
 	const [isMapVisible, setIsMapVisible] = React.useState(true);
 	const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
@@ -133,6 +133,12 @@ export default function SearchModule() {
 
 			<Grid container spacing={5}>
 				<Grid size={leftGridSize}>
+					<Stack justifyContent="center" alignItems="flex-start">
+						<Typography color="text.secondary" my={2.5}>
+							100 de rezultate in zona
+						</Typography>
+					</Stack>
+
 					<Box
 						sx={{
 							display: "grid",
@@ -140,7 +146,7 @@ export default function SearchModule() {
 								xs: "1fr",
 								sm: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
 							},
-							gap: 5,
+							gap: 2.5,
 							px: { xs: 1, md: 0 },
 						}}
 					>

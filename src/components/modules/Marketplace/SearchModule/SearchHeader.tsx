@@ -56,7 +56,7 @@ const SearchHeader = ({
 				zIndex: theme => theme.zIndex.appBar - 1,
 				backgroundColor: "background.paper",
 				pt: 1,
-				pb: 5,
+				pb: 2.5,
 			}}
 		>
 			<Stack
@@ -158,7 +158,7 @@ const SearchHeader = ({
 				flexDirection="row"
 				alignItems="center"
 				justifyContent="space-between"
-				sx={{ mt: 5 }}
+				sx={{ mt: 2.5 }}
 			>
 				<Stack flexDirection="row" alignItems="center" gap={1}>
 					<Button
