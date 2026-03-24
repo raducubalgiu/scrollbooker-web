@@ -7,197 +7,217 @@ import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid2";
 import { Box, Typography } from "@mui/material";
 import SearchHeader from "./SearchHeader/SearchHeader";
-import { busineses_for_map, markers } from "./searchMockData";
 import BusinessCard from "./BusinessCard";
-import { BusinessMarkerType } from "@/ts/models/booking/business/BusinessMarker";
 import FiltersModal from "./FiltersModal";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
 import MapActions from "./MapActions";
-
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
-const MAPBOX_STYLE_LIGHT = process.env.NEXT_PUBLIC_MAPBOX_STYLE_LIGHT ?? "";
-const MAPBOX_STYLE_DARK = process.env.NEXT_PUBLIC_MAPBOX_STYLE_DARK ?? "";
+import { BusinessMarkerType } from "@/ts/models/booking/business/search/BusinessMarker";
+import { useCustomQuery } from "@/hooks/useHttp";
+import BusinessCardSkeleton from "./BusinessCardSkeleton";
+import {
+  MAPBOX_STYLE_DARK,
+  MAPBOX_STYLE_LIGHT,
+  MAPBOX_TOKEN,
+} from "./search-utils";
 
 export default function SearchModule() {
-	const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
-	const mapRef = React.useRef<mapboxgl.Map | null>(null);
-	const theme = useTheme();
-	const mapStyle =
-		theme.palette.mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT;
-	const mainPagePadding = theme.spacing(2.5);
-	const mapTopGap = theme.spacing(0.5);
-	const mapBottomGap = theme.spacing(2.5);
+  const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
+  const mapRef = React.useRef<mapboxgl.Map | null>(null);
+  const theme = useTheme();
+  const mapStyle =
+    theme.palette.mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT;
+  const mainPagePadding = theme.spacing(2.5);
+  const mapTopGap = theme.spacing(0.5);
+  const mapBottomGap = theme.spacing(2.5);
 
-	const [selectedBusinessDomain, setSelectedBusinessDomain] =
-		React.useState<BusinessDomainType>({
-			id: 0,
-			name: "Toate",
-			short_name: "Toate",
-			active: false,
-			service_domains: [],
-		});
-	const [isMapVisible, setIsMapVisible] = React.useState(true);
-	const [isMapExpanded, setIsMapExpanded] = React.useState(false);
-	const [openFilters, setOpenFilters] = React.useState(false);
-	const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
+  const [selectedBusinessDomain, setSelectedBusinessDomain] =
+    React.useState<BusinessDomainType>({
+      id: 0,
+      name: "Toate",
+      short_name: "Toate",
+      active: false,
+      service_domains: [],
+    });
 
-	const mapTopOffset = `calc(${searchHeaderHeight}px + ${mapTopGap})`;
-	const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapTopGap} - ${mainPagePadding} - ${mapBottomGap})`;
+  const { data, isLoading } = useCustomQuery({
+    url: "/api/businesses/map",
+    method: "GET",
+    key: ["markers-and-locations", selectedBusinessDomain.id],
+    params: {
+      businessDomainId:
+        selectedBusinessDomain.id !== 0 ? selectedBusinessDomain.id : undefined,
+    },
+  });
 
-	React.useEffect(() => {
-		if (!isMapVisible) return;
+  const [isMapVisible, setIsMapVisible] = React.useState(true);
+  const [isMapExpanded, setIsMapExpanded] = React.useState(false);
+  const [openFilters, setOpenFilters] = React.useState(false);
+  const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
 
-		if (!mapContainerRef.current || mapRef.current || !MAPBOX_TOKEN) {
-			return;
-		}
+  const mapTopOffset = `calc(${searchHeaderHeight}px + ${mapTopGap})`;
+  const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapTopGap} - ${mainPagePadding} - ${mapBottomGap})`;
 
-		mapboxgl.accessToken = MAPBOX_TOKEN;
+  React.useEffect(() => {
+    if (!data) return;
 
-		const map = new mapboxgl.Map({
-			container: mapContainerRef.current,
-			style: mapStyle,
-			center: [26.1025, 44.4268],
-			zoom: 12,
-		});
+    if (!isMapVisible) return;
 
-		// we'll add markers only after the style has loaded to avoid race conditions
-		const createdMarkers: mapboxgl.Marker[] = [];
+    if (!mapContainerRef.current || mapRef.current || !MAPBOX_TOKEN) {
+      return;
+    }
 
-		const onLoad = () => {
-			// static center marker (only after load)
-			const centerMarker = new mapboxgl.Marker({ color: "#ef4444" })
-				.setLngLat([26.1025, 44.4268])
-				.addTo(map);
-			createdMarkers.push(centerMarker);
+    mapboxgl.accessToken = MAPBOX_TOKEN;
 
-			const markerItems = markers?.results ?? [];
-			if (Array.isArray(markerItems)) {
-				markerItems.forEach((m: BusinessMarkerType) => {
-					const lat = m?.coordinates?.lat ?? null;
-					const lng = m?.coordinates?.lng ?? null;
-					if (lat == null || lng == null) return;
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: mapStyle,
+      center: [26.1025, 44.4268],
+      zoom: 12,
+    });
 
-					const marker = new mapboxgl.Marker({ color: "#1976d2" })
-						.setLngLat([lng, lat])
-						.addTo(map);
+    // we'll add markers only after the style has loaded to avoid race conditions
+    const createdMarkers: mapboxgl.Marker[] = [];
 
-					createdMarkers.push(marker);
-				});
-			}
-		};
+    const onLoad = () => {
+      // static center marker (only after load)
+      const centerMarker = new mapboxgl.Marker({ color: "#ef4444" })
+        .setLngLat([26.1025, 44.4268])
+        .addTo(map);
+      createdMarkers.push(centerMarker);
 
-		map.on("load", onLoad);
-		mapRef.current = map;
+      const markerItems = data?.markers?.results ?? [];
+      if (Array.isArray(markerItems)) {
+        markerItems.forEach((m: BusinessMarkerType) => {
+          const lat = m?.coordinates?.lat ?? null;
+          const lng = m?.coordinates?.lng ?? null;
+          if (lat == null || lng == null) return;
 
-		return () => {
-			try {
-				map.off("load", onLoad);
-			} catch (e) {
-				if (e instanceof Error) {
-					// ignore if map already destroyed
-				}
-			}
-			createdMarkers.forEach(mk => mk.remove());
-			mapRef.current?.remove();
-			mapRef.current = null;
-		};
-	}, [mapStyle, isMapVisible]);
+          const marker = new mapboxgl.Marker({ color: "#1976d2" })
+            .setLngLat([lng, lat])
+            .addTo(map);
 
-	React.useEffect(() => {
-		if (!isMapVisible || !mapRef.current) return;
+          createdMarkers.push(marker);
+        });
+      }
+    };
 
-		mapRef.current.resize();
-	}, [isMapVisible, mapHeight, mapTopOffset]);
+    map.on("load", onLoad);
+    mapRef.current = map;
 
-	const map = React.useMemo(() => {
-		return (
-			<Box
-				sx={{
-					position: "sticky",
-					top: mapTopOffset,
-					height: mapHeight,
-					bgcolor: "background.default",
-					borderRadius: 5,
-					overflow: "hidden",
-				}}
-			>
-				<Box
-					sx={{
-						position: "relative",
-						width: "100%",
-						height: "100%",
-						borderRadius: 5,
-					}}
-				>
-					<Box
-						ref={mapContainerRef}
-						sx={{ width: "100%", height: "100%", borderRadius: 5 }}
-					/>
-					<MapActions
-						onMapExpandToggle={() => setIsMapExpanded(prev => !prev)}
-						onZoomIn={() => {
-							if (mapRef.current) {
-								mapRef.current.zoomTo(mapRef.current.getZoom() + 1, {
-									duration: 300,
-								});
-							}
-						}}
-						onZoomOut={() => {
-							if (mapRef.current) {
-								mapRef.current.zoomTo(mapRef.current.getZoom() - 1, {
-									duration: 300,
-								});
-							}
-						}}
-						isMapExpanded={isMapExpanded}
-					/>
-				</Box>
-			</Box>
-		);
-	}, [mapContainerRef, mapHeight, mapTopOffset, isMapExpanded]);
+    return () => {
+      try {
+        map.off("load", onLoad);
+      } catch (e) {
+        if (e instanceof Error) {
+          // ignore if map already destroyed
+        }
+      }
+      createdMarkers.forEach((mk) => mk.remove());
+      mapRef.current?.remove();
+      mapRef.current = null;
+    };
+  }, [mapStyle, isMapVisible, data]);
 
-	const leftGridSize = isMapVisible ? 7 : 12;
+  React.useEffect(() => {
+    if (!isMapVisible || !mapRef.current) return;
 
-	return (
-		<Box>
-			<FiltersModal open={openFilters} onClose={() => setOpenFilters(false)} />
+    mapRef.current.resize();
+  }, [isMapVisible, mapHeight, mapTopOffset]);
 
-			<SearchHeader
-				isMapVisible={isMapVisible}
-				onToggleMap={() => setIsMapVisible(prev => !prev)}
-				onHeightChange={setSearchHeaderHeight}
-				onOpenFilters={() => setOpenFilters(true)}
-				mainPagePadding={mainPagePadding}
-				selectedBusinessDomain={selectedBusinessDomain}
-				onSetSelectedBusinessDomain={bDomain =>
-					setSelectedBusinessDomain(bDomain)
-				}
-			/>
+  const map = React.useMemo(() => {
+    return (
+      <Box
+        sx={{
+          position: "sticky",
+          top: mapTopOffset,
+          height: mapHeight,
+          bgcolor: "background.default",
+          borderRadius: 5,
+          overflow: "hidden",
+        }}
+      >
+        <Box
+          sx={{
+            position: "relative",
+            width: "100%",
+            height: "100%",
+            borderRadius: 5,
+          }}
+        >
+          <Box
+            ref={mapContainerRef}
+            sx={{ width: "100%", height: "100%", borderRadius: 5 }}
+          />
+          <MapActions
+            onMapExpandToggle={() => setIsMapExpanded((prev) => !prev)}
+            onZoomIn={() => {
+              if (mapRef.current) {
+                mapRef.current.zoomTo(mapRef.current.getZoom() + 1, {
+                  duration: 300,
+                });
+              }
+            }}
+            onZoomOut={() => {
+              if (mapRef.current) {
+                mapRef.current.zoomTo(mapRef.current.getZoom() - 1, {
+                  duration: 300,
+                });
+              }
+            }}
+            isMapExpanded={isMapExpanded}
+          />
+        </Box>
+      </Box>
+    );
+  }, [mapContainerRef, mapHeight, mapTopOffset, isMapExpanded]);
 
-			<Grid container spacing={5}>
-				<Grid size={{ lg: leftGridSize }}>
-					<Typography color="text.secondary" my={2.5}>
-						100 de rezultate in zona
-					</Typography>
+  const leftGridSize = isMapVisible ? 7 : 12;
 
-					<Box
-						sx={{
-							display: "grid",
-							gridTemplateColumns: {
-								lg: "1fr",
-								xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
-							},
-							gap: 5,
-							px: { xs: 1, md: 0 },
-						}}
-					>
-						{busineses_for_map.results.map(b => (
-							<BusinessCard key={b.id} business={b} />
-						))}
-					</Box>
-				</Grid>
-				{isMapVisible && <Grid size={{ md: 5 }}>{map}</Grid>}
-			</Grid>
-		</Box>
-	);
+  return (
+    <Box>
+      <FiltersModal open={openFilters} onClose={() => setOpenFilters(false)} />
+
+      <SearchHeader
+        isMapVisible={isMapVisible}
+        onToggleMap={() => setIsMapVisible((prev) => !prev)}
+        onHeightChange={setSearchHeaderHeight}
+        onOpenFilters={() => setOpenFilters(true)}
+        mainPagePadding={mainPagePadding}
+        selectedBusinessDomain={selectedBusinessDomain}
+        onSetSelectedBusinessDomain={(bDomain) =>
+          setSelectedBusinessDomain(bDomain)
+        }
+      />
+
+      <Grid container spacing={5}>
+        <Grid size={{ lg: leftGridSize }}>
+          <Typography color="text.secondary" my={2.5}>
+            {data?.list?.count} de rezultate in zona
+          </Typography>
+
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                lg: "1fr",
+                xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
+              },
+              gap: 5,
+              px: { xs: 1, md: 0 },
+            }}
+          >
+            {isLoading &&
+              Array.from({ length: 6 }).map((_, i) => (
+                <BusinessCardSkeleton key={i} />
+              ))}
+            {!isLoading &&
+              data?.list?.results.map((b) => (
+                <BusinessCard key={b.id} business={b} />
+              ))}
+          </Box>
+        </Grid>
+        {isMapVisible && <Grid size={{ md: 5 }}>{map}</Grid>}
+      </Grid>
+    </Box>
+  );
 }

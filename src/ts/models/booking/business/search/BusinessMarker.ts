@@ -1,7 +1,7 @@
 import { PaginatedData } from "@/components/core/Table/Table";
-import { BusinessMediaFileType } from "./BusinessMediaFile";
-import { BusinessCoordinatesType } from "./BusinessResponse";
-import { BusinessOwnerType } from "./BusinessOwnerType";
+import { BusinessOwnerType } from "../BusinessOwnerType";
+import { BusinessCoordinatesType } from "../BusinessResponse";
+import { BusinessMediaFileType } from "../BusinessMediaFile";
 
 export type BusinessMarkerType = {
   id: number;

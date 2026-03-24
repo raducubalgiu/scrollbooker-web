@@ -1,5 +1,5 @@
-import { BusinessMarkerResponse } from "@/ts/models/booking/business/BusinessMarker";
-import { BusinessSheetResponse } from "@/ts/models/booking/business/BusinessSheet";
+import { BusinessMarkerResponse } from "@/ts/models/booking/business/search/BusinessMarker";
+import { BusinessSheetResponse } from "@/ts/models/booking/business/search/BusinessSheet";
 
 export const markers: BusinessMarkerResponse = {
   count: 31,
