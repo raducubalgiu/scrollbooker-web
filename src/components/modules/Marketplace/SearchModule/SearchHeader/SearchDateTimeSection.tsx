@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { Dayjs } from "dayjs";
-import CustomCalendar from "./CustomCalendar";
+import CustomCalendar from "../../../../cutomized/CustomCalendar/CustomCalendar";
 
 const SearchDateTimeSection = () => {
 	const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);

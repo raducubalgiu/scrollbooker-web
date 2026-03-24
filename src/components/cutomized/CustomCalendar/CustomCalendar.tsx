@@ -1,9 +1,8 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import localeData from "dayjs/plugin/localeData";
-import { Box, IconButton, Typography } from "@mui/material";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { Box, Typography } from "@mui/material";
+import CalendarHeader, { CalendarActionTypeEnum } from "./CalendarHeader";
 
 dayjs.extend(localeData);
 
@@ -42,34 +41,25 @@ const CustomCalendar: React.FC<Props> = ({ value, onChange }) => {
 	}
 	while (days.length % 7 !== 0) days.push(null);
 
+	const handleNavigate = useCallback(
+		(action: CalendarActionTypeEnum) => {
+			if (action === CalendarActionTypeEnum.GO_PREV && canGoPrev)
+				setViewMonth(m => m.subtract(1, "month"));
+			else if (action === CalendarActionTypeEnum.GO_NEXT && canGoNext)
+				setViewMonth(m => m.add(1, "month"));
+		},
+		[canGoPrev, canGoNext],
+	);
+
 	return (
 		<Box>
-			<Box
-				display="flex"
-				alignItems="center"
-				justifyContent="space-between"
-				mb={1}
-			>
-				<IconButton
-					size="large"
-					disabled={!canGoPrev}
-					onClick={() => setViewMonth(m => m.subtract(1, "month"))}
-				>
-					<ChevronLeftIcon fontSize="large" />
-				</IconButton>
-				<Typography fontWeight={600} sx={{ textTransform: "capitalize" }}>
-					{viewMonth.format("MMMM YYYY")}
-				</Typography>
-				<IconButton
-					size="large"
-					disabled={!canGoNext}
-					onClick={() => setViewMonth(m => m.add(1, "month"))}
-				>
-					<ChevronRightIcon fontSize="large" />
-				</IconButton>
-			</Box>
+			<CalendarHeader
+				canGoPrev={canGoPrev}
+				canGoNext={canGoNext}
+				title={viewMonth.format("MMMM YYYY")}
+				onSetTitle={handleNavigate}
+			/>
 
-			{/* Weekday labels */}
 			<Box display="grid" gridTemplateColumns="repeat(7, 1fr)" mb={0.5}>
 				{weekDays.map(d => (
 					<Typography
