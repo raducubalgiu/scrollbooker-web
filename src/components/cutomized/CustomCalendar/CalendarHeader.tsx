@@ -33,7 +33,7 @@ export default function CalendarHeader({
 				disabled={!canGoPrev}
 				onClick={() => onSetTitle(CalendarActionTypeEnum.GO_PREV)}
 			>
-				<ChevronLeftIcon fontSize="large" />
+				<ChevronLeftIcon />
 			</IconButton>
 			<Typography fontWeight={600} sx={{ textTransform: "capitalize" }}>
 				{title}
@@ -43,7 +43,7 @@ export default function CalendarHeader({
 				disabled={!canGoNext}
 				onClick={() => onSetTitle(CalendarActionTypeEnum.GO_NEXT)}
 			>
-				<ChevronRightIcon fontSize="large" />
+				<ChevronRightIcon />
 			</IconButton>
 		</Box>
 	);

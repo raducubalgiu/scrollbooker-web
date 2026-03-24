@@ -28,7 +28,7 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 					style={{
 						objectFit: "cover",
 						borderRadius: 20,
-						backgroundColor: "background.default",
+						backgroundColor: "#eee",
 					}}
 				/>
 			</Box>
