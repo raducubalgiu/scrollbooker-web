@@ -49,7 +49,7 @@ const SearchHeader = ({
     setActiveSection((prev) => (prev === section ? null : section));
   }, []);
 
-  const STALE_TIME = 24 * 60 * 60 * 1000; // 24h
+  const STALE_TIME = 24 * 60 * 60 * 1000;
   const { data: rawBusinessDomains } = useCustomQuery<
     BusinessDomainsResponse | unknown
   >({
@@ -73,7 +73,6 @@ const SearchHeader = ({
       if (Array.isArray(rec.data)) return rec.data as BusinessDomainsResponse;
     }
 
-     
     console.warn("SearchHeader: unexpected businessDomains shape", d);
     return [];
   }, [rawBusinessDomains]);
@@ -107,31 +106,76 @@ const SearchHeader = ({
   }, []);
 
   React.useEffect(() => {
-    const html = document.documentElement;
+    if (!isExpanded) return;
+
+    const doc = document.documentElement;
     const body = document.body;
 
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-    const prevBodyPaddingRight = body.style.paddingRight;
+    const prev = {
+      htmlOverflow: doc.style.overflow,
+      htmlPaddingRight: doc.style.paddingRight,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+    } as const;
 
-    if (!isExpanded)
-      return () => {
-        html.style.overflow = prevHtmlOverflow;
-        body.style.overflow = prevBodyOverflow;
-        body.style.paddingRight = prevBodyPaddingRight;
-      };
-
-    const scrollBarWidth =
+    const calcScrollbarWidth = () =>
       window.innerWidth - document.documentElement.clientWidth;
+    const applyScrollbarCompensation = () => {
+      const sw = calcScrollbarWidth();
+      if (sw > 0) doc.style.paddingRight = `${sw}px`;
+      else doc.style.paddingRight = "";
+    };
 
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    if (scrollBarWidth > 0) body.style.paddingRight = `${scrollBarWidth}px`;
+    const isiOS = /iP(ad|hone|od)/.test(navigator.userAgent || "");
+    let savedY: number | null = null;
+
+    if (isiOS) {
+      savedY = window.scrollY || window.pageYOffset;
+      body.style.position = "fixed";
+      body.style.top = `-${savedY}px`;
+      body.style.left = "0";
+      body.style.right = "0";
+    } else {
+      doc.style.overflow = "hidden";
+      applyScrollbarCompensation();
+    }
+
+    const onResize = () => {
+      applyScrollbarCompensation();
+      window.requestAnimationFrame(() =>
+        window.dispatchEvent(new Event("resize"))
+      );
+    };
+    window.addEventListener("resize", onResize);
+
+    const onTouchMove = (e: TouchEvent) => {
+      try {
+        if (
+          popperRef.current?.contains(e.target as Node) ||
+          pillRef.current?.contains(e.target as Node)
+        )
+          return;
+      } catch (err) {
+        // defensive
+      }
+      e.preventDefault();
+    };
+
+    document.addEventListener("touchmove", onTouchMove, { passive: false });
 
     return () => {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-      body.style.paddingRight = prevBodyPaddingRight;
+      document.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("resize", onResize);
+
+      doc.style.overflow = prev.htmlOverflow;
+      doc.style.paddingRight = prev.htmlPaddingRight;
+
+      body.style.position = prev.bodyPosition;
+      body.style.top = prev.bodyTop;
+
+      if (isiOS && savedY !== null) {
+        window.scrollTo(0, savedY);
+      }
     };
   }, [isExpanded]);
 
@@ -155,11 +199,8 @@ const SearchHeader = ({
   );
 
   const containerSx = React.useMemo(() => {
-    const bg = isExpanded
-      ? "transparent"
-      : theme.palette.mode === "dark"
-        ? "background.default"
-        : "background.paper";
+    const bg =
+      theme.palette.mode === "dark" ? "background.default" : "background.paper";
 
     return {
       position: "sticky",
@@ -169,10 +210,26 @@ const SearchHeader = ({
       backgroundColor: bg,
       pt: `calc(${mainPagePadding} + ${theme.spacing(1)})`,
       pb: 2.5,
+      ...(isExpanded
+        ? {
+            position: "sticky",
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              bgcolor: "rgba(0,0,0,0.28)",
+              pointerEvents: "none",
+              zIndex: theme.zIndex.drawer + 1,
+            },
+          }
+        : {}),
     } as const;
   }, [isExpanded, mainPagePadding, theme.palette.mode, theme.zIndex]);
 
-  const pillSx = React.useMemo(() => ({ position: "relative" }), []);
+  const pillSx = React.useMemo(
+    () => ({ position: "relative", zIndex: theme.zIndex.drawer + 3 }),
+    [theme.zIndex]
+  );
 
   const onSearchClick = React.useCallback(() => {
     // placeholder for search action; stable ref prevents re-renders downstream
