@@ -44,11 +44,7 @@ type SidebarProps = {
   onCloseDrawer?: () => void;
 };
 
-export default function Sidebar({
-  collapsed,
-  onToggleCollapse,
-  onCloseDrawer,
-}: SidebarProps) {
+export default function Sidebar({ collapsed, onCloseDrawer }: SidebarProps) {
   const router = useRouter();
   const session = useSession();
   const pathname = usePathname();

@@ -1,8 +1,7 @@
 import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "nodejs"; // important: FormData + File forwarding stabil
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function PATCH(
@@ -21,7 +20,6 @@ export async function PATCH(
   const photo = incoming.get("photo");
 
   if (!photo || !(photo instanceof File)) {
-    console.log("Missing photo!!!");
     return NextResponse.json({ error: "Missing photo" }, { status: 400 });
   }
 

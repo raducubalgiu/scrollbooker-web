@@ -5,9 +5,9 @@ type UserAvatarProps = {
   isBusinessOrEmployee: boolean | undefined;
   openNow?: boolean | undefined;
   url: string | undefined;
-  small?: boolean;
-  defaultSize?: number;
-  badgeSize?: number;
+  small?: boolean | undefined;
+  defaultSize?: number | undefined;
+  badgeSize?: number | undefined;
 };
 
 export default function UserAvatar({
@@ -33,7 +33,7 @@ export default function UserAvatar({
           border: `1px solid ${theme.palette.divider}`,
         }}
         alt="User Avatar"
-        src={url}
+        src={url ?? ""}
       />
     ),
     [url, size, theme.palette.divider]

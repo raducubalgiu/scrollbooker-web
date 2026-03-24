@@ -23,7 +23,7 @@ type UserInfoProps = {
   user: UserProfileType | undefined;
   isLoadingUser: boolean;
   refetchUser: () => Promise<UseQueryResult<UserProfileType, unknown>>;
-  collapsed?: boolean;
+  collapsed?: boolean | undefined;
 };
 
 export default function UserInfo({

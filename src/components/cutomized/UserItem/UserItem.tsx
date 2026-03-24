@@ -57,10 +57,17 @@ const UserItem = ({ user }: { user: UserMiniType }) => {
         }
         sx={styles.badge}
       >
-        <Avatar sx={styles.avatar} src={avatar} />
+        <Avatar sx={styles.avatar} src={avatar ?? ""} />
       </Badge>
     );
-  }, [is_business_or_employee, formattedRating, avatar]);
+  }, [
+    is_business_or_employee,
+    formattedRating,
+    avatar,
+    styles.avatar,
+    styles.badge,
+    styles.badgeContent,
+  ]);
 
   const followButton = useMemo(() => {
     return (

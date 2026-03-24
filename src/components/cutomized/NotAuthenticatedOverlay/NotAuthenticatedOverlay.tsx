@@ -57,7 +57,7 @@ const NotAuthenticatedOverlay = ({
       pointerEvents: "auto",
       borderRadius: 2,
     };
-  }, [theme.palette.mode]);
+  }, [theme.palette.mode, theme.zIndex?.modal]);
 
   return (
     <Box sx={{ mt: 3 }}>

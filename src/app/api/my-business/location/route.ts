@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { get } from "@/utils/requests";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
   const { userId } = await getUserServerSession();
 
   const response = (

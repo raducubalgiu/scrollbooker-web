@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Paper,
   Typography,
   ListItem,
   ListItemText,
@@ -46,7 +45,7 @@ export default function Consent({
         {!isLoading &&
           sections?.map((section, index) => {
             const [titleLine, ...descLines] = section.split("\n- ");
-            const title = titleLine.trim();
+            const title = titleLine?.trim();
             const description = descLines.join("\n- ").trim();
 
             return (

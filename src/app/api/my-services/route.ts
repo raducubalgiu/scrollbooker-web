@@ -3,7 +3,7 @@ import { get, put } from "@/utils/requests";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
   const user = await getUserServerSession();
 
   const response = (

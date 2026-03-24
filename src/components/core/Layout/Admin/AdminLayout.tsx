@@ -50,18 +50,13 @@ export default function AdminLayout({ children }: LayoutProps) {
       main: {
         p: 2.5,
         width: "100%",
-        // account for permanent drawer on sm+ by shifting the main content
-        //ml: { sm: `${DRAWER_WIDTH}px` },
-        //width: { xs: "100%", sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-        // subtle outline to help debug layout gaps (remove when confirmed)
-        //border: "1px dashed rgba(0,0,255,0.04)",
       },
       box: {
         display: "flex",
         minHeight: "100vh",
       },
     }),
-    [DRAWER_WIDTH]
+    []
   );
 
   return (

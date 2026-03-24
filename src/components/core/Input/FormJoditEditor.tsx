@@ -4,7 +4,16 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { useTheme } from "@mui/material/styles";
 
-const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false }) as any;
+type JoditEditorComponentProps = {
+  value: string;
+  config: object;
+  onChange: (value: string) => void;
+};
+
+const JoditEditor = dynamic<JoditEditorComponentProps>(
+  () => import("jodit-react"),
+  { ssr: false }
+);
 
 type FormJoditEditorProps = {
   value?: string;
@@ -53,12 +62,26 @@ export default function FormJoditEditor({
         "redo",
       ],
     }),
-    [placeholder, isDarkTheme, containerColor, contentColor, isDisabled]
+    [
+      placeholder,
+      isDarkTheme,
+      containerColor,
+      contentColor,
+      isDisabled,
+      fontFamily,
+    ]
+  );
+
+  const handleChange = React.useCallback(
+    (v: string) => {
+      if (onChange) onChange(v);
+    },
+    [onChange]
   );
 
   return (
     <div>
-      <JoditEditor value={value} config={config} onChange={onChange} />
+      <JoditEditor value={value} config={config} onChange={handleChange} />
     </div>
   );
 }

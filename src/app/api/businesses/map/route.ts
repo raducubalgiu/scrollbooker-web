@@ -5,8 +5,6 @@ export async function GET(req: NextRequest) {
   const { session } = await getUserServerSession();
   const business_domain_id = req.nextUrl.searchParams.get("businessDomainId");
 
-  console.log("businessDomainId:", business_domain_id);
-
   try {
     //const body = await req.json();
 

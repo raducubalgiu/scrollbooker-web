@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Tab, Tabs, Typography, Theme } from "@mui/material";
 import React, { useMemo, ReactElement, useEffect, useCallback } from "react";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
@@ -11,7 +11,6 @@ import ProfileEmployeesTab from "./ProfileEmployeesTab";
 import ProfileBookmarksTab from "./ProfileBookmarksTab";
 import ProfileInfoTab from "./ProfileInfoTab";
 import { useSession } from "next-auth/react";
-import { Theme } from "@mui/system";
 
 enum ProfileTabEnum {
   POSTS,
@@ -122,7 +121,7 @@ const ProfileTabs = ({
       default:
         return null;
     }
-  }, [currentTab, isAuthenticated]);
+  }, [currentTab, isAuthenticated, businessId, userId]);
 
   const styles = useMemo(
     () => ({

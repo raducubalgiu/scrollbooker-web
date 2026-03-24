@@ -1,9 +1,8 @@
 import React, { memo, useEffect, useRef } from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
 import { useInfiniteReviews } from "@/hooks/infiniteQuery/useInfiniteReviews";
 
 type VideoReviewsTabProps = {
-  userId?: number;
+  userId?: number | undefined;
   rootRef?: React.RefObject<HTMLDivElement | null>;
   disableInitialIgnore?: boolean;
 };
@@ -15,13 +14,12 @@ const VideoReviewsTab = ({
 }: VideoReviewsTabProps) => {
   const {
     data: videoReviews,
-    isLoading: isLoadingVideoReviews,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteReviews(userId, new Set<number>());
 
-  const reviews = videoReviews?.pages.flatMap((p) => p.results) ?? [];
+  //const reviews = videoReviews?.pages.flatMap((p) => p.results) ?? [];
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -38,7 +36,7 @@ const VideoReviewsTab = ({
       (entries) => {
         const entry = entries[0];
         if (ignoreInitial) return;
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },
@@ -61,6 +59,24 @@ const VideoReviewsTab = ({
 
   return (
     <>
+      {videoReviews?.pages.map((page, pageIndex) => (
+        <React.Fragment key={pageIndex}>
+          {page.results.map((review) => (
+            <div
+              key={review.id}
+              style={{
+                marginBottom: 16,
+                padding: 16,
+                border: "1px solid #ccc",
+                borderRadius: 8,
+              }}
+            >
+              <h3 style={{ margin: 0, fontWeight: 600 }}>{review.review}</h3>
+              <p style={{ margin: "8px 0 0" }}>{review.created_at}</p>
+            </div>
+          ))}
+        </React.Fragment>
+      ))}
       {/* {!isLoadingVideoReviews && reviews.length === 0 && (
         <Typography variant="h6" color="text.secondary" align="center" mt={4}>
           Nu există recenzii video.
