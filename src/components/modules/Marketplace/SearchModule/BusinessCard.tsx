@@ -22,13 +22,13 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 				}}
 			>
 				<Image
-					src={media_files[0].url}
+					src={media_files?.[0]?.url ?? ""}
 					alt={fullname}
 					fill
 					style={{
 						objectFit: "cover",
 						borderRadius: 20,
-						backgroundColor: "#eee",
+						backgroundColor: "background.default",
 					}}
 				/>
 			</Box>
