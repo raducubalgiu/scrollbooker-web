@@ -43,7 +43,6 @@ export default function SearchModule() {
 
 	const mapTopOffset = `calc(${searchHeaderHeight}px + ${mapTopGap})`;
 	const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapTopGap} - ${mainPagePadding} - ${mapBottomGap})`;
-	const leftGridSize = isMapVisible ? 7 : 12;
 
 	React.useEffect(() => {
 		if (!isMapVisible) return;
@@ -112,52 +111,52 @@ export default function SearchModule() {
 
 	const map = React.useMemo(() => {
 		return (
-			<Grid size={5}>
+			<Box
+				sx={{
+					position: "sticky",
+					top: mapTopOffset,
+					height: mapHeight,
+					bgcolor: "background.default",
+					borderRadius: 5,
+					overflow: "hidden",
+				}}
+			>
 				<Box
 					sx={{
-						position: "sticky",
-						top: mapTopOffset,
-						height: mapHeight,
-						bgcolor: "background.default",
+						position: "relative",
+						width: "100%",
+						height: "100%",
 						borderRadius: 5,
-						overflow: "hidden",
 					}}
 				>
 					<Box
-						sx={{
-							position: "relative",
-							width: "100%",
-							height: "100%",
-							borderRadius: 5,
+						ref={mapContainerRef}
+						sx={{ width: "100%", height: "100%", borderRadius: 5 }}
+					/>
+					<MapActions
+						onMapExpandToggle={() => setIsMapExpanded(prev => !prev)}
+						onZoomIn={() => {
+							if (mapRef.current) {
+								mapRef.current.zoomTo(mapRef.current.getZoom() + 1, {
+									duration: 300,
+								});
+							}
 						}}
-					>
-						<Box
-							ref={mapContainerRef}
-							sx={{ width: "100%", height: "100%", borderRadius: 5 }}
-						/>
-						<MapActions
-							onMapExpandToggle={() => setIsMapExpanded(prev => !prev)}
-							onZoomIn={() => {
-								if (mapRef.current) {
-									mapRef.current.zoomTo(mapRef.current.getZoom() + 1, {
-										duration: 300,
-									});
-								}
-							}}
-							onZoomOut={() => {
-								if (mapRef.current) {
-									mapRef.current.zoomTo(mapRef.current.getZoom() - 1, {
-										duration: 300,
-									});
-								}
-							}}
-							isMapExpanded={isMapExpanded}
-						/>
-					</Box>
+						onZoomOut={() => {
+							if (mapRef.current) {
+								mapRef.current.zoomTo(mapRef.current.getZoom() - 1, {
+									duration: 300,
+								});
+							}
+						}}
+						isMapExpanded={isMapExpanded}
+					/>
 				</Box>
-			</Grid>
+			</Box>
 		);
 	}, [mapContainerRef, mapHeight, mapTopOffset, isMapExpanded]);
+
+	const leftGridSize = isMapVisible ? 7 : 12;
 
 	return (
 		<Box>
@@ -176,7 +175,7 @@ export default function SearchModule() {
 			/>
 
 			<Grid container spacing={5}>
-				<Grid size={leftGridSize}>
+				<Grid size={{ lg: leftGridSize }}>
 					<Typography color="text.secondary" my={2.5}>
 						100 de rezultate in zona
 					</Typography>
@@ -185,8 +184,8 @@ export default function SearchModule() {
 						sx={{
 							display: "grid",
 							gridTemplateColumns: {
-								xs: "1fr",
-								sm: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
+								lg: "1fr",
+								xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
 							},
 							gap: 5,
 							px: { xs: 1, md: 0 },
@@ -197,7 +196,7 @@ export default function SearchModule() {
 						))}
 					</Box>
 				</Grid>
-				{isMapVisible && map}
+				{isMapVisible && <Grid size={{ md: 5 }}>{map}</Grid>}
 			</Grid>
 		</Box>
 	);
