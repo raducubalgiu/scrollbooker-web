@@ -7,7 +7,6 @@ import {
   Typography,
   DialogActions,
   Stack,
-  Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { ActionButtonType } from "../ActionButton/ActionButton";

@@ -1,12 +1,12 @@
 import { PaginatedData } from "@/components/core/Table/Table";
-import { BusinessOwnerType } from "../BusinessOwnerType";
 import { BusinessCoordinatesType } from "../BusinessResponse";
 import { BusinessMediaFileType } from "../BusinessMediaFile";
 import { ProductType } from "../../product/Product";
+import { BusinessOwner } from "../BusinessOwner";
 
-export type BusinessSheetType = {
+export interface BusinessSheet {
   id: number;
-  owner: BusinessOwnerType;
+  owner: BusinessOwner;
   business_type: string;
   business_short_domain: string;
   address: string;
@@ -15,6 +15,6 @@ export type BusinessSheetType = {
   media_files: BusinessMediaFileType[];
   products: ProductType[];
   distance: number | undefined | null;
-};
+}
 
-export type BusinessSheetResponse = PaginatedData<BusinessSheetType>;
+export type BusinessSheetResponse = PaginatedData<BusinessSheet>;

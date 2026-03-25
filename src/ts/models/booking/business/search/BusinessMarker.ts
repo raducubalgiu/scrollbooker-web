@@ -1,10 +1,10 @@
-import { BusinessOwnerType } from "../BusinessOwnerType";
 import { BusinessCoordinatesType } from "../BusinessResponse";
 import { BusinessMediaFileType } from "../BusinessMediaFile";
+import { BusinessOwner } from "../BusinessOwner";
 
-export type BusinessMarkerType = {
+export interface BusinessMarker {
   id: number;
-  owner: BusinessOwnerType;
+  owner: BusinessOwner;
   business_type: string;
   business_short_domain: string;
   address: string;
@@ -12,6 +12,6 @@ export type BusinessMarkerType = {
   is_primary: boolean;
   has_video: boolean;
   media_files: BusinessMediaFileType[];
-};
+}
 
-export type BusinessMarkerResponse = BusinessMarkerType[];
+export type BusinessMarkerResponse = BusinessMarker[];

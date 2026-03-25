@@ -1,9 +1,9 @@
-export type BusinessOwnerType = {
+export interface BusinessOwner {
   id: number;
   fullname: string;
   username: string;
-  avatar: string | undefined;
+  avatar?: string | null;
   profession: string;
   ratings_average: number;
   ratings_count: number;
-};
+}

@@ -11,7 +11,6 @@ import BusinessCard from "./BusinessCard";
 import FiltersModal from "./FiltersModal";
 import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
 import MapActions from "./MapActions";
-import { BusinessMarkerType } from "@/ts/models/booking/business/search/BusinessMarker";
 import BusinessCardSkeleton from "./BusinessCardSkeleton";
 import {
   MAPBOX_STYLE_DARK,
@@ -19,6 +18,7 @@ import {
   MAPBOX_TOKEN,
 } from "./search-utils";
 import { busineses_for_map, markers } from "./searchMockData";
+import { BusinessMarker } from "@/ts/models/booking/business/search/BusinessMarker";
 
 export default function SearchModule() {
   const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
@@ -94,7 +94,7 @@ export default function SearchModule() {
 
       const markerItems = businessData?.markers ?? [];
       if (Array.isArray(markerItems)) {
-        markerItems.forEach((m: BusinessMarkerType) => {
+        markerItems.forEach((m: BusinessMarker) => {
           const lat = m?.coordinates?.lat ?? null;
           const lng = m?.coordinates?.lng ?? null;
           if (lat == null || lng == null) return;

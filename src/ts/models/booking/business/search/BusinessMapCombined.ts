@@ -1,26 +1,47 @@
 import { BusinessMarkerResponse } from "./BusinessMarker";
 import { BusinessSheetResponse } from "./BusinessSheet";
 
-export type BusinessMapRequest = {
+export enum SearchSortEnum {
+  Recommended = "recommended",
+  Distance = "distance",
+  Price = "price",
+  Rating = "rating",
+}
+
+export interface BusinessMapRequest {
   bbox: BoundingBox;
-  zoom?: number | 12;
-  max_markers?: number | 400;
+  zoom: number;
+  max_markers: number;
+
   business_domain_id?: number | null;
   service_domain_id?: number | null;
-  subfilter_ids?: number[] | [];
-  user_location?: [number, number] | null;
-  max_price?: number | null;
-  has_discount?: boolean | false;
-};
+  service_id?: number | null;
+  subfilter_ids?: number[] | null;
+  user_location?: LocationLatLng | null;
 
-export type BoundingBox = {
+  max_price?: number | string | null;
+  sort?: SearchSortEnum | null;
+
+  has_discount: boolean;
+
+  start_date?: string | null;
+  start_time?: string | null;
+  end_time?: string | null;
+}
+
+export interface LocationLatLng {
+  lat: number;
+  lng: number;
+}
+
+export interface BoundingBox {
   min_lng: number;
   min_lat: number;
   max_lng: number;
   max_lat: number;
-};
+}
 
-export type BusinessMapResponse = {
+export interface BusinessMapResponse {
   markers: BusinessMarkerResponse;
   list: BusinessSheetResponse;
-};
+}
