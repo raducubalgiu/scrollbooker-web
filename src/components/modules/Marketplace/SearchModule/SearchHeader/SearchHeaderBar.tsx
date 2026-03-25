@@ -25,27 +25,32 @@ const SearchHeaderBar = ({
 	const theme = useTheme();
 
 	const searchButtonWidth = React.useMemo(
-		() => (isExpanded ? 278 : 220),
+		() => (isExpanded ? 320 : 220),
+		[isExpanded],
+	);
+
+	const searchButtonHeight = React.useMemo(
+		() => (isExpanded ? 75 : 48),
 		[isExpanded],
 	);
 
 	const buttonBaseSx = React.useMemo(
 		() => ({
 			width: searchButtonWidth,
+			height: searchButtonHeight,
 			flex: "0 0 auto",
 			minWidth: 0,
 			textTransform: "none" as const,
 			borderRadius: 999,
-			py: 2,
 			px: 3,
 			justifyContent: "flex-start",
 			alignItems: "flex-start",
 			textAlign: "left",
 			transition:
-				"width 0.34s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease",
+				"width 0.34s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease",
 			overflow: "hidden",
 		}),
-		[isExpanded, searchButtonWidth],
+		[isExpanded, searchButtonWidth, searchButtonHeight],
 	);
 
 	const buttonSxBySection = React.useMemo(() => {
@@ -123,7 +128,6 @@ const SearchHeaderBar = ({
 		[isExpanded],
 	);
 
-	// button refs for keyboard navigation
 	const buttonRefs = React.useRef<Array<HTMLDivElement | null>>([]);
 
 	const handleKeyDown = React.useCallback(
@@ -138,7 +142,6 @@ const SearchHeaderBar = ({
 				buttonRefs.current[prev]?.focus();
 				e.preventDefault();
 			} else if (e.key === "Escape") {
-				// close popper if provided
 				typeof (SearchHeaderBar as any).close === "function" ? null : null;
 				e.preventDefault();
 			}
@@ -202,15 +205,11 @@ const SearchHeaderBar = ({
 							}
 							onKeyDown={e => handleKeyDown(e, idx)}
 						>
-							<Stack alignItems="flex-start">
-								<Typography
-									variant="subtitle2"
-									color="text.secondary"
-									fontWeight={700}
-									lineHeight={1.3}
-								>
-									{sec.title}
-								</Typography>
+							<Stack
+								alignItems="flex-start"
+								justifyContent="center"
+								sx={{ height: "100%" }}
+							>
 								<Typography
 									variant="subtitle1"
 									color="text.primary"
