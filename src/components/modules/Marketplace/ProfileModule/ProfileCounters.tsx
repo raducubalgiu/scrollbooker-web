@@ -1,10 +1,10 @@
-import { UserCountersType } from "@/ts/models/user/UserProfile";
 import { Divider, ListItemButton, Stack, Typography } from "@mui/material";
 import React from "react";
 import { SocialTabEnum } from "./social/SocialTabEnum";
+import { UserCounter } from "@/ts/models/user/UserProfile";
 
 type ProfileCountersProps = {
-  counters: UserCountersType;
+  counters: UserCounter;
   onClick: (tab: SocialTabEnum) => void;
 };
 

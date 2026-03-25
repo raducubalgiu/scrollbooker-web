@@ -15,15 +15,15 @@ import React, { useMemo } from "react";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import { UserProfileType } from "@/ts/models/user/UserProfile";
 import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
 import CachedIcon from "@mui/icons-material/Cached";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { UserProfile } from "@/ts/models/user/UserProfile";
 
 type ProfileUserInfoProps = {
-  profile: UserProfileType;
+  profile: UserProfile;
   onOpenScheduleModal: () => void;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
 };
@@ -61,7 +61,7 @@ const ProfileUserInfo = ({
       Sunday: "Duminică",
     };
 
-    const localizeDay = (dayEn?: string) => {
+    const localizeDay = (dayEn: string | null) => {
       if (!dayEn) return null;
       return daysMap[dayEn] ?? dayEn;
     };
@@ -173,7 +173,7 @@ const ProfileUserInfo = ({
 
                   <ButtonBase>
                     <Avatar
-                      src={business_owner?.avatar}
+                      src={business_owner?.avatar ?? ""}
                       sx={{ border: 1, borderColor: "text.secondary", ml: 1.5 }}
                     />
                     <Typography

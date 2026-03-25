@@ -26,7 +26,7 @@ const UserProfileActions = ({
     previousLocalRef.current = is_follow;
   }, [is_follow]);
 
-  const onErrorHandler = (err?: any) => {
+  const onErrorHandler = () => {
     const intended = intendedNewFollowRef.current;
     const previous = previousLocalRef.current;
 

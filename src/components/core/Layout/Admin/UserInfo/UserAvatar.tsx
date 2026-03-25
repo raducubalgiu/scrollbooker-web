@@ -2,12 +2,12 @@ import React, { useMemo } from "react";
 import { Badge, Avatar, useTheme } from "@mui/material";
 
 type UserAvatarProps = {
-  isBusinessOrEmployee: boolean | undefined;
-  openNow?: boolean | undefined;
-  url: string | undefined;
-  small?: boolean | undefined;
-  defaultSize?: number | undefined;
-  badgeSize?: number | undefined;
+  isBusinessOrEmployee: boolean;
+  openNow?: boolean | null;
+  url?: string | null;
+  small?: boolean | null;
+  defaultSize?: number | null;
+  badgeSize?: number | null;
 };
 
 export default function UserAvatar({

@@ -1,7 +1,7 @@
 import Modal from "@/components/core/Modal/Modal";
 import SchedulesSection from "@/components/cutomized/SchedulesSection/SchedulesSection";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { ScheduleResponse } from "@/ts/models/booking/schedule/Schedule";
+import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { Box } from "@mui/material";
 import React from "react";
 
@@ -12,7 +12,7 @@ type ScheduleModalProps = {
 };
 
 const ScheduleModal = ({ userId, open, handleClose }: ScheduleModalProps) => {
-  const { data, isLoading } = useCustomQuery<ScheduleResponse>({
+  const { data, isLoading } = useCustomQuery<Schedule[]>({
     url: `/api/schedules?userId=${userId}`,
     key: ["user-schedule", userId],
     options: {

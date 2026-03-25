@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, post, put, deleteRequest } from "@/utils/requests";
 import { omit } from "lodash";
-import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
+import { PaginatedData } from "@/components/core/Table/Table";
+import { ServiceDomain } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 
 export const GET = async (req: NextRequest) => {
   const pagination = req.nextUrl.searchParams;
 
   const response = (
-    await get<ServiceDomainsResponse>({
+    await get<PaginatedData<ServiceDomain>>({
       url: `/service-domains?${pagination}`,
     })
   ).data;

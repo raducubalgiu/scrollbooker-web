@@ -5,10 +5,10 @@ import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { ReviewsSummaryResponse } from "@/ts/models/booking/review/ReviewsSummaryType";
 import VideoReviewsTab from "./VideoReviewsTab";
 import WrittenReviewsTab from "./WrittenReviewsTab";
 import ReviewsSummaryHeader from "./ReviewsSummaryHeader";
+import { ReviewsSummary } from "@/ts/models/booking/review/ReviewsSummaryType";
 
 type SocialReviewsTabProps = {
   userId: number | undefined;
@@ -25,7 +25,7 @@ const SocialReviewsTab = ({
     new Set()
   );
 
-  const { data, isLoading } = useCustomQuery<ReviewsSummaryResponse>({
+  const { data, isLoading } = useCustomQuery<ReviewsSummary>({
     url: `/api/social/reviews/summary?userId=${userId}`,
     key: ["reviewsSummary", userId],
     options: { enabled: !!userId },

@@ -2,24 +2,23 @@ import { useCustomQuery } from "@/hooks/useHttp";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import React, { memo } from "react";
-import { UserProfileInfoResponse } from "@/ts/models/user/UserProfileInfo";
 import SchedulesSection from "@/components/cutomized/SchedulesSection/SchedulesSection";
 import Image from "next/image";
 import Grid from "@mui/material/Grid2";
+import { UserProfileInfo } from "@/ts/models/user/UserProfileInfo";
 
 type ProfileInfoTabProps = {
   userId: number;
 };
 
 const ProfileInfoTab = ({ userId }: ProfileInfoTabProps) => {
-  const { data, isLoading, isRefetching } =
-    useCustomQuery<UserProfileInfoResponse>({
-      key: ["profile-info"],
-      url: `/api/profile/info?userId=${userId}`,
-      options: {
-        enabled: !!userId,
-      },
-    });
+  const { data, isLoading } = useCustomQuery<UserProfileInfo>({
+    key: ["profile-info"],
+    url: `/api/profile/info?userId=${userId}`,
+    options: {
+      enabled: !!userId,
+    },
+  });
 
   const { location, description, schedules } = data || {};
 

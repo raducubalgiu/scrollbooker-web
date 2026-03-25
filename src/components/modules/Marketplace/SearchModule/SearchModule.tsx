@@ -9,7 +9,6 @@ import { Box, Typography } from "@mui/material";
 import SearchHeader from "./SearchHeader/SearchHeader";
 import BusinessCard from "./BusinessCard";
 import FiltersModal from "./FiltersModal";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import MapActions from "./MapActions";
 import BusinessCardSkeleton from "./BusinessCardSkeleton";
 import {
@@ -19,6 +18,7 @@ import {
 } from "./search-utils";
 import { busineses_for_map, markers } from "./searchMockData";
 import { BusinessMarker } from "@/ts/models/booking/business/search/BusinessMarker";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 export default function SearchModule() {
   const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
@@ -31,7 +31,7 @@ export default function SearchModule() {
   const mapBottomGap = theme.spacing(2.5);
 
   const [selectedBusinessDomain, setSelectedBusinessDomain] =
-    React.useState<BusinessDomainType>({
+    React.useState<BusinessDomain>({
       id: 0,
       name: "Toate",
       short_name: "Toate",

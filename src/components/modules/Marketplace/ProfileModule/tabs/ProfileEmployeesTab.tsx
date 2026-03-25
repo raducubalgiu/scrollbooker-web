@@ -1,15 +1,16 @@
 import React, { memo } from "react";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployee";
 import EmployeeItem from "../EmployeeItem";
+import { PaginatedData } from "@/components/core/Table/Table";
+import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 
 type ProfileEmployeesTabProps = {
   businessOwnerId: number | undefined;
 };
 
 const ProfileEmployeesTab = ({ businessOwnerId }: ProfileEmployeesTabProps) => {
-  const { data, isLoading } = useCustomQuery<BusinessEmployeeResponse>({
+  const { data, isLoading } = useCustomQuery<PaginatedData<BusinessEmployee>>({
     key: ["business-employees", businessOwnerId],
     url: `/api/employees?businessOwnerId=${businessOwnerId}`,
     params: { page: 1, limit: 10 },
