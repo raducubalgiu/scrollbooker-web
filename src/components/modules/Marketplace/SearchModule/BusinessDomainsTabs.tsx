@@ -6,6 +6,7 @@ import {
   BusinessDomainsResponse,
   BusinessDomainType,
 } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+import { MVP_BUSINESS_DOMAINS } from "@/utils/mvp-hardcoded/mvp-business-domains";
 
 type BusinessDomainsTabsProps = {
   isExpanded: boolean;
@@ -22,10 +23,20 @@ const BusinessDomainsTabs = ({
   isMapVisible,
   onOpenFilters,
   onToggleMap,
-  businessDomains,
   selectedBusinessDomain,
   onSetSelectedBusinessDomain,
 }: BusinessDomainsTabsProps) => {
+  const businessDomains = [
+    {
+      id: 0,
+      name: "Toate",
+      short_name: "Toate",
+      active: false,
+      service_domains: [],
+    },
+    ...MVP_BUSINESS_DOMAINS,
+  ];
+
   return (
     <Box
       sx={{
@@ -41,34 +52,23 @@ const BusinessDomainsTabs = ({
         sx={{ mt: 2.5 }}
       >
         <Stack flexDirection="row" alignItems="center" gap={1}>
-          {businessDomains &&
-            businessDomains.length > 0 &&
-            [
-              {
-                id: 0,
-                name: "Toate",
-                short_name: "Toate",
-                active: false,
-                service_domains: [],
-              },
-              ...businessDomains,
-            ].map((d) => {
-              const isSelected = d.id === selectedBusinessDomain?.id;
+          {businessDomains.map((d) => {
+            const isSelected = d.id === selectedBusinessDomain?.id;
 
-              return (
-                <Button
-                  key={d.id}
-                  variant={isSelected ? "contained" : "outlined"}
-                  color={isSelected ? "primary" : "secondary"}
-                  size="large"
-                  disableElevation
-                  sx={{ py: 1.5, px: 3 }}
-                  onClick={() => onSetSelectedBusinessDomain(d)}
-                >
-                  {d.short_name}
-                </Button>
-              );
-            })}
+            return (
+              <Button
+                key={d.id}
+                variant={isSelected ? "contained" : "outlined"}
+                color={isSelected ? "primary" : "secondary"}
+                size="large"
+                disableElevation
+                sx={{ py: 1.5, px: 3 }}
+                onClick={() => onSetSelectedBusinessDomain(d)}
+              >
+                {d.short_name}
+              </Button>
+            );
+          })}
         </Stack>
         <Stack
           flexDirection="row"
