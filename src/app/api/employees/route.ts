@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
-import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployeeResponse";
+import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployee";
 
 export const GET = async (req: NextRequest) => {
   const businessOwnerId = req.nextUrl.searchParams.get("businessOwnerId");

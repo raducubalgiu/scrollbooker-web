@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployeeResponse";
+import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployee";
 import EmployeeItem from "../EmployeeItem";
 
 type ProfileEmployeesTabProps = {

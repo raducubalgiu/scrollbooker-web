@@ -1,16 +1,17 @@
 import { PaginatedData } from "@/components/core/Table/Table";
 
-export type BusinessEmployeeType = {
+export interface BusinessEmployee {
+  [key: string]: unknown;
   id: number;
   username: string;
   fullname: string;
-  avatar: string;
+  avatar?: string | null;
   job: string;
   hire_date: string;
   followers_count: number;
   ratings_count: number;
   ratings_average: number;
   products_count: number;
-};
+}
 
-export type BusinessEmployeeResponse = PaginatedData<BusinessEmployeeType>;
+export type BusinessEmployeeResponse = PaginatedData<BusinessEmployee>;

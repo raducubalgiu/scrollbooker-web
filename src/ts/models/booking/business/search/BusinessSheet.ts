@@ -1,8 +1,8 @@
 import { PaginatedData } from "@/components/core/Table/Table";
 import { BusinessCoordinatesType } from "../BusinessResponse";
-import { BusinessMediaFileType } from "../BusinessMediaFile";
 import { ProductType } from "../../product/Product";
 import { BusinessOwner } from "../BusinessOwner";
+import { BusinessMediaFile } from "../BusinessMediaFile";
 
 export interface BusinessSheet {
   id: number;
@@ -12,7 +12,7 @@ export interface BusinessSheet {
   address: string;
   coordinates: BusinessCoordinatesType;
   has_video: boolean;
-  media_files: BusinessMediaFileType[];
+  media_files: BusinessMediaFile[];
   products: ProductType[];
   distance: number | undefined | null;
 }

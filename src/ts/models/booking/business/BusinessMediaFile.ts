@@ -1,8 +1,8 @@
-export type BusinessMediaFileType = {
-  url: string;
-  url_key: string;
-  thumbnail_url: string;
-  thumbnail_key: string;
+export interface BusinessMediaFile {
+  url?: string | null;
+  url_key?: string | null;
+  thumbnail_url?: string | null;
+  thumbnail_key?: string | null;
   type: string;
   order_index: number;
-};
+}
