@@ -1,7 +1,6 @@
 "use client";
 
 import Table, { TableRowAndTable } from "@/components/core/Table/Table";
-import { AppointmentResponse } from "@/ts/models/booking/appointment/AppointmentResponse";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import { Label } from "@/components/cutomized/Label/Label";
@@ -28,6 +27,7 @@ import AsCustomerButton from "./AsCustomerButton";
 import AppointmentCancelModal from "./AppointmentCancelModal";
 import { useMutate } from "@/hooks/useHttp";
 import { useQueryClient } from "@tanstack/react-query";
+import { Appointment } from "@/ts/models/booking/appointment/Appointment";
 
 const AppointmentsModule = ({ session }: { session: Session | null }) => {
   const [asCustomer, setAsCustomer] = useState<boolean | null>(null);
@@ -66,7 +66,7 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
   );
 
   const { data, isLoading, pagination, setPagination } =
-    useTableHandlers<AppointmentResponse>({
+    useTableHandlers<Appointment>({
       route: "/appointments",
       extraParams,
       queryOptions: {
@@ -126,8 +126,8 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
     },
   });
 
-  const columns = useMemo<MRT_ColumnDef<AppointmentResponse>[]>(() => {
-    const cols: MRT_ColumnDef<AppointmentResponse>[] = [
+  const columns = useMemo<MRT_ColumnDef<Appointment>[]>(() => {
+    const cols: MRT_ColumnDef<Appointment>[] = [
       {
         accessorKey: "id",
         header: "ID",
@@ -142,7 +142,7 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
           <Stack flexDirection="row" alignItems={"center"}>
             <Avatar
               sx={{ width: 40, height: 40 }}
-              src={row.original.customer.avatar}
+              src={row.original.customer.avatar ?? ""}
             />
             <Box sx={{ ml: 1.5 }}>
               <Typography>{row.original.customer.fullname}</Typography>
@@ -259,7 +259,7 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
           <Stack flexDirection="row" alignItems={"center"}>
             <Avatar
               sx={{ width: 40, height: 40 }}
-              src={row.original.user?.avatar}
+              src={row.original.user?.avatar ?? ""}
             />
             <Box sx={{ ml: 1.5 }}>
               <Typography>{row.original.user?.fullname}</Typography>
@@ -308,7 +308,7 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
   }, [asCustomer, employee, status, channel, date]);
 
   const renderRowActionMenuItems = useCallback(
-    ({ row, table }: TableRowAndTable<AppointmentResponse>) => {
+    ({ row, table }: TableRowAndTable<Appointment>) => {
       return [
         <MRT_ActionMenuItem
           key="details"
@@ -350,13 +350,16 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
         }}
       />
 
-      <Table<AppointmentResponse>
+      <Table<Appointment>
         data={data?.results}
         rowCount={data?.count}
         columns={columns}
         manualPagination={true}
         onPaginationChange={setPagination}
-        state={{ pagination, isLoading }}
+        state={{
+          pagination,
+          isLoading,
+        }}
         renderTopToolbarCustomActions={getToolbarCustomActions}
         renderRowActionMenuItems={renderRowActionMenuItems}
         enableRowActions={true}

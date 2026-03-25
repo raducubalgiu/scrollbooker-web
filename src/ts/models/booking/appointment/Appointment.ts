@@ -2,50 +2,51 @@ import { CurrencyResponse } from "../../nomenclatures/currency/CurrencyResponse"
 import { AppointmentChannelEnum } from "./AppointmentChannelEnum";
 import { AppointmentStatusEnum } from "./AppointmentStatusEnum";
 
-type AppointmentProductsResponse = {
-  id?: number;
+interface AppointmentProducts {
+  id?: number | null;
   name: string;
   price: number;
   price_with_discount: number;
   duration: number;
   currency: CurrencyResponse;
   converted_price_with_discount: number;
-  exchange_rate?: number;
-};
+  exchange_rate?: number | null;
+}
 
-type AppointmentUser = {
+interface AppointmentUser {
   id?: number;
   fullname: string;
-  username?: string;
-  avatar?: string;
-  profession?: string;
-  ratings_average?: number;
-  ratings_count?: number;
-};
+  username?: string | null;
+  avatar?: string | null;
+  profession?: string | null;
+  ratings_average?: number | null;
+  ratings_count?: number | null;
+}
 
-type AppointmentBusiness = {
-  id?: number;
+interface AppointmentBusiness {
+  id?: number | null;
   address: string;
   formatted_address: string;
   coordinates: [number, number];
-  map_url: string;
-};
+  map_url: string | null;
+}
 
-type AppointmentWrittenReview = {
+interface AppointmentWrittenReview {
   id: number;
   review: string;
   rating: number;
-};
+}
 
-export type AppointmentResponse = {
+export interface Appointment {
+  [key: string]: unknown;
   id: number;
   start_date: string;
   end_date: string;
   channel: AppointmentChannelEnum;
   status: AppointmentStatusEnum;
-  message?: string;
+  message?: string | null;
   is_customer: boolean;
-  products: AppointmentProductsResponse[];
+  products: AppointmentProducts[];
   user: AppointmentUser;
   customer: AppointmentUser;
   business: AppointmentBusiness;
@@ -57,4 +58,4 @@ export type AppointmentResponse = {
   has_written_review: boolean;
   has_video_review: boolean;
   written_review: AppointmentWrittenReview;
-};
+}

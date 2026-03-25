@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, put } from "@/utils/requests";
-import { AppointmentResponse } from "@/ts/models/booking/appointment/AppointmentResponse";
+import { AppointmentResponse } from "@/ts/models/booking/appointment/Appointment";
 import { omit } from "lodash";
 
 export const GET = async (req: NextRequest) => {

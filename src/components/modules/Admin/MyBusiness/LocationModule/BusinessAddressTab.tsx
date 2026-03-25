@@ -19,11 +19,7 @@ type BusinessAddressTabProps = {
   has_employees: boolean;
 };
 
-const BusinessAddressTab = ({
-  address,
-  map_url,
-  has_employees,
-}: BusinessAddressTabProps) => {
+const BusinessAddressTab = ({ address, map_url }: BusinessAddressTabProps) => {
   const handleOpenInNewTab = () => {
     if (map_url) window.open(map_url, "_blank");
   };
