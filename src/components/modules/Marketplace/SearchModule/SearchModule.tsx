@@ -19,6 +19,7 @@ import {
   MAPBOX_STYLE_LIGHT,
   MAPBOX_TOKEN,
 } from "./search-utils";
+import { BusinessMapResponse } from "@/ts/models/booking/business/search/BusinessMapCombined";
 
 export default function SearchModule() {
   const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
@@ -39,7 +40,7 @@ export default function SearchModule() {
       service_domains: [],
     });
 
-  const { data, isLoading } = useCustomQuery({
+  const { data, isLoading } = useCustomQuery<BusinessMapResponse>({
     url: "/api/businesses/map",
     method: "GET",
     key: ["markers-and-locations", selectedBusinessDomain.id],
@@ -48,6 +49,7 @@ export default function SearchModule() {
         selectedBusinessDomain.id !== 0 ? selectedBusinessDomain.id : undefined,
     },
   });
+  const businessData: BusinessMapResponse | undefined = data;
 
   const [isMapVisible, setIsMapVisible] = React.useState(true);
   const [isMapExpanded, setIsMapExpanded] = React.useState(false);
@@ -58,7 +60,7 @@ export default function SearchModule() {
   const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapTopGap} - ${mainPagePadding} - ${mapBottomGap})`;
 
   React.useEffect(() => {
-    if (!data) return;
+    if (!businessData) return;
 
     if (!isMapVisible) return;
 
@@ -85,7 +87,7 @@ export default function SearchModule() {
         .addTo(map);
       createdMarkers.push(centerMarker);
 
-      const markerItems = data?.markers?.results ?? [];
+      const markerItems = businessData?.markers?.results ?? [];
       if (Array.isArray(markerItems)) {
         markerItems.forEach((m: BusinessMarkerType) => {
           const lat = m?.coordinates?.lat ?? null;
@@ -116,7 +118,7 @@ export default function SearchModule() {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [mapStyle, isMapVisible, data]);
+  }, [mapStyle, isMapVisible, businessData]);
 
   React.useEffect(() => {
     if (!isMapVisible || !mapRef.current) return;
@@ -192,7 +194,7 @@ export default function SearchModule() {
       <Grid container spacing={5}>
         <Grid size={{ lg: leftGridSize }}>
           <Typography color="text.secondary" my={2.5}>
-            {data?.list?.count} de rezultate in zona
+            {businessData?.list?.count} de rezultate in zona
           </Typography>
 
           <Box
@@ -211,7 +213,7 @@ export default function SearchModule() {
                 <BusinessCardSkeleton key={i} />
               ))}
             {!isLoading &&
-              data?.list?.results.map((b) => (
+              businessData?.list?.results.map((b) => (
                 <BusinessCard key={b.id} business={b} />
               ))}
           </Box>

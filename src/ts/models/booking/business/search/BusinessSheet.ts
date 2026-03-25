@@ -1,8 +1,8 @@
 import { PaginatedData } from "@/components/core/Table/Table";
-import { ProductType } from "../product/Product";
-import { BusinessMediaFileType } from "./BusinessMediaFile";
-import { BusinessOwnerType } from "./BusinessOwnerType";
-import { BusinessCoordinatesType } from "./BusinessResponse";
+import { BusinessOwnerType } from "../BusinessOwnerType";
+import { BusinessCoordinatesType } from "../BusinessResponse";
+import { BusinessMediaFileType } from "../BusinessMediaFile";
+import { ProductType } from "../../product/Product";
 
 export type BusinessSheetType = {
   id: number;

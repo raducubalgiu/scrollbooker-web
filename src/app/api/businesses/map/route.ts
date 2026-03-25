@@ -1,4 +1,5 @@
 import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { BusinessMapResponse } from "@/ts/models/booking/business/search/BusinessMapCombined";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -58,10 +59,9 @@ export async function GET(req: NextRequest) {
       list = await listResult.value.json();
     }
 
-    return Response.json({
-      markers,
-      list,
-    });
+    const mainResults: BusinessMapResponse = { markers, list };
+
+    return Response.json(mainResults);
   } catch (error) {
     console.error("Error in /api/businesses/map route:", error);
     return Response.json({ error: "Unexpected server error" }, { status: 500 });

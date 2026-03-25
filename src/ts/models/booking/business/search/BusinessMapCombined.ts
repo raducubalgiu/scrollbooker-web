@@ -1,4 +1,5 @@
 import { BusinessMarkerResponse } from "./BusinessMarker";
+import { BusinessSheetResponse } from "./BusinessSheet";
 
 export type BusinessMapRequest = {
   bbox: BoundingBox;
@@ -21,5 +22,5 @@ export type BoundingBox = {
 
 export type BusinessMapResponse = {
   markers: BusinessMarkerResponse;
-  list: BusinessMapResponse;
+  list: BusinessSheetResponse;
 };
