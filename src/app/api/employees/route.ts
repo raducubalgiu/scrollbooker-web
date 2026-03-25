@@ -3,13 +3,13 @@ import { get } from "@/utils/requests";
 import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessEmployeeResponse";
 
 export const GET = async (req: NextRequest) => {
-  const businessId = req.nextUrl.searchParams.get("businessId");
+  const businessOwnerId = req.nextUrl.searchParams.get("businessOwnerId");
   const page = req.nextUrl.searchParams.get("page");
   const limit = req.nextUrl.searchParams.get("limit");
 
   const response = (
     await get<BusinessEmployeeResponse>({
-      url: `/businesses/${businessId}/employees?page=${page}&limit=${limit}`,
+      url: `/businesses/owner/${businessOwnerId}/employees?page=${page}&limit=${limit}`,
     })
   ).data;
 

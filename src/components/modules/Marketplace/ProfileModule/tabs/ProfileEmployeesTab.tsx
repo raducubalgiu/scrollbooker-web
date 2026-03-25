@@ -5,17 +5,16 @@ import { BusinessEmployeeResponse } from "@/ts/models/booking/business/BusinessE
 import EmployeeItem from "../EmployeeItem";
 
 type ProfileEmployeesTabProps = {
-  businessId: number | undefined;
+  businessOwnerId: number | undefined;
 };
 
-const ProfileEmployeesTab = ({ businessId }: ProfileEmployeesTabProps) => {
-  const { data, isLoading, isRefetching } =
-    useCustomQuery<BusinessEmployeeResponse>({
-      key: ["business-employees", businessId],
-      url: `/api/employees?businessId=${businessId}`,
-      params: { page: 1, limit: 10 },
-      options: { enabled: !!businessId },
-    });
+const ProfileEmployeesTab = ({ businessOwnerId }: ProfileEmployeesTabProps) => {
+  const { data, isLoading } = useCustomQuery<BusinessEmployeeResponse>({
+    key: ["business-employees", businessOwnerId],
+    url: `/api/employees?businessOwnerId=${businessOwnerId}`,
+    params: { page: 1, limit: 10 },
+    options: { enabled: !!businessOwnerId },
+  });
 
   return (
     <Box sx={{ maxWidth: "md" }}>

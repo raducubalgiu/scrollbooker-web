@@ -72,14 +72,14 @@ type ProfileTabsProps = {
   isBusinessOrEmployee?: boolean;
   isMyProfile?: boolean;
   userId: number;
-  businessId: number | undefined;
+  businessOwnerId: number | undefined;
 };
 
 const ProfileTabs = ({
   isBusinessOrEmployee = false,
   isMyProfile = false,
   userId,
-  businessId,
+  businessOwnerId,
 }: ProfileTabsProps) => {
   const { status } = useSession();
   const isAuthenticated = status === "authenticated";
@@ -113,7 +113,7 @@ const ProfileTabs = ({
       case ProfileTabEnum.PRODUCTS:
         return <ProfileProductsTab />;
       case ProfileTabEnum.EMPLOYEES:
-        return <ProfileEmployeesTab businessId={businessId} />;
+        return <ProfileEmployeesTab businessOwnerId={businessOwnerId} />;
       case ProfileTabEnum.BOOKMARKS:
         return <ProfileBookmarksTab isAuthenticated={isAuthenticated} />;
       case ProfileTabEnum.INFO:
@@ -121,7 +121,7 @@ const ProfileTabs = ({
       default:
         return null;
     }
-  }, [currentTab, isAuthenticated, businessId, userId]);
+  }, [currentTab, isAuthenticated, businessOwnerId, userId]);
 
   const styles = useMemo(
     () => ({

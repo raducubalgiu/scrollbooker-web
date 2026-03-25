@@ -14,7 +14,7 @@ const EmployeesTab = ({ isEnabled }: { isEnabled: boolean }) => {
   const { data, pagination, isLoading, setPagination } =
     useTableHandlers<BusinessEmployeeType>({
       route: "/employees",
-      extraParams: { businessId: session?.business_id ?? undefined },
+      extraParams: { businessOwnerId: session?.user_id ?? undefined },
       enabled: isEnabled,
     });
 

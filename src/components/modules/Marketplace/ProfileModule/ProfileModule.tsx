@@ -2,7 +2,10 @@
 
 import { Box } from "@mui/material";
 import React, { useEffect, useState, useCallback } from "react";
-import { UserProfileType } from "@/ts/models/user/UserProfileType";
+import {
+  UserProfileType,
+  UserCountersType,
+} from "@/ts/models/user/UserProfileType";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
 import ProfileTabs from "./tabs/ProfileTabs";
@@ -25,34 +28,43 @@ export type ScheduleModalProps = {
   userId: number;
 };
 
+const emptyCounters: UserCountersType = {
+  user_id: 0,
+  followings_count: 0,
+  followers_count: 0,
+  products_count: 0,
+  posts_count: 0,
+  ratings_count: 0,
+  ratings_average: 0,
+};
+
 const ProfileModule = ({ profile }: ProfileModuleProps) => {
   const [openScheduleModal, setOpenScheduleModal] = useState<boolean>(false);
   const [socialModal, setSocialModal] = useState<SocialModalProps | null>(null);
   const isSocialModalOpen = socialModal !== null;
-
-  if (!profile) return null;
-
-  const [updatedCounters, setUpdatedCounters] = useState(profile.counters);
+  const [updatedCounters, setUpdatedCounters] = useState<UserCountersType>(
+    profile?.counters ?? emptyCounters
+  );
 
   useEffect(() => {
-    setUpdatedCounters(profile.counters);
-  }, [profile.counters]);
+    if (profile) setUpdatedCounters(profile.counters);
+  }, [profile]);
 
   const handleUpdateFollows = useCallback(
     (action: UpdateFollowersAction) => {
       setUpdatedCounters((prev) => {
         if (!prev) return prev;
         const delta = action === UpdateFollowersAction.FOLLOW ? 1 : -1;
-
         const nextCount = Math.max(0, (prev.followers_count ?? 0) + delta);
-
         return { ...prev, followers_count: nextCount };
       });
     },
     [setUpdatedCounters]
   );
 
-  const { is_business_or_employee, is_own_profile, business_id } = profile;
+  if (!profile) return null;
+
+  const { is_business_or_employee, is_own_profile, business_owner } = profile;
 
   return (
     <Box>
@@ -88,7 +100,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
 
       <ProfileTabs
         userId={profile.id}
-        businessId={business_id}
+        businessOwnerId={business_owner?.id}
         isBusinessOrEmployee={is_business_or_employee}
         isMyProfile={is_own_profile}
       />
