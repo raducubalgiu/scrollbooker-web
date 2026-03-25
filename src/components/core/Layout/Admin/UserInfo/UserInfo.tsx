@@ -1,29 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Divider,
-  Skeleton,
-  Stack,
-  Typography,
-  Collapse,
-  Box,
-} from "@mui/material";
+import { Skeleton, Stack, Typography, Collapse, Box } from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
 import CustomStack from "../../../CustomStack/CustomStack";
-import UserInfoCounter from "./UserInfoCounter";
 import UserAvatar from "./UserAvatar";
 import UserInfoEditModal from "./UserInfoEditModal";
 import { UseQueryResult } from "@tanstack/react-query";
-import { UserProfileType } from "@/ts/models/user/UserProfile";
+import { UserProfile } from "@/ts/models/user/UserProfile";
+import UserInfoCounters from "./UserInfoCounters";
 
 const styles = { username: { mt: 2.5, fontSize: 18, fontWeight: "700" } };
 
 type UserInfoProps = {
-  user: UserProfileType | undefined;
+  user: UserProfile;
   isLoadingUser: boolean;
-  refetchUser: () => Promise<UseQueryResult<UserProfileType, unknown>>;
-  collapsed?: boolean | undefined;
+  refetchUser: () => Promise<UseQueryResult<UserProfile, unknown>>;
+  collapsed: boolean;
 };
 
 export default function UserInfo({
@@ -40,8 +33,8 @@ export default function UserInfo({
     fullname,
     is_business_or_employee,
     opening_hours,
-  } = user ?? {};
-  const { open_now } = opening_hours ?? {};
+  } = user;
+  const { open_now } = opening_hours;
 
   const userProfession = (
     <>
@@ -71,7 +64,7 @@ export default function UserInfo({
         sx={{ my: 5, py: collapsed ? 2 : undefined }}
       >
         <UserAvatar
-          isBusinessOrEmployee={is_business_or_employee}
+          isBusinessOrEmployee={user?.is_business_or_employee}
           openNow={open_now}
           url={avatar}
           small={collapsed}
@@ -103,42 +96,7 @@ export default function UserInfo({
               {isLoadingUser ? <Skeleton width={150} /> : userProfession}
             </CustomStack>
 
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="center"
-              sx={{ mt: 5, gap: 2 }}
-            >
-              <UserInfoCounter
-                label="Urmărești"
-                counter={counters?.followings_count}
-                isLoading={isLoadingUser}
-              />
-
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{ height: 20, mx: 0.25, alignSelf: "center" }}
-              />
-
-              <UserInfoCounter
-                label="Urmăritori"
-                counter={counters?.followers_count}
-                isLoading={isLoadingUser}
-              />
-
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{ height: 20, mx: 0.25, alignSelf: "center" }}
-              />
-
-              <UserInfoCounter
-                label="Recenzii"
-                counter={counters?.ratings_count}
-                isLoading={isLoadingUser}
-              />
-            </Stack>
+            <UserInfoCounters counters={counters} isLoading={isLoadingUser} />
           </Box>
         </Collapse>
       </Stack>

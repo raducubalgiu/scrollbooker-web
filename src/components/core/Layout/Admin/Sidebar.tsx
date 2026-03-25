@@ -34,12 +34,12 @@ import { signOut, useSession } from "next-auth/react";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { UserProfileType } from "@/ts/models/user/UserProfile";
+import { UserProfile } from "@/ts/models/user/UserProfile";
 import UserInfo from "./UserInfo/UserInfo";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 
 type SidebarProps = {
-  collapsed?: boolean;
+  collapsed: boolean;
   onToggleCollapse?: () => void;
   onCloseDrawer?: () => void;
 };
@@ -55,7 +55,7 @@ export default function Sidebar({ collapsed, onCloseDrawer }: SidebarProps) {
     data: user,
     isLoading: isLoadingUser,
     refetch: refetchUser,
-  } = useCustomQuery<UserProfileType>({
+  } = useCustomQuery<UserProfile>({
     key: ["user-profile"],
     url: "/api/profile",
   });
@@ -74,7 +74,6 @@ export default function Sidebar({ collapsed, onCloseDrawer }: SidebarProps) {
 
   const navigateTo = (href: string) => {
     if (onCloseDrawer) {
-      // close the drawer first (mobile)
       onCloseDrawer();
     }
     router.push(href);
@@ -200,12 +199,14 @@ export default function Sidebar({ collapsed, onCloseDrawer }: SidebarProps) {
         Marketplace
       </Button>
 
-      <UserInfo
-        user={user}
-        isLoadingUser={isLoadingUser}
-        refetchUser={refetchUser}
-        collapsed={collapsed}
-      />
+      {user && (
+        <UserInfo
+          user={user}
+          isLoadingUser={isLoadingUser ?? false}
+          refetchUser={refetchUser}
+          collapsed={collapsed}
+        />
+      )}
       <Divider sx={{ mb: 0.5 }} />
       <List
         sx={{

@@ -10,12 +10,12 @@ import { toast } from "react-toastify";
 import { required, minField, maxField } from "@/utils/validation-rules";
 import AvatarUploader from "@/components/cutomized/AvatarUploader/AvatarUploader";
 import Protected from "@/components/cutomized/Protected/Protected";
-import { UserProfileType } from "@/ts/models/user/UserProfile";
+import { UserProfile } from "@/ts/models/user/UserProfile";
 
 type UserInfoEditModalProps = {
   open: boolean;
   handleClose: () => void;
-  user: UserProfileType | undefined;
+  user: UserProfile | undefined;
   refetchUserData: () => void;
 };
 
@@ -33,7 +33,7 @@ export default function UserInfoEditModal({
   user,
   refetchUserData,
 }: UserInfoEditModalProps) {
-  const methods = useForm({ defaultValues: user });
+  const methods = useForm({ defaultValues: user ?? {} });
   const { handleSubmit, reset } = methods;
   const isRequired = required();
 
@@ -62,7 +62,7 @@ export default function UserInfoEditModal({
 
   const professions = data ?? [];
 
-  const handleEditUser = (updatedUser: UserProfileType) =>
+  const handleEditUser = (updatedUser: UserProfile) =>
     updateUser({
       username: updatedUser.username,
       fullname: updatedUser.fullname,
@@ -103,7 +103,7 @@ export default function UserInfoEditModal({
     >
       <FormProvider {...methods}>
         <Stack justifyContent="center" alignItems="center" sx={{ p: 2.5 }}>
-          <AvatarUploader url={user?.avatar} />
+          <AvatarUploader url={user?.avatar ?? ""} />
         </Stack>
         <Input
           name="username"

@@ -7,8 +7,8 @@ type AdminDrawerProps = {
   onCloseDrawer: () => void;
   onTransitionDrawerEnd: () => void;
   drawerWidth: number;
-  collapsed?: boolean;
-  onToggleCollapse?: () => void;
+  collapsed: boolean;
+  onToggleCollapse: () => void;
 };
 
 export default function AdminDrawer({
