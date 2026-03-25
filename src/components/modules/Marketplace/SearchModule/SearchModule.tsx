@@ -87,7 +87,7 @@ export default function SearchModule() {
         .addTo(map);
       createdMarkers.push(centerMarker);
 
-      const markerItems = businessData?.markers?.results ?? [];
+      const markerItems = businessData?.markers ?? [];
       if (Array.isArray(markerItems)) {
         markerItems.forEach((m: BusinessMarkerType) => {
           const lat = m?.coordinates?.lat ?? null;

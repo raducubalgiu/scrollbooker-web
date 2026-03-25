@@ -1,4 +1,3 @@
-import { PaginatedData } from "@/components/core/Table/Table";
 import { BusinessOwnerType } from "../BusinessOwnerType";
 import { BusinessCoordinatesType } from "../BusinessResponse";
 import { BusinessMediaFileType } from "../BusinessMediaFile";
@@ -15,4 +14,4 @@ export type BusinessMarkerType = {
   media_files: BusinessMediaFileType[];
 };
 
-export type BusinessMarkerResponse = PaginatedData<BusinessMarkerType>;
+export type BusinessMarkerResponse = BusinessMarkerType[];
