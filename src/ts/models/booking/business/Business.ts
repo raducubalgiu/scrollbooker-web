@@ -1,4 +1,4 @@
-import { ServiceType } from "../../nomenclatures/service/Service";
+import { Service } from "../../nomenclatures/service/Service";
 import { Schedule } from "../schedule/Schedule";
 
 export interface BusinessCoordinates {
@@ -6,7 +6,7 @@ export interface BusinessCoordinates {
   lng: number;
 }
 
-export interface BusinessResponse {
+export interface Business {
   id: number;
   business_type_id: number;
   owner_id: number;
@@ -18,7 +18,7 @@ export interface BusinessResponse {
   city: string;
   country_code: string;
   map_url: string;
-  services: ServiceType[];
+  services: Service[];
   schedules: Schedule[];
   has_employees: boolean;
 }

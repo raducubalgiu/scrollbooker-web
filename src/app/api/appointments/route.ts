@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, put } from "@/utils/requests";
-import { AppointmentResponse } from "@/ts/models/booking/appointment/Appointment";
 import { omit } from "lodash";
+import { Appointment } from "@/ts/models/booking/appointment/Appointment";
 
 export const GET = async (req: NextRequest) => {
   const page = req.nextUrl.searchParams.get("page");
@@ -16,7 +16,7 @@ export const GET = async (req: NextRequest) => {
   const endDate = req.nextUrl.searchParams.get("end_date");
 
   const response = (
-    await get<AppointmentResponse[]>({
+    await get<Appointment[]>({
       url: (() => {
         const params: string[] = [];
 

@@ -11,7 +11,7 @@ import { isNull } from "lodash";
 import EmploymentRequestsStepOne from "./EmploymentRequestsStepOne";
 import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { ConsentType } from "@/ts/models/nomenclatures/consent/ConsentType";
+import { ConsentType } from "@/ts/models/nomenclatures/consent/Consent";
 import EmploymentRequestsStepThree from "./EmploymentRequestsStepThree";
 import { ProfessionType } from "@/ts/models/nomenclatures/profession/ProfessionType";
 import { ConsentEnum } from "@/ts/models/nomenclatures/consent/ConsentEnum";

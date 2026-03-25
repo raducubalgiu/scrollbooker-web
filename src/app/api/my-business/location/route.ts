@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { get } from "@/utils/requests";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { BusinessResponse } from "@/ts/models/booking/business/Business";
+import { Business } from "@/ts/models/booking/business/Business";
 
 export const GET = async () => {
   const { userId } = await getUserServerSession();
 
   const response = (
-    await get<BusinessResponse>({
+    await get<Business>({
       url: `/users/${userId}/businesses`,
     })
   ).data;

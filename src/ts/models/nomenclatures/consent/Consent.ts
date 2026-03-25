@@ -1,4 +1,4 @@
-export interface ConsentType {
+export interface Consent {
   id: number;
   name: string;
   title: string;

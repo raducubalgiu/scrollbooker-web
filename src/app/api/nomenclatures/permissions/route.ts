@@ -1,53 +1,55 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, post, put, deleteRequest } from "@/utils/requests";
 import { omit } from "lodash";
+import { PaginatedData } from "@/components/core/Table/Table";
+import { Permission } from "@/ts/models/user/Permission";
 
 export const GET = async (req: NextRequest) => {
-	const pagination = req.nextUrl.searchParams;
+  const pagination = req.nextUrl.searchParams;
 
-	const response = (
-		await get({
-			url: `/permissions?${pagination}`,
-		})
-	).data;
+  const response = (
+    await get<PaginatedData<Permission>>({
+      url: `/permissions?${pagination}`,
+    })
+  ).data;
 
-	return NextResponse.json(response);
+  return NextResponse.json(response);
 };
 
 export const POST = async (req: NextRequest) => {
-	const data = await req.json();
+  const data = await req.json();
 
-	const response = (
-		await post({
-			url: `/permissions`,
-			data,
-		})
-	).data;
+  const response = (
+    await post({
+      url: `/permissions`,
+      data,
+    })
+  ).data;
 
-	return NextResponse.json(response);
+  return NextResponse.json(response);
 };
 
 export const PUT = async (req: NextRequest) => {
-	const data = await req.json();
+  const data = await req.json();
 
-	const response = (
-		await put({
-			url: `/permissions/${data.id}`,
-			data: omit(data, "id"),
-		})
-	).data;
+  const response = (
+    await put({
+      url: `/permissions/${data.id}`,
+      data: omit(data, "id"),
+    })
+  ).data;
 
-	return NextResponse.json(response);
+  return NextResponse.json(response);
 };
 
 export const DELETE = async (req: NextRequest) => {
-	const { id } = await req.json();
+  const { id } = await req.json();
 
-	const response = (
-		await deleteRequest({
-			url: `/permissions/${id}`,
-		})
-	).data;
+  const response = (
+    await deleteRequest({
+      url: `/permissions/${id}`,
+    })
+  ).data;
 
-	return NextResponse.json(response);
+  return NextResponse.json(response);
 };
