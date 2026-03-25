@@ -5,72 +5,72 @@ import PercentIcon from "@mui/icons-material/Percent";
 import React from "react";
 
 type FiltersModalProps = {
-	open: boolean;
-	onClose: () => void;
+  open: boolean;
+  onClose: () => void;
 };
 
 export default function FiltersModal({ open, onClose }: FiltersModalProps) {
-	const actions: ActionButtonType[] = [
-		{
-			title: "Aplică",
-			props: {
-				onClick: () => {},
-			},
-		},
-	];
+  const actions: ActionButtonType[] = [
+    {
+      title: "Aplică",
+      props: {
+        onClick: () => {},
+      },
+    },
+  ];
 
-	return (
-		<Modal
-			title="Filtre"
-			open={open}
-			handleClose={onClose}
-			maxWidth="md"
-			fullWidth
-			actions={actions}
-		>
-			<Box sx={{ p: 2 }}>
-				<Typography variant="h6" fontWeight={600}>
-					Optiuni
-				</Typography>
+  return (
+    <Modal
+      title="Filtre"
+      open={open}
+      handleClose={onClose}
+      maxWidth="md"
+      fullWidth
+      actions={actions}
+    >
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6" fontWeight={600}>
+          Optiuni
+        </Typography>
 
-				<Button
-					variant="outlined"
-					color="secondary"
-					size="large"
-					sx={{ mt: 2.5 }}
-					startIcon={<PercentIcon />}
-				>
-					Reducere
-				</Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          size="large"
+          sx={{ mt: 2.5 }}
+          startIcon={<PercentIcon />}
+        >
+          Reducere
+        </Button>
 
-				<Stack
-					direction="row"
-					alignItems="center"
-					justifyContent="space-between"
-					mt={5}
-					mb={2.5}
-				>
-					<Typography variant="h6" fontWeight={600}>
-						Pretul maxim
-					</Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mt={5}
+          mb={2.5}
+        >
+          <Typography variant="h6" fontWeight={600}>
+            Pretul maxim
+          </Typography>
 
-					<Typography variant="h6" fontWeight={600}>
-						1500 RON
-					</Typography>
-				</Stack>
+          <Typography variant="h6" fontWeight={600}>
+            1500 RON
+          </Typography>
+        </Stack>
 
-				<Slider
-					//size="small"
-					defaultValue={70}
-					aria-label="Small"
-					valueLabelDisplay="auto"
-					max={1500}
-				/>
+        <Slider
+          //size="small"
+          defaultValue={70}
+          aria-label="Small"
+          valueLabelDisplay="auto"
+          max={1500}
+        />
 
-				<Typography variant="h6" fontWeight={600} mt={5}>
-					Sorteaza dupa
-				</Typography>
-			</Box>
-		</Modal>
-	);
+        <Typography variant="h6" fontWeight={600} mt={5}>
+          Sorteaza dupa
+        </Typography>
+      </Box>
+    </Modal>
+  );
 }

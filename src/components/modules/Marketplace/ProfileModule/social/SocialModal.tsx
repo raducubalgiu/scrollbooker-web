@@ -21,18 +21,18 @@ type ProfileSocialModalProps = {
   handleClose: () => void;
 };
 
+type TabDef = {
+  route: SocialTabEnum;
+  key: keyof UserCountersType;
+  label: string;
+};
+
 const SocialModal = ({
   open,
   counters,
   socialModal,
   handleClose,
 }: ProfileSocialModalProps) => {
-  type TabDef = {
-    route: SocialTabEnum;
-    key: keyof UserCountersType;
-    label: string;
-  };
-
   const tabs = useMemo<TabDef[]>(
     () => [
       {
@@ -55,7 +55,7 @@ const SocialModal = ({
   );
 
   const [currentTab, setCurrentTab] = useState<SocialTabEnum>(
-    socialModal?.selectedTab ?? tabs[0].route
+    socialModal?.selectedTab ?? SocialTabEnum.REVIEWS
   );
 
   const scrollRootRef = useRef<HTMLDivElement | null>(null);
@@ -105,7 +105,7 @@ const SocialModal = ({
   useEffect(() => {
     const available = tabs.map((t) => t.route);
     if (!available.includes(currentTab)) {
-      setCurrentTab(tabs[0].route);
+      setCurrentTab(SocialTabEnum.REVIEWS);
     }
   }, [tabs]);
 
@@ -188,14 +188,14 @@ const SocialModal = ({
       dividers={false}
       showFooter={false}
       title={`@${socialModal?.username}`}
-      //maxWidth="md"
-      //fullWidth
+      align="left"
     >
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           height: "80vh",
+          px: 2,
         }}
       >
         <Box sx={styles.container}>

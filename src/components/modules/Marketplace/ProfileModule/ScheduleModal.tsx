@@ -2,6 +2,7 @@ import Modal from "@/components/core/Modal/Modal";
 import SchedulesSection from "@/components/cutomized/SchedulesSection/SchedulesSection";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { ScheduleResponse } from "@/ts/models/booking/schedule/ScheduleType";
+import { Box } from "@mui/material";
 import React from "react";
 
 type ScheduleModalProps = {
@@ -27,7 +28,9 @@ const ScheduleModal = ({ userId, open, handleClose }: ScheduleModalProps) => {
       maxWidth="sm"
       fullWidth
     >
-      {isLoading ? <p>Loading...</p> : <SchedulesSection schedules={data} />}
+      <Box sx={{ p: 2 }}>
+        {isLoading ? <p>Loading...</p> : <SchedulesSection schedules={data} />}
+      </Box>
     </Modal>
   );
 };
