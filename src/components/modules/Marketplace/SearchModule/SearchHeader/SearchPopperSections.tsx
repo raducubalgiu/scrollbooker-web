@@ -4,7 +4,7 @@ import {
   SearchHeaderSectionEnum,
   SearchHeaderSectionType,
 } from "../SearchHeaderSectionEnum";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import SearchServicesSection from "./SearchServicesSection";
 
 const SearchLocationSection = React.lazy(

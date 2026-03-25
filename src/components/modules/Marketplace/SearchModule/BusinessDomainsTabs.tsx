@@ -5,7 +5,7 @@ import React from "react";
 import {
   BusinessDomainsResponse,
   BusinessDomainType,
-} from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+} from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import { MVP_BUSINESS_DOMAINS } from "@/utils/mvp-hardcoded/mvp-business-domains";
 
 type BusinessDomainsTabsProps = {

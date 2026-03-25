@@ -1,22 +1,20 @@
-import { ServiceType } from "../service/ServiceType";
+import { Service } from "../service/Service";
 
-export type ServiceDomainCreate = {
+export interface ServiceDomainCreate {
   name: string;
-};
+}
 
-export type ServiceDomainUpdate = {
+export interface ServiceDomainUpdate {
   name: string;
-};
+}
 
-export type ServiceDomainsType = {
+export interface ServiceDomain {
   id: number;
   name: string;
-  description?: string;
-  url?: string;
-  thumbnail_url?: string;
-  services: ServiceType[];
+  description?: string | null;
+  url?: string | null;
+  thumbnail_url?: string | null;
+  services: Service[];
   created_at: string;
   updated_at: string;
-};
-
-export type ServiceDomainsResponse = ServiceDomainsType[];
+}

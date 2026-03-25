@@ -1,4 +1,4 @@
-import { CurrencyResponse } from "../../nomenclatures/currency/CurrencyResponse";
+import { CurrencyResponse } from "../../nomenclatures/currency/Currency";
 import { AppointmentChannelEnum } from "./AppointmentChannelEnum";
 import { AppointmentStatusEnum } from "./AppointmentStatusEnum";
 

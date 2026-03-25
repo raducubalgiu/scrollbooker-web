@@ -1,6 +1,6 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import ServiceDomainsModule from "@/components/modules/Admin/Nomenclatures/ServiceDomainsModule/ServiceDomainsModule";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import { get } from "@/utils/requests";
 
 async function ServiceDomains() {

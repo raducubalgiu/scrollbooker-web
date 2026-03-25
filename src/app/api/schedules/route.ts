@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { get, put } from "@/utils/requests";
-import { ScheduleResponse } from "@/ts/models/booking/schedule/ScheduleType";
+import { ScheduleResponse } from "@/ts/models/booking/schedule/Schedule";
 
 export const GET = async (req: NextRequest) => {
   const userId = req.nextUrl.searchParams.get("userId");

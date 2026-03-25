@@ -1,6 +1,6 @@
-export type ConsentType = {
-	id: number;
-	name: string;
-	title: string;
-	text: string;
-};
+export interface ConsentType {
+  id: number;
+  name: string;
+  title: string;
+  text: string;
+}

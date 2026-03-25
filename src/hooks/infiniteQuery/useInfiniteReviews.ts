@@ -1,4 +1,4 @@
-import { ReviewsResponse } from "@/ts/models/booking/review/ReviewType";
+import { ReviewsResponse } from "@/ts/models/booking/review/Review";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 

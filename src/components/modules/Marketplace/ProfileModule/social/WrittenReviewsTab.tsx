@@ -7,8 +7,8 @@ type WrittenReviewsTabProps = {
   userId: number | undefined;
   selectedRatings: Set<number>;
   isLoadingSummary: boolean;
-  rootRef?: React.RefObject<HTMLDivElement | null>;
-  disableInitialIgnore?: boolean;
+  rootRef?: React.RefObject<HTMLDivElement | null> | undefined;
+  disableInitialIgnore?: boolean | undefined;
 };
 
 const WrittenReviewsTab = ({
@@ -43,7 +43,7 @@ const WrittenReviewsTab = ({
       (entries) => {
         const entry = entries[0];
         if (ignoreInitial) return;
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },

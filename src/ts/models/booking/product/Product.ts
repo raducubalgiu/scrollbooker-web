@@ -1,21 +1,20 @@
-import { PaginatedData } from "@/components/core/Table/Table";
-import { SubFilterType } from "../../nomenclatures/subFilter/SubFilterType";
+import { SubFilterType } from "../../nomenclatures/subFilter/SubFilter";
 
-export type ProductFilterType = {
+export interface ProductFilter {
   id: number;
   name: string;
   sub_filters: SubFilterType[];
   type: string;
-  unit?: string | undefined | null;
-  minim?: number | undefined | null;
-  maxim?: number | undefined | null;
+  unit?: string | null;
+  minim?: number | null;
+  maxim?: number | null;
   display_as_tab: boolean;
-};
+}
 
-export type ProductType = {
+export interface Product {
   id: number;
   name: string;
-  description: string | undefined | null;
+  description: string | null;
   user_id: number;
   service_id: number;
   business_id: number;
@@ -26,11 +25,9 @@ export type ProductType = {
   duration: number;
   can_be_booked: boolean;
   type: string;
-  sessions_count: number | undefined | null;
-  validity_days: number | undefined | null;
-  filters: ProductFilterType[];
+  sessions_count?: number | null;
+  validity_days?: number | null;
+  filters: ProductFilter[];
   created_at: string;
   updated_at: string;
-};
-
-export type ProductResponse = PaginatedData<ProductType>;
+}

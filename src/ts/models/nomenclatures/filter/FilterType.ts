@@ -1,6 +1,6 @@
-import { SubFilterType } from "./SubFilterType";
+import { SubFilter } from "../subFilter/SubFilter";
 
-export type FilterType = {
+export interface Filter {
   id: number;
   name: string;
   active: boolean;
@@ -9,10 +9,5 @@ export type FilterType = {
   single_select: boolean;
   created_at: string;
   updated_at: string;
-  sub_filters?: SubFilterType[];
-};
-
-export type PaginatedFilterType = {
-  count: number;
-  results: FilterType[];
-};
+  sub_filters: SubFilter[];
+}

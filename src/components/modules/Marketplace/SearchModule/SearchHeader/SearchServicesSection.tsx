@@ -11,7 +11,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useMemo, useState } from "react";
 import { MVP_BUSINESS_DOMAINS } from "@/utils/mvp-hardcoded/mvp-business-domains";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import Image from "next/image";
 
 type SearchServicesSectionProps = {

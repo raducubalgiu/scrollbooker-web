@@ -1,8 +1,7 @@
-import { PaginatedData } from "@/components/core/Table/Table";
-import { ProductType } from "../../product/Product";
 import { BusinessOwner } from "../BusinessOwner";
 import { BusinessMediaFile } from "../BusinessMediaFile";
-import { BusinessCoordinates } from "../BusinessResponse";
+import { BusinessCoordinates } from "../Business";
+import { Product } from "../../product/Product";
 
 export interface BusinessSheet {
   id: number;
@@ -13,8 +12,6 @@ export interface BusinessSheet {
   coordinates: BusinessCoordinates;
   has_video: boolean;
   media_files: BusinessMediaFile[];
-  products: ProductType[];
+  products: Product[];
   distance: number | null;
 }
-
-export type BusinessSheetResponse = PaginatedData<BusinessSheet>;

@@ -1,12 +1,10 @@
-export type ReviewsSummaryType = {
+export interface ReviewsSummary {
   ratings_average: number;
   ratings_count: number;
-  breakdown: RatingBreakdownType[];
-};
+  breakdown: RatingBreakdown[];
+}
 
-export type RatingBreakdownType = {
+export interface RatingBreakdown {
   rating: number;
   count: number;
-};
-
-export type ReviewsSummaryResponse = ReviewsSummaryType;
+}

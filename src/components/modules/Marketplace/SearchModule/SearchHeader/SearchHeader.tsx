@@ -5,7 +5,7 @@ import BusinessDomainsTabs from "../BusinessDomainsTabs";
 import { SearchHeaderSectionType } from "@/components/modules/Marketplace/SearchModule/SearchHeaderSectionEnum";
 import SearchPopperSections from "./SearchPopperSections";
 import SearchHeaderBar from "./SearchHeaderBar";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type SearchHeaderProps = {
   isMapVisible: boolean;

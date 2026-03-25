@@ -1,7 +1,6 @@
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { EmploymentRequestType } from "@/ts/models/booking/employmentRequest/EmploymentRequestType";
 import { Close } from "@mui/icons-material";
 import { Avatar, Button, IconButton, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
@@ -10,6 +9,7 @@ import React, { useMemo, useState } from "react";
 import EmploymentRequestsModal from "./EmploymentRequestsModal/EmploymentRequestsModal";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import Table from "@/components/core/Table/Table";
+import { EmploymentRequest } from "@/ts/models/booking/employmentRequest/EmploymentRequest";
 
 type OpenConfirmationState = {
   openModal: boolean;
@@ -27,7 +27,7 @@ const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
     data: employmentRequests,
     isLoading,
     refetch,
-  } = useCustomQuery<EmploymentRequestType[]>({
+  } = useCustomQuery<EmploymentRequest[]>({
     key: ["get-employment-requests"],
     url: "/api/employment-requests",
     options: {
@@ -47,7 +47,7 @@ const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
     },
   });
 
-  const columns = useMemo<MRT_ColumnDef<EmploymentRequestType>[]>(
+  const columns = useMemo<MRT_ColumnDef<EmploymentRequest>[]>(
     () => [
       {
         accessorKey: "employee.username",
@@ -56,7 +56,7 @@ const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
           return (
             <CustomStack justifyContent="flex-start">
               <Avatar
-                src={row.original.employee.avatar}
+                src={row.original.employee.avatar ?? ""}
                 sx={{ width: 35, height: 35, mr: 2.5 }}
               />
               {row.original.employee.fullname}
@@ -82,11 +82,7 @@ const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
     []
   );
 
-  const renderRowActions = ({
-    row,
-  }: {
-    row: MRT_Row<EmploymentRequestType>;
-  }) => (
+  const renderRowActions = ({ row }: { row: MRT_Row<EmploymentRequest> }) => (
     <Tooltip title="Anulează cererea">
       <IconButton
         onClick={() =>

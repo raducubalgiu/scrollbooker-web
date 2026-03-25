@@ -3,8 +3,8 @@ import { useInfiniteReviews } from "@/hooks/infiniteQuery/useInfiniteReviews";
 
 type VideoReviewsTabProps = {
   userId?: number | undefined;
-  rootRef?: React.RefObject<HTMLDivElement | null>;
-  disableInitialIgnore?: boolean;
+  rootRef?: React.RefObject<HTMLDivElement | null> | undefined;
+  disableInitialIgnore?: boolean | undefined;
 };
 
 const VideoReviewsTab = ({

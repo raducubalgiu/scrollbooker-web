@@ -2,7 +2,6 @@
 
 import {
   Box,
-  Paper,
   Stack,
   Table,
   TableBody,
@@ -10,10 +9,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import {
-  ScheduleType,
-  ScheduleUpdateType,
-} from "@/ts/models/booking/schedule/ScheduleType";
 import SchedulesSelectHours from "./SchedulesSelectHours";
 import { FormProvider, useForm } from "react-hook-form";
 import { useState } from "react";
@@ -22,8 +17,12 @@ import ActionButton, {
 } from "@/components/core/ActionButton/ActionButton";
 import { toast } from "react-toastify";
 import { useMutate } from "@/hooks/useHttp";
+import {
+  Schedule,
+  ScheduleUpdate,
+} from "@/ts/models/booking/schedule/Schedule";
 
-type SchedulesProps = { data: ScheduleType[] };
+type SchedulesProps = { data: Schedule[] };
 
 export default function MySchedulesModule({ data }: SchedulesProps) {
   const [disabled, setDisabled] = useState(true);
@@ -44,7 +43,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
   const { schedules } = watch();
 
   const { mutate: handleUpdateSchedules, isPending } = useMutate<
-    ScheduleUpdateType[]
+    ScheduleUpdate[]
   >({
     key: ["update-schedules"],
     url: "/api/schedules",
@@ -61,7 +60,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
     },
   });
 
-  const handleSave = (new_data: { schedules: ScheduleType[] }) => {
+  const handleSave = (new_data: { schedules: Schedule[] }) => {
     const updated_schedules = new_data.schedules.map((schedule) => {
       const { id, start_time, end_time } = schedule;
 

@@ -8,7 +8,7 @@ import { MRT_ColumnDef } from "material-react-table";
 import { useMemo, useRef, useState } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import ServicesByServiceDomainModule from "./ServicesByServiceDomainModule";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import Modal from "@/components/core/Modal/Modal";
 import { IconButton } from "@mui/material";
 import Image from "next/image";

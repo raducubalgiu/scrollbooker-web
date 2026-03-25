@@ -1,5 +1,3 @@
-import { PaginatedData } from "@/components/core/Table/Table";
-
 export interface BusinessEmployee {
   [key: string]: unknown;
   id: number;
@@ -13,5 +11,3 @@ export interface BusinessEmployee {
   ratings_average: number;
   products_count: number;
 }
-
-export type BusinessEmployeeResponse = PaginatedData<BusinessEmployee>;

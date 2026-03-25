@@ -7,7 +7,7 @@ import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 import BusinessTypeServiceDomains from "./BusinessTypeServiceDomains";
 

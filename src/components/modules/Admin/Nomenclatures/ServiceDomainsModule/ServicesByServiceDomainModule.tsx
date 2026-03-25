@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ServiceType } from "@/ts/models/nomenclatures/service/ServiceType";
+import { ServiceType } from "@/ts/models/nomenclatures/service/Service";
 
 type ServicesByServiceDomainModuleType = {
   services: ServiceType[];

@@ -2,7 +2,7 @@
 
 import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { useMemo } from "react";
 import { MRT_ColumnDef } from "material-react-table";

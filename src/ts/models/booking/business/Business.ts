@@ -1,5 +1,5 @@
-import { ServiceType } from "../../nomenclatures/service/ServiceType";
-import { ScheduleType } from "../schedule/ScheduleType";
+import { ServiceType } from "../../nomenclatures/service/Service";
+import { Schedule } from "../schedule/Schedule";
 
 export interface BusinessCoordinates {
   lat: number;
@@ -19,6 +19,6 @@ export interface BusinessResponse {
   country_code: string;
   map_url: string;
   services: ServiceType[];
-  schedules: ScheduleType[];
+  schedules: Schedule[];
   has_employees: boolean;
 }

@@ -34,7 +34,7 @@ const SocialFollowersTab = ({
       (entries) => {
         const entry = entries[0];
         if (ignoreInitial) return;
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },

@@ -9,7 +9,7 @@ import { Box, Typography } from "@mui/material";
 import SearchHeader from "./SearchHeader/SearchHeader";
 import BusinessCard from "./BusinessCard";
 import FiltersModal from "./FiltersModal";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomainType";
+import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import MapActions from "./MapActions";
 import BusinessCardSkeleton from "./BusinessCardSkeleton";
 import {

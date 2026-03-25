@@ -1,8 +1,8 @@
-import { ScheduleType } from "../booking/schedule/ScheduleType";
+import { Schedule } from "../booking/schedule/Schedule";
 
 export interface UserProfileInfo {
   description?: string | null;
-  schedules: ScheduleType[];
+  schedules: Schedule[];
   owner_fullname: string;
   location: LocationInfo;
 }
@@ -16,5 +16,3 @@ export interface LocationInfo {
   };
   map_url: string;
 }
-
-export type UserProfileInfoResponse = UserProfileInfo;

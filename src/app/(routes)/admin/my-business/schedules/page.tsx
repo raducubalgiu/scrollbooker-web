@@ -1,18 +1,18 @@
 import React from "react";
 import { get } from "@/utils/requests";
-import { ScheduleResponse } from "@/ts/models/booking/schedule/ScheduleType";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import MySchedulesModule from "@/components/modules/Admin/MyBusiness/MySchedulesModule/MySchedulesModule";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { Paper } from "@mui/material";
+import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 
 async function Schedules() {
   const { userId } = await getUserServerSession();
 
   const response = (
-    await get<ScheduleResponse>({
+    await get<Schedule[]>({
       url: `/users/${userId}/schedules`,
     })
   ).data;

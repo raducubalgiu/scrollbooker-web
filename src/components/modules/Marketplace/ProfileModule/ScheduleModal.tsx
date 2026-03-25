@@ -1,7 +1,7 @@
 import Modal from "@/components/core/Modal/Modal";
 import SchedulesSection from "@/components/cutomized/SchedulesSection/SchedulesSection";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { ScheduleResponse } from "@/ts/models/booking/schedule/ScheduleType";
+import { ScheduleResponse } from "@/ts/models/booking/schedule/Schedule";
 import { Box } from "@mui/material";
 import React from "react";
 

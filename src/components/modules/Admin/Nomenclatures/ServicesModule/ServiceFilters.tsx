@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ServiceFilterType } from "@/ts/models/nomenclatures/service/ServiceType";
+import { ServiceFilterType } from "@/ts/models/nomenclatures/service/Service";
 import FilterSubFilters from "./FilterSubFilters";
 
 type ServicesFiltersType = {

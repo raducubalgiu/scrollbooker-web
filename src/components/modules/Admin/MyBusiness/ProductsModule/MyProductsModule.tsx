@@ -1,9 +1,9 @@
 "use client";
 
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { CurrencyType } from "@/ts/models/nomenclatures/currency/CurrencyResponse";
+import { CurrencyType } from "@/ts/models/nomenclatures/currency/Currency";
 import { FilterType } from "@/ts/models/nomenclatures/FilterType";
-import { ServiceType } from "@/ts/models/nomenclatures/service/ServiceType";
+import { ServiceType } from "@/ts/models/nomenclatures/service/Service";
 import { ProductType } from "@/ts/models/Product/ProductResponse";
 import useProductColumns from "../MyProductsModule/useProductColumns";
 import Table from "@/components/core/Table/Table";

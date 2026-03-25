@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
 import { MRT_ColumnDef } from "material-react-table";
 import Table from "@/components/core/Table/Table";
-import { FilterSubfilterType } from "@/ts/models/nomenclatures/service/ServiceType";
+import { FilterSubfilterType } from "@/ts/models/nomenclatures/service/Service";
 
 type FilterSubFiltersType = {
   sub_filters: FilterSubfilterType[] | undefined;

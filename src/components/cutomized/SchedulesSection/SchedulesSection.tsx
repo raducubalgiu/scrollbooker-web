@@ -1,4 +1,4 @@
-import { ScheduleType } from "@/ts/models/booking/schedule/ScheduleType";
+import { ScheduleType } from "@/ts/models/booking/schedule/Schedule";
 import { Box, Stack, Typography } from "@mui/material";
 
 type SchedulesSectionProps = {

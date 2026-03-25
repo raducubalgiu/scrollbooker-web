@@ -6,7 +6,7 @@ import MySchedulesModule from "../MySchedulesModule/MySchedulesModule";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
-import { BusinessResponse } from "@/ts/models/booking/business/BusinessResponse";
+import { BusinessResponse } from "@/ts/models/booking/business/Business";
 import BusinessDescriptionTab from "./BusinessDescriptionTab";
 import BusinessAddressTab from "./BusinessAddressTab";
 import BusinessGalleryTab from "./BusinessGalleryTab";

@@ -1,13 +1,13 @@
 import RatingsStars from "@/components/cutomized/RatingsDistribution/RatingsStars";
 import { reviewLabelText } from "@/ts/enums/ReviewLabel";
-import { ReviewType } from "@/ts/models/booking/review/ReviewType";
 import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import React, { useMemo } from "react";
+import { Review } from "@/ts/models/booking/review/Review";
 
 type ReviewCardProps = {
-  review: ReviewType;
+  review: Review;
 };
 
 const ReviewCard = ({ review }: ReviewCardProps) => {
@@ -41,7 +41,10 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
       }}
     >
       <Stack flexDirection="row" alignItems="center" gap={2}>
-        <Avatar src={review.customer.avatar} sx={{ width: 70, height: 70 }} />
+        <Avatar
+          src={review.customer.avatar ?? ""}
+          sx={{ width: 70, height: 70 }}
+        />
 
         <Box>
           <Typography variant="h6" fontWeight={600}>
@@ -73,7 +76,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
       >
         {is_liked_by_product_owner && (
           <Avatar
-            src={review.product_business_owner.avatar}
+            src={review.product_business_owner.avatar ?? ""}
             sx={{ width: 24, height: 24 }}
           />
         )}
