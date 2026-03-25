@@ -1,5 +1,5 @@
 import { ProfessionType } from "../../nomenclatures/profession/ProfessionType";
-import { UserMiniType } from "../../user/UserMiniType";
+import { UserMiniType } from "../../user/UserMini";
 
 export type EmploymentRequestType = {
   id: number;

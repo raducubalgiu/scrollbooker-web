@@ -12,18 +12,18 @@ import SocialFollowersTab from "./SocialFollowersTab";
 import SocialFollowingsTab from "./SocialFollowingsTab";
 import { SocialTabEnum } from "./SocialTabEnum";
 import { SocialModalProps } from "../ProfileModule";
-import { UserCountersType } from "@/ts/models/user/UserProfileType";
+import { UserCounter } from "@/ts/models/user/UserProfile";
 
 type ProfileSocialModalProps = {
   open: boolean;
-  counters: UserCountersType;
+  counters: UserCounter;
   socialModal: SocialModalProps | null;
   handleClose: () => void;
 };
 
 type TabDef = {
   route: SocialTabEnum;
-  key: keyof UserCountersType;
+  key: keyof UserCounter;
   label: string;
 };
 

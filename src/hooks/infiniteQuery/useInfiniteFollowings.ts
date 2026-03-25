@@ -1,5 +1,5 @@
 import { PaginatedData } from "@/components/core/Table/Table";
-import { UserMiniType } from "@/ts/models/user/UserMiniType";
+import { UserMiniType } from "@/ts/models/user/UserMini";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 

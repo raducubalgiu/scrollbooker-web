@@ -1,13 +1,13 @@
 import { ScheduleType } from "../booking/schedule/ScheduleType";
 
-export type UserProfileInfoType = {
-  description: string | undefined;
+export interface UserProfileInfo {
+  description?: string | null;
   schedules: ScheduleType[];
   owner_fullname: string;
-  location: LocationInfoType;
-};
+  location: LocationInfo;
+}
 
-export type LocationInfoType = {
+export interface LocationInfo {
   address: string;
   formatted_address: string;
   coordinates: {
@@ -15,6 +15,6 @@ export type LocationInfoType = {
     lng: number;
   };
   map_url: string;
-};
+}
 
-export type UserProfileInfoResponse = UserProfileInfoType;
+export type UserProfileInfoResponse = UserProfileInfo;

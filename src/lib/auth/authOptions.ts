@@ -6,7 +6,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import axios, { AxiosResponse } from "axios";
 import { map } from "lodash";
 import { JWT } from "next-auth/jwt";
-import { PermissionType } from "@/ts/models/user/PermissionType";
+import { Permission } from "@/ts/models/user/Permission";
 
 type DecodedTokenType = {
   id: number;
@@ -21,18 +21,6 @@ type AuthResponseType = {
   access_token: string;
   refresh_token: string;
   token_type: string;
-};
-
-type UserInfoType = {
-  id: number;
-  username: string;
-  fullname: string;
-  business_id?: number;
-  business_type_id?: number;
-  has_employees: boolean;
-  is_employee: boolean;
-  is_validated: boolean;
-  registration_step?: string;
 };
 
 export const authOptions: AuthOptions = {
@@ -209,7 +197,7 @@ async function verifyToken(token: string): Promise<DecodedTokenType | null> {
 }
 
 async function getPermissions(token: string): Promise<string[]> {
-  const userPermissions: AxiosResponse<PermissionType[]> = await axios.get(
+  const userPermissions: AxiosResponse<Permission[]> = await axios.get(
     `${process.env.BE_BASE_ENDPOINT}/auth/user-permissions`,
     { headers: { Authorization: `Bearer ${token}` } }
   );

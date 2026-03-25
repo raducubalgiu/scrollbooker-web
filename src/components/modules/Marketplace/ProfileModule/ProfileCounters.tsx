@@ -1,4 +1,4 @@
-import { UserCountersType } from "@/ts/models/user/UserProfileType";
+import { UserCountersType } from "@/ts/models/user/UserProfile";
 import { Divider, ListItemButton, Stack, Typography } from "@mui/material";
 import React from "react";
 import { SocialTabEnum } from "./social/SocialTabEnum";

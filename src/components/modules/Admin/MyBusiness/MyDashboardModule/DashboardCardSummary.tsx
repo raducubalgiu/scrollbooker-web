@@ -3,7 +3,7 @@ import { Paper, Typography, Box } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import Grid from "@mui/material/Grid2";
-import { DashboardSummaryType } from "@/ts/models/DashboardSummaryType";
+import { DashboardSummaryType } from "@/ts/models/DashboardSummary";
 import CustomStack from "@/components/core/CustomStack/CustomStack";
 
 type DashboardSummaryProps = {

@@ -34,7 +34,7 @@ import { signOut, useSession } from "next-auth/react";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { UserProfileType } from "@/ts/models/user/UserProfileType";
+import { UserProfileType } from "@/ts/models/user/UserProfile";
 import UserInfo from "./UserInfo/UserInfo";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 

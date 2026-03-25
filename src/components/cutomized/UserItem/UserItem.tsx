@@ -1,4 +1,4 @@
-import { UserMiniType } from "@/ts/models/user/UserMiniType";
+import { UserMiniType } from "@/ts/models/user/UserMini";
 import { Avatar, Badge, Box, Button, Stack, Typography } from "@mui/material";
 import { useMemo } from "react";
 import StarIcon from "@mui/icons-material/Star";

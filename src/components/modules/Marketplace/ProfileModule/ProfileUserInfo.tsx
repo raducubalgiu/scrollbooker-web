@@ -15,7 +15,7 @@ import React, { useMemo } from "react";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import { UserProfileType } from "@/ts/models/user/UserProfileType";
+import { UserProfileType } from "@/ts/models/user/UserProfile";
 import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
 import CachedIcon from "@mui/icons-material/Cached";

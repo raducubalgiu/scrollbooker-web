@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { required, minField, maxField } from "@/utils/validation-rules";
 import AvatarUploader from "@/components/cutomized/AvatarUploader/AvatarUploader";
 import Protected from "@/components/cutomized/Protected/Protected";
-import { UserProfileType } from "@/ts/models/user/UserProfileType";
+import { UserProfileType } from "@/ts/models/user/UserProfile";
 
 type UserInfoEditModalProps = {
   open: boolean;

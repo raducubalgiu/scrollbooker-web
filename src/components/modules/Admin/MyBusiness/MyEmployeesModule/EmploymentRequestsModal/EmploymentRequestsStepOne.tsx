@@ -1,7 +1,7 @@
 import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItemSkeletons";
 import UserListItem from "@/components/cutomized/UserItem/UserItem";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { UserMiniType } from "@/ts/models/user/UserMiniType";
+import { UserMiniType } from "@/ts/models/user/UserMini";
 import {
   Box,
   Divider,

@@ -2,10 +2,6 @@
 
 import { Box } from "@mui/material";
 import React, { useEffect, useState, useCallback } from "react";
-import {
-  UserProfileType,
-  UserCountersType,
-} from "@/ts/models/user/UserProfileType";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
 import ProfileTabs from "./tabs/ProfileTabs";
@@ -13,9 +9,10 @@ import SocialModal from "./social/SocialModal";
 import { SocialTabEnum } from "./social/SocialTabEnum";
 import ScheduleModal from "./ScheduleModal";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
+import { UserCounter, UserProfile } from "@/ts/models/user/UserProfile";
 
 export type ProfileModuleProps = {
-  profile: UserProfileType | undefined;
+  profile: UserProfile | null;
 };
 
 export type SocialModalProps = {
@@ -28,7 +25,7 @@ export type ScheduleModalProps = {
   userId: number;
 };
 
-const emptyCounters: UserCountersType = {
+const emptyCounters: UserCounter = {
   user_id: 0,
   followings_count: 0,
   followers_count: 0,
@@ -42,7 +39,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
   const [openScheduleModal, setOpenScheduleModal] = useState<boolean>(false);
   const [socialModal, setSocialModal] = useState<SocialModalProps | null>(null);
   const isSocialModalOpen = socialModal !== null;
-  const [updatedCounters, setUpdatedCounters] = useState<UserCountersType>(
+  const [updatedCounters, setUpdatedCounters] = useState<UserCounter>(
     profile?.counters ?? emptyCounters
   );
 

@@ -1,7 +1,7 @@
 "use client";
 
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
-import { NotificationType } from "@/ts/models/user/NotificationType";
+import { NotificationType } from "@/ts/models/user/Notification";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
 import {
   Button,

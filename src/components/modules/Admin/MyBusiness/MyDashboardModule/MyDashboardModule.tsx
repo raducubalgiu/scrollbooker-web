@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { DashboardSummaryType } from "@/ts/models/DashboardSummaryType";
+import { DashboardSummaryType } from "@/ts/models/DashboardSummary";
 import { useDashboardReducer } from "@/hooks/useDashboardReducer";
 import Protected from "@/components/cutomized/Protected/Protected";
 import usePermission from "@/components/cutomized/Protected/usePermission";

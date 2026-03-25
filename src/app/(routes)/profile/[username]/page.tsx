@@ -1,21 +1,21 @@
 import ProfileModule from "@/components/modules/Marketplace/ProfileModule/ProfileModule";
-import { UserProfileType } from "@/ts/models/user/UserProfileType";
 import { get } from "@/utils/requests";
 import React from "react";
+import { UserProfile } from "@/ts/models/user/UserProfile";
 
 interface Props {
   params: { username: string };
 }
 
-export default async function UserProfile({ params }: Props) {
+export default async function UserProfilePage({ params }: Props) {
   const { username } = await Promise.resolve(params);
 
   if (!username) {
-    return <ProfileModule profile={undefined} />;
+    return <ProfileModule profile={null} />;
   }
 
   const profile = (
-    await get<UserProfileType | undefined>({
+    await get<UserProfile | null>({
       url: `/users/${username}/user-profile`,
     })
   ).data;

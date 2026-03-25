@@ -2,7 +2,7 @@ import Modal from "@/components/core/Modal/Modal";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import Table from "@/components/core/Table/Table";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { RoleType } from "@/ts/models/user/RoleType";
+import { Role } from "@/ts/models/user/Role";
 import { Paper, useTheme } from "@mui/material";
 import { MRT_ColumnDef } from "material-react-table";
 import React, { useMemo } from "react";
@@ -18,10 +18,10 @@ export default function RolesModule({ open, handleClose }: RolesModuleProps) {
     onCreatingRowSave,
     onDeletingRowSave,
     onEditingRowSave,
-  } = useTableHandlers<RoleType>({ route: "nomenclatures/roles" });
+  } = useTableHandlers<Role>({ route: "nomenclatures/roles" });
   const theme = useTheme();
 
-  const columns = useMemo<MRT_ColumnDef<RoleType>[]>(
+  const columns = useMemo<MRT_ColumnDef<Role>[]>(
     () => [
       {
         accessorKey: "name",
