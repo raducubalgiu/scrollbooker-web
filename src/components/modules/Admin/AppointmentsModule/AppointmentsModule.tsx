@@ -21,15 +21,17 @@ import StatusButton from "./StatusButton";
 import ChannelButton from "./ChannelButton";
 import PickerButton from "./PickerButton";
 import EmployeeButton from "./EmployeeButton";
-import { Session } from "next-auth/core/types";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import AsCustomerButton from "./AsCustomerButton";
 import AppointmentCancelModal from "./AppointmentCancelModal";
 import { useMutate } from "@/hooks/useHttp";
 import { useQueryClient } from "@tanstack/react-query";
 import { Appointment } from "@/ts/models/booking/appointment/Appointment";
+import { useSession } from "next-auth/react";
 
-const AppointmentsModule = ({ session }: { session: Session | null }) => {
+const AppointmentsModule = () => {
+  const { data: session } = useSession();
+
   const [asCustomer, setAsCustomer] = useState<boolean | null>(null);
   const [status, setStatus] = useState<AppointmentStatusEnum | null>(null);
   const [channel, setChannel] = useState<AppointmentChannelEnum | null>(null);
@@ -76,7 +78,6 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
       },
     });
 
-  // Optimistic cancel mutation example
   const queryClient = useQueryClient();
   const appointmentsQueryKey = React.useMemo(
     () => [
@@ -93,7 +94,6 @@ const AppointmentsModule = ({ session }: { session: Session | null }) => {
     url: "/api/appointments",
     method: "PUT",
     options: {
-      // optimistic update
       onMutate: async (variables) => {
         await queryClient.cancelQueries({
           queryKey: appointmentsQueryKey as any,

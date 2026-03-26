@@ -4,10 +4,11 @@ import PostGrid from "../../PostGrid/PostGrid";
 import { Box } from "@mui/material";
 
 type ProfilePostsTabProps = {
+  userId: number;
   isAuthenticated: boolean;
 };
 
-const ProfilePostsTab = ({ isAuthenticated }: ProfilePostsTabProps) => {
+const ProfilePostsTab = ({ userId, isAuthenticated }: ProfilePostsTabProps) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, padding: 2 }}>
       {!isAuthenticated ? (

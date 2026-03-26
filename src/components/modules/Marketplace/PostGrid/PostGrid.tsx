@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Avatar, Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 
 type PostMock = {
   id: number;
@@ -39,7 +39,6 @@ const PostCard: React.FC<{ post: PostMock }> = ({ post }) => {
         width: "100%",
         borderRadius: 2,
         overflow: "hidden",
-        //boxShadow: 1,
         backgroundColor: "background.default",
       }}
     >

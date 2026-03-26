@@ -109,7 +109,9 @@ const ProfileTabs = ({
   const tabsContent = useMemo(() => {
     switch (currentTab) {
       case ProfileTabEnum.POSTS:
-        return <ProfilePostsTab isAuthenticated={isAuthenticated} />;
+        return (
+          <ProfilePostsTab userId={userId} isAuthenticated={isAuthenticated} />
+        );
       case ProfileTabEnum.PRODUCTS:
         return <ProfileProductsTab />;
       case ProfileTabEnum.EMPLOYEES:
