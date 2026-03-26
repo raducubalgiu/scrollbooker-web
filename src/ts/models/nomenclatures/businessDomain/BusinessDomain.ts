@@ -3,8 +3,8 @@ export interface BusinessDomain {
   name: string;
   short_name: string;
   active: boolean;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
   service_domains: BusinessDomainServiceDomainType[];
 }
 

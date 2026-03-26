@@ -1,5 +1,6 @@
-import { BusinessMarkerResponse } from "./BusinessMarker";
-import { BusinessSheetResponse } from "./BusinessSheet";
+import { PaginatedData } from "@/components/core/Table/Table";
+import { BusinessMarker } from "./BusinessMarker";
+import { BusinessSheet } from "./BusinessSheet";
 
 export enum SearchSortEnum {
   Recommended = "recommended",
@@ -42,6 +43,6 @@ export interface BoundingBox {
 }
 
 export interface BusinessMapResponse {
-  markers: BusinessMarkerResponse;
-  list: BusinessSheetResponse;
+  markers: BusinessMarker;
+  list: PaginatedData<BusinessSheet>;
 }

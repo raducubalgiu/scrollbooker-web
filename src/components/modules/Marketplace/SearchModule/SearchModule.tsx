@@ -19,6 +19,7 @@ import {
 import { busineses_for_map, markers } from "./searchMockData";
 import { BusinessMarker } from "@/ts/models/booking/business/search/BusinessMarker";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { BusinessMapResponse } from "@/ts/models/booking/business/search/BusinessMapCombined";
 
 export default function SearchModule() {
   const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
@@ -40,7 +41,7 @@ export default function SearchModule() {
     });
 
   const isLoading = false;
-  const businessData = {
+  const businessData: BusinessMapResponse = {
     list: busineses_for_map,
     markers: markers,
   };
