@@ -24,6 +24,14 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       textAlign: "center",
       maxWidth: 200,
     },
+    title: {
+      color: "text.secondary",
+      fontSize: { xs: 12, sm: 14, md: 16, lg: 18, xl: 20 },
+    },
+    counter: {
+      fontWeight: 600,
+      fontSize: { xs: 16, sm: 20, md: 25, lg: 30, xl: 35 },
+    },
   };
 
   return (
@@ -38,12 +46,8 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
         onClick={() => onClick(SocialTabEnum.REVIEWS)}
       >
         <Stack alignItems="center" spacing={1}>
-          <Typography variant="h6" sx={{ color: "text.secondary" }}>
-            Recenzii
-          </Typography>
-          <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            {ratings_count}
-          </Typography>
+          <Typography sx={styles.title}>Recenzii</Typography>
+          <Typography sx={styles.counter}>{ratings_count}</Typography>
         </Stack>
       </ListItemButton>
 
@@ -58,12 +62,8 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
         onClick={() => onClick(SocialTabEnum.FOLLOWERS)}
       >
         <Stack alignItems="center" spacing={1}>
-          <Typography variant="h6" sx={{ color: "text.secondary" }}>
-            Urmaritori
-          </Typography>
-          <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            {followers_count}
-          </Typography>
+          <Typography sx={styles.title}>Urmaritori</Typography>
+          <Typography sx={styles.counter}>{followers_count}</Typography>
         </Stack>
       </ListItemButton>
 
@@ -78,12 +78,8 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
         onClick={() => onClick(SocialTabEnum.FOLLOWINGS)}
       >
         <Stack alignItems="center" spacing={1}>
-          <Typography variant="h6" sx={{ color: "text.secondary" }}>
-            Urmaresti
-          </Typography>
-          <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            {followings_count}
-          </Typography>
+          <Typography sx={styles.title}>Urmaresti</Typography>
+          <Typography sx={styles.counter}>{followings_count}</Typography>
         </Stack>
       </ListItemButton>
     </Stack>

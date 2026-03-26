@@ -99,20 +99,49 @@ const ProfileUserInfo = ({
     );
   }, [is_business_or_employee, is_own_profile, is_follow, id, onUpdateFollows]);
 
+  const styles = {
+    fullName: {
+      fontWeight: 600,
+      fontSize: {
+        xs: 20,
+        sm: 24,
+        md: 28,
+        lg: 32,
+        xl: 36,
+      },
+    },
+    star: {
+      mr: 0.5,
+      fontWeight: 600,
+      fontSize: {
+        sm: 20,
+        md: 25,
+        lg: 30,
+        xl: 35,
+      },
+    },
+    rating: {
+      fontWeight: 600,
+      fontSize: {
+        sm: 15,
+        md: 20,
+        lg: 25,
+        xl: 30,
+      },
+    },
+  };
+
   return (
     <Stack flexDirection="row" alignItems="center">
       <UserAvatar
         isBusinessOrEmployee={is_business_or_employee}
         openNow={opening_hours.open_now}
         url={avatar}
-        small={false}
-        defaultSize={250}
-        badgeSize={25}
       />
 
       <Box sx={{ ml: 3 }}>
         <Stack flexDirection="row" alignItems="center">
-          <Typography variant="h5" sx={{ fontWeight: 600, fontSize: 28 }}>
+          <Typography variant="h5" sx={styles.fullName}>
             {fullname}
           </Typography>
           <Typography variant="body1" sx={{ ml: 1.5, color: "text.secondary" }}>
@@ -130,8 +159,8 @@ const ProfileUserInfo = ({
           {is_business_or_employee && (
             <>
               <Stack flexDirection="row" alignItems="center">
-                <GradeIcon color="primary" sx={{ fontSize: 30, mr: 0.5 }} />
-                <Typography variant="h6" sx={{ fontWeight: 600, fontSize: 25 }}>
+                <GradeIcon color="primary" sx={styles.star} />
+                <Typography variant="h6" sx={styles.rating}>
                   {counters.ratings_average}
                 </Typography>
               </Stack>
@@ -164,7 +193,7 @@ const ProfileUserInfo = ({
           )}
         </Stack>
 
-        {business_owner && (
+        {/* {business_owner && (
           <Stack flexDirection="row" alignItems="center" mt={0.5}>
             {business_owner.id !== id && (
               <>
@@ -266,7 +295,7 @@ const ProfileUserInfo = ({
               Website
             </Button>
           </Stack>
-        )}
+        )} */}
 
         <Box sx={{ maxWidth: "sm", mt: 1.5 }}>{bio}</Box>
 

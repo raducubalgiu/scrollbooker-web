@@ -42,15 +42,6 @@ const PostGridContainer = ({ children }: PostGridContainerProps) => {
         md: 1,
         lg: 1.5,
       },
-      px: {
-        xs: 0,
-        sm: 1,
-        md: 2,
-      },
-      pb: {
-        xs: 0,
-        md: 2,
-      },
     },
   };
 
