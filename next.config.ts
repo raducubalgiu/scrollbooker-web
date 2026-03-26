@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "*.cloudflarestream.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

@@ -29,7 +29,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
     [isAdminArea]
   );
 
-  if (status === "loading") return null;
+  //if (status === "loading") return null;
 
   if (isAdminArea) {
     return <LayoutComp>{children}</LayoutComp>;
