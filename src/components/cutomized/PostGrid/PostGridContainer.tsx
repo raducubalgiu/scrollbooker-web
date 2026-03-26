@@ -34,13 +34,13 @@ const PostGridContainer = ({ children }: PostGridContainerProps) => {
         sm: "repeat(3, 1fr)",
         md: "repeat(4, 1fr)",
         lg: "repeat(6, 1fr)",
-        xl: "repeat(8, 1fr)",
+        xl: "repeat(6, 1fr)",
       },
       gap: {
         xs: "2px",
         sm: "4px",
-        md: 1,
-        lg: 1.5,
+        md: 2,
+        lg: 2.5,
       },
     },
   };

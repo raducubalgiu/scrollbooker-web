@@ -1,26 +1,34 @@
-import NotAuthenticatedOverlay from "@/components/cutomized/NotAuthenticatedOverlay/NotAuthenticatedOverlay";
-import { Box } from "@mui/material";
 import React, { memo } from "react";
-import PostGrid from "../../PostGrid/PostGrid";
+import { useCustomQuery } from "@/hooks/useHttp";
+import { PaginatedData } from "@/components/core/Table/Table";
+import { Post } from "@/ts/models/social/Post";
+import PostGridContainer from "@/components/cutomized/PostGrid/PostGridContainer";
+import PostGrid from "@/components/cutomized/PostGrid/PostGrid";
+import { useRouter } from "next/navigation";
 
-type ProfileBookmarksTabProps = {
-  isAuthenticated: boolean;
-};
+const ProfileBookmarksTab = () => {
+  const router = useRouter();
 
-const ProfileBookmarksTab = ({ isAuthenticated }: ProfileBookmarksTabProps) => {
+  const { data: posts } = useCustomQuery<PaginatedData<Post>>({
+    key: ["profile-bookmarks"],
+    url: `/api/profile/bookmarks`,
+    params: { page: 1, limit: 10 },
+  });
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, padding: 2 }}>
-      {!isAuthenticated ? (
-        <NotAuthenticatedOverlay
-          title="Conectează-te pentru a vedea postările"
-          description="Trebuie să fii autentificat pentru a vedea și interacționa cu postările (urmări, comenta sau aprecia)."
-        >
-          <PostGrid count={6} />
-        </NotAuthenticatedOverlay>
-      ) : (
-        <PostGrid count={6} />
-      )}
-    </Box>
+    <PostGridContainer>
+      {posts?.results.map((post) => (
+        <PostGrid
+          key={post.id}
+          viewsCount={post.counters.views_count}
+          thumbnailUrl={post.media_files[0]?.thumbnail_url ?? null}
+          videoUrl={post.media_files[0]?.url ?? null}
+          onNavigateToVideo={() =>
+            router.push(`/profile/${post.user.username}/video/${post.id}`)
+          }
+        />
+      ))}
+    </PostGridContainer>
   );
 };
 

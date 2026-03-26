@@ -109,15 +109,13 @@ const ProfileTabs = ({
   const tabsContent = useMemo(() => {
     switch (currentTab) {
       case ProfileTabEnum.POSTS:
-        return (
-          <ProfilePostsTab userId={userId} isAuthenticated={isAuthenticated} />
-        );
+        return <ProfilePostsTab userId={userId} />;
       case ProfileTabEnum.PRODUCTS:
         return <ProfileProductsTab />;
       case ProfileTabEnum.EMPLOYEES:
         return <ProfileEmployeesTab businessOwnerId={businessOwnerId} />;
       case ProfileTabEnum.BOOKMARKS:
-        return <ProfileBookmarksTab isAuthenticated={isAuthenticated} />;
+        return <ProfileBookmarksTab />;
       case ProfileTabEnum.INFO:
         return <ProfileInfoTab userId={userId} />;
       default:
@@ -142,13 +140,39 @@ const ProfileTabs = ({
         "& .MuiTabs-indicator": {
           height: 3,
           borderRadius: 2,
+          width: "100%",
         },
         "& .MuiTab-root": {
           textTransform: "none",
           minHeight: 56,
+          minWidth: {
+            lg: 150,
+            xl: 200,
+          },
+          flex: {
+            xs: "1 1 auto",
+            lg: "0 1 auto",
+          },
+        },
+        "& .MuiTab-icon": {
+          fontSize: {
+            xs: 20,
+            md: 25,
+            lg: 30,
+            xl: 35,
+          },
         },
       },
-      label: { fontSize: 20, fontWeight: 600 },
+      label: {
+        fontSize: 20,
+        fontWeight: 600,
+        display: {
+          xs: "none",
+          sm: "none",
+          md: "none",
+          lg: "block",
+        },
+      },
     }),
     []
   );
@@ -164,7 +188,7 @@ const ProfileTabs = ({
               icon={tab.icon}
               iconPosition="start"
               label={<Typography sx={styles.label}>{tab.label}</Typography>}
-              sx={{ minWidth: 200 }}
+              //sx={{ minWidth: 200 }}
             />
           ))}
         </Tabs>

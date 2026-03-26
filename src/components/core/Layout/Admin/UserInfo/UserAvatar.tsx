@@ -21,7 +21,7 @@ export default function UserAvatar({
   const boxShadow = `0 0 0 2px ${theme.palette.background.paper}`;
 
   const size = { xs: 95, md: 150, lg: 200, xl: 255 };
-  const badgeSize = { xs: 12, sm: 14, md: 17.5 };
+  const badgeSize = { xs: 12, sm: 14, md: 20, lg: 25 };
 
   const badgeSx = useMemo<SxProps<Theme>>(
     () => ({

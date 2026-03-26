@@ -132,7 +132,7 @@ const ProfileUserInfo = ({
   };
 
   return (
-    <Stack flexDirection="row" alignItems="center">
+    <Stack flexDirection="row" alignItems="center" sx={{ p: { xs: 2, lg: 0 } }}>
       <UserAvatar
         isBusinessOrEmployee={is_business_or_employee}
         openNow={opening_hours.open_now}

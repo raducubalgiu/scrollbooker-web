@@ -4,14 +4,16 @@ import { Post } from "@/ts/models/social/Post";
 import { PaginatedData } from "@/components/core/Table/Table";
 import PostGrid from "@/components/cutomized/PostGrid/PostGrid";
 import PostGridContainer from "@/components/cutomized/PostGrid/PostGridContainer";
+import { useRouter } from "next/navigation";
 
 type ProfilePostsTabProps = {
   userId: number;
-  isAuthenticated: boolean;
 };
 
-const ProfilePostsTab = ({ userId, isAuthenticated }: ProfilePostsTabProps) => {
-  const { data: posts, isLoading } = useCustomQuery<PaginatedData<Post>>({
+const ProfilePostsTab = ({ userId }: ProfilePostsTabProps) => {
+  const router = useRouter();
+
+  const { data: posts } = useCustomQuery<PaginatedData<Post>>({
     key: ["profile-posts", userId],
     url: `/api/profile/posts`,
     params: { userId, page: 1, limit: 10 },
@@ -22,8 +24,12 @@ const ProfilePostsTab = ({ userId, isAuthenticated }: ProfilePostsTabProps) => {
       {posts?.results.map((post) => (
         <PostGrid
           key={post.id}
-          views_count={post.counters.views_count}
-          imgUrl={post.media_files[0]?.thumbnail_url ?? null}
+          viewsCount={post.counters.views_count}
+          thumbnailUrl={post.media_files[0]?.thumbnail_url ?? null}
+          videoUrl={post.media_files[0]?.url ?? null}
+          onNavigateToVideo={() =>
+            router.push(`/profile/${post.user.username}/video/${post.id}`)
+          }
         />
       ))}
     </PostGridContainer>
