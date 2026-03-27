@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import React from "react";
 import { usePathname } from "next/navigation";
 import AdminLayout from "./Admin/AdminLayout";
@@ -11,7 +10,6 @@ const ADMIN_PREFIXES = ["/admin"];
 type LayoutWrapperProps = { children: React.ReactNode };
 
 export default function LayoutWrapper({ children }: LayoutWrapperProps) {
-  const { status } = useSession();
   const pathname = usePathname() || "";
 
   const isAdminArea = React.useMemo(
@@ -28,8 +26,6 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
     () => (isAdminArea ? AdminLayout : MarketplaceLayout),
     [isAdminArea]
   );
-
-  //if (status === "loading") return null;
 
   if (isAdminArea) {
     return <LayoutComp>{children}</LayoutComp>;

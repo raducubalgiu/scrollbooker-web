@@ -1,10 +1,11 @@
-import { UserMiniType } from "@/ts/models/user/UserMini";
 import { Avatar, Badge, Box, Button, Stack, Typography } from "@mui/material";
 import { useMemo } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import { formatRating } from "@/utils/formatters";
+import { UserMini } from "@/ts/models/user/UserMini";
+import Link from "next/link";
 
-const UserItem = ({ user }: { user: UserMiniType }) => {
+const UserItem = ({ user }: { user: UserMini }) => {
   const {
     is_business_or_employee,
     avatar,
@@ -91,18 +92,23 @@ const UserItem = ({ user }: { user: UserMiniType }) => {
       justifyContent="space-between"
       sx={{ py: 2.5 }}
     >
-      <Stack flexDirection="row" alignItems="center">
-        {user_avatar}
+      <Link
+        href={`/profile/${username}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <Stack flexDirection="row" alignItems="center">
+          {user_avatar}
 
-        <Box sx={{ ml: 2.5 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            {fullname}
-          </Typography>
-          <Typography color="text.secondary">
-            {is_business_or_employee ? profession : `@${username}`}
-          </Typography>
-        </Box>
-      </Stack>
+          <Box sx={{ ml: 2.5 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              {fullname}
+            </Typography>
+            <Typography color="text.secondary">
+              {is_business_or_employee ? profession : `@${username}`}
+            </Typography>
+          </Box>
+        </Stack>
+      </Link>
 
       {followButton}
     </Stack>

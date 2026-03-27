@@ -4,9 +4,9 @@ import crypto from "crypto";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/authOptions";
 import {
-	requestLogger,
-	responseErrorLogger,
-	responseLogger,
+  requestLogger,
+  responseErrorLogger,
+  responseLogger,
 } from "@/utils/axios-utils";
 import { LOG } from "@/utils/logger";
 import { redirect } from "next/navigation";
@@ -16,35 +16,43 @@ const BASE_URL = process.env.BE_BASE_ENDPOINT;
 const random16Hex = () => crypto.randomBytes(8).toString("hex");
 
 export async function Instance() {
-	const session = await getServerSession(authOptions);
-	const spanId = random16Hex();
-	const traceId = random16Hex();
+  const session = await getServerSession(authOptions);
+  const spanId = random16Hex();
+  const traceId = random16Hex();
 
-	if (!session) redirect("/api/auth/signin");
+  if (!BASE_URL) {
+    LOG.error("BE_BASE_ENDPOINT is not defined in environment variables", {
+      traceId,
+      spanId,
+    });
+    throw new Error("BE_BASE_ENDPOINT is not defined in environment variables");
+  }
 
-	const headers = new AxiosHeaders({
-		Authorization: `Bearer ${session?.accessToken}`,
-		Language: "RO",
-		"Content-Type": "application/json",
-		"X-B3-SpanId": spanId,
-		"X-B3-TraceId": traceId,
-	});
+  if (!session) redirect("/api/auth/signin");
 
-	const instance = axios.create({
-		baseURL: BASE_URL,
-		headers,
-	});
+  const headers = new AxiosHeaders({
+    Authorization: `Bearer ${session?.accessToken}`,
+    Language: "RO",
+    "Content-Type": "application/json",
+    "X-B3-SpanId": spanId,
+    "X-B3-TraceId": traceId,
+  });
 
-	instance.interceptors.request.use(requestLogger);
-	instance.interceptors.response.use(responseLogger, responseErrorLogger);
+  const instance = axios.create({
+    baseURL: BASE_URL,
+    headers,
+  });
 
-	LOG.info(
-		`Instance was created for user with username: @${session?.username}`,
-		{
-			traceId,
-			spanId,
-		}
-	);
+  instance.interceptors.request.use(requestLogger);
+  instance.interceptors.response.use(responseLogger, responseErrorLogger);
 
-	return instance;
+  LOG.info(
+    `Instance was created for user with username: @${session?.username}`,
+    {
+      traceId,
+      spanId,
+    }
+  );
+
+  return instance;
 }

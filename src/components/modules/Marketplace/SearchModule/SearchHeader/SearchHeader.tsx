@@ -5,7 +5,7 @@ import BusinessDomainsTabs from "../BusinessDomainsTabs";
 import { SearchHeaderSectionType } from "@/components/modules/Marketplace/SearchModule/SearchHeaderSectionEnum";
 import SearchPopperSections from "./SearchPopperSections";
 import SearchHeaderBar from "./SearchHeaderBar";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type SearchHeaderProps = {
   isMapVisible: boolean;
@@ -13,8 +13,8 @@ type SearchHeaderProps = {
   onToggleMap: () => void;
   onHeightChange?: (height: number) => void;
   mainPagePadding?: number | string;
-  selectedBusinessDomain: BusinessDomainType | null;
-  onSetSelectedBusinessDomain: (domain: BusinessDomainType) => void;
+  selectedBusinessDomain: BusinessDomain | null;
+  onSetSelectedBusinessDomain: (domain: BusinessDomain) => void;
 };
 
 const SearchHeader = ({

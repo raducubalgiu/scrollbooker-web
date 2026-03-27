@@ -7,6 +7,7 @@ import { Drawer } from "@mui/material";
 import MarketplaceDrawer from "./MarketplaceDrawer";
 import MarketplaceBottomBar from "./MarketplaceBottomBar";
 import { useTheme } from "@mui/material/styles";
+import { usePathname } from "next/navigation";
 
 const DRAWER_WIDTH = 300;
 
@@ -17,6 +18,13 @@ interface MarketplaceLayoutProps {
 export default function MarketplaceLayout({
   children,
 }: MarketplaceLayoutProps) {
+  const pathname = usePathname() || "";
+
+  const isBusinessPage = React.useMemo(
+    () => pathname.startsWith("/business/"),
+    [pathname]
+  );
+
   const theme = useTheme();
   const bgColor =
     theme.palette.mode === "dark" ? "background.default" : "background.paper";
@@ -50,22 +58,24 @@ export default function MarketplaceLayout({
   return (
     <Box sx={styles.box}>
       <CssBaseline />
-      <Box
-        component="nav"
-        sx={{
-          width: { sm: DRAWER_WIDTH },
-          flexShrink: { sm: 0 },
-          display: { xs: "none", lg: "block" },
-        }}
-      >
-        <Drawer
-          variant="permanent"
-          open
-          slotProps={{ paper: { sx: styles.paper } }}
+      {!isBusinessPage && (
+        <Box
+          component="nav"
+          sx={{
+            width: { sm: DRAWER_WIDTH },
+            flexShrink: { sm: 0 },
+            display: { xs: "none", lg: "block" },
+          }}
         >
-          <MarketplaceDrawer />
-        </Drawer>
-      </Box>
+          <Drawer
+            variant="permanent"
+            open
+            slotProps={{ paper: { sx: styles.paper } }}
+          >
+            <MarketplaceDrawer />
+          </Drawer>
+        </Box>
+      )}
       <Box component="main" sx={{ ...styles.main, pb: { xs: 8, sm: 2.5 } }}>
         {children}
       </Box>

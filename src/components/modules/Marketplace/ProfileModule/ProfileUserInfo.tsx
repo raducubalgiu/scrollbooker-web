@@ -1,25 +1,12 @@
 import UserAvatar from "@/components/core/Layout/Admin/UserInfo/UserAvatar";
-import {
-  Avatar,
-  Box,
-  Button,
-  ButtonBase,
-  Divider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import React, { useMemo } from "react";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
-import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
-import CachedIcon from "@mui/icons-material/Cached";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { UserProfile } from "@/ts/models/user/UserProfile";
 
 type ProfileUserInfoProps = {
@@ -45,7 +32,6 @@ const ProfileUserInfo = ({
     is_follow,
     counters,
     opening_hours,
-    business_owner,
   } = profile || {};
 
   const openingStatus = useMemo(() => {
@@ -106,8 +92,8 @@ const ProfileUserInfo = ({
         xs: 20,
         sm: 24,
         md: 28,
-        lg: 32,
-        xl: 36,
+        lg: 30,
+        xl: 32,
       },
     },
     star: {
@@ -117,7 +103,7 @@ const ProfileUserInfo = ({
         sm: 20,
         md: 25,
         lg: 30,
-        xl: 35,
+        xl: 32,
       },
     },
     rating: {
@@ -126,7 +112,7 @@ const ProfileUserInfo = ({
         sm: 15,
         md: 20,
         lg: 25,
-        xl: 30,
+        xl: 28,
       },
     },
   };
