@@ -1,20 +1,129 @@
 "use client";
 
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
-import { Box, Rating, Stack, Typography } from "@mui/material";
-import React from "react";
+import { Box, Rating, Stack, Tab, Tabs, Typography } from "@mui/material";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import SearchHeaderBar from "../SearchModule/SearchHeader/SearchHeaderBar";
 import Grid from "@mui/material/Grid2";
-import BusinessProfileGallery from "./BusinessGallery";
 import BusinessStickyCard from "./BusinessStickyCard";
-import CustomTabs from "@/components/core/CustomTabs/CustomTabs";
+import BusinessServicesTab from "./tabs/BusinessServicesTab";
+import BusinessPostsTab from "./tabs/BusinessPostsTab";
+import BusinessReviewsTab from "./tabs/BusinessReviewsTab";
+import BusinessAboutTab from "./tabs/BusinessAboutTab";
+import BusinessPhotosTab from "./tabs/BusinessPhotosTab";
 
 type BusinessProfileModuleProps = {
   profile: BusinessProfile | null;
 };
 
+type TabSection = {
+  id: string;
+  label: string;
+};
+
+const TAB_SECTIONS: TabSection[] = [
+  { id: "photos", label: "Photos" },
+  { id: "services", label: "Services" },
+  { id: "social", label: "Social" },
+  { id: "reviews", label: "Reviews" },
+  { id: "about", label: "About" },
+];
+
 const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
   if (!profile) return null;
+
+  const [activeTab, setActiveTab] = useState<string>(
+    TAB_SECTIONS[0]?.id ?? "services"
+  );
+
+  const tabsContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({
+    photos: null,
+    services: null,
+    social: null,
+    reviews: null,
+    about: null,
+  });
+
+  useEffect(() => {
+    const handleScroll = (): void => {
+      const stickyTabsHeight = tabsContainerRef.current?.offsetHeight ?? 0;
+      const activationOffset = stickyTabsHeight + 16;
+
+      let currentActiveTab = TAB_SECTIONS[0]?.id ?? "services";
+
+      for (const section of TAB_SECTIONS) {
+        const element = sectionRefs.current[section.id];
+        if (!element) continue;
+
+        const rect = element.getBoundingClientRect();
+
+        if (rect.top - activationOffset <= 0) {
+          currentActiveTab = section.id;
+        }
+      }
+
+      setActiveTab((prev) =>
+        prev !== currentActiveTab ? currentActiveTab : prev
+      );
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [sectionRefs]);
+
+  const scrollToSection = (sectionId: string): void => {
+    const element = sectionRefs.current[sectionId];
+    if (!element) return;
+
+    const stickyTabsHeight = tabsContainerRef.current?.offsetHeight ?? 0;
+
+    const top =
+      window.scrollY +
+      element.getBoundingClientRect().top -
+      stickyTabsHeight -
+      12;
+
+    window.scrollTo({
+      top,
+      behavior: "smooth",
+    });
+  };
+
+  const handleTabChange = (
+    _event: React.SyntheticEvent,
+    value: string
+  ): void => {
+    setActiveTab(value);
+    scrollToSection(value);
+  };
+
+  const sectionRefCallbacks = useMemo(
+    () => ({
+      photos: (element: HTMLDivElement | null) => {
+        sectionRefs.current.photos = element;
+      },
+      services: (element: HTMLDivElement | null) => {
+        sectionRefs.current.services = element;
+      },
+      social: (element: HTMLDivElement | null) => {
+        sectionRefs.current.social = element;
+      },
+      reviews: (element: HTMLDivElement | null) => {
+        sectionRefs.current.reviews = element;
+      },
+      about: (element: HTMLDivElement | null) => {
+        sectionRefs.current.about = element;
+      },
+    }),
+    []
+  );
 
   return (
     <Box sx={{ px: 2.5, bgcolor: "background.paper" }}>
@@ -54,142 +163,63 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
 
       <Grid container spacing={2.5}>
         <Grid size={{ xs: 12, lg: 9 }}>
-          <BusinessProfileGallery mediaFiles={profile.media_files || []} />
+          <BusinessPhotosTab
+            id="photos"
+            innerRef={sectionRefCallbacks.photos}
+            mediaFiles={profile.media_files || []}
+          />
 
-          <Box
-            sx={{
-              position: { lg: "sticky" },
-              top: 0,
-            }}
-          >
-            <Box sx={{ bgcolor: "background.paper", zIndex: 1, py: 2.5 }}>
-              <CustomTabs
-                tabs={[
-                  { label: "Despre", key: 0 },
-                  { label: "Servicii", key: 1 },
-                  { label: "Recenzii", key: 2 },
-                  { label: "Galerie", key: 3 },
-                ]}
-                currentTab={0}
-                setValue={() => {}}
+          <Box>
+            <Box
+              ref={tabsContainerRef}
+              sx={{
+                position: "sticky",
+                top: 0,
+                zIndex: (theme) => theme.zIndex.appBar,
+                bgcolor: "background.paper",
+                borderBottom: "1px solid",
+                borderColor: "divider",
+              }}
+            >
+              <Tabs
+                value={activeTab}
+                onChange={handleTabChange}
+                variant="scrollable"
+                scrollButtons="auto"
+                aria-label="Business profile sections"
+              >
+                {TAB_SECTIONS.map((section) => (
+                  <Tab
+                    key={section.id}
+                    value={section.id}
+                    label={section.label}
+                  />
+                ))}
+              </Tabs>
+            </Box>
+
+            <Box sx={{ py: 3 }}>
+              <BusinessServicesTab
+                id="services"
+                innerRef={sectionRefCallbacks.services}
+              />
+              <BusinessPostsTab
+                id="social"
+                innerRef={sectionRefCallbacks.social}
+              />
+              <BusinessReviewsTab
+                id="reviews"
+                innerRef={sectionRefCallbacks.reviews}
+              />
+              <BusinessAboutTab
+                id="about"
+                innerRef={sectionRefCallbacks.about}
               />
             </Box>
           </Box>
-
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {profile?.description}
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
-          <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
-            Despre
-          </Typography>
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
-          {profile && (
-            <BusinessStickyCard
-              // name={profile?.owner.fullname}
-              // avatarUrl={profile?.owner.avatar}
-              // category="Frizerie"
-              // city="Bucuresti"
-              // rating={profile?.owner.counters.ratings_average}
-              // reviewsCount={profile?.owner.counters.ratings_count}
-              // followersCount={profile?.owner.counters.followers_count}
-              // isOpenNow={true}
-              // openUntil="21:00"
-              // responseTime="Răspunde în 1 oră"
-              // bookingType="instant"
-              // nextAvailabilityLabel="Azi, de la 16:30"
-              // onBook={() => console.log("book")}
-              // onFollow={() => console.log("follow")}
-              // onMessage={() => console.log("message")}
-              // onShare={() => console.log("share")}
-              // onSave={() => console.log("save")}
-              business={profile}
-            />
-          )}
+          {profile && <BusinessStickyCard business={profile} />}
         </Grid>
       </Grid>
     </Box>

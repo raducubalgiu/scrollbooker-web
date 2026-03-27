@@ -246,66 +246,16 @@ export default function BusinessStickyCard({
   );
 }
 
-function InfoRow({ label, value }: { label: string; value: string }) {
-  return (
-    <Stack
-      direction="row"
-      justifyContent="space-between"
-      spacing={2}
-      alignItems="center"
-    >
-      <Typography variant="body2" color="text.secondary">
-        {label}
-      </Typography>
-      <Typography
-        variant="body2"
-        sx={{
-          fontWeight: 600,
-          textAlign: "right",
-        }}
-      >
-        {value}
-      </Typography>
-    </Stack>
-  );
-}
+// function formatCompactNumber(value: number) {
+//   if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
+//   if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
+//   return `${value}`;
+// }
 
-function TextActionButton({
-  icon,
-  label,
-  onClick,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  onClick?: () => void;
-}) {
-  return (
-    <Button
-      onClick={onClick}
-      variant="text"
-      startIcon={icon}
-      sx={{
-        borderRadius: 999,
-        textTransform: "none",
-        fontWeight: 600,
-        px: 1.25,
-      }}
-    >
-      {label}
-    </Button>
-  );
-}
+// function buildOpenLabel(isOpenNow?: boolean | null, openUntil?: string | null) {
+//   if (isOpenNow) {
+//     return openUntil ? `Deschis până la ${openUntil}` : "Deschis acum";
+//   }
 
-function formatCompactNumber(value: number) {
-  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
-  return `${value}`;
-}
-
-function buildOpenLabel(isOpenNow?: boolean | null, openUntil?: string | null) {
-  if (isOpenNow) {
-    return openUntil ? `Deschis până la ${openUntil}` : "Deschis acum";
-  }
-
-  return "Închis acum";
-}
+//   return "Închis acum";
+// }
