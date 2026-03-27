@@ -71,7 +71,7 @@ const PostGrid = ({
           <video
             ref={videoRef}
             src={videoUrl}
-            muted={false}
+            muted={true}
             playsInline
             loop
             preload="metadata"

@@ -5,7 +5,7 @@ import Modal from "@/components/core/Modal/Modal";
 import { UserProfile } from "@/ts/models/user/UserProfile";
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 type EditProfileModalProps = {
@@ -26,9 +26,20 @@ const EditProfileModal = ({
       bio: profile.bio,
     },
   });
+  const { reset } = methods;
   const isRequired = required();
   const minLength = minField(35);
   const maxLength = maxField(35);
+
+  useEffect(() => {
+    if (open) {
+      reset({
+        name: profile.fullname,
+        username: profile.username,
+        bio: profile.bio,
+      });
+    }
+  }, [open, profile, reset]);
 
   const actions: ActionButtonType[] = [
     {

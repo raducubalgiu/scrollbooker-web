@@ -31,7 +31,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
   return (
     <Box
       sx={{
-        p: 2,
+        p: 2.5,
         display: "flex",
         flexDirection: "column",
         gap: 1,
