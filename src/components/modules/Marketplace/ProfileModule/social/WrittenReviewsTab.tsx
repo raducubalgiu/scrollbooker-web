@@ -1,5 +1,5 @@
 import { useInfiniteReviews } from "@/hooks/infiniteQuery/useInfiniteReviews";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import React, { memo, useEffect, useRef } from "react";
 import ReviewCard from "./ReviewCard";
 
@@ -21,6 +21,7 @@ const WrittenReviewsTab = ({
   const {
     data: writtenReviews,
     isLoading: isLoadingWrittenReviews,
+    isRefetching,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -65,7 +66,7 @@ const WrittenReviewsTab = ({
   ]);
 
   return (
-    <>
+    <Box sx={{ mt: 1.5 }}>
       {!isLoadingWrittenReviews && reviews.length === 0 && (
         <Typography variant="h6" color="text.secondary" align="center" mt={4}>
           Nu există recenzii scrise.
@@ -74,16 +75,24 @@ const WrittenReviewsTab = ({
 
       {!isLoadingWrittenReviews &&
         !isLoadingSummary &&
+        !isRefetching &&
         reviews.map((review) => <ReviewCard key={review.id} review={review} />)}
 
       <div ref={sentinelRef} aria-hidden style={{ height: 1 }} />
 
-      {isFetchingNextPage && (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
-          <CircularProgress size={24} />
+      {(isFetchingNextPage || isRefetching) && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            py: 5,
+          }}
+        >
+          <CircularProgress />
         </Box>
       )}
-    </>
+    </Box>
   );
 };
 

@@ -7,12 +7,15 @@ import SearchHeaderBar from "../SearchModule/SearchHeader/SearchHeaderBar";
 import Grid from "@mui/material/Grid2";
 import BusinessProfileGallery from "./BusinessGallery";
 import BusinessStickyCard from "./BusinessStickyCard";
+import CustomTabs from "@/components/core/CustomTabs/CustomTabs";
 
 type BusinessProfileModuleProps = {
   profile: BusinessProfile | null;
 };
 
 const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
+  if (!profile) return null;
+
   return (
     <Box sx={{ px: 2.5, bgcolor: "background.paper" }}>
       <Stack direction="row" alignItems="center" justifyContent="center" mb={5}>
@@ -51,11 +54,27 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
 
       <Grid container spacing={2.5}>
         <Grid size={{ xs: 12, lg: 9 }}>
-          <BusinessProfileGallery
-            images={profile?.media_files.map((file) => file.url)}
-          />
+          <BusinessProfileGallery mediaFiles={profile.media_files || []} />
 
-          {/* <BusinessGallery images={profile?.media_files.map((file) => file.url)} /> */}
+          <Box
+            sx={{
+              position: { lg: "sticky" },
+              top: 0,
+            }}
+          >
+            <Box sx={{ bgcolor: "background.paper", zIndex: 1, py: 2.5 }}>
+              <CustomTabs
+                tabs={[
+                  { label: "Despre", key: 0 },
+                  { label: "Servicii", key: 1 },
+                  { label: "Recenzii", key: 2 },
+                  { label: "Galerie", key: 3 },
+                ]}
+                currentTab={0}
+                setValue={() => {}}
+              />
+            </Box>
+          </Box>
 
           <Typography variant="h4" mt={3} mb={1} fontWeight={600}>
             Despre
@@ -149,25 +168,28 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
           </Typography>
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
-          <BusinessStickyCard
-            name={profile?.owner.fullname}
-            avatarUrl={profile?.owner.avatar}
-            category="Frizerie"
-            city="Bucuresti"
-            rating={profile?.owner.counters.ratings_average}
-            reviewsCount={profile?.owner.counters.ratings_count}
-            followersCount={profile?.owner.counters.followers_count}
-            isOpenNow={true}
-            openUntil="21:00"
-            responseTime="Răspunde în 1 oră"
-            bookingType="instant"
-            nextAvailabilityLabel="Azi, de la 16:30"
-            onBook={() => console.log("book")}
-            onFollow={() => console.log("follow")}
-            onMessage={() => console.log("message")}
-            onShare={() => console.log("share")}
-            onSave={() => console.log("save")}
-          />
+          {profile && (
+            <BusinessStickyCard
+              // name={profile?.owner.fullname}
+              // avatarUrl={profile?.owner.avatar}
+              // category="Frizerie"
+              // city="Bucuresti"
+              // rating={profile?.owner.counters.ratings_average}
+              // reviewsCount={profile?.owner.counters.ratings_count}
+              // followersCount={profile?.owner.counters.followers_count}
+              // isOpenNow={true}
+              // openUntil="21:00"
+              // responseTime="Răspunde în 1 oră"
+              // bookingType="instant"
+              // nextAvailabilityLabel="Azi, de la 16:30"
+              // onBook={() => console.log("book")}
+              // onFollow={() => console.log("follow")}
+              // onMessage={() => console.log("message")}
+              // onShare={() => console.log("share")}
+              // onSave={() => console.log("save")}
+              business={profile}
+            />
+          )}
         </Grid>
       </Grid>
     </Box>

@@ -4,58 +4,21 @@ import {
   Avatar,
   Box,
   Button,
-  Chip,
   Divider,
+  Paper,
   Stack,
   Typography,
 } from "@mui/material";
-import StarRoundedIcon from "@mui/icons-material/StarRounded";
-import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
-import IosShareRoundedIcon from "@mui/icons-material/IosShareRounded";
-import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
-import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
-import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
+import UserInfoCounters from "@/components/core/Layout/Admin/UserInfo/UserInfoCounters";
 
 type BusinessStickyCardProps = {
-  name: string;
-  avatarUrl?: string | null;
-  category?: string | null;
-  city?: string | null;
-  rating?: number | null;
-  reviewsCount?: number | null;
-  followersCount?: number | null;
-  isOpenNow?: boolean | null;
-  openUntil?: string | null;
-  responseTime?: string | null;
-  bookingType?: "instant" | "approval" | null;
-  nextAvailabilityLabel?: string | null;
-  onFollow: () => void;
-  onBook: () => void;
-  onMessage: () => void;
-  onShare: () => void;
-  onSave: () => void;
+  business: BusinessProfile;
 };
 
 export default function BusinessStickyCard({
-  name,
-  avatarUrl,
-  category,
-  city,
-  rating,
-  reviewsCount,
-  followersCount,
-  isOpenNow,
-  openUntil,
-  responseTime,
-  bookingType,
-  nextAvailabilityLabel,
-  onFollow,
-  onBook,
-  onMessage,
-  onShare,
-  onSave,
+  business,
 }: BusinessStickyCardProps) {
   return (
     <Box
@@ -64,17 +27,52 @@ export default function BusinessStickyCard({
         top: { lg: 88 },
       }}
     >
-      <Box
-        sx={{
-          border: "1px solid",
-          borderColor: "divider",
-          borderRadius: 4,
-          bgcolor: "background.paper",
-          p: { xs: 2, md: 2.5 },
-          boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
-        }}
-      >
-        <Stack spacing={2.25}>
+      <Paper sx={{ p: { xs: 2, md: 2.5 } }}>
+        <Stack alignItems="center" justifyContent="center">
+          <Avatar
+            src={business.owner.avatar ?? ""}
+            sx={{ width: 100, height: 100 }}
+          />
+
+          <UserInfoCounters
+            counters={{
+              followers_count: 0,
+              followings_count: 0,
+              ratings_average: 4.5,
+              ratings_count: 20,
+              posts_count: 0,
+              user_id: 1,
+              products_count: 0,
+            }}
+            isLoading={false}
+          />
+
+          <Stack direction="row" alignItems="center" gap={2}>
+            <LocationOnOutlinedIcon fontSize="large" />
+            <Typography variant="h6" color="text.secondary">
+              {business.location.formatted_address}
+            </Typography>
+          </Stack>
+        </Stack>
+
+        <Divider sx={{ my: 1.5 }} />
+
+        <Button
+          variant="contained"
+          fullWidth
+          disableElevation
+          sx={{
+            p: 1.75,
+            textTransform: "none",
+            fontWeight: 700,
+            mt: 2,
+            fontSize: 17,
+          }}
+        >
+          Rezerva acum
+        </Button>
+
+        {/* <Stack spacing={2.25}>
           <Stack direction="row" spacing={1.5} alignItems="center">
             <Avatar
               src={avatarUrl ?? ""}
@@ -242,8 +240,8 @@ export default function BusinessStickyCard({
               onClick={onSave}
             />
           </Stack>
-        </Stack>
-      </Box>
+        </Stack> */}
+      </Paper>
     </Box>
   );
 }

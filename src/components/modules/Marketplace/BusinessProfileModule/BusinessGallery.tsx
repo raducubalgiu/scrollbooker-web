@@ -2,19 +2,20 @@
 
 import Image from "next/image";
 import { Box, Typography, ButtonBase } from "@mui/material";
+import { BusinessMediaFile } from "@/ts/models/booking/business/BusinessMediaFile";
 
 type BusinessProfileGalleryProps = {
-  images: string[];
+  mediaFiles: BusinessMediaFile[];
   businessName?: string;
   onOpenGallery?: (initialIndex?: number) => void;
 };
 
 export default function BusinessProfileGallery({
-  images,
+  mediaFiles,
   businessName = "Business",
   onOpenGallery,
 }: BusinessProfileGalleryProps) {
-  const safeImages = images.filter(Boolean).slice(0, 5);
+  const safeImages = mediaFiles.filter(Boolean).slice(0, 5);
 
   if (safeImages.length === 0) {
     return (
@@ -29,8 +30,8 @@ export default function BusinessProfileGallery({
     );
   }
 
-  const heroImage = safeImages[0];
-  const rightImages = safeImages.slice(1, 3);
+  const heroImage = safeImages[0]?.url;
+  const rightImages = safeImages.slice(1, 3).map((file) => file.thumbnail_url);
   const remainingCount = safeImages.length - 3;
 
   return (
