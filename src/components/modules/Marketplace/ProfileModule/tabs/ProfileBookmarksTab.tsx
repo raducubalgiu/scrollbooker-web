@@ -23,7 +23,7 @@ const ProfileBookmarksTab = () => {
       <PostGridContainer>
         {isLoading &&
           Array.from({ length: 3 }).map((_, i) => <PostGridSkeleton key={i} />)}
-        {posts?.results.map((post) => (
+        {posts?.results?.map((post) => (
           <PostGrid
             key={post.id}
             viewsCount={post.counters.views_count}

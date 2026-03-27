@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 
 type OwnProfileActionsProps = {
   is_business_or_employee: boolean;
+  onOpenEditModal: () => void;
 };
 
 const OwnProfileActions = ({
   is_business_or_employee,
+  onOpenEditModal,
 }: OwnProfileActionsProps) => {
   const router = useRouter();
 
@@ -17,7 +19,7 @@ const OwnProfileActions = ({
       <Button
         variant="outlined"
         color="secondary"
-        onClick={() => {}}
+        onClick={onOpenEditModal}
         size="large"
         disableElevation
         sx={{ mr: 1.5, textTransform: "capitalize" }}

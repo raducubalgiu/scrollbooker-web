@@ -28,7 +28,7 @@ const ProfilePostsTab = ({ userId }: ProfilePostsTabProps) => {
         {isLoading &&
           Array.from({ length: 3 }).map((_, i) => <PostGridSkeleton key={i} />)}
         {!isLoading &&
-          posts?.results.map((post) => (
+          posts?.results?.map((post) => (
             <PostGrid
               key={post.id}
               viewsCount={post.counters.views_count}

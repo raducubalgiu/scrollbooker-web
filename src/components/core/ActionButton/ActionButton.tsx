@@ -1,4 +1,4 @@
-import { Button, ButtonProps, SxProps, Stack } from "@mui/material";
+import { Button, ButtonProps, SxProps, Stack, Theme } from "@mui/material";
 
 export type ActionButtonType = {
   title: string;
@@ -8,17 +8,18 @@ export type ActionButtonType = {
 
 type ActionButtonProps = {
   actions: ActionButtonType[];
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 };
 
 const ActionButton = ({ actions, sx }: ActionButtonProps) => {
   return (
-    <Stack flexDirection="row" alignItems="center" sx={sx}>
+    <Stack flexDirection="row" alignItems="center" sx={sx ?? {}}>
       {actions.map((btn, index) => (
         <Button
           key={index}
           variant="contained"
           size="large"
+          disableElevation
           sx={{
             ml: 1,
             mt: 2,

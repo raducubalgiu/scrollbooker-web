@@ -10,6 +10,7 @@ import { SocialTabEnum } from "./social/SocialTabEnum";
 import ScheduleModal from "./ScheduleModal";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import { UserCounter, UserProfile } from "@/ts/models/user/UserProfile";
+import EditProfileModal from "./edit/EditProfileModal";
 
 export type ProfileModuleProps = {
   profile: UserProfile | null;
@@ -37,8 +38,11 @@ const emptyCounters: UserCounter = {
 
 const ProfileModule = ({ profile }: ProfileModuleProps) => {
   const [openScheduleModal, setOpenScheduleModal] = useState<boolean>(false);
-  const [socialModal, setSocialModal] = useState<SocialModalProps | null>(null);
-  const isSocialModalOpen = socialModal !== null;
+  const [openEditProfileModal, setOpenEditProfileModal] =
+    useState<boolean>(false);
+  const [openSocialModal, setOpenSocialModal] =
+    useState<SocialModalProps | null>(null);
+  const isSocialModalOpen = openSocialModal !== null;
   const [updatedCounters, setUpdatedCounters] = useState<UserCounter>(
     profile?.counters ?? emptyCounters
   );
@@ -68,8 +72,8 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
       <SocialModal
         open={isSocialModalOpen}
         counters={updatedCounters}
-        socialModal={socialModal}
-        handleClose={() => setSocialModal(null)}
+        socialModal={openSocialModal}
+        handleClose={() => setOpenSocialModal(null)}
       />
 
       <ScheduleModal
@@ -78,9 +82,15 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
         handleClose={() => setOpenScheduleModal(false)}
       />
 
+      <EditProfileModal
+        open={openEditProfileModal}
+        handleClose={() => setOpenEditProfileModal(false)}
+        profile={profile}
+      />
+
       <ProfileCounters
         onClick={(tab) => {
-          setSocialModal({
+          setOpenSocialModal({
             selectedTab: tab,
             userId: profile.id,
             username: profile.username,
@@ -92,6 +102,7 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
       <ProfileUserInfo
         profile={profile}
         onOpenScheduleModal={() => setOpenScheduleModal(true)}
+        onOpenEditModal={() => setOpenEditProfileModal(true)}
         onUpdateFollows={handleUpdateFollows}
       />
 

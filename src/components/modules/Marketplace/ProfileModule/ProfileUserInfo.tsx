@@ -8,17 +8,20 @@ import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import { UserProfile } from "@/ts/models/user/UserProfile";
+import { formatRating } from "@/utils/formatters";
 
 type ProfileUserInfoProps = {
   profile: UserProfile;
   onOpenScheduleModal: () => void;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
+  onOpenEditModal: () => void;
 };
 
 const ProfileUserInfo = ({
   profile,
   onOpenScheduleModal,
   onUpdateFollows,
+  onOpenEditModal,
 }: ProfileUserInfoProps) => {
   const {
     id,
@@ -71,7 +74,10 @@ const ProfileUserInfo = ({
   const actions = useMemo(() => {
     if (is_own_profile) {
       return (
-        <OwnProfileActions is_business_or_employee={is_business_or_employee} />
+        <OwnProfileActions
+          is_business_or_employee={is_business_or_employee}
+          onOpenEditModal={onOpenEditModal}
+        />
       );
     }
 
@@ -147,7 +153,7 @@ const ProfileUserInfo = ({
               <Stack flexDirection="row" alignItems="center">
                 <GradeIcon color="primary" sx={styles.star} />
                 <Typography variant="h6" sx={styles.rating}>
-                  {counters.ratings_average}
+                  {formatRating(counters.ratings_average)}
                 </Typography>
               </Stack>
 

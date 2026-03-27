@@ -40,9 +40,11 @@ const ModalTitle = ({
         alignItems="center"
         justifyContent={"space-between"}
       >
-        <IconButton aria-label="close" size="large" disabled={true}>
-          <CloseIcon fontSize="large" sx={{ color: "transparent" }} />
-        </IconButton>
+        {align === "center" && (
+          <IconButton aria-label="close" size="large" disabled={true}>
+            <CloseIcon fontSize="large" sx={{ color: "transparent" }} />
+          </IconButton>
+        )}
         <Typography
           variant="h5"
           fontWeight={600}
@@ -59,7 +61,7 @@ const ModalTitle = ({
 };
 
 const ModalFooter = ({ actions }: { actions: ActionButtonType[] }) => (
-  <DialogActions>
+  <DialogActions sx={{ p: 3, pt: 2 }}>
     {!isEmpty(actions) && <ActionButton actions={actions} />}
   </DialogActions>
 );
