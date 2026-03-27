@@ -37,7 +37,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
         gap: 1,
         bgcolor: "secondary.main",
         mb: 2.5,
-        borderRadius: 2,
+        borderRadius: 5,
       }}
     >
       <Stack flexDirection="row" alignItems="center" gap={2}>

@@ -181,6 +181,8 @@ const SocialModal = ({
     }
   }, [currentTab, socialModal?.userId]);
 
+  const isReviewsStep = currentTab === SocialTabEnum.REVIEWS;
+
   return (
     <Modal
       open={open}
@@ -189,6 +191,8 @@ const SocialModal = ({
       showFooter={false}
       title={`@${socialModal?.username}`}
       align="left"
+      {...(isReviewsStep && { maxWidth: "md" })}
+      fullWidth={isReviewsStep}
     >
       <Box
         sx={{

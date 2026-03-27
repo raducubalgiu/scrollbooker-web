@@ -5,11 +5,12 @@ import { Post } from "@/ts/models/social/Post";
 import PostGridContainer from "@/components/cutomized/PostGrid/PostGridContainer";
 import PostGrid from "@/components/cutomized/PostGrid/PostGrid";
 import { useRouter } from "next/navigation";
+import PostGridSkeleton from "@/components/cutomized/PostGrid/PostGridSkeleton";
 
 const ProfileBookmarksTab = () => {
   const router = useRouter();
 
-  const { data: posts } = useCustomQuery<PaginatedData<Post>>({
+  const { data: posts, isLoading } = useCustomQuery<PaginatedData<Post>>({
     key: ["profile-bookmarks"],
     url: `/api/profile/bookmarks`,
     params: { page: 1, limit: 10 },
@@ -17,6 +18,8 @@ const ProfileBookmarksTab = () => {
 
   return (
     <PostGridContainer>
+      {isLoading &&
+        Array.from({ length: 3 }).map((_, i) => <PostGridSkeleton key={i} />)}
       {posts?.results.map((post) => (
         <PostGrid
           key={post.id}
