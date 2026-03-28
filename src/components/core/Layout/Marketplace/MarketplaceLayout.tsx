@@ -25,6 +25,17 @@ export default function MarketplaceLayout({
     [pathname]
   );
 
+  const isProfileVideoPage = React.useMemo(() => {
+    const segments = pathname.split("/").filter(Boolean);
+    return (
+      segments.length === 4 &&
+      segments[0] === "profile" &&
+      segments[2] === "video"
+    );
+  }, [pathname]);
+
+  const shouldShowDrawer = !isBusinessPage && !isProfileVideoPage;
+
   const theme = useTheme();
   const bgColor =
     theme.palette.mode === "dark" ? "background.default" : "background.paper";
@@ -32,10 +43,10 @@ export default function MarketplaceLayout({
   const styles = React.useMemo(
     () => ({
       main: {
-        p: {
-          xs: 0,
-          md: 2.5,
-        },
+        // p: {
+        //   xs: 0,
+        //   md: 2.5,
+        // },
         width: "100%",
         bgcolor: bgColor,
       },
@@ -58,7 +69,7 @@ export default function MarketplaceLayout({
   return (
     <Box sx={styles.box}>
       <CssBaseline />
-      {!isBusinessPage && (
+      {shouldShowDrawer && (
         <Box
           component="nav"
           sx={{
@@ -76,7 +87,7 @@ export default function MarketplaceLayout({
           </Drawer>
         </Box>
       )}
-      <Box component="main" sx={{ ...styles.main, pb: { xs: 8, sm: 2.5 } }}>
+      <Box component="main" sx={{ ...styles.main }}>
         {children}
       </Box>
       <MarketplaceBottomBar />

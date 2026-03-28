@@ -4,7 +4,6 @@ import QueryClientProvider from "../providers/QueryClientProvider";
 import SessionProvider from "../providers/SessionProvider";
 import ToastProvider from "@/providers/ToastProvider";
 import LayoutWrapper from "@/components/core/Layout/LayoutWrapper";
-import TopLoadingBar from "@/components/core/TopLoadingBar/TopLoadingBar";
 import AuthListener from "@/components/core/AuthListener/AuthListener";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
@@ -22,7 +21,6 @@ export default async function RootLayout({ children }: ChildrenType) {
           <MUIProvider>
             <ToastProvider />
             <QueryClientProvider>
-              <TopLoadingBar />
               <LayoutWrapper>{children}</LayoutWrapper>
             </QueryClientProvider>
           </MUIProvider>

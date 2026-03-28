@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import VideoDetailModule from "@/components/modules/Marketplace/VideoDetailModule/VideoDetailModule";
 import React from "react";
 
 interface VideoDetailPageProps {
@@ -13,9 +13,5 @@ export default async function VideoDetailPage({
 }: VideoDetailPageProps) {
   const { username, video_id } = await Promise.resolve(params);
 
-  return (
-    <Box>
-      {username} {video_id}
-    </Box>
-  );
+  return <VideoDetailModule username={username} videoId={video_id} />;
 }
