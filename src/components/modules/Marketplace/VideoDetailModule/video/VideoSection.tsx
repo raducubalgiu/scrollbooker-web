@@ -1,4 +1,11 @@
-import { Box, IconButton, Slider, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Slider,
+  Stack,
+  Typography,
+} from "@mui/material";
 import VolumeUpOutlinedIcon from "@mui/icons-material/VolumeUpOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
@@ -215,17 +222,16 @@ export default function VideoSection({ url, onClose }: VideoSectionProps) {
 
       <Box
         sx={{
-          width: "100%",
-          height: "100%",
-          p: { xs: 2, md: 3 },
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          height: "100%",
         }}
       >
         <Box
           sx={{
             position: "relative",
+            height: "100%",
             width: "100%",
             maxWidth: 560,
             aspectRatio: "9 / 16",
@@ -295,30 +301,13 @@ export default function VideoSection({ url, onClose }: VideoSectionProps) {
             )}
           </Box>
 
-          {/* <Stack sx={{ height: "100%", bottom: 5 }} justifyContent="flex-end">
-            <Button
-              size="large"
-              sx={{
-                mx: 2.5,
-                my: 5,
-                py: 2,
-                opacity: 0.9,
-                textTransform: "none",
-                fontSize: 16,
-              }}
-              variant="contained"
-            >
-              Rezerva acum
-            </Button>
-          </Stack> */}
-
           <Stack
             direction="row"
             spacing={1}
             alignItems="center"
             sx={{
               position: "absolute",
-              bottom: 32,
+              bottom: 16,
               left: 16,
               right: 16,
               zIndex: 2,
@@ -397,6 +386,22 @@ export default function VideoSection({ url, onClose }: VideoSectionProps) {
             </IconButton>
           </Stack>
         </Box>
+
+        <Button
+          fullWidth
+          size="large"
+          sx={{
+            mx: 2.5,
+            my: 1.5,
+            py: 2,
+            opacity: 0.9,
+            textTransform: "none",
+            fontSize: 16,
+          }}
+          variant="contained"
+        >
+          Rezerva acum
+        </Button>
       </Box>
     </Box>
   );

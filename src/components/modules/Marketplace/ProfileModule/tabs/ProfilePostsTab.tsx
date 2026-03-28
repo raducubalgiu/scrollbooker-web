@@ -2,11 +2,11 @@ import React, { memo, useMemo } from "react";
 import PostGrid from "@/components/cutomized/PostGrid/PostGrid";
 import PostGridContainer from "@/components/cutomized/PostGrid/PostGridContainer";
 import { useRouter } from "next/navigation";
-import PostGridSkeleton from "@/components/cutomized/PostGrid/PostGridSkeleton";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import { useInfiniteUserPosts } from "@/hooks/infiniteQuery/userInfiniteUserPosts";
 import { isEmpty } from "lodash";
+import { CircularProgress, Stack } from "@mui/material";
 
 type ProfilePostsTabProps = {
   userId: number;
@@ -24,10 +24,13 @@ const ProfilePostsTab = ({ userId, username }: ProfilePostsTabProps) => {
 
   return (
     <>
-      <PostGridContainer>
-        {isLoading &&
-          Array.from({ length: 6 }).map((_, i) => <PostGridSkeleton key={i} />)}
+      {isLoading && (
+        <Stack justifyContent="center" alignItems="center" mt={10}>
+          <CircularProgress />
+        </Stack>
+      )}
 
+      <PostGridContainer>
         {!isLoading &&
           posts?.map((post) => (
             <PostGrid
