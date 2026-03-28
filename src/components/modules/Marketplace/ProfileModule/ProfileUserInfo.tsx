@@ -129,6 +129,7 @@ const ProfileUserInfo = ({
         isBusinessOrEmployee={is_business_or_employee}
         openNow={opening_hours.open_now}
         url={avatar}
+        size="xxl"
       />
 
       <Box sx={{ ml: 3 }}>

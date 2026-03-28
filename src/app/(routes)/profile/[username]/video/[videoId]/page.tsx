@@ -1,4 +1,6 @@
 import VideoDetailModule from "@/components/modules/Marketplace/VideoDetailModule/VideoDetailModule";
+import { Post } from "@/ts/models/social/Post";
+import { get } from "@/utils/requests";
 import React from "react";
 
 interface VideoDetailPageProps {
@@ -16,5 +18,11 @@ export default async function VideoDetailPage({
   const { username, videoId } = await Promise.resolve(params);
   const { tab } = await Promise.resolve(searchParams);
 
-  return <VideoDetailModule username={username} videoId={videoId} tab={tab} />;
+  const post = (
+    await get<Post | null>({
+      url: `/posts/${videoId}`,
+    })
+  ).data;
+
+  return <VideoDetailModule post={post} username={username} tab={tab} />;
 }

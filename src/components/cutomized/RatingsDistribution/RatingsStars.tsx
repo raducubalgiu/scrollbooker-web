@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { Box } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
+import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 
 type RatingsStarsProps = {
   rating: number;
@@ -23,12 +23,12 @@ const RatingsStars = ({
     const isSolid = i <= rating;
     stars.push(
       isSolid ? (
-        <StarIcon
+        <StarRateRoundedIcon
           key={i}
           sx={{ fontSize: starSize, color: color ?? "primary.main" }}
         />
       ) : (
-        <StarBorderIcon
+        <StarOutlineRoundedIcon
           key={i}
           sx={{ fontSize: starSize, color: color ?? "primary.main" }}
         />

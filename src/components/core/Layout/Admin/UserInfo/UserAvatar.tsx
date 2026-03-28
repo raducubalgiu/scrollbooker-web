@@ -2,9 +2,26 @@ import React, { useMemo } from "react";
 import Image from "next/image";
 import { Badge, Box, SxProps, Theme, useTheme } from "@mui/material";
 
+type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+
+type SizeConfig = {
+  avatar: number;
+  badge: number;
+};
+
+const SIZE_MAP: Record<AvatarSize, SizeConfig> = {
+  xs: { avatar: 32, badge: 8 },
+  sm: { avatar: 48, badge: 10 },
+  md: { avatar: 64, badge: 12 },
+  lg: { avatar: 96, badge: 16 },
+  xl: { avatar: 128, badge: 20 },
+  xxl: { avatar: 250, badge: 25 },
+};
+
 type UserAvatarProps = {
   isBusinessOrEmployee: boolean;
   openNow?: boolean | null;
+  size?: AvatarSize;
   url?: string | null;
   alt?: string;
 };
@@ -14,22 +31,24 @@ export default function UserAvatar({
   url,
   openNow,
   alt = "User avatar",
+  size = "md",
 }: UserAvatarProps) {
   const theme = useTheme();
+  const { avatar, badge } = SIZE_MAP[size];
 
   const color = openNow ? theme.palette.success.main : theme.palette.grey[500];
   const boxShadow = `0 0 0 2px ${theme.palette.background.paper}`;
 
-  const size = { xs: 95, md: 150, lg: 200, xl: 255 };
-  const badgeSize = { xs: 12, sm: 14, md: 20, lg: 25 };
+  // const avatarSize = { xs: 95, md: 150, lg: 200, xl: 255 };
+  // const badgeSize = { xs: 12, sm: 14, md: 20, lg: 25 };
 
   const badgeSx = useMemo<SxProps<Theme>>(
     () => ({
       "& .MuiBadge-badge": {
         backgroundColor: color,
-        width: badgeSize,
-        height: badgeSize,
-        minWidth: badgeSize,
+        width: badge,
+        height: badge,
+        minWidth: badge,
         borderRadius: "50%",
         boxShadow,
         "&::after": {
@@ -40,15 +59,15 @@ export default function UserAvatar({
         },
       },
     }),
-    [color, boxShadow, badgeSize]
+    [color, boxShadow, badge]
   );
 
   const avatarContent = (
     <Box
       sx={{
         position: "relative",
-        width: size,
-        height: size,
+        width: avatar,
+        height: avatar,
         borderRadius: "50%",
         overflow: "hidden",
         border: `1px solid ${theme.palette.divider}`,

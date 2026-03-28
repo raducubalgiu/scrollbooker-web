@@ -38,7 +38,7 @@ const getTabs = (
 
   const Products: ProfileTabType = {
     route: ProfileTabEnum.PRODUCTS,
-    label: "Produse",
+    label: "Prețuri",
     icon: <ShoppingBagOutlinedIcon sx={{ fontSize: 30 }} />,
   };
 
