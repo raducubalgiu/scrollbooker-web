@@ -1,5 +1,5 @@
 import { PaginatedData } from "@/components/core/Table/Table";
-import { UserMiniType } from "@/ts/models/user/UserMini";
+import { UserMini } from "@/ts/models/user/UserMini";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -12,7 +12,7 @@ const fetchFollowings = async ({
   pageParam: number;
   userId: number | undefined;
 }) => {
-  const { data } = await axios.get<PaginatedData<UserMiniType>>(
+  const { data } = await axios.get<PaginatedData<UserMini>>(
     `/api/social/followings?userId=${userId}&page=${pageParam}&limit=${PAGE_LIMIT}`
   );
   return {

@@ -27,24 +27,24 @@ const PostGrid = ({
   const [isHovered, setIsHovered] = React.useState(false);
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
-  React.useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+  // React.useEffect(() => {
+  //   const video = videoRef.current;
+  //   if (!video) return;
 
-    if (isHovered && videoUrl) {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-      video.currentTime = 0;
-    }
-  }, [isHovered, videoUrl]);
+  //   if (isHovered && videoUrl) {
+  //     video.currentTime = 0;
+  //     video.play().catch(() => {});
+  //   } else {
+  //     video.pause();
+  //     video.currentTime = 0;
+  //   }
+  // }, [isHovered, videoUrl]);
 
   return (
     <ButtonBase
       onClick={onNavigateToVideo}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      //onMouseEnter={() => setIsHovered(true)}
+      //onMouseLeave={() => setIsHovered(false)}
       sx={{ width: "100%", display: "block" }}
     >
       <Box

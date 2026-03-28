@@ -1,19 +1,19 @@
 import { PaginatedData } from "@/components/core/Table/Table";
-import { UserMini } from "@/ts/models/user/UserMini";
+import { Post } from "@/ts/models/social/Post";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const PAGE_LIMIT = 20;
 
-const fetchFollowers = async ({
+const fetchUserPosts = async ({
   pageParam,
   userId,
 }: {
   pageParam: number;
   userId: number | undefined;
 }) => {
-  const { data } = await axios.get<PaginatedData<UserMini>>(
-    `/api/social/followers?userId=${userId}&page=${pageParam}&limit=${PAGE_LIMIT}`
+  const { data } = await axios.get<PaginatedData<Post>>(
+    `/api/profile/posts?userId=${userId}&page=${pageParam}&limit=${PAGE_LIMIT}`
   );
   return {
     ...data,
@@ -21,10 +21,10 @@ const fetchFollowers = async ({
   };
 };
 
-export const useInfiniteFollowers = (userId?: number) => {
+export const useInfiniteUserPosts = (userId?: number) => {
   return useInfiniteQuery({
-    queryKey: ["followers", userId],
-    queryFn: ({ pageParam = 1 }) => fetchFollowers({ pageParam, userId }),
+    queryKey: ["userPosts", userId],
+    queryFn: ({ pageParam = 1 }) => fetchUserPosts({ pageParam, userId }),
     initialPageParam: 1,
     enabled: !!userId,
     getNextPageParam: (lastPage, pages) => {

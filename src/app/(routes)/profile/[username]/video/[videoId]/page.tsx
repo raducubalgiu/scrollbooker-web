@@ -4,14 +4,17 @@ import React from "react";
 interface VideoDetailPageProps {
   params: {
     username: string;
-    video_id: number;
+    videoId: number;
   };
+  searchParams: Promise<{ tab?: string | null | undefined }>;
 }
 
 export default async function VideoDetailPage({
   params,
+  searchParams,
 }: VideoDetailPageProps) {
-  const { username, video_id } = await Promise.resolve(params);
+  const { username, videoId } = await Promise.resolve(params);
+  const { tab } = await Promise.resolve(searchParams);
 
-  return <VideoDetailModule username={username} videoId={video_id} />;
+  return <VideoDetailModule username={username} videoId={videoId} tab={tab} />;
 }

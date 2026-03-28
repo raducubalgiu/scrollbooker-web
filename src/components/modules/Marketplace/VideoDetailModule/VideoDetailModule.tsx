@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 type ProfileVideoDetailPageProps = {
   username: string;
   videoId: number;
+  tab?: string | null | undefined;
 };
 
 type CommentItem = {
@@ -59,11 +60,12 @@ const MOCK_COMMENTS: CommentItem[] = [
 export default function VideoDetailModule({
   username,
   videoId,
+  tab,
 }: ProfileVideoDetailPageProps) {
   const router = useRouter();
 
   const handleClose = React.useCallback(() => {
-    router.back();
+    router.replace(`/profile/${username}${tab ? `?tab=${tab}` : ""}`);
   }, [router]);
 
   return (
@@ -75,7 +77,6 @@ export default function VideoDetailModule({
           xs: "1fr",
           lg: "minmax(0, 1fr) minmax(480px, 640px)",
         },
-        bgcolor: "red",
       }}
     >
       <VideoStage username={username} videoId={videoId} onClose={handleClose} />
@@ -106,6 +107,7 @@ function VideoStage({ username, videoId, onClose }: VideoStageProps) {
     >
       <IconButton
         onClick={onClose}
+        size="large"
         sx={{
           position: "absolute",
           top: 16,
@@ -133,6 +135,7 @@ function VideoStage({ username, videoId, onClose }: VideoStageProps) {
         }}
       >
         <IconButton
+          size="large"
           sx={{
             bgcolor: "rgba(255,255,255,0.10)",
             color: "common.white",
@@ -142,6 +145,7 @@ function VideoStage({ username, videoId, onClose }: VideoStageProps) {
         </IconButton>
 
         <IconButton
+          size="large"
           sx={{
             bgcolor: "rgba(255,255,255,0.10)",
             color: "common.white",
@@ -193,6 +197,7 @@ function VideoStage({ username, videoId, onClose }: VideoStageProps) {
             }}
           >
             <IconButton
+              size="large"
               sx={{
                 width: 72,
                 height: 72,
@@ -238,6 +243,7 @@ function VideoStage({ username, videoId, onClose }: VideoStageProps) {
             </Box>
 
             <IconButton
+              size="large"
               sx={{
                 color: "common.white",
                 bgcolor: "rgba(255,255,255,0.10)",

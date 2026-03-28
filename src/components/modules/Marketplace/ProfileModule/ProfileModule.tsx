@@ -14,6 +14,7 @@ import EditProfileModal from "./edit/EditProfileModal";
 
 export type ProfileModuleProps = {
   profile: UserProfile | null;
+  tab?: string | null | undefined;
 };
 
 export type SocialModalProps = {
@@ -36,7 +37,7 @@ const emptyCounters: UserCounter = {
   ratings_average: 0,
 };
 
-const ProfileModule = ({ profile }: ProfileModuleProps) => {
+const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
   const [openScheduleModal, setOpenScheduleModal] = useState<boolean>(false);
   const [openEditProfileModal, setOpenEditProfileModal] =
     useState<boolean>(false);
@@ -108,9 +109,11 @@ const ProfileModule = ({ profile }: ProfileModuleProps) => {
 
       <ProfileTabs
         userId={profile.id}
+        username={profile.username}
         businessOwnerId={business_owner?.id}
         isBusinessOrEmployee={is_business_or_employee}
         isMyProfile={is_own_profile}
+        tab={tab}
       />
     </Box>
   );

@@ -72,14 +72,18 @@ type ProfileTabsProps = {
   isBusinessOrEmployee?: boolean;
   isMyProfile?: boolean;
   userId: number;
+  username: string;
   businessOwnerId: number | undefined;
+  tab?: string | null | undefined;
 };
 
 const ProfileTabs = ({
   isBusinessOrEmployee = false,
   isMyProfile = false,
   userId,
+  username,
   businessOwnerId,
+  tab,
 }: ProfileTabsProps) => {
   const { status } = useSession();
   const isAuthenticated = status === "authenticated";
@@ -89,9 +93,24 @@ const ProfileTabs = ({
     [isBusinessOrEmployee, isMyProfile]
   );
 
+  const searchParamTab = useMemo<ProfileTabEnum | null>(() => {
+    if (!tab) return null;
+    if (tab === "posts") return ProfileTabEnum.POSTS;
+    if (tab === "products") return ProfileTabEnum.PRODUCTS;
+    if (tab === "employees") return ProfileTabEnum.EMPLOYEES;
+    if (tab === "bookmarks") return ProfileTabEnum.BOOKMARKS;
+    if (tab === "info") return ProfileTabEnum.INFO;
+    return null;
+  }, [tab]);
+
   const [currentTab, setCurrentTab] = React.useState<ProfileTabEnum>(
-    tabs[0]?.route ?? ProfileTabEnum.POSTS
+    searchParamTab ?? ProfileTabEnum.POSTS
   );
+
+  const safeCurrentTab = useMemo(() => {
+    const exists = tabs.some((t) => t.route === currentTab);
+    return exists ? currentTab : (tabs[0]?.route ?? ProfileTabEnum.POSTS);
+  }, [currentTab, tabs]);
 
   useEffect(() => {
     if (!tabs.find((t) => t.route === currentTab)) {
@@ -109,13 +128,13 @@ const ProfileTabs = ({
   const tabsContent = useMemo(() => {
     switch (currentTab) {
       case ProfileTabEnum.POSTS:
-        return <ProfilePostsTab userId={userId} />;
+        return <ProfilePostsTab userId={userId} username={username} />;
       case ProfileTabEnum.PRODUCTS:
         return <ProfileProductsTab />;
       case ProfileTabEnum.EMPLOYEES:
         return <ProfileEmployeesTab businessOwnerId={businessOwnerId} />;
       case ProfileTabEnum.BOOKMARKS:
-        return <ProfileBookmarksTab />;
+        return <ProfileBookmarksTab username={username} />;
       case ProfileTabEnum.INFO:
         return <ProfileInfoTab userId={userId} />;
       default:
@@ -180,7 +199,7 @@ const ProfileTabs = ({
   return (
     <>
       <Box sx={styles.container}>
-        <Tabs value={currentTab} onChange={handleChange} sx={styles.tabs}>
+        <Tabs value={safeCurrentTab} onChange={handleChange} sx={styles.tabs}>
           {tabs.map((tab) => (
             <Tab
               key={tab.route}
@@ -188,7 +207,6 @@ const ProfileTabs = ({
               icon={tab.icon}
               iconPosition="start"
               label={<Typography sx={styles.label}>{tab.label}</Typography>}
-              //sx={{ minWidth: 200 }}
             />
           ))}
         </Tabs>
