@@ -1,7 +1,15 @@
 "use client";
 
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
-import { Box, Rating, Stack, Tab, Tabs, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Rating,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import SearchHeaderBar from "../SearchModule/SearchHeader/SearchHeaderBar";
 import Grid from "@mui/material/Grid2";
@@ -136,6 +144,50 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
         />
       </Stack>
 
+      <Box
+        ref={tabsContainerRef}
+        sx={{
+          position: "sticky",
+          top: 0,
+          zIndex: (theme) => theme.zIndex.appBar,
+          bgcolor: "background.paper",
+          borderBottom: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="Business profile sections"
+        >
+          {TAB_SECTIONS.map((section) => (
+            <Tab
+              key={section.id}
+              value={section.id}
+              label={section.label}
+              sx={{
+                fontWeight: 600,
+                textTransform: "none",
+                fontSize: 17,
+                py: 2.5,
+                color: "text.secondary",
+                "&.Mui-selected": {
+                  fontWeight: 700,
+                  boxShadow: "none",
+                },
+                "&:hover": { opacity: 0.92 },
+                "&.Mui-focusVisible": {
+                  boxShadow: (theme) =>
+                    `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
+                },
+              }}
+            />
+          ))}
+        </Tabs>
+      </Box>
+
       <Stack mb={2}>
         <Typography
           variant="h3"
@@ -170,34 +222,6 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
           />
 
           <Box>
-            <Box
-              ref={tabsContainerRef}
-              sx={{
-                position: "sticky",
-                top: 0,
-                zIndex: (theme) => theme.zIndex.appBar,
-                bgcolor: "background.paper",
-                borderBottom: "1px solid",
-                borderColor: "divider",
-              }}
-            >
-              <Tabs
-                value={activeTab}
-                onChange={handleTabChange}
-                variant="scrollable"
-                scrollButtons="auto"
-                aria-label="Business profile sections"
-              >
-                {TAB_SECTIONS.map((section) => (
-                  <Tab
-                    key={section.id}
-                    value={section.id}
-                    label={section.label}
-                  />
-                ))}
-              </Tabs>
-            </Box>
-
             <Box sx={{ py: 3 }}>
               <BusinessServicesTab
                 id="services"

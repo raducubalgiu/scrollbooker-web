@@ -4,7 +4,7 @@ import * as React from "react";
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import VideoSection from "./video/VideoSection";
-import VideoSidebar from "./comments/VideoSidebar";
+import VideoSidebar from "./sidebar/VideoSidebar";
 import { Post } from "@/ts/models/social/Post";
 
 type ProfileVideoDetailPageProps = {

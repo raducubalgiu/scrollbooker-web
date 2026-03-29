@@ -131,7 +131,7 @@ const VideoHeader = ({
         spacing={2.5}
         sx={{ mt: 3, flexWrap: "wrap", rowGap: 1.5 }}
       >
-        <Stack direction="row" spacing={1.5} alignItems="center">
+        <Stack direction="row" spacing={1} alignItems="center">
           <IconButton
             sx={{
               width: 45,
@@ -151,15 +151,23 @@ const VideoHeader = ({
           </Typography>
         </Stack>
 
-        <Stack direction="row" spacing={1.5} alignItems="center">
-          <ChatBubbleOutlineIcon fontSize="medium" />
+        <Stack direction="row" spacing={1} alignItems="center">
+          <IconButton
+            sx={{
+              width: 45,
+              height: 45,
+              bgcolor: "action.hover",
+            }}
+          >
+            <ChatBubbleOutlineIcon fontSize="medium" />
+          </IconButton>
 
           <Typography variant="body1" fontWeight={600}>
             {counters.comments_count?.toString() ?? "0"}
           </Typography>
         </Stack>
 
-        <Stack direction="row" spacing={1.5} alignItems="center">
+        <Stack direction="row" spacing={1} alignItems="center">
           <IconButton
             sx={{
               width: 45,
@@ -179,8 +187,16 @@ const VideoHeader = ({
           </Typography>
         </Stack>
 
-        <Stack direction="row" spacing={1.5} alignItems="center">
-          <ShareIcon fontSize="medium" />
+        <Stack direction="row" spacing={1} alignItems="center">
+          <IconButton
+            sx={{
+              width: 45,
+              height: 45,
+              bgcolor: "action.hover",
+            }}
+          >
+            <ShareIcon fontSize="medium" />
+          </IconButton>
 
           <Typography variant="body1" fontWeight={600}>
             12
