@@ -1,7 +1,6 @@
 "use client";
 
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
-import { NotificationType } from "@/ts/models/user/Notification";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
 import {
   Button,
@@ -17,7 +16,7 @@ import axios from "axios";
 import { PaginatedData } from "@/components/core/Table/Table";
 
 const fetchNotifications = async ({ pageParam }: { pageParam: number }) => {
-  const { data } = await axios.get<PaginatedData<NotificationType>>(
+  const { data } = await axios.get<PaginatedData<Notification>>(
     `/api/notifications?page=${pageParam}&limit=10`
   );
   return {
@@ -26,7 +25,7 @@ const fetchNotifications = async ({ pageParam }: { pageParam: number }) => {
   };
 };
 
-export default function NotificationsModule() {
+const NotificationsModule = () => {
   const {
     data,
     refetch,
@@ -85,4 +84,6 @@ export default function NotificationsModule() {
       )}
     </MainLayout>
   );
-}
+};
+
+export default NotificationsModule;

@@ -1,6 +1,5 @@
-import { DropdownMenu } from "@/components/cutomized/DropdownMenu/DropdownMenu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Button, MenuItem, Theme, Avatar, Box } from "@mui/material";
+import { Button, MenuItem, Avatar, Box, Menu } from "@mui/material";
 import React from "react";
 
 const EMPLOYEES = [
@@ -65,7 +64,7 @@ const EmployeeButton: React.FC<EmployeeButtonProps> = ({
           "Toti angajații"
         )}
       </Button>
-      <DropdownMenu
+      <Menu
         id="employee-menu"
         slotProps={{
           list: { "aria-labelledby": "employee-button" },
@@ -99,7 +98,7 @@ const EmployeeButton: React.FC<EmployeeButtonProps> = ({
             {e.fullname}
           </MenuItem>
         ))}
-      </DropdownMenu>
+      </Menu>
     </div>
   );
 };

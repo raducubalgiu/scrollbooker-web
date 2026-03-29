@@ -3,12 +3,15 @@ import { get } from "@/utils/requests";
 import React from "react";
 import { UserProfile } from "@/ts/models/user/UserProfile";
 
-interface Props {
+interface UserProfilePageProps {
   params: { username: string };
   searchParams: Promise<{ tab?: string | null }>;
 }
 
-export default async function UserProfilePage({ params, searchParams }: Props) {
+export default async function UserProfilePage({
+  params,
+  searchParams,
+}: UserProfilePageProps) {
   const { username } = await Promise.resolve(params);
   const { tab } = await Promise.resolve(searchParams);
 

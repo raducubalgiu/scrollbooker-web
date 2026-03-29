@@ -4,14 +4,14 @@ import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { get } from "@/utils/requests";
-import { BusinessResponse } from "@/ts/models/booking/business/Business";
 import MyBusinessDetailsModule from "@/components/modules/Admin/MyBusiness/LocationModule/MyBusinessDetailsModule";
+import { Business } from "@/ts/models/booking/business/Business";
 
 async function MyBusiness() {
   const { userId } = await getUserServerSession();
 
   const business = (
-    await get<BusinessResponse>({
+    await get<Business>({
       url: `/users/${userId}/businesses`,
     })
   ).data;

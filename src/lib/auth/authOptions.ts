@@ -179,6 +179,8 @@ async function verifyToken(token: string): Promise<DecodedTokenType | null> {
       process.env.JWT_SECRET as string
     ) as JwtPayload & DecodedTokenType;
 
+    console.log("Decoded token:", decoded); // Log the decoded token for debugging
+
     if (!decoded.id || !decoded.role) {
       LOG.error("Invalid token or missing User id or Role");
       return null;

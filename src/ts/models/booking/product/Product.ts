@@ -1,9 +1,9 @@
-import { SubFilterType } from "../../nomenclatures/subFilter/SubFilter";
+import { SubFilter } from "../../nomenclatures/subFilter/SubFilter";
 
 export interface ProductFilter {
   id: number;
   name: string;
-  sub_filters: SubFilterType[];
+  sub_filters: SubFilter[];
   type: string;
   unit?: string | null;
   minim?: number | null;
@@ -12,6 +12,7 @@ export interface ProductFilter {
 }
 
 export interface Product {
+  [x: string]: unknown;
   id: number;
   name: string;
   description: string | null;
