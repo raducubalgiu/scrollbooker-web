@@ -43,10 +43,10 @@ export default function MarketplaceLayout({
   const styles = React.useMemo(
     () => ({
       main: {
-        // p: {
-        //   xs: 0,
-        //   md: 2.5,
-        // },
+        p: {
+          xs: 0,
+          md: isProfileVideoPage ? 0 : 2.5,
+        },
         width: "100%",
         bgcolor: bgColor,
       },
@@ -63,7 +63,7 @@ export default function MarketplaceLayout({
         border: 0,
       },
     }),
-    [bgColor]
+    [bgColor, isProfileVideoPage]
   );
 
   return (

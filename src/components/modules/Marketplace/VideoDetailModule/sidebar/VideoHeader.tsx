@@ -1,41 +1,18 @@
-import {
-  Avatar,
-  Badge,
-  Box,
-  Button,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
-import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
-import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import ShareIcon from "@mui/icons-material/Share";
+import { Avatar, Badge, Box, Button, Stack, Typography } from "@mui/material";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
-
-import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
-import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
 import { formatRating } from "@/utils/formatters";
 import React from "react";
-import {
-  PostCounters,
-  PostUser,
-  PostUserActions,
-} from "@/ts/models/social/Post";
+import { PostUser } from "@/ts/models/social/Post";
+import { useRouter } from "next/navigation";
 
 type VideoHeaderProps = {
   description: string | null;
   user: PostUser;
-  counters: PostCounters;
-  userActions: PostUserActions;
 };
 
-const VideoHeader = ({
-  user,
-  counters,
-  description,
-  userActions,
-}: VideoHeaderProps) => {
+const VideoHeader = ({ user, description }: VideoHeaderProps) => {
+  const router = useRouter();
+
   const styles = {
     badge: {
       "& .MuiBadge-badge": {
@@ -55,8 +32,14 @@ const VideoHeader = ({
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Stack direction="row" spacing={1.5} alignItems="center">
+    <Box>
+      <Stack
+        direction="row"
+        spacing={1.5}
+        alignItems="center"
+        onClick={() => router.push(`/profile/${user.username}`)}
+        sx={{ cursor: "pointer" }}
+      >
         <Badge
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -124,85 +107,6 @@ const VideoHeader = ({
       <Box sx={{ mt: 4 }}>
         <Typography>{description ?? "..."}</Typography>
       </Box>
-
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={2.5}
-        sx={{ mt: 3, flexWrap: "wrap", rowGap: 1.5 }}
-      >
-        <Stack direction="row" spacing={1} alignItems="center">
-          <IconButton
-            sx={{
-              width: 45,
-              height: 45,
-              bgcolor: "action.hover",
-            }}
-          >
-            {userActions.is_liked ? (
-              <FavoriteRoundedIcon color="error" />
-            ) : (
-              <FavoriteBorderRoundedIcon />
-            )}
-          </IconButton>
-
-          <Typography variant="body1" fontWeight={600}>
-            {counters.like_count?.toString()}
-          </Typography>
-        </Stack>
-
-        <Stack direction="row" spacing={1} alignItems="center">
-          <IconButton
-            sx={{
-              width: 45,
-              height: 45,
-              bgcolor: "action.hover",
-            }}
-          >
-            <ChatBubbleOutlineIcon fontSize="medium" />
-          </IconButton>
-
-          <Typography variant="body1" fontWeight={600}>
-            {counters.comments_count?.toString() ?? "0"}
-          </Typography>
-        </Stack>
-
-        <Stack direction="row" spacing={1} alignItems="center">
-          <IconButton
-            sx={{
-              width: 45,
-              height: 45,
-              bgcolor: "action.hover",
-            }}
-          >
-            {userActions.is_bookmarked ? (
-              <BookmarkRoundedIcon />
-            ) : (
-              <BookmarkBorderRoundedIcon />
-            )}
-          </IconButton>
-
-          <Typography variant="body1" fontWeight={600}>
-            {counters.bookmark_count?.toString()}
-          </Typography>
-        </Stack>
-
-        <Stack direction="row" spacing={1} alignItems="center">
-          <IconButton
-            sx={{
-              width: 45,
-              height: 45,
-              bgcolor: "action.hover",
-            }}
-          >
-            <ShareIcon fontSize="medium" />
-          </IconButton>
-
-          <Typography variant="body1" fontWeight={600}>
-            12
-          </Typography>
-        </Stack>
-      </Stack>
     </Box>
   );
 };
