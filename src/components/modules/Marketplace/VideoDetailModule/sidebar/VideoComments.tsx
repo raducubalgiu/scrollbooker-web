@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   Avatar,
   Box,
@@ -117,10 +117,16 @@ const VideoComments = ({ postId, avatar }: VideoCommentsProps) => {
           />
 
           <IconButton
-            sx={{ bgcolor: "primary.main" }}
             onClick={handleCreateComment}
+            sx={{
+              bgcolor: "primary.main",
+              color: "#fff",
+              "&:hover": {
+                bgcolor: "primary.dark",
+              },
+            }}
           >
-            <ArrowUpwardOutlinedIcon sx={{ color: "#fff" }} />
+            <ArrowUpwardOutlinedIcon />
           </IconButton>
         </Stack>
       </Box>
@@ -128,4 +134,4 @@ const VideoComments = ({ postId, avatar }: VideoCommentsProps) => {
   );
 };
 
-export default VideoComments;
+export default memo(VideoComments);

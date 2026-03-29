@@ -63,7 +63,7 @@ const CommentCard = ({ comment, avatar }: CommentCardProps) => {
 
   return (
     <Stack direction="row" spacing={1.5} alignItems="flex-start">
-      <Avatar src={avatar ?? ""} sx={{ width: 40, height: 40 }} />
+      <Avatar src={user.avatar ?? ""} sx={{ width: 40, height: 40 }} />
 
       <Box sx={{ minWidth: 0, flex: 1 }}>
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
