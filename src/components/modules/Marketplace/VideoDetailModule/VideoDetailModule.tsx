@@ -9,18 +9,17 @@ import { Post } from "@/ts/models/social/Post";
 
 type ProfileVideoDetailPageProps = {
   username: string;
-  post: Post | null;
+  initialPost: Post;
   tab?: string | null | undefined;
 };
 
 export default function VideoDetailModule({
   username,
-  post,
+  initialPost,
   tab,
 }: ProfileVideoDetailPageProps) {
+  const [post, setPost] = React.useState<Post>(initialPost);
   const router = useRouter();
-
-  if (!post) return null;
 
   const handleClose = React.useCallback(() => {
     router.replace(`/profile/${username}${tab ? `?tab=${tab}` : ""}`);
@@ -41,7 +40,7 @@ export default function VideoDetailModule({
     >
       {url && <VideoSection url={url} onClose={handleClose} />}
 
-      <VideoSidebar post={post} />
+      <VideoSidebar post={post} setPost={setPost} />
     </Box>
   );
 }

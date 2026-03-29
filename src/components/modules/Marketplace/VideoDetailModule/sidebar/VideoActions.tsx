@@ -1,4 +1,5 @@
-import { PostCounters, PostUserActions } from "@/ts/models/social/Post";
+import React from "react";
+import { Post, PostCounters, PostUserActions } from "@/ts/models/social/Post";
 import { IconButton, Stack, Typography } from "@mui/material";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
@@ -6,28 +7,149 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
 import IosShareIcon from "@mui/icons-material/IosShare";
-import React, { useEffect } from "react";
+import { useMutate } from "@/hooks/useHttp";
 
 type VideoActionsProps = {
+  postId: number;
   counters: PostCounters;
   userActions: PostUserActions;
+  setPost: React.Dispatch<React.SetStateAction<Post>>;
 };
 
-const VideoActions = ({ counters, userActions }: VideoActionsProps) => {
+const VideoActions = ({
+  postId,
+  counters,
+  userActions,
+  setPost,
+}: VideoActionsProps) => {
   const { like_count, bookmark_count } = counters;
   const { is_liked, is_bookmarked } = userActions;
 
-  const [likeCount, setLikeCount] = React.useState(like_count);
-  const [bookmarkCount, setBookmarkCount] = React.useState(bookmark_count);
-  const [isLiked, setIsLiked] = React.useState(is_liked);
-  const [isBookmarked, setIsBookmarked] = React.useState(is_bookmarked);
+  const { mutate: like } = useMutate({
+    key: ["like-post", postId],
+    method: "POST",
+    url: `/api/posts/like`,
+  });
 
-  useEffect(() => {
-    setIsLiked(is_liked);
-    setIsBookmarked(is_bookmarked);
-    setLikeCount(like_count);
-    setBookmarkCount(bookmark_count);
-  }, [is_liked, is_bookmarked, like_count, bookmark_count]);
+  const { mutate: unlike } = useMutate({
+    key: ["unlike-post", postId],
+    method: "DELETE",
+    url: `/api/posts/like`,
+  });
+
+  const { mutate: bookmark } = useMutate({
+    key: ["bookmark-post", postId],
+    method: "POST",
+    url: `/api/posts/bookmark`,
+  });
+
+  const { mutate: unbookmark } = useMutate({
+    key: ["unbookmark-post", postId],
+    method: "DELETE",
+    url: `/api/posts/bookmark`,
+  });
+
+  const handleLike = () => {
+    if (is_liked) {
+      setPost((prev) => ({
+        ...prev,
+        counters: {
+          ...prev.counters,
+          like_count: Math.max(0, prev.counters.like_count - 1),
+        },
+        user_actions: {
+          ...prev.user_actions,
+          is_liked: false,
+        },
+      }));
+
+      unlike(
+        { post_id: postId },
+        {
+          onError: () => {
+            setPost((prev) => ({
+              ...prev,
+              counters: {
+                ...prev.counters,
+                like_count: prev.counters.like_count + 1,
+              },
+              user_actions: {
+                ...prev.user_actions,
+                is_liked: true,
+              },
+            }));
+          },
+        }
+      );
+
+      return;
+    }
+
+    setPost((prev) => ({
+      ...prev,
+      counters: {
+        ...prev.counters,
+        like_count: prev.counters.like_count + 1,
+      },
+      user_actions: {
+        ...prev.user_actions,
+        is_liked: true,
+      },
+    }));
+
+    like(
+      { post_id: postId },
+      {
+        onError: () => {
+          setPost((prev) => ({
+            ...prev,
+            counters: {
+              ...prev.counters,
+              like_count: Math.max(0, prev.counters.like_count - 1),
+            },
+            user_actions: {
+              ...prev.user_actions,
+              is_liked: false,
+            },
+          }));
+        },
+      }
+    );
+  };
+
+  const handleBookmark = () => {
+    if (is_bookmarked) {
+      setPost((prev) => ({
+        ...prev,
+        counters: {
+          ...prev.counters,
+          bookmark_count: Math.max(0, prev.counters.bookmark_count - 1),
+        },
+        user_actions: {
+          ...prev.user_actions,
+          is_bookmarked: false,
+        },
+      }));
+
+      unbookmark({ post_id: postId });
+
+      return;
+    }
+
+    setPost((prev) => ({
+      ...prev,
+      counters: {
+        ...prev.counters,
+        bookmark_count: prev.counters.bookmark_count + 1,
+      },
+      user_actions: {
+        ...prev.user_actions,
+        is_bookmarked: true,
+      },
+    }));
+
+    bookmark({ post_id: postId });
+  };
 
   return (
     <Stack
@@ -38,13 +160,14 @@ const VideoActions = ({ counters, userActions }: VideoActionsProps) => {
     >
       <Stack direction="row" spacing={1} alignItems="center">
         <IconButton
+          onClick={handleLike}
           sx={{
             width: 45,
             height: 45,
             bgcolor: "action.hover",
           }}
         >
-          {isLiked ? (
+          {is_liked ? (
             <FavoriteRoundedIcon color="error" />
           ) : (
             <FavoriteBorderRoundedIcon />
@@ -52,7 +175,7 @@ const VideoActions = ({ counters, userActions }: VideoActionsProps) => {
         </IconButton>
 
         <Typography variant="body1" fontWeight={600}>
-          {likeCount?.toString()}
+          {like_count?.toString()}
         </Typography>
       </Stack>
 
@@ -74,13 +197,14 @@ const VideoActions = ({ counters, userActions }: VideoActionsProps) => {
 
       <Stack direction="row" spacing={1} alignItems="center">
         <IconButton
+          onClick={handleBookmark}
           sx={{
             width: 45,
             height: 45,
             bgcolor: "action.hover",
           }}
         >
-          {isBookmarked ? (
+          {is_bookmarked ? (
             <BookmarkRoundedIcon />
           ) : (
             <BookmarkBorderRoundedIcon />
@@ -88,7 +212,7 @@ const VideoActions = ({ counters, userActions }: VideoActionsProps) => {
         </IconButton>
 
         <Typography variant="body1" fontWeight={600}>
-          {bookmarkCount?.toString()}
+          {bookmark_count?.toString()}
         </Typography>
       </Stack>
 

@@ -5,12 +5,11 @@ import VideoComments from "./VideoComments";
 import VideoActions from "./VideoActions";
 
 type VideoSidebarProps = {
-  post: Post | null;
+  post: Post;
+  setPost: React.Dispatch<React.SetStateAction<Post>>;
 };
 
-export default function VideoSidebar({ post }: VideoSidebarProps) {
-  if (!post) return null;
-
+export default function VideoSidebar({ post, setPost }: VideoSidebarProps) {
   const { user } = post;
 
   return (
@@ -28,8 +27,10 @@ export default function VideoSidebar({ post }: VideoSidebarProps) {
       <Box p={2.5}>
         <VideoHeader user={user} description={post.description} />
         <VideoActions
+          postId={post.id}
           counters={post.counters}
           userActions={post.user_actions}
+          setPost={setPost}
         />
       </Box>
 

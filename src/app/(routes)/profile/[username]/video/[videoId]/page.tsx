@@ -24,5 +24,7 @@ export default async function VideoDetailPage({
     })
   ).data;
 
-  return <VideoDetailModule post={post} username={username} tab={tab} />;
+  if (!post) return null;
+
+  return <VideoDetailModule initialPost={post} username={username} tab={tab} />;
 }
