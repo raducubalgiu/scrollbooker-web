@@ -1,6 +1,8 @@
+import React from "react";
 import {
   Avatar,
   Box,
+  CircularProgress,
   Divider,
   IconButton,
   Stack,
@@ -8,94 +10,91 @@ import {
   Typography,
 } from "@mui/material";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
-import React from "react";
+import { useInfiniteComments } from "@/hooks/infiniteQuery/useInfiniteComments";
+import CommentCard from "./CommentCard";
+import { useMutate } from "@/hooks/useHttp";
+import { PostCommentCreate } from "@/ts/models/social/PostComment";
 
-type CommentItem = {
-  id: string;
-  username: string;
-  text: string;
-  timeAgo: string;
+type VideoCommentsProps = {
+  postId: number;
+  avatar: string | null;
 };
 
-type CommentCardProps = {
-  comment: CommentItem;
-};
+const VideoComments = ({ postId, avatar }: VideoCommentsProps) => {
+  const [text, setText] = React.useState("");
 
-function CommentCard({ comment }: CommentCardProps) {
-  return (
-    <Stack direction="row" spacing={1.5} alignItems="flex-start">
-      <Avatar sx={{ width: 40, height: 40 }}>
-        {comment.username.slice(0, 1).toUpperCase()}
-      </Avatar>
+  const { data, refetch, isLoading } = useInfiniteComments(postId);
+  const comments = data?.pages.flatMap((page) => page.results) ?? [];
+  const count = data?.pages[0]?.count ?? 0;
 
-      <Box sx={{ minWidth: 0, flex: 1 }}>
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
-          <Typography fontWeight={700}>@{comment.username}</Typography>
-          <Typography variant="caption" color="text.secondary">
-            {comment.timeAgo}
-          </Typography>
-        </Stack>
+  const styles = {
+    commentsContainer: {
+      flex: 1,
+      minHeight: 0,
+      overflowY: "auto",
+      px: 3,
+      py: 2,
+    },
+    input: {
+      "& .MuiOutlinedInput-root": {
+        borderRadius: 50,
+        bgcolor: "action.hover",
+        "& fieldset": {
+          borderColor: "transparent",
+        },
+        "&:hover fieldset": {
+          borderColor: "transparent",
+        },
+        "&.Mui-focused fieldset": {
+          borderColor: "transparent",
+        },
+      },
+    },
+  };
 
-        <Typography>{comment.text}</Typography>
-      </Box>
-    </Stack>
-  );
-}
+  const { mutate: createComment } = useMutate({
+    key: ["comments", postId],
+    method: "POST",
+    url: `/api/comments`,
+    options: {
+      onSuccess: () => refetch(),
+    },
+  });
 
-const MOCK_COMMENTS: CommentItem[] = [
-  {
-    id: "1",
-    username: "alex",
-    text: "Foarte tare ideea 🔥",
-    timeAgo: "2h",
-  },
-  {
-    id: "2",
-    username: "maria",
-    text: "Îmi place mult cum arată pagina.",
-    timeAgo: "1h",
-  },
-  {
-    id: "3",
-    username: "david",
-    text: "Asta arată chiar clean.",
-    timeAgo: "35m",
-  },
-];
+  const handleCreateComment = () => {
+    const newComment: PostCommentCreate = {
+      text,
+      post_id: postId,
+    };
 
-const VideoComments = () => {
+    createComment(newComment);
+    setText("");
+  };
+
   return (
     <>
-      <Box
-        sx={{
-          px: 3,
-          py: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 2,
-        }}
-      >
-        <Typography fontWeight={700}>
-          Commentarii ({MOCK_COMMENTS.length})
-        </Typography>
-      </Box>
+      <Typography px={3} py={2} fontWeight={700}>
+        Commentarii ({count})
+      </Typography>
 
       <Divider />
 
-      <Box
-        sx={{
-          flex: 1,
-          minHeight: 0,
-          overflowY: "auto",
-          px: 3,
-          py: 2,
-        }}
-      >
+      <Box sx={styles.commentsContainer}>
         <Stack spacing={2.5}>
-          {MOCK_COMMENTS.map((comment) => (
-            <CommentCard key={comment.id} comment={comment} />
-          ))}
+          {isLoading && (
+            <Stack
+              justifyContent="center"
+              alignItems="center"
+              sx={{ height: "100%" }}
+              flex={1}
+            >
+              <CircularProgress />
+            </Stack>
+          )}
+          {!isLoading &&
+            comments.map((comment) => (
+              <CommentCard key={comment.id} comment={comment} avatar={avatar} />
+            ))}
         </Stack>
       </Box>
 
@@ -103,30 +102,24 @@ const VideoComments = () => {
 
       <Box sx={{ p: 2 }}>
         <Stack direction="row" spacing={1.5} alignItems="center">
-          <Avatar sx={{ width: 45, height: 45 }}>R</Avatar>
+          <Avatar src={avatar ?? ""} sx={{ width: 45, height: 45 }} />
 
           <TextField
             fullWidth
             size="medium"
             placeholder="Add comment..."
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 50,
-                bgcolor: "action.hover",
-                "& fieldset": {
-                  borderColor: "transparent",
-                },
-                "&:hover fieldset": {
-                  borderColor: "transparent",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "transparent",
-                },
-              },
-            }}
+            sx={styles.input}
+            value={text}
+            multiline
+            minRows={0}
+            maxRows={4}
+            onChange={(e) => setText(e.target.value)}
           />
 
-          <IconButton sx={{ bgcolor: "primary.main" }}>
+          <IconButton
+            sx={{ bgcolor: "primary.main" }}
+            onClick={handleCreateComment}
+          >
             <ArrowUpwardOutlinedIcon sx={{ color: "#fff" }} />
           </IconButton>
         </Stack>

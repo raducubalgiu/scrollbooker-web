@@ -35,7 +35,7 @@ export default function VideoSidebar({ post }: VideoSidebarProps) {
 
       <Divider />
 
-      <VideoComments />
+      <VideoComments postId={post.id} avatar={user.avatar} />
     </Paper>
   );
 }
