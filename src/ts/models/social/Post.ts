@@ -10,10 +10,11 @@ export interface Post {
   user_actions: PostUserActions;
   plan: Plan;
   media_files: PostMediaFile[];
+  hashtags: string[];
   is_video_review: boolean;
   is_own_post: boolean;
   rating: number | null;
-  bookable: number;
+  bookable: boolean;
   business_id: number | null;
   last_minute: PostLastMinute | null;
   created_at: string;
@@ -37,7 +38,7 @@ export interface FixedSlot {
 
 export interface PostLastMinute {
   is_last_minute: boolean;
-  last_minute_date: string | null;
+  last_minute_end: string | null;
   has_fixed_slots: boolean;
   fixed_slots: FixedSlot[] | null;
 }
@@ -49,7 +50,7 @@ export interface PostUserActions {
 }
 
 export interface PostCounters {
-  comments_count: number;
+  comment_count: number;
   like_count: number;
   bookmark_count: number;
   repost_count: number;
