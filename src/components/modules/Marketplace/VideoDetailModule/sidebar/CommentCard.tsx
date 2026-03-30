@@ -1,20 +1,41 @@
 import { PostComment } from "@/ts/models/social/PostComment";
-import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonBase,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
+import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { memo, useEffect, useState } from "react";
 import { useMutate } from "@/hooks/useHttp";
+import CloseIcon from "@mui/icons-material/Close";
+import { Reply } from "./VideoComments";
 
 dayjs.extend(relativeTime);
 
 type CommentCardProps = {
   comment: PostComment;
   avatar: string | null;
+  reply: Reply | null;
+  onSetReply: (reply: Reply | null) => void;
+  onCreateReplyComment: () => void;
 };
 
-const CommentCard = ({ comment, avatar }: CommentCardProps) => {
+const CommentCard = ({
+  comment,
+  avatar,
+  reply,
+  onSetReply,
+  onCreateReplyComment,
+}: CommentCardProps) => {
   const [likeCount, setLikeCount] = useState(comment.like_count ?? 0);
   const [liked, setLiked] = useState(comment.is_liked);
 
@@ -79,13 +100,13 @@ const CommentCard = ({ comment, avatar }: CommentCardProps) => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          sx={{ mt: 1 }}
         >
           <Typography
             variant="body2"
             color="text.secondary"
             fontWeight={600}
             sx={{ cursor: "pointer" }}
+            onClick={() => onSetReply({ commentId: comment.id, text: "" })}
           >
             Răspunde
           </Typography>
@@ -111,6 +132,65 @@ const CommentCard = ({ comment, avatar }: CommentCardProps) => {
             </IconButton>
           </Stack>
         </Stack>
+
+        {reply && reply.commentId === comment.id && (
+          <Stack flexDirection="row" alignItems="center" my={2} gap={1}>
+            <TextField
+              size="small"
+              placeholder="Raspunde..."
+              fullWidth
+              value={reply.text}
+              multiline
+              minRows={0}
+              maxRows={4}
+              onChange={(e) =>
+                onSetReply({ commentId: reply.commentId, text: e.target.value })
+              }
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  padding: 0,
+                  borderRadius: 50,
+                },
+                "& .MuiInputBase-inputMultiline": {
+                  padding: "12px 20px 0px 20px",
+                  borderRadius: 50,
+                },
+              }}
+            />
+
+            <IconButton
+              onClick={onCreateReplyComment}
+              sx={{
+                bgcolor: "primary.main",
+                color: "#fff",
+                "&:hover": {
+                  bgcolor: "primary.dark",
+                },
+              }}
+              disabled={reply.text.trim() === ""}
+            >
+              <ArrowUpwardOutlinedIcon />
+            </IconButton>
+
+            <IconButton onClick={() => onSetReply(null)}>
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+        )}
+
+        {comment.replies_count > 0 && (
+          <ButtonBase>
+            <Stack direction="row" alignItems="center">
+              <Box sx={{ width: 25, height: 2, bgcolor: "divider", mr: 2 }} />
+              <Typography color="text.secondary" mr={1}>
+                Vezi răspunsurile
+              </Typography>
+              <Typography color="text.secondary">
+                ({comment.replies_count})
+              </Typography>
+            </Stack>
+          </ButtonBase>
+        )}
       </Box>
     </Stack>
   );

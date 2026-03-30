@@ -20,8 +20,14 @@ type VideoCommentsProps = {
   avatar: string | null;
 };
 
+export type Reply = {
+  commentId: number;
+  text: string;
+};
+
 const VideoComments = ({ postId, avatar }: VideoCommentsProps) => {
   const [text, setText] = React.useState("");
+  const [reply, setReply] = React.useState<Reply | null>(null);
 
   const { data, refetch, isLoading } = useInfiniteComments(postId);
   const comments = data?.pages.flatMap((page) => page.results) ?? [];
@@ -37,17 +43,12 @@ const VideoComments = ({ postId, avatar }: VideoCommentsProps) => {
     },
     input: {
       "& .MuiOutlinedInput-root": {
+        padding: 0,
         borderRadius: 50,
-        bgcolor: "action.hover",
-        "& fieldset": {
-          borderColor: "transparent",
-        },
-        "&:hover fieldset": {
-          borderColor: "transparent",
-        },
-        "&.Mui-focused fieldset": {
-          borderColor: "transparent",
-        },
+      },
+      "& .MuiInputBase-inputMultiline": {
+        padding: "12px 20px 0px 20px",
+        borderRadius: 50,
       },
     },
   };
@@ -63,8 +64,9 @@ const VideoComments = ({ postId, avatar }: VideoCommentsProps) => {
 
   const handleCreateComment = () => {
     const newComment: PostCommentCreate = {
-      text,
+      text: reply ? reply.text : text,
       post_id: postId,
+      parent_id: reply?.commentId ?? null,
     };
 
     createComment(newComment);
@@ -93,7 +95,14 @@ const VideoComments = ({ postId, avatar }: VideoCommentsProps) => {
           )}
           {!isLoading &&
             comments.map((comment) => (
-              <CommentCard key={comment.id} comment={comment} avatar={avatar} />
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                avatar={avatar}
+                reply={reply}
+                onSetReply={(reply) => setReply(reply)}
+                onCreateReplyComment={handleCreateComment}
+              />
             ))}
         </Stack>
       </Box>
@@ -125,6 +134,7 @@ const VideoComments = ({ postId, avatar }: VideoCommentsProps) => {
                 bgcolor: "primary.dark",
               },
             }}
+            disabled={text.trim() === ""}
           >
             <ArrowUpwardOutlinedIcon />
           </IconButton>

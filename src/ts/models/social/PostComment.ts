@@ -20,6 +20,6 @@ export interface CommentUser {
 
 export interface PostCommentCreate {
   text: string;
-  parent_id?: number;
+  parent_id?: number | null;
   post_id: number;
 }

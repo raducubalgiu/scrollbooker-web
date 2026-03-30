@@ -75,10 +75,8 @@ const VideoHeader = ({ user, description }: VideoHeaderProps) => {
           </Stack>
 
           <Stack direction="row" alignItems="center" gap={1}>
-            <Typography variant="body2" color="text.secondary">
-              Frizerie •
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography color="text.secondary">Frizerie •</Typography>
+            <Typography color="text.secondary">
               Strada Oarecare nr 3, Sector 6
             </Typography>
             <Typography

@@ -190,7 +190,7 @@ const SocialModal = ({
       dividers={false}
       showFooter={false}
       title={`@${socialModal?.username}`}
-      align="left"
+      align="center"
       {...(isReviewsStep && { maxWidth: "md" })}
       fullWidth={isReviewsStep}
     >
