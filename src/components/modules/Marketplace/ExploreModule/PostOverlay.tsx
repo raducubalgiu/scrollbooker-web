@@ -1,7 +1,13 @@
+import { PostUser } from "@/ts/models/social/Post";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const PostOverlay = () => {
+type PostOverlayProps = {
+  user: PostUser;
+  description: string | null;
+};
+
+const PostOverlay = ({ user, description }: PostOverlayProps) => {
   return (
     <Stack
       spacing={1.5}
@@ -16,24 +22,15 @@ const PostOverlay = () => {
     >
       <Stack direction="row" spacing={1.25} alignItems="center">
         <Box>
-          <Typography variant="subtitle1" fontWeight={800}>
-            Frizeria Figaro
-          </Typography>
-          <Typography
-            variant="body2"
-            color="primary"
-            sx={{ opacity: 0.92, fontWeight: 600 }}
-          >
-            Frizerie
+          <Typography fontWeight={800}>{user.fullname}</Typography>
+          <Typography color="primary" sx={{ opacity: 0.92, fontWeight: 600 }}>
+            {user.profession}
           </Typography>
         </Box>
       </Stack>
-
-      <Typography variant="body2" sx={{ opacity: 0.9, maxWidth: 320 }}>
-        Un video trebuie să convingă vizual. Panoul din dreapta trebuie să
-        închidă rapid decizia de rezervare.
+      <Typography sx={{ opacity: 0.9, maxWidth: 320 }}>
+        {description}
       </Typography>
-
       <Button
         variant="contained"
         size="large"

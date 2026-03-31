@@ -1331,7 +1331,6 @@ const MOCK_POSTS: PaginatedData<Post> = {
 };
 
 const WINDOW_SIZE = 5;
-const TOTAL_VIDEOS = 100;
 
 export default function ExploreModule() {
   const posts = MOCK_POSTS.results;
@@ -1340,7 +1339,7 @@ export default function ExploreModule() {
   const currentPost: Post | undefined = posts[currentIndex];
   const currentVideoUrl = currentPost?.media_files[0]?.url || "";
 
-  const { user_actions, counters } = currentPost || {};
+  const { user_actions, counters, user, description } = currentPost || {};
 
   // Sliding Window Logic: We want to keep a window of posts around the current index to ensure smooth transitions and preloading.
   const visibleWindow = useMemo(() => {
@@ -1357,7 +1356,8 @@ export default function ExploreModule() {
   }, [currentIndex]);
 
   const goToNext = useCallback(() => {
-    if (currentIndex < TOTAL_VIDEOS - 1) setCurrentIndex((prev) => prev + 1);
+    if (currentIndex < MOCK_POSTS.results.length - 1)
+      setCurrentIndex((prev) => prev + 1);
   }, [currentIndex]);
 
   const goToPrev = useCallback(() => {
@@ -1394,7 +1394,6 @@ export default function ExploreModule() {
             position: "relative",
             height: "100%",
             aspectRatio: "9 / 16",
-            //maxWidth: "min(420x, 100vw)",
             borderRadius: 4,
             overflow: "hidden",
             bgcolor: "black",
@@ -1420,7 +1419,8 @@ export default function ExploreModule() {
               />
             );
           })}
-          <PostOverlay />
+
+          {user && <PostOverlay user={user} description={description ?? ""} />}
         </Box>
 
         {counters && user_actions && (
@@ -1432,7 +1432,7 @@ export default function ExploreModule() {
 
       <ExploreControls
         isDisabledPrev={currentIndex === 0}
-        isDisabledNext={currentIndex === TOTAL_VIDEOS - 1}
+        isDisabledNext={currentIndex === MOCK_POSTS.results.length - 1}
         onGoToPrev={goToPrev}
         onGoToNext={goToNext}
       />
