@@ -1,5 +1,17 @@
-import SearchModule from "@/components/modules/Marketplace/SearchModule/SearchModule";
+import ExploreModule from "@/components/modules/Marketplace/ExploreModule/ExploreModule";
+import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { Typography } from "@mui/material";
 
 export default async function HomePage() {
-	return <SearchModule />;
+  const { userId } = await getUserServerSession();
+
+  if (!userId) {
+    return (
+      <div style={{ padding: "2rem", textAlign: "center" }}>
+        <Typography variant="h6">Please log in to continue</Typography>
+      </div>
+    );
+  }
+
+  return <ExploreModule />;
 }

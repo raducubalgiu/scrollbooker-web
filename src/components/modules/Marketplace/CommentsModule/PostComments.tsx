@@ -35,8 +35,6 @@ const PostComments = ({
   const [activeReplyTarget, setActiveReplyTarget] =
     useState<ReplyTarget | null>(null);
 
-  console.log("POST AVATAR", postAuthorAvatar);
-
   const {
     data,
     refetch,

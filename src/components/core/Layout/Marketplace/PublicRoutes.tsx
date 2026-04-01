@@ -35,25 +35,15 @@ const PublicRoutes = ({
   const publicRoutes: ScrollBookerRoute[] = React.useMemo(
     () => [
       {
-        label: "Caută",
-        route: "/",
-        icon: <SearchOutlinedIcon />,
-        permission: PermissionEnum.NO_PROTECTION,
-      },
-      {
         label: "Explorează",
-        route: "/explore",
+        route: "/",
         icon: <VideoLibraryOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
-        label: "Notificări",
-        route: "/notifications",
-        icon: (
-          <Badge badgeContent={4} color="error">
-            <NotificationsNoneOutlinedIcon />
-          </Badge>
-        ),
+        label: "Caută",
+        route: "/search",
+        icon: <SearchOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
@@ -62,6 +52,16 @@ const PublicRoutes = ({
         icon: (
           <Badge badgeContent={0} color="error">
             <QueryBuilderOutlinedIcon />
+          </Badge>
+        ),
+        permission: PermissionEnum.NO_PROTECTION,
+      },
+      {
+        label: "Notificări",
+        route: "/notifications",
+        icon: (
+          <Badge badgeContent={4} color="error">
+            <NotificationsNoneOutlinedIcon />
           </Badge>
         ),
         permission: PermissionEnum.NO_PROTECTION,
