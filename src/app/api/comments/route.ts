@@ -26,6 +26,7 @@ export const POST = async (req: NextRequest) => {
       data: {
         text: data.text,
         parent_id: data?.parent_id,
+        reply_to_comment_id: data?.reply_to_comment_id,
       },
     })
   ).data;

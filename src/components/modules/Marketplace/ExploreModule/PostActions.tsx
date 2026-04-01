@@ -24,17 +24,17 @@ const PostActions = ({ user, counters, userActions }: PostActionsProps) => {
     {
       key: "like",
       icon: <FavoriteIcon fontSize="large" sx={{ color: "text.primary" }} />,
-      count: 120,
+      count: counters.like_count,
     },
     {
       key: "comments",
       icon: <TextsmsIcon fontSize="large" sx={{ color: "text.primary" }} />,
-      count: 45,
+      count: counters.comment_count,
     },
     {
       key: "save",
       icon: <BookmarkIcon fontSize="large" sx={{ color: "text.primary" }} />,
-      count: 30,
+      count: counters.bookmark_count,
     },
     {
       key: "share",

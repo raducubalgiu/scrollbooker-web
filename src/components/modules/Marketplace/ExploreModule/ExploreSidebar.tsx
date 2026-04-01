@@ -1,8 +1,27 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import React from "react";
+import React, { useRef } from "react";
+import PostComments from "../CommentsModule/PostComments";
+import VideoHeader from "../VideoDetailModule/sidebar/VideoHeader";
+import { PostUser } from "@/ts/models/social/Post";
+import SocialReviewsTab from "../ProfileModule/social/SocialReviewsTab";
 
-const ExploreSidebar = () => {
+type ExploreSidebarProps = {
+  commentsCount: number | undefined;
+  postId: number | undefined;
+  user: PostUser | undefined;
+};
+
+const ExploreSidebar = ({
+  commentsCount,
+  postId,
+  user,
+}: ExploreSidebarProps) => {
   const [activeTab, setActiveTab] = React.useState(0);
+  const reviewsRef = useRef<HTMLDivElement | null>(null);
+
+  if (!postId) {
+    return null;
+  }
 
   return (
     <Box
@@ -11,14 +30,22 @@ const ExploreSidebar = () => {
         flex: 1,
         minWidth: 320,
         maxWidth: 600,
-        width: "100%",
-        height: "100%",
-        minHeight: 0,
         border: 1,
         borderColor: "divider",
         borderRadius: 4,
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+        height: "100%",
+        overflow: "hidden",
       }}
     >
+      {user && (
+        <Box p={3}>
+          <VideoHeader description={null} user={user} />
+        </Box>
+      )}
+
       <Tabs
         value={activeTab}
         onChange={(_, newValue) => setActiveTab(newValue)}
@@ -36,7 +63,7 @@ const ExploreSidebar = () => {
           }}
         />
         <Tab
-          label="Comentarii"
+          label={`Comentarii (${commentsCount ?? 0})`}
           value={2}
           sx={{
             fontWeight: 600,
@@ -58,6 +85,20 @@ const ExploreSidebar = () => {
           }}
         />
       </Tabs>
+
+      {activeTab === 2 && (
+        <PostComments postId={postId} avatar={null} postAuthorAvatar={null} />
+      )}
+
+      {activeTab === 3 && (
+        <Box p={3} sx={{ height: "100%" }}>
+          <SocialReviewsTab
+            userId={user?.id}
+            rootRef={reviewsRef}
+            disableInitialIgnore={true}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

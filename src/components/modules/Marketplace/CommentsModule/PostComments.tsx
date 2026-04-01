@@ -144,19 +144,18 @@ const PostComments = ({
 
   return (
     <Stack sx={{ minHeight: 0, height: "100%" }}>
-      <Typography px={3} py={2} fontWeight={700}>
-        Comentarii ({count})
-      </Typography>
-
-      <Divider />
-
       <Box
         sx={{
           flex: 1,
           minHeight: 0,
           overflowY: "auto",
           px: 3,
-          py: 2,
+          py: 3,
+          scrollBarWidth: "none",
+          msOverflowStyle: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         <Stack spacing={3}>

@@ -69,10 +69,7 @@ const CommentItem = ({
           </Typography>
         </Stack>
 
-        <Typography
-          variant="body2"
-          sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-        >
+        <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
           {comment.text}
         </Typography>
 
@@ -84,7 +81,6 @@ const CommentItem = ({
         >
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography
-              variant="body2"
               color="text.secondary"
               fontWeight={600}
               sx={{ cursor: "pointer" }}

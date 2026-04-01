@@ -89,7 +89,7 @@ const VideoHeader = ({ user, description }: VideoHeaderProps) => {
           </Stack>
         </Box>
 
-        {!user.is_follow && (
+        {/* {!user.is_follow && (
           <Button
             variant="outlined"
             color="primary"
@@ -99,12 +99,12 @@ const VideoHeader = ({ user, description }: VideoHeaderProps) => {
           >
             Urmareste
           </Button>
-        )}
+        )} */}
       </Stack>
 
-      <Box sx={{ mt: 4 }}>
+      {/* <Box sx={{ mt: 4 }}>
         <Typography>{description ?? "..."}</Typography>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

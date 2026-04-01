@@ -3,7 +3,7 @@ import { PostComment } from "@/ts/models/social/PostComment";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const PAGE_LIMIT = 20;
+const PAGE_LIMIT = 10;
 
 type FetchCommentsParams = {
   pageParam: number;
