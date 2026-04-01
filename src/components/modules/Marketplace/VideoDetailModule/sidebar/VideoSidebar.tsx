@@ -1,8 +1,8 @@
 import { Box, Divider, Paper } from "@mui/material";
 import { Post } from "@/ts/models/social/Post";
 import VideoHeader from "./VideoHeader";
-import VideoComments from "./VideoComments";
 import VideoActions from "./VideoActions";
+import PostComments from "../../CommentsModule/PostComments";
 
 type VideoSidebarProps = {
   post: Post;
@@ -41,7 +41,11 @@ export default function VideoSidebar({
 
       <Divider />
 
-      <VideoComments postId={post.id} avatar={user.avatar} />
+      <PostComments
+        avatar={null}
+        postId={post.id}
+        postAuthorAvatar={user.avatar}
+      />
     </Paper>
   );
 }

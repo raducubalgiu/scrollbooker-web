@@ -27,6 +27,7 @@ export const useInfiniteUserPosts = (userId?: number) => {
     queryFn: ({ pageParam = 1 }) => fetchUserPosts({ pageParam, userId }),
     initialPageParam: 1,
     enabled: !!userId,
+    staleTime: 2 * 60 * 1000, // 5 minutes
     getNextPageParam: (lastPage, pages) => {
       const totalFetched = pages.flatMap((p) => p.results).length;
       return totalFetched < lastPage.count ? pages.length + 1 : undefined;
