@@ -100,7 +100,8 @@ const VideoComments = ({ postId, avatar }: VideoCommentsProps) => {
                 comment={comment}
                 avatar={avatar}
                 reply={reply}
-                onSetReply={(reply) => setReply(reply)}
+                onAddReply={(reply) => setReply(reply)}
+                onRemoveReply={() => setReply(null)}
                 onCreateReplyComment={handleCreateComment}
               />
             ))}

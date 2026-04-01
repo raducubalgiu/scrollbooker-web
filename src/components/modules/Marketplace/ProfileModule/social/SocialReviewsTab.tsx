@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Stack } from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import React, { memo, useCallback, useMemo, useState } from "react";
 import RatingsDistribution from "@/components/cutomized/RatingsDistribution/RatingsDistribution";
 import CustomTabs, {
@@ -103,7 +103,12 @@ const SocialReviewsTab = ({
           <CircularProgress />
         </Stack>
       )}
-      {!isLoading && (
+
+      {!isLoading && ratings_count === 0 && (
+        <Typography>No reviews yet</Typography>
+      )}
+
+      {!isLoading && ratings_count && ratings_count > 0 && (
         <>
           {ratings_average !== undefined && ratings_count !== undefined && (
             <ReviewsSummaryHeader

@@ -1,7 +1,9 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
 
 const ExploreSidebar = () => {
+  const [activeTab, setActiveTab] = React.useState(0);
+
   return (
     <Box
       sx={{
@@ -17,7 +19,45 @@ const ExploreSidebar = () => {
         borderRadius: 4,
       }}
     >
-      <Typography>Sidebar</Typography>
+      <Tabs
+        value={activeTab}
+        onChange={(_, newValue) => setActiveTab(newValue)}
+        sx={{ borderBottom: 1, borderColor: "divider" }}
+      >
+        <Tab
+          label="Servicii"
+          value={0}
+          sx={{
+            fontWeight: 600,
+            textTransform: "none",
+            fontSize: 17,
+            p: 2.5,
+            minWidth: 120,
+          }}
+        />
+        <Tab
+          label="Comentarii"
+          value={2}
+          sx={{
+            fontWeight: 600,
+            textTransform: "none",
+            fontSize: 17,
+            p: 2.5,
+            minWidth: 120,
+          }}
+        />
+        <Tab
+          label="Recenzii"
+          value={3}
+          sx={{
+            fontWeight: 600,
+            textTransform: "none",
+            fontSize: 17,
+            p: 2.5,
+            minWidth: 120,
+          }}
+        />
+      </Tabs>
     </Box>
   );
 };

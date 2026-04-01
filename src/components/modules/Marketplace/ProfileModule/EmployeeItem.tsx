@@ -7,9 +7,9 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
 import { formatRating } from "@/utils/formatters";
 import { useRouter } from "next/navigation";
+import StarRoundedIcon from "@mui/icons-material/StarRounded";
 
 const EmployeeItem = ({ employee }: { employee: BusinessEmployee }) => {
   const router = useRouter();
@@ -51,7 +51,10 @@ const EmployeeItem = ({ employee }: { employee: BusinessEmployee }) => {
                 justifyContent="center"
                 sx={styles.badgeContent}
               >
-                <StarIcon sx={{ fontSize: 18, mr: 0.5 }} color="primary" />
+                <StarRoundedIcon
+                  sx={{ fontSize: 18, mr: 0.5 }}
+                  color="primary"
+                />
                 <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
                   {formatRating(employee.ratings_average)}
                 </Typography>

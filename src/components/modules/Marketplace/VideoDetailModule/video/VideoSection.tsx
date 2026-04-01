@@ -393,7 +393,7 @@ export default function VideoSection({ url, onClose }: VideoSectionProps) {
           sx={{
             mx: 2.5,
             my: 1.5,
-            py: 2,
+            py: 1.5,
             opacity: 0.9,
             textTransform: "none",
             fontSize: 16,

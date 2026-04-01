@@ -5,9 +5,14 @@ import React from "react";
 type PostOverlayProps = {
   user: PostUser;
   description: string | null;
+  isVideoReview: boolean | undefined;
 };
 
-const PostOverlay = ({ user, description }: PostOverlayProps) => {
+const PostOverlay = ({
+  user,
+  description,
+  isVideoReview,
+}: PostOverlayProps) => {
   return (
     <Stack
       spacing={1.5}
@@ -20,6 +25,20 @@ const PostOverlay = ({ user, description }: PostOverlayProps) => {
         color: "common.white",
       }}
     >
+      {isVideoReview && (
+        <Box
+          sx={{
+            bgcolor: "rgba(255,255,255,0.1)",
+            px: 1.5,
+            py: 1,
+            width: "fit-content",
+            borderRadius: 20,
+          }}
+        >
+          <Typography fontWeight={600}>Recenzie video</Typography>
+        </Box>
+      )}
+
       <Stack direction="row" spacing={1.25} alignItems="center">
         <Box>
           <Typography fontWeight={800}>{user.fullname}</Typography>

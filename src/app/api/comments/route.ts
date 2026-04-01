@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, post } from "@/utils/requests";
 import { PostCommentCreate } from "@/ts/models/social/PostComment";
+import { PaginatedData } from "@/components/core/Table/Table";
 
 export const GET = async (req: NextRequest) => {
   const postId = req.nextUrl.searchParams.get("postId");
@@ -8,7 +9,7 @@ export const GET = async (req: NextRequest) => {
   const limit = req.nextUrl.searchParams.get("limit");
 
   const response = (
-    await get({
+    await get<PaginatedData<Comment>>({
       url: `/posts/${postId}/comments?page=${page}&limit=${limit}`,
     })
   ).data;

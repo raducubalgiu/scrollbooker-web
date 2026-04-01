@@ -1339,7 +1339,8 @@ export default function ExploreModule() {
   const currentPost: Post | undefined = posts[currentIndex];
   const currentVideoUrl = currentPost?.media_files[0]?.url || "";
 
-  const { user_actions, counters, user, description } = currentPost || {};
+  const { user_actions, counters, user, description, is_video_review } =
+    currentPost || {};
 
   // Sliding Window Logic: We want to keep a window of posts around the current index to ensure smooth transitions and preloading.
   const visibleWindow = useMemo(() => {
@@ -1420,11 +1421,21 @@ export default function ExploreModule() {
             );
           })}
 
-          {user && <PostOverlay user={user} description={description ?? ""} />}
+          {user && (
+            <PostOverlay
+              user={user}
+              description={description ?? ""}
+              isVideoReview={is_video_review}
+            />
+          )}
         </Box>
 
-        {counters && user_actions && (
-          <PostActions counters={counters} userActions={user_actions} />
+        {user && counters && user_actions && (
+          <PostActions
+            user={user}
+            counters={counters}
+            userActions={user_actions}
+          />
         )}
       </Box>
 

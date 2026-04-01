@@ -4,14 +4,19 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import IosShareRoundedIcon from "@mui/icons-material/IosShareRounded";
-import { PostCounters, PostUserActions } from "@/ts/models/social/Post";
+import {
+  PostCounters,
+  PostUser,
+  PostUserActions,
+} from "@/ts/models/social/Post";
 
 type PostActionsProps = {
+  user: PostUser;
   counters: PostCounters;
   userActions: PostUserActions;
 };
 
-const PostActions = ({ counters, userActions }: PostActionsProps) => {
+const PostActions = ({ user, counters, userActions }: PostActionsProps) => {
   console.log("counters", counters);
   console.log("userActions", userActions);
 
@@ -39,7 +44,6 @@ const PostActions = ({ counters, userActions }: PostActionsProps) => {
       count: 10,
     },
   ];
-
   return (
     <Box
       sx={{

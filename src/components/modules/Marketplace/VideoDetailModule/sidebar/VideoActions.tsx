@@ -1,12 +1,10 @@
 import React from "react";
 import { PostCounters, PostUserActions } from "@/ts/models/social/Post";
 import { IconButton, Stack, Typography } from "@mui/material";
-import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
-import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
 import IosShareIcon from "@mui/icons-material/IosShare";
+import TextsmsIcon from "@mui/icons-material/Textsms";
 
 type VideoActionsProps = {
   counters: PostCounters;
@@ -40,11 +38,9 @@ const VideoActions = ({
             bgcolor: "action.hover",
           }}
         >
-          {is_liked ? (
-            <FavoriteRoundedIcon color="error" />
-          ) : (
-            <FavoriteBorderRoundedIcon />
-          )}
+          <FavoriteRoundedIcon
+            sx={{ color: is_liked ? "error.main" : "text.primary" }}
+          />
         </IconButton>
 
         <Typography variant="body1" fontWeight={600}>
@@ -60,11 +56,11 @@ const VideoActions = ({
             bgcolor: "action.hover",
           }}
         >
-          <ChatBubbleOutlineIcon fontSize="medium" />
+          <TextsmsIcon fontSize="medium" sx={{ color: "text.primary" }} />
         </IconButton>
 
         <Typography variant="body1" fontWeight={600}>
-          {counters.comments_count?.toString() ?? "0"}
+          {counters.comment_count?.toString() ?? "0"}
         </Typography>
       </Stack>
 
@@ -78,9 +74,9 @@ const VideoActions = ({
           }}
         >
           {is_bookmarked ? (
-            <BookmarkRoundedIcon />
+            <BookmarkRoundedIcon sx={{ color: "text.primary" }} />
           ) : (
-            <BookmarkBorderRoundedIcon />
+            <BookmarkRoundedIcon sx={{ color: "text.primary" }} />
           )}
         </IconButton>
 
@@ -97,7 +93,7 @@ const VideoActions = ({
             bgcolor: "action.hover",
           }}
         >
-          <IosShareIcon fontSize="medium" />
+          <IosShareIcon fontSize="medium" sx={{ color: "text.primary" }} />
         </IconButton>
       </Stack>
     </Stack>

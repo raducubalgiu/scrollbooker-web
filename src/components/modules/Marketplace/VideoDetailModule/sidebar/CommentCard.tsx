@@ -2,8 +2,6 @@ import { PostComment } from "@/ts/models/social/PostComment";
 import {
   Avatar,
   Box,
-  Button,
-  ButtonBase,
   IconButton,
   Stack,
   TextField,
@@ -18,6 +16,7 @@ import { memo, useEffect, useState } from "react";
 import { useMutate } from "@/hooks/useHttp";
 import CloseIcon from "@mui/icons-material/Close";
 import { Reply } from "./VideoComments";
+import CommentReplies from "./CommentReplies";
 
 dayjs.extend(relativeTime);
 
@@ -25,7 +24,8 @@ type CommentCardProps = {
   comment: PostComment;
   avatar: string | null;
   reply: Reply | null;
-  onSetReply: (reply: Reply | null) => void;
+  onAddReply: (reply: Reply) => void;
+  onRemoveReply: () => void;
   onCreateReplyComment: () => void;
 };
 
@@ -33,13 +33,16 @@ const CommentCard = ({
   comment,
   avatar,
   reply,
-  onSetReply,
+  onAddReply,
+  onRemoveReply,
   onCreateReplyComment,
 }: CommentCardProps) => {
   const [likeCount, setLikeCount] = useState(comment.like_count ?? 0);
   const [liked, setLiked] = useState(comment.is_liked);
+  const [shouldFetchReplies, setShouldFetchReplies] = useState(false);
 
-  const { user, text, liked_by_post_author } = comment;
+  const { id, post_id, user, text, liked_by_post_author, replies_count } =
+    comment;
 
   useEffect(() => {
     setLiked(comment.is_liked);
@@ -106,7 +109,7 @@ const CommentCard = ({
             color="text.secondary"
             fontWeight={600}
             sx={{ cursor: "pointer" }}
-            onClick={() => onSetReply({ commentId: comment.id, text: "" })}
+            onClick={() => onAddReply({ commentId: comment.id, text: "" })}
           >
             Răspunde
           </Typography>
@@ -144,7 +147,7 @@ const CommentCard = ({
               minRows={0}
               maxRows={4}
               onChange={(e) =>
-                onSetReply({ commentId: reply.commentId, text: e.target.value })
+                onAddReply({ commentId: reply.commentId, text: e.target.value })
               }
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -172,24 +175,20 @@ const CommentCard = ({
               <ArrowUpwardOutlinedIcon />
             </IconButton>
 
-            <IconButton onClick={() => onSetReply(null)}>
+            <IconButton onClick={onRemoveReply}>
               <CloseIcon />
             </IconButton>
           </Stack>
         )}
 
         {comment.replies_count > 0 && (
-          <ButtonBase>
-            <Stack direction="row" alignItems="center">
-              <Box sx={{ width: 25, height: 2, bgcolor: "divider", mr: 2 }} />
-              <Typography color="text.secondary" mr={1}>
-                Vezi răspunsurile
-              </Typography>
-              <Typography color="text.secondary">
-                ({comment.replies_count})
-              </Typography>
-            </Stack>
-          </ButtonBase>
+          <CommentReplies
+            postId={post_id}
+            commentId={id}
+            repliesCount={replies_count}
+            shouldFetchReplies={shouldFetchReplies}
+            onSetShouldFetchReplies={() => setShouldFetchReplies(true)}
+          />
         )}
       </Box>
     </Stack>
