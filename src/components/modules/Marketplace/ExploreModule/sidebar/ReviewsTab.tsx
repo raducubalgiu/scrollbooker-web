@@ -1,34 +1,32 @@
-import { Box, Button, Stack } from "@mui/material";
-import React from "react";
+import { useInfiniteReviews } from "@/hooks/infiniteQuery/useInfiniteReviews";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import React, { memo } from "react";
+import ReviewCard from "../../ProfileModule/social/ReviewCard";
 
-const ReviewsTab = () => {
+type ReviewsTabProps = {
+  userId: number | undefined;
+};
+
+const ReviewsTab = ({ userId }: ReviewsTabProps) => {
+  const { data, isLoading } = useInfiniteReviews(userId);
+  const reviews = data?.pages.flatMap((p) => p.results) ?? [];
+
   return (
-    <Box p={1.5}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="center"
-        gap={1}
-      >
-        <Button
-          variant="contained"
-          disableElevation
-          sx={{ textTransform: "none" }}
-          color="primary"
-        >
-          Scrise
-        </Button>
-        <Button
-          //variant="contained"
-          disableElevation
-          sx={{ textTransform: "none" }}
-          color="inherit"
-        >
-          Video
-        </Button>
-      </Stack>
+    <Box p={3}>
+      {isLoading && (
+        <Stack alignItems="center" justifyContent="center" py={4}>
+          <CircularProgress />
+        </Stack>
+      )}
+      {!isLoading &&
+        reviews.length > 0 &&
+        reviews.map((review) => <ReviewCard key={review.id} review={review} />)}
+
+      {!isLoading && reviews.length === 0 && (
+        <Typography>Nu există recenzii.</Typography>
+      )}
     </Box>
   );
 };
 
-export default ReviewsTab;
+export default memo(ReviewsTab);

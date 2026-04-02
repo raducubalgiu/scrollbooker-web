@@ -3,7 +3,7 @@ import { Post } from "@/ts/models/social/Post";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const PAGE_LIMIT = 20;
+const PAGE_LIMIT = 10;
 
 const fetchExplorePosts = async ({ pageParam }: { pageParam: number }) => {
   const { data } = await axios.get<PaginatedData<Post>>(

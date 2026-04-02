@@ -30,7 +30,12 @@ export default function VideoSidebar({
   return (
     <Paper square elevation={0} sx={styles.container}>
       <Box p={2.5}>
-        <VideoHeader user={user} description={post.description} />
+        <VideoHeader
+          user={user}
+          description={post.description}
+          displayDescription={true}
+          isLoading={false}
+        />
         <VideoActions
           counters={post.counters}
           userActions={post.user_actions}

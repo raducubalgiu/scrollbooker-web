@@ -1,4 +1,5 @@
-import { ReviewsResponse } from "@/ts/models/booking/review/Review";
+import { PaginatedData } from "@/components/core/Table/Table";
+import { Review } from "@/ts/models/booking/review/Review";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -21,7 +22,7 @@ const fetchReviews = async ({
       ? `&ratings=${encodeURIComponent(ratingsArray.join(","))}`
       : "";
 
-  const { data } = await axios.get<ReviewsResponse>(
+  const { data } = await axios.get<PaginatedData<Review>>(
     `/api/social/reviews/written?userId=${userId}&page=${pageParam}&limit=${PAGE_LIMIT}${ratingsParam}`
   );
 

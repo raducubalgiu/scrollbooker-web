@@ -1,7 +1,13 @@
 "use client";
 
 import { Box } from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import PostOverlay from "./PostOverlay";
 import PostActions from "./PostActions";
 import { VideoPlayer } from "./VideoPlayer";
@@ -48,23 +54,34 @@ export default function ExploreModule() {
     if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   }, [currentIndex]);
 
-  useEffect(() => {
-    const shouldPrefetchNextPage =
-      hasNextPage &&
-      !isFetchingNextPage &&
-      currentIndex >= posts.length - PREFETCH_OFFSET;
+  const lastPrefetchTriggerRef = useRef<number | null>(null);
 
-    if (shouldPrefetchNextPage) {
-      fetchNextPage();
+  useEffect(() => {
+    const hasMoreRemoteItems = posts.length < postsCount;
+    const reachedPrefetchZone = currentIndex >= posts.length - PREFETCH_OFFSET;
+    const alreadyTriggeredForThisLength =
+      lastPrefetchTriggerRef.current === posts.length;
+
+    if (
+      !hasMoreRemoteItems ||
+      !hasNextPage ||
+      isFetchingNextPage ||
+      !reachedPrefetchZone ||
+      alreadyTriggeredForThisLength
+    ) {
+      return;
     }
+
+    lastPrefetchTriggerRef.current = posts.length;
+    fetchNextPage();
   }, [
     currentIndex,
-    fetchNextPage,
+    posts.length,
+    postsCount,
     hasNextPage,
     isFetchingNextPage,
-    posts.length,
+    fetchNextPage,
   ]);
-
   return (
     <Box sx={styles.container}>
       <Box sx={styles.leftSection}>

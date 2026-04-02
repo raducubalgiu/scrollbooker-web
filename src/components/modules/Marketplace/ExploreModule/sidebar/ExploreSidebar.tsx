@@ -54,7 +54,7 @@ const ExploreSidebar = ({
           <PostComments postId={postId} avatar={null} postAuthorAvatar={null} />
         );
       case ExploreSidebarTab.REVIEWS:
-        return <ReviewsTab />;
+        return <ReviewsTab userId={user?.id} />;
       default:
         return null;
     }
@@ -71,26 +71,46 @@ const ExploreSidebar = ({
         />
       </Box>
 
-      {!isLoading && (
-        <>
-          <Tabs
-            value={activeTab}
-            onChange={(_, newValue) => setActiveTab(newValue)}
-            sx={{ borderBottom: 1, borderColor: "divider" }}
-          >
-            {tabs.map((tab) => (
-              <Tab
-                key={tab.value}
-                label={tab.label}
-                value={tab.value}
-                sx={styles.tab}
-              />
-            ))}
-          </Tabs>
+      <Box
+        sx={{
+          borderTop: 1,
+          borderColor: "divider",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: 0,
+        }}
+      >
+        <Tabs
+          value={activeTab}
+          onChange={(_, newValue) => setActiveTab(newValue)}
+          sx={{ borderBottom: 1, borderColor: "divider" }}
+        >
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.value}
+              label={tab.label}
+              value={tab.value}
+              sx={styles.tab}
+            />
+          ))}
+        </Tabs>
 
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
+            scrollBarWidth: "none",
+            msOverflowStyle: "none",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+          }}
+        >
           {tabsContent}
-        </>
-      )}
+        </Box>
+      </Box>
     </Box>
   );
 };
