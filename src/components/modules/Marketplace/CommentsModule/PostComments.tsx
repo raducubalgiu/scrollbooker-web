@@ -149,21 +149,8 @@ const PostComments = ({
   };
 
   return (
-    <Stack sx={{ minHeight: 0, height: "100%" }}>
-      <Box
-        sx={{
-          flex: 1,
-          minHeight: 0,
-          overflowY: "auto",
-          px: 3,
-          py: 3,
-          scrollBarWidth: "none",
-          msOverflowStyle: "none",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
-        }}
-      >
+    <Stack sx={styles.container}>
+      <Box sx={styles.listContainer}>
         <Stack spacing={3}>
           {isLoading && rootComments.length === 0 && (
             <Stack alignItems="center" justifyContent="center" py={4}>
@@ -226,3 +213,18 @@ const PostComments = ({
 };
 
 export default memo(PostComments);
+
+const styles = {
+  container: { minHeight: 0, height: "100%" },
+  listContainer: {
+    flex: 1,
+    minHeight: 0,
+    overflowY: "auto",
+    p: 3,
+    scrollBarWidth: "none",
+    msOverflowStyle: "none",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
+  },
+};

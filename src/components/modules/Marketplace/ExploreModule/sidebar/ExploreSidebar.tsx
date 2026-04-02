@@ -3,6 +3,8 @@ import React, { memo, useMemo } from "react";
 import { PostUser } from "@/ts/models/social/Post";
 import PostComments from "../../CommentsModule/PostComments";
 import VideoHeader from "../../VideoDetailModule/sidebar/VideoHeader";
+import InstantBookingTab from "./InstantBookingTab";
+import ReviewsTab from "./ReviewsTab";
 
 enum ExploreSidebarTab {
   SERVICES,
@@ -11,6 +13,7 @@ enum ExploreSidebarTab {
 }
 
 type ExploreSidebarProps = {
+  isLoading: boolean;
   commentsCount: number | undefined;
   postId: number | undefined;
   user: PostUser | undefined;
@@ -20,35 +23,12 @@ const ExploreSidebar = ({
   commentsCount,
   postId,
   user,
+  isLoading,
 }: ExploreSidebarProps) => {
   const [activeTab, setActiveTab] = React.useState<ExploreSidebarTab>(
     ExploreSidebarTab.SERVICES
   );
   const { ratings_count } = user || {};
-
-  const styles = {
-    container: {
-      ml: 6,
-      flex: 1,
-      minWidth: 320,
-      maxWidth: 600,
-      border: 1,
-      borderColor: "divider",
-      borderRadius: 4,
-      display: "flex",
-      flexDirection: "column",
-      minHeight: 0,
-      height: "100%",
-      overflow: "hidden",
-    },
-    tab: {
-      fontWeight: 600,
-      textTransform: "none",
-      fontSize: 17,
-      p: 2.5,
-      minWidth: 120,
-    },
-  };
 
   const tabs = useMemo(
     () => [
@@ -68,17 +48,13 @@ const ExploreSidebar = ({
   const tabsContent = useMemo(() => {
     switch (activeTab) {
       case ExploreSidebarTab.SERVICES:
-        return <Box p={3}>Services Content</Box>;
+        return <InstantBookingTab />;
       case ExploreSidebarTab.COMMENTS:
         return (
           <PostComments postId={postId} avatar={null} postAuthorAvatar={null} />
         );
       case ExploreSidebarTab.REVIEWS:
-        return (
-          <Box p={3} sx={{ height: "100%" }}>
-            Reviews
-          </Box>
-        );
+        return <ReviewsTab />;
       default:
         return null;
     }
@@ -88,30 +64,59 @@ const ExploreSidebar = ({
     <Box sx={styles.container}>
       <Box p={3}>
         <VideoHeader
+          isLoading={isLoading}
           description={null}
           user={user}
           displayDescription={false}
         />
       </Box>
 
-      <Tabs
-        value={activeTab}
-        onChange={(_, newValue) => setActiveTab(newValue)}
-        sx={{ borderBottom: 1, borderColor: "divider" }}
-      >
-        {tabs.map((tab) => (
-          <Tab
-            key={tab.value}
-            label={tab.label}
-            value={tab.value}
-            sx={styles.tab}
-          />
-        ))}
-      </Tabs>
+      {!isLoading && (
+        <>
+          <Tabs
+            value={activeTab}
+            onChange={(_, newValue) => setActiveTab(newValue)}
+            sx={{ borderBottom: 1, borderColor: "divider" }}
+          >
+            {tabs.map((tab) => (
+              <Tab
+                key={tab.value}
+                label={tab.label}
+                value={tab.value}
+                sx={styles.tab}
+              />
+            ))}
+          </Tabs>
 
-      {tabsContent}
+          {tabsContent}
+        </>
+      )}
     </Box>
   );
 };
 
 export default memo(ExploreSidebar);
+
+const styles = {
+  container: {
+    ml: 6,
+    flex: 1,
+    minWidth: 320,
+    maxWidth: 600,
+    border: 1,
+    borderColor: "divider",
+    borderRadius: 4,
+    display: "flex",
+    flexDirection: "column",
+    minHeight: 0,
+    height: "100%",
+    overflow: "hidden",
+  },
+  tab: {
+    fontWeight: 600,
+    textTransform: "none",
+    fontSize: 17,
+    p: 2.5,
+    minWidth: 120,
+  },
+};

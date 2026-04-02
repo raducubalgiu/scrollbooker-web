@@ -1,13 +1,34 @@
-import { Box } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 import React, { useEffect } from "react";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 
 type VideoPlayerProps = {
+  isLoading: boolean;
   src: string;
   isActive: boolean;
 };
 
-export const VideoPlayer = ({ src, isActive }: VideoPlayerProps) => {
+export const VideoPlayer = ({
+  src,
+  isActive,
+  isLoading = false,
+}: VideoPlayerProps) => {
+  console.log("VideoPlayer render", { src, isActive, isLoading });
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+          position: "relative",
+        }}
+      >
+        <Skeleton variant="rectangular" width="100%" height="100%" />
+      </Box>
+    );
+  }
+
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [isMuted, setIsMuted] = React.useState(false);

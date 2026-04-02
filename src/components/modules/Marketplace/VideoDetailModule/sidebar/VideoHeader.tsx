@@ -1,4 +1,4 @@
-import { Avatar, Badge, Box, Stack, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Skeleton, Stack, Typography } from "@mui/material";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import { formatRating } from "@/utils/formatters";
 import React from "react";
@@ -6,6 +6,7 @@ import { PostUser } from "@/ts/models/social/Post";
 import { useRouter } from "next/navigation";
 
 type VideoHeaderProps = {
+  isLoading: boolean;
   displayDescription: boolean;
   description: string | null;
   user: PostUser | undefined;
@@ -15,6 +16,7 @@ const VideoHeader = ({
   user,
   description,
   displayDescription = false,
+  isLoading = false,
 }: VideoHeaderProps) => {
   const router = useRouter();
   const { avatar, fullname, username, ratings_average } = user || {};
@@ -46,55 +48,71 @@ const VideoHeader = ({
         onClick={() => router.push(`/profile/${username}`)}
         sx={{ cursor: "pointer" }}
       >
-        <Badge
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          badgeContent={
-            <Stack
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="center"
-              sx={styles.badgeContent}
-            >
-              <StarRateRoundedIcon
-                sx={{ fontSize: 18, mr: 0.5 }}
-                color="primary"
-              />
-              <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-                {ratings_average ? formatRating(ratings_average) : "-"}
-              </Typography>
-            </Stack>
-          }
-          sx={styles.badge}
-        >
-          <Avatar sx={styles.avatar} src={avatar ?? ""} />
-        </Badge>
+        {isLoading ? (
+          <Skeleton variant="circular" width={70} height={70} />
+        ) : (
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            badgeContent={
+              <Stack
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="center"
+                sx={styles.badgeContent}
+              >
+                <StarRateRoundedIcon
+                  sx={{ fontSize: 18, mr: 0.5 }}
+                  color="primary"
+                />
+                <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
+                  {ratings_average ? formatRating(ratings_average) : "-"}
+                </Typography>
+              </Stack>
+            }
+            sx={styles.badge}
+          >
+            <Avatar sx={styles.avatar} src={avatar ?? ""} />
+          </Badge>
+        )}
 
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Stack direction="row" alignItems="center" gap={1.5}>
-            <Typography variant="h6" fontWeight={700} noWrap>
-              {fullname ?? "-"}
-            </Typography>
-            {username && (
-              <Typography variant="body2" color="text.secondary">
-                @{username}
-              </Typography>
+            {isLoading ? (
+              <Skeleton variant="rounded" width={150} height={15} />
+            ) : (
+              <>
+                <Typography variant="h6" fontWeight={700} noWrap>
+                  {fullname ?? "-"}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  @{username}
+                </Typography>
+              </>
             )}
           </Stack>
 
-          <Stack direction="row" alignItems="center" gap={1}>
-            <Typography color="text.secondary">Frizerie •</Typography>
-            <Typography color="text.secondary">
-              Strada Oarecare nr 3, Sector 6
-            </Typography>
-            <Typography
-              color="primary"
-              fontWeight={600}
-              sx={{ cursor: "pointer" }}
-            >
-              Vezi indicatii
-            </Typography>
-          </Stack>
+          {isLoading ? (
+            <Skeleton
+              variant="rounded"
+              width={300}
+              height={15}
+              sx={{ mt: 1 }}
+            />
+          ) : (
+            <Stack direction="row" alignItems="center" gap={1}>
+              <Typography color="text.secondary">
+                Frizerie • Strada Oarecare nr 3, Sector 6
+              </Typography>
+              <Typography
+                color="primary"
+                fontWeight={600}
+                sx={{ cursor: "pointer" }}
+              >
+                Vezi indicatii
+              </Typography>
+            </Stack>
+          )}
         </Box>
 
         {/* {!user.is_follow && (
