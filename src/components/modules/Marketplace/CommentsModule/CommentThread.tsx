@@ -62,7 +62,7 @@ const CommentThread = ({
     onOpenReply({
       rootCommentId: rootComment.id,
       replyToCommentId: rootComment.id,
-      replyToUsername: rootComment.user.username,
+      replyToFullName: rootComment.user.fullname,
     });
   };
 
@@ -74,7 +74,7 @@ const CommentThread = ({
     onOpenReply({
       rootCommentId: rootComment.id,
       replyToCommentId: reply.id,
-      replyToUsername: reply.user.username,
+      replyToFullName: reply.user.fullname,
     });
   };
 
@@ -158,10 +158,10 @@ const CommentThread = ({
             value={replyText}
             onChange={onReplyTextChange}
             onSubmit={() => onSubmitReply(rootComment)}
-            replyingTo={activeReplyTarget.replyToUsername}
+            replyingTo={activeReplyTarget.replyToFullName}
             onCancel={onCloseReply}
             autoFocus
-            placeholder={`Răspunde lui @${activeReplyTarget.replyToUsername}...`}
+            placeholder={`Răspunde lui ${activeReplyTarget.replyToFullName}...`}
           />
         </Box>
       )}

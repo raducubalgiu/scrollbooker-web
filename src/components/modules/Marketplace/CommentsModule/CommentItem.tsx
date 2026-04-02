@@ -62,7 +62,7 @@ const CommentItem = ({
           alignItems="center"
           sx={{ mb: 0.5, flexWrap: "wrap" }}
         >
-          <Typography fontWeight={700}>@{comment.user.username}</Typography>
+          <Typography fontWeight={700}>{comment.user.fullname}</Typography>
 
           <Typography variant="caption" color="text.secondary">
             {dayjs(comment.created_at).fromNow()}

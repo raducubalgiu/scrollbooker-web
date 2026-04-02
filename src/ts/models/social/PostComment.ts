@@ -29,5 +29,5 @@ export interface PostCommentCreate {
 export interface ReplyTarget {
   rootCommentId: number;
   replyToCommentId: number;
-  replyToUsername: string;
+  replyToFullName: string;
 }
