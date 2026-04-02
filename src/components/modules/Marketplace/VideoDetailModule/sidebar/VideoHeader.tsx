@@ -1,4 +1,4 @@
-import { Avatar, Badge, Box, Button, Stack, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Stack, Typography } from "@mui/material";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import { formatRating } from "@/utils/formatters";
 import React from "react";
@@ -6,12 +6,18 @@ import { PostUser } from "@/ts/models/social/Post";
 import { useRouter } from "next/navigation";
 
 type VideoHeaderProps = {
+  displayDescription: boolean;
   description: string | null;
-  user: PostUser;
+  user: PostUser | undefined;
 };
 
-const VideoHeader = ({ user, description }: VideoHeaderProps) => {
+const VideoHeader = ({
+  user,
+  description,
+  displayDescription = false,
+}: VideoHeaderProps) => {
   const router = useRouter();
+  const { avatar, fullname, username, ratings_average } = user || {};
 
   const styles = {
     badge: {
@@ -37,7 +43,7 @@ const VideoHeader = ({ user, description }: VideoHeaderProps) => {
         direction="row"
         spacing={1.5}
         alignItems="center"
-        onClick={() => router.push(`/profile/${user.username}`)}
+        onClick={() => router.push(`/profile/${username}`)}
         sx={{ cursor: "pointer" }}
       >
         <Badge
@@ -55,23 +61,25 @@ const VideoHeader = ({ user, description }: VideoHeaderProps) => {
                 color="primary"
               />
               <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-                {formatRating(user.ratings_average)}
+                {ratings_average ? formatRating(ratings_average) : "-"}
               </Typography>
             </Stack>
           }
           sx={styles.badge}
         >
-          <Avatar sx={styles.avatar} src={user.avatar ?? ""} />
+          <Avatar sx={styles.avatar} src={avatar ?? ""} />
         </Badge>
 
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Stack direction="row" alignItems="center" gap={1.5}>
             <Typography variant="h6" fontWeight={700} noWrap>
-              {user.fullname}
+              {fullname ?? "-"}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              @{user.username}
-            </Typography>
+            {username && (
+              <Typography variant="body2" color="text.secondary">
+                @{username}
+              </Typography>
+            )}
           </Stack>
 
           <Stack direction="row" alignItems="center" gap={1}>
@@ -102,9 +110,11 @@ const VideoHeader = ({ user, description }: VideoHeaderProps) => {
         )} */}
       </Stack>
 
-      {/* <Box sx={{ mt: 4 }}>
-        <Typography>{description ?? "..."}</Typography>
-      </Box> */}
+      {displayDescription && (
+        <Box sx={{ mt: 4 }}>
+          <Typography>{description ?? "..."}</Typography>
+        </Box>
+      )}
     </Box>
   );
 };

@@ -1,5 +1,5 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import React, { useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import { PostUser } from "@/ts/models/social/Post";
 import PostComments from "../../CommentsModule/PostComments";
 import VideoHeader from "../../VideoDetailModule/sidebar/VideoHeader";
@@ -26,10 +26,6 @@ const ExploreSidebar = ({
   );
   const { ratings_count } = user || {};
 
-  if (!postId) {
-    return null;
-  }
-
   const styles = {
     container: {
       ml: 6,
@@ -44,6 +40,13 @@ const ExploreSidebar = ({
       minHeight: 0,
       height: "100%",
       overflow: "hidden",
+    },
+    tab: {
+      fontWeight: 600,
+      textTransform: "none",
+      fontSize: 17,
+      p: 2.5,
+      minWidth: 120,
     },
   };
 
@@ -83,11 +86,13 @@ const ExploreSidebar = ({
 
   return (
     <Box sx={styles.container}>
-      {user && (
-        <Box p={3}>
-          <VideoHeader description={null} user={user} />
-        </Box>
-      )}
+      <Box p={3}>
+        <VideoHeader
+          description={null}
+          user={user}
+          displayDescription={false}
+        />
+      </Box>
 
       <Tabs
         value={activeTab}
@@ -99,13 +104,7 @@ const ExploreSidebar = ({
             key={tab.value}
             label={tab.label}
             value={tab.value}
-            sx={{
-              fontWeight: 600,
-              textTransform: "none",
-              fontSize: 17,
-              p: 2.5,
-              minWidth: 120,
-            }}
+            sx={styles.tab}
           />
         ))}
       </Tabs>
@@ -115,4 +114,4 @@ const ExploreSidebar = ({
   );
 };
 
-export default ExploreSidebar;
+export default memo(ExploreSidebar);

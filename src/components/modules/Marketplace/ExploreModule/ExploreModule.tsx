@@ -13,7 +13,7 @@ import ExploreSidebar from "./sidebar/ExploreSidebar";
 const WINDOW_SIZE = 5;
 
 export default function ExploreModule() {
-  const { data, isLoading } = useInfiniteExplorePosts();
+  const { data } = useInfiniteExplorePosts();
   const posts = data ? data.pages.flatMap((page) => page.results) : [];
   const postsCount = data?.pages[0]?.count || 0;
 
@@ -62,81 +62,72 @@ export default function ExploreModule() {
 
   return (
     <Box sx={styles.container}>
-      {isLoading && <div>Loading...</div>}
-      {!isLoading && (
-        <>
-          <Box
-            sx={{
-              flex: "0 0 auto",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              gap: 2.5,
-            }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                height: "100%",
-                aspectRatio: "9 / 16",
-                borderRadius: 4,
-                overflow: "hidden",
-                bgcolor: "black",
-              }}
-            >
-              {currentVideoUrl && (
-                <VideoPlayer
-                  key={currentPost?.id}
-                  src={currentVideoUrl}
-                  isActive={true}
-                />
-              )}
+      <Box
+        sx={{
+          flex: "0 0 auto",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: 2.5,
+        }}
+      >
+        <Box
+          sx={{
+            position: "relative",
+            height: "100%",
+            aspectRatio: "9 / 16",
+            borderRadius: 4,
+            overflow: "hidden",
+            bgcolor: "black",
+          }}
+        >
+          {currentVideoUrl && (
+            <VideoPlayer
+              key={currentPost?.id}
+              src={currentVideoUrl}
+              isActive={true}
+            />
+          )}
 
-              {visibleWindow.map((post) => {
-                const url = post.media_files?.[0]?.url;
+          {visibleWindow.map((post) => {
+            const url = post.media_files?.[0]?.url;
 
-                return (
-                  <video
-                    key={post.id}
-                    src={url}
-                    preload="auto"
-                    style={{ display: "none" }}
-                  />
-                );
-              })}
-
-              {user && (
-                <PostOverlay
-                  user={user}
-                  description={description ?? ""}
-                  isVideoReview={is_video_review}
-                />
-              )}
-            </Box>
-
-            {user && counters && user_actions && (
-              <PostActions
-                user={user}
-                counters={counters}
-                userActions={user_actions}
+            return (
+              <video
+                key={post.id}
+                src={url}
+                preload="auto"
+                style={{ display: "none" }}
               />
-            )}
-          </Box>
+            );
+          })}
 
-          <ExploreSidebar
-            commentsCount={currentPost?.counters.comment_count}
-            postId={currentPost?.id}
-            user={currentPost?.user}
+          <PostOverlay
+            user={user}
+            description={description ?? ""}
+            isVideoReview={is_video_review}
           />
+        </Box>
 
-          <ExploreControls
-            isDisabledPrev={currentIndex === 0}
-            isDisabledNext={currentIndex === posts.length - 1}
-            onGoToPrev={goToPrev}
-            onGoToNext={goToNext}
-          />
-        </>
-      )}
+        <PostActions
+          user={user}
+          counters={counters}
+          userActions={user_actions}
+        />
+      </Box>
+
+      <ExploreSidebar
+        commentsCount={currentPost?.counters.comment_count}
+        postId={currentPost?.id}
+        user={currentPost?.user}
+      />
+
+      <ExploreControls
+        isDisabledPrev={currentIndex === 0}
+        isDisabledNext={currentIndex === posts.length - 1}
+        onGoToPrev={goToPrev}
+        onGoToNext={goToNext}
+      />
     </Box>
   );
 }

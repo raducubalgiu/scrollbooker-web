@@ -3,7 +3,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 
 type PostOverlayProps = {
-  user: PostUser;
+  user: PostUser | undefined;
   description: string | null;
   isVideoReview: boolean | undefined;
 };
@@ -41,9 +41,9 @@ const PostOverlay = ({
 
       <Stack direction="row" spacing={1.25} alignItems="center">
         <Box>
-          <Typography fontWeight={800}>{user.fullname}</Typography>
+          <Typography fontWeight={800}>{user?.fullname}</Typography>
           <Typography color="primary" sx={{ opacity: 0.92, fontWeight: 600 }}>
-            {user.profession}
+            {user?.profession}
           </Typography>
         </Box>
       </Stack>

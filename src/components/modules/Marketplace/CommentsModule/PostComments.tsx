@@ -13,7 +13,7 @@ import { useInfiniteComments } from "@/hooks/infiniteQuery/useInfiniteComments";
 import { useMutate } from "@/hooks/useHttp";
 
 type PostCommentsProps = {
-  postId: number;
+  postId: number | undefined;
   avatar: string | null;
   postAuthorAvatar: string | null;
 };
@@ -30,6 +30,16 @@ const PostComments = ({
   avatar,
   postAuthorAvatar,
 }: PostCommentsProps) => {
+  if (!postId) {
+    return (
+      <Stack alignItems="center" justifyContent="center" py={4}>
+        <Typography color="text.secondary">
+          Nu s-a putut încărca comentariile.
+        </Typography>
+      </Stack>
+    );
+  }
+
   const [newCommentText, setNewCommentText] = useState("");
   const [replyText, setReplyText] = useState("");
   const [activeReplyTarget, setActiveReplyTarget] =
@@ -51,8 +61,6 @@ const PostComments = ({
     () => data?.pages.flatMap((page) => page.results) ?? [],
     [data]
   );
-
-  const count = data?.pages[0]?.count ?? 0;
 
   const { mutate: createComment } = useMutate({
     key: ["comments", postId],

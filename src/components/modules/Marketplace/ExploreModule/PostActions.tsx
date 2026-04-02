@@ -11,9 +11,9 @@ import {
 } from "@/ts/models/social/Post";
 
 type PostActionsProps = {
-  user: PostUser;
-  counters: PostCounters;
-  userActions: PostUserActions;
+  user: PostUser | undefined;
+  counters: PostCounters | undefined;
+  userActions: PostUserActions | undefined;
 };
 
 const PostActions = ({ user, counters, userActions }: PostActionsProps) => {
@@ -24,17 +24,17 @@ const PostActions = ({ user, counters, userActions }: PostActionsProps) => {
     {
       key: "like",
       icon: <FavoriteIcon fontSize="large" sx={{ color: "text.primary" }} />,
-      count: counters.like_count,
+      count: counters?.like_count ?? "-",
     },
     {
       key: "comments",
       icon: <TextsmsIcon fontSize="large" sx={{ color: "text.primary" }} />,
-      count: counters.comment_count,
+      count: counters?.comment_count ?? "-",
     },
     {
       key: "save",
       icon: <BookmarkIcon fontSize="large" sx={{ color: "text.primary" }} />,
-      count: counters.bookmark_count,
+      count: counters?.bookmark_count ?? "-",
     },
     {
       key: "share",
