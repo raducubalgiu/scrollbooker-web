@@ -6,9 +6,9 @@ import PostOverlay from "./PostOverlay";
 import PostActions from "./PostActions";
 import { VideoPlayer } from "./VideoPlayer";
 import { Post } from "@/ts/models/social/Post";
-import ExploreSidebar from "./ExploreSidebar";
 import ExploreControls from "./ExploreControls";
 import { useInfiniteExplorePosts } from "@/hooks/infiniteQuery/useInfiniteExplorePosts";
+import ExploreSidebar from "./sidebar/ExploreSidebar";
 
 const WINDOW_SIZE = 5;
 
@@ -16,9 +16,6 @@ export default function ExploreModule() {
   const { data, isLoading } = useInfiniteExplorePosts();
   const posts = data ? data.pages.flatMap((page) => page.results) : [];
   const postsCount = data?.pages[0]?.count || 0;
-
-  console.log("Fetched posts:", posts);
-  console.log("Posts count:", postsCount);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
