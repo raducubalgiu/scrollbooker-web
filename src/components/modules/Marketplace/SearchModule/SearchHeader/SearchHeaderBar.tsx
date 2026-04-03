@@ -210,7 +210,11 @@ const SearchHeaderBar = ({
                 >
                   {sec.title}
                 </Typography>
-                <Typography color="text.primary" fontWeight={500}>
+                <Typography
+                  color="text.primary"
+                  fontWeight={500}
+                  sx={{ fontSize: "1rem" }}
+                >
                   {sec.value}
                 </Typography>
               </Stack>
