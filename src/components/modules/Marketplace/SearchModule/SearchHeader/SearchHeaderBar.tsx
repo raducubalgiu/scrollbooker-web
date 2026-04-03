@@ -204,18 +204,13 @@ const SearchHeaderBar = ({
             >
               <Stack alignItems="flex-start">
                 <Typography
-                  variant="subtitle2"
                   color="text.secondary"
-                  fontWeight={700}
-                  lineHeight={1.3}
+                  fontWeight={600}
+                  lineHeight={1.5}
                 >
                   {sec.title}
                 </Typography>
-                <Typography
-                  variant="subtitle1"
-                  color="text.primary"
-                  sx={{ fontSize: "0.98rem" }}
-                >
+                <Typography color="text.primary" fontWeight={500}>
                   {sec.value}
                 </Typography>
               </Stack>

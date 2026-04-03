@@ -50,6 +50,16 @@ declare module "@mui/material/Button" {
   }
 }
 
+declare module "@mui/material/styles" {
+  interface TypographyVariants {
+    fontWeightSemiBold: number;
+  }
+
+  interface TypographyVariantsOptions {
+    fontWeightSemiBold?: number;
+  }
+}
+
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -78,6 +88,15 @@ export const darkTheme = createTheme({
     slotBookedScrollBooker: {
       main: "#C06020",
     },
+  },
+
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightSemiBold: 600,
+    fontWeightBold: 700,
   },
 
   components: {
@@ -313,6 +332,15 @@ export const lightTheme = createTheme({
     },
   },
 
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightSemiBold: 600,
+    fontWeightBold: 700,
+  },
+
   components: {
     MuiAppBar: {
       styleOverrides: {
@@ -363,7 +391,7 @@ export const lightTheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          fontWeight: "bold",
+          fontWeight: 600,
           borderRadius: 50,
           textTransform: "none",
           fontSize: "1rem",
