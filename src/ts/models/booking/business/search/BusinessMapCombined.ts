@@ -41,8 +41,3 @@ export interface BoundingBox {
   max_lng: number;
   max_lat: number;
 }
-
-export interface BusinessMapResponse {
-  markers: BusinessMarker;
-  list: PaginatedData<BusinessSheet>;
-}

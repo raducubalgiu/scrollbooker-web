@@ -1,11 +1,20 @@
 import { Portal, Stack, Box } from "@mui/material";
-import React from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import BusinessDomainsTabs from "../BusinessDomainsTabs";
 import { SearchHeaderSectionType } from "@/components/modules/Marketplace/SearchModule/SearchHeaderSectionEnum";
 import SearchPopperSections from "./SearchPopperSections";
 import SearchHeaderBar from "./SearchHeaderBar";
-import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import {
+  createHandleMouseDown,
+  useSearchHeaderScrollLock,
+} from "./search-header-utils";
+
+export type SearchHeaderState = {
+  selectedBusinessDomainId: number | null;
+  selectedServiceDomainId: number | null;
+  selectedServiceId: number | null;
+};
 
 type SearchHeaderProps = {
   isMapVisible: boolean;
@@ -13,8 +22,8 @@ type SearchHeaderProps = {
   onToggleMap: () => void;
   onHeightChange?: (height: number) => void;
   mainPagePadding?: number | string;
-  selectedBusinessDomain: BusinessDomain | null;
-  onSetSelectedBusinessDomain: (domain: BusinessDomain) => void;
+  onSearch: (state: SearchHeaderState) => void;
+  headerState: SearchHeaderState;
 };
 
 const SearchHeader = ({
@@ -23,10 +32,15 @@ const SearchHeader = ({
   onToggleMap,
   onHeightChange,
   mainPagePadding = 0,
-  selectedBusinessDomain,
-  onSetSelectedBusinessDomain,
+  onSearch,
+  headerState,
 }: SearchHeaderProps) => {
   const theme = useTheme();
+  const [state, setState] = useState<SearchHeaderState>(headerState);
+
+  useEffect(() => {
+    setState(headerState);
+  }, [headerState]);
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const pillRef = React.useRef<HTMLDivElement | null>(null);
@@ -60,120 +74,35 @@ const SearchHeader = ({
   }, [onHeightChange]);
 
   React.useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => {
-      if (!isExpandedRef.current) return;
-
-      const targetNode = e.target as Node;
-      // Check if click is inside Popper or pill
-      if (popperRef.current?.contains(targetNode)) return;
-      if (pillRef.current?.contains(targetNode)) return;
-
-      // Check if click is inside any MUI Popover/Menu/MenuItem
-      let el: Node | null = targetNode;
-      while (el) {
-        if (
-          (el as HTMLElement).classList &&
-          [
-            "MuiPopover-root",
-            "MuiMenu-root",
-            "MuiMenu-paper",
-            "MuiPaper-root",
-            "MuiModal-root",
-            "MuiMenu-list",
-            "MuiList-root",
-          ].some((cls) => (el as HTMLElement).classList.contains(cls))
-        ) {
-          return;
-        }
-        el = el.parentNode;
-      }
-
-      setActiveSection(null);
-    };
     document.addEventListener("mousedown", handleMouseDown);
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, []);
 
-  React.useEffect(() => {
-    if (!isExpanded) return;
+  const handleMouseDown = React.useCallback(
+    createHandleMouseDown({
+      isExpandedRef,
+      popperRef,
+      pillRef,
+      onOutsideClick: () => setActiveSection(null),
+    }),
+    []
+  );
 
-    const doc = document.documentElement;
-    const body = document.body;
-
-    const prev = {
-      htmlOverflow: doc.style.overflow,
-      htmlPaddingRight: doc.style.paddingRight,
-      bodyPosition: body.style.position,
-      bodyTop: body.style.top,
-    } as const;
-
-    const calcScrollbarWidth = () =>
-      window.innerWidth - document.documentElement.clientWidth;
-    const applyScrollbarCompensation = () => {
-      const sw = calcScrollbarWidth();
-      if (sw > 0) doc.style.paddingRight = `${sw}px`;
-      else doc.style.paddingRight = "";
-    };
-
-    const isiOS = /iP(ad|hone|od)/.test(navigator.userAgent || "");
-    let savedY: number | null = null;
-
-    if (isiOS) {
-      savedY = window.scrollY || window.pageYOffset;
-      body.style.position = "fixed";
-      body.style.top = `-${savedY}px`;
-      body.style.left = "0";
-      body.style.right = "0";
-    } else {
-      doc.style.overflow = "hidden";
-      applyScrollbarCompensation();
-    }
-
-    const onResize = () => {
-      applyScrollbarCompensation();
-      window.requestAnimationFrame(() =>
-        window.dispatchEvent(new Event("resize"))
-      );
-    };
-    window.addEventListener("resize", onResize);
-
-    const onTouchMove = (e: TouchEvent) => {
-      try {
-        if (
-          popperRef.current?.contains(e.target as Node) ||
-          pillRef.current?.contains(e.target as Node)
-        )
-          return;
-      } catch (err) {
-        // defensive
-      }
-      e.preventDefault();
-    };
-
-    document.addEventListener("touchmove", onTouchMove, { passive: false });
-
-    return () => {
-      document.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("resize", onResize);
-
-      doc.style.overflow = prev.htmlOverflow;
-      doc.style.paddingRight = prev.htmlPaddingRight;
-
-      body.style.position = prev.bodyPosition;
-      body.style.top = prev.bodyTop;
-
-      if (isiOS && savedY !== null) {
-        window.scrollTo(0, savedY);
-      }
-    };
-  }, [isExpanded]);
+  useSearchHeaderScrollLock({
+    isExpanded,
+    popperRef,
+    pillRef,
+  });
 
   const backDrop = React.useMemo(
     () => (
       <Portal>
         {isExpanded && (
           <Box
-            onClick={closeSection}
+            onClick={() => {
+              setState(headerState);
+              closeSection();
+            }}
             sx={{
               position: "fixed",
               inset: 0,
@@ -184,7 +113,7 @@ const SearchHeader = ({
         )}
       </Portal>
     ),
-    [isExpanded, closeSection, theme.zIndex]
+    [isExpanded, closeSection, theme.zIndex, headerState, setState]
   );
 
   const containerSx = React.useMemo(() => {
@@ -220,9 +149,24 @@ const SearchHeader = ({
     [theme.zIndex]
   );
 
-  const onSearchClick = React.useCallback(() => {
-    // placeholder for search action; stable ref prevents re-renders downstream
-  }, []);
+  const handleBusinessDomainChange = (id: number | null) => {
+    setState((prev) => ({
+      ...prev,
+      selectedBusinessDomainId: id,
+      selectedServiceDomainId: null,
+      selectedServiceId: null,
+    }));
+  };
+  const handleServiceDomainChange = (id: number | null) => {
+    setState((prev) => ({
+      ...prev,
+      selectedServiceDomainId: id,
+      selectedServiceId: null,
+    }));
+  };
+  const handleServiceChange = (id: number | null) => {
+    setState((prev) => ({ ...prev, selectedServiceId: id }));
+  };
 
   return (
     <>
@@ -235,7 +179,10 @@ const SearchHeader = ({
               isExpanded={isExpanded}
               toggle={toggle}
               activeSection={activeSection}
-              onSearch={onSearchClick}
+              onSearch={() => {
+                closeSection();
+                onSearch(state);
+              }}
               popperId="search-popper"
               close={closeSection}
             />
@@ -246,8 +193,12 @@ const SearchHeader = ({
               popperRef={popperRef}
               activeSection={activeSection}
               popperId="search-popper"
-              selectedBusinessDomain={selectedBusinessDomain}
-              onSetSelectedBusinessDomain={onSetSelectedBusinessDomain}
+              selectedBusinessDomainId={state.selectedBusinessDomainId}
+              onSetBusinessDomainId={handleBusinessDomainChange}
+              selectedServiceDomainId={state.selectedServiceDomainId}
+              onSetServiceDomainId={handleServiceDomainChange}
+              selectedServiceId={state.selectedServiceId}
+              onSetServiceId={handleServiceChange}
             />
           </Box>
         </Stack>
@@ -257,12 +208,19 @@ const SearchHeader = ({
           isMapVisible={isMapVisible}
           onOpenFilters={onOpenFilters}
           onToggleMap={onToggleMap}
-          selectedBusinessDomain={selectedBusinessDomain}
-          onSetSelectedBusinessDomain={onSetSelectedBusinessDomain}
+          selectedBusinessDomainId={headerState.selectedBusinessDomainId}
+          onSelectBusinessDomain={(id) =>
+            onSearch({
+              ...state,
+              selectedBusinessDomainId: id,
+              selectedServiceDomainId: null,
+              selectedServiceId: null,
+            })
+          }
         />
       </Box>
     </>
   );
 };
 
-export default SearchHeader;
+export default memo(SearchHeader);

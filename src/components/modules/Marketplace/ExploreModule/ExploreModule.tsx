@@ -22,7 +22,12 @@ const PREFETCH_OFFSET = 2;
 export default function ExploreModule() {
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     useInfiniteExplorePosts();
-  const posts = data ? data.pages.flatMap((page) => page.results) : [];
+
+  const posts = useMemo(
+    () => data?.pages.flatMap((page) => page.results) || [],
+    [data]
+  );
+
   const postsCount = data?.pages[0]?.count || 0;
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -82,6 +87,7 @@ export default function ExploreModule() {
     isFetchingNextPage,
     fetchNextPage,
   ]);
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.leftSection}>

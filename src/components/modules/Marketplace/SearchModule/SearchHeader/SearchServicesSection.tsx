@@ -7,26 +7,45 @@ import {
   FormControl,
   InputLabel,
   IconButton,
+  Breadcrumbs,
+  Stack,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { MVP_BUSINESS_DOMAINS } from "@/utils/mvp-hardcoded/mvp-business-domains";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import Image from "next/image";
+import { useCustomQuery } from "@/hooks/useHttp";
+import { Service } from "@/ts/models/nomenclatures/service/Service";
 
 type SearchServicesSectionProps = {
-  selectedBusinessDomain: BusinessDomainType | null;
-  onSetSelectedBusinessDomain: (domain: BusinessDomainType) => void;
+  selectedBusinessDomainId: number | null;
+  onSetBusinessDomainId: (id: number | null) => void;
+  selectedServiceDomainId: number | null;
+  onSetServiceDomainId: (id: number | null) => void;
+  selectedServiceId: number | null;
+  onSetServiceId: (id: number | null) => void;
 };
 
 const SearchServicesSection = ({
-  selectedBusinessDomain,
-  onSetSelectedBusinessDomain,
+  selectedBusinessDomainId,
+  onSetBusinessDomainId,
+  selectedServiceDomainId,
+  onSetServiceDomainId,
+  selectedServiceId,
+  onSetServiceId,
 }: SearchServicesSectionProps) => {
+  const { data: services, isLoading } = useCustomQuery<Service[]>({
+    key: ["services-by-service-domain", !!selectedServiceDomainId],
+    url: `/api/nomenclatures/service-domains/${selectedServiceDomainId}/services`,
+    options: {
+      enabled: !!selectedServiceDomainId,
+    },
+  });
+
   const bDomains = useMemo(
     () => [
       {
-        id: 0,
+        id: null,
         name: "Toate",
         short_name: "Toate",
         active: false,
@@ -38,14 +57,23 @@ const SearchServicesSection = ({
   );
 
   const [displayServices, setDisplayServices] = useState(false);
-  const [selectedServiceId, setSelectedServiceId] = useState("");
+
+  useEffect(() => {
+    if (selectedServiceDomainId) {
+      onSetServiceDomainId(selectedServiceDomainId);
+      setDisplayServices(true);
+    } else {
+      onSetServiceDomainId(null);
+      setDisplayServices(false);
+    }
+  }, [selectedServiceDomainId]);
 
   const selectedServiceDomains = useMemo(() => {
     return (
-      bDomains.find((d) => d.id === selectedBusinessDomain?.id)
+      bDomains.find((d) => d.id === selectedBusinessDomainId)
         ?.service_domains || []
     );
-  }, [selectedBusinessDomain, bDomains]);
+  }, [selectedBusinessDomainId, bDomains]);
 
   return (
     <Box sx={{ minWidth: 700, minHeight: 500 }}>
@@ -55,7 +83,7 @@ const SearchServicesSection = ({
 
       <Box sx={{ mb: 2 }}>
         {bDomains.map((d) => {
-          const isSelected = d.id === selectedBusinessDomain?.id;
+          const isSelected = d.id === selectedBusinessDomainId;
 
           return (
             <Button
@@ -65,7 +93,7 @@ const SearchServicesSection = ({
               size="large"
               disableElevation
               sx={{ py: 1.5, px: 3, mr: 1, mb: 1 }}
-              onClick={() => onSetSelectedBusinessDomain(d)}
+              onClick={() => onSetBusinessDomainId(d.id)}
             >
               {d.short_name}
             </Button>
@@ -109,13 +137,14 @@ const SearchServicesSection = ({
                   }}
                   onClick={() => {
                     setDisplayServices(true);
+                    onSetServiceDomainId(serviceDomain.id);
                   }}
                 >
                   <Box
                     sx={{
                       position: "relative",
                       width: "100%",
-                      height: 100,
+                      height: 150,
                     }}
                   >
                     <Image
@@ -130,7 +159,7 @@ const SearchServicesSection = ({
                       }}
                     />
                   </Box>
-                  <Typography variant="body2" fontWeight={700}>
+                  <Typography fontWeight={700} mt={1.5}>
                     {serviceDomain.name}
                   </Typography>
                 </Box>
@@ -140,31 +169,46 @@ const SearchServicesSection = ({
         </Box>
       ) : (
         <Box sx={{ minWidth: 700, minHeight: 500 }}>
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+          <Stack flexDirection="row" alignItems="center" mb={1.5} gap={1}>
             <IconButton
               size="large"
               onClick={() => {
                 setDisplayServices(false);
-                setSelectedServiceId("");
+                onSetServiceDomainId(null);
               }}
             >
               <ArrowBackIcon fontSize="medium" />
             </IconButton>
-            <Typography variant="subtitle1" fontWeight={700} ml={1}>
-              Selectează serviciul
-            </Typography>
-          </Box>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Typography sx={{ color: "text.primary" }}>
+                Par si Barba
+              </Typography>
+              <Typography sx={{ color: "text.primary" }} fontWeight={600}>
+                Selecteaza serviciul
+              </Typography>
+            </Breadcrumbs>
+          </Stack>
+
           <FormControl fullWidth sx={{ mb: 3 }}>
             <InputLabel id="service-select-label">Serviciu</InputLabel>
             <Select
               labelId="service-select-label"
-              value={selectedServiceId}
+              value={selectedServiceId ?? ""}
               label="Serviciu"
-              disabled={true}
+              disabled={isLoading}
+              onChange={(e) => onSetServiceId(Number(e.target.value))}
             >
-              <MenuItem>
-                Nu exista servicii disponibile pentru acest domeniu
-              </MenuItem>
+              {!isLoading &&
+                services?.map((s) => (
+                  <MenuItem key={s.id} value={s.id}>
+                    {s.name}
+                  </MenuItem>
+                ))}
+              {!isLoading && services?.length === 0 && (
+                <MenuItem>
+                  Nu exista servicii disponibile pentru acest domeniu
+                </MenuItem>
+              )}
             </Select>
           </FormControl>
           {selectedServiceId && (

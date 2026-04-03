@@ -4,7 +4,6 @@ import {
   SearchHeaderSectionEnum,
   SearchHeaderSectionType,
 } from "../SearchHeaderSectionEnum";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import SearchServicesSection from "./SearchServicesSection";
 
 const SearchLocationSection = React.lazy(
@@ -20,8 +19,12 @@ type SearchPopperSectionsProps = {
   popperRef: React.RefObject<HTMLDivElement | null>;
   activeSection: SearchHeaderSectionType | null;
   popperId?: string;
-  selectedBusinessDomain: BusinessDomainType | null;
-  onSetSelectedBusinessDomain: (domain: BusinessDomainType) => void;
+  selectedBusinessDomainId: number | null;
+  onSetBusinessDomainId: (id: number | null) => void;
+  selectedServiceDomainId: number | null;
+  onSetServiceDomainId: (id: number | null) => void;
+  selectedServiceId: number | null;
+  onSetServiceId: (id: number | null) => void;
 };
 
 const POPPER_MODIFIERS = [{ name: "offset", options: { offset: [0, 12] } }];
@@ -32,16 +35,24 @@ const SearchPopperSections = ({
   popperRef,
   activeSection,
   popperId,
-  selectedBusinessDomain,
-  onSetSelectedBusinessDomain,
+  selectedBusinessDomainId,
+  onSetBusinessDomainId,
+  selectedServiceDomainId,
+  onSetServiceDomainId,
+  selectedServiceId,
+  onSetServiceId,
 }: SearchPopperSectionsProps) => {
   const sections = useMemo(() => {
     switch (activeSection) {
       case SearchHeaderSectionEnum.Services:
         return (
           <SearchServicesSection
-            selectedBusinessDomain={selectedBusinessDomain}
-            onSetSelectedBusinessDomain={onSetSelectedBusinessDomain}
+            selectedBusinessDomainId={selectedBusinessDomainId}
+            selectedServiceDomainId={selectedServiceDomainId}
+            onSetBusinessDomainId={onSetBusinessDomainId}
+            onSetServiceDomainId={onSetServiceDomainId}
+            selectedServiceId={selectedServiceId}
+            onSetServiceId={onSetServiceId}
           />
         );
       case SearchHeaderSectionEnum.Location:
@@ -71,7 +82,12 @@ const SearchPopperSections = ({
       default:
         return null;
     }
-  }, [activeSection, selectedBusinessDomain, onSetSelectedBusinessDomain]);
+  }, [
+    activeSection,
+    selectedBusinessDomainId,
+    selectedServiceDomainId,
+    selectedServiceId,
+  ]);
 
   return (
     <Popper

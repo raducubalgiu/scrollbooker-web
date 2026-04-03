@@ -2,22 +2,46 @@ import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
 import { Box, Button, Slider, Stack, Typography } from "@mui/material";
 import PercentIcon from "@mui/icons-material/Percent";
-import React from "react";
+import React, { useState } from "react";
 
 type FiltersModalProps = {
+  hasDiscount: boolean;
+  maxPrice: number;
   open: boolean;
   onClose: () => void;
+  onApplyFilters: (filters: { hasDiscount: boolean; maxPrice: number }) => void;
 };
 
-export default function FiltersModal({ open, onClose }: FiltersModalProps) {
+export default function FiltersModal({
+  open,
+  onClose,
+  hasDiscount,
+  maxPrice,
+  onApplyFilters,
+}: FiltersModalProps) {
+  const [state, setState] = useState(() => ({
+    hasDiscount,
+    maxPrice,
+  }));
+
   const actions: ActionButtonType[] = [
     {
       title: "Aplică",
       props: {
-        onClick: () => {},
+        onClick: () => {
+          onApplyFilters?.(state);
+        },
       },
     },
   ];
+
+  const handleDiscountToggle = () => {
+    setState((prev) => ({ ...prev, hasDiscount: !prev.hasDiscount }));
+  };
+
+  const handlePriceChange = (_: Event, value: number | number[]) => {
+    setState((prev) => ({ ...prev, maxPrice: value as number }));
+  };
 
   return (
     <Modal
@@ -35,10 +59,11 @@ export default function FiltersModal({ open, onClose }: FiltersModalProps) {
 
         <Button
           variant="outlined"
-          color="secondary"
+          color={state.hasDiscount ? "primary" : "secondary"}
           size="large"
           sx={{ mt: 2.5 }}
           startIcon={<PercentIcon />}
+          onClick={handleDiscountToggle}
         >
           Reducere
         </Button>
@@ -60,11 +85,11 @@ export default function FiltersModal({ open, onClose }: FiltersModalProps) {
         </Stack>
 
         <Slider
-          //size="small"
-          defaultValue={70}
+          value={state.maxPrice}
           aria-label="Small"
           valueLabelDisplay="auto"
           max={1500}
+          onChange={handlePriceChange}
         />
 
         <Typography variant="h6" fontWeight={600} mt={5}>

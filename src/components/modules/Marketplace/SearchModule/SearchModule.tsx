@@ -1,230 +1,181 @@
 "use client";
 
 import * as React from "react";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
-import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid2";
 import { Box, Typography } from "@mui/material";
-import SearchHeader from "./SearchHeader/SearchHeader";
+import SearchHeader, { SearchHeaderState } from "./SearchHeader/SearchHeader";
 import BusinessCard from "./BusinessCard";
 import FiltersModal from "./FiltersModal";
-import MapActions from "./MapActions";
 import BusinessCardSkeleton from "./BusinessCardSkeleton";
-import {
-  MAPBOX_STYLE_DARK,
-  MAPBOX_STYLE_LIGHT,
-  MAPBOX_TOKEN,
-} from "./search-utils";
-import { busineses_for_map, markers } from "./searchMockData";
-import { BusinessMarker } from "@/ts/models/booking/business/search/BusinessMarker";
-import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
-import { BusinessMapResponse } from "@/ts/models/booking/business/search/BusinessMapCombined";
+import { markers } from "./searchMockData";
+import SearchMap from "./SearchMap";
+import { useTheme } from "@mui/material/styles";
+import { BoundingBox } from "@/ts/models/booking/business/search/BusinessMapCombined";
+import { useRouter } from "next/navigation";
+import { useInfiniteBusinessLocations } from "@/hooks/infiniteQuery/useInfiniteBusinessLocations";
 
-export default function SearchModule() {
-  const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
-  const mapRef = React.useRef<mapboxgl.Map | null>(null);
+type SearchPageProps = {
+  searchParams: Record<string, string | string[] | undefined>;
+};
+
+export type SearchState = {
+  bbox: BoundingBox | null;
+  zoom: number | null;
+  businessDomainId: number | null;
+  serviceDomainId: number | null;
+  serviceId: number | null;
+  subfilterIds: number[];
+  startDate: string | null;
+  startTime: string | null;
+  endTime: string | null;
+  hasDiscount: boolean;
+  maxPrice: number;
+};
+
+export default function SearchModule({ searchParams }: SearchPageProps) {
   const theme = useTheme();
-  const mapStyle =
-    theme.palette.mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT;
   const mainPagePadding = theme.spacing(2.5);
-  const mapTopGap = theme.spacing(0.5);
-  const mapBottomGap = theme.spacing(2.5);
+  const router = useRouter();
 
-  const [selectedBusinessDomain, setSelectedBusinessDomain] =
-    React.useState<BusinessDomain>({
-      id: 0,
-      name: "Toate",
-      short_name: "Toate",
-      active: false,
-      service_domains: [],
-    });
+  const [searchState, setSearchState] = React.useState<SearchState>(() => {
+    return {
+      bbox: {
+        min_lng: 25.961395,
+        min_lat: 44.202274,
+        max_lng: 26.243607,
+        max_lat: 44.650467,
+      },
+      zoom: Number(searchParams.zoom) || null,
+      businessDomainId: Number(searchParams.businessDomain) || null,
+      serviceDomainId: Number(searchParams.serviceDomain) || null,
+      serviceId: Number(searchParams.service) || null,
+      subfilterIds: [],
+      startDate: String(searchParams.startDate) || null,
+      startTime: String(searchParams.startTime) || null,
+      endTime: String(searchParams.endTime) || null,
+      hasDiscount: String(searchParams.hasDiscount) === "true",
+      maxPrice: Number(searchParams.maxPrice) || 1500,
+    };
+  });
 
-  const isLoading = false;
-  const businessData: BusinessMapResponse = {
-    list: busineses_for_map,
-    markers: markers,
-  };
+  console.log("Search state:", searchState);
 
-  // const { data, isLoading } = useCustomQuery<BusinessMapResponse>({
-  //   url: "/api/businesses/map",
-  //   method: "GET",
-  //   key: ["markers-and-locations", selectedBusinessDomain.id],
-  //   params: {
-  //     businessDomainId:
-  //       selectedBusinessDomain.id !== 0 ? selectedBusinessDomain.id : undefined,
-  //   },
-  // });
-  // const businessData: BusinessMapResponse | undefined = data;
+  const { data, isLoading } = useInfiniteBusinessLocations(searchState);
+  const locations = data ? data.pages.flatMap((page) => page.results) : [];
+  const locationsCount = data ? data.pages[0]?.count : 0;
 
   const [isMapVisible, setIsMapVisible] = React.useState(true);
   const [isMapExpanded, setIsMapExpanded] = React.useState(false);
   const [openFilters, setOpenFilters] = React.useState(false);
   const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
 
-  const mapTopOffset = `calc(${searchHeaderHeight}px + ${mapTopGap})`;
-  const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapTopGap} - ${mainPagePadding} - ${mapBottomGap})`;
-
-  React.useEffect(() => {
-    if (!businessData) return;
-
-    if (!isMapVisible) return;
-
-    if (!mapContainerRef.current || mapRef.current || !MAPBOX_TOKEN) {
-      return;
-    }
-
-    mapboxgl.accessToken = MAPBOX_TOKEN;
-
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: mapStyle,
-      center: [26.1025, 44.4268],
-      zoom: 12,
-    });
-
-    // we'll add markers only after the style has loaded to avoid race conditions
-    const createdMarkers: mapboxgl.Marker[] = [];
-
-    const onLoad = () => {
-      // static center marker (only after load)
-      const centerMarker = new mapboxgl.Marker({ color: "#ef4444" })
-        .setLngLat([26.1025, 44.4268])
-        .addTo(map);
-      createdMarkers.push(centerMarker);
-
-      const markerItems = businessData?.markers ?? [];
-      if (Array.isArray(markerItems)) {
-        markerItems.forEach((m: BusinessMarker) => {
-          const lat = m?.coordinates?.lat ?? null;
-          const lng = m?.coordinates?.lng ?? null;
-          if (lat == null || lng == null) return;
-
-          const marker = new mapboxgl.Marker({ color: "#1976d2" })
-            .setLngLat([lng, lat])
-            .addTo(map);
-
-          createdMarkers.push(marker);
-        });
-      }
-    };
-
-    map.on("load", onLoad);
-    mapRef.current = map;
-
-    return () => {
-      try {
-        map.off("load", onLoad);
-      } catch (e) {
-        if (e instanceof Error) {
-          // ignore if map already destroyed
-        }
-      }
-      createdMarkers.forEach((mk) => mk.remove());
-      mapRef.current?.remove();
-      mapRef.current = null;
-    };
-  }, [mapStyle, isMapVisible, businessData]);
-
-  React.useEffect(() => {
-    if (!isMapVisible || !mapRef.current) return;
-
-    mapRef.current.resize();
-  }, [isMapVisible, mapHeight, mapTopOffset]);
-
-  const map = React.useMemo(() => {
-    return (
-      <Box
-        sx={{
-          position: "sticky",
-          top: mapTopOffset,
-          height: mapHeight,
-          bgcolor: "background.default",
-          borderRadius: 5,
-          overflow: "hidden",
-        }}
-      >
-        <Box
-          sx={{
-            position: "relative",
-            width: "100%",
-            height: "100%",
-            borderRadius: 5,
-          }}
-        >
-          <Box
-            ref={mapContainerRef}
-            sx={{ width: "100%", height: "100%", borderRadius: 5 }}
-          />
-          <MapActions
-            onMapExpandToggle={() => setIsMapExpanded((prev) => !prev)}
-            onZoomIn={() => {
-              if (mapRef.current) {
-                mapRef.current.zoomTo(mapRef.current.getZoom() + 1, {
-                  duration: 300,
-                });
-              }
-            }}
-            onZoomOut={() => {
-              if (mapRef.current) {
-                mapRef.current.zoomTo(mapRef.current.getZoom() - 1, {
-                  duration: 300,
-                });
-              }
-            }}
-            isMapExpanded={isMapExpanded}
-          />
-        </Box>
-      </Box>
-    );
-  }, [mapContainerRef, mapHeight, mapTopOffset, isMapExpanded]);
-
   const leftGridSize = isMapVisible ? 7 : 12;
+
+  const styles = {
+    list: {
+      display: "grid",
+      gridTemplateColumns: {
+        lg: "1fr",
+        xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
+      },
+      gap: 5,
+      px: { xs: 1, md: 0 },
+    },
+  };
+
+  const handleToggleMap = React.useCallback(
+    () => setIsMapVisible((prev) => !prev),
+    []
+  );
+  const handleMapExpandToggle = React.useCallback(
+    () => setIsMapExpanded((prev) => !prev),
+    []
+  );
+  const handleOpenFilters = React.useCallback(() => setOpenFilters(true), []);
+  const handleCloseFilters = React.useCallback(() => setOpenFilters(false), []);
+
+  const handleApplyFilters = React.useCallback(
+    (filters: { hasDiscount: boolean | null; maxPrice: number | null }) => {
+      setSearchState((prev) => ({
+        ...prev,
+        hasDiscount: filters.hasDiscount ?? prev.hasDiscount,
+        maxPrice: filters.maxPrice ?? prev.maxPrice,
+      }));
+      handleCloseFilters();
+    },
+    [handleCloseFilters]
+  );
+
+  const handleSearch = React.useCallback((state: SearchHeaderState) => {
+    setSearchState((prev) => ({
+      ...prev,
+      businessDomainId: state.selectedBusinessDomainId,
+      serviceDomainId: state.selectedServiceDomainId,
+      serviceId: state.selectedServiceId,
+    }));
+
+    const params = new URLSearchParams();
+    if (state.selectedBusinessDomainId)
+      params.set("businessDomain", String(state.selectedBusinessDomainId));
+    if (state.selectedServiceDomainId)
+      params.set("serviceDomain", String(state.selectedServiceDomainId));
+    if (state.selectedServiceId)
+      params.set("service", String(state.selectedServiceId));
+
+    router.replace(`/search?${params.toString()}`);
+  }, []);
 
   return (
     <Box>
-      <FiltersModal open={openFilters} onClose={() => setOpenFilters(false)} />
+      <FiltersModal
+        open={openFilters}
+        onClose={handleCloseFilters}
+        hasDiscount={searchState.hasDiscount}
+        maxPrice={searchState.maxPrice}
+        onApplyFilters={handleApplyFilters}
+      />
 
       <SearchHeader
         isMapVisible={isMapVisible}
-        onToggleMap={() => setIsMapVisible((prev) => !prev)}
+        onToggleMap={handleToggleMap}
         onHeightChange={setSearchHeaderHeight}
-        onOpenFilters={() => setOpenFilters(true)}
+        onOpenFilters={handleOpenFilters}
         mainPagePadding={mainPagePadding}
-        selectedBusinessDomain={selectedBusinessDomain}
-        onSetSelectedBusinessDomain={(bDomain) =>
-          setSelectedBusinessDomain(bDomain)
-        }
+        onSearch={handleSearch}
+        headerState={{
+          selectedBusinessDomainId: searchState.businessDomainId,
+          selectedServiceDomainId: searchState.serviceDomainId,
+          selectedServiceId: searchState.serviceId,
+        }}
       />
 
       <Grid container spacing={5}>
         <Grid size={{ lg: leftGridSize }}>
           <Typography color="text.secondary" my={2.5}>
-            {businessData?.list?.count} de rezultate in zona
+            {locationsCount?.toLocaleString() ?? 0} de rezultate in zona
           </Typography>
 
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                lg: "1fr",
-                xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
-              },
-              gap: 5,
-              px: { xs: 1, md: 0 },
-            }}
-          >
+          <Box sx={styles.list}>
             {isLoading &&
               Array.from({ length: 6 }).map((_, i) => (
                 <BusinessCardSkeleton key={i} />
               ))}
             {!isLoading &&
-              businessData?.list?.results.map((b) => (
-                <BusinessCard key={b.id} business={b} />
-              ))}
+              locations?.map((b) => <BusinessCard key={b.id} business={b} />)}
           </Box>
         </Grid>
-        {isMapVisible && <Grid size={{ md: 5 }}>{map}</Grid>}
+        {isMapVisible && (
+          <Grid size={{ md: 5 }}>
+            <SearchMap
+              markers={markers}
+              isMapVisible={isMapVisible}
+              onMapExpandToggle={handleMapExpandToggle}
+              isMapExpanded={isMapExpanded}
+              searchHeaderHeight={searchHeaderHeight}
+              mainPagePadding={mainPagePadding}
+            />
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

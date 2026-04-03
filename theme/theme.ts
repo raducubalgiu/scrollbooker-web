@@ -128,6 +128,7 @@ export const darkTheme = createTheme({
         root: {
           fontWeight: "bold",
           borderRadius: 50,
+          textTransform: "none",
           "&.Mui-disabled": {
             pointerEvents: "auto",
           },
@@ -364,6 +365,8 @@ export const lightTheme = createTheme({
         root: {
           fontWeight: "bold",
           borderRadius: 50,
+          textTransform: "none",
+          fontSize: "1rem",
           "&.Mui-disabled": {
             pointerEvents: "auto",
           },

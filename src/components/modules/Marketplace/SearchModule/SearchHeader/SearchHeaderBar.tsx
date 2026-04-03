@@ -1,6 +1,6 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import { Theme, useTheme } from "@mui/material/styles";
-import React, { useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import {
   SEARCH_HEADER_SECTIONS,
   SearchHeaderSectionType,
@@ -256,6 +256,4 @@ const SearchHeaderBar = ({
   );
 };
 
-export const MemoizedSearchHeaderBar = React.memo(SearchHeaderBar);
-
-export default MemoizedSearchHeaderBar;
+export default memo(SearchHeaderBar);

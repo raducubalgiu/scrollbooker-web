@@ -2,20 +2,17 @@ import { Box, Button, Stack } from "@mui/material";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import React from "react";
-import {
-  BusinessDomainsResponse,
-  BusinessDomainType,
-} from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import { MVP_BUSINESS_DOMAINS } from "@/utils/mvp-hardcoded/mvp-business-domains";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type BusinessDomainsTabsProps = {
   isExpanded: boolean;
   isMapVisible: boolean;
   onOpenFilters: () => void;
   onToggleMap: () => void;
-  businessDomains?: BusinessDomainsResponse;
-  selectedBusinessDomain: BusinessDomainType | null;
-  onSetSelectedBusinessDomain: (domain: BusinessDomainType) => void;
+  businessDomains?: BusinessDomain;
+  selectedBusinessDomainId: number | null;
+  onSelectBusinessDomain: (id: number | null) => void;
 };
 
 const BusinessDomainsTabs = ({
@@ -23,12 +20,12 @@ const BusinessDomainsTabs = ({
   isMapVisible,
   onOpenFilters,
   onToggleMap,
-  selectedBusinessDomain,
-  onSetSelectedBusinessDomain,
+  selectedBusinessDomainId,
+  onSelectBusinessDomain,
 }: BusinessDomainsTabsProps) => {
   const businessDomains = [
     {
-      id: 0,
+      id: null,
       name: "Toate",
       short_name: "Toate",
       active: false,
@@ -53,7 +50,7 @@ const BusinessDomainsTabs = ({
       >
         <Stack flexDirection="row" alignItems="center" gap={1}>
           {businessDomains.map((d) => {
-            const isSelected = d.id === selectedBusinessDomain?.id;
+            const isSelected = d.id === selectedBusinessDomainId;
 
             return (
               <Button
@@ -63,7 +60,7 @@ const BusinessDomainsTabs = ({
                 size="large"
                 disableElevation
                 sx={{ py: 1.5, px: 3 }}
-                onClick={() => onSetSelectedBusinessDomain(d)}
+                onClick={() => onSelectBusinessDomain(d.id)}
               >
                 {d.short_name}
               </Button>

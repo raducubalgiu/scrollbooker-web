@@ -13,4 +13,5 @@ export interface Service {
   active: boolean;
   type: string;
   business_domain_id: number;
+  filters: ServiceFilter[];
 }
