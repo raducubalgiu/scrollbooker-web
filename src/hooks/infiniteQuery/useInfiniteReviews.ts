@@ -12,7 +12,7 @@ const fetchReviews = async ({
 }: {
   pageParam: number;
   userId: number | undefined;
-  selectedRatings?: Set<number>;
+  selectedRatings?: Set<number> | undefined;
 }) => {
   const ratingsArray = selectedRatings
     ? [...selectedRatings].filter((n) => typeof n === "number")
