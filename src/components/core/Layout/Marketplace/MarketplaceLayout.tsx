@@ -25,6 +25,11 @@ export default function MarketplaceLayout({
     [pathname]
   );
 
+  const isAdminPage = React.useMemo(
+    () => pathname.startsWith("/admin/"),
+    [pathname]
+  );
+
   const isProfileVideoPage = React.useMemo(() => {
     const segments = pathname.split("/").filter(Boolean);
     return (
@@ -48,7 +53,7 @@ export default function MarketplaceLayout({
           md: isProfileVideoPage ? 0 : 2.5,
         },
         width: "100%",
-        bgcolor: bgColor,
+        bgcolor: isAdminPage ? "background.default" : bgColor,
       },
       box: {
         display: "flex",
@@ -60,10 +65,11 @@ export default function MarketplaceLayout({
         width: DRAWER_WIDTH,
         transition: "width 200ms ease",
         boxShadow: "none",
-        border: 0,
+        borderRight: isAdminPage ? 1 : 0,
+        borderColor: "divider",
       },
     }),
-    [bgColor, isProfileVideoPage]
+    [bgColor, isProfileVideoPage, isAdminPage]
   );
 
   return (
@@ -87,7 +93,7 @@ export default function MarketplaceLayout({
           </Drawer>
         </Box>
       )}
-      <Box component="main" sx={{ ...styles.main }}>
+      <Box component="main" sx={styles.main}>
         {children}
       </Box>
       <MarketplaceBottomBar />
