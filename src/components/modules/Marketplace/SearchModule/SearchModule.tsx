@@ -6,13 +6,14 @@ import { Box, Typography } from "@mui/material";
 import SearchHeader, { SearchHeaderState } from "./SearchHeader/SearchHeader";
 import BusinessCard from "./BusinessCard";
 import FiltersModal from "./FiltersModal";
-import BusinessCardSkeleton from "./BusinessCardSkeleton";
 import SearchMap from "./SearchMap";
 import { useTheme } from "@mui/material/styles";
 import { BoundingBox } from "@/ts/models/booking/business/search/BusinessMapCombined";
 import { useRouter } from "next/navigation";
 import { useInfiniteBusinessLocations } from "@/hooks/infiniteQuery/useInfiniteBusinessLocations";
 import { useBusinessMarkers } from "@/hooks/useMarkers";
+import { LngLatBounds } from "mapbox-gl";
+import BusinessCardSkeletons from "./BusinessCardSkeletons";
 
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -85,7 +86,54 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         : 1500,
   }));
 
-  const { data, isLoading } = useInfiniteBusinessLocations(searchState);
+  const buildUrlParams = React.useCallback((state: SearchState) => {
+    const params = new URLSearchParams();
+
+    if (state.zoom != null) {
+      params.set("zoom", String(state.zoom));
+    }
+
+    if (state.businessDomainId != null) {
+      params.set("businessDomain", String(state.businessDomainId));
+    }
+
+    if (state.serviceDomainId != null) {
+      params.set("serviceDomain", String(state.serviceDomainId));
+    }
+
+    if (state.serviceId != null) {
+      params.set("service", String(state.serviceId));
+    }
+
+    if (state.subfilterIds.length > 0) {
+      params.set("subfilterIds", state.subfilterIds.join(","));
+    }
+
+    if (state.startDate) {
+      params.set("startDate", state.startDate);
+    }
+
+    if (state.startTime) {
+      params.set("startTime", state.startTime);
+    }
+
+    if (state.endTime) {
+      params.set("endTime", state.endTime);
+    }
+
+    if (state.hasDiscount) {
+      params.set("hasDiscount", "true");
+    }
+
+    if (state.maxPrice != null) {
+      params.set("maxPrice", String(state.maxPrice));
+    }
+
+    return params;
+  }, []);
+
+  const { data, isLoading, refetch } =
+    useInfiniteBusinessLocations(searchState);
   const locations = data ? data.pages.flatMap((page) => page.results) : [];
   const locationsCount = data ? data.pages[0]?.count : 0;
 
@@ -93,6 +141,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     data: markers,
     isLoading: isLoadingMarkers,
     isRefetching: isRefetchingMarkers,
+    refetch: refetchMarkers,
   } = useBusinessMarkers(searchState);
 
   const [isMapVisible, setIsMapVisible] = React.useState(true);
@@ -169,6 +218,29 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     },
   };
 
+  const handleRefetch = React.useCallback(
+    (bounds: LngLatBounds, zoom: number) => {
+      setSearchState((prev) => ({
+        ...prev,
+        zoom: Math.round(zoom),
+        bbox: {
+          min_lng: bounds.getWest(),
+          min_lat: bounds.getSouth(),
+          max_lng: bounds.getEast(),
+          max_lat: bounds.getNorth(),
+        },
+      }));
+    },
+    []
+  );
+
+  React.useEffect(() => {
+    if (searchState?.bbox?.min_lng !== 0) {
+      refetch();
+      refetchMarkers();
+    }
+  }, [searchState.bbox, searchState.zoom]);
+
   return (
     <Box sx={styles.root}>
       <FiltersModal
@@ -196,15 +268,12 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       <Grid container spacing={isMapExpanded ? 0 : 5}>
         {!isMapExpanded && (
           <Grid size={{ lg: leftGridSize }}>
-            <Typography color="text.secondary" my={2.5}>
-              {locationsCount?.toLocaleString() ?? 0} de rezultate in zona
+            <Typography variant="h5" my={2.5} fontWeight={600}>
+              {locationsCount?.toLocaleString() ?? 0} rezultate
             </Typography>
 
             <Box sx={styles.list}>
-              {isLoading &&
-                Array.from({ length: 6 }).map((_, i) => (
-                  <BusinessCardSkeleton key={i} />
-                ))}
+              {isLoading && <BusinessCardSkeletons />}
               {!isLoading &&
                 locations?.map((b) => <BusinessCard key={b.id} business={b} />)}
             </Box>
@@ -221,6 +290,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
               mainPagePadding={mainPagePadding}
               isLoadingMarkers={isLoadingMarkers}
               isRefetchingMarkers={isRefetchingMarkers}
+              refetchData={handleRefetch}
             />
           </Grid>
         )}
@@ -228,49 +298,3 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     </Box>
   );
 }
-
-const buildUrlParams = (state: SearchState) => {
-  const params = new URLSearchParams();
-
-  if (state.zoom != null) {
-    params.set("zoom", String(state.zoom));
-  }
-
-  if (state.businessDomainId != null) {
-    params.set("businessDomain", String(state.businessDomainId));
-  }
-
-  if (state.serviceDomainId != null) {
-    params.set("serviceDomain", String(state.serviceDomainId));
-  }
-
-  if (state.serviceId != null) {
-    params.set("service", String(state.serviceId));
-  }
-
-  if (state.subfilterIds.length > 0) {
-    params.set("subfilterIds", state.subfilterIds.join(","));
-  }
-
-  if (state.startDate) {
-    params.set("startDate", state.startDate);
-  }
-
-  if (state.startTime) {
-    params.set("startTime", state.startTime);
-  }
-
-  if (state.endTime) {
-    params.set("endTime", state.endTime);
-  }
-
-  if (state.hasDiscount) {
-    params.set("hasDiscount", "true");
-  }
-
-  if (state.maxPrice != null) {
-    params.set("maxPrice", String(state.maxPrice));
-  }
-
-  return params;
-};

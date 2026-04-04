@@ -24,7 +24,6 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
           display: "block",
           color: "inherit",
           cursor: "pointer",
-          borderRadius: 2,
           "&:hover .imageWrapper": {
             transform: "scale(1.05)",
           },
@@ -36,7 +35,7 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
             width: "100%",
             height: 280,
             overflow: "hidden",
-            borderRadius: 2,
+            borderRadius: 5,
           }}
         >
           <Box
@@ -45,6 +44,7 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
               position: "absolute",
               inset: 0,
               transition: "transform 0.3s",
+              backgroundColor: "background.default",
             }}
           >
             {media_files?.[0]?.thumbnail_url && (
@@ -55,7 +55,6 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
                 sizes="(max-width: 600px) 100vw, 50vw"
                 style={{
                   objectFit: "cover",
-                  borderRadius: 20,
                   backgroundColor: "#eee",
                 }}
               />
