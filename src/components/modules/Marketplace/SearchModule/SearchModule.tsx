@@ -37,26 +37,53 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   const mainPagePadding = theme.spacing(2.5);
   const router = useRouter();
 
-  const [searchState, setSearchState] = React.useState<SearchState>(() => {
-    return {
-      bbox: {
-        min_lng: 25.961395,
-        min_lat: 44.202274,
-        max_lng: 26.243607,
-        max_lat: 44.650467,
-      },
-      zoom: Number(searchParams.zoom) || null,
-      businessDomainId: Number(searchParams.businessDomain) || null,
-      serviceDomainId: Number(searchParams.serviceDomain) || null,
-      serviceId: Number(searchParams.service) || null,
-      subfilterIds: [],
-      startDate: String(searchParams.startDate) || null,
-      startTime: String(searchParams.startTime) || null,
-      endTime: String(searchParams.endTime) || null,
-      hasDiscount: String(searchParams.hasDiscount) === "true",
-      maxPrice: Number(searchParams.maxPrice) || 1500,
-    };
-  });
+  const [searchState, setSearchState] = React.useState<SearchState>(() => ({
+    bbox: {
+      min_lng: 25.961395,
+      min_lat: 44.202274,
+      max_lng: 26.243607,
+      max_lat: 44.650467,
+    },
+    zoom:
+      typeof searchParams.zoom === "string"
+        ? Number(searchParams.zoom) || null
+        : null,
+    businessDomainId:
+      typeof searchParams.businessDomain === "string"
+        ? Number(searchParams.businessDomain) || null
+        : null,
+    serviceDomainId:
+      typeof searchParams.serviceDomain === "string"
+        ? Number(searchParams.serviceDomain) || null
+        : null,
+    serviceId:
+      typeof searchParams.service === "string"
+        ? Number(searchParams.service) || null
+        : null,
+    subfilterIds:
+      typeof searchParams.subfilterIds === "string" &&
+      searchParams.subfilterIds.length > 0
+        ? searchParams.subfilterIds
+            .split(",")
+            .map(Number)
+            .filter((x) => !Number.isNaN(x))
+        : [],
+    startDate:
+      typeof searchParams.startDate === "string"
+        ? searchParams.startDate
+        : null,
+    startTime:
+      typeof searchParams.startTime === "string"
+        ? searchParams.startTime
+        : null,
+    endTime:
+      typeof searchParams.endTime === "string" ? searchParams.endTime : null,
+    hasDiscount: searchParams.hasDiscount === "true",
+    maxPrice:
+      typeof searchParams.maxPrice === "string"
+        ? Number(searchParams.maxPrice) || 1500
+        : 1500,
+  }));
 
   console.log("Search state:", searchState);
 
@@ -96,34 +123,38 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
   const handleApplyFilters = React.useCallback(
     (filters: { hasDiscount: boolean | null; maxPrice: number | null }) => {
-      setSearchState((prev) => ({
-        ...prev,
-        hasDiscount: filters.hasDiscount ?? prev.hasDiscount,
-        maxPrice: filters.maxPrice ?? prev.maxPrice,
-      }));
+      const nextState: SearchState = {
+        ...searchState,
+        hasDiscount: filters.hasDiscount ?? searchState.hasDiscount,
+        maxPrice: filters.maxPrice ?? searchState.maxPrice,
+      };
+
+      setSearchState(nextState);
+
+      const params = buildUrlParams(nextState);
+      router.replace(`/search?${params.toString()}`);
+
       handleCloseFilters();
     },
-    [handleCloseFilters]
+    [handleCloseFilters, router, searchState]
   );
 
-  const handleSearch = React.useCallback((state: SearchHeaderState) => {
-    setSearchState((prev) => ({
-      ...prev,
-      businessDomainId: state.selectedBusinessDomainId,
-      serviceDomainId: state.selectedServiceDomainId,
-      serviceId: state.selectedServiceId,
-    }));
+  const handleSearch = React.useCallback(
+    (state: SearchHeaderState) => {
+      const nextState = {
+        ...searchState,
+        businessDomainId: state.selectedBusinessDomainId,
+        serviceDomainId: state.selectedServiceDomainId,
+        serviceId: state.selectedServiceId,
+      };
 
-    const params = new URLSearchParams();
-    if (state.selectedBusinessDomainId)
-      params.set("businessDomain", String(state.selectedBusinessDomainId));
-    if (state.selectedServiceDomainId)
-      params.set("serviceDomain", String(state.selectedServiceDomainId));
-    if (state.selectedServiceId)
-      params.set("service", String(state.selectedServiceId));
+      setSearchState(nextState);
 
-    router.replace(`/search?${params.toString()}`);
-  }, []);
+      const params = buildUrlParams(nextState);
+      router.replace(`/search?${params.toString()}`);
+    },
+    [router]
+  );
 
   return (
     <Box>
@@ -180,3 +211,49 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     </Box>
   );
 }
+
+const buildUrlParams = (state: SearchState) => {
+  const params = new URLSearchParams();
+
+  if (state.zoom != null) {
+    params.set("zoom", String(state.zoom));
+  }
+
+  if (state.businessDomainId != null) {
+    params.set("businessDomain", String(state.businessDomainId));
+  }
+
+  if (state.serviceDomainId != null) {
+    params.set("serviceDomain", String(state.serviceDomainId));
+  }
+
+  if (state.serviceId != null) {
+    params.set("service", String(state.serviceId));
+  }
+
+  if (state.subfilterIds.length > 0) {
+    params.set("subfilterIds", state.subfilterIds.join(","));
+  }
+
+  if (state.startDate) {
+    params.set("startDate", state.startDate);
+  }
+
+  if (state.startTime) {
+    params.set("startTime", state.startTime);
+  }
+
+  if (state.endTime) {
+    params.set("endTime", state.endTime);
+  }
+
+  if (state.hasDiscount) {
+    params.set("hasDiscount", "true");
+  }
+
+  if (state.maxPrice != null) {
+    params.set("maxPrice", String(state.maxPrice));
+  }
+
+  return params;
+};

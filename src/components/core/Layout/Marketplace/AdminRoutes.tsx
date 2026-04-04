@@ -166,9 +166,9 @@ const AdminRoutes = ({
           bgcolor: (theme: Theme) => `${theme.palette.action.hover} !important`,
         },
       },
-      iconDefault: { color: "text.primary", "& svg": { fontSize: 25 } },
+      iconDefault: { color: "text.secondary", "& svg": { fontSize: 25 } },
       iconSelected: { color: "primary.main", "& svg": { fontSize: 25 } },
-      textDefault: { fontSize: 17, fontWeight: 600, color: "text.primary" },
+      textDefault: { fontSize: 17, fontWeight: 600, color: "text.secondary" },
       textSelected: { fontSize: 17, fontWeight: 600, color: "primary.main" },
     }),
     []

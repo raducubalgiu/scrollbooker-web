@@ -6,29 +6,36 @@ import axios from "axios";
 
 const PAGE_LIMIT = 10;
 
+type FetchLocationsArgs = {
+  pageParam: number;
+  searchState: SearchState;
+};
+
 const fetchLocations = async ({
   pageParam,
   searchState,
-}: {
-  pageParam: number;
-  searchState: SearchState;
-}) => {
-  const {
-    bbox,
-    zoom,
-    businessDomainId,
-    serviceDomainId,
-    serviceId,
-    subfilterIds,
-    startDate,
-    startTime,
-    endTime,
-    hasDiscount,
-    maxPrice,
-  } = searchState || {};
-  const { data } = await axios.get<PaginatedData<BusinessSheet>>(
-    `/api/businesses/locations?zoom=${zoom}&businessDomain=${businessDomainId}&serviceDomain=${serviceDomainId}&service=${serviceId}&subfilterIds=${subfilterIds.join(",")}&startDate=${startDate}&startTime=${startTime}&endTime=${endTime}&hasDiscount=${hasDiscount}&maxPrice=${maxPrice}&page=${pageParam}&limit=${PAGE_LIMIT}`
+}: FetchLocationsArgs) => {
+  const payload = {
+    bbox: searchState.bbox,
+    zoom: searchState.zoom,
+    business_domain_id: searchState.businessDomainId,
+    service_domain_id: searchState.serviceDomainId,
+    service_id: searchState.serviceId,
+    subfilter_ids: searchState.subfilterIds,
+    start_date: searchState.startDate,
+    start_time: searchState.startTime,
+    end_time: searchState.endTime,
+    has_discount: searchState.hasDiscount,
+    max_price: searchState.maxPrice,
+    page: pageParam,
+    limit: PAGE_LIMIT,
+  };
+
+  const { data } = await axios.post<PaginatedData<BusinessSheet>>(
+    "/api/businesses/locations",
+    payload
   );
+
   return {
     ...data,
     page: pageParam,

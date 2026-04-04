@@ -167,16 +167,6 @@ export const VideoPlayer = ({
           )}
         </Box>
       </Box>
-
-      <Box
-        sx={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0) 60%)",
-          pointerEvents: "none",
-        }}
-      />
     </Box>
   );
 };

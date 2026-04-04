@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Skeleton, Typography } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import CButton from "../../CButton/CButton";
@@ -20,6 +20,7 @@ export type ScrollBookerRoute = {
 const MarketplaceDrawer = () => {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
+  const isLoading = status === "loading";
 
   const pathname = usePathname() || "/";
   const router = useRouter();
@@ -80,6 +81,17 @@ const MarketplaceDrawer = () => {
           onCloseMore={handleCloseMorePopper}
         />
 
+        {isLoading &&
+          Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              variant="rectangular"
+              width="100%"
+              height={50}
+              sx={{ mt: 1.5 }}
+            />
+          ))}
+
         {isAuthenticated && (
           <AdminRoutes
             hasEmployees={session?.has_employees ?? false}
@@ -88,7 +100,7 @@ const MarketplaceDrawer = () => {
           />
         )}
 
-        {!isAuthenticated && (
+        {!isAuthenticated && !isLoading && (
           <CButton
             onClick={() => router.push("/api/auth/signin")}
             label="Conectare"

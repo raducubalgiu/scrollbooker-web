@@ -1,10 +1,10 @@
-import { ProductType } from "@/ts/models/booking/product/Product";
+import { Product } from "@/ts/models/booking/product/Product";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import React from "react";
 
 type BusinessProductCardProps = {
-  product: ProductType;
+  product: Product;
 };
 
 const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
@@ -17,6 +17,7 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
         borderRadius: 5,
         mb: 1.5,
         bgcolor: "secondary.main",
+        cursor: "pointer",
       }}
       role="button"
       tabIndex={0}
