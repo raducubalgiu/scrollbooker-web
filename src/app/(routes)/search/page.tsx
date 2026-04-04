@@ -6,7 +6,5 @@ type SearchPageProps = {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
-  console.log("Received search params:", params);
-
   return <SearchModule searchParams={params} />;
 }

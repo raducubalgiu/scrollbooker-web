@@ -7,12 +7,12 @@ import SearchHeader, { SearchHeaderState } from "./SearchHeader/SearchHeader";
 import BusinessCard from "./BusinessCard";
 import FiltersModal from "./FiltersModal";
 import BusinessCardSkeleton from "./BusinessCardSkeleton";
-import { markers } from "./searchMockData";
 import SearchMap from "./SearchMap";
 import { useTheme } from "@mui/material/styles";
 import { BoundingBox } from "@/ts/models/booking/business/search/BusinessMapCombined";
 import { useRouter } from "next/navigation";
 import { useInfiniteBusinessLocations } from "@/hooks/infiniteQuery/useInfiniteBusinessLocations";
+import { useBusinessMarkers } from "@/hooks/useMarkers";
 
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -85,11 +85,15 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         : 1500,
   }));
 
-  console.log("Search state:", searchState);
-
   const { data, isLoading } = useInfiniteBusinessLocations(searchState);
   const locations = data ? data.pages.flatMap((page) => page.results) : [];
   const locationsCount = data ? data.pages[0]?.count : 0;
+
+  const {
+    data: markers,
+    isLoading: isLoadingMarkers,
+    isRefetching: isRefetchingMarkers,
+  } = useBusinessMarkers(searchState);
 
   const [isMapVisible, setIsMapVisible] = React.useState(true);
   const [isMapExpanded, setIsMapExpanded] = React.useState(false);
@@ -98,26 +102,17 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
   const leftGridSize = isMapVisible ? 7 : 12;
 
-  const styles = {
-    list: {
-      display: "grid",
-      gridTemplateColumns: {
-        lg: "1fr",
-        xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
-      },
-      gap: 5,
-      px: { xs: 1, md: 0 },
-    },
-  };
+  const handleToggleMap = React.useCallback(() => {
+    setIsMapVisible((prev) => !prev);
+    if (isMapExpanded) {
+      setIsMapExpanded(false);
+    }
+  }, []);
+  const handleMapExpandToggle = React.useCallback(() => {
+    setIsMapExpanded((prev) => !prev);
+    setIsMapVisible(true);
+  }, []);
 
-  const handleToggleMap = React.useCallback(
-    () => setIsMapVisible((prev) => !prev),
-    []
-  );
-  const handleMapExpandToggle = React.useCallback(
-    () => setIsMapExpanded((prev) => !prev),
-    []
-  );
   const handleOpenFilters = React.useCallback(() => setOpenFilters(true), []);
   const handleCloseFilters = React.useCallback(() => setOpenFilters(false), []);
 
@@ -156,8 +151,26 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     [router]
   );
 
+  const styles = {
+    root: {
+      px: isMapExpanded ? 0 : mainPagePadding,
+    },
+    list: {
+      display: "grid",
+      gridTemplateColumns: {
+        lg: "1fr",
+        xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
+      },
+      gap: 5,
+      px: { xs: 1, md: 0 },
+    },
+    mapGrid: {
+      width: "100%",
+    },
+  };
+
   return (
-    <Box>
+    <Box sx={styles.root}>
       <FiltersModal
         open={openFilters}
         onClose={handleCloseFilters}
@@ -180,23 +193,25 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         }}
       />
 
-      <Grid container spacing={5}>
-        <Grid size={{ lg: leftGridSize }}>
-          <Typography color="text.secondary" my={2.5}>
-            {locationsCount?.toLocaleString() ?? 0} de rezultate in zona
-          </Typography>
+      <Grid container spacing={isMapExpanded ? 0 : 5}>
+        {!isMapExpanded && (
+          <Grid size={{ lg: leftGridSize }}>
+            <Typography color="text.secondary" my={2.5}>
+              {locationsCount?.toLocaleString() ?? 0} de rezultate in zona
+            </Typography>
 
-          <Box sx={styles.list}>
-            {isLoading &&
-              Array.from({ length: 6 }).map((_, i) => (
-                <BusinessCardSkeleton key={i} />
-              ))}
-            {!isLoading &&
-              locations?.map((b) => <BusinessCard key={b.id} business={b} />)}
-          </Box>
-        </Grid>
+            <Box sx={styles.list}>
+              {isLoading &&
+                Array.from({ length: 6 }).map((_, i) => (
+                  <BusinessCardSkeleton key={i} />
+                ))}
+              {!isLoading &&
+                locations?.map((b) => <BusinessCard key={b.id} business={b} />)}
+            </Box>
+          </Grid>
+        )}
         {isMapVisible && (
-          <Grid size={{ md: 5 }}>
+          <Grid size={isMapExpanded ? 12 : { md: 5 }} sx={styles.mapGrid}>
             <SearchMap
               markers={markers}
               isMapVisible={isMapVisible}
@@ -204,6 +219,8 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
               isMapExpanded={isMapExpanded}
               searchHeaderHeight={searchHeaderHeight}
               mainPagePadding={mainPagePadding}
+              isLoadingMarkers={isLoadingMarkers}
+              isRefetchingMarkers={isRefetchingMarkers}
             />
           </Grid>
         )}

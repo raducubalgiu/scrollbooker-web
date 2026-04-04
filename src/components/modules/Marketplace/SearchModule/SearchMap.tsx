@@ -19,6 +19,8 @@ type SearchMapProps = {
   isMapExpanded: boolean;
   searchHeaderHeight: number;
   mainPagePadding: string;
+  isLoadingMarkers: boolean;
+  isRefetchingMarkers: boolean;
 };
 
 const SearchMap = ({
@@ -28,6 +30,8 @@ const SearchMap = ({
   isMapExpanded,
   searchHeaderHeight,
   mainPagePadding,
+  isLoadingMarkers,
+  isRefetchingMarkers,
 }: SearchMapProps) => {
   const theme = useTheme();
   const mapTopGap = theme.spacing(0.5);
@@ -125,12 +129,22 @@ const SearchMap = ({
     }
   }, [mapRef]);
 
+  React.useEffect(() => {
+    if (mapRef.current) {
+      setTimeout(() => {
+        mapRef.current?.resize();
+      }, 0);
+    }
+  }, [isMapExpanded]);
+
   return (
     <Box
       sx={{
         position: "sticky",
         top: mapTopOffset,
         height: mapHeight,
+        width: "100%",
+        minWidth: 0,
         bgcolor: "background.default",
         borderRadius: 5,
         overflow: "hidden",
