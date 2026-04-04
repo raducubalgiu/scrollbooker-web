@@ -2,6 +2,7 @@ import { Product } from "@/ts/models/booking/product/Product";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import React from "react";
+import { formatPrice } from "@/utils/formatPrice";
 
 type BusinessProductCardProps = {
   product: Product;
@@ -28,12 +29,13 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
+          gap={2}
         >
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
             {name}
           </Typography>
           <Typography sx={{ fontWeight: 700 }}>
-            {price_with_discount} RON
+            {formatPrice(price_with_discount)} RON
           </Typography>
         </Stack>
 

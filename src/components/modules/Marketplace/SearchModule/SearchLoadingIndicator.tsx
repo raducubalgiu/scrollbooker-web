@@ -16,7 +16,7 @@ const MapLoadingIndicator = ({ show }: { show: boolean }) => {
           top: 16,
           left: "50%",
           transform: "translateX(-50%)",
-          zIndex: 10,
+          zIndex: 20,
           bgcolor: "background.paper",
           p: 2.5,
           borderRadius: 10,

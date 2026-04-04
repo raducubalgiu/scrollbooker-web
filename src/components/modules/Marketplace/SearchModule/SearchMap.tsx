@@ -60,13 +60,15 @@ const SearchMap = ({
     [mode]
   );
 
-  // 1. Păstrăm funcția de refetch mereu "proaspătă" fără a declanșa useEffects
+  const initialBounds: [number, number, number, number] = [
+    25.961395, 44.202274, 26.243607, 44.650467,
+  ];
+
   const refetchRef = React.useRef(refetchData);
   React.useEffect(() => {
     refetchRef.current = refetchData;
   }, [refetchData]);
 
-  // 2. INIȚIALIZARE HARTĂ (Garantat o singură dată)
   React.useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -74,9 +76,11 @@ const SearchMap = ({
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: mapStyle,
-      center: [26.1025, 44.4268],
-      zoom: 12,
-      trackResize: false, // Îl gestionăm noi manual pentru performanță
+      bounds: initialBounds,
+      fitBoundsOptions: {
+        padding: 20,
+      },
+      trackResize: false,
     });
 
     map.on("moveend", () => {
@@ -122,12 +126,9 @@ const SearchMap = ({
               zoom,
             };
 
-            console.log("🚀 Executing debounced refetch...");
-
-            // Acum TypeScript va fi fericit deoarece am eliminat posibilitatea de 'null'
             refetchRef.current(bounds, zoom);
           }
-        }, 1000);
+        }, 500);
       }
     });
 
@@ -138,7 +139,7 @@ const SearchMap = ({
       map.remove();
       mapRef.current = null;
     };
-  }, []); // STRICT GOL
+  }, []);
 
   const businessDomainMap = new Map<string, string>([
     ["Beauty", "#9B4A55"],
@@ -151,7 +152,6 @@ const SearchMap = ({
     const map = mapRef.current;
     if (!map || !isMapVisible || !Array.isArray(markers)) return;
 
-    // Asigură-te că markersRef.current este un Map
     if (!(markersRef.current instanceof Map)) {
       markersRef.current = new Map();
     }
@@ -159,7 +159,6 @@ const SearchMap = ({
     const currentMarkersMap = markersRef.current;
     const newMarkerIds = new Set(markers.map((m) => m.id));
 
-    // 1. Curățăm markerii care au ieșit din listă
     currentMarkersMap.forEach((marker, id) => {
       if (!newMarkerIds.has(id)) {
         marker.remove();
@@ -167,7 +166,6 @@ const SearchMap = ({
       }
     });
 
-    // 2. Adăugăm markerii noi
     markers.forEach((m) => {
       if (!currentMarkersMap.has(m.id)) {
         const lat = m?.coordinates?.lat;
@@ -176,57 +174,34 @@ const SearchMap = ({
 
         const domainColor =
           businessDomainMap.get(m.business_short_domain) || "#000";
-        let el: HTMLDivElement;
+        const el = document.createElement("div");
+
+        el.style.borderRadius = "50%";
+        el.style.cursor = "pointer";
+        el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
+        el.style.display = "block";
 
         if (m.is_primary) {
-          // --- LOGICA PENTRU AVATAR PIN (PRIMARY) ---
-          el = document.createElement("div");
-          el.style.position = "relative";
-          el.style.width = "54px"; // Puțin mai mic pentru a fi mai elegant
-          el.style.height = "54px";
-          el.style.borderRadius = "50%";
+          const size = "60px";
+          el.style.width = size;
+          el.style.height = size;
           el.style.border = `3px solid ${domainColor}`;
-          el.style.boxShadow = "0 4px 12px rgba(0,0,0,0.25)";
           el.style.backgroundImage = `url(${m.media_files?.[0]?.url || "/default-avatar.png"})`;
           el.style.backgroundSize = "cover";
           el.style.backgroundPosition = "center";
-          el.style.cursor = "pointer";
           el.style.zIndex = "20";
-
-          // Creăm Săgeata (Triunghi mai lat și mai scurt)
-          const arrow = document.createElement("div");
-          arrow.style.position = "absolute";
-          arrow.style.bottom = "-8px"; // Ridicat mai aproape de cerc
-          arrow.style.left = "50%";
-          arrow.style.transform = "translateX(-50%)";
-          arrow.style.width = "0";
-          arrow.style.height = "0";
-
-          // Modificăm dimensiunile pentru a nu fi ascuțit:
-          // border-left/right mari (baza lată) + border-top mic (înălțime mică)
-          arrow.style.borderLeft = "10px solid transparent";
-          arrow.style.borderRight = "10px solid transparent";
-          arrow.style.borderTop = `8px solid ${domainColor}`;
-
-          el.appendChild(arrow);
         } else {
-          // --- LOGICA PENTRU PUNCT (SECUNDAR) ---
-          el = document.createElement("div");
-          el.style.width = "15px";
-          el.style.height = "15px";
-          el.style.borderRadius = "50%";
+          const size = "15px";
+          el.style.width = size;
+          el.style.height = size;
           el.style.backgroundColor = domainColor;
           el.style.border = "2px solid white";
-          el.style.boxShadow = "0 1px 4px rgba(0,0,0,0.2)";
-          el.style.cursor = "pointer";
           el.style.zIndex = "10";
         }
 
         const marker = new mapboxgl.Marker({
           element: el,
-          // Folosim 'bottom' pentru avatare ca vârful săgeții să fie ancora,
-          // și 'center' pentru puncte pentru stabilitate
-          anchor: m.is_primary ? "bottom" : "center",
+          anchor: "center",
         })
           .setLngLat([lng, lat])
           .addTo(map);

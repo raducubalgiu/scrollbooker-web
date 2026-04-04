@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { memo } from "react";
 import Image from "next/image";
 import { formatRating } from "@/utils/formatters";
 import StarIcon from "@mui/icons-material/Star";
@@ -87,7 +87,13 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 
         <Typography color="text.secondary">{profession}</Typography>
 
-        <Typography color="text.secondary" fontWeight={400} mt={1.5} mb={2.5}>
+        <Typography
+          color="text.secondary"
+          noWrap
+          fontWeight={400}
+          mt={1.5}
+          mb={2.5}
+        >
           {address}
         </Typography>
       </Box>
@@ -99,4 +105,4 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
   );
 };
 
-export default BusinessCard;
+export default memo(BusinessCard);

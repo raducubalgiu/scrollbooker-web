@@ -6,10 +6,13 @@ import React, { useState } from "react";
 
 type FiltersModalProps = {
   hasDiscount: boolean;
-  maxPrice: number;
+  maxPrice: number | null;
   open: boolean;
   onClose: () => void;
-  onApplyFilters: (filters: { hasDiscount: boolean; maxPrice: number }) => void;
+  onApplyFilters: (filters: {
+    hasDiscount: boolean;
+    maxPrice: number | null;
+  }) => void;
 };
 
 export default function FiltersModal({
@@ -24,6 +27,14 @@ export default function FiltersModal({
     maxPrice,
   }));
 
+  const handleDiscountToggle = () => {
+    setState((prev) => ({ ...prev, hasDiscount: !prev.hasDiscount }));
+  };
+
+  const handlePriceChange = (_: Event, value: number | number[]) => {
+    setState((prev) => ({ ...prev, maxPrice: value as number }));
+  };
+
   const actions: ActionButtonType[] = [
     {
       title: "Aplică",
@@ -34,14 +45,6 @@ export default function FiltersModal({
       },
     },
   ];
-
-  const handleDiscountToggle = () => {
-    setState((prev) => ({ ...prev, hasDiscount: !prev.hasDiscount }));
-  };
-
-  const handlePriceChange = (_: Event, value: number | number[]) => {
-    setState((prev) => ({ ...prev, maxPrice: value as number }));
-  };
 
   return (
     <Modal
@@ -80,15 +83,15 @@ export default function FiltersModal({
           </Typography>
 
           <Typography variant="h6" fontWeight={600}>
-            1500 RON
+            {state.maxPrice ?? 5000} RON
           </Typography>
         </Stack>
 
         <Slider
-          value={state.maxPrice}
+          value={state.maxPrice ?? 5000}
           aria-label="Small"
           valueLabelDisplay="auto"
-          max={1500}
+          max={5000}
           onChange={handlePriceChange}
         />
 

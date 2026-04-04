@@ -30,7 +30,7 @@ export type SearchState = {
   startTime: string | null;
   endTime: string | null;
   hasDiscount: boolean;
-  maxPrice: number;
+  maxPrice: number | null;
 };
 
 export default function SearchModule({ searchParams }: SearchPageProps) {
@@ -83,15 +83,19 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     maxPrice:
       typeof searchParams.maxPrice === "string"
         ? Number(searchParams.maxPrice) || 1500
-        : 1500,
+        : null,
   }));
 
   const buildUrlParams = React.useCallback((state: SearchState) => {
     const params = new URLSearchParams();
 
-    if (state.zoom != null) {
-      params.set("zoom", String(state.zoom));
+    if (state.bbox) {
+      params.set("min_lng", state.bbox.min_lng.toFixed(6));
+      params.set("min_lat", state.bbox.min_lat.toFixed(6));
+      params.set("max_lng", state.bbox.max_lng.toFixed(6));
+      params.set("max_lat", state.bbox.max_lat.toFixed(6));
     }
+    if (state.zoom) params.set("zoom", String(state.zoom));
 
     if (state.businessDomainId != null) {
       params.set("businessDomain", String(state.businessDomainId));
@@ -132,8 +136,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     return params;
   }, []);
 
-  const { data, isLoading, refetch } =
-    useInfiniteBusinessLocations(searchState);
+  const { data, isLoading } = useInfiniteBusinessLocations(searchState);
   const locations = data ? data.pages.flatMap((page) => page.results) : [];
   const locationsCount = data ? data.pages[0]?.count : 0;
 
@@ -141,7 +144,6 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     data: markers,
     isLoading: isLoadingMarkers,
     isRefetching: isRefetchingMarkers,
-    refetch: refetchMarkers,
   } = useBusinessMarkers(searchState);
 
   const [isMapVisible, setIsMapVisible] = React.useState(true);
@@ -157,6 +159,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       setIsMapExpanded(false);
     }
   }, []);
+
   const handleMapExpandToggle = React.useCallback(() => {
     setIsMapExpanded((prev) => !prev);
     setIsMapVisible(true);
@@ -165,60 +168,52 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   const handleOpenFilters = React.useCallback(() => setOpenFilters(true), []);
   const handleCloseFilters = React.useCallback(() => setOpenFilters(false), []);
 
+  const styles = React.useMemo(
+    () => ({
+      root: {
+        px: isMapExpanded ? 0 : mainPagePadding,
+      },
+      list: {
+        display: "grid",
+        gridTemplateColumns: {
+          lg: "1fr",
+          xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
+        },
+        gap: 5,
+        px: { xs: 1, md: 0 },
+      },
+      mapGrid: {
+        width: "100%",
+      },
+    }),
+    [isMapExpanded, mainPagePadding, isMapVisible]
+  );
+
+  // 1. Filtrele de sus (Beauty, Medical, etc.)
+  const handleSearch = React.useCallback((state: SearchHeaderState) => {
+    setSearchState((prev) => ({
+      ...prev,
+      businessDomainId: state.selectedBusinessDomainId,
+      serviceDomainId: state.selectedServiceDomainId,
+      serviceId: state.selectedServiceId,
+    }));
+  }, []);
+
+  // 2. Filtrele din modal (Preț, Discount, etc.)
   const handleApplyFilters = React.useCallback(
     (filters: { hasDiscount: boolean | null; maxPrice: number | null }) => {
-      const nextState: SearchState = {
-        ...searchState,
-        hasDiscount: filters.hasDiscount ?? searchState.hasDiscount,
-        maxPrice: filters.maxPrice ?? searchState.maxPrice,
-      };
-
-      setSearchState(nextState);
-
-      const params = buildUrlParams(nextState);
-      router.replace(`/search?${params.toString()}`);
-
+      setSearchState((prev) => ({
+        ...prev,
+        hasDiscount: filters.hasDiscount ?? prev.hasDiscount,
+        maxPrice: filters.maxPrice ?? prev.maxPrice,
+      }));
       handleCloseFilters();
     },
-    [handleCloseFilters, router, searchState]
+    [handleCloseFilters]
   );
 
-  const handleSearch = React.useCallback(
-    (state: SearchHeaderState) => {
-      const nextState = {
-        ...searchState,
-        businessDomainId: state.selectedBusinessDomainId,
-        serviceDomainId: state.selectedServiceDomainId,
-        serviceId: state.selectedServiceId,
-      };
-
-      setSearchState(nextState);
-
-      const params = buildUrlParams(nextState);
-      router.replace(`/search?${params.toString()}`);
-    },
-    [router]
-  );
-
-  const styles = {
-    root: {
-      px: isMapExpanded ? 0 : mainPagePadding,
-    },
-    list: {
-      display: "grid",
-      gridTemplateColumns: {
-        lg: "1fr",
-        xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
-      },
-      gap: 5,
-      px: { xs: 1, md: 0 },
-    },
-    mapGrid: {
-      width: "100%",
-    },
-  };
-
-  const handleRefetch = React.useCallback(
+  // 3. Update-ul de la hartă (BBox, Zoom)
+  const handleSearchFromMap = React.useCallback(
     (bounds: LngLatBounds, zoom: number) => {
       setSearchState((prev) => ({
         ...prev,
@@ -235,11 +230,14 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   );
 
   React.useEffect(() => {
-    if (searchState?.bbox?.min_lng !== 0) {
-      refetch();
-      refetchMarkers();
+    const params = buildUrlParams(searchState);
+    const currentQuery = window.location.search;
+    const newQuery = `?${params.toString()}`;
+
+    if (currentQuery !== newQuery) {
+      router.replace(`/search${newQuery}`, { scroll: false });
     }
-  }, [searchState.bbox, searchState.zoom]);
+  }, [searchState, buildUrlParams, router]);
 
   return (
     <Box sx={styles.root}>
@@ -290,7 +288,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
               mainPagePadding={mainPagePadding}
               isLoadingMarkers={isLoadingMarkers}
               isRefetchingMarkers={isRefetchingMarkers}
-              refetchData={handleRefetch}
+              refetchData={handleSearchFromMap}
             />
           </Grid>
         )}
