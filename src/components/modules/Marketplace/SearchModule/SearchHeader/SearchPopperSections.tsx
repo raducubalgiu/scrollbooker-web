@@ -4,13 +4,13 @@ import {
   SearchHeaderSectionEnum,
   SearchHeaderSectionType,
 } from "../SearchHeaderSectionEnum";
-import SearchServicesSection from "./SearchServicesSection";
+import SearchServicesSection from "./sections/SearchServicesSection";
 
 const SearchLocationSection = React.lazy(
-  () => import("./SearchLocationSection")
+  () => import("./sections/SearchLocationSection")
 );
 const SearchDateTimeSection = React.lazy(
-  () => import("./SearchDateTimeSection")
+  () => import("./sections/SearchDateTimeSection")
 );
 
 type SearchPopperSectionsProps = {
