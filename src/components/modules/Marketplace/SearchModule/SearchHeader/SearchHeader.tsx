@@ -17,13 +17,14 @@ export type SearchHeaderState = {
 };
 
 type SearchHeaderProps = {
-  isMapVisible: boolean;
-  onOpenFilters: () => void;
-  onToggleMap: () => void;
-  onHeightChange?: (height: number) => void;
-  mainPagePadding?: number | string;
-  onSearch: (state: SearchHeaderState) => void;
   headerState: SearchHeaderState;
+  onSearch: (state: SearchHeaderState) => void;
+  displayFiltersSection?: boolean;
+  mainPagePadding?: number | string;
+  isMapVisible?: boolean;
+  onOpenFilters?: () => void;
+  onToggleMap?: () => void;
+  onHeightChange?: (height: number) => void;
 };
 
 const SearchHeader = ({
@@ -34,6 +35,7 @@ const SearchHeader = ({
   mainPagePadding = 0,
   onSearch,
   headerState,
+  displayFiltersSection = true,
 }: SearchHeaderProps) => {
   const theme = useTheme();
   const [state, setState] = useState<SearchHeaderState>(headerState);
@@ -203,21 +205,23 @@ const SearchHeader = ({
           </Box>
         </Stack>
 
-        <BusinessDomainsTabs
-          isExpanded={isExpanded}
-          isMapVisible={isMapVisible}
-          onOpenFilters={onOpenFilters}
-          onToggleMap={onToggleMap}
-          selectedBusinessDomainId={headerState.selectedBusinessDomainId}
-          onSelectBusinessDomain={(id) =>
-            onSearch({
-              ...state,
-              selectedBusinessDomainId: id,
-              selectedServiceDomainId: null,
-              selectedServiceId: null,
-            })
-          }
-        />
+        {displayFiltersSection && (
+          <BusinessDomainsTabs
+            isExpanded={isExpanded}
+            isMapVisible={isMapVisible ?? false}
+            onOpenFilters={onOpenFilters}
+            onToggleMap={onToggleMap}
+            selectedBusinessDomainId={headerState.selectedBusinessDomainId}
+            onSelectBusinessDomain={(id) =>
+              onSearch({
+                ...state,
+                selectedBusinessDomainId: id,
+                selectedServiceDomainId: null,
+                selectedServiceId: null,
+              })
+            }
+          />
+        )}
       </Box>
     </>
   );

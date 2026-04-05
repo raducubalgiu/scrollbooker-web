@@ -19,6 +19,7 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
         component={Link}
         target="_blank"
         href={`/business/${owner.username}`}
+        rel="noopener noreferrer"
         sx={{
           textDecoration: "none",
           display: "block",

@@ -8,8 +8,8 @@ import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/Busines
 type BusinessDomainsTabsProps = {
   isExpanded: boolean;
   isMapVisible: boolean;
-  onOpenFilters: () => void;
-  onToggleMap: () => void;
+  onOpenFilters: (() => void) | undefined;
+  onToggleMap: (() => void) | undefined;
   businessDomains?: BusinessDomain;
   selectedBusinessDomainId: number | null;
   onSelectBusinessDomain: (id: number | null) => void;

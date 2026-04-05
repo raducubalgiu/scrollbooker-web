@@ -189,7 +189,6 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     [isMapExpanded, mainPagePadding, isMapVisible]
   );
 
-  // 1. Filtrele de sus (Beauty, Medical, etc.)
   const handleSearch = React.useCallback((state: SearchHeaderState) => {
     setSearchState((prev) => ({
       ...prev,
@@ -199,7 +198,6 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     }));
   }, []);
 
-  // 2. Filtrele din modal (Preț, Discount, etc.)
   const handleApplyFilters = React.useCallback(
     (filters: { hasDiscount: boolean | null; maxPrice: number | null }) => {
       setSearchState((prev) => ({
@@ -212,7 +210,6 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     [handleCloseFilters]
   );
 
-  // 3. Update-ul de la hartă (BBox, Zoom)
   const handleSearchFromMap = React.useCallback(
     (bounds: LngLatBounds, zoom: number) => {
       setSearchState((prev) => ({

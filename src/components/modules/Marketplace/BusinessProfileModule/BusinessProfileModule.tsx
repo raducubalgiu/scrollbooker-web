@@ -10,15 +10,41 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import SearchHeaderBar from "../SearchModule/SearchHeader/SearchHeaderBar";
+import { useTheme } from "@mui/material/styles";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Grid from "@mui/material/Grid2";
 import BusinessStickyCard from "./BusinessStickyCard";
-import BusinessServicesTab from "./tabs/BusinessServicesTab";
-import BusinessPostsTab from "./tabs/BusinessPostsTab";
-import BusinessReviewsTab from "./tabs/BusinessReviewsTab";
-import BusinessAboutTab from "./tabs/BusinessAboutTab";
-import BusinessPhotosTab from "./tabs/BusinessPhotosTab";
+import SearchHeader, {
+  SearchHeaderState,
+} from "../SearchModule/SearchHeader/SearchHeader";
+import { useRouter } from "next/navigation";
+
+import dynamic from "next/dynamic";
+
+const BusinessPhotosTab = dynamic(() => import("./tabs/BusinessPhotosTab"), {
+  ssr: true,
+});
+const BusinessServicesTab = dynamic(
+  () => import("./tabs/BusinessServicesTab"),
+  {
+    ssr: true,
+  }
+);
+const BusinessPostsTab = dynamic(() => import("./tabs/BusinessPostsTab"), {
+  ssr: true,
+});
+const BusinessReviewsTab = dynamic(() => import("./tabs/BusinessReviewsTab"), {
+  ssr: true,
+});
+const BusinessAboutTab = dynamic(() => import("./tabs/BusinessAboutTab"), {
+  ssr: true,
+});
 
 type BusinessProfileModuleProps = {
   profile: BusinessProfile | null;
@@ -39,6 +65,9 @@ const TAB_SECTIONS: TabSection[] = [
 
 const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
   if (!profile) return null;
+  const theme = useTheme();
+  const mainPagePadding = theme.spacing(2.5);
+  const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<string>(
     TAB_SECTIONS[0]?.id ?? "services"
@@ -84,7 +113,7 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [sectionRefs]);
+  }, []);
 
   const scrollToSection = (sectionId: string): void => {
     const element = sectionRefs.current[sectionId];
@@ -133,14 +162,36 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
     []
   );
 
+  const handleSearch = useCallback((state: SearchHeaderState) => {
+    const params = new URLSearchParams();
+
+    if (state.selectedBusinessDomainId != null) {
+      params.set("businessDomain", String(state.selectedBusinessDomainId));
+    }
+
+    if (state.selectedServiceDomainId != null) {
+      params.set("serviceDomain", String(state.selectedServiceDomainId));
+    }
+
+    if (state.selectedServiceId != null) {
+      params.set("service", String(state.selectedServiceId));
+    }
+
+    router.push(`/search?${params.toString()}`, { scroll: false });
+  }, []);
+
   return (
     <Box sx={{ px: 2.5, bgcolor: "background.paper" }}>
       <Stack direction="row" alignItems="center" justifyContent="center" mb={5}>
-        <SearchHeaderBar
-          isExpanded={false}
-          toggle={() => {}}
-          activeSection={null}
-          onSearch={() => {}}
+        <SearchHeader
+          mainPagePadding={mainPagePadding}
+          headerState={{
+            selectedBusinessDomainId: null,
+            selectedServiceDomainId: null,
+            selectedServiceId: null,
+          }}
+          displayFiltersSection={false}
+          onSearch={handleSearch}
         />
       </Stack>
 
