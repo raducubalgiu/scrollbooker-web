@@ -1,5 +1,5 @@
 import { Portal, Stack, Box } from "@mui/material";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import BusinessDomainsTabs from "../BusinessDomainsTabs";
 import { SearchHeaderSectionType } from "@/components/modules/Marketplace/SearchModule/SearchHeaderSectionEnum";
@@ -9,16 +9,12 @@ import {
   createHandleMouseDown,
   useSearchHeaderScrollLock,
 } from "./search-header-utils";
-
-export type SearchHeaderState = {
-  selectedBusinessDomainId: number | null;
-  selectedServiceDomainId: number | null;
-  selectedServiceId: number | null;
-};
+import { SearchHeaderStateType } from "./search-header-types";
 
 type SearchHeaderProps = {
-  headerState: SearchHeaderState;
-  onSearch: (state: SearchHeaderState) => void;
+  headerState: SearchHeaderStateType;
+  onSearch: (state: SearchHeaderStateType) => void;
+  selectedServiceDomainName: string | null | undefined;
   displayFiltersSection?: boolean;
   mainPagePadding?: number | string;
   isMapVisible?: boolean;
@@ -28,21 +24,30 @@ type SearchHeaderProps = {
 };
 
 const SearchHeader = ({
+  headerState,
+  onSearch,
+  selectedServiceDomainName,
   isMapVisible,
   onOpenFilters,
   onToggleMap,
   onHeightChange,
   mainPagePadding = 0,
-  onSearch,
-  headerState,
   displayFiltersSection = true,
 }: SearchHeaderProps) => {
   const theme = useTheme();
-  const [state, setState] = useState<SearchHeaderState>(headerState);
+  const [state, setState] = useState<SearchHeaderStateType>(headerState);
 
   useEffect(() => {
-    setState(headerState);
-  }, [headerState]);
+    setState({
+      selectedBusinessDomainId: headerState.selectedBusinessDomainId,
+      selectedServiceDomainId: headerState.selectedServiceDomainId,
+      selectedServiceId: headerState.selectedServiceId,
+    });
+  }, [
+    headerState.selectedBusinessDomainId,
+    headerState.selectedServiceDomainId,
+    headerState.selectedServiceId,
+  ]);
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const pillRef = React.useRef<HTMLDivElement | null>(null);
@@ -151,24 +156,26 @@ const SearchHeader = ({
     [theme.zIndex]
   );
 
-  const handleBusinessDomainChange = (id: number | null) => {
+  const handleBusinessDomainChange = useCallback((id: number | null) => {
     setState((prev) => ({
       ...prev,
       selectedBusinessDomainId: id,
       selectedServiceDomainId: null,
       selectedServiceId: null,
     }));
-  };
-  const handleServiceDomainChange = (id: number | null) => {
+  }, []);
+
+  const handleServiceDomainChange = useCallback((id: number | null) => {
     setState((prev) => ({
       ...prev,
       selectedServiceDomainId: id,
       selectedServiceId: null,
     }));
-  };
-  const handleServiceChange = (id: number | null) => {
+  }, []);
+
+  const handleServiceChange = useCallback((id: number | null) => {
     setState((prev) => ({ ...prev, selectedServiceId: id }));
-  };
+  }, []);
 
   return (
     <>
@@ -178,6 +185,7 @@ const SearchHeader = ({
         <Stack direction="row" justifyContent="center" alignItems="flex-start">
           <Box ref={pillRef} sx={pillSx}>
             <SearchHeaderBar
+              selectedServiceDomainName={selectedServiceDomainName}
               isExpanded={isExpanded}
               toggle={toggle}
               activeSection={activeSection}
@@ -195,12 +203,12 @@ const SearchHeader = ({
               popperRef={popperRef}
               activeSection={activeSection}
               popperId="search-popper"
-              selectedBusinessDomainId={state.selectedBusinessDomainId}
-              onSetBusinessDomainId={handleBusinessDomainChange}
-              selectedServiceDomainId={state.selectedServiceDomainId}
-              onSetServiceDomainId={handleServiceDomainChange}
-              selectedServiceId={state.selectedServiceId}
-              onSetServiceId={handleServiceChange}
+              state={state}
+              actions={{
+                onSetBusinessDomainId: handleBusinessDomainChange,
+                onSetServiceDomainId: handleServiceDomainChange,
+                onSetServiceId: handleServiceChange,
+              }}
             />
           </Box>
         </Stack>

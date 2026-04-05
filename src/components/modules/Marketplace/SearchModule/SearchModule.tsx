@@ -3,7 +3,7 @@
 import * as React from "react";
 import Grid from "@mui/material/Grid2";
 import { Box, Typography } from "@mui/material";
-import SearchHeader, { SearchHeaderState } from "./SearchHeader/SearchHeader";
+import SearchHeader from "./SearchHeader/SearchHeader";
 import BusinessCard from "./BusinessCard";
 import FiltersModal from "./FiltersModal";
 import SearchMap from "./SearchMap";
@@ -14,6 +14,8 @@ import { useInfiniteBusinessLocations } from "@/hooks/infiniteQuery/useInfiniteB
 import { useBusinessMarkers } from "@/hooks/useMarkers";
 import { LngLatBounds } from "mapbox-gl";
 import BusinessCardSkeletons from "./BusinessCardSkeletons";
+import { getServiceDomainNameById } from "@/utils/mvp-hardcoded/mvp-business-domains";
+import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
 
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -189,7 +191,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     [isMapExpanded, mainPagePadding, isMapVisible]
   );
 
-  const handleSearch = React.useCallback((state: SearchHeaderState) => {
+  const handleSearch = React.useCallback((state: SearchHeaderStateType) => {
     setSearchState((prev) => ({
       ...prev,
       businessDomainId: state.selectedBusinessDomainId,
@@ -236,6 +238,11 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     }
   }, [searchState, buildUrlParams, router]);
 
+  const selectedServiceDomainName = getServiceDomainNameById(
+    searchState.businessDomainId,
+    searchState.serviceDomainId
+  );
+
   return (
     <Box sx={styles.root}>
       <FiltersModal
@@ -247,6 +254,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       />
 
       <SearchHeader
+        selectedServiceDomainName={selectedServiceDomainName}
         isMapVisible={isMapVisible}
         onToggleMap={handleToggleMap}
         onHeightChange={setSearchHeaderHeight}

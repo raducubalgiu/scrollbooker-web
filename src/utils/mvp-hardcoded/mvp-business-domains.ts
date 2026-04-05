@@ -1,3 +1,5 @@
+import { find } from "lodash";
+
 export const MVP_BUSINESS_DOMAINS = [
   {
     id: 1,
@@ -204,3 +206,19 @@ export const MVP_BUSINESS_DOMAINS = [
     ],
   },
 ];
+
+export const getServiceDomainNameById = (
+  businessDomainId: number | null,
+  serviceDomainId: number | null
+) => {
+  if (!businessDomainId || !serviceDomainId) return null;
+
+  const selectedBusinessDomain = find(MVP_BUSINESS_DOMAINS, {
+    id: businessDomainId,
+  });
+
+  if (!selectedBusinessDomain) return null;
+
+  return find(selectedBusinessDomain.service_domains, { id: serviceDomainId })
+    ?.name;
+};

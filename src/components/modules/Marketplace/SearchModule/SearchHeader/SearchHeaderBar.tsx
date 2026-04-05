@@ -1,13 +1,23 @@
-import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { Theme, useTheme } from "@mui/material/styles";
 import React, { memo, useMemo } from "react";
 import {
   SEARCH_HEADER_SECTIONS,
+  SearchHeaderSectionEnum,
   SearchHeaderSectionType,
 } from "../SearchHeaderSectionEnum";
 import SearchIcon from "@mui/icons-material/Search";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 type SearchHeaderBarProps = {
+  selectedServiceDomainName: string | null | undefined;
   isExpanded: boolean;
   toggle: (section: SearchHeaderSectionType) => void;
   activeSection: SearchHeaderSectionType | null;
@@ -17,6 +27,7 @@ type SearchHeaderBarProps = {
 };
 
 const SearchHeaderBar = ({
+  selectedServiceDomainName,
   isExpanded,
   toggle,
   activeSection,
@@ -25,7 +36,7 @@ const SearchHeaderBar = ({
   const theme = useTheme();
 
   const searchButtonWidth = React.useMemo(
-    () => (isExpanded ? 278 : 220),
+    () => (isExpanded ? 320 : 250),
     [isExpanded]
   );
 
@@ -123,7 +134,6 @@ const SearchHeaderBar = ({
     [isExpanded]
   );
 
-  // button refs for keyboard navigation
   const buttonRefs = React.useRef<Array<HTMLDivElement | null>>([]);
 
   const handleKeyDown = React.useCallback(
@@ -138,7 +148,6 @@ const SearchHeaderBar = ({
         buttonRefs.current[prev]?.focus();
         e.preventDefault();
       } else if (e.key === "Escape") {
-        // close popper if provided
         typeof (SearchHeaderBar as any).close === "function" ? null : null;
         e.preventDefault();
       }
@@ -153,6 +162,8 @@ const SearchHeaderBar = ({
       borderRadius: 50,
       py: 2,
       pl: 2.5,
+      fontWeight: 700,
+      fontSize: 18,
       pr: isExpanded ? 2 : 1.25,
       minWidth: isExpanded ? 100 : 48,
       boxShadow: "none",
@@ -202,21 +213,42 @@ const SearchHeaderBar = ({
               }
               onKeyDown={(e) => handleKeyDown(e, idx)}
             >
-              <Stack alignItems="flex-start">
-                <Typography
-                  color="text.secondary"
-                  fontWeight={600}
-                  lineHeight={1.5}
+              <Stack
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+                flex={1}
+                gap={5}
+              >
+                <Stack alignItems="flex-start">
+                  <Typography
+                    color="text.secondary"
+                    fontWeight={600}
+                    lineHeight={1.5}
+                    noWrap
+                  >
+                    {sec.title}
+                  </Typography>
+                  <Typography
+                    color="text.primary"
+                    fontWeight={500}
+                    sx={{ fontSize: "1rem" }}
+                    noWrap
+                  >
+                    {sec.key === SearchHeaderSectionEnum.Services &&
+                    selectedServiceDomainName
+                      ? selectedServiceDomainName
+                      : sec.value}
+                  </Typography>
+                </Stack>
+                <IconButton
+                  onClick={(e) => e.preventDefault()}
+                  sx={{
+                    opacity: isExpanded && selectedServiceDomainName ? 1 : 0,
+                  }}
                 >
-                  {sec.title}
-                </Typography>
-                <Typography
-                  color="text.primary"
-                  fontWeight={500}
-                  sx={{ fontSize: "1rem" }}
-                >
-                  {sec.value}
-                </Typography>
+                  <CancelIcon />
+                </IconButton>
               </Stack>
             </Button>
 
@@ -232,7 +264,14 @@ const SearchHeaderBar = ({
           variant="contained"
           color="primary"
           size="large"
-          startIcon={<SearchIcon fontSize="large" />}
+          startIcon={
+            <SearchIcon
+              sx={{
+                width: 26,
+                height: 26,
+              }}
+            />
+          }
           sx={searchBtnSx}
         >
           {isExpanded && (

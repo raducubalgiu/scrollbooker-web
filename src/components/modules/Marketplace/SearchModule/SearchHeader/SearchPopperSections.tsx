@@ -5,6 +5,10 @@ import {
   SearchHeaderSectionType,
 } from "../SearchHeaderSectionEnum";
 import SearchServicesSection from "./sections/SearchServicesSection";
+import {
+  SearchHeaderActionsType,
+  SearchHeaderStateType,
+} from "./search-header-types";
 
 const SearchLocationSection = React.lazy(
   () => import("./sections/SearchLocationSection")
@@ -14,45 +18,49 @@ const SearchDateTimeSection = React.lazy(
 );
 
 type SearchPopperSectionsProps = {
+  state: SearchHeaderStateType;
+  actions: SearchHeaderActionsType;
   isExpanded: boolean;
   pillRef: React.RefObject<HTMLDivElement | null>;
   popperRef: React.RefObject<HTMLDivElement | null>;
   activeSection: SearchHeaderSectionType | null;
   popperId?: string;
-  selectedBusinessDomainId: number | null;
-  onSetBusinessDomainId: (id: number | null) => void;
-  selectedServiceDomainId: number | null;
-  onSetServiceDomainId: (id: number | null) => void;
-  selectedServiceId: number | null;
-  onSetServiceId: (id: number | null) => void;
 };
 
 const POPPER_MODIFIERS = [{ name: "offset", options: { offset: [0, 12] } }];
 
 const SearchPopperSections = ({
+  state,
+  actions,
   isExpanded,
   pillRef,
   popperRef,
   activeSection,
   popperId,
-  selectedBusinessDomainId,
-  onSetBusinessDomainId,
-  selectedServiceDomainId,
-  onSetServiceDomainId,
-  selectedServiceId,
-  onSetServiceId,
 }: SearchPopperSectionsProps) => {
+  const {
+    selectedBusinessDomainId,
+    selectedServiceDomainId,
+    selectedServiceId,
+  } = state;
+  const { onSetBusinessDomainId, onSetServiceDomainId, onSetServiceId } =
+    actions;
+
   const sections = useMemo(() => {
     switch (activeSection) {
       case SearchHeaderSectionEnum.Services:
         return (
           <SearchServicesSection
-            selectedBusinessDomainId={selectedBusinessDomainId}
-            selectedServiceDomainId={selectedServiceDomainId}
-            onSetBusinessDomainId={onSetBusinessDomainId}
-            onSetServiceDomainId={onSetServiceDomainId}
-            selectedServiceId={selectedServiceId}
-            onSetServiceId={onSetServiceId}
+            state={{
+              selectedBusinessDomainId,
+              selectedServiceDomainId,
+              selectedServiceId,
+            }}
+            actions={{
+              onSetBusinessDomainId,
+              onSetServiceDomainId,
+              onSetServiceId,
+            }}
           />
         );
       case SearchHeaderSectionEnum.Location:
