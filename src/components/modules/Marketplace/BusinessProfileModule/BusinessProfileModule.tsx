@@ -4,6 +4,7 @@ import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
 import {
   alpha,
   Box,
+  Button,
   Rating,
   Stack,
   Tab,
@@ -20,12 +21,14 @@ import React, {
 } from "react";
 import Grid from "@mui/material/Grid2";
 import BusinessStickyCard from "./BusinessStickyCard";
-import SearchHeader, {
-  SearchHeaderState,
-} from "../SearchModule/SearchHeader/SearchHeader";
+import SearchHeader from "../SearchModule/SearchHeader/SearchHeader";
 import { useRouter } from "next/navigation";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 
 import dynamic from "next/dynamic";
+import { SearchHeaderStateType } from "../SearchModule/SearchHeader/search-header-types";
+import Link from "next/link";
 
 const BusinessPhotosTab = dynamic(() => import("./tabs/BusinessPhotosTab"), {
   ssr: true,
@@ -56,11 +59,11 @@ type TabSection = {
 };
 
 const TAB_SECTIONS: TabSection[] = [
-  { id: "photos", label: "Photos" },
-  { id: "services", label: "Services" },
-  { id: "social", label: "Social" },
-  { id: "reviews", label: "Reviews" },
-  { id: "about", label: "About" },
+  { id: "photos", label: "Fotografii" },
+  { id: "services", label: "Servicii" },
+  { id: "social", label: "Postari" },
+  { id: "reviews", label: "Recenzii" },
+  { id: "about", label: "Despre" },
 ];
 
 const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
@@ -68,6 +71,8 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
   const theme = useTheme();
   const mainPagePadding = theme.spacing(2.5);
   const router = useRouter();
+
+  const [isTabsVisible, setIsTabsVisible] = useState(false);
 
   const [activeTab, setActiveTab] = useState<string>(
     TAB_SECTIONS[0]?.id ?? "services"
@@ -85,8 +90,24 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
 
   useEffect(() => {
     const handleScroll = (): void => {
+      // 1. Logica pentru Vizibilitatea Tab-urilor (Apar doar la Services)
+      const servicesElement = sectionRefs.current["services"];
+      if (servicesElement) {
+        const rect = servicesElement.getBoundingClientRect();
+
+        // Activăm tab-urile când marginea de sus a secțiunii Services
+        // ajunge aproape de top (ex: 80px distanță)
+        // Folosim un prag fix pentru a evita "tremuratul"
+        const shouldBeVisible = rect.top <= 80;
+
+        if (isTabsVisible !== shouldBeVisible) {
+          setIsTabsVisible(shouldBeVisible);
+        }
+      }
+
+      // 2. Logica pentru Tab-ul Activ (Care secțiune e în focus)
       const stickyTabsHeight = tabsContainerRef.current?.offsetHeight ?? 0;
-      const activationOffset = stickyTabsHeight + 16;
+      const activationOffset = stickyTabsHeight + 100; // Offset mai generos pentru precizie
 
       let currentActiveTab = TAB_SECTIONS[0]?.id ?? "services";
 
@@ -96,7 +117,8 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
 
         const rect = element.getBoundingClientRect();
 
-        if (rect.top - activationOffset <= 0) {
+        // Dacă secțiunea a trecut de pragul de sus, o considerăm activă
+        if (rect.top <= activationOffset) {
           currentActiveTab = section.id;
         }
       }
@@ -106,6 +128,7 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
       );
     };
 
+    // Executăm o dată la mount pentru a seta starea inițială corectă
     handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -113,7 +136,7 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isTabsVisible]); // Adăugăm isTabsVisible în dependențe pentru a reflecta starea corect în clousur
 
   const scrollToSection = (sectionId: string): void => {
     const element = sectionRefs.current[sectionId];
@@ -162,7 +185,7 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
     []
   );
 
-  const handleSearch = useCallback((state: SearchHeaderState) => {
+  const handleSearch = useCallback((state: SearchHeaderStateType) => {
     const params = new URLSearchParams();
 
     if (state.selectedBusinessDomainId != null) {
@@ -181,9 +204,40 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
   }, []);
 
   return (
-    <Box sx={{ px: 2.5, bgcolor: "background.paper" }}>
-      <Stack direction="row" alignItems="center" justifyContent="center" mb={5}>
+    <Box sx={{ px: 5, py: 1, bgcolor: "background.paper" }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={2.5}
+      >
+        <Box
+          component={Link}
+          href="/"
+          sx={{
+            textDecoration: "none",
+            display: "block",
+            color: "inherit",
+            cursor: "pointer",
+            "&:hover .imageWrapper": {
+              transform: "scale(1.05)",
+            },
+          }}
+        >
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            fontWeight={800}
+            fontSize={35}
+            sx={{ fontStyle: "italic" }}
+          >
+            ScrollBooker
+          </Typography>
+        </Box>
+
         <SearchHeader
+          selectedServiceDomainName=""
           mainPagePadding={mainPagePadding}
           headerState={{
             selectedBusinessDomainId: null,
@@ -193,17 +247,40 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
           displayFiltersSection={false}
           onSearch={handleSearch}
         />
+
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          fontWeight={700}
+          fontSize={30}
+          sx={{ color: "transparent" }}
+        >
+          ScrollBooker
+        </Typography>
       </Stack>
 
       <Box
         ref={tabsContainerRef}
         sx={{
-          position: "sticky",
+          position: "fixed",
           top: 0,
-          zIndex: (theme) => theme.zIndex.appBar,
+          left: 0,
+          right: 0,
+          zIndex: (theme) => theme.zIndex.appBar + 100,
           bgcolor: "background.paper",
           borderBottom: "1px solid",
-          borderColor: "divider",
+          borderColor: isTabsVisible ? "divider" : "transparent",
+
+          transition:
+            "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s",
+
+          transform: isTabsVisible ? "translateY(0)" : "translateY(-100%)",
+          opacity: isTabsVisible ? 1 : 0,
+
+          pointerEvents: isTabsVisible ? "all" : "none",
+          boxShadow: isTabsVisible ? "0px 4px 20px rgba(0,0,0,0.05)" : "none",
+          willChange: "transform, opacity",
         }}
       >
         <Tabs
@@ -211,7 +288,17 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
           onChange={handleTabChange}
           variant="scrollable"
           scrollButtons="auto"
-          aria-label="Business profile sections"
+          sx={{
+            px: 5,
+            "& .MuiTabs-indicator": {
+              height: 4,
+              borderRadius: "4px",
+              backgroundColor: "primary.main",
+              transition: isTabsVisible
+                ? "all 300ms cubic-bezier(0.4, 0, 0.2, 1)"
+                : "none !important",
+            },
+          }}
         >
           {TAB_SECTIONS.map((section) => (
             <Tab
@@ -221,9 +308,9 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
               sx={{
                 fontWeight: 600,
                 textTransform: "none",
-                fontSize: 17,
-                py: 2.5,
-                color: "text.secondary",
+                fontSize: 18,
+                py: 3,
+                color: "text.primary",
                 "&.Mui-selected": {
                   fontWeight: 700,
                   boxShadow: "none",
@@ -240,32 +327,68 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
       </Box>
 
       <Stack mb={2}>
-        <Typography
-          variant="h3"
-          fontWeight={600}
-          sx={{ textTransform: "uppercase" }}
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
         >
-          {profile?.owner.fullname}
-        </Typography>
+          <Box>
+            <Typography
+              variant="h4"
+              fontWeight={600}
+              sx={{ textTransform: "uppercase" }}
+            >
+              {profile?.owner.fullname}
+            </Typography>
+            <Stack flexDirection="row" alignItems="center" gap={1}>
+              <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                5,0
+              </Typography>
+              <Rating
+                value={profile?.owner.counters.ratings_average || 0}
+                precision={0.5}
+                readOnly
+                sx={{ color: "primary.main" }}
+              />
+              <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                ({profile?.owner.counters.ratings_count || 0})
+              </Typography>
+            </Stack>
+          </Box>
 
-        <Stack flexDirection="row" alignItems="center" gap={1}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            5,0
-          </Typography>
-          <Rating
-            value={profile?.owner.counters.ratings_average || 0}
-            precision={0.5}
-            readOnly
-            sx={{ color: "primary.main" }}
-          />
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            ({profile?.owner.counters.ratings_count || 0})
-          </Typography>
+          <Stack flexDirection="row" alignItems="center" gap={2}>
+            <Button
+              endIcon={
+                profile.owner.is_follow && (
+                  <CheckOutlinedIcon
+                    color="primary"
+                    sx={{ width: 27.5, height: 27.5 }}
+                  />
+                )
+              }
+              variant="outlined"
+              color="secondary"
+              size="large"
+              sx={{ px: 5, py: 2, fontSize: 18 }}
+            >
+              {profile.owner.is_follow ? "Urmaresti" : "Urmareste"}
+            </Button>
+
+            <Button
+              startIcon={<IosShareIcon sx={{ width: 27.5, height: 27.5 }} />}
+              variant="outlined"
+              color="secondary"
+              size="large"
+              sx={{ px: 5, py: 2, fontSize: 18 }}
+            >
+              Distribuie
+            </Button>
+          </Stack>
         </Stack>
       </Stack>
 
-      <Grid container spacing={2.5}>
-        <Grid size={{ xs: 12, lg: 9 }}>
+      <Grid container spacing={5}>
+        <Grid size={{ xs: 12, lg: 8 }}>
           <BusinessPhotosTab
             id="photos"
             innerRef={sectionRefCallbacks.photos}
@@ -273,7 +396,7 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
           />
 
           <Box>
-            <Box sx={{ py: 3 }}>
+            <Stack sx={{ py: 3 }} spacing={10}>
               <BusinessServicesTab
                 id="services"
                 innerRef={sectionRefCallbacks.services}
@@ -281,19 +404,22 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
               <BusinessPostsTab
                 id="social"
                 innerRef={sectionRefCallbacks.social}
+                posts={profile.posts}
               />
               <BusinessReviewsTab
                 id="reviews"
                 innerRef={sectionRefCallbacks.reviews}
+                reviews={profile.reviews}
               />
               <BusinessAboutTab
                 id="about"
                 innerRef={sectionRefCallbacks.about}
+                profile={profile}
               />
-            </Box>
+            </Stack>
           </Box>
         </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
+        <Grid size={{ xs: 12, lg: 4 }}>
           {profile && <BusinessStickyCard business={profile} />}
         </Grid>
       </Grid>

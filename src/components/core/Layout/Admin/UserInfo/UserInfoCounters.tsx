@@ -25,7 +25,7 @@ const UserInfoCounters = ({ counters, isLoading }: UserInfoCountersProps) => {
       <Divider
         orientation="vertical"
         flexItem
-        sx={{ height: 20, mx: 0.25, alignSelf: "center" }}
+        sx={{ height: 20, mx: 1.5, alignSelf: "center" }}
       />
 
       <UserInfoCounter
@@ -37,7 +37,7 @@ const UserInfoCounters = ({ counters, isLoading }: UserInfoCountersProps) => {
       <Divider
         orientation="vertical"
         flexItem
-        sx={{ height: 20, mx: 0.25, alignSelf: "center" }}
+        sx={{ height: 20, mx: 1.5, alignSelf: "center" }}
       />
 
       <UserInfoCounter

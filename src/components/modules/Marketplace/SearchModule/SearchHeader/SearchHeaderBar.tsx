@@ -99,6 +99,8 @@ const SearchHeaderBar = ({
         "68%": { transform: "scale(1, 1.02)" },
         "100%": { transform: "scale(1, 1.015)" },
       },
+      border: 1,
+      borderColor: "divider",
       position: "relative",
       isolation: "isolate",
       display: "inline-flex",

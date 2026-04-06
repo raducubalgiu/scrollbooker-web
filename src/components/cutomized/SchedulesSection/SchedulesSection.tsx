@@ -1,8 +1,8 @@
-import { ScheduleType } from "@/ts/models/booking/schedule/Schedule";
+import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { Box, Stack, Typography } from "@mui/material";
 
 type SchedulesSectionProps = {
-  schedules: ScheduleType[] | undefined;
+  schedules: Schedule[] | undefined;
 };
 
 enum WorkScheduleStatus {
@@ -93,13 +93,19 @@ export default function SchedulesSection({ schedules }: SchedulesSectionProps) {
                 />
                 <Box sx={{ width: 12 }} />
                 <Typography
-                  sx={{ fontWeight: isToday ? 800 : 400, fontSize: 18 }}
+                  sx={{
+                    fontWeight: isToday ? 800 : 400,
+                    fontSize: 20,
+                    lineHeight: 1.75,
+                  }}
                 >
                   {daysMap[s.day_of_week] ?? s.day_of_week}
                 </Typography>
               </Stack>
 
-              <Typography sx={{ fontWeight: isToday ? 800 : 400 }}>
+              <Typography
+                sx={{ fontWeight: isToday ? 800 : 400, fontSize: 20 }}
+              >
                 {text}
               </Typography>
             </Stack>

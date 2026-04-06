@@ -50,7 +50,7 @@ export default function MarketplaceLayout({
       main: {
         p: {
           xs: 0,
-          md: isProfileVideoPage ? 0 : 2.5,
+          md: isProfileVideoPage || isBusinessPage ? 0 : 2.5,
         },
         width: "100%",
         bgcolor: isAdminPage ? "background.default" : bgColor,
@@ -69,7 +69,7 @@ export default function MarketplaceLayout({
         borderColor: "divider",
       },
     }),
-    [bgColor, isProfileVideoPage, isAdminPage]
+    [bgColor, isProfileVideoPage, isAdminPage, isBusinessPage]
   );
 
   return (

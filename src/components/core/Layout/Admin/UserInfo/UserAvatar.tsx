@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import Image from "next/image";
-import { Badge, Box, SxProps, Theme, useTheme } from "@mui/material";
+import { Avatar, Badge, Box, SxProps, Theme, useTheme } from "@mui/material";
 
 type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 
@@ -39,9 +38,6 @@ export default function UserAvatar({
   const color = openNow ? theme.palette.success.main : theme.palette.grey[500];
   const boxShadow = `0 0 0 2px ${theme.palette.background.paper}`;
 
-  // const avatarSize = { xs: 95, md: 150, lg: 200, xl: 255 };
-  // const badgeSize = { xs: 12, sm: 14, md: 20, lg: 25 };
-
   const badgeSx = useMemo<SxProps<Theme>>(
     () => ({
       "& .MuiBadge-badge": {
@@ -75,34 +71,11 @@ export default function UserAvatar({
         flexShrink: 0,
       }}
     >
-      {url ? (
-        <Image
-          src={url}
-          alt={alt}
-          fill
-          sizes="(max-width: 600px) 56px, (max-width: 900px) 72px, 95px"
-          style={{ objectFit: "cover" }}
-        />
-      ) : (
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "text.secondary",
-            fontSize: {
-              xs: 18,
-              sm: 22,
-              md: 28,
-            },
-            userSelect: "none",
-          }}
-        >
-          ?
-        </Box>
-      )}
+      <Avatar
+        src={url ?? ""}
+        alt={alt}
+        sx={{ width: "100%", height: "100%" }}
+      />
     </Box>
   );
 
