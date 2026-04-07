@@ -23,7 +23,7 @@ export default function BusinessProfileGallery({
         sx={{
           width: "100%",
           height: { xs: 260, md: 640 },
-          borderRadius: 5,
+          borderRadius: 3,
           bgcolor: "action.hover",
         }}
       />
@@ -146,7 +146,7 @@ function GalleryTile({
         width: "100%",
         height,
         overflow: "hidden",
-        borderRadius: 5,
+        borderRadius: 3,
         textAlign: "initial",
         "&:hover img": {
           transform: "scale(1.03)",
@@ -190,7 +190,7 @@ function EmptyTile() {
       sx={{
         width: "100%",
         height: "100%",
-        borderRadius: 5,
+        borderRadius: 3,
         bgcolor: "action.hover",
       }}
     />

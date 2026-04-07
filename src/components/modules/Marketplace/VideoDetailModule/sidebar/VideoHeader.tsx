@@ -4,6 +4,7 @@ import { formatRating } from "@/utils/formatters";
 import React from "react";
 import { PostUser } from "@/ts/models/social/Post";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type VideoHeaderProps = {
   isLoading: boolean;
@@ -104,13 +105,15 @@ const VideoHeader = ({
               <Typography color="text.secondary">
                 Frizerie • Strada Oarecare nr 3, Sector 6
               </Typography>
-              <Typography
-                color="primary"
-                fontWeight={600}
-                sx={{ cursor: "pointer" }}
-              >
-                Vezi indicatii
-              </Typography>
+              <Link href="" style={{ textDecoration: "none" }}>
+                <Typography
+                  color="primary"
+                  fontWeight={600}
+                  sx={{ cursor: "pointer" }}
+                >
+                  Vezi indicatii
+                </Typography>
+              </Link>
             </Stack>
           )}
         </Box>

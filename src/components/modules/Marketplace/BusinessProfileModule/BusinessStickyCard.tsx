@@ -1,19 +1,13 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  ButtonBase,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
 import UserInfoCounters from "@/components/core/Layout/Admin/UserInfo/UserInfoCounters";
 import UserAvatar from "@/components/core/Layout/Admin/UserInfo/UserAvatar";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import Link from "next/link";
 
 type BusinessStickyCardProps = {
   business: BusinessProfile;
@@ -22,6 +16,9 @@ type BusinessStickyCardProps = {
 export default function BusinessStickyCard({
   business,
 }: BusinessStickyCardProps) {
+  const { lng, lat } = business.location.coordinates;
+  const mapsUrl = `https://google.com/maps/dir/?api=1&?destination=${lat},${lng})`;
+
   return (
     <Box
       sx={{
@@ -97,7 +94,14 @@ export default function BusinessStickyCard({
               <Typography variant="h6" color="text.secondary">
                 {business.location.formatted_address}
               </Typography>
-              <ButtonBase>
+              <Link
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card-container"
+                style={{ textDecoration: "none" }}
+                prefetch={false}
+              >
                 <Typography
                   fontWeight={600}
                   variant="h6"
@@ -106,7 +110,7 @@ export default function BusinessStickyCard({
                 >
                   Obține indicații de orientare
                 </Typography>
-              </ButtonBase>
+              </Link>
             </Box>
           </Stack>
         </Box>

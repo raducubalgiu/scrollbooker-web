@@ -23,8 +23,12 @@ export default function VideoDetailModule({
   const router = useRouter();
 
   const handleClose = React.useCallback(() => {
-    router.replace(`/profile/${username}${tab ? `?tab=${tab}` : ""}`);
-  }, [router]);
+    if (!tab) {
+      router.back();
+    } else {
+      router.replace(`/profile/${username}${tab ? `?tab=${tab}` : ""}`);
+    }
+  }, [router, tab]);
 
   const url = post.media_files[0]?.url;
 

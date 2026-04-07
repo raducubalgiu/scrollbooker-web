@@ -39,7 +39,13 @@ export default function MarketplaceLayout({
     );
   }, [pathname]);
 
-  const shouldShowDrawer = !isBusinessPage && !isProfileVideoPage;
+  const isPostPage = React.useMemo(
+    () => pathname.startsWith("/post/"),
+    [pathname]
+  );
+
+  const shouldShowDrawer =
+    !isBusinessPage && !isProfileVideoPage && !isPostPage;
 
   const theme = useTheme();
   const bgColor =
@@ -50,7 +56,7 @@ export default function MarketplaceLayout({
       main: {
         p: {
           xs: 0,
-          md: isProfileVideoPage || isBusinessPage ? 0 : 2.5,
+          md: isProfileVideoPage || isBusinessPage || isPostPage ? 0 : 2.5,
         },
         width: "100%",
         bgcolor: isAdminPage ? "background.default" : bgColor,

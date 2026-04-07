@@ -1,9 +1,10 @@
 import { Post } from "@/ts/models/social/Post";
-import { Box, ButtonBase, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import React, { memo } from "react";
 import Image from "next/image";
 import { formatViews } from "@/components/cutomized/PostGrid/PostGrid";
+import Link from "next/link";
 
 type BusinessPostsTabProps = {
   id: string;
@@ -54,9 +55,10 @@ const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
       <Box sx={styles.container}>
         <Box sx={styles.grid}>
           {posts.map((post) => (
-            <ButtonBase
+            <Box
+              component={Link}
               key={post.id}
-              onClick={() => {}}
+              href={`/post/${post.id}`}
               sx={{ width: "100%", display: "block" }}
             >
               <Box
@@ -117,7 +119,7 @@ const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
                   </Stack>
                 </Box>
               </Box>
-            </ButtonBase>
+            </Box>
           ))}
         </Box>
       </Box>

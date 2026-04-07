@@ -1,15 +1,7 @@
 import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItemSkeletons";
-import UserListItem from "@/components/cutomized/UserItem/UserItem";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { UserMiniType } from "@/ts/models/user/UserMini";
-import {
-  Box,
-  Divider,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { UserMini } from "@/ts/models/user/UserMini";
+import { Box, Divider, Stack, TextField, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 
@@ -26,7 +18,7 @@ export default function EmploymentRequestsStepOne({
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [hasTypedAfterSelection, setHasTypesAfterSelection] = useState(false);
 
-  const { data: users, isLoading } = useCustomQuery<UserMiniType[]>({
+  const { data: users, isLoading } = useCustomQuery<UserMini[]>({
     key: ["search-users", debouncedSearch],
     url: "/api/employment-requests/search-users",
     params: { search },
@@ -94,7 +86,7 @@ export default function EmploymentRequestsStepOne({
       >
         {!isLoading &&
           users?.map((user) => (
-            <></>
+            <Box key={user.id}></Box>
             // <UserListItem
             //   onClick={() => handleUserSelect(user.id)}
             //   isSelected={user.id === selectedUserId}
