@@ -5,6 +5,7 @@ import React, { memo } from "react";
 import Image from "next/image";
 import { formatViews } from "@/components/cutomized/PostGrid/PostGrid";
 import Link from "next/link";
+import { isEmpty } from "lodash";
 
 type BusinessPostsTabProps = {
   id: string;
@@ -51,6 +52,12 @@ const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
       <Typography variant="h4" fontWeight={600} gutterBottom>
         Postări video
       </Typography>
+
+      {isEmpty(posts) && (
+        <Typography sx={{ color: "text.secondary" }}>
+          Momentan nu au fost adaugate postari video
+        </Typography>
+      )}
 
       <Box sx={styles.container}>
         <Box sx={styles.grid}>

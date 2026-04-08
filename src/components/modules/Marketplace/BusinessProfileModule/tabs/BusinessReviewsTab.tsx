@@ -81,14 +81,20 @@ const BusinessReviewsTab = ({
                   {reviewLabelText(r.rating)}
                 </Typography>
 
-                <Rating
-                  readOnly
-                  value={r.rating}
-                  size="medium"
-                  sx={{ color: "primary.main" }}
-                />
+                <Stack flexDirection="row" alignItems="center" gap={2}>
+                  <Rating
+                    readOnly
+                    value={r.rating}
+                    size="medium"
+                    sx={{ color: "primary.main" }}
+                  />
 
-                <Typography mt={1}>{r.review}</Typography>
+                  <Typography color="text.secondary">4 din 5</Typography>
+                </Stack>
+
+                <Typography mt={1} variant="h6" fontWeight={400}>
+                  {r.review}
+                </Typography>
               </Box>
             );
           })}

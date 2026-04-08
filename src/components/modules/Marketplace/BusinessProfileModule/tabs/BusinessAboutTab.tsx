@@ -18,7 +18,7 @@ const BusinessAboutTab = ({ profile, id, innerRef }: BusinessAboutTabProps) => {
         Despre
       </Typography>
 
-      <Typography mb={2.5}>
+      <Typography mb={2.5} fontWeight={400} variant="h6">
         Adara Spa is more than a place. It is an experience, a journey, a
         ceremony. It is the perfect space to enjoy peace and serenity and to
         refresh your mind, body and soul. Adara Spa treatments will surrender

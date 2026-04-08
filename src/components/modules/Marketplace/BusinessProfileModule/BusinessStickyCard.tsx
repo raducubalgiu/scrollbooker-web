@@ -73,12 +73,12 @@ export default function BusinessStickyCard({
         </Button>
 
         <Box my={5}>
-          <Stack direction="row" alignItems="center" gap={2} mb={2.5}>
+          <Stack direction="row" alignItems="center" gap={2} mb={3}>
             <AccessTimeOutlinedIcon
               fontSize="large"
               sx={{ color: "text.secondary" }}
             />
-            <Typography variant="h6" color="text.secondary">
+            <Typography variant="h6" color="text.primary" fontWeight={400}>
               Deschis pana la 12:00
             </Typography>
 
@@ -91,7 +91,7 @@ export default function BusinessStickyCard({
               sx={{ color: "text.secondary" }}
             />
             <Box>
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="h6" color="text.primary" fontWeight={400}>
                 {business.location.formatted_address}
               </Typography>
               <Link
