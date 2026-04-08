@@ -127,6 +127,12 @@ export default function Table<T extends Record<string, unknown>>({
       updateData: (rowIndex, columnId, value) =>
         updateData(rowIndex, columnId as keyof T, value, setTableData),
     },
+    muiTableBodyCellProps: {
+      sx: {
+        fontSize: "1rem",
+        fontWeight: 400,
+      },
+    },
     muiTablePaperProps: {
       elevation: 0,
       sx: {

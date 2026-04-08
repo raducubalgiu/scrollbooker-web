@@ -2,7 +2,7 @@
 
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
@@ -11,16 +11,12 @@ import { isNull } from "lodash";
 import EmploymentRequestsStepOne from "./EmploymentRequestsStepOne";
 import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { ConsentType } from "@/ts/models/nomenclatures/consent/Consent";
 import EmploymentRequestsStepThree from "./EmploymentRequestsStepThree";
-import { ProfessionType } from "@/ts/models/nomenclatures/profession/ProfessionType";
 import { ConsentEnum } from "@/ts/models/nomenclatures/consent/ConsentEnum";
+import { Profession } from "@/ts/models/nomenclatures/profession/ProfessionType";
+import { Consent } from "@/ts/models/nomenclatures/consent/Consent";
 
-const steps = [
-  "Selectează viitorul angajat",
-  "Alege poziția funcția noului angajat",
-  "Trimite cererea de angajare",
-];
+const steps = ["Angajat", "Profesia", "Trimite"];
 
 type EmploymentRequestsModalProps = {
   open: boolean;
@@ -38,6 +34,15 @@ export default function EmploymentRequestsModal({
   >(null);
   const [stepIndex, setStepIndex] = useState<number>(0);
 
+  // Funcție pentru a reseta totul la închidere (reluarea procesului)
+  const handleResetAndClose = () => {
+    setStepIndex(0);
+    setSelectedUserId(null);
+    setSelectedProfessionId(null);
+    setAcknowledged(false);
+    handleClose();
+  };
+
   const isFirstStep = stepIndex === 0;
   const isSecondStep = stepIndex === 1;
   const isThirdStep = stepIndex === 2;
@@ -47,13 +52,13 @@ export default function EmploymentRequestsModal({
     url: "/api/employment-requests",
     options: {
       onSuccess: () => {
-        handleClose();
+        handleResetAndClose();
       },
     },
   });
 
   const { data: professions, isLoading: isLoadingProfessions } = useCustomQuery<
-    ProfessionType[]
+    Profession[]
   >({
     key: ["get-professions"],
     url: "/api/employment-requests/professions",
@@ -61,7 +66,7 @@ export default function EmploymentRequestsModal({
   });
 
   const { data: consent, isLoading: isLoadingConsent } =
-    useCustomQuery<ConsentType>({
+    useCustomQuery<Consent>({
       key: ["get-consent"],
       url: "/api/employment-requests/consent",
       params: { consentName: ConsentEnum.EMPLOYMENT_REQUESTS_INITIATION },
@@ -72,23 +77,11 @@ export default function EmploymentRequestsModal({
     (isNull(selectedUserId) && isFirstStep) ||
     (isNull(selectedProfessionId) && isSecondStep);
 
-  const handleBack = () => {
-    setStepIndex((prev) => prev - 1);
-    setSelectedUserId(null);
-  };
-
-  const handleEmploymentRequest = () =>
-    createEmploymentRequest({
-      employee_id: selectedUserId,
-      consent_id: consent?.id,
-      profession_id: selectedProfessionId,
-    });
-
   const actions: ActionButtonType[] = [
     {
       title: "Înapoi",
       props: {
-        onClick: handleBack,
+        onClick: () => setStepIndex((prev) => prev - 1),
         variant: "outlined",
         color: "secondary",
         disabled: isPending,
@@ -106,15 +99,20 @@ export default function EmploymentRequestsModal({
     {
       title: "Trimite cererea",
       props: {
-        onClick: handleEmploymentRequest,
+        onClick: () =>
+          createEmploymentRequest({
+            employee_id: selectedUserId,
+            consent_id: consent?.id,
+            profession_id: selectedProfessionId,
+          }),
         disabled: !acknowledged || isPending,
         loading: isPending,
       },
-      hidden: isFirstStep || isSecondStep,
+      hidden: !isThirdStep,
     },
   ];
 
-  const stepContent = () => {
+  const stepContent = useMemo(() => {
     switch (stepIndex) {
       case 0:
         return (
@@ -144,17 +142,27 @@ export default function EmploymentRequestsModal({
       default:
         return null;
     }
-  };
+    // Adăugat toate dependințele necesare pentru re-render
+  }, [
+    stepIndex,
+    selectedUserId,
+    selectedProfessionId,
+    professions,
+    isLoadingProfessions,
+    consent,
+    isLoadingConsent,
+    acknowledged,
+  ]);
 
   return (
     <Modal
       title="Trimite o cerere de angajare"
       open={open}
-      handleClose={handleClose}
+      handleClose={handleResetAndClose}
       actions={actions}
     >
-      <Box sx={{ minWidth: 700 }}>
-        <Stepper activeStep={stepIndex} alternativeLabel>
+      <Box sx={{ minWidth: 700, py: 2 }}>
+        <Stepper activeStep={stepIndex} alternativeLabel sx={styles.stepper}>
           {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
@@ -162,8 +170,26 @@ export default function EmploymentRequestsModal({
           ))}
         </Stepper>
 
-        {stepContent()}
+        <Box sx={{ mt: 1.5 }}>{stepContent}</Box>
       </Box>
     </Modal>
   );
 }
+
+const styles = {
+  stepper: {
+    "& .MuiStepIcon-root": {
+      fontSize: "2rem",
+      color: "secondary.main",
+      fontWeight: 500,
+      "&.Mui-active": { color: "secondary.main" },
+      "&.Mui-completed": { color: "primary.main" },
+    },
+    "& .MuiStepLabel-label": {
+      fontSize: "1rem",
+      mt: 1.5,
+      "&.Mui-active": { fontWeight: "bold", color: "primary.main" },
+      "&.Mui-completed": { color: "text.secondary" },
+    },
+  },
+};

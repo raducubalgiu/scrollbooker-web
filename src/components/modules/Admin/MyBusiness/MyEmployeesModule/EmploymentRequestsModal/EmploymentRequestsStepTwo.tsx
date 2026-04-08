@@ -1,13 +1,13 @@
 import React from "react";
-import { Box, Paper } from "@mui/material";
-import ProfessionListItem from "@/components/cutomized/ProfessionListItem/ProfessionListItem";
-import { ProfessionType } from "@/ts/models/nomenclatures/profession/ProfessionType";
+import { Box, List } from "@mui/material";
 import ProfessionListItemSkeletons from "@/components/cutomized/Skeletons/ProfessionListItemSkeletons";
+import { Profession } from "@/ts/models/nomenclatures/profession/ProfessionType";
+import SelectedProfessionItem from "./SelectedProfessionItem";
 
 type EmploymentRequestsStepTwoProps = {
   selectedProfessionId: number | null;
   onSelectProfessionId: (id: number) => void;
-  professions: ProfessionType[] | undefined;
+  professions: Profession[] | undefined;
   isLoading: boolean;
 };
 
@@ -22,21 +22,22 @@ export default function EmploymentRequestsStepTwo({
       sx={{
         height: 300,
         my: 2.5,
-        p: 2.5,
         overflow: "auto",
         bgcolor: "secondary.main",
-        borderRadius: 2,
+        borderRadius: 5,
       }}
     >
-      {!isLoading &&
-        professions?.map((profession) => (
-          <ProfessionListItem
-            key={profession.id}
-            name={profession.name}
-            isSelected={selectedProfessionId === profession.id}
-            onClick={() => onSelectProfessionId(profession.id)}
-          />
-        ))}
+      <List>
+        {!isLoading &&
+          professions?.map((profession) => (
+            <SelectedProfessionItem
+              key={profession.id}
+              profession={profession.name}
+              isSelected={selectedProfessionId === profession.id}
+              onClick={() => onSelectProfessionId(profession.id)}
+            />
+          ))}
+      </List>
       {isLoading && <ProfessionListItemSkeletons />}
     </Box>
   );

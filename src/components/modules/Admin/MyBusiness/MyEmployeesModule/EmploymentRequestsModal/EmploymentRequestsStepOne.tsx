@@ -1,9 +1,10 @@
 import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItemSkeletons";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { UserMini } from "@/ts/models/user/UserMini";
-import { Box, Divider, Stack, TextField, Typography } from "@mui/material";
+import { Box, Stack, TextField, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useState } from "react";
+import SelectedEmployeeItem from "./SelectedEmployeeItem";
 
 type EmploymentRequestsStepOneProps = {
   selectedUserId: number | null;
@@ -69,35 +70,31 @@ export default function EmploymentRequestsStepOne({
     <Box sx={{ my: 2.5, px: 2.5 }}>
       <Stack justifyContent="center">
         <TextField
-          placeholder="Caută utilizatori"
+          placeholder="Caută angajatul.."
           onChange={handleSearch}
           sx={styles.input}
         />
       </Stack>
-      <Divider />
       <Box
         sx={{
           height: 300,
           overflow: "auto",
-          pb: 2.5,
           bgcolor: "secondary.main",
-          borderRadius: 2,
+          borderRadius: 5,
         }}
       >
         {!isLoading &&
           users?.map((user) => (
-            <Box key={user.id}></Box>
-            // <UserListItem
-            //   onClick={() => handleUserSelect(user.id)}
-            //   isSelected={user.id === selectedUserId}
-            //   key={user.id}
-            //   username={user.username}
-            //   name={user.fullname}
-            // />
+            <SelectedEmployeeItem
+              key={user.id}
+              user={user}
+              isSelected={selectedUserId === user.id}
+              onClick={() => handleUserSelect(user.id)}
+            />
           ))}
         {isLoading && <UserListItemSkeletons />}
         {isEmpty(users) && !isLoading && (
-          <Typography sx={{ textAlign: "center" }}>
+          <Typography sx={{ textAlign: "center", p: 2.5 }}>
             Nu au fost găsiți utilizatori
           </Typography>
         )}
