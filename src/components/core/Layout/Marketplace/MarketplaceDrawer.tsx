@@ -9,6 +9,7 @@ import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import DrawerPopper from "./DrawerPopper";
 import PublicRoutes from "./PublicRoutes";
 import AdminRoutes from "./AdminRoutes";
+import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 
 export type ScrollBookerRoute = {
   label: string;
@@ -91,6 +92,16 @@ const MarketplaceDrawer = () => {
               sx={{ mt: 1.5 }}
             />
           ))}
+
+        {isAuthenticated && (
+          <CButton
+            onClick={() => {}}
+            startIcon={<AddTwoToneIcon />}
+            label="Adauga o postare"
+            variant="outlined"
+            sx={{ my: 1.5 }}
+          />
+        )}
 
         {isAuthenticated && (
           <AdminRoutes

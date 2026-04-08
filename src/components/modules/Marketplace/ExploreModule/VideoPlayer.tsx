@@ -1,6 +1,7 @@
 import { Box, Skeleton } from "@mui/material";
 import React, { useEffect } from "react";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import Hls from "hls.js";
 
 type VideoPlayerProps = {
   isLoading: boolean;
@@ -13,8 +14,6 @@ export const VideoPlayer = ({
   isActive,
   isLoading = false,
 }: VideoPlayerProps) => {
-  console.log("VideoPlayer render", { src, isActive, isLoading });
-
   if (isLoading) {
     return (
       <Box
@@ -30,6 +29,7 @@ export const VideoPlayer = ({
   }
 
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const [isReady, setIsReady] = React.useState(false); // Flag nou
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [isMuted, setIsMuted] = React.useState(false);
 
@@ -40,36 +40,101 @@ export const VideoPlayer = ({
   const [isEnded, setIsEnded] = React.useState(false);
   const wasPlayingBeforeSeekRef = React.useRef(false);
 
+  const updateDuration = React.useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const nextDuration = video.duration;
+
+    if (Number.isFinite(nextDuration) && nextDuration > 0) {
+      setDuration(nextDuration);
+    }
+  }, []);
+
+  // 1. Efect dedicat pentru INIȚIALIZARE HLS
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !src) return;
 
+    let hls: Hls | null = null;
+    setIsReady(false);
+
+    const onLoadedMetadata = () => {
+      updateDuration();
+      setIsReady(true);
+    };
+
+    if (Hls.isSupported()) {
+      hls = new Hls();
+      hls.loadSource(src);
+      hls.attachMedia(video);
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        updateDuration();
+        setIsReady(true);
+      });
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      // Suport nativ (Safari/iOS)
+      video.src = src;
+      video.addEventListener("loadedmetadata", onLoadedMetadata);
+    }
+
+    // ACESTA ESTE RETURN-UL CARE ACOPERĂ TOATE CAZURILE
+    return () => {
+      if (hls) {
+        hls.destroy();
+      }
+      video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      // Opțional: curățăm sursa video la demontare pentru a opri descărcarea buffer-ului
+      video.src = "";
+      video.load();
+    };
+  }, [src, updateDuration]);
+
+  // 2. Efectul tău existent pentru AUTO-PLAY (ajustat)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !src || !isReady) return;
+
     if (isActive) {
       const playPromise = video.play();
+
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
-            // Video is playing
+            setIsPlaying(true); // Te asiguri că starea UI este corectă
           })
           .catch((error) => {
-            console.error("Error playing video:", error);
+            // 1. Verificăm dacă browserul a blocat autoplay-ul (la refresh)
+            if (error.name === "NotAllowedError") {
+              console.warn(
+                "Autoplay blocat. Aștept interacțiunea utilizatorului."
+              );
+              setIsPlaying(false);
+            }
+            // 2. Ignorăm întreruperile cauzate de încărcări noi (AbortError)
+            else if (error.name !== "AbortError") {
+              console.error("Eroare neașteptată la play():", error);
+            }
           });
-      } else {
-        video.pause();
+      }
+    } else {
+      video.pause();
+      setIsPlaying(false);
+      if (video.duration !== Infinity) {
         video.currentTime = 0;
       }
     }
-  }, [isActive, src]);
+  }, [isActive, src, isReady]);
 
+  // 3. Logica de control (handleTogglePlay) rămâne neschimbată
   const handleTogglePlay = React.useCallback(async () => {
     const video = videoRef.current;
     if (!video) return;
 
     if (isEnded || video.ended) {
       video.currentTime = 0;
-      setProgress(0);
       setIsEnded(false);
-
       try {
         await video.play();
         setIsPlaying(true);
@@ -92,16 +157,24 @@ export const VideoPlayer = ({
     }
   }, [isEnded]);
 
-  const updateDuration = React.useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      const video = videoRef.current;
+      if (!video) return;
 
-    const nextDuration = video.duration;
+      if (document.hidden) {
+        video.pause();
+        setIsPlaying(false);
+      } else {
+      }
+    };
 
-    if (Number.isFinite(nextDuration) && nextDuration > 0) {
-      setDuration(nextDuration);
-    }
-  }, []);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isActive]);
 
   return (
     <Box

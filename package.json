@@ -28,6 +28,7 @@
     "axios": "^1.8.4",
     "chart.js": "^4.4.8",
     "dayjs": "^1.11.13",
+    "hls.js": "^1.6.15",
     "i18next": "^24.2.3",
     "jodit": "^4.11.13",
     "jodit-react": "^5.3.21",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/hls.js": "^0.13.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
