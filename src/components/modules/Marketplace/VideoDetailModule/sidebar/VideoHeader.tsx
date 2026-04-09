@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, Badge, Box, Skeleton, Stack, Typography } from "@mui/material";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import { formatRating } from "@/utils/formatters";

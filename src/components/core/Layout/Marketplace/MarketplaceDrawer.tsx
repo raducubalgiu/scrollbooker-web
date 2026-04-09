@@ -95,9 +95,9 @@ const MarketplaceDrawer = () => {
 
         {isAuthenticated && (
           <CButton
-            onClick={() => {}}
-            startIcon={<AddTwoToneIcon />}
-            label="Adauga o postare"
+            onClick={() => router.push("/upload-video")}
+            //startIcon={<AddTwoToneIcon />}
+            label="Creează o postare"
             variant="outlined"
             sx={{ my: 1.5 }}
           />
