@@ -4,7 +4,7 @@ import { Avatar, Badge, Box, Skeleton, Stack, Typography } from "@mui/material";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import { formatRating } from "@/utils/formatters";
 import React from "react";
-import { PostUser } from "@/ts/models/social/Post";
+import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -12,12 +12,14 @@ type VideoHeaderProps = {
   isLoading: boolean;
   displayDescription: boolean;
   description: string | null;
+  businessLocation: PostBusinessLocation | null | undefined;
   user: PostUser | undefined;
 };
 
 const VideoHeader = ({
   user,
   description,
+  businessLocation,
   displayDescription = false,
   isLoading = false,
 }: VideoHeaderProps) => {
@@ -103,9 +105,9 @@ const VideoHeader = ({
               sx={{ mt: 1 }}
             />
           ) : (
-            <Stack direction="row" alignItems="center" gap={1}>
+            <Stack gap={1}>
               <Typography color="text.secondary">
-                Frizerie • Strada Oarecare nr 3, Sector 6
+                {user?.profession} • {businessLocation?.formatted_address}
               </Typography>
               <Link href="" style={{ textDecoration: "none" }}>
                 <Typography

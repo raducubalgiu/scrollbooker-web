@@ -17,6 +17,7 @@ import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Session } from "next-auth";
+import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 
 type PublicRoutesProps = {
   session: Session | null;
@@ -73,6 +74,12 @@ const PublicRoutes = ({
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
+        label: "Upload",
+        route: `/upload-video`,
+        icon: <AddBoxOutlinedIcon />,
+        permission: PermissionEnum.NO_PROTECTION,
+      },
+      {
         label: "Mai mult",
         route: "/more",
         icon: <MoreHorizOutlinedIcon />,
@@ -110,36 +117,40 @@ const PublicRoutes = ({
 
   return (
     <>
-      {publicRoutes.map((el) => (
-        <ListItem disablePadding sx={{ px: 0 }} key={el.route}>
-          <ListItemButton
-            onClick={(e) => onNavigate(el.route, e)}
-            selected={isSelected(el.route)}
-            sx={styles.button}
-          >
-            <ListItemIcon
-              sx={
-                isSelected(el.route) ? styles.iconSelected : styles.iconDefault
-              }
+      {publicRoutes.map((el) => {
+        return (
+          <ListItem disablePadding sx={{ px: 0 }} key={el.route}>
+            <ListItemButton
+              onClick={(e) => onNavigate(el.route, e)}
+              selected={isSelected(el.route)}
+              sx={styles.button}
             >
-              {el.icon}
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                <Typography
-                  sx={
-                    isSelected(el.route)
-                      ? styles.textSelected
-                      : styles.textDefault
-                  }
-                >
-                  {el.label}
-                </Typography>
-              }
-            />
-          </ListItemButton>
-        </ListItem>
-      ))}
+              <ListItemIcon
+                sx={
+                  isSelected(el.route)
+                    ? styles.iconSelected
+                    : styles.iconDefault
+                }
+              >
+                {el.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography
+                    sx={
+                      isSelected(el.route)
+                        ? styles.textSelected
+                        : styles.textDefault
+                    }
+                  >
+                    {el.label}
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
+        );
+      })}
     </>
   );
 };

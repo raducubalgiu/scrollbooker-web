@@ -6,7 +6,7 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import { useInfiniteUserPosts } from "@/hooks/infiniteQuery/userInfiniteUserPosts";
 import { isEmpty } from "lodash";
-import { CircularProgress, Stack } from "@mui/material";
+import PostGridSkeleton from "@/components/cutomized/PostGrid/PostGridSkeleton";
 
 type ProfilePostsTabProps = {
   userId: number;
@@ -24,13 +24,9 @@ const ProfilePostsTab = ({ userId, username }: ProfilePostsTabProps) => {
 
   return (
     <>
-      {isLoading && (
-        <Stack justifyContent="center" alignItems="center" mt={10}>
-          <CircularProgress />
-        </Stack>
-      )}
-
       <PostGridContainer>
+        {isLoading && <PostGridSkeleton />}
+
         {!isLoading &&
           posts?.map((post) => (
             <PostGrid

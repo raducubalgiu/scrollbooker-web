@@ -78,8 +78,7 @@ const UploadVideoSidebar = ({
               Produse
             </Typography>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              Descrierea ar trebui să reflecte clar conținutul videoclipului și
-              valoarea oferită utilizatorilor.
+              Poți atașa acestei postări maxim 5 produse din lista ta existentă.
             </Typography>
           </Box>
         </Box>

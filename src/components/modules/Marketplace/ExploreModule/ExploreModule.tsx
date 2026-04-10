@@ -133,6 +133,7 @@ export default function ExploreModule() {
         commentsCount={currentPost?.counters.comment_count}
         postId={currentPost?.id}
         user={currentPost?.user}
+        businessLocation={currentPost?.business_location}
       />
 
       {isLoading ? (

@@ -1,10 +1,10 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import React, { memo, useMemo } from "react";
-import { PostUser } from "@/ts/models/social/Post";
+import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import PostComments from "../../CommentsModule/PostComments";
 import VideoHeader from "../../VideoDetailModule/sidebar/VideoHeader";
-import InstantBookingTab from "./InstantBookingTab";
 import ReviewsTab from "./ReviewsTab";
+import ExploreServicesTab from "./ExploreServicesTab";
 
 enum ExploreSidebarTab {
   SERVICES,
@@ -17,12 +17,14 @@ type ExploreSidebarProps = {
   commentsCount: number | undefined;
   postId: number | undefined;
   user: PostUser | undefined;
+  businessLocation: PostBusinessLocation | null | undefined;
 };
 
 const ExploreSidebar = ({
   commentsCount,
   postId,
   user,
+  businessLocation,
   isLoading,
 }: ExploreSidebarProps) => {
   const [activeTab, setActiveTab] = React.useState<ExploreSidebarTab>(
@@ -48,7 +50,7 @@ const ExploreSidebar = ({
   const tabsContent = useMemo(() => {
     switch (activeTab) {
       case ExploreSidebarTab.SERVICES:
-        return <InstantBookingTab />;
+        return <ExploreServicesTab postId={postId} />;
       case ExploreSidebarTab.COMMENTS:
         return (
           <PostComments postId={postId} avatar={null} postAuthorAvatar={null} />
@@ -67,6 +69,7 @@ const ExploreSidebar = ({
           isLoading={isLoading}
           description={null}
           user={user}
+          businessLocation={businessLocation}
           displayDescription={false}
         />
       </Box>

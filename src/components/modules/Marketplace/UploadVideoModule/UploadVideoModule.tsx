@@ -71,8 +71,6 @@ const UploadVideoModule = () => {
         );
       }
 
-      console.log("INIT DATA!!!", initData);
-
       const upload = new tus.Upload(selectedVideo, {
         uploadUrl: initData.uploadUrl,
         metadata: {

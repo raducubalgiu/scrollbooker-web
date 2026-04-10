@@ -5,6 +5,7 @@ export interface Post {
   description: string | null;
   user: PostUser;
   business_owner: PostBusinessOwner;
+  business_location: PostBusinessLocation | null;
   employee: PostEmployee | null;
   counters: PostCounters;
   user_actions: PostUserActions;
@@ -18,6 +19,18 @@ export interface Post {
   business_id: number | null;
   last_minute: PostLastMinute | null;
   created_at: string;
+}
+
+export interface PostBusinessLocationCoordinates {
+  lat: number;
+  lng: number;
+}
+
+export interface PostBusinessLocation {
+  address: string;
+  formatted_address: string;
+  coordinates: PostBusinessLocationCoordinates;
+  map_url: string;
 }
 
 export interface PostMediaFile {

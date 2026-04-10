@@ -1,4 +1,4 @@
-import { Product } from "@/ts/models/booking/product/Product";
+import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import React from "react";
@@ -10,6 +10,7 @@ type BusinessProductCardProps = {
 
 const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
   const { name, price_with_discount, duration } = product;
+  const filtersText = ProductUtils.getFiltersSummary(product);
 
   return (
     <Box
@@ -46,7 +47,7 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
             label={`${duration} min`}
           />
           <Typography variant="body2" color="text.secondary">
-            Caini & Pisici • Standard
+            {filtersText}
           </Typography>
         </Stack>
       </Stack>
