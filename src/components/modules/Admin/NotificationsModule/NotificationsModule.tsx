@@ -2,85 +2,69 @@
 
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
-import {
-  Button,
-  CircularProgress,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Paper, Typography } from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { isEmpty } from "lodash";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { PaginatedData } from "@/components/core/Table/Table";
-
-const fetchNotifications = async ({ pageParam }: { pageParam: number }) => {
-  const { data } = await axios.get<PaginatedData<Notification>>(
-    `/api/notifications?page=${pageParam}&limit=10`
-  );
-  return {
-    ...data,
-    page: pageParam,
-  };
-};
+import { useEffect, useRef } from "react";
+import { useInfiniteNotifications } from "@/hooks/infiniteQuery/useInfiniteNotifications";
 
 const NotificationsModule = () => {
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
   const {
     data,
-    refetch,
-    isLoading,
-    fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["notifications"],
-    queryFn: fetchNotifications,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      const { count, results, page } = lastPage;
-      return (page - 1) * 5 + results.length < count ? page + 1 : undefined;
-    },
-  });
+    fetchNextPage,
+    isLoading,
+    refetch,
+  } = useInfiniteNotifications();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const notifications = data?.pages.flatMap((p) => p.results) ?? [];
 
   return (
     <MainLayout title="Notificări" hideAction>
       {isLoading && <NotificationSkeleton />}
+
       {!isLoading &&
-        notifications?.map((notication, i) => (
+        notifications?.map((notification) => (
           <NotificationItem
-            key={i}
-            notification={notication}
+            key={notification.id}
+            notification={notification}
             refetchNotifications={refetch}
           />
         ))}
-      {hasNextPage && (
-        <Stack alignItems="center" mt={1.5}>
-          <Button
-            variant="outlined"
-            onClick={() => fetchNextPage()}
-            sx={{
-              textTransform: "capitalize",
-              fontWeight: 600,
-            }}
-          >
-            Încarcă mai mult
-          </Button>
-        </Stack>
-      )}
+
+      <Box
+        ref={loadMoreRef}
+        sx={{ py: 3, display: "flex", justifyContent: "center" }}
+      >
+        {isFetchingNextPage && <CircularProgress size={25} />}
+      </Box>
+
       {!isLoading && isEmpty(notifications) && (
         <Paper sx={{ p: 2.5 }}>
           <Typography sx={{ textAlign: "center" }}>
             Nu au fost găsite notificări
           </Typography>
         </Paper>
-      )}
-      {isFetchingNextPage && (
-        <Stack alignItems="center" justifyContent="center">
-          <CircularProgress size={20} />
-        </Stack>
       )}
     </MainLayout>
   );
