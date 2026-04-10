@@ -1,6 +1,6 @@
 "use client";
 
-import { Box } from "@mui/material";
+import { alpha, Box, Button, IconButton, Slide, Stack } from "@mui/material";
 import React, {
   useCallback,
   useEffect,
@@ -15,13 +15,20 @@ import { Post } from "@/ts/models/social/Post";
 import ExploreControls from "./ExploreControls";
 import { useInfiniteExplorePosts } from "@/hooks/infiniteQuery/useInfiniteExplorePosts";
 import ExploreSidebar from "./sidebar/ExploreSidebar";
+import MenuIcon from "@mui/icons-material/Menu";
+import ExploreDrawer from "./ExploreDrawer";
 
 const WINDOW_SIZE = 5;
 const PREFETCH_OFFSET = 2;
 
 export default function ExploreModule() {
+  const [showDrawer, setShowDrawer] = useState(false);
+  const [selectedBusinessTypes, setSelectedBusinessTypes] = useState<
+    Set<number>
+  >(new Set());
+
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-    useInfiniteExplorePosts();
+    useInfiniteExplorePosts(selectedBusinessTypes);
 
   const posts = useMemo(
     () => data?.pages.flatMap((page) => page.results) || [],
@@ -119,6 +126,89 @@ export default function ExploreModule() {
               isVideoReview={is_video_review}
             />
           )}
+
+          {!isLoading && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: 100,
+                background:
+                  "linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent)",
+                zIndex: 10,
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  m: 2.5,
+                  zIndex: 11,
+                  pointerEvents: "auto",
+                }}
+              >
+                <Stack flexDirection="row" alignItems="center">
+                  <IconButton
+                    size="large"
+                    onClick={() => setShowDrawer((prev) => !prev)}
+                  >
+                    <MenuIcon
+                      sx={{ color: "common.white", width: 30, height: 30 }}
+                    />
+                  </IconButton>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    sx={{
+                      mr: 1,
+                      bgcolor: (theme) =>
+                        alpha(theme.palette.primary.main, 0.7),
+                      "&:hover": {
+                        bgcolor: (theme) =>
+                          alpha(theme.palette.primary.main, 0.3),
+                      },
+                    }}
+                  >
+                    Explorează
+                  </Button>
+                  <Button sx={{ color: "common.white" }} disableElevation>
+                    Urmaresti
+                  </Button>
+                </Stack>
+              </Box>
+            </Box>
+          )}
+
+          <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                zIndex: 12,
+                bgcolor: "common.black",
+                display: "flex",
+                flexDirection: "column",
+                p: 5,
+              }}
+            >
+              <ExploreDrawer
+                defaultBusinessTypes={selectedBusinessTypes}
+                onCloseDrawer={() => setShowDrawer(false)}
+                onFilter={(ids) => {
+                  setSelectedBusinessTypes(ids);
+                  setShowDrawer(false);
+                }}
+              />
+            </Box>
+          </Slide>
         </Box>
 
         <PostActions

@@ -183,6 +183,7 @@ export const VideoPlayer = ({
         height: "100%",
         position: "relative",
         cursor: "pointer",
+        borderRadius: 3,
       }}
       onClick={handleTogglePlay}
     >
@@ -206,7 +207,12 @@ export const VideoPlayer = ({
         }}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
-        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          borderRadius: 15,
+        }}
       >
         <source src={src} type="video/mp4" />
       </video>

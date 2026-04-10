@@ -97,7 +97,7 @@ const VideoHeader = ({
         <Box flex={1}>
           <Stack
             flexDirection="row"
-            alignItems="center"
+            alignItems="flex-end"
             justifyContent="space-between"
             sx={{ width: "100%" }}
           >

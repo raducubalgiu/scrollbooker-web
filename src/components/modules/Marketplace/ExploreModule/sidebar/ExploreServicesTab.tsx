@@ -63,7 +63,7 @@ const ExploreServicesTab = ({ postId }: ExploreServicesTabProps) => {
         )}
       </Box>
 
-      <Box sx={{ p: 2 }}>
+      {/* <Box sx={{ p: 2 }}>
         <Divider />
 
         <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
@@ -83,7 +83,7 @@ const ExploreServicesTab = ({ postId }: ExploreServicesTabProps) => {
             Rezervă acum
           </Button>
         </Protected>
-      </Box>
+      </Box> */}
     </Box>
   );
 };
