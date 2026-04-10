@@ -28,13 +28,11 @@ const ExploreControls = ({
       <IconButton
         onClick={onGoToPrev}
         disabled={isDisabledPrev}
-        size="large"
         sx={{ width: 70, height: 70, bgcolor: "secondary.main" }}
       >
         <ArrowUpwardIcon fontSize="large" />
       </IconButton>
       <IconButton
-        size="large"
         onClick={onGoToNext}
         disabled={isDisabledNext}
         sx={{ width: 70, height: 70, bgcolor: "secondary.main" }}

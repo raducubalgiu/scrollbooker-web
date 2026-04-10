@@ -1,5 +1,7 @@
 import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
+import Protected from "@/components/cutomized/Protected/Protected";
 import { useCustomQuery } from "@/hooks/useHttp";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Product } from "@/ts/models/booking/product/Product";
 import {
   Box,
@@ -61,10 +63,10 @@ const ExploreServicesTab = ({ postId }: ExploreServicesTabProps) => {
         )}
       </Box>
 
-      <Divider />
-
       <Box sx={{ p: 2 }}>
-        <Stack direction="row" alignItems="center" gap={2}>
+        <Divider />
+
+        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
           <Button
             variant="contained"
             color="primary"
@@ -80,22 +82,7 @@ const ExploreServicesTab = ({ postId }: ExploreServicesTabProps) => {
           >
             Rezervă acum
           </Button>
-          {/* <Button
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            disableElevation
-            size="large"
-            sx={{
-              textTransform: "none",
-              fontWeight: 600,
-              fontSize: 17,
-              py: 1.5,
-            }}
-          >
-            Toate produsele
-          </Button> */}
-        </Stack>
+        </Protected>
       </Box>
     </Box>
   );

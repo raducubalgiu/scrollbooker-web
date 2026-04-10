@@ -31,6 +31,7 @@ export interface PostBusinessLocation {
   formatted_address: string;
   coordinates: PostBusinessLocationCoordinates;
   map_url: string;
+  place_id: string;
 }
 
 export interface PostMediaFile {

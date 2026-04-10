@@ -1,6 +1,10 @@
+"use client";
+
+import Protected from "@/components/cutomized/Protected/Protected";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { PostUser } from "@/ts/models/social/Post";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import React from "react";
+import { Box, Button, Collapse, Stack, Typography } from "@mui/material";
+import React, { memo, useEffect, useRef, useState } from "react";
 
 type PostOverlayProps = {
   user: PostUser | undefined;
@@ -13,6 +17,24 @@ const PostOverlay = ({
   description,
   isVideoReview,
 }: PostOverlayProps) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsExpanded(!isExpanded);
+  };
+
+  const [showButton, setShowButton] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const element = textRef.current;
+    if (element) {
+      const isOverflowing = element.scrollHeight > element.clientHeight;
+      setShowButton(isOverflowing);
+    }
+  }, [description]);
+
   return (
     <>
       <Stack
@@ -48,20 +70,65 @@ const PostOverlay = ({
             </Typography>
           </Box>
         </Stack>
-        <Typography sx={{ opacity: 0.9, maxWidth: 320 }}>
-          {description}
-        </Typography>
-        <Button
-          variant="contained"
-          size="large"
-          sx={{
-            display: { xs: "inline-flex", lg: "none" },
-            alignSelf: "flex-start",
-            px: 2.5,
-          }}
-        >
-          Rezervă acum
-        </Button>
+
+        <Box>
+          <Stack
+            flexDirection="row"
+            alignItems="flex-end"
+            justifyContent="space-between"
+            gap={2}
+          >
+            <Box sx={{ flex: 1 }}>
+              <Collapse in={isExpanded} collapsedSize={48} timeout="auto">
+                <Typography
+                  ref={textRef}
+                  sx={{
+                    opacity: 0.9,
+                    ...(!isExpanded && {
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }),
+                  }}
+                >
+                  {description || "..."}
+                </Typography>
+              </Collapse>
+            </Box>
+
+            {(showButton || isExpanded) && (
+              <Button
+                size="small"
+                onClick={handleToggle}
+                sx={{
+                  minWidth: "fit-content",
+                  textTransform: "none",
+                  fontWeight: 700,
+                  alignSelf: "flex-end",
+                  color: "common.white",
+                }}
+              >
+                {isExpanded ? "Mai puțin" : "Mai mult"}
+              </Button>
+            )}
+          </Stack>
+        </Box>
+
+        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{
+              display: { xs: "inline-flex", lg: "none" },
+              alignSelf: "flex-start",
+              px: 2.5,
+            }}
+          >
+            Rezervă acum
+          </Button>
+        </Protected>
       </Stack>
 
       <Box
@@ -77,4 +144,4 @@ const PostOverlay = ({
   );
 };
 
-export default PostOverlay;
+export default memo(PostOverlay);

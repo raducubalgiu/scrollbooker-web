@@ -1,6 +1,15 @@
 "use client";
 
-import { Avatar, Badge, Box, Skeleton, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import { formatRating } from "@/utils/formatters";
 import React from "react";
@@ -24,7 +33,10 @@ const VideoHeader = ({
   isLoading = false,
 }: VideoHeaderProps) => {
   const router = useRouter();
-  const { avatar, fullname, username, ratings_average } = user || {};
+  const { avatar, fullname, username, ratings_average, is_follow } = user || {};
+  const { lng, lat } = businessLocation?.coordinates || {};
+
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}`;
 
   const styles = {
     badge: {
@@ -49,9 +61,10 @@ const VideoHeader = ({
       <Stack
         direction="row"
         spacing={1.5}
-        alignItems="center"
+        alignItems="flex-start"
         onClick={() => router.push(`/profile/${username}`)}
         sx={{ cursor: "pointer" }}
+        gap={0.5}
       >
         {isLoading ? (
           <Skeleton variant="circular" width={70} height={70} />
@@ -81,58 +94,78 @@ const VideoHeader = ({
           </Badge>
         )}
 
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Stack direction="row" alignItems="center" gap={1.5}>
-            {isLoading ? (
-              <Skeleton variant="rounded" width={150} height={15} />
-            ) : (
-              <>
-                <Typography variant="h6" fontWeight={700} noWrap>
-                  {fullname ?? "-"}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  @{username}
-                </Typography>
-              </>
+        <Box flex={1}>
+          <Stack
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ width: "100%" }}
+          >
+            <Stack direction="row" alignItems="center" gap={1.5}>
+              {isLoading ? (
+                <Skeleton variant="rounded" width={150} height={15} />
+              ) : (
+                <>
+                  <Typography variant="h6" fontWeight={700} noWrap>
+                    {fullname ?? "-"}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    @{username}
+                  </Typography>
+                </>
+              )}
+            </Stack>
+
+            {!is_follow && (
+              <Button
+                variant="outlined"
+                color="secondary"
+                disableElevation
+                size="medium"
+                sx={{ textTransform: "none" }}
+                startIcon={<AddIcon />}
+              >
+                Urmărește
+              </Button>
             )}
           </Stack>
 
-          {isLoading ? (
-            <Skeleton
-              variant="rounded"
-              width={300}
-              height={15}
-              sx={{ mt: 1 }}
-            />
-          ) : (
-            <Stack gap={1}>
-              <Typography color="text.secondary">
-                {user?.profession} • {businessLocation?.formatted_address}
+          <Typography
+            mt={0.5}
+            variant="body1"
+            color="text.secondary"
+            sx={{
+              display: "-webkit-box",
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              wordBreak: "break-word",
+            }}
+          >
+            {user?.profession} • {businessLocation?.formatted_address}
+          </Typography>
+
+          {lat && lng && (
+            <Link
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card-container"
+              style={{ textDecoration: "none" }}
+              prefetch={false}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Typography
+                color="primary"
+                fontWeight={600}
+                sx={{ cursor: "pointer" }}
+              >
+                Obține indicații de orientare
               </Typography>
-              <Link href="" style={{ textDecoration: "none" }}>
-                <Typography
-                  color="primary"
-                  fontWeight={600}
-                  sx={{ cursor: "pointer" }}
-                >
-                  Vezi indicatii
-                </Typography>
-              </Link>
-            </Stack>
+            </Link>
           )}
         </Box>
-
-        {/* {!user.is_follow && (
-          <Button
-            variant="outlined"
-            color="primary"
-            disableElevation
-            size="medium"
-            sx={{ textTransform: "none" }}
-          >
-            Urmareste
-          </Button>
-        )} */}
       </Stack>
 
       {displayDescription && (
