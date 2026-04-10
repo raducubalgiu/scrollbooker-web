@@ -109,42 +109,6 @@ const SocialModal = ({
     }
   }, [tabs]);
 
-  const styles = {
-    container: {
-      width: "100%",
-      bgcolor: "transparent",
-      borderBottom: 1,
-      borderColor: "divider",
-      position: "sticky",
-      top: 0,
-      zIndex: 10,
-      backgroundColor: "background.paper",
-    },
-    tabs: {
-      "& .MuiTabs-indicator": {
-        height: 3,
-        borderRadius: 2,
-      },
-      "& .MuiTab-root": {
-        textTransform: "none",
-        minHeight: 56,
-      },
-    },
-    label: { fontSize: 20, fontWeight: 600 },
-    tabsContent: {
-      mx: 1,
-      flex: 1,
-      overflowY: "auto",
-      pt: 0,
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
-      "&::-webkit-scrollbar": {
-        width: 0,
-        height: 0,
-      },
-    },
-  };
-
   const handleChange = handleTabChange;
 
   const tabsContent = useMemo(() => {
@@ -230,3 +194,39 @@ const SocialModal = ({
 };
 
 export default SocialModal;
+
+const styles = {
+  container: {
+    width: "100%",
+    bgcolor: "transparent",
+    borderBottom: 1,
+    borderColor: "divider",
+    position: "sticky",
+    top: 0,
+    zIndex: 10,
+    backgroundColor: "background.paper",
+  },
+  tabs: {
+    "& .MuiTabs-indicator": {
+      height: 3,
+      borderRadius: 2,
+    },
+    "& .MuiTab-root": {
+      textTransform: "none",
+      minHeight: 56,
+    },
+  },
+  label: { fontSize: 20, fontWeight: 600 },
+  tabsContent: {
+    mx: 1,
+    flex: 1,
+    overflowY: "auto",
+    pt: 0,
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
+    "&::-webkit-scrollbar": {
+      width: 0,
+      height: 0,
+    },
+  },
+};

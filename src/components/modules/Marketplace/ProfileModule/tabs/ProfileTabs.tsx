@@ -142,60 +142,6 @@ const ProfileTabs = ({
     }
   }, [currentTab, isAuthenticated, businessOwnerId, userId]);
 
-  const styles = useMemo(
-    () => ({
-      container: {
-        width: "100%",
-        position: "sticky",
-        top: 0,
-        zIndex: 1200,
-        bgcolor: "background.paper",
-        mt: 5,
-        borderBottom: 1,
-        borderColor: "divider",
-        boxShadow: (theme: Theme) => `0 1px 0 ${theme.palette.divider}`,
-      },
-      tabs: {
-        "& .MuiTabs-indicator": {
-          height: 3,
-          borderRadius: 2,
-          width: "100%",
-        },
-        "& .MuiTab-root": {
-          textTransform: "none",
-          minHeight: 56,
-          minWidth: {
-            lg: 150,
-            xl: 200,
-          },
-          flex: {
-            xs: "1 1 auto",
-            lg: "0 1 auto",
-          },
-        },
-        "& .MuiTab-icon": {
-          fontSize: {
-            xs: 20,
-            md: 25,
-            lg: 30,
-            xl: 35,
-          },
-        },
-      },
-      label: {
-        fontSize: 20,
-        fontWeight: 600,
-        display: {
-          xs: "none",
-          sm: "none",
-          md: "none",
-          lg: "block",
-        },
-      },
-    }),
-    []
-  );
-
   return (
     <>
       <Box sx={styles.container}>
@@ -218,3 +164,54 @@ const ProfileTabs = ({
 };
 
 export default ProfileTabs;
+
+const styles = {
+  container: {
+    width: "100%",
+    position: "sticky",
+    top: 0,
+    zIndex: 1200,
+    bgcolor: "background.paper",
+    mt: 5,
+    borderBottom: 1,
+    borderColor: "divider",
+    boxShadow: (theme: Theme) => `0 1px 0 ${theme.palette.divider}`,
+  },
+  tabs: {
+    "& .MuiTabs-indicator": {
+      height: 3,
+      borderRadius: 2,
+      width: "100%",
+    },
+    "& .MuiTab-root": {
+      textTransform: "none",
+      minHeight: 56,
+      minWidth: {
+        lg: 150,
+        xl: 200,
+      },
+      flex: {
+        xs: "1 1 auto",
+        lg: "0 1 auto",
+      },
+    },
+    "& .MuiTab-icon": {
+      fontSize: {
+        xs: 20,
+        md: 25,
+        lg: 30,
+        xl: 35,
+      },
+    },
+  },
+  label: {
+    fontSize: 20,
+    fontWeight: 600,
+    display: {
+      xs: "none",
+      sm: "none",
+      md: "none",
+      lg: "block",
+    },
+  },
+};

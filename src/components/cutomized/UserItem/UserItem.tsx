@@ -4,9 +4,17 @@ import StarIcon from "@mui/icons-material/Star";
 import { formatRating } from "@/utils/formatters";
 import { UserMini } from "@/ts/models/user/UserMini";
 import Link from "next/link";
+import { useFollowMutation } from "@/hooks/mutations/useFollowMutation";
 
-const UserItem = ({ user }: { user: UserMini }) => {
+type UserItemProps = {
+  user: UserMini;
+  ownerId: number | undefined;
+  type: "followers" | "followings";
+};
+
+const UserItem = ({ user, ownerId, type }: UserItemProps) => {
   const {
+    id,
     is_business_or_employee,
     avatar,
     ratings_average,
@@ -15,24 +23,6 @@ const UserItem = ({ user }: { user: UserMini }) => {
     username,
     profession,
   } = user;
-
-  const styles = {
-    badge: {
-      "& .MuiBadge-badge": {
-        right: "auto",
-        left: "50%",
-        transform: `translate(-50%, 100%)`,
-      },
-    },
-    badgeContent: {
-      backgroundColor: "background.paper",
-      px: 1.5,
-      py: 0.5,
-      borderRadius: 50,
-      boxShadow: 1,
-    },
-    avatar: { width: 70, height: 70, border: 1, borderColor: "divider" },
-  };
 
   const formattedRating = formatRating(ratings_average);
 
@@ -70,20 +60,30 @@ const UserItem = ({ user }: { user: UserMini }) => {
     styles.badgeContent,
   ]);
 
-  const followButton = useMemo(() => {
-    return (
+  const { mutate: toggleFollow } = useFollowMutation(ownerId, type);
+
+  const handleFollowClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    toggleFollow({ targetUserId: id, isFollow: !!is_follow });
+  };
+
+  const followButton = useMemo(
+    () => (
       <Button
         variant={!is_follow ? "contained" : "outlined"}
         color={is_follow ? "secondary" : "primary"}
-        onClick={() => {}}
+        onClick={handleFollowClick}
         size="large"
         disableElevation
-        sx={{ textTransform: "capitalize" }}
+        sx={{ textTransform: "capitalize", minWidth: 120 }}
       >
         {is_follow ? "Urmărești" : "Urmărește"}
       </Button>
-    );
-  }, [is_follow]);
+    ),
+    [is_follow, handleFollowClick]
+  );
 
   return (
     <Stack
@@ -116,3 +116,21 @@ const UserItem = ({ user }: { user: UserMini }) => {
 };
 
 export default UserItem;
+
+const styles = {
+  badge: {
+    "& .MuiBadge-badge": {
+      right: "auto",
+      left: "50%",
+      transform: `translate(-50%, 100%)`,
+    },
+  },
+  badgeContent: {
+    backgroundColor: "background.paper",
+    px: 1.5,
+    py: 0.5,
+    borderRadius: 50,
+    boxShadow: 1,
+  },
+  avatar: { width: 70, height: 70, border: 1, borderColor: "divider" },
+};

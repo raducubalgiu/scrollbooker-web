@@ -74,7 +74,12 @@ const SocialFollowingsTab = ({
 
       {!isLoading &&
         followings.map((following) => (
-          <UserItem key={following.id} user={following} />
+          <UserItem
+            key={following.id}
+            user={following}
+            ownerId={userId}
+            type="followings"
+          />
         ))}
 
       <div ref={sentinelRef} aria-hidden style={{ height: 1 }} />
