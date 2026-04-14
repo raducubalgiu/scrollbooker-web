@@ -1,5 +1,5 @@
 import { Box, Skeleton, Typography } from "@mui/material";
-import React, { act, useMemo } from "react";
+import React, { useMemo } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -10,6 +10,7 @@ type PostActionsProps = {
   isLoading: boolean;
   counters: PostCounters | undefined;
   userActions: PostUserActions | undefined;
+  onCommentClick: () => void;
 };
 
 enum PostActionEnum {
@@ -29,6 +30,7 @@ const PostActions = ({
   counters,
   userActions,
   isLoading = false,
+  onCommentClick,
 }: PostActionsProps) => {
   const { is_liked, is_bookmarked } = userActions || {};
 
@@ -100,7 +102,13 @@ const PostActions = ({
       {!isLoading &&
         actions.map((action) => (
           <Box key={action.key}>
-            <Box key={action.key} sx={styles.container}>
+            <Box
+              key={action.key}
+              sx={styles.container}
+              onClick={() =>
+                action.key === PostActionEnum.COMMENT ? onCommentClick() : null
+              }
+            >
               {action.icon}
             </Box>
 

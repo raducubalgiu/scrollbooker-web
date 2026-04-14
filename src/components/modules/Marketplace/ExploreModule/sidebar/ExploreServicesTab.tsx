@@ -38,11 +38,11 @@ const ExploreServicesTab = ({
 
   const skeletons = useMemo(
     () =>
-      Array.from({ length: 3 }).map((_, index) => {
+      Array.from({ length: 5 }).map((_, index) => {
         return (
           <Box key={index}>
             <ProductCardSkeleton />
-            {index < 2 && <Divider sx={{ my: 1.5 }} />}
+            {index < 4 && <Divider sx={{ my: 1.5 }} />}
           </Box>
         );
       }),

@@ -53,7 +53,6 @@ const PostOverlay = ({
           position: "absolute",
           top: 0,
           left: 0,
-          width: "100%",
           height: 100,
           background:
             "linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent)",
@@ -103,7 +102,7 @@ const PostOverlay = ({
           left: 20,
           right: 20,
           bottom: 20,
-          zIndex: 1,
+          zIndex: 20,
           color: "common.white",
         }}
       >

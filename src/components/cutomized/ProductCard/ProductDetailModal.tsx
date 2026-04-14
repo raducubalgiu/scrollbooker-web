@@ -1,5 +1,5 @@
 import Modal from "@/components/core/Modal/Modal";
-import { Product } from "@/ts/models/booking/product/Product";
+import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
 import { formatPrice } from "@/utils/formatPrice";
 import { Box, Button, Chip, Stack, Tooltip, Typography } from "@mui/material";
 import React from "react";
@@ -15,6 +15,10 @@ const ProductDetailModal = ({
   open,
   onClose,
 }: ProductDetailModalProps) => {
+  const durationText = product
+    ? ProductUtils.getDurationText(product.duration)
+    : "";
+
   return (
     <Modal
       open={open}
@@ -98,9 +102,7 @@ const ProductDetailModal = ({
                 </>
               )}
             </Stack>
-            <Typography color="text.secondary">
-              {product?.duration}min
-            </Typography>
+            <Typography color="text.secondary">{durationText}</Typography>
           </Stack>
           <Button
             variant="contained"

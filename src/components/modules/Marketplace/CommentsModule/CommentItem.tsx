@@ -69,7 +69,9 @@ const CommentItem = ({
           </Typography>
         </Stack>
 
-        <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+        <Typography
+          sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", fontSize: 17 }}
+        >
           {comment.text}
         </Typography>
 
@@ -112,7 +114,7 @@ const CommentItem = ({
             </IconButton>
 
             {likeCount > 0 && (
-              <Typography variant="caption" color="text.secondary">
+              <Typography color="text.secondary" fontWeight={600}>
                 {likeCount}
               </Typography>
             )}

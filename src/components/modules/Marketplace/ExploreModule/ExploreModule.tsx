@@ -1,23 +1,18 @@
 "use client";
 
 import { Box, Slide } from "@mui/material";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PostOverlay from "./PostOverlay";
 import PostActions from "./PostActions";
-import { VideoPlayer } from "./VideoPlayer";
-import { Post } from "@/ts/models/social/Post";
 import ExploreControls from "./ExploreControls";
 import { useInfiniteExplorePosts } from "@/hooks/infiniteQuery/useInfiniteExplorePosts";
 import ExploreSidebar from "./sidebar/ExploreSidebar";
 import ExploreDrawer from "./ExploreDrawer";
+import { useExplorePlayerPool } from "./useExplorePlayerPool";
+import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
+import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
+import { ExploreVideoPool } from "./ExploreVideoPool";
 
-const WINDOW_SIZE = 5;
 const PREFETCH_OFFSET = 2;
 
 export default function ExploreModule() {
@@ -25,104 +20,69 @@ export default function ExploreModule() {
   const [selectedBusinessTypes, setSelectedBusinessTypes] = useState<
     Set<number>
   >(new Set());
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     useInfiniteExplorePosts(selectedBusinessTypes);
 
   const posts = useMemo(
-    () => data?.pages.flatMap((page) => page.results) || [],
+    () => data?.pages.flatMap((page) => page.results) ?? [],
     [data]
   );
 
-  const postsCount = data?.pages[0]?.count || 0;
+  const postsCount = data?.pages[0]?.count ?? 0;
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const currentPost: Post | undefined = posts[currentIndex];
-  const currentVideoUrl = currentPost?.media_files[0]?.url || "";
-
-  const { user_actions, counters, user, description, is_video_review } =
-    currentPost || {};
-
-  const visibleWindow = useMemo(() => {
-    const half = Math.floor(WINDOW_SIZE / 2);
-
-    let start = Math.max(0, currentIndex - half);
-    let end = Math.min(posts.length, start + WINDOW_SIZE);
-
-    if (end === posts.length) {
-      start = Math.max(0, end - WINDOW_SIZE);
-    }
-
-    return posts.slice(start, end);
-  }, [currentIndex, posts]);
-
-  const goToNext = useCallback(() => {
-    if (currentIndex < postsCount - 1) setCurrentIndex((prev) => prev + 1);
-  }, [currentIndex, postsCount]);
-
-  const goToPrev = useCallback(() => {
-    if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
-  }, [currentIndex]);
-
-  const lastPrefetchTriggerRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const hasMoreRemoteItems = posts.length < postsCount;
-    const reachedPrefetchZone = currentIndex >= posts.length - PREFETCH_OFFSET;
-    const alreadyTriggeredForThisLength =
-      lastPrefetchTriggerRef.current === posts.length;
-
-    if (
-      !hasMoreRemoteItems ||
-      !hasNextPage ||
-      isFetchingNextPage ||
-      !reachedPrefetchZone ||
-      alreadyTriggeredForThisLength
-    ) {
-      return;
-    }
-
-    lastPrefetchTriggerRef.current = posts.length;
-    fetchNextPage();
-  }, [
+  const { prevPost, currentPost, nextPost, poolItems } = useExplorePlayerPool({
+    posts,
     currentIndex,
-    posts.length,
+  });
+
+  useExplorePaginationPrefetch({
+    currentIndex,
+    postsLength: posts.length,
     postsCount,
-    hasNextPage,
+    hasNextPage: !!hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  ]);
+    prefetchOffset: PREFETCH_OFFSET,
+  });
+
+  useVideoNeighborsPreload({
+    prevSrc: prevPost?.media_files?.[0]?.url ?? "",
+    nextSrc: nextPost?.media_files?.[0]?.url ?? "",
+  });
+
+  useEffect(() => {
+    if (currentIndex > 0 && currentIndex >= posts.length) {
+      setCurrentIndex(Math.max(0, posts.length - 1));
+    }
+  }, [currentIndex, posts.length]);
 
   const handleToggleDrawer = useCallback(() => {
-    setShowDrawer((show) => !show);
+    setShowDrawer((prev) => !prev);
   }, []);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prev) => {
+      const maxIndex = Math.max(0, posts.length - 1);
+      return prev < maxIndex ? prev + 1 : prev;
+    });
+  }, [posts.length]);
+
+  const goToPrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  }, []);
+
+  const { user_actions, counters, user, description, is_video_review } =
+    currentPost ?? {};
 
   return (
     <Box sx={styles.container}>
       <Box sx={styles.leftSection}>
         <Box sx={styles.videoContainer}>
-          <VideoPlayer
-            isLoading={isLoading}
-            key={currentPost?.id}
-            src={currentVideoUrl}
-            isActive={true}
-          />
+          <ExploreVideoPool items={poolItems} isLoading={isLoading} />
 
-          {visibleWindow.map((post) => {
-            const url = post.media_files?.[0]?.url;
-
-            return (
-              <video
-                key={post.id}
-                src={url}
-                preload="auto"
-                style={{ display: "none" }}
-              />
-            );
-          })}
-
-          {!isLoading && (
+          {!isLoading && currentPost && (
             <PostOverlay
               user={user}
               description={description ?? ""}
@@ -139,6 +99,7 @@ export default function ExploreModule() {
                 onFilter={(ids) => {
                   setSelectedBusinessTypes(ids);
                   setShowDrawer(false);
+                  setCurrentIndex(0);
                 }}
               />
             </Box>
@@ -149,6 +110,7 @@ export default function ExploreModule() {
           isLoading={isLoading}
           counters={counters}
           userActions={user_actions}
+          onCommentClick={() => {}}
         />
       </Box>
 
@@ -165,7 +127,7 @@ export default function ExploreModule() {
       ) : (
         <ExploreControls
           isDisabledPrev={currentIndex === 0}
-          isDisabledNext={currentIndex === posts.length - 1}
+          isDisabledNext={currentIndex >= posts.length - 1}
           onGoToPrev={goToPrev}
           onGoToNext={goToNext}
         />
