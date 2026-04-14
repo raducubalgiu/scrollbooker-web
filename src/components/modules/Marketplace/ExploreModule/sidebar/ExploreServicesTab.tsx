@@ -37,58 +37,34 @@ const ExploreServicesTab = ({
   );
 
   return (
-    <Box sx={styles.container}>
-      <Box sx={styles.listContainer}>
-        {(isLoading || isLoadingPosts) && skeletons}
+    <Box sx={styles.listContainer}>
+      {(isLoading || isLoadingPosts) && skeletons}
 
-        {!isLoading &&
-          products?.map((prod, i) => (
-            <Box key={prod.id}>
-              <ProductCard product={prod} isSelected={i === 0} />
+      {!isLoading &&
+        products?.map((prod, i) => (
+          <Box key={prod.id}>
+            <ProductCard product={prod} isSelected={false} showIcon={false} />
 
-              {i < products?.length - 1 && <Divider sx={{ my: 1.5 }} />}
-            </Box>
-          ))}
+            {i < products?.length - 1 && <Divider sx={{ my: 1.5 }} />}
+          </Box>
+        ))}
 
-        {!isLoading && !isEmpty(products) && (
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            sx={{ textTransform: "none", mt: 2.5 }}
-          >
-            Toate serviciile
-          </Button>
-        )}
+      {!isLoading && !isEmpty(products) && (
+        <Button
+          variant="outlined"
+          color="secondary"
+          size="large"
+          sx={{ mt: 2.5 }}
+        >
+          Vezi tot
+        </Button>
+      )}
 
-        {!isLoading && products?.length === 0 && (
-          <Typography color="text.secondary">
-            Nu există servicii momentan.
-          </Typography>
-        )}
-      </Box>
-
-      {/* <Box sx={{ p: 2 }}>
-        <Divider />
-
-        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            disableElevation
-            size="large"
-            sx={{
-              textTransform: "none",
-              fontWeight: 600,
-              fontSize: 17,
-              py: 1.5,
-            }}
-          >
-            Rezervă acum
-          </Button>
-        </Protected>
-      </Box> */}
+      {!isLoading && products?.length === 0 && (
+        <Typography color="text.secondary">
+          Nu există servicii momentan.
+        </Typography>
+      )}
     </Box>
   );
 };
@@ -96,17 +72,12 @@ const ExploreServicesTab = ({
 export default memo(ExploreServicesTab);
 
 const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    minHeight: 0,
-    height: "100%",
-  },
   listContainer: {
     flex: 1,
     minHeight: 0,
     overflowY: "auto",
-    p: 3,
+    px: 3,
+    py: 1.5,
     scrollBarWidth: "none",
     msOverflowStyle: "none",
     "&::-webkit-scrollbar": {
