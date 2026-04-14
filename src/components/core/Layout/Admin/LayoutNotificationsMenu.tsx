@@ -17,7 +17,7 @@ import { isEmpty } from "lodash";
 import { useRouter } from "next/navigation";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import { NotificationType } from "@/ts/models/user/Notification";
+import { Notification } from "@/ts/models/user/Notification";
 
 export default function LayoutNotificationsMenu() {
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function LayoutNotificationsMenu() {
     data: notifications,
     isLoading,
     refetch,
-  } = useCustomQuery<PaginatedData<NotificationType>>({
+  } = useCustomQuery<PaginatedData<Notification>>({
     key: ["get-notifications"],
     url: "/api/notifications",
     params: { page: 1, limit: 5 },

@@ -214,7 +214,7 @@ export const VideoPlayer = ({
           borderRadius: 15,
         }}
       >
-        <source src={src} type="video/mp4" />
+        <source src={src} />
       </video>
 
       <Box

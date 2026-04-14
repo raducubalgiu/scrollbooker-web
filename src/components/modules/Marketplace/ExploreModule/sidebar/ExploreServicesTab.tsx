@@ -1,24 +1,20 @@
 import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
-import Protected from "@/components/cutomized/Protected/Protected";
+import ProductCardSkeleton from "@/components/cutomized/ProductCard/ProductCardSkeleton";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Product } from "@/ts/models/booking/product/Product";
-import {
-  Box,
-  Divider,
-  Stack,
-  Button,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, Button, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 
 type ExploreServicesTabProps = {
   postId: number | undefined;
+  isLoadingPosts: boolean;
 };
 
-const ExploreServicesTab = ({ postId }: ExploreServicesTabProps) => {
+const ExploreServicesTab = ({
+  postId,
+  isLoadingPosts,
+}: ExploreServicesTabProps) => {
   const { data: products, isLoading } = useCustomQuery<Product[]>({
     key: ["post-linked-products", postId],
     url: `/api/posts/${postId}/linked-products`,
@@ -27,14 +23,23 @@ const ExploreServicesTab = ({ postId }: ExploreServicesTabProps) => {
     },
   });
 
+  const skeletons = useMemo(
+    () =>
+      Array.from({ length: 3 }).map((_, index) => {
+        return (
+          <Box key={index}>
+            <ProductCardSkeleton />
+            {index < 2 && <Divider sx={{ my: 1.5 }} />}
+          </Box>
+        );
+      }),
+    []
+  );
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.listContainer}>
-        {isLoading && (
-          <Stack alignItems="center" justifyContent="center" py={4}>
-            <CircularProgress />
-          </Stack>
-        )}
+        {(isLoading || isLoadingPosts) && skeletons}
 
         {!isLoading &&
           products?.map((prod, i) => (
@@ -56,7 +61,7 @@ const ExploreServicesTab = ({ postId }: ExploreServicesTabProps) => {
           </Button>
         )}
 
-        {!isLoading && isEmpty(products) && (
+        {!isLoading && products?.length === 0 && (
           <Typography color="text.secondary">
             Nu există servicii momentan.
           </Typography>

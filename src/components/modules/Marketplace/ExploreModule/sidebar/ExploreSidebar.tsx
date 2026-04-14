@@ -5,6 +5,7 @@ import PostComments from "../../CommentsModule/PostComments";
 import VideoHeader from "../../VideoDetailModule/sidebar/VideoHeader";
 import ReviewsTab from "./ReviewsTab";
 import ExploreServicesTab from "./ExploreServicesTab";
+import VideoHeaderSkeleton from "../../VideoDetailModule/sidebar/VideoHeaderSkeleton";
 
 enum ExploreSidebarTab {
   SERVICES,
@@ -50,7 +51,9 @@ const ExploreSidebar = ({
   const tabsContent = useMemo(() => {
     switch (activeTab) {
       case ExploreSidebarTab.SERVICES:
-        return <ExploreServicesTab postId={postId} />;
+        return (
+          <ExploreServicesTab postId={postId} isLoadingPosts={isLoading} />
+        );
       case ExploreSidebarTab.COMMENTS:
         return (
           <PostComments postId={postId} avatar={null} postAuthorAvatar={null} />
@@ -60,18 +63,21 @@ const ExploreSidebar = ({
       default:
         return null;
     }
-  }, [activeTab, postId, user]);
+  }, [activeTab, postId, user, isLoading]);
 
   return (
     <Box sx={styles.container}>
       <Box p={3}>
-        <VideoHeader
-          isLoading={isLoading}
-          description={null}
-          user={user}
-          businessLocation={businessLocation}
-          displayDescription={false}
-        />
+        {isLoading ? (
+          <VideoHeaderSkeleton />
+        ) : (
+          <VideoHeader
+            description={null}
+            user={user}
+            businessLocation={businessLocation}
+            displayDescription={false}
+          />
+        )}
       </Box>
 
       <Box
