@@ -5,6 +5,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import React, { useMemo } from "react";
 import { Review } from "@/ts/models/booking/review/Review";
+import dayjs from "dayjs";
 
 type ReviewCardProps = {
   review: Review;
@@ -51,7 +52,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
             {customer.fullname}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            {created_at}
+            {dayjs(created_at).format("DD MMMM YYYY HH:mm")}
           </Typography>
         </Box>
       </Stack>
