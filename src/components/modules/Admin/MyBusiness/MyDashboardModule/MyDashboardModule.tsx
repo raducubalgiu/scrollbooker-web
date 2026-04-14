@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { DashboardSummaryType } from "@/ts/models/DashboardSummary";
 import { useDashboardReducer } from "@/hooks/useDashboardReducer";
@@ -9,7 +9,6 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import usePermission from "@/components/cutomized/Protected/usePermission";
 import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import CustomStack from "@/components/core/CustomStack/CustomStack";
 import DashboardCardSummary from "@/components/modules/Admin/MyBusiness/MyDashboardModule/DashboardCardSummary";
 import DashboardBarChart from "@/components/modules/Admin/MyBusiness/MyDashboardModule/DashboardBarChart";
 
@@ -105,8 +104,8 @@ export default function MyDashboardModule({ userId }: DashboardModuleProps) {
 
   return (
     <Box>
-      <CustomStack sx={{ mb: 2.5 }}>
-        <CustomStack>
+      <Stack sx={{ mb: 2.5 }}>
+        <Stack>
           {buttons.map((btn, i) => (
             <Button
               key={i}
@@ -120,7 +119,7 @@ export default function MyDashboardModule({ userId }: DashboardModuleProps) {
               {btn.title}
             </Button>
           ))}
-        </CustomStack>
+        </Stack>
         {/* <Protected permission={PermissionEnum.MY_EMPLOYEES_VIEW}>
 					<DashboardEmployeesSelect
 						options={employeesOptions}
@@ -132,7 +131,7 @@ export default function MyDashboardModule({ userId }: DashboardModuleProps) {
 						}
 					/>
 				</Protected> */}
-      </CustomStack>
+      </Stack>
       <Grid container spacing={3} sx={{ mb: 2.5 }}>
         {/* {isLoading && <DashboardCardSummarySkeleton />} */}
         {dummySummary?.map((summary, i) => (

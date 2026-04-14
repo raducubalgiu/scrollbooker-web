@@ -1,6 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, Box, IconButton } from "@mui/material";
-import CustomStack from "../../CustomStack/CustomStack";
+import { AppBar, Toolbar, Box, IconButton, Stack } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LayoutSearch from "./LayoutSearch";
 import LayoutNotificationsMenu from "./LayoutNotificationsMenu";
@@ -29,7 +28,7 @@ export default function AdminAppBar({
   return (
     <AppBar position="fixed" sx={styles.appBar}>
       <Toolbar>
-        <CustomStack sx={{ width: "100%", flex: 1 }}>
+        <Stack sx={{ width: "100%", flex: 1 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
               color="default"
@@ -51,11 +50,11 @@ export default function AdminAppBar({
             )}
           </Box>
           <LayoutSearch />
-          <CustomStack>
+          <Stack>
             <LayoutNotificationsMenu />
             <LayoutThemeToggle />
-          </CustomStack>
-        </CustomStack>
+          </Stack>
+        </Stack>
       </Toolbar>
     </AppBar>
   );

@@ -17,7 +17,6 @@ import {
 } from "@/utils/validation-rules";
 import { shortPrettyDate, shortTimeFormat } from "@/utils/date-utils-dayjs";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import CustomStack from "@/components/core/CustomStack/CustomStack";
 import { ChangeEvent, useState } from "react";
 import EditChangeIconButton from "../../IconButtons/EditChangeIconButton";
 import { useUserClientSession } from "@/lib/auth/get-user-client";
@@ -273,7 +272,7 @@ export default function CalendarEventsCreateModal({
           label="Alege un Serviciu"
           sx={{ mb: 2.5 }}
         />
-        <CustomStack mb={2.5}>
+        <Stack mb={2.5}>
           {!editProduct ? (
             <InputSelect
               rules={{ ...isRequired, valueAsNumber: true }}
@@ -302,7 +301,7 @@ export default function CalendarEventsCreateModal({
               setValue("currency_id", undefined);
             }}
           />
-        </CustomStack>
+        </Stack>
         <Paper sx={{ p: 2.5 }}>
           <Input
             name="product_price_with_discount"

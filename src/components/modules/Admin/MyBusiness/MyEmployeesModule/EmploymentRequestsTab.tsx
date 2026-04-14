@@ -1,8 +1,7 @@
-import CustomStack from "@/components/core/CustomStack/CustomStack";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { Close } from "@mui/icons-material";
-import { Avatar, Button, IconButton, Tooltip } from "@mui/material";
+import { Avatar, Button, IconButton, Stack, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
 import { MRT_ColumnDef, MRT_Row } from "material-react-table";
 import React, { useMemo, useState } from "react";
@@ -54,13 +53,13 @@ const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
         header: "Viitorul angajat",
         Cell: ({ row }) => {
           return (
-            <CustomStack justifyContent="flex-start">
+            <Stack flexDirection="row" justifyContent="flex-start">
               <Avatar
                 src={row.original.employee.avatar ?? ""}
                 sx={{ width: 35, height: 35, mr: 2.5 }}
               />
               {row.original.employee.fullname}
-            </CustomStack>
+            </Stack>
           );
         },
       },

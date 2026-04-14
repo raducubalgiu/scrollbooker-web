@@ -12,13 +12,12 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
-import CustomStack from "@/components/core/CustomStack/CustomStack";
 import { useMutate } from "@/hooks/useHttp";
-import { NotificationType } from "@/ts/models/user/Notification";
 import { useRouter } from "next/navigation";
+import { Notification } from "@/ts/models/user/Notification";
 
 type NotificationItemProps = {
-  notification: NotificationType;
+  notification: Notification;
   refetchNotifications: () => void;
 } & ListItemProps;
 
@@ -56,12 +55,15 @@ export default function NotificationItem({
         sx={{ p: 0, mb: 1.5, borderRadius: 5 }}
         {...props}
       >
-        <CustomStack p={2.5} flexGrow={1}>
-          <CustomStack justifyContent="flex-start" maxWidth={400}>
-            <Avatar
-              src={sender?.avatar}
-              sx={{ width: 45, height: 45, mr: 1.5 }}
-            />
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          p={2.5}
+          flexGrow={1}
+        >
+          <Stack flexDirection="row" alignItems="center" maxWidth={400} gap={2}>
+            <Avatar src={sender?.avatar} sx={{ width: 45, height: 45 }} />
             <Stack flexWrap="wrap">
               <Typography fontWeight={600}>{sender?.username ?? ""}</Typography>
               <Typography
@@ -72,7 +74,7 @@ export default function NotificationItem({
                 {constructedMessage}
               </Typography>
             </Stack>
-          </CustomStack>
+          </Stack>
           <IconButton
             onClick={(e) => {
               e.stopPropagation();
@@ -81,7 +83,7 @@ export default function NotificationItem({
           >
             {isPending ? <CircularProgress size={20} /> : <CloseIcon />}
           </IconButton>
-        </CustomStack>
+        </Stack>
       </ListItemButton>
     </Paper>
   );

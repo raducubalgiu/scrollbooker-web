@@ -1,5 +1,4 @@
-import { Box, Button, SxProps, Typography } from "@mui/material";
-import CustomStack from "../../core/CustomStack/CustomStack";
+import { Box, Button, Stack, SxProps, Typography } from "@mui/material";
 
 type MainLayoutProps = {
   title?: string;
@@ -18,11 +17,16 @@ export default function MainLayout({
   children,
   hideAction = false,
   onOpenModal,
-  sx,
+  sx = {},
 }: MainLayoutProps) {
   return (
     <Box sx={sx}>
-      <CustomStack sx={{ mb: 2.5 }}>
+      <Stack
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mb: 2.5 }}
+      >
         <Box>
           <Typography fontWeight={600} variant="h4">
             {title}
@@ -38,7 +42,7 @@ export default function MainLayout({
             {!!actionTitle ? actionTitle : "Adaugă"}
           </Button>
         )}
-      </CustomStack>
+      </Stack>
       {children}
     </Box>
   );

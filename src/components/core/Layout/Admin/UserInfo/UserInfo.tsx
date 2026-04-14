@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Skeleton, Stack, Typography, Collapse, Box } from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
-import CustomStack from "../../../CustomStack/CustomStack";
 import UserAvatar from "./UserAvatar";
 import UserInfoEditModal from "./UserInfoEditModal";
 import { UseQueryResult } from "@tanstack/react-query";
@@ -92,9 +91,9 @@ export default function UserInfo({
               {isLoadingUser ? <Skeleton width={100} /> : `${fullname}`}
             </Typography>
 
-            <CustomStack sx={{ mt: 1 }}>
+            <Stack sx={{ mt: 1 }}>
               {isLoadingUser ? <Skeleton width={150} /> : userProfession}
-            </CustomStack>
+            </Stack>
 
             <UserInfoCounters counters={counters} isLoading={isLoadingUser} />
           </Box>
