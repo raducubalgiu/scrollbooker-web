@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 import { get } from "@/utils/requests";
-import { ProductType } from "@/ts/models/Product/ProductResponse";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { Product } from "@/ts/models/booking/product/Product";
 
 export const GET = async () => {
-	const { userId } = await getUserServerSession();
+  const { userId } = await getUserServerSession();
 
-	const response = (
-		await get<ProductType[]>({
-			url: `/users/${userId}/currencies`,
-		})
-	).data;
+  const response = (
+    await get<Product[]>({
+      url: `/users/${userId}/currencies`,
+    })
+  ).data;
 
-	return NextResponse.json(response);
+  return NextResponse.json(response);
 };

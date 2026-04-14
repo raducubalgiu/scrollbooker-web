@@ -1,20 +1,33 @@
+"use client";
+
 import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
 import ProductCardSkeleton from "@/components/cutomized/ProductCard/ProductCardSkeleton";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { Product } from "@/ts/models/booking/product/Product";
 import { Box, Divider, Button, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
-import React, { memo, useMemo } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
+import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal";
 
 type ExploreServicesTabProps = {
   postId: number | undefined;
   isLoadingPosts: boolean;
 };
 
+type SelectedProduct = {
+  product: Product | null;
+  open: boolean;
+};
+
 const ExploreServicesTab = ({
   postId,
   isLoadingPosts,
 }: ExploreServicesTabProps) => {
+  const [selectedProduct, setSelectedProduct] = useState<SelectedProduct>({
+    product: null,
+    open: false,
+  });
+
   const { data: products, isLoading } = useCustomQuery<Product[]>({
     key: ["post-linked-products", postId],
     url: `/api/posts/${postId}/linked-products`,
@@ -36,36 +49,61 @@ const ExploreServicesTab = ({
     []
   );
 
+  const handleOpen = useCallback(
+    (product: Product) => setSelectedProduct({ product, open: true }),
+    []
+  );
+
+  const handleClose = useCallback(
+    () => setSelectedProduct({ product: null, open: false }),
+    []
+  );
+
   return (
-    <Box sx={styles.listContainer}>
-      {(isLoading || isLoadingPosts) && skeletons}
-
-      {!isLoading &&
-        products?.map((prod, i) => (
-          <Box key={prod.id}>
-            <ProductCard product={prod} isSelected={false} showIcon={false} />
-
-            {i < products?.length - 1 && <Divider sx={{ my: 1.5 }} />}
-          </Box>
-        ))}
-
-      {!isLoading && !isEmpty(products) && (
-        <Button
-          variant="outlined"
-          color="secondary"
-          size="large"
-          sx={{ mt: 2.5 }}
-        >
-          Vezi tot
-        </Button>
+    <>
+      {selectedProduct.open && (
+        <ProductDetailModal
+          open={selectedProduct.open}
+          product={selectedProduct.product}
+          onClose={handleClose}
+        />
       )}
 
-      {!isLoading && products?.length === 0 && (
-        <Typography color="text.secondary">
-          Nu există servicii momentan.
-        </Typography>
-      )}
-    </Box>
+      <Box sx={styles.listContainer}>
+        {(isLoading || isLoadingPosts) && skeletons}
+
+        {!isLoading &&
+          products?.map((prod, i) => (
+            <Box key={prod.id}>
+              <ProductCard
+                product={prod}
+                isSelected={false}
+                showIcon={false}
+                onOpenDetail={() => handleOpen(prod)}
+              />
+
+              {i < products?.length - 1 && <Divider sx={{ my: 1.5 }} />}
+            </Box>
+          ))}
+
+        {!isLoading && !isEmpty(products) && (
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="large"
+            sx={{ mt: 2.5 }}
+          >
+            Vezi tot
+          </Button>
+        )}
+
+        {!isLoading && products?.length === 0 && (
+          <Typography color="text.secondary">
+            Nu există servicii momentan.
+          </Typography>
+        )}
+      </Box>
+    </>
   );
 };
 

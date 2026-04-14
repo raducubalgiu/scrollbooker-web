@@ -17,7 +17,6 @@ type ModalPropsType = DialogProps & {
   handleClose: () => void;
   actions?: ActionButtonType[];
   dividers?: boolean;
-  showFooter?: boolean;
   align?: "center" | "left";
 };
 
@@ -73,10 +72,11 @@ export default function Modal({
   open,
   actions = [],
   dividers = true,
-  showFooter = true,
   align = "left",
   ...others
 }: ModalPropsType) {
+  const showFooter = actions.length > 0;
+
   return (
     <Dialog
       onClose={handleClose}

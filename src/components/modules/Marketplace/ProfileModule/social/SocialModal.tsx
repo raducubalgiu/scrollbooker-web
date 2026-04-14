@@ -152,7 +152,6 @@ const SocialModal = ({
       open={open}
       handleClose={handleClose}
       dividers={false}
-      showFooter={false}
       title={`@${socialModal?.username}`}
       align="center"
       {...(isReviewsStep && { maxWidth: "md" })}

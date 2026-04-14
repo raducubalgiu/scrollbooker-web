@@ -19,9 +19,15 @@ type ProductCardProps = {
   product: Product;
   isSelected: boolean;
   showIcon: boolean;
+  onOpenDetail: () => void;
 };
 
-const ProductCard = ({ product, isSelected, showIcon }: ProductCardProps) => {
+const ProductCard = ({
+  product,
+  isSelected,
+  showIcon,
+  onOpenDetail,
+}: ProductCardProps) => {
   const { name, description, price, price_with_discount, discount } = product;
 
   const filtersText = ProductUtils.getFiltersSummary(product);
@@ -49,6 +55,7 @@ const ProductCard = ({ product, isSelected, showIcon }: ProductCardProps) => {
           },
         };
       }}
+      onClick={onOpenDetail}
     >
       <Stack
         flexDirection="row"
