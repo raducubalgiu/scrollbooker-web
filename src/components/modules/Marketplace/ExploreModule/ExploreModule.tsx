@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Slide } from "@mui/material";
+import { alpha, Box, Button, IconButton, Slide, Stack } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PostActions from "./PostActions";
 import ExploreControls from "./ExploreControls";
@@ -11,6 +11,7 @@ import { useExplorePlayerPool } from "./useExplorePlayerPool";
 import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
 import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
 import { ExploreVideoPool } from "./ExploreVideoPool";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const PREFETCH_OFFSET = 2;
 
@@ -86,6 +87,55 @@ export default function ExploreModule() {
             isVideoReview={is_video_review ?? false}
             onToggleDrawer={handleToggleDrawer}
           />
+
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              height: 100,
+              background:
+                "linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent)",
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                m: 2.5,
+                zIndex: 11,
+                pointerEvents: "auto",
+              }}
+            >
+              <Stack flexDirection="row" alignItems="center">
+                <IconButton size="large" onClick={handleToggleDrawer}>
+                  <MenuIcon
+                    sx={{ color: "common.white", width: 30, height: 30 }}
+                  />
+                </IconButton>
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                  sx={{
+                    mr: 1,
+                    bgcolor: (theme) => alpha(theme.palette.primary.main, 0.7),
+                    "&:hover": {
+                      bgcolor: (theme) =>
+                        alpha(theme.palette.primary.main, 0.3),
+                    },
+                  }}
+                >
+                  Explorează
+                </Button>
+                <Button sx={{ color: "common.white" }} disableElevation>
+                  Urmaresti
+                </Button>
+              </Stack>
+            </Box>
+          </Box>
 
           <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
             <Box sx={styles.drawerContainer}>

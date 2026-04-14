@@ -108,7 +108,6 @@ const VideoHeader = ({
                 variant="outlined"
                 color="secondary"
                 disableElevation
-                size="medium"
                 sx={{ textTransform: "none" }}
                 startIcon={<AddIcon />}
               >

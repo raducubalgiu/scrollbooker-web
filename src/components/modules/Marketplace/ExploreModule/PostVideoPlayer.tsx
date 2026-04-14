@@ -21,7 +21,6 @@ type PostVideoPlayerProps = {
   user: PostUser | null;
   description: string | null;
   isVideoReview: boolean;
-  onToggleDrawer: () => void;
 };
 
 const PROGRESS_EPSILON = 0.1;
@@ -41,7 +40,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   user,
   description,
   isVideoReview,
-  onToggleDrawer,
 }: PostVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -410,7 +408,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
           user={user}
           description={description ?? ""}
           isVideoReview={isVideoReview}
-          onToggleDrawer={onToggleDrawer}
         />
       )}
     </Box>

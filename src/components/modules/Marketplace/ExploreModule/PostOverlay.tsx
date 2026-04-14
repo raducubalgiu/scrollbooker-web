@@ -4,29 +4,18 @@ import React, { memo, useEffect, useRef, useState } from "react";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { PostUser } from "@/ts/models/social/Post";
-import {
-  alpha,
-  Box,
-  Button,
-  Collapse,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Box, Button, Collapse, Stack, Typography } from "@mui/material";
 
 type PostOverlayProps = {
   user: PostUser | undefined;
   description: string | null;
   isVideoReview: boolean | undefined;
-  onToggleDrawer: () => void;
 };
 
 const PostOverlay = ({
   user,
   description,
   isVideoReview,
-  onToggleDrawer,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -48,53 +37,6 @@ const PostOverlay = ({
 
   return (
     <>
-      <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: 100,
-          background:
-            "linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent)",
-          zIndex: 10,
-        }}
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            m: 2.5,
-            zIndex: 11,
-            pointerEvents: "auto",
-          }}
-        >
-          <Stack flexDirection="row" alignItems="center">
-            <IconButton size="large" onClick={onToggleDrawer}>
-              <MenuIcon sx={{ color: "common.white", width: 30, height: 30 }} />
-            </IconButton>
-
-            <Button
-              variant="contained"
-              color="primary"
-              disableElevation
-              sx={{
-                mr: 1,
-                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.7),
-                "&:hover": {
-                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.3),
-                },
-              }}
-            >
-              Explorează
-            </Button>
-            <Button sx={{ color: "common.white" }} disableElevation>
-              Urmaresti
-            </Button>
-          </Stack>
-        </Box>
-      </Box>
-
       <Stack
         spacing={1.5}
         sx={{
