@@ -1,11 +1,18 @@
 "use client";
 
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Paper,
+  Stack,
+  StackProps,
+  Typography,
+} from "@mui/material";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
-import UserInfoCounters from "@/components/core/Layout/Admin/UserInfo/UserInfoCounters";
-import UserAvatar from "@/components/core/Layout/Admin/UserInfo/UserAvatar";
+import UserAvatar from "@/components/core/Avatar/UserAvatar";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import Link from "next/link";
 
@@ -16,6 +23,8 @@ type BusinessStickyCardProps = {
 export default function BusinessStickyCard({
   business,
 }: BusinessStickyCardProps) {
+  const { followers_count, followings_count, ratings_count } =
+    business.owner.counters;
   const { lng, lat } = business.location.coordinates;
   const mapsUrl = `https://google.com/maps/dir/?api=1&?destination=${lat},${lng})`;
 
@@ -43,18 +52,42 @@ export default function BusinessStickyCard({
             size="xl"
           />
 
-          <UserInfoCounters
-            counters={{
-              followers_count: business.owner.counters.followers_count,
-              followings_count: business.owner.counters.followings_count,
-              ratings_average: business.owner.counters.ratings_average,
-              ratings_count: business.owner.counters.ratings_count,
-              posts_count: 0,
-              user_id: 1,
-              products_count: 0,
-            }}
-            isLoading={false}
-          />
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ mt: 5, gap: 2 }}
+          >
+            <UserInfoCounter
+              label="Urmărești"
+              counter={followings_count}
+              isLoading={false}
+            />
+
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ height: 20, mx: 1.5, alignSelf: "center" }}
+            />
+
+            <UserInfoCounter
+              label="Urmăritori"
+              counter={followers_count}
+              isLoading={false}
+            />
+
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ height: 20, mx: 1.5, alignSelf: "center" }}
+            />
+
+            <UserInfoCounter
+              label="Recenzii"
+              counter={ratings_count}
+              isLoading={false}
+            />
+          </Stack>
         </Stack>
 
         <Button
@@ -116,5 +149,30 @@ export default function BusinessStickyCard({
         </Box>
       </Paper>
     </Box>
+  );
+}
+
+type UserInfoCounterProps = {
+  label: string;
+  counter: number | undefined;
+  isLoading: boolean;
+} & StackProps;
+
+function UserInfoCounter({
+  label,
+  counter,
+  isLoading,
+  ...props
+}: UserInfoCounterProps) {
+  return (
+    <Stack alignItems="center" {...props}>
+      <Typography
+        sx={{ mb: 1.5, fontWeight: 500, fontSize: 17 }}
+        color="text.secondary"
+      >
+        {label}
+      </Typography>
+      <Typography sx={{ fontWeight: 800, fontSize: 25 }}>{counter}</Typography>
+    </Stack>
   );
 }

@@ -1,4 +1,4 @@
-import UserAvatar from "@/components/core/Layout/Admin/UserInfo/UserAvatar";
+import UserAvatar from "@/components/core/Avatar/UserAvatar";
 import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";

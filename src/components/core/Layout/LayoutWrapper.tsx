@@ -2,7 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
-import MarketplaceLayout from "./Marketplace/MarketplaceLayout";
+import Layout from "./Layout";
 
 type LayoutWrapperProps = { children: React.ReactNode };
 
@@ -18,5 +18,5 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
     return <>{children}</>;
   }
 
-  return <MarketplaceLayout>{children}</MarketplaceLayout>;
+  return <Layout>{children}</Layout>;
 }

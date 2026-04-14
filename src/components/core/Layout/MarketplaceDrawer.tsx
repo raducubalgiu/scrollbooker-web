@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useCallback } from "react";
-import { Box, Skeleton, Typography } from "@mui/material";
+import { Box, Button, Skeleton, Typography } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import CButton from "../../CButton/CButton";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import DrawerPopper from "./DrawerPopper";
 import PublicRoutes from "./PublicRoutes";
@@ -101,12 +100,14 @@ const MarketplaceDrawer = () => {
         )}
 
         {!isAuthenticated && !isLoading && (
-          <CButton
-            onClick={() => router.push("/api/auth/signin")}
-            label="Conectare"
+          <Button
             variant="outlined"
+            disableElevation
             sx={{ mt: 2.5 }}
-          />
+            onClick={() => router.push("/api/auth/signin")}
+          >
+            Conectare
+          </Button>
         )}
       </Box>
     </Box>

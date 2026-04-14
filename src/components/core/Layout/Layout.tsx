@@ -15,9 +15,7 @@ interface MarketplaceLayoutProps {
   children: React.ReactNode;
 }
 
-export default function MarketplaceLayout({
-  children,
-}: MarketplaceLayoutProps) {
+export default function Layout({ children }: MarketplaceLayoutProps) {
   const pathname = usePathname() || "";
 
   const isBusinessPage = React.useMemo(
