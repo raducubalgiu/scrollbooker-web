@@ -94,6 +94,10 @@ export default function ExploreModule() {
     fetchNextPage,
   ]);
 
+  const handleToggleDrawer = useCallback(() => {
+    setShowDrawer((show) => !show);
+  }, []);
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.leftSection}>
@@ -123,6 +127,7 @@ export default function ExploreModule() {
               user={user}
               description={description ?? ""}
               isVideoReview={is_video_review}
+              onToggleDrawer={handleToggleDrawer}
             />
           )}
 

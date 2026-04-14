@@ -19,12 +19,14 @@ type PostOverlayProps = {
   user: PostUser | undefined;
   description: string | null;
   isVideoReview: boolean | undefined;
+  onToggleDrawer: () => void;
 };
 
 const PostOverlay = ({
   user,
   description,
   isVideoReview,
+  onToggleDrawer,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -69,7 +71,7 @@ const PostOverlay = ({
           }}
         >
           <Stack flexDirection="row" alignItems="center">
-            <IconButton size="large" onClick={handleToggle}>
+            <IconButton size="large" onClick={onToggleDrawer}>
               <MenuIcon sx={{ color: "common.white", width: 30, height: 30 }} />
             </IconButton>
 
