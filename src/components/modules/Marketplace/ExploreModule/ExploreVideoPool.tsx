@@ -1,13 +1,25 @@
 import { Box } from "@mui/material";
 import { PoolItem } from "./useExplorePlayerPool";
-import { VideoPlayer } from "./VideoPlayer";
+import { PostUser } from "@/ts/models/social/Post";
+import { PostVideoPlayer } from "./PostVideoPlayer";
 
 type ExploreVideoPoolProps = {
   items: PoolItem[];
   isLoading: boolean;
+  user: PostUser | null;
+  description: string | null;
+  isVideoReview: boolean;
+  onToggleDrawer: () => void;
 };
 
-export function ExploreVideoPool({ items, isLoading }: ExploreVideoPoolProps) {
+export function ExploreVideoPool({
+  items,
+  isLoading,
+  user,
+  description,
+  isVideoReview,
+  onToggleDrawer,
+}: ExploreVideoPoolProps) {
   return (
     <Box sx={poolStyles.root}>
       {items.map((item) => {
@@ -23,10 +35,14 @@ export function ExploreVideoPool({ items, isLoading }: ExploreVideoPoolProps) {
               zIndex: item.slot === "current" ? 2 : 1,
             }}
           >
-            <VideoPlayer
+            <PostVideoPlayer
               src={item.src}
               isActive={item.isActive}
               isLoading={isLoading && item.slot === "current"}
+              user={user}
+              description={description ?? ""}
+              isVideoReview={isVideoReview}
+              onToggleDrawer={onToggleDrawer}
             />
           </Box>
         );

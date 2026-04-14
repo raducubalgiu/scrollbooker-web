@@ -11,11 +11,17 @@ import VolumeOffRoundedIcon from "@mui/icons-material/VolumeOffRounded";
 import VolumeUpRoundedIcon from "@mui/icons-material/VolumeUpRounded";
 import { alpha, Theme } from "@mui/material/styles";
 import Hls from "hls.js";
+import PostOverlay from "./PostOverlay";
+import { PostUser } from "@/ts/models/social/Post";
 
-type VideoPlayerProps = {
+type PostVideoPlayerProps = {
   isLoading?: boolean;
   src: string;
   isActive: boolean;
+  user: PostUser | null;
+  description: string | null;
+  isVideoReview: boolean;
+  onToggleDrawer: () => void;
 };
 
 const PROGRESS_EPSILON = 0.1;
@@ -28,11 +34,15 @@ const getSliderValue = (value: number | number[]): number => {
   return value;
 };
 
-export const VideoPlayer = React.memo(function VideoPlayer({
+export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   src,
   isActive,
   isLoading = false,
-}: VideoPlayerProps) {
+  user,
+  description,
+  isVideoReview,
+  onToggleDrawer,
+}: PostVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null);
   const lastProgressRef = useRef(0);
@@ -394,6 +404,15 @@ export const VideoPlayer = React.memo(function VideoPlayer({
           sx={sliderSx}
         />
       </Box>
+
+      {!isLoading && user && (
+        <PostOverlay
+          user={user}
+          description={description ?? ""}
+          isVideoReview={isVideoReview}
+          onToggleDrawer={onToggleDrawer}
+        />
+      )}
     </Box>
   );
 });

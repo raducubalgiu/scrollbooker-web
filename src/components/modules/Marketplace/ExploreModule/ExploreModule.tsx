@@ -2,7 +2,6 @@
 
 import { Box, Slide } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import PostOverlay from "./PostOverlay";
 import PostActions from "./PostActions";
 import ExploreControls from "./ExploreControls";
 import { useInfiniteExplorePosts } from "@/hooks/infiniteQuery/useInfiniteExplorePosts";
@@ -73,23 +72,20 @@ export default function ExploreModule() {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
   }, []);
 
-  const { user_actions, counters, user, description, is_video_review } =
-    currentPost ?? {};
+  const { user_actions, counters, is_video_review } = currentPost ?? {};
 
   return (
     <Box sx={styles.container}>
       <Box sx={styles.leftSection}>
         <Box sx={styles.videoContainer}>
-          <ExploreVideoPool items={poolItems} isLoading={isLoading} />
-
-          {!isLoading && currentPost && (
-            <PostOverlay
-              user={user}
-              description={description ?? ""}
-              isVideoReview={is_video_review}
-              onToggleDrawer={handleToggleDrawer}
-            />
-          )}
+          <ExploreVideoPool
+            items={poolItems}
+            isLoading={isLoading}
+            user={currentPost?.user ?? null}
+            description={currentPost?.description ?? null}
+            isVideoReview={is_video_review ?? false}
+            onToggleDrawer={handleToggleDrawer}
+          />
 
           <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
             <Box sx={styles.drawerContainer}>
