@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
@@ -14,63 +16,65 @@ type Ctx = {
 const STORAGE_KEY = "sb-ui-color-mode";
 const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
 
-function getSystemPrefersDarkMode(): boolean {
-  if (typeof window === "undefined" || !window.matchMedia) return false;
-  return window.matchMedia(COLOR_SCHEME_QUERY).matches;
-}
-
-function getInitialMode(): ThemeModeEnum {
-  if (typeof window === "undefined") return ThemeModeEnum.SYSTEM;
-  const saved = window.localStorage.getItem(
-    STORAGE_KEY
-  ) as ThemeModeEnum | null;
-
-  if (
-    saved === ThemeModeEnum.SYSTEM ||
-    saved === ThemeModeEnum.LIGHT ||
-    saved === ThemeModeEnum.DARK
-  )
-    return saved;
-
-  return ThemeModeEnum.SYSTEM;
-}
-
 const ThemeModeContext = React.createContext<Ctx | undefined>(undefined);
 
 export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = React.useState<ThemeModeEnum>(getInitialMode);
+  const [mode, setMode] = React.useState<ThemeModeEnum>(ThemeModeEnum.SYSTEM);
   const [systemPrefersDarkMode, setSystemPrefersDarkMode] =
-    React.useState<boolean>(getSystemPrefersDarkMode);
+    React.useState<boolean>(false);
+  const [isHydrated, setIsHydrated] = React.useState(false);
 
   React.useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
+    const saved = window.localStorage.getItem(
+      STORAGE_KEY
+    ) as ThemeModeEnum | null;
+
+    const nextMode =
+      saved === ThemeModeEnum.SYSTEM ||
+      saved === ThemeModeEnum.LIGHT ||
+      saved === ThemeModeEnum.DARK
+        ? saved
+        : ThemeModeEnum.SYSTEM;
 
     const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY);
-    const handleChange = (event: MediaQueryListEvent) => {
-      setSystemPrefersDarkMode(event.matches);
+
+    const syncSystemMode = (matches: boolean) => {
+      setSystemPrefersDarkMode(matches);
     };
 
-    setSystemPrefersDarkMode(mediaQuery.matches);
+    setMode(nextMode);
+    syncSystemMode(mediaQuery.matches);
+    setIsHydrated(true);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      syncSystemMode(event.matches);
+    };
+
     mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
   }, []);
 
-  const resolvedMode = React.useMemo(
-    () =>
-      mode === ThemeModeEnum.SYSTEM
-        ? systemPrefersDarkMode
-          ? ThemeModeEnum.DARK
-          : ThemeModeEnum.LIGHT
-        : mode,
-    [mode, systemPrefersDarkMode]
-  );
+  const resolvedMode = React.useMemo(() => {
+    if (mode === ThemeModeEnum.SYSTEM) {
+      return systemPrefersDarkMode ? ThemeModeEnum.DARK : ThemeModeEnum.LIGHT;
+    }
 
-  React.useEffect(() => {
+    return mode;
+  }, [mode, systemPrefersDarkMode]);
+
+  React.useLayoutEffect(() => {
+    if (!isHydrated) return;
+
     try {
       window.localStorage.setItem(STORAGE_KEY, mode);
     } catch {}
+
     const html = document.documentElement;
     html.setAttribute("data-theme", resolvedMode);
+    html.style.colorScheme = resolvedMode;
 
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) {
@@ -80,22 +84,22 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
           : lightTheme.palette.primary.main;
       meta.setAttribute("content", color);
     }
-  }, [mode, resolvedMode]);
+  }, [isHydrated, mode, resolvedMode]);
 
   const value = React.useMemo<Ctx>(
     () => ({
       mode,
-      isSystemInDarkMode: resolvedMode == ThemeModeEnum.DARK,
+      isSystemInDarkMode: resolvedMode === ThemeModeEnum.DARK,
       setMode,
       toggle: () =>
-        setMode((m) => {
-          if (m === ThemeModeEnum.SYSTEM) {
+        setMode((currentMode) => {
+          if (currentMode === ThemeModeEnum.SYSTEM) {
             return systemPrefersDarkMode
               ? ThemeModeEnum.LIGHT
               : ThemeModeEnum.DARK;
           }
 
-          return m === ThemeModeEnum.LIGHT
+          return currentMode === ThemeModeEnum.LIGHT
             ? ThemeModeEnum.DARK
             : ThemeModeEnum.LIGHT;
         }),
@@ -111,7 +115,7 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
   return (
     <ThemeModeContext.Provider value={value}>
       <ThemeProvider theme={theme}>
-        <CssBaseline enableColorScheme={true} />
+        <CssBaseline enableColorScheme />
         {children}
       </ThemeProvider>
     </ThemeModeContext.Provider>
@@ -120,7 +124,10 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
 
 export function useThemeMode(): Ctx {
   const ctx = React.useContext(ThemeModeContext);
-  if (!ctx)
+
+  if (!ctx) {
     throw new Error("useThemeMode must be used within <ThemeModeProvider>");
+  }
+
   return ctx;
 }

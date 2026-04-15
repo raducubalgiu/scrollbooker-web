@@ -169,11 +169,11 @@ export const darkTheme = createTheme({
           },
         }),
         outlinedSecondary: ({ theme }) => ({
-          borderColor: theme.palette.divider,
+          borderColor: theme.palette.grey[700],
           color: theme.palette.text.primary,
           "&:hover": {
             color: theme.palette.text.primary + "90",
-            borderColor: theme.palette.divider,
+            borderColor: theme.palette.grey[500],
           },
         }),
       },

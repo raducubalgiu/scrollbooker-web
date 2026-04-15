@@ -12,6 +12,7 @@ import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetail
 type ExploreServicesTabProps = {
   postId: number | undefined;
   isLoadingPosts: boolean;
+  onNavigateToBooking: (product: Product) => void;
 };
 
 type SelectedProduct = {
@@ -22,6 +23,7 @@ type SelectedProduct = {
 const ExploreServicesTab = ({
   postId,
   isLoadingPosts,
+  onNavigateToBooking,
 }: ExploreServicesTabProps) => {
   const [selectedProduct, setSelectedProduct] = useState<SelectedProduct>({
     product: null,
@@ -80,6 +82,7 @@ const ExploreServicesTab = ({
                 isSelected={false}
                 showIcon={false}
                 onOpenDetail={() => handleOpen(prod)}
+                onNavigateToBooking={onNavigateToBooking}
               />
 
               {i < products?.length - 1 && <Divider sx={{ my: 1.5 }} />}

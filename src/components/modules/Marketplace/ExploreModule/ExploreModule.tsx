@@ -12,6 +12,7 @@ import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
 import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
 import { ExploreVideoPool } from "./ExploreVideoPool";
 import MenuIcon from "@mui/icons-material/Menu";
+import BookingModuleModal from "../BookingModule/BookingModuleModal";
 
 const PREFETCH_OFFSET = 2;
 
@@ -75,8 +76,15 @@ export default function ExploreModule() {
 
   const { user_actions, counters, is_video_review } = currentPost ?? {};
 
+  const [openBooking, setOpenBooking] = useState(false);
+
   return (
     <Box sx={styles.container}>
+      <BookingModuleModal
+        open={openBooking}
+        onClose={() => setOpenBooking(false)}
+      />
+
       <Box sx={styles.leftSection}>
         <Box sx={styles.videoContainer}>
           <ExploreVideoPool
@@ -166,6 +174,7 @@ export default function ExploreModule() {
         postId={currentPost?.id}
         user={currentPost?.user}
         businessLocation={currentPost?.business_location}
+        onNavigateToBooking={() => setOpenBooking(true)}
       />
 
       {isLoading ? (

@@ -6,6 +6,7 @@ import VideoHeader from "../../VideoDetailModule/sidebar/VideoHeader";
 import ReviewsTab from "./ReviewsTab";
 import ExploreServicesTab from "./ExploreServicesTab";
 import VideoHeaderSkeleton from "../../VideoDetailModule/sidebar/VideoHeaderSkeleton";
+import { Product } from "@/ts/models/booking/product/Product";
 
 enum ExploreSidebarTab {
   SERVICES,
@@ -19,6 +20,7 @@ type ExploreSidebarProps = {
   postId: number | undefined;
   user: PostUser | undefined;
   businessLocation: PostBusinessLocation | null | undefined;
+  onNavigateToBooking: (product: Product) => void;
 };
 
 const ExploreSidebar = ({
@@ -27,6 +29,7 @@ const ExploreSidebar = ({
   user,
   businessLocation,
   isLoading,
+  onNavigateToBooking,
 }: ExploreSidebarProps) => {
   const [activeTab, setActiveTab] = React.useState<ExploreSidebarTab>(
     ExploreSidebarTab.SERVICES
@@ -52,7 +55,11 @@ const ExploreSidebar = ({
     switch (activeTab) {
       case ExploreSidebarTab.SERVICES:
         return (
-          <ExploreServicesTab postId={postId} isLoadingPosts={isLoading} />
+          <ExploreServicesTab
+            postId={postId}
+            isLoadingPosts={isLoading}
+            onNavigateToBooking={onNavigateToBooking}
+          />
         );
       case ExploreSidebarTab.COMMENTS:
         return (

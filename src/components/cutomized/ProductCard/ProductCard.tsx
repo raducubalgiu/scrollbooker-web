@@ -20,6 +20,7 @@ type ProductCardProps = {
   isSelected: boolean;
   showIcon: boolean;
   onOpenDetail: () => void;
+  onNavigateToBooking: (product: Product) => void;
 };
 
 const ProductCard = ({
@@ -27,6 +28,7 @@ const ProductCard = ({
   isSelected,
   showIcon,
   onOpenDetail,
+  onNavigateToBooking,
 }: ProductCardProps) => {
   const { name, description, price, price_with_discount, discount } = product;
 
@@ -105,7 +107,15 @@ const ProductCard = ({
               )}
             </IconButton>
           ) : (
-            <Button variant="outlined" color="secondary" size="large">
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigateToBooking(product);
+              }}
+            >
               Rezervă
             </Button>
           )}
