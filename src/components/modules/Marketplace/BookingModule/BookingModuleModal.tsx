@@ -1,13 +1,12 @@
 import {
   alpha,
+  Box,
   Container,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
-  Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import React from "react";
 
@@ -34,7 +33,6 @@ const BookingModuleModal = ({ open, onClose }: BookingModuleModalProps) => {
             width: 65,
             height: 65,
             color: "text.primary",
-            //border: 1,
             border: (theme) =>
               `1px solid ${alpha(theme.palette.text.primary, 0.2)}`,
             "&:hover": {
@@ -46,8 +44,20 @@ const BookingModuleModal = ({ open, onClose }: BookingModuleModalProps) => {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Container>
-          <Typography>Booking</Typography>
+        <Container maxWidth="xl">
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "1fr 1fr",
+              },
+              gap: 10,
+            }}
+          >
+            <Box sx={{ border: 1, borderColor: "divider" }}>Left</Box>
+            <Box sx={{ border: 1, borderColor: "divider" }}>Right</Box>
+          </Box>
         </Container>
       </DialogContent>
     </Dialog>

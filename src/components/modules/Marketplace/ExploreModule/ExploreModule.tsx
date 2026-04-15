@@ -85,124 +85,145 @@ export default function ExploreModule() {
         onClose={() => setOpenBooking(false)}
       />
 
-      <Box sx={styles.leftSection}>
-        <Box sx={styles.videoContainer}>
-          <ExploreVideoPool
-            items={poolItems}
-            isLoading={isLoading}
-            user={currentPost?.user ?? null}
-            description={currentPost?.description ?? null}
-            isVideoReview={is_video_review ?? false}
-            onToggleDrawer={handleToggleDrawer}
-          />
+      <Box sx={styles.mainContent}>
+        <Box sx={styles.leftSection}>
+          <Box sx={styles.videoContainer}>
+            <ExploreVideoPool
+              items={poolItems}
+              isLoading={isLoading}
+              user={currentPost?.user ?? null}
+              description={currentPost?.description ?? null}
+              isVideoReview={is_video_review ?? false}
+              onToggleDrawer={handleToggleDrawer}
+            />
 
-          <Box
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              height: 100,
-              background:
-                "linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent)",
-            }}
-          >
             <Box
               sx={{
                 position: "absolute",
                 top: 0,
                 left: 0,
-                m: 2.5,
-                zIndex: 11,
-                pointerEvents: "auto",
+                width: "100%",
+                height: 100,
+                background:
+                  "linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent)",
               }}
             >
-              <Stack flexDirection="row" alignItems="center">
-                <IconButton size="large" onClick={handleToggleDrawer}>
-                  <MenuIcon
-                    sx={{ color: "common.white", width: 30, height: 30 }}
-                  />
-                </IconButton>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  m: 2.5,
+                  zIndex: 11,
+                  pointerEvents: "auto",
+                }}
+              >
+                <Stack flexDirection="row" alignItems="center">
+                  <IconButton size="large" onClick={handleToggleDrawer}>
+                    <MenuIcon
+                      sx={{ color: "common.white", width: 30, height: 30 }}
+                    />
+                  </IconButton>
 
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disableElevation
-                  sx={{
-                    mr: 1,
-                    bgcolor: (theme) => alpha(theme.palette.primary.main, 0.7),
-                    "&:hover": {
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    sx={{
+                      mr: 1,
                       bgcolor: (theme) =>
-                        alpha(theme.palette.primary.main, 0.3),
-                    },
-                  }}
-                >
-                  Explorează
-                </Button>
-                <Button sx={{ color: "common.white" }} disableElevation>
-                  Urmaresti
-                </Button>
-              </Stack>
+                        alpha(theme.palette.primary.main, 0.7),
+                      "&:hover": {
+                        bgcolor: (theme) =>
+                          alpha(theme.palette.primary.main, 0.3),
+                      },
+                    }}
+                  >
+                    Explorează
+                  </Button>
+
+                  <Button sx={{ color: "common.white" }} disableElevation>
+                    Urmărești
+                  </Button>
+                </Stack>
+              </Box>
             </Box>
+
+            <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
+              <Box sx={styles.drawerContainer}>
+                <ExploreDrawer
+                  defaultBusinessTypes={selectedBusinessTypes}
+                  onCloseDrawer={() => setShowDrawer(false)}
+                  onFilter={(ids) => {
+                    setSelectedBusinessTypes(ids);
+                    setShowDrawer(false);
+                    setCurrentIndex(0);
+                  }}
+                />
+              </Box>
+            </Slide>
           </Box>
 
-          <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
-            <Box sx={styles.drawerContainer}>
-              <ExploreDrawer
-                defaultBusinessTypes={selectedBusinessTypes}
-                onCloseDrawer={() => setShowDrawer(false)}
-                onFilter={(ids) => {
-                  setSelectedBusinessTypes(ids);
-                  setShowDrawer(false);
-                  setCurrentIndex(0);
-                }}
-              />
-            </Box>
-          </Slide>
+          <PostActions
+            isLoading={isLoading}
+            counters={counters}
+            userActions={user_actions}
+            onCommentClick={() => {}}
+          />
         </Box>
 
-        <PostActions
+        <ExploreSidebar
           isLoading={isLoading}
-          counters={counters}
-          userActions={user_actions}
-          onCommentClick={() => {}}
+          commentsCount={currentPost?.counters.comment_count}
+          postId={currentPost?.id}
+          user={currentPost?.user}
+          businessLocation={currentPost?.business_location}
+          onNavigateToBooking={() => setOpenBooking(true)}
         />
       </Box>
 
-      <ExploreSidebar
-        isLoading={isLoading}
-        commentsCount={currentPost?.counters.comment_count}
-        postId={currentPost?.id}
-        user={currentPost?.user}
-        businessLocation={currentPost?.business_location}
-        onNavigateToBooking={() => setOpenBooking(true)}
-      />
-
-      {isLoading ? (
-        <Box width={70} />
-      ) : (
-        <ExploreControls
-          isDisabledPrev={currentIndex === 0}
-          isDisabledNext={currentIndex >= posts.length - 1}
-          onGoToPrev={goToPrev}
-          onGoToNext={goToNext}
-        />
-      )}
+      <Box sx={styles.controlsSection}>
+        {isLoading ? (
+          <Box width={70} />
+        ) : (
+          <ExploreControls
+            isDisabledPrev={currentIndex === 0}
+            isDisabledNext={currentIndex >= posts.length - 1}
+            onGoToPrev={goToPrev}
+            onGoToNext={goToNext}
+          />
+        )}
+      </Box>
     </Box>
   );
 }
 
 const styles = {
   container: {
-    display: "flex",
+    display: "grid",
+    gridTemplateColumns: "1fr auto",
     alignItems: "stretch",
-    justifyContent: "flex-end",
-    gap: 3,
     width: "100%",
     height: "calc(100vh - 40px)",
-    mx: "auto",
     px: 3,
     overflow: "hidden",
   },
+
+  mainContent: {
+    minWidth: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 3,
+  },
+
+  controlsSection: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    pl: 3,
+  },
+
   leftSection: {
     flex: "0 0 auto",
     height: "100%",
@@ -210,13 +231,16 @@ const styles = {
     alignItems: "center",
     gap: 2.5,
   },
+
   videoContainer: {
     position: "relative",
     height: "100%",
     aspectRatio: "9 / 16",
     borderRadius: 4,
     overflow: "hidden",
+    flexShrink: 0,
   },
+
   drawerContainer: {
     position: "absolute",
     top: 0,
