@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Box, IconButton, Skeleton, Typography } from "@mui/material";
+import { Box, IconButton, Skeleton, Typography, Theme } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -155,11 +155,11 @@ const styles = {
     width: 60,
     height: 60,
     borderRadius: "50%",
-    bgcolor: "secondary.main",
+    bgcolor: (theme: Theme) =>
+      theme.palette.mode === "light"
+        ? "background.default"
+        : "background.paper",
     color: "common.white",
-    "&:hover": {
-      bgcolor: "secondary.main",
-    },
   },
   count: {
     mt: 0.5,
