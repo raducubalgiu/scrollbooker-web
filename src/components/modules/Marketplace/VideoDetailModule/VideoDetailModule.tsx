@@ -1,12 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { Box } from "@mui/material";
+import { alpha, Box, IconButton, Theme } from "@mui/material";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { useRouter } from "next/navigation";
-import VideoSection from "./video/VideoSection";
-import VideoSidebar from "./sidebar/VideoSidebar";
 import { Post } from "@/ts/models/social/Post";
 import { useMutate } from "@/hooks/useHttp";
+import PostActions from "../ExploreModule/PostActions";
+import ExploreSidebar from "../ExploreModule/sidebar/ExploreSidebar";
+import { PostVideoPlayer } from "../ExploreModule/PostVideoPlayer";
+import BookingModuleModal from "../BookingModule/BookingModuleModal";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -19,18 +22,18 @@ export default function VideoDetailModule({
   initialPost,
   tab,
 }: ProfileVideoDetailPageProps) {
+  const [openBooking, setOpenBooking] = React.useState(false);
   const [post, setPost] = React.useState<Post>(initialPost);
   const router = useRouter();
 
   const handleClose = React.useCallback(() => {
     if (!tab) {
       router.back();
-    } else {
-      router.replace(`/profile/${username}${tab ? `?tab=${tab}` : ""}`);
+      return;
     }
-  }, [router, tab]);
 
-  const url = post.media_files[0]?.url;
+    router.replace(`/profile/${username}?tab=${tab}`);
+  }, [router, tab, username]);
 
   const { mutate: like } = useMutate({
     key: ["like-post", post.id],
@@ -193,23 +196,129 @@ export default function VideoDetailModule({
   }, [bookmark, unbookmark, post]);
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        display: "grid",
-        gridTemplateColumns: {
-          xs: "1fr",
-          lg: "minmax(0, 1fr) minmax(480px, 640px)",
-        },
-      }}
-    >
-      {url && <VideoSection url={url} onClose={handleClose} />}
-
-      <VideoSidebar
-        post={post}
-        onHandleLike={handleLike}
-        onHandleBookmark={handleBookmark}
+    <Box sx={styles.container}>
+      <BookingModuleModal
+        open={openBooking}
+        onClose={() => setOpenBooking(false)}
       />
+
+      <IconButton
+        onClick={(e) => {
+          e.stopPropagation();
+          handleClose();
+        }}
+        sx={styles.backButton}
+      >
+        <ArrowBackRoundedIcon fontSize="large" />
+      </IconButton>
+
+      <Box sx={styles.mainContent}>
+        <Box sx={styles.leftSection}>
+          <Box sx={styles.videoContainer}>
+            <PostVideoPlayer
+              src={post.media_files[0]?.url ?? ""}
+              isActive={true}
+              isLoading={false}
+              user={post.user}
+              description={post.description ?? ""}
+              isVideoReview={post.is_video_review}
+            />
+          </Box>
+
+          <PostActions
+            isLoading={false}
+            counters={post.counters}
+            userActions={post.user_actions}
+            onCommentClick={() => {}}
+            onLike={handleLike}
+            onBookmarkClick={handleBookmark}
+            onShareClick={() => {}}
+          />
+        </Box>
+
+        <ExploreSidebar
+          isLoading={false}
+          commentsCount={post.counters.comment_count}
+          postId={post.id}
+          user={post.user}
+          businessLocation={post?.business_location}
+          onNavigateToBooking={() => setOpenBooking(true)}
+        />
+      </Box>
     </Box>
   );
 }
+
+const styles = {
+  container: {
+    position: "relative",
+    display: "grid",
+    gridTemplateColumns: "1fr auto",
+    alignItems: "stretch",
+    width: "100%",
+    height: "calc(100vh - 40px)",
+    marginTop: "20px",
+    overflow: "hidden",
+  },
+
+  backButton: {
+    position: "absolute",
+    top: 0,
+    left: "20px",
+    zIndex: 20,
+    width: 65,
+    height: 65,
+    color: "text.primary",
+    border: (theme: Theme) =>
+      `1px solid ${alpha(theme.palette.text.primary, 0.2)}`,
+    "&:hover": {
+      bgcolor: "action.hover",
+    },
+  },
+
+  mainContent: {
+    minWidth: 0,
+    minHeight: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 3,
+  },
+
+  controlsSection: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+
+  leftSection: {
+    flex: "0 0 auto",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    gap: 2.5,
+  },
+
+  videoContainer: {
+    position: "relative",
+    height: "100%",
+    aspectRatio: "9 / 16",
+    borderRadius: 4,
+    overflow: "hidden",
+    flexShrink: 0,
+    backgroundColor: "background.default",
+  },
+
+  drawerContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    zIndex: 12,
+    bgcolor: "common.black",
+    display: "flex",
+    flexDirection: "column",
+    p: 5,
+  },
+} as const;

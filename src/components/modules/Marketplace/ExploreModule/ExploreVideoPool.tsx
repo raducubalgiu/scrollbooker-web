@@ -9,7 +9,6 @@ type ExploreVideoPoolProps = {
   user: PostUser | null;
   description: string | null;
   isVideoReview: boolean;
-  onToggleDrawer: () => void;
 };
 
 export function ExploreVideoPool({
@@ -18,31 +17,33 @@ export function ExploreVideoPool({
   user,
   description,
   isVideoReview,
-  onToggleDrawer,
 }: ExploreVideoPoolProps) {
   return (
     <Box sx={poolStyles.root}>
       {items.map((item) => {
         if (!item.post || !item.src) return null;
 
+        const isCurrent = item.slot === "current";
+
         return (
           <Box
             key={item.slot}
             sx={{
               ...poolStyles.playerLayer,
-              opacity: item.slot === "current" ? 1 : 0,
-              pointerEvents: item.slot === "current" ? "auto" : "none",
-              zIndex: item.slot === "current" ? 2 : 1,
+              opacity: isCurrent ? 1 : 0,
+              pointerEvents: isCurrent ? "auto" : "none",
+              zIndex: isCurrent ? 2 : 1,
             }}
           >
             <PostVideoPlayer
               src={item.src}
               isActive={item.isActive}
-              isLoading={isLoading && item.slot === "current"}
+              isLoading={isLoading && isCurrent}
               user={user}
               description={description ?? ""}
               isVideoReview={isVideoReview}
-              onToggleDrawer={onToggleDrawer}
+              preload="metadata"
+              resetOnInactive={false}
             />
           </Box>
         );

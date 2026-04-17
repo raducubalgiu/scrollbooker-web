@@ -54,7 +54,7 @@ export default function Layout({ children }: MarketplaceLayoutProps) {
       main: {
         p: {
           xs: 0,
-          md: isProfileVideoPage || isBusinessPage || isPostPage ? 0 : 2.5,
+          md: isProfileVideoPage || isBusinessPage ? 0 : 2.5,
         },
         width: "100%",
         bgcolor: isAdminPage ? "background.default" : bgColor,

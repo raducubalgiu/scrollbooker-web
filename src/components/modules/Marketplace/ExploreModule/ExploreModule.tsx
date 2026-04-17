@@ -94,7 +94,6 @@ export default function ExploreModule() {
               user={currentPost?.user ?? null}
               description={currentPost?.description ?? null}
               isVideoReview={is_video_review ?? false}
-              onToggleDrawer={handleToggleDrawer}
             />
 
             <Box
@@ -164,12 +163,17 @@ export default function ExploreModule() {
             </Slide>
           </Box>
 
-          <PostActions
-            isLoading={isLoading}
-            counters={counters}
-            userActions={user_actions}
-            onCommentClick={() => {}}
-          />
+          {counters && user_actions && (
+            <PostActions
+              isLoading={isLoading}
+              counters={counters}
+              userActions={user_actions}
+              onCommentClick={() => {}}
+              onBookmarkClick={() => {}}
+              onLike={() => {}}
+              onShareClick={() => {}}
+            />
+          )}
         </Box>
 
         <ExploreSidebar
@@ -211,6 +215,7 @@ const styles = {
 
   mainContent: {
     minWidth: 0,
+    minHeight: 0,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

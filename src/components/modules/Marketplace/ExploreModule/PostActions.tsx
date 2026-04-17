@@ -1,5 +1,5 @@
-import { Box, Skeleton, Typography } from "@mui/material";
 import React, { useMemo } from "react";
+import { Box, IconButton, Skeleton, Typography } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -8,122 +8,130 @@ import { PostCounters, PostUserActions } from "@/ts/models/social/Post";
 
 type PostActionsProps = {
   isLoading: boolean;
-  counters: PostCounters | undefined;
-  userActions: PostUserActions | undefined;
+  counters: PostCounters | null;
+  userActions: PostUserActions | null;
+  onLike: () => void;
   onCommentClick: () => void;
+  onBookmarkClick: () => void;
+  onShareClick: () => void;
 };
 
-enum PostActionEnum {
-  LIKE,
-  COMMENT,
-  BOOKMARK,
-  SHARE,
-}
-
-type CounterButtonType = {
-  key: PostActionEnum;
+type PostActionItem = {
+  id: "like" | "comment" | "bookmark" | "share";
   icon: React.ReactNode;
-  count?: number | string;
+  count?: number;
+  onClick: () => void;
 };
 
 const PostActions = ({
   counters,
   userActions,
   isLoading = false,
+  onLike,
   onCommentClick,
+  onBookmarkClick,
+  onShareClick,
 }: PostActionsProps) => {
-  const { is_liked, is_bookmarked } = userActions || {};
-
-  const actions: CounterButtonType[] = useMemo(
+  const actions = useMemo<PostActionItem[]>(
     () => [
       {
-        key: PostActionEnum.LIKE,
+        id: "like",
         icon: (
           <FavoriteIcon
             fontSize="large"
-            sx={{ color: is_liked ? "error.main" : "text.primary" }}
+            sx={{
+              color: userActions?.is_liked ? "error.main" : "text.primary",
+            }}
           />
         ),
-        count: counters?.like_count ?? "-",
+        count: counters?.like_count ?? 0,
+        onClick: onLike,
       },
       {
-        key: PostActionEnum.COMMENT,
+        id: "comment",
         icon: <TextsmsIcon fontSize="large" sx={{ color: "text.primary" }} />,
-        count: counters?.comment_count ?? "-",
+        count: counters?.comment_count ?? 0,
+        onClick: onCommentClick,
       },
       {
-        key: PostActionEnum.BOOKMARK,
+        id: "bookmark",
         icon: (
           <BookmarkIcon
             fontSize="large"
-            sx={{ color: is_bookmarked ? "primary.main" : "text.primary" }}
+            sx={{
+              color: userActions?.is_bookmarked
+                ? "primary.main"
+                : "text.primary",
+            }}
           />
         ),
-        count: counters?.bookmark_count ?? "-",
+        count: counters?.bookmark_count ?? 0,
+        onClick: onBookmarkClick,
       },
       {
-        key: PostActionEnum.SHARE,
+        id: "share",
         icon: (
           <IosShareRoundedIcon
             fontSize="large"
             sx={{ color: "text.primary" }}
           />
         ),
+        onClick: onShareClick,
       },
     ],
-    [counters, is_liked, is_bookmarked]
+    [
+      counters?.bookmark_count,
+      counters?.comment_count,
+      counters?.like_count,
+      onBookmarkClick,
+      onCommentClick,
+      onLike,
+      onShareClick,
+      userActions?.is_bookmarked,
+      userActions?.is_liked,
+    ]
   );
 
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 1,
-        pb: 1,
-        alignSelf: { xs: "flex-end", lg: "flex-end" },
-      }}
-    >
-      {isLoading &&
-        actions.map((action) => (
-          <Box
-            key={action.key}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
+  if (isLoading) {
+    return (
+      <Box sx={styles.root}>
+        {actions.map((action) => (
+          <Box key={action.id} sx={styles.actionItem}>
             <Skeleton variant="circular" width={60} height={60} />
-            {action.count !== undefined && <Box height={20} sx={{ mt: 0.5 }} />}
-          </Box>
-        ))}
-
-      {!isLoading &&
-        actions.map((action) => (
-          <Box key={action.key}>
-            <Box
-              key={action.key}
-              sx={styles.container}
-              onClick={() =>
-                action.key === PostActionEnum.COMMENT ? onCommentClick() : null
-              }
-            >
-              {action.icon}
-            </Box>
-
             {action.count !== undefined && (
-              <Typography
-                variant="h6"
-                textAlign="center"
-                fontWeight={600}
-                sx={{ fontSize: 17 }}
-              >
-                {action.count}
-              </Typography>
+              <Skeleton
+                variant="text"
+                width={28}
+                height={24}
+                sx={{ mt: 0.5 }}
+              />
             )}
           </Box>
         ))}
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={styles.root}>
+      {actions.map((action) => (
+        <Box key={action.id} sx={styles.actionItem}>
+          <IconButton onClick={action.onClick} disableRipple sx={styles.button}>
+            {action.icon}
+          </IconButton>
+
+          {action.count !== undefined && (
+            <Typography
+              variant="h6"
+              textAlign="center"
+              fontWeight={600}
+              sx={styles.count}
+            >
+              {action.count}
+            </Typography>
+          )}
+        </Box>
+      ))}
     </Box>
   );
 };
@@ -131,15 +139,30 @@ const PostActions = ({
 export default PostActions;
 
 const styles = {
-  container: {
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 1,
+    pb: 1,
+    alignSelf: { xs: "flex-end", lg: "flex-end" },
+  },
+  actionItem: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  button: {
     width: 60,
     height: 60,
     borderRadius: "50%",
     bgcolor: "secondary.main",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     color: "common.white",
-    cursor: "pointer",
+    "&:hover": {
+      bgcolor: "secondary.main",
+    },
+  },
+  count: {
+    mt: 0.5,
+    fontSize: 17,
   },
 };
