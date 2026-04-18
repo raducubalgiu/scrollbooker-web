@@ -27,10 +27,13 @@ const VideoHeader = ({
   const { avatar, fullname, username, ratings_average, is_follow } = user || {};
   const { lng, lat } = businessLocation?.coordinates || {};
 
-  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}`;
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+    `${lat},${lng}`
+  )}`;
 
   const styles = {
     badge: {
+      flexShrink: 0,
       "& .MuiBadge-badge": {
         right: "auto",
         left: "50%",
@@ -44,7 +47,18 @@ const VideoHeader = ({
       borderRadius: 50,
       boxShadow: 1,
     },
-    avatar: { width: 70, height: 70, border: 1, borderColor: "divider" },
+    avatar: {
+      width: 70,
+      height: 70,
+      border: 1,
+      borderColor: "divider",
+    },
+    ellipsisText: {
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      minWidth: 0,
+    },
   };
 
   return (
@@ -54,7 +68,7 @@ const VideoHeader = ({
         spacing={1.5}
         alignItems="center"
         onClick={() => router.push(`/profile/${username}`)}
-        sx={{ cursor: "pointer" }}
+        sx={{ cursor: "pointer", minWidth: 0 }}
         gap={0.5}
       >
         <Badge
@@ -81,26 +95,41 @@ const VideoHeader = ({
           <Avatar sx={styles.avatar} src={avatar ?? ""} />
         </Badge>
 
-        <Box flex={1}>
+        <Box flex={1} sx={{ minWidth: 0 }}>
           <Stack
-            flexDirection="row"
+            direction="row"
             alignItems="center"
             justifyContent="space-between"
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", minWidth: 0 }}
+            gap={1}
           >
-            <Box>
-              <Stack direction="row" alignItems="center" gap={1.5}>
-                <>
-                  <Typography variant="h6" fontWeight={700} noWrap>
-                    {fullname ?? "-"}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    @{username}
-                  </Typography>
-                </>
+            <Box sx={{ minWidth: 0, flex: 1 }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                gap={1.5}
+                sx={{ minWidth: 0 }}
+              >
+                <Typography
+                  variant="h6"
+                  fontWeight={700}
+                  sx={{ ...styles.ellipsisText, flexShrink: 1 }}
+                >
+                  {fullname ?? "-"}
+                </Typography>
+
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ ...styles.ellipsisText, flexShrink: 1 }}
+                >
+                  @{username}
+                </Typography>
               </Stack>
 
-              <Typography color="text.secondary">{user?.profession}</Typography>
+              <Typography color="text.secondary" sx={styles.ellipsisText}>
+                {user?.profession}
+              </Typography>
             </Box>
 
             {!is_follow && (
@@ -108,7 +137,7 @@ const VideoHeader = ({
                 variant="outlined"
                 color="secondary"
                 disableElevation
-                sx={{ textTransform: "none" }}
+                sx={{ textTransform: "none", flexShrink: 0 }}
                 startIcon={<AddIcon />}
               >
                 Urmărește

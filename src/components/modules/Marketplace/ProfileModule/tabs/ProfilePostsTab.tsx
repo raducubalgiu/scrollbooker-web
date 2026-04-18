@@ -6,7 +6,6 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import { useInfiniteUserPosts } from "@/hooks/infiniteQuery/userInfiniteUserPosts";
 import { isEmpty } from "lodash";
-import PostGridSkeleton from "@/components/cutomized/PostGrid/PostGridSkeleton";
 
 type ProfilePostsTabProps = {
   userId: number;
@@ -25,8 +24,6 @@ const ProfilePostsTab = ({ userId, username }: ProfilePostsTabProps) => {
   return (
     <>
       <PostGridContainer>
-        {isLoading && <PostGridSkeleton />}
-
         {!isLoading &&
           posts?.map((post) => (
             <PostGrid

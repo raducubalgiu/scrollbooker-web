@@ -30,8 +30,6 @@
     "dayjs": "^1.11.13",
     "hls.js": "^1.6.15",
     "i18next": "^24.2.3",
-    "jodit": "^4.11.13",
-    "jodit-react": "^5.3.21",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mapbox-gl": "^3.20.0",

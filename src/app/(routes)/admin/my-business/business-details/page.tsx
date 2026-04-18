@@ -4,7 +4,7 @@ import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { get } from "@/utils/requests";
-import MyBusinessDetailsModule from "@/components/modules/Admin/MyBusiness/LocationModule/MyBusinessDetailsModule";
+import MyBusinessDetailsModule from "@/components/modules/Admin/MyBusiness/MyBusinessDetailsModule/MyBusinessDetailsModule";
 import { Business } from "@/ts/models/booking/business/Business";
 
 async function MyBusiness() {

@@ -60,7 +60,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
 
   const [isReady, setIsReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);

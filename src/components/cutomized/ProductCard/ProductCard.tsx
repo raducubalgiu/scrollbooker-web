@@ -11,7 +11,6 @@ import {
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import React from "react";
-import { formatPrice } from "@/utils/formatPrice";
 import Protected from "../Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
@@ -30,9 +29,13 @@ const ProductCard = ({
   onOpenDetail,
   onNavigateToBooking,
 }: ProductCardProps) => {
-  const { name, description, price, price_with_discount, discount } = product;
+  const { name, description, has_different_offerings } = product;
 
   const filtersText = ProductUtils.getFiltersSummary(product);
+  const displayedPrice = ProductUtils.getPrice(product);
+  const displayed_price_with_discount =
+    ProductUtils.getPriceWithDiscount(product);
+  const displayedDiscount = ProductUtils.getDiscount(product);
 
   return (
     <Box
@@ -74,19 +77,20 @@ const ProductCard = ({
 
           <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
             <Typography fontSize={18} fontWeight={600}>
-              {formatPrice(price_with_discount)} RON
+              {has_different_offerings && "de la"}{" "}
+              {displayed_price_with_discount} RON
             </Typography>
-            {discount > 0 && (
+            {displayedDiscount > 0 && (
               <>
                 <Typography
                   variant="body2"
                   color="text.secondary"
                   sx={{ textDecoration: "line-through" }}
                 >
-                  {formatPrice(price)}
+                  {displayedPrice}
                 </Typography>
                 <Typography fontWeight={600} color="error.main">
-                  (-{discount}%)
+                  (-{displayedDiscount}%)
                 </Typography>
               </>
             )}

@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm, Controller, FormProvider } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { Box, Typography } from "@mui/material";
-import FormJoditEditor from "@/components/core/Input/FormJoditEditor";
 import ActionButton, {
   ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
+import Input from "@/components/core/Input/Input";
 
-type BusinessDescriptionTabProps = { description?: string };
-type DescriptionFormProps = { defaultDescription?: string };
+type BusinessDescriptionTabProps = { defaultDescription?: string };
 
-function DescriptionForm({ defaultDescription }: DescriptionFormProps) {
+export default function BusinessDescriptionTab({
+  defaultDescription,
+}: BusinessDescriptionTabProps) {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const methods = useForm<{ description: string }>({
@@ -19,7 +20,7 @@ function DescriptionForm({ defaultDescription }: DescriptionFormProps) {
     mode: "onBlur",
   });
 
-  const { handleSubmit, reset, control } = methods;
+  const { handleSubmit, reset } = methods;
 
   const cancel: ActionButtonType[] = isDisabled
     ? []
@@ -60,38 +61,24 @@ function DescriptionForm({ defaultDescription }: DescriptionFormProps) {
   };
 
   return (
-    <FormProvider {...methods}>
-      <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{ minHeight: 260 }}>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <FormJoditEditor
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Descrie locația, serviciile, politici etc."
-                isDisabled={isDisabled}
-              />
-            )}
-          />
-        </Box>
-
-        <ActionButton actions={actions} />
-      </Box>
-    </FormProvider>
-  );
-}
-
-export default function BusinessDescriptionTab({
-  description,
-}: BusinessDescriptionTabProps) {
-  return (
     <Box>
       <Typography variant="h6" sx={{ mb: 2.5 }}>
         Descriere locație
       </Typography>
-      <DescriptionForm defaultDescription={description} />
+
+      <FormProvider {...methods}>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            name="description"
+            multiline
+            minRows={5}
+            placeholder="Adauga o descriere..."
+            disabled={isDisabled}
+          />
+
+          <ActionButton actions={actions} />
+        </Box>
+      </FormProvider>
     </Box>
   );
 }
