@@ -6,13 +6,13 @@ import MySchedulesModule from "../MySchedulesModule/MySchedulesModule";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
-import { BusinessResponse } from "@/ts/models/booking/business/Business";
+import { Business } from "@/ts/models/booking/business/Business";
 import BusinessDescriptionTab from "./BusinessDescriptionTab";
 import BusinessAddressTab from "./BusinessAddressTab";
 import BusinessGalleryTab from "./BusinessGalleryTab";
 
 type MyBusinessDetailsProps = {
-  business: BusinessResponse;
+  business: Business;
 };
 
 const TABS: CustomTabType[] = [
@@ -38,7 +38,12 @@ export default function MyBusinessDetailsModule({
           />
         );
       case 1:
-        return <BusinessDescriptionTab description={business.description} />;
+        return (
+          <BusinessDescriptionTab
+            businessId={business.id}
+            defaultDescription={business.description}
+          />
+        );
       case 2:
         return (
           <BusinessGalleryTab businessId={business.id} initialImages={[]} />

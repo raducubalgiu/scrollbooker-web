@@ -10,7 +10,7 @@ export interface Business {
   id: number;
   business_type_id: number;
   owner_id: number;
-  description: string;
+  description: string | null;
   timezone: string;
   address: string;
   formatted_address: string;
