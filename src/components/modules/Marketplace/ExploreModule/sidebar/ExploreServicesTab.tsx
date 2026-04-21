@@ -11,6 +11,7 @@ import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetail
 
 type ExploreServicesTabProps = {
   postId: number | undefined;
+  userId: number | undefined;
   isLoadingPosts: boolean;
   onNavigateToBooking: (product: Product) => void;
 };
@@ -95,6 +96,7 @@ const ExploreServicesTab = ({
             color="secondary"
             size="large"
             sx={{ mt: 2.5 }}
+            onClick={() => {}}
           >
             Vezi tot
           </Button>

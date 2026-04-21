@@ -1,7 +1,17 @@
 "use client";
 
 import React, { useCallback } from "react";
-import { Box, Button, Skeleton, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Button,
+  InputAdornment,
+  Skeleton,
+  TextField,
+  Typography,
+  Theme,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
@@ -68,18 +78,31 @@ const MarketplaceDrawer = () => {
       </Typography>
 
       <Box>
+        <TextField
+          placeholder="Cauta utilizatori"
+          variant="outlined"
+          fullWidth
+          sx={styles.search}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
         <PublicRoutes
           session={session}
           isSelected={isSelected}
           onNavigate={navigate}
         />
-
         <DrawerPopper
           moreOpen={moreOpen}
           moreAnchorEl={moreAnchorEl}
           onCloseMore={handleCloseMorePopper}
         />
-
         {isLoading &&
           Array.from({ length: 5 }).map((_, i) => (
             <Skeleton
@@ -90,7 +113,6 @@ const MarketplaceDrawer = () => {
               sx={{ mt: 1.5 }}
             />
           ))}
-
         {isAuthenticated && (
           <AdminRoutes
             hasEmployees={session?.has_employees ?? false}
@@ -98,7 +120,6 @@ const MarketplaceDrawer = () => {
             onNavigate={navigate}
           />
         )}
-
         {!isAuthenticated && !isLoading && (
           <Button
             variant="outlined"
@@ -115,3 +136,32 @@ const MarketplaceDrawer = () => {
 };
 
 export default MarketplaceDrawer;
+
+const styles = {
+  search: {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: "999px",
+      bgcolor: (theme: Theme) => alpha(theme.palette.action.hover, 0.05),
+      transition: "all 0.2s ease-in-out",
+      "& fieldset": {
+        borderColor: "divider",
+      },
+      "&:hover fieldset": {
+        borderColor: "action.disabled",
+      },
+      "&.Mui-focused": {
+        bgcolor: "background.paper",
+        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
+      },
+      "& input": {
+        fontSize: "18px",
+      },
+      "& input::placeholder": {
+        fontSize: "18px",
+        opacity: 0.8,
+        color: (theme: Theme) => alpha(theme.palette.text.disabled, 0.5),
+      },
+    },
+    mb: 1.5,
+  },
+};

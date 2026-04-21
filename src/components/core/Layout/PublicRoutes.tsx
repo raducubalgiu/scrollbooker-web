@@ -42,7 +42,7 @@ const PublicRoutes = ({
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
-        label: "Caută",
+        label: "Rezervă pe hartă",
         route: "/search",
         icon: <SearchOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,

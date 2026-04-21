@@ -57,6 +57,7 @@ const ExploreSidebar = ({
         return (
           <ExploreServicesTab
             postId={postId}
+            userId={user?.id}
             isLoadingPosts={isLoading}
             onNavigateToBooking={onNavigateToBooking}
           />
