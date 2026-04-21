@@ -29,7 +29,7 @@ const ProductCard = ({
   onOpenDetail,
   onNavigateToBooking,
 }: ProductCardProps) => {
-  const { name, description, has_different_offerings } = product;
+  const { name, description, has_different_prices } = product;
 
   const filtersText = ProductUtils.getFiltersSummary(product);
   const displayedPrice = ProductUtils.getPrice(product);
@@ -48,8 +48,10 @@ const ProductCard = ({
 
         return {
           bgcolor: isSelected ? selectedBg : baseBg,
-          p: 1.5,
-          borderRadius: 5,
+          p: 2.5,
+          borderRadius: 2.5,
+          border: 1.5,
+          borderColor: "divider",
           cursor: "pointer",
           transition: "all 0.2s ease",
 
@@ -68,22 +70,22 @@ const ProductCard = ({
         justifyContent="space-between"
       >
         <Box>
-          <Typography fontSize={18} fontWeight={600}>
+          <Typography fontSize={20} fontWeight={500}>
             {name}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body1" color="text.secondary">
             {filtersText}
           </Typography>
 
           <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
             <Typography fontSize={18} fontWeight={600}>
-              {has_different_offerings && "de la"}{" "}
-              {displayed_price_with_discount} RON
+              {has_different_prices && "de la"} {displayed_price_with_discount}{" "}
+              RON
             </Typography>
             {displayedDiscount > 0 && (
               <>
                 <Typography
-                  variant="body2"
+                  variant="body1"
                   color="text.secondary"
                   sx={{ textDecoration: "line-through" }}
                 >
@@ -112,8 +114,8 @@ const ProductCard = ({
             </IconButton>
           ) : (
             <Button
-              variant="contained"
-              color="primary"
+              variant="outlined"
+              color="secondary"
               disableElevation
               size="large"
               onClick={(e) => {

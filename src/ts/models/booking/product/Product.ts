@@ -1,5 +1,6 @@
 import { formatPrice } from "@/utils/formatPrice";
 import { SubFilter } from "../../nomenclatures/subFilter/SubFilter";
+import { Service } from "../../nomenclatures/service/Service";
 
 export interface ProductFilter {
   id: number;
@@ -17,7 +18,16 @@ export interface ProductOffering {
   price: number;
   price_with_discount: number;
   discount: number;
+}
+
+export interface ProductVariant {
+  id: number;
+  name: string;
   duration: number;
+  starting_price: number;
+  starting_price_with_discount: number;
+  has_different_prices: boolean;
+  offerings: ProductOffering[];
 }
 
 export interface Product {
@@ -32,13 +42,13 @@ export interface Product {
   type: string;
   sessions_count?: number | null;
   validity_days?: number | null;
-  offerings: ProductOffering[];
-  has_different_offerings: boolean;
-  filters: ProductFilter[];
+  starting_duration: number;
   starting_price: number;
   starting_price_with_discount: number;
   starting_discount: number;
-  starting_duration: number;
+  has_different_prices: boolean;
+  variants: ProductVariant[];
+  filters: ProductFilter[];
   created_at: string;
   updated_at: string;
 }
@@ -57,13 +67,7 @@ export const ProductUtils = {
   },
 
   getFiltersSummary(product: Product): string {
-    const duration = product.has_multiple_offerings
-      ? product.starting_duration
-      : product.offerings[0]?.duration;
-
-    if (!duration) return "";
-
-    const durationText = this.getDurationText(duration);
+    const durationText = this.getDurationText(product.starting_duration);
 
     const filterParts = product.filters
       .map((filter) => {
@@ -84,32 +88,25 @@ export const ProductUtils = {
   },
 
   getPrice(product: Product): string {
-    const price = product.has_different_offerings
-      ? product.starting_price
-      : product.offerings[0]?.price;
-
-    if (!price) return "";
-
-    return formatPrice(price);
+    return formatPrice(product.starting_price);
   },
 
   getPriceWithDiscount(product: Product): string {
-    const price_with_discount = product.has_different_offerings
-      ? product.starting_price_with_discount
-      : product.offerings[0]?.price_with_discount;
-
-    if (!price_with_discount) return "";
-
-    return formatPrice(price_with_discount);
+    return formatPrice(product.starting_price_with_discount);
   },
 
   getDiscount(product: Product): number {
-    const discount = product.has_different_offerings
-      ? product.starting_discount
-      : product.offerings[0]?.discount;
+    return product.starting_discount ?? 0;
+  },
 
-    if (!discount) return 0;
-
-    return discount;
+  getPriceLabel(product: Product): string {
+    const prefix = product.has_different_prices ? "de la " : "";
+    return `${prefix}${this.getPrice(product)}`;
   },
 };
+
+export interface BusinessProductsResponse {
+  service: Service;
+  products: Product[];
+}
+[];

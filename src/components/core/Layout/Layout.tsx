@@ -42,8 +42,13 @@ export default function Layout({ children }: MarketplaceLayoutProps) {
     [pathname]
   );
 
+  const isBookingPage = React.useMemo(
+    () => pathname.startsWith("/booking/"),
+    [pathname]
+  );
+
   const shouldShowDrawer =
-    !isBusinessPage && !isProfileVideoPage && !isPostPage;
+    !isBusinessPage && !isProfileVideoPage && !isPostPage && !isBookingPage;
 
   const theme = useTheme();
   const bgColor =
@@ -52,10 +57,6 @@ export default function Layout({ children }: MarketplaceLayoutProps) {
   const styles = React.useMemo(
     () => ({
       main: {
-        p: {
-          xs: 0,
-          md: isProfileVideoPage || isBusinessPage ? 0 : 2.5,
-        },
         width: "100%",
         bgcolor: isAdminPage ? "background.default" : bgColor,
       },
@@ -73,7 +74,7 @@ export default function Layout({ children }: MarketplaceLayoutProps) {
         borderColor: "divider",
       },
     }),
-    [bgColor, isProfileVideoPage, isAdminPage, isBusinessPage]
+    [bgColor, isAdminPage]
   );
 
   return (

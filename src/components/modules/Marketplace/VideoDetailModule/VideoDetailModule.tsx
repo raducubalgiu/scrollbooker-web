@@ -9,7 +9,6 @@ import { useMutate } from "@/hooks/useHttp";
 import PostActions from "../ExploreModule/PostActions";
 import ExploreSidebar from "../ExploreModule/sidebar/ExploreSidebar";
 import { PostVideoPlayer } from "../ExploreModule/PostVideoPlayer";
-import BookingModuleModal from "../BookingModule/BookingModuleModal";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -22,7 +21,6 @@ export default function VideoDetailModule({
   initialPost,
   tab,
 }: ProfileVideoDetailPageProps) {
-  const [openBooking, setOpenBooking] = React.useState(false);
   const [post, setPost] = React.useState<Post>(initialPost);
   const router = useRouter();
 
@@ -197,11 +195,6 @@ export default function VideoDetailModule({
 
   return (
     <Box sx={styles.container}>
-      <BookingModuleModal
-        open={openBooking}
-        onClose={() => setOpenBooking(false)}
-      />
-
       <IconButton
         onClick={(e) => {
           e.stopPropagation();
@@ -242,7 +235,7 @@ export default function VideoDetailModule({
           postId={post.id}
           user={post.user}
           businessLocation={post?.business_location}
-          onNavigateToBooking={() => setOpenBooking(true)}
+          onNavigateToBooking={() => router.back()}
         />
       </Box>
     </Box>

@@ -109,6 +109,7 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
 
       <ProfileTabs
         userId={profile.id}
+        businessId={profile.business_id}
         username={profile.username}
         businessOwnerId={business_owner?.id}
         isBusinessOrEmployee={is_business_or_employee}

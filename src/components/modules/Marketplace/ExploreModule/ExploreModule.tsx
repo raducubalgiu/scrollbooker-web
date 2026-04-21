@@ -12,7 +12,7 @@ import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
 import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
 import { ExploreVideoPool } from "./ExploreVideoPool";
 import MenuIcon from "@mui/icons-material/Menu";
-import BookingModuleModal from "../BookingModule/BookingModuleModal";
+import { useRouter } from "next/navigation";
 
 const PREFETCH_OFFSET = 2;
 
@@ -22,6 +22,7 @@ export default function ExploreModule() {
     Set<number>
   >(new Set());
   const [currentIndex, setCurrentIndex] = useState(0);
+  const router = useRouter();
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     useInfiniteExplorePosts(selectedBusinessTypes);
@@ -76,15 +77,8 @@ export default function ExploreModule() {
 
   const { user_actions, counters, is_video_review } = currentPost ?? {};
 
-  const [openBooking, setOpenBooking] = useState(false);
-
   return (
     <Box sx={styles.container}>
-      <BookingModuleModal
-        open={openBooking}
-        onClose={() => setOpenBooking(false)}
-      />
-
       <Box sx={styles.mainContent}>
         <Box sx={styles.leftSection}>
           <Box sx={styles.videoContainer}>
@@ -163,17 +157,15 @@ export default function ExploreModule() {
             </Slide>
           </Box>
 
-          {counters && user_actions && (
-            <PostActions
-              isLoading={isLoading}
-              counters={counters}
-              userActions={user_actions}
-              onCommentClick={() => {}}
-              onBookmarkClick={() => {}}
-              onLike={() => {}}
-              onShareClick={() => {}}
-            />
-          )}
+          <PostActions
+            isLoading={isLoading}
+            counters={counters}
+            userActions={user_actions}
+            onCommentClick={() => {}}
+            onBookmarkClick={() => {}}
+            onLike={() => {}}
+            onShareClick={() => {}}
+          />
         </Box>
 
         <ExploreSidebar
@@ -182,7 +174,9 @@ export default function ExploreModule() {
           postId={currentPost?.id}
           user={currentPost?.user}
           businessLocation={currentPost?.business_location}
-          onNavigateToBooking={() => setOpenBooking(true)}
+          onNavigateToBooking={(product) =>
+            router.push(`/booking/${product.business_id}`)
+          }
         />
       </Box>
 
@@ -244,6 +238,7 @@ const styles = {
     borderRadius: 4,
     overflow: "hidden",
     flexShrink: 0,
+    backgroundColor: "background.default",
   },
 
   drawerContainer: {

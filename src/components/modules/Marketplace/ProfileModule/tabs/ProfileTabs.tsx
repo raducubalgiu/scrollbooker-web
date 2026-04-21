@@ -44,7 +44,7 @@ const getTabs = (
 
   const Employees: ProfileTabType = {
     route: ProfileTabEnum.EMPLOYEES,
-    label: "Angajati",
+    label: "Specialiști",
     icon: <PeopleOutlinedIcon sx={{ fontSize: 30 }} />,
   };
 
@@ -72,6 +72,7 @@ type ProfileTabsProps = {
   isBusinessOrEmployee?: boolean;
   isMyProfile?: boolean;
   userId: number;
+  businessId: number | null;
   username: string;
   businessOwnerId: number | undefined;
   tab?: string | null | undefined;
@@ -81,6 +82,7 @@ const ProfileTabs = ({
   isBusinessOrEmployee = false,
   isMyProfile = false,
   userId,
+  businessId,
   username,
   businessOwnerId,
   tab,
@@ -130,7 +132,7 @@ const ProfileTabs = ({
       case ProfileTabEnum.POSTS:
         return <ProfilePostsTab userId={userId} username={username} />;
       case ProfileTabEnum.PRODUCTS:
-        return <ProfileProductsTab />;
+        return <ProfileProductsTab businessId={businessId} userId={userId} />;
       case ProfileTabEnum.EMPLOYEES:
         return <ProfileEmployeesTab businessOwnerId={businessOwnerId} />;
       case ProfileTabEnum.BOOKMARKS:
@@ -168,9 +170,10 @@ export default ProfileTabs;
 const styles = {
   container: {
     width: "100%",
-    position: "sticky",
-    top: 0,
-    zIndex: 1200,
+    //position: "sticky",
+    //height: 58,
+    //top: 0,
+    //zIndex: 1200,
     bgcolor: "background.paper",
     mt: 5,
     borderBottom: 1,
@@ -200,7 +203,6 @@ const styles = {
         xs: 20,
         md: 25,
         lg: 30,
-        xl: 35,
       },
     },
   },

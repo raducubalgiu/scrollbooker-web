@@ -8,8 +8,8 @@ import { PostCounters, PostUserActions } from "@/ts/models/social/Post";
 
 type PostActionsProps = {
   isLoading: boolean;
-  counters: PostCounters | null;
-  userActions: PostUserActions | null;
+  counters?: PostCounters | undefined;
+  userActions?: PostUserActions | undefined;
   onLike: () => void;
   onCommentClick: () => void;
   onBookmarkClick: () => void;
