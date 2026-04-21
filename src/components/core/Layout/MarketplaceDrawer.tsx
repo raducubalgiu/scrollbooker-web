@@ -10,6 +10,7 @@ import {
   TextField,
   Typography,
   Theme,
+  IconButton,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { usePathname, useRouter } from "next/navigation";
@@ -26,7 +27,13 @@ export type ScrollBookerRoute = {
   permission: PermissionEnum;
 };
 
-const MarketplaceDrawer = () => {
+const MarketplaceDrawer = ({
+  isCollapsed,
+  onCollapse,
+}: {
+  isCollapsed: boolean;
+  onCollapse: () => void;
+}) => {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const isLoading = status === "loading";
@@ -72,30 +79,57 @@ const MarketplaceDrawer = () => {
         component="div"
         fontWeight={600}
         fontSize={30}
-        sx={{ mb: 2.5 }}
+        sx={{ mb: 2.5, textAlign: isCollapsed ? "center" : "start" }}
       >
-        ScrollBooker
+        {isCollapsed ? "S" : "ScrollBooker"}
       </Typography>
 
       <Box>
-        <TextField
-          placeholder="Cauta utilizatori"
-          variant="outlined"
-          fullWidth
-          sx={styles.search}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
-                </InputAdornment>
-              ),
-            },
-          }}
-        />
+        {isCollapsed ? (
+          <IconButton
+            onClick={onCollapse}
+            sx={{
+              width: 60,
+              height: 60,
+              mx: "auto",
+              mb: 1.5,
+              display: "flex",
+              bgcolor: (theme) => alpha(theme.palette.action.hover, 0.05),
+              border: "1px solid",
+              borderColor: "divider",
+              "&:hover": {
+                bgcolor: (theme) => alpha(theme.palette.action.hover, 0.1),
+                borderColor: "action.disabled",
+              },
+              transition: "all 200ms ease",
+            }}
+          >
+            <SearchIcon sx={{ color: "text.secondary", fontSize: 28 }} />
+          </IconButton>
+        ) : (
+          <TextField
+            autoFocus={false}
+            placeholder="Cauta utilizatori"
+            variant="outlined"
+            fullWidth
+            onFocus={onCollapse}
+            onBlur={() => {}}
+            sx={styles.search}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        )}
         <PublicRoutes
           session={session}
           isSelected={isSelected}
+          isCollapsed={isCollapsed}
           onNavigate={navigate}
         />
         <DrawerPopper
@@ -118,9 +152,10 @@ const MarketplaceDrawer = () => {
             hasEmployees={session?.has_employees ?? false}
             isSelected={isSelected}
             onNavigate={navigate}
+            isCollapsed={isCollapsed}
           />
         )}
-        {!isAuthenticated && !isLoading && (
+        {!isAuthenticated && !isLoading && !isCollapsed && (
           <Button
             variant="outlined"
             disableElevation

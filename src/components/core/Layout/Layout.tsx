@@ -1,107 +1,161 @@
 "use client";
 
 import * as React from "react";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import { Drawer } from "@mui/material";
+import { usePathname } from "next/navigation";
+import { useTheme, Theme } from "@mui/material/styles";
+import { Backdrop, Box, CssBaseline, Drawer, Slide } from "@mui/material";
+
 import MarketplaceDrawer from "./MarketplaceDrawer";
 import MarketplaceBottomBar from "./MarketplaceBottomBar";
-import { useTheme } from "@mui/material/styles";
-import { usePathname } from "next/navigation";
+import NotificationsModule from "@/components/modules/Admin/NotificationsModule/NotificationsModule";
 
-const DRAWER_WIDTH = 300;
+const DRAWER_WIDTH = 340;
+const COLLAPSED_WIDTH = 110;
+const OVERLAY_WIDTH = 450;
 
-interface MarketplaceLayoutProps {
-  children: React.ReactNode;
-}
+type ActiveView = "search" | "notifications" | "appointments" | null;
 
-export default function Layout({ children }: MarketplaceLayoutProps) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || "";
+  const theme = useTheme();
+  const [activeView, setActiveView] = React.useState<ActiveView>(null);
 
-  const isBusinessPage = React.useMemo(
-    () => pathname.startsWith("/business/"),
-    [pathname]
-  );
+  const isCollapsed = activeView !== null;
 
-  const isAdminPage = React.useMemo(
-    () => pathname.startsWith("/admin/"),
-    [pathname]
-  );
+  const handleToggleView = React.useCallback((view: ActiveView) => {
+    setActiveView((prev) => (prev === view ? null : view));
+  }, []);
 
-  const isProfileVideoPage = React.useMemo(() => {
-    const segments = pathname.split("/").filter(Boolean);
+  const handleCloseAll = React.useCallback(() => setActiveView(null), []);
+
+  const isSpecialPage = React.useMemo(() => {
+    const specialPaths = ["/business/", "/post/", "/booking/"];
+    const isProfileVideo =
+      pathname.startsWith("/profile/") && pathname.includes("/video/");
     return (
-      segments.length === 4 &&
-      segments[0] === "profile" &&
-      segments[2] === "video"
+      isProfileVideo || specialPaths.some((path) => pathname.startsWith(path))
     );
   }, [pathname]);
 
-  const isPostPage = React.useMemo(
-    () => pathname.startsWith("/post/"),
-    [pathname]
-  );
-
-  const isBookingPage = React.useMemo(
-    () => pathname.startsWith("/booking/"),
-    [pathname]
-  );
-
-  const shouldShowDrawer =
-    !isBusinessPage && !isProfileVideoPage && !isPostPage && !isBookingPage;
-
-  const theme = useTheme();
+  const isAdminPage = pathname.startsWith("/admin/");
+  const shouldShowDrawer = !isSpecialPage;
   const bgColor =
     theme.palette.mode === "dark" ? "background.default" : "background.paper";
 
   const styles = React.useMemo(
-    () => ({
-      main: {
-        width: "100%",
-        bgcolor: isAdminPage ? "background.default" : bgColor,
-      },
-      box: {
-        display: "flex",
-        minHeight: "100vh",
-      },
-      paper: {
-        bgcolor: bgColor,
-        boxSizing: "border-box",
-        width: DRAWER_WIDTH,
-        transition: "width 200ms ease",
-        boxShadow: "none",
-        borderRight: isAdminPage ? 1 : 0,
-        borderColor: "divider",
-      },
-    }),
-    [bgColor, isAdminPage]
+    () => getStyles(theme, isCollapsed, isAdminPage, bgColor),
+    [theme, isCollapsed, isAdminPage, bgColor]
   );
 
   return (
-    <Box sx={styles.box}>
+    <Box sx={styles.layoutContainer}>
       <CssBaseline />
+
+      <Backdrop
+        open={isCollapsed}
+        onClick={handleCloseAll}
+        sx={styles.backdrop}
+      />
+
       {shouldShowDrawer && (
-        <Box
-          component="nav"
-          sx={{
-            width: { sm: DRAWER_WIDTH },
-            flexShrink: { sm: 0 },
-            display: { xs: "none", lg: "block" },
-          }}
-        >
+        <Box component="nav" sx={styles.navWrapper}>
           <Drawer
             variant="permanent"
             open
-            slotProps={{ paper: { sx: styles.paper } }}
+            slotProps={{ paper: { sx: styles.drawerPaper } }}
+            sx={styles.drawerRoot}
           >
-            <MarketplaceDrawer />
+            <MarketplaceDrawer
+              isCollapsed={isCollapsed}
+              onCollapse={() => handleToggleView("notifications")}
+            />
           </Drawer>
         </Box>
       )}
-      <Box component="main" sx={styles.main}>
+
+      <Slide
+        in={isCollapsed}
+        direction="right"
+        timeout={300}
+        mountOnEnter
+        unmountOnExit
+      >
+        <Box sx={styles.overlayContainer}>
+          <Box sx={styles.overlayContent}>
+            <NotificationsModule />
+          </Box>
+        </Box>
+      </Slide>
+
+      <Box component="main" sx={styles.mainContent}>
         {children}
       </Box>
+
       <MarketplaceBottomBar />
     </Box>
   );
 }
+
+const getStyles = (
+  theme: Theme,
+  isCollapsed: boolean,
+  isAdminPage: boolean,
+  bgColor: string
+) => ({
+  layoutContainer: {
+    display: "flex",
+    minHeight: "100vh",
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer - 2,
+    bgcolor: "rgba(0, 0, 0, 0.4)",
+  },
+  navWrapper: {
+    width: { lg: DRAWER_WIDTH },
+    flexShrink: 0,
+    display: { xs: "none", lg: "block" },
+  },
+  drawerRoot: {
+    "& .MuiDrawer-paper": { transition: "none !important" },
+  },
+  drawerPaper: {
+    width: isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH,
+    bgcolor: bgColor,
+    boxSizing: "border-box",
+    boxShadow: "none",
+    borderRight: "1px solid",
+    borderColor: isCollapsed ? "divider" : "transparent",
+    overflowX: "hidden",
+    transition: "none !important",
+    zIndex: theme.zIndex.drawer,
+  },
+  overlayContainer: {
+    position: "fixed",
+    left: COLLAPSED_WIDTH,
+    top: 0,
+    bottom: 0,
+    width: OVERLAY_WIDTH,
+    bgcolor: "background.paper",
+    zIndex: theme.zIndex.drawer - 1,
+    borderRight: "1px solid",
+    borderColor: "divider",
+    boxShadow: "20px 0 40px rgba(0,0,0,0.05)",
+    p: 3,
+    overflowY: "auto",
+    "&::-webkit-scrollbar": { width: "6px" },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: theme.palette.divider,
+      borderRadius: "10px",
+    },
+  },
+  overlayContent: {
+    opacity: isCollapsed ? 1 : 0,
+    transition: "opacity 0.2s",
+  },
+  mainContent: {
+    flexGrow: 1,
+    width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
+    bgcolor: isAdminPage ? "background.default" : bgColor,
+    minWidth: 0,
+  },
+});

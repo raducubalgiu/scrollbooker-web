@@ -1,5 +1,4 @@
-import React from "react";
-import { ScrollBookerRoute } from "./MarketplaceDrawer";
+import React, { memo } from "react";
 import {
   Badge,
   ListItem,
@@ -22,70 +21,74 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 type PublicRoutesProps = {
   session: Session | null;
   isSelected: (route: string) => boolean;
+  isCollapsed: boolean;
   onNavigate: (
     route: string,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
 };
 
+const GET_PUBLIC_ROUTES = (username?: string) => [
+  {
+    label: "Explorează",
+    route: "/",
+    icon: <VideoLibraryOutlinedIcon />,
+    permission: PermissionEnum.NO_PROTECTION,
+  },
+  {
+    label: "Rezervă pe hartă",
+    route: "/search",
+    icon: <SearchOutlinedIcon />,
+    permission: PermissionEnum.NO_PROTECTION,
+  },
+  {
+    label: "Rezervări",
+    route: "/appointments",
+    icon: (
+      <Badge badgeContent={0} color="error">
+        <QueryBuilderOutlinedIcon />
+      </Badge>
+    ),
+    permission: PermissionEnum.NO_PROTECTION,
+  },
+  {
+    label: "Notificări",
+    route: "/notifications",
+    icon: (
+      <Badge badgeContent={4} color="error">
+        <NotificationsNoneOutlinedIcon />
+      </Badge>
+    ),
+    permission: PermissionEnum.NO_PROTECTION,
+  },
+  {
+    label: "Profil",
+    route: `/profile/${username}`,
+    icon: <PersonOutlineOutlinedIcon />,
+    permission: PermissionEnum.NO_PROTECTION,
+  },
+  {
+    label: "Upload",
+    route: `/upload-video`,
+    icon: <AddBoxOutlinedIcon />,
+    permission: PermissionEnum.NO_PROTECTION,
+  },
+  {
+    label: "Mai mult",
+    route: "/more",
+    icon: <MoreHorizOutlinedIcon />,
+    permission: PermissionEnum.NO_PROTECTION,
+  },
+];
+
 const PublicRoutes = ({
   session,
   isSelected,
+  isCollapsed,
   onNavigate,
 }: PublicRoutesProps) => {
-  const publicRoutes: ScrollBookerRoute[] = React.useMemo(
-    () => [
-      {
-        label: "Explorează",
-        route: "/",
-        icon: <VideoLibraryOutlinedIcon />,
-        permission: PermissionEnum.NO_PROTECTION,
-      },
-      {
-        label: "Rezervă pe hartă",
-        route: "/search",
-        icon: <SearchOutlinedIcon />,
-        permission: PermissionEnum.NO_PROTECTION,
-      },
-      {
-        label: "Rezervări",
-        route: "/appointments",
-        icon: (
-          <Badge badgeContent={0} color="error">
-            <QueryBuilderOutlinedIcon />
-          </Badge>
-        ),
-        permission: PermissionEnum.NO_PROTECTION,
-      },
-      {
-        label: "Notificări",
-        route: "/notifications",
-        icon: (
-          <Badge badgeContent={4} color="error">
-            <NotificationsNoneOutlinedIcon />
-          </Badge>
-        ),
-        permission: PermissionEnum.NO_PROTECTION,
-      },
-      {
-        label: "Profil",
-        route: `/profile/${session?.username}`,
-        icon: <PersonOutlineOutlinedIcon />,
-        permission: PermissionEnum.NO_PROTECTION,
-      },
-      {
-        label: "Upload",
-        route: `/upload-video`,
-        icon: <AddBoxOutlinedIcon />,
-        permission: PermissionEnum.NO_PROTECTION,
-      },
-      {
-        label: "Mai mult",
-        route: "/more",
-        icon: <MoreHorizOutlinedIcon />,
-        permission: PermissionEnum.NO_PROTECTION,
-      },
-    ],
+  const publicRoutes = React.useMemo(
+    () => GET_PUBLIC_ROUTES(session?.username),
     [session?.username]
   );
 
@@ -93,12 +96,13 @@ const PublicRoutes = ({
     () => ({
       button: {
         width: "100%",
-        px: 1.5,
         py: 1.25,
         borderRadius: 2,
-        justifyContent: "flex-start",
-        gap: 1.25,
-        transition: "background-color 150ms ease, transform 120ms ease",
+        px: isCollapsed ? 0 : 1.5,
+        justifyContent: isCollapsed ? "center" : "flex-start",
+        gap: isCollapsed ? 0 : 1.25,
+        minHeight: 56,
+        transition: "none !important",
         bgcolor: "transparent",
         "&.Mui-selected": {
           bgcolor: "transparent !important",
@@ -107,46 +111,48 @@ const PublicRoutes = ({
           bgcolor: (theme: Theme) => `${theme.palette.action.hover} !important`,
         },
       },
-      iconDefault: { color: "text.secondary", "& svg": { fontSize: 32 } },
-      iconSelected: { color: "primary.main", "& svg": { fontSize: 32 } },
-      textDefault: { fontSize: 20, fontWeight: 600, color: "text.secondary" },
-      textSelected: { fontSize: 20, fontWeight: 600, color: "primary.main" },
+      getIconStyles: (selected: boolean) => ({
+        minWidth: isCollapsed ? 0 : 40,
+        justifyContent: "center",
+        display: "flex",
+        color: selected ? "primary.main" : "text.secondary",
+        "& svg": { fontSize: 32 },
+      }),
+      getTextStyles: (selected: boolean) => ({
+        fontSize: 20,
+        fontWeight: 600,
+        color: selected ? "primary.main" : "text.secondary",
+        display: isCollapsed ? "none" : "block",
+        whiteSpace: "nowrap",
+      }),
     }),
-    []
+    [isCollapsed]
   );
 
   return (
     <>
       {publicRoutes.map((el) => {
+        const selected = isSelected(el.route);
         return (
           <ListItem disablePadding sx={{ px: 0 }} key={el.route}>
             <ListItemButton
               onClick={(e) => onNavigate(el.route, e)}
-              selected={isSelected(el.route)}
+              selected={selected}
               sx={styles.button}
             >
-              <ListItemIcon
-                sx={
-                  isSelected(el.route)
-                    ? styles.iconSelected
-                    : styles.iconDefault
-                }
-              >
+              <ListItemIcon sx={styles.getIconStyles(selected)}>
                 {el.icon}
               </ListItemIcon>
-              <ListItemText
-                primary={
-                  <Typography
-                    sx={
-                      isSelected(el.route)
-                        ? styles.textSelected
-                        : styles.textDefault
-                    }
-                  >
-                    {el.label}
-                  </Typography>
-                }
-              />
+
+              {!isCollapsed && (
+                <ListItemText
+                  primary={
+                    <Typography sx={styles.getTextStyles(selected)}>
+                      {el.label}
+                    </Typography>
+                  }
+                />
+              )}
             </ListItemButton>
           </ListItem>
         );
@@ -155,4 +161,4 @@ const PublicRoutes = ({
   );
 };
 
-export default PublicRoutes;
+export default memo(PublicRoutes);
