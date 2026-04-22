@@ -11,20 +11,26 @@ type ProductsStepProps = {
   sync: ScrollSyncResult;
   businessProducts: BusinessProductsResponse[];
   scrollOffset: number;
+  displayTitle?: boolean;
+  top?: number;
 };
 
 const ProductsStep = ({
   sync,
   businessProducts,
   scrollOffset,
+  top = 90,
+  displayTitle = true,
 }: ProductsStepProps) => {
   return (
-    <Box sx={{ minWidth: 0, mt: 3 }}>
-      <Typography fontWeight={800} fontSize={47.5}>
-        Servicii
-      </Typography>
+    <Box sx={{ minWidth: 0 }}>
+      {displayTitle && (
+        <Typography fontWeight={800} fontSize={47.5} mt={3}>
+          Servicii
+        </Typography>
+      )}
 
-      <BookingTabs sync={sync} services={businessProducts} />
+      <BookingTabs top={top} sync={sync} services={businessProducts} />
 
       <Box>
         {businessProducts.map((group, index) => (

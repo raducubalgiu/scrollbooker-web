@@ -1,4 +1,4 @@
-import { CurrencyResponse } from "../../nomenclatures/currency/Currency";
+import { Currency } from "../../nomenclatures/currency/Currency";
 import { AppointmentChannelEnum } from "./AppointmentChannelEnum";
 import { AppointmentStatusEnum } from "./AppointmentStatusEnum";
 
@@ -8,7 +8,7 @@ interface AppointmentProducts {
   price: number;
   price_with_discount: number;
   duration: number;
-  currency: CurrencyResponse;
+  currency: Currency;
   converted_price_with_discount: number;
   exchange_rate?: number | null;
 }
@@ -54,7 +54,7 @@ export interface Appointment {
   total_price_with_discount: number;
   total_discount: number;
   total_duration: number;
-  payment_currency: CurrencyResponse;
+  payment_currency: Currency;
   has_written_review: boolean;
   has_video_review: boolean;
   written_review: AppointmentWrittenReview;

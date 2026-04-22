@@ -6,14 +6,16 @@ import { ScrollSyncResult } from "../../useScrollSync";
 export const BookingTabs = ({
   sync,
   services,
+  top = 90,
 }: {
   sync: ScrollSyncResult;
   services: BusinessProductsResponse[];
+  top?: number;
 }) => (
   <Box
     sx={{
       position: "sticky",
-      top: 90,
+      top: top,
       zIndex: 10,
       bgcolor: "background.paper",
       mx: -2.5,

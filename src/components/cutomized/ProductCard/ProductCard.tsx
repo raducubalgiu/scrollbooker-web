@@ -74,7 +74,7 @@ const ProductCard = ({
         justifyContent="space-between"
       >
         <Box>
-          <Typography fontSize={20} fontWeight={500}>
+          <Typography fontSize={19} fontWeight={500}>
             {name}
           </Typography>
           <Typography variant="body1" color="text.secondary">
