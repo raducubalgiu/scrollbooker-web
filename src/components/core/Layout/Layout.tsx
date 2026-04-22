@@ -54,7 +54,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       case "search":
         return (
           <SearchUsersModule
-            onSearchUser={(username) => {
+            onNavigateToUserProfile={(username) => {
               handleCloseAll();
               router.push(`/profile/${username}`);
             }}
