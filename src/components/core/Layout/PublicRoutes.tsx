@@ -28,6 +28,7 @@ type PublicRoutesProps = {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
   onOpenNotificationsView: () => void;
+  onOpenAppointmentsView: () => void;
 };
 
 type NavigationItem = {
@@ -45,9 +46,11 @@ const ITEM_GAP = 10;
 const getPublicRoutes = ({
   username,
   onOpenNotificationsView,
+  onOpenAppointmentsView,
 }: {
   username: string | undefined;
   onOpenNotificationsView: () => void;
+  onOpenAppointmentsView: () => void;
 }): NavigationItem[] => [
   {
     label: "Explorează",
@@ -56,7 +59,7 @@ const getPublicRoutes = ({
     permission: PermissionEnum.NO_PROTECTION,
   },
   {
-    label: "Rezervă pe hartă",
+    label: "Servicii",
     route: "/search",
     icon: <SearchOutlinedIcon />,
     permission: PermissionEnum.NO_PROTECTION,
@@ -70,6 +73,7 @@ const getPublicRoutes = ({
       </Badge>
     ),
     permission: PermissionEnum.NO_PROTECTION,
+    onClick: () => onOpenAppointmentsView(),
   },
   {
     label: "Notificări",
@@ -107,12 +111,14 @@ const PublicRoutes = ({
   isCollapsed,
   onNavigate,
   onOpenNotificationsView,
+  onOpenAppointmentsView,
 }: PublicRoutesProps) => {
   const publicRoutes = React.useMemo(
     () =>
       getPublicRoutes({
         username: session?.username,
         onOpenNotificationsView,
+        onOpenAppointmentsView,
       }),
     [session?.username, onOpenNotificationsView]
   );
@@ -143,7 +149,7 @@ const PublicRoutes = ({
       getIconStyles: (selected: boolean) => ({
         minWidth: "unset",
         width: ICON_SLOT_SIZE,
-        height: 56,
+        height: 25,
         m: 0,
         display: "inline-flex",
         alignItems: "center",

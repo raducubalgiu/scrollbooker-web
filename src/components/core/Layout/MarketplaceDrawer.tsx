@@ -23,6 +23,7 @@ type MarketplaceDrawerProps = {
   isCollapsed: boolean;
   onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
+  onOpenAppointmentsView: () => void;
 };
 
 const DRAWER_PADDING_X = 20;
@@ -34,6 +35,7 @@ const MarketplaceDrawer = ({
   isCollapsed,
   onOpenSearchView,
   onOpenNotificationsView,
+  onOpenAppointmentsView,
 }: MarketplaceDrawerProps) => {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
@@ -136,6 +138,7 @@ const MarketplaceDrawer = ({
           isCollapsed={isCollapsed}
           onNavigate={navigate}
           onOpenNotificationsView={onOpenNotificationsView}
+          onOpenAppointmentsView={onOpenAppointmentsView}
         />
 
         <DrawerPopper

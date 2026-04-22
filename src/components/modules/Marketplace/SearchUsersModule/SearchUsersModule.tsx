@@ -48,7 +48,7 @@ const SearchUsersModule = ({
         variant="h6"
         noWrap
         component="div"
-        fontWeight={600}
+        fontWeight={700}
         fontSize={25}
         sx={{ mb: 2.5 }}
       >

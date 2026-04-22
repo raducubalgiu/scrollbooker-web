@@ -13,7 +13,7 @@ import SearchUsersModule from "@/components/modules/Marketplace/SearchUsersModul
 
 const DRAWER_WIDTH = 340;
 const COLLAPSED_WIDTH = 110;
-const OVERLAY_WIDTH = 450;
+const OVERLAY_WIDTH = 500;
 
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
@@ -70,6 +70,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     () => setActiveView("notifications"),
     []
   );
+  const handleOpenAppointments = React.useCallback(
+    () => setActiveView("appointments"),
+    []
+  );
 
   return (
     <Box sx={styles.layoutContainer}>
@@ -93,6 +97,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               isCollapsed={isCollapsed}
               onOpenSearchView={handleOpenSearch}
               onOpenNotificationsView={handleOpenNotifications}
+              onOpenAppointmentsView={handleOpenAppointments}
             />
           </Drawer>
         </Box>

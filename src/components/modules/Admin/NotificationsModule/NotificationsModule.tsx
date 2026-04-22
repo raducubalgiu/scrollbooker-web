@@ -10,14 +10,8 @@ import { useInfiniteNotifications } from "@/hooks/infiniteQuery/useInfiniteNotif
 const NotificationsModule = () => {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const {
-    data,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    isLoading,
-    refetch,
-  } = useInfiniteNotifications();
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
+    useInfiniteNotifications();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,7 +38,7 @@ const NotificationsModule = () => {
         variant="h6"
         noWrap
         component="div"
-        fontWeight={600}
+        fontWeight={700}
         fontSize={25}
         sx={{ mb: 2.5 }}
       >
@@ -55,11 +49,7 @@ const NotificationsModule = () => {
 
       {!isLoading &&
         notifications?.map((notification) => (
-          <NotificationItem
-            key={notification.id}
-            notification={notification}
-            refetchNotifications={refetch}
-          />
+          <NotificationItem key={notification.id} notification={notification} />
         ))}
 
       <Box
