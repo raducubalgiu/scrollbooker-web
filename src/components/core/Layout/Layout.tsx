@@ -63,7 +63,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       default:
         return null;
     }
-  }, [activeView, router]);
+  }, [activeView, handleCloseAll, router]);
 
   const handleOpenSearch = React.useCallback(() => setActiveView("search"), []);
   const handleOpenNotifications = React.useCallback(
@@ -139,7 +139,9 @@ const getStyles = (
     display: { xs: "none", lg: "block" },
   },
   drawerRoot: {
-    "& .MuiDrawer-paper": { transition: "none !important" },
+    "& .MuiDrawer-paper": {
+      transition: "none !important",
+    },
   },
   drawerPaper: {
     width: isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH,

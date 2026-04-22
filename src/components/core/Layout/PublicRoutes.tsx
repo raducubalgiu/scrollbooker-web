@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import {
   Badge,
+  Box,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -36,6 +37,10 @@ type NavigationItem = {
   route?: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
+
+const DRAWER_PADDING_X = 15;
+const ICON_SLOT_SIZE = 72;
+const ITEM_GAP = 10;
 
 const getPublicRoutes = ({
   username,
@@ -78,7 +83,7 @@ const getPublicRoutes = ({
   },
   {
     label: "Profil",
-    route: `/profile/${username}`,
+    route: username ? `/profile/${username}` : "/api/auth/signin",
     icon: <PersonOutlineOutlinedIcon />,
     permission: PermissionEnum.NO_PROTECTION,
   },
@@ -116,14 +121,17 @@ const PublicRoutes = ({
     () => ({
       button: {
         width: "100%",
-        py: 1.25,
-        borderRadius: 2,
-        px: isCollapsed ? 0 : 1.5,
-        justifyContent: isCollapsed ? "center" : "flex-start",
-        gap: isCollapsed ? 0 : 1.25,
         minHeight: 56,
-        transition: "none !important",
+        borderRadius: 2,
+        px: `${DRAWER_PADDING_X}px`,
+        py: 0.75,
+        display: "grid",
+        gridTemplateColumns: `${ICON_SLOT_SIZE}px minmax(0, 1fr)`,
+        alignItems: "center",
+        columnGap: `${ITEM_GAP}px`,
+        justifyContent: "flex-start",
         bgcolor: "transparent",
+        transition: "none !important",
         "&.Mui-selected": {
           bgcolor: "transparent !important",
         },
@@ -131,19 +139,36 @@ const PublicRoutes = ({
           bgcolor: (theme: Theme) => `${theme.palette.action.hover} !important`,
         },
       },
+
       getIconStyles: (selected: boolean) => ({
-        minWidth: isCollapsed ? 0 : 40,
+        minWidth: "unset",
+        width: ICON_SLOT_SIZE,
+        height: 56,
+        m: 0,
+        display: "inline-flex",
+        alignItems: "center",
         justifyContent: "center",
-        display: "flex",
         color: selected ? "primary.main" : "text.secondary",
-        "& svg": { fontSize: 32 },
+        "& svg": {
+          fontSize: 32,
+        },
       }),
+
+      textWrapper: {
+        minWidth: 0,
+        overflow: "hidden",
+        width: isCollapsed ? 0 : "auto",
+        opacity: isCollapsed ? 0 : 1,
+        pointerEvents: isCollapsed ? "none" : "auto",
+      },
+
       getTextStyles: (selected: boolean) => ({
         fontSize: 20,
         fontWeight: 600,
         color: selected ? "primary.main" : "text.secondary",
-        display: isCollapsed ? "none" : "block",
         whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
       }),
     }),
     [isCollapsed]
@@ -182,7 +207,7 @@ const PublicRoutes = ({
                 {item.icon}
               </ListItemIcon>
 
-              {!isCollapsed && (
+              <Box sx={styles.textWrapper}>
                 <ListItemText
                   primary={
                     <Typography sx={styles.getTextStyles(selected)}>
@@ -190,7 +215,7 @@ const PublicRoutes = ({
                     </Typography>
                   }
                 />
-              )}
+              </Box>
             </ListItemButton>
           </ListItem>
         );

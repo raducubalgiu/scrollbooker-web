@@ -24,7 +24,6 @@ import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOu
 
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { ScrollBookerRoute } from "./MarketplaceDrawer";
 
 type AdminRoutesProps = {
   hasEmployees: boolean;
@@ -36,6 +35,21 @@ type AdminRoutesProps = {
   ) => void;
 };
 
+type NavigationItem = {
+  label: string;
+  icon: React.ReactNode;
+  permission: PermissionEnum;
+  route: string;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+};
+
+const DRAWER_PADDING_X = 15;
+const ICON_SLOT_SIZE = 72;
+const ADMIN_ITEM_HEIGHT = 48;
+const ADMIN_ICON_SIZE = 26;
+const ADMIN_FONT_SIZE = 16;
+const ADMIN_GAP = 8;
+
 const AdminRoutes = ({
   hasEmployees,
   isSelected,
@@ -45,8 +59,7 @@ const AdminRoutes = ({
   const [openMyBusiness, setOpenMyBusiness] = React.useState(true);
   const [openNomenclatures, setOpenNomenclatures] = React.useState(false);
 
-  // 1. Definirea rutelor în useMemo pentru a evita recrearea obiectelor la fiecare randare
-  const adminRoutes: ScrollBookerRoute[] = React.useMemo(
+  const adminRoutes: NavigationItem[] = React.useMemo(
     () => [
       {
         label: "Calendar",
@@ -94,7 +107,7 @@ const AdminRoutes = ({
     []
   );
 
-  const nomenclaturesRoutes: ScrollBookerRoute[] = React.useMemo(
+  const nomenclaturesRoutes: NavigationItem[] = React.useMemo(
     () => [
       {
         label: "Validează afacerea",
@@ -158,78 +171,116 @@ const AdminRoutes = ({
     () => ({
       button: {
         width: "100%",
-        px: isCollapsed ? 0 : 1.5,
-        py: 1.25,
+        minHeight: ADMIN_ITEM_HEIGHT,
         borderRadius: 2,
-        justifyContent: isCollapsed ? "center" : "flex-start",
-        gap: isCollapsed ? 0 : 1.25,
-        transition: "none !important",
+        px: `${DRAWER_PADDING_X}px`,
+        py: 0.5,
+        display: "grid",
+        gridTemplateColumns: `${ICON_SLOT_SIZE}px minmax(0, 1fr)`,
+        alignItems: "center",
+        columnGap: `${ADMIN_GAP}px`,
+        justifyContent: "flex-start",
         bgcolor: "transparent",
-        "&.Mui-selected": { bgcolor: "transparent !important" },
-        "&:hover": {
+        transition: "none !important",
+        "&.Mui-selected": {
+          bgcolor: "transparent !important",
+        },
+        "&:hover, &.Mui-selected:hover": {
           bgcolor: (theme: Theme) => `${theme.palette.action.hover} !important`,
         },
       },
-      iconContainer: (selected: boolean) => ({
-        minWidth: isCollapsed ? 0 : 40,
-        display: "flex",
+
+      getIconStyles: (selected: boolean) => ({
+        minWidth: "unset",
+        width: ICON_SLOT_SIZE,
+        height: ADMIN_ITEM_HEIGHT,
+        m: 0,
+        display: "inline-flex",
+        alignItems: "center",
         justifyContent: "center",
         color: selected ? "primary.main" : "text.secondary",
-        "& svg": { fontSize: 28 },
-        transition: "none !important",
+        "& svg": {
+          fontSize: ADMIN_ICON_SIZE,
+        },
       }),
+
+      textWrapper: {
+        minWidth: 0,
+        overflow: "hidden",
+        width: isCollapsed ? 0 : "auto",
+        opacity: isCollapsed ? 0 : 1,
+        pointerEvents: isCollapsed ? "none" : "auto",
+      },
+
+      textHeaderRow: {
+        minHeight: 40,
+        px: `${DRAWER_PADDING_X}px`,
+        mt: 1,
+        mb: 0.5,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderRadius: 2,
+      },
+
       textHeader: {
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: 700,
         color: "text.disabled",
         textTransform: "uppercase",
         letterSpacing: "1px",
-        whiteSpace: "nowrap",
       },
-      textItem: (selected: boolean) => ({
-        fontSize: 17,
+
+      getTextItemStyles: (selected: boolean) => ({
+        fontSize: ADMIN_FONT_SIZE,
         fontWeight: 600,
         color: selected ? "primary.main" : "text.secondary",
         whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
       }),
+
       separator: {
         height: "1px",
         bgcolor: "divider",
         my: 2,
-        mx: 2,
+        mx: `${DRAWER_PADDING_X}px`,
         display: isCollapsed ? "block" : "none",
       },
     }),
     [isCollapsed]
   );
 
-  const renderRouteList = (routes: ScrollBookerRoute[]) => (
+  const renderRouteList = (routes: NavigationItem[]) => (
     <List component="div" disablePadding>
-      {routes.map((route, i) => {
-        if (route.route === "/admin/my-business/employees" && !hasEmployees)
+      {routes.map((route) => {
+        if (route.route === "/admin/my-business/employees" && !hasEmployees) {
           return null;
+        }
+
         const selected = isSelected(route.route);
 
         return (
-          <Protected key={i} permission={route.permission}>
+          <Protected key={route.route} permission={route.permission}>
             <ListItem disablePadding sx={{ px: 0 }}>
               <ListItemButton
                 onClick={(e) => onNavigate(route.route, e)}
                 selected={selected}
                 sx={styles.button}
               >
-                <ListItemIcon sx={styles.iconContainer(selected)}>
+                <ListItemIcon sx={styles.getIconStyles(selected)}>
                   {route.icon}
                 </ListItemIcon>
-                {!isCollapsed && (
+
+                <Box sx={styles.textWrapper}>
                   <ListItemText
                     primary={
-                      <Typography sx={styles.textItem(selected)}>
+                      <Typography sx={styles.getTextItemStyles(selected)}>
                         {route.label}
                       </Typography>
                     }
                   />
-                )}
+                </Box>
               </ListItemButton>
             </ListItem>
           </Protected>
@@ -240,17 +291,13 @@ const AdminRoutes = ({
 
   return (
     <div>
-      {/* SECȚIUNE ADMINISTRARE */}
       <Protected permission="MY_BUSINESS_ROUTES_VIEW">
         {!isCollapsed ? (
           <ListItemButton
             onClick={() => setOpenMyBusiness((v) => !v)}
-            sx={{ ...styles.button, my: 1 }}
+            sx={styles.textHeaderRow}
           >
-            <ListItemText
-              primary="Administrare"
-              slotProps={{ primary: { sx: styles.textHeader } }}
-            />
+            <Typography sx={styles.textHeader}>Administrare</Typography>
             {openMyBusiness ? (
               <ExpandLess sx={{ color: "text.disabled" }} />
             ) : (
@@ -270,12 +317,9 @@ const AdminRoutes = ({
         {!isCollapsed ? (
           <ListItemButton
             onClick={() => setOpenNomenclatures((v) => !v)}
-            sx={{ ...styles.button, my: 1 }}
+            sx={styles.textHeaderRow}
           >
-            <ListItemText
-              primary="SuperAdmin"
-              slotProps={{ primary: { sx: styles.textHeader } }}
-            />
+            <Typography sx={styles.textHeader}>SuperAdmin</Typography>
             {openNomenclatures ? (
               <ExpandLess sx={{ color: "text.disabled" }} />
             ) : (

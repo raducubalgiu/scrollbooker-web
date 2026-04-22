@@ -15,23 +15,20 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import DrawerPopper from "./DrawerPopper";
 import PublicRoutes from "./PublicRoutes";
 import AdminRoutes from "./AdminRoutes";
-
-export type ScrollBookerRoute = {
-  label: string;
-  route: string;
-  icon: React.ReactNode;
-  permission: PermissionEnum;
-};
 
 type MarketplaceDrawerProps = {
   isCollapsed: boolean;
   onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
 };
+
+const DRAWER_PADDING_X = 20;
+const ICON_SLOT_SIZE = 72;
+const ITEM_GAP = 10;
+const CONTENT_START = DRAWER_PADDING_X + ICON_SLOT_SIZE + ITEM_GAP;
 
 const MarketplaceDrawer = ({
   isCollapsed,
@@ -59,11 +56,15 @@ const MarketplaceDrawer = ({
         return;
       }
 
-      if (moreOpen) setMoreOpen(false);
+      if (moreOpen) {
+        setMoreOpen(false);
+      }
 
-      if (pathname !== route) router.push(route);
+      if (pathname !== route) {
+        router.push(route);
+      }
     },
-    [pathname, router, moreAnchorEl, moreOpen]
+    [moreAnchorEl, moreOpen, pathname, router]
   );
 
   const handleCloseMorePopper = useCallback(() => {
@@ -76,27 +77,41 @@ const MarketplaceDrawer = ({
   );
 
   return (
-    <Box sx={{ p: 2.5 }}>
-      <Typography
-        variant="h6"
-        noWrap
-        component="div"
-        fontWeight={600}
-        fontSize={30}
-        sx={{ mb: 2.5, textAlign: isCollapsed ? "center" : "start" }}
+    <Box sx={styles.root}>
+      <Box
+        sx={[
+          styles.brandRow,
+          isCollapsed ? styles.brandRowCollapsed : styles.brandRowExpanded,
+        ]}
       >
-        {isCollapsed ? "S" : "ScrollBooker"}
-      </Typography>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          fontWeight={700}
+          sx={[
+            styles.brandText,
+            isCollapsed ? styles.brandTextCollapsed : styles.brandTextExpanded,
+          ]}
+        >
+          {isCollapsed ? "S" : "ScrollBooker"}
+        </Typography>
+      </Box>
 
-      <Box>
+      <Box
+        sx={[
+          styles.searchRow,
+          isCollapsed ? styles.searchRowCollapsed : styles.searchRowExpanded,
+        ]}
+      >
         {isCollapsed ? (
           <IconButton onClick={onOpenSearchView} sx={styles.searchIconButton}>
-            <SearchIcon sx={{ color: "text.secondary", fontSize: 28 }} />
+            <SearchIcon sx={styles.searchCollapsedIcon} />
           </IconButton>
         ) : (
           <TextField
             autoFocus={false}
-            placeholder="Cauta utilizatori"
+            placeholder="Caută utilizatori"
             variant="outlined"
             fullWidth
             onFocus={onOpenSearchView}
@@ -105,13 +120,16 @@ const MarketplaceDrawer = ({
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
+                    <SearchIcon sx={styles.searchFieldIcon} />
                   </InputAdornment>
                 ),
               },
             }}
           />
         )}
+      </Box>
+
+      <Box sx={styles.routesWrapper}>
         <PublicRoutes
           session={session}
           isSelected={isSelected}
@@ -119,21 +137,24 @@ const MarketplaceDrawer = ({
           onNavigate={navigate}
           onOpenNotificationsView={onOpenNotificationsView}
         />
+
         <DrawerPopper
           moreOpen={moreOpen}
           moreAnchorEl={moreAnchorEl}
           onCloseMore={handleCloseMorePopper}
         />
+
         {isLoading &&
           Array.from({ length: 5 }).map((_, i) => (
             <Skeleton
               key={i}
               variant="rectangular"
               width="100%"
-              height={50}
-              sx={{ mt: 1.5 }}
+              height={56}
+              sx={{ mt: 1.25, borderRadius: 2 }}
             />
           ))}
+
         {isAuthenticated && (
           <AdminRoutes
             hasEmployees={session?.has_employees ?? false}
@@ -142,11 +163,16 @@ const MarketplaceDrawer = ({
             isCollapsed={isCollapsed}
           />
         )}
+
         {!isAuthenticated && !isLoading && !isCollapsed && (
           <Button
             variant="outlined"
             disableElevation
-            sx={{ mt: 2.5 }}
+            sx={{
+              mt: 2.5,
+              ml: `${CONTENT_START}px`,
+              mr: `${DRAWER_PADDING_X}px`,
+            }}
             onClick={() => router.push("/api/auth/signin")}
           >
             Conectare
@@ -160,26 +186,89 @@ const MarketplaceDrawer = ({
 export default MarketplaceDrawer;
 
 const styles = {
-  searchIconButton: {
-    width: 60,
-    height: 60,
-    mx: "auto",
-    mb: 1.5,
+  root: {
+    pt: 2.5,
+    pb: 2,
+  },
+
+  brandRow: {
+    minHeight: 56,
+    mb: 2,
+  },
+  brandRowExpanded: {
+    px: `${DRAWER_PADDING_X}px`,
     display: "flex",
+    alignItems: "center",
+  },
+
+  brandRowCollapsed: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  brandText: {
+    lineHeight: 1.1,
+  },
+  brandTextExpanded: {
+    fontSize: 30,
+    textAlign: "left",
+  },
+  brandTextCollapsed: {
+    width: ICON_SLOT_SIZE,
+    textAlign: "center",
+    fontSize: 30,
+  },
+
+  searchRow: {
+    mb: 1.5,
+  },
+  searchRowExpanded: {
+    px: `${DRAWER_PADDING_X}px`,
+  },
+  searchRowCollapsed: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+  },
+
+  routesWrapper: {
+    mt: 0.5,
+  },
+
+  searchIconButton: {
+    width: ICON_SLOT_SIZE,
+    height: 56,
+    borderRadius: 2,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
     bgcolor: (theme: Theme) => alpha(theme.palette.action.hover, 0.05),
     border: "1px solid",
     borderColor: "divider",
+    boxSizing: "border-box",
     "&:hover": {
       bgcolor: (theme: Theme) => alpha(theme.palette.action.hover, 0.1),
       borderColor: "action.disabled",
     },
-    transition: "all 200ms ease",
   },
+
+  searchCollapsedIcon: {
+    color: "text.secondary",
+    fontSize: 28,
+  },
+
+  searchFieldIcon: {
+    color: "text.secondary",
+    ml: 0.5,
+    fontSize: 24,
+  },
+
   search: {
     "& .MuiOutlinedInput-root": {
+      minHeight: 56,
       borderRadius: "999px",
       bgcolor: (theme: Theme) => alpha(theme.palette.action.hover, 0.05),
-      transition: "all 0.2s ease-in-out",
       "& fieldset": {
         borderColor: "divider",
       },
@@ -188,17 +277,16 @@ const styles = {
       },
       "&.Mui-focused": {
         bgcolor: "background.paper",
-        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
       },
       "& input": {
-        fontSize: "18px",
+        fontSize: 18,
+        py: 1.6,
       },
       "& input::placeholder": {
-        fontSize: "18px",
+        fontSize: 18,
         opacity: 0.8,
         color: (theme: Theme) => alpha(theme.palette.text.disabled, 0.5),
       },
     },
-    mb: 1.5,
   },
 };
