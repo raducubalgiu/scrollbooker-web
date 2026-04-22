@@ -92,7 +92,7 @@ const SocialFollowingsTab = ({
 
       {!isLoading && isEmpty(followings) && (
         <Box sx={{ p: 2.5 }}>
-          <Typography sx={{ textAlign: "center" }}>
+          <Typography sx={{ textAlign: "center" }} color="text.secondary">
             Nu au fost găsite rezultate
           </Typography>
         </Box>

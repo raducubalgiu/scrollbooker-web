@@ -1,8 +1,9 @@
+import { NotificationTypeEnum } from "@/ts/enums/NotificationTypeEnum";
 import { UserMini } from "./UserMini";
 
 export interface Notification {
   id: number;
-  type: string;
+  type: NotificationTypeEnum;
   sender_id: number;
   receiver_id: number;
   data: unknown;

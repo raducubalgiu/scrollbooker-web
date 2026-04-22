@@ -105,7 +105,11 @@ const SocialReviewsTab = ({
       )}
 
       {!isLoading && ratings_count === 0 && (
-        <Typography>No reviews yet</Typography>
+        <Box sx={{ p: 2.5 }}>
+          <Typography sx={{ textAlign: "center" }} color="text.secondary">
+            Nu au fost găsite rezultate
+          </Typography>
+        </Box>
       )}
 
       {!isLoading && ratings_count && ratings_count > 0 && (

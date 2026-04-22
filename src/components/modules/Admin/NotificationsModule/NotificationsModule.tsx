@@ -2,8 +2,7 @@
 
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
-import { Box, CircularProgress, Paper, Typography } from "@mui/material";
-import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useEffect, useRef } from "react";
 import { useInfiniteNotifications } from "@/hooks/infiniteQuery/useInfiniteNotifications";
@@ -40,7 +39,18 @@ const NotificationsModule = () => {
   const notifications = data?.pages.flatMap((p) => p.results) ?? [];
 
   return (
-    <MainLayout title="Notificări" hideAction>
+    <>
+      <Typography
+        variant="h6"
+        noWrap
+        component="div"
+        fontWeight={600}
+        fontSize={25}
+        sx={{ mb: 2.5 }}
+      >
+        Notificări
+      </Typography>
+
       {isLoading && <NotificationSkeleton />}
 
       {!isLoading &&
@@ -60,13 +70,11 @@ const NotificationsModule = () => {
       </Box>
 
       {!isLoading && isEmpty(notifications) && (
-        <Paper sx={{ p: 2.5 }}>
-          <Typography sx={{ textAlign: "center" }}>
-            Nu au fost găsite notificări
-          </Typography>
-        </Paper>
+        <Typography sx={{ textAlign: "center" }} color="text.secondary">
+          Nu au fost găsite notificări
+        </Typography>
       )}
-    </MainLayout>
+    </>
   );
 };
 

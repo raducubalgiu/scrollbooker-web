@@ -61,7 +61,7 @@ export const SearchUserItem = ({
           )}
 
           <Box sx={{ ml: 2.5 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography fontSize={18} fontWeight={600}>
               {user.fullname}
             </Typography>
             <Typography color="text.secondary">
