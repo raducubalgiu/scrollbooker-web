@@ -154,7 +154,7 @@ const MarketplaceDrawer = ({
               variant="rectangular"
               width="100%"
               height={56}
-              sx={{ mt: 1.25, borderRadius: 2 }}
+              sx={{ mx: 2.5, mt: 1.25, borderRadius: 2 }}
             />
           ))}
 

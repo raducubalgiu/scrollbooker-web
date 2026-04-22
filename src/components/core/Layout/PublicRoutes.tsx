@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import {
+  Avatar,
   Badge,
   Box,
   ListItem,
@@ -88,7 +89,19 @@ const getPublicRoutes = ({
   {
     label: "Profil",
     route: username ? `/profile/${username}` : "/api/auth/signin",
-    icon: <PersonOutlineOutlinedIcon />,
+    icon: username ? (
+      <Avatar
+        src=""
+        alt={username}
+        sx={{
+          width: 32,
+          height: 32,
+          fontSize: 14,
+        }}
+      />
+    ) : (
+      <PersonOutlineOutlinedIcon />
+    ),
     permission: PermissionEnum.NO_PROTECTION,
   },
   {
@@ -157,6 +170,10 @@ const PublicRoutes = ({
         color: selected ? "primary.main" : "text.secondary",
         "& svg": {
           fontSize: 32,
+        },
+        "& .MuiAvatar-root": {
+          width: 32,
+          height: 32,
         },
       }),
 
