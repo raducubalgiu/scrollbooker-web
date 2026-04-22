@@ -154,7 +154,6 @@ const AdminRoutes = ({
     []
   );
 
-  // 2. Optimizarea stilurilor
   const styles = React.useMemo(
     () => ({
       button: {
@@ -267,7 +266,6 @@ const AdminRoutes = ({
         </Collapse>
       </Protected>
 
-      {/* SECȚIUNE NOMENCLATOARE (SUPERADMIN) */}
       <Protected permission="NOMENCLATURES_VIEW">
         {!isCollapsed ? (
           <ListItemButton

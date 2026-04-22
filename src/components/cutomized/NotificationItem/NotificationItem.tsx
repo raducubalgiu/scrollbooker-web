@@ -24,7 +24,6 @@ type NotificationItemProps = {
 export default function NotificationItem({
   notification,
   refetchNotifications,
-  ...props
 }: NotificationItemProps) {
   const { type, sender, is_read } = notification || {};
   let constructedMessage = "";
@@ -53,7 +52,6 @@ export default function NotificationItem({
         component="div"
         onClick={() => sender?.id && router.push(`/profile/${sender.username}`)}
         sx={{ p: 0, mb: 1.5, borderRadius: 5 }}
-        {...props}
       >
         <Stack
           flexDirection="row"
@@ -63,7 +61,7 @@ export default function NotificationItem({
           flexGrow={1}
         >
           <Stack flexDirection="row" alignItems="center" maxWidth={400} gap={2}>
-            <Avatar src={sender?.avatar} sx={{ width: 45, height: 45 }} />
+            <Avatar src={sender?.avatar ?? ""} sx={{ width: 45, height: 45 }} />
             <Stack flexWrap="wrap">
               <Typography fontWeight={600}>{sender?.username ?? ""}</Typography>
               <Typography

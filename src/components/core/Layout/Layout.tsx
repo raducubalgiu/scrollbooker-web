@@ -8,6 +8,8 @@ import { Backdrop, Box, CssBaseline, Drawer, Slide } from "@mui/material";
 import MarketplaceDrawer from "./MarketplaceDrawer";
 import MarketplaceBottomBar from "./MarketplaceBottomBar";
 import NotificationsModule from "@/components/modules/Admin/NotificationsModule/NotificationsModule";
+import AppointmentsModule from "@/components/modules/Marketplace/AppointmentsModule/AppointmentsModule";
+import SearchUsersModule from "@/components/modules/Marketplace/SearchUsersModule/SearchUsersModule";
 
 const DRAWER_WIDTH = 340;
 const COLLAPSED_WIDTH = 110;
@@ -21,11 +23,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [activeView, setActiveView] = React.useState<ActiveView>(null);
 
   const isCollapsed = activeView !== null;
-
-  const handleToggleView = React.useCallback((view: ActiveView) => {
-    setActiveView((prev) => (prev === view ? null : view));
-  }, []);
-
   const handleCloseAll = React.useCallback(() => setActiveView(null), []);
 
   const isSpecialPage = React.useMemo(() => {
@@ -45,6 +42,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const styles = React.useMemo(
     () => getStyles(theme, isCollapsed, isAdminPage, bgColor),
     [theme, isCollapsed, isAdminPage, bgColor]
+  );
+
+  const expandedDrawer = React.useMemo(() => {
+    switch (activeView) {
+      case "appointments":
+        return <AppointmentsModule />;
+      case "notifications":
+        return <NotificationsModule />;
+      case "search":
+        return <SearchUsersModule />;
+      default:
+        return null;
+    }
+  }, [activeView]);
+
+  const handleOpenSearch = React.useCallback(() => setActiveView("search"), []);
+  const handleOpenNotifications = React.useCallback(
+    () => setActiveView("notifications"),
+    []
   );
 
   return (
@@ -67,7 +83,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           >
             <MarketplaceDrawer
               isCollapsed={isCollapsed}
-              onCollapse={() => handleToggleView("notifications")}
+              onOpenSearchView={handleOpenSearch}
+              onOpenNotificationsView={handleOpenNotifications}
             />
           </Drawer>
         </Box>
@@ -81,9 +98,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         unmountOnExit
       >
         <Box sx={styles.overlayContainer}>
-          <Box sx={styles.overlayContent}>
-            <NotificationsModule />
-          </Box>
+          <Box sx={styles.overlayContent}>{expandedDrawer}</Box>
         </Box>
       </Slide>
 

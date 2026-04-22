@@ -350,7 +350,7 @@ const AppointmentsModule = () => {
         }}
       />
 
-      <Table<Appointment>
+      {/* <Table<Appointment>
         data={data?.results}
         rowCount={data?.count}
         columns={columns}
@@ -367,7 +367,7 @@ const AppointmentsModule = () => {
         enableFilters={false}
         enableColumnFilters={false}
         enableSorting={false}
-      />
+      /> */}
     </MainLayout>
   );
 };

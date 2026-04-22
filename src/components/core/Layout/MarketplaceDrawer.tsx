@@ -27,13 +27,17 @@ export type ScrollBookerRoute = {
   permission: PermissionEnum;
 };
 
+type MarketplaceDrawerProps = {
+  isCollapsed: boolean;
+  onOpenSearchView: () => void;
+  onOpenNotificationsView: () => void;
+};
+
 const MarketplaceDrawer = ({
   isCollapsed,
-  onCollapse,
-}: {
-  isCollapsed: boolean;
-  onCollapse: () => void;
-}) => {
+  onOpenSearchView,
+  onOpenNotificationsView,
+}: MarketplaceDrawerProps) => {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const isLoading = status === "loading";
@@ -86,24 +90,7 @@ const MarketplaceDrawer = ({
 
       <Box>
         {isCollapsed ? (
-          <IconButton
-            onClick={onCollapse}
-            sx={{
-              width: 60,
-              height: 60,
-              mx: "auto",
-              mb: 1.5,
-              display: "flex",
-              bgcolor: (theme) => alpha(theme.palette.action.hover, 0.05),
-              border: "1px solid",
-              borderColor: "divider",
-              "&:hover": {
-                bgcolor: (theme) => alpha(theme.palette.action.hover, 0.1),
-                borderColor: "action.disabled",
-              },
-              transition: "all 200ms ease",
-            }}
-          >
+          <IconButton onClick={onOpenSearchView} sx={styles.searchIconButton}>
             <SearchIcon sx={{ color: "text.secondary", fontSize: 28 }} />
           </IconButton>
         ) : (
@@ -112,8 +99,7 @@ const MarketplaceDrawer = ({
             placeholder="Cauta utilizatori"
             variant="outlined"
             fullWidth
-            onFocus={onCollapse}
-            onBlur={() => {}}
+            onFocus={onOpenSearchView}
             sx={styles.search}
             slotProps={{
               input: {
@@ -131,6 +117,7 @@ const MarketplaceDrawer = ({
           isSelected={isSelected}
           isCollapsed={isCollapsed}
           onNavigate={navigate}
+          onOpenNotificationsView={onOpenNotificationsView}
         />
         <DrawerPopper
           moreOpen={moreOpen}
@@ -173,6 +160,21 @@ const MarketplaceDrawer = ({
 export default MarketplaceDrawer;
 
 const styles = {
+  searchIconButton: {
+    width: 60,
+    height: 60,
+    mx: "auto",
+    mb: 1.5,
+    display: "flex",
+    bgcolor: (theme: Theme) => alpha(theme.palette.action.hover, 0.05),
+    border: "1px solid",
+    borderColor: "divider",
+    "&:hover": {
+      bgcolor: (theme: Theme) => alpha(theme.palette.action.hover, 0.1),
+      borderColor: "action.disabled",
+    },
+    transition: "all 200ms ease",
+  },
   search: {
     "& .MuiOutlinedInput-root": {
       borderRadius: "999px",

@@ -14,9 +14,9 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
+import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Session } from "next-auth";
-import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 
 type PublicRoutesProps = {
   session: Session | null;
@@ -26,9 +26,24 @@ type PublicRoutesProps = {
     route: string,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
+  onOpenNotificationsView: () => void;
 };
 
-const GET_PUBLIC_ROUTES = (username?: string) => [
+type NavigationItem = {
+  label: string;
+  icon: React.ReactNode;
+  permission: PermissionEnum;
+  route?: string;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+};
+
+const getPublicRoutes = ({
+  username,
+  onOpenNotificationsView,
+}: {
+  username: string | undefined;
+  onOpenNotificationsView: () => void;
+}): NavigationItem[] => [
   {
     label: "Explorează",
     route: "/",
@@ -53,13 +68,13 @@ const GET_PUBLIC_ROUTES = (username?: string) => [
   },
   {
     label: "Notificări",
-    route: "/notifications",
     icon: (
       <Badge badgeContent={4} color="error">
         <NotificationsNoneOutlinedIcon />
       </Badge>
     ),
     permission: PermissionEnum.NO_PROTECTION,
+    onClick: () => onOpenNotificationsView(),
   },
   {
     label: "Profil",
@@ -69,7 +84,7 @@ const GET_PUBLIC_ROUTES = (username?: string) => [
   },
   {
     label: "Upload",
-    route: `/upload-video`,
+    route: "/upload-video",
     icon: <AddBoxOutlinedIcon />,
     permission: PermissionEnum.NO_PROTECTION,
   },
@@ -86,10 +101,15 @@ const PublicRoutes = ({
   isSelected,
   isCollapsed,
   onNavigate,
+  onOpenNotificationsView,
 }: PublicRoutesProps) => {
   const publicRoutes = React.useMemo(
-    () => GET_PUBLIC_ROUTES(session?.username),
-    [session?.username]
+    () =>
+      getPublicRoutes({
+        username: session?.username,
+        onOpenNotificationsView,
+      }),
+    [session?.username, onOpenNotificationsView]
   );
 
   const styles = React.useMemo(
@@ -129,26 +149,44 @@ const PublicRoutes = ({
     [isCollapsed]
   );
 
+  const handleItemClick = React.useCallback(
+    (
+      item: NavigationItem,
+      event: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
+      if (item.onClick) {
+        item.onClick(event);
+        return;
+      }
+
+      if (item.route) {
+        onNavigate(item.route, event);
+      }
+    },
+    [onNavigate]
+  );
+
   return (
     <>
-      {publicRoutes.map((el) => {
-        const selected = isSelected(el.route);
+      {publicRoutes.map((item) => {
+        const selected = item.route ? isSelected(item.route) : false;
+
         return (
-          <ListItem disablePadding sx={{ px: 0 }} key={el.route}>
+          <ListItem disablePadding sx={{ px: 0 }} key={item.label}>
             <ListItemButton
-              onClick={(e) => onNavigate(el.route, e)}
+              onClick={(e) => handleItemClick(item, e)}
               selected={selected}
               sx={styles.button}
             >
               <ListItemIcon sx={styles.getIconStyles(selected)}>
-                {el.icon}
+                {item.icon}
               </ListItemIcon>
 
               {!isCollapsed && (
                 <ListItemText
                   primary={
                     <Typography sx={styles.getTextStyles(selected)}>
-                      {el.label}
+                      {item.label}
                     </Typography>
                   }
                 />

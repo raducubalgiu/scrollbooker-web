@@ -5,6 +5,8 @@ import {
   IconButton,
   lighten,
   Stack,
+  SxProps,
+  Theme,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -20,6 +22,7 @@ type ProductCardProps = {
   showIcon: boolean;
   onOpenDetail: () => void;
   onNavigateToBooking: (product: Product) => void;
+  sx?: SxProps<Theme>;
 };
 
 const ProductCard = ({
@@ -28,6 +31,7 @@ const ProductCard = ({
   showIcon,
   onOpenDetail,
   onNavigateToBooking,
+  sx = {},
 }: ProductCardProps) => {
   const { name, description, has_different_prices } = product;
 
@@ -39,29 +43,29 @@ const ProductCard = ({
 
   return (
     <Box
-      sx={(theme) => {
-        const isDark = theme.palette.mode === "dark";
+      sx={[
+        (theme) => {
+          const isDark = theme.palette.mode === "dark";
+          const baseBg = isDark ? "background.default" : "background.paper";
+          const selectedBg = "background.default";
 
-        const baseBg = isDark ? "background.default" : "background.paper";
-
-        const selectedBg = "background.default";
-
-        return {
-          bgcolor: isSelected ? selectedBg : baseBg,
-          p: 2.5,
-          borderRadius: 2.5,
-          border: 1.5,
-          borderColor: "divider",
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-
-          "&:hover": {
-            bgcolor: isDark
-              ? lighten(theme.palette.background.default, 0.1)
-              : lighten(theme.palette.background.default, 0.2),
-          },
-        };
-      }}
+          return {
+            bgcolor: isSelected ? selectedBg : baseBg,
+            p: 2.5,
+            borderRadius: 2.5,
+            border: 1.5,
+            borderColor: "divider",
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              bgcolor: isDark
+                ? lighten(theme.palette.background.default, 0.1)
+                : lighten(theme.palette.background.default, 0.2),
+            },
+          };
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       onClick={onOpenDetail}
     >
       <Stack
@@ -114,8 +118,7 @@ const ProductCard = ({
             </IconButton>
           ) : (
             <Button
-              variant="outlined"
-              color="secondary"
+              variant="contained"
               disableElevation
               size="large"
               onClick={(e) => {

@@ -84,6 +84,7 @@ const ExploreServicesTab = ({
                 showIcon={false}
                 onOpenDetail={() => handleOpen(prod)}
                 onNavigateToBooking={onNavigateToBooking}
+                sx={{ borderColor: "transparent", p: 1.5 }}
               />
 
               {i < products?.length - 1 && <Divider sx={{ my: 1.5 }} />}
