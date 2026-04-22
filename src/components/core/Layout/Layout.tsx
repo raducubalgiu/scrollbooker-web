@@ -170,7 +170,8 @@ const getStyles = (
     borderRight: "1px solid",
     borderColor: "divider",
     boxShadow: "20px 0 40px rgba(0,0,0,0.05)",
-    p: 3,
+    // px: 3,
+    pb: 3,
     overflowY: "auto",
     "&::-webkit-scrollbar": { width: "6px" },
     "&::-webkit-scrollbar-thumb": {

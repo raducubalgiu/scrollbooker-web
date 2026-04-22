@@ -2,7 +2,7 @@
 
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useEffect, useRef } from "react";
 import { useInfiniteNotifications } from "@/hooks/infiniteQuery/useInfiniteNotifications";
@@ -34,16 +34,28 @@ const NotificationsModule = () => {
 
   return (
     <>
-      <Typography
-        variant="h6"
-        noWrap
-        component="div"
-        fontWeight={700}
-        fontSize={25}
-        sx={{ mb: 2.5 }}
+      <Box
+        sx={{
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+          backgroundColor: "background.paper",
+          px: 3,
+          pt: 3,
+        }}
       >
-        Notificări
-      </Typography>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          fontWeight={700}
+          fontSize={25}
+        >
+          Notificari
+        </Typography>
+
+        <Divider sx={{ mt: 2.5, mb: 1.5 }} />
+      </Box>
 
       {isLoading && <NotificationSkeleton />}
 

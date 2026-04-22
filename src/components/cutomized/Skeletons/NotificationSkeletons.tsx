@@ -5,8 +5,8 @@ import { Stack, Skeleton } from "@mui/material";
 export default function NotificationSkeletons() {
   return (
     <>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <ListItem sx={{ p: 0, mb: 2.5 }} key={i}>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <ListItem sx={{ p: 0 }} key={i}>
           <Stack
             flexDirection="row"
             alignItems="center"

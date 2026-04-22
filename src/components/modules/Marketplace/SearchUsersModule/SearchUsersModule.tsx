@@ -6,6 +6,7 @@ import {
   Theme,
   Stack,
   CircularProgress,
+  Box,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState } from "react";
@@ -44,36 +45,47 @@ const SearchUsersModule = ({
 
   return (
     <>
-      <Typography
-        variant="h6"
-        noWrap
-        component="div"
-        fontWeight={700}
-        fontSize={25}
-        sx={{ mb: 2.5 }}
-      >
-        Caută utilizatori
-      </Typography>
-
-      <TextField
-        autoFocus={true}
-        placeholder="Caută utilizatori, afaceri, specialisti"
-        variant="outlined"
-        fullWidth
-        onFocus={() => {}}
-        onBlur={() => {}}
-        onChange={(e) => setValue(e.target.value)}
-        sx={styles.search}
-        slotProps={{
-          input: {
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
-              </InputAdornment>
-            ),
-          },
+      <Box
+        sx={{
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+          backgroundColor: "background.paper",
+          px: 3,
+          pt: 3,
         }}
-      />
+      >
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          fontWeight={700}
+          fontSize={25}
+          sx={{ mb: 2.5 }}
+        >
+          Caută utilizatori
+        </Typography>
+
+        <TextField
+          autoFocus={true}
+          placeholder="Caută utilizatori, afaceri, specialisti"
+          variant="outlined"
+          fullWidth
+          onFocus={() => {}}
+          onBlur={() => {}}
+          onChange={(e) => setValue(e.target.value)}
+          sx={styles.search}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+      </Box>
 
       {loading && (
         <Stack justifyContent="center" alignItems="center" p={2.5}>

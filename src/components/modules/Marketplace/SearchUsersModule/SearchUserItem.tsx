@@ -21,7 +21,7 @@ export const SearchUserItem = ({
   onNavigateToUserProfile,
 }: SearchUserItemProps) => {
   return (
-    <ListItem disablePadding>
+    <ListItem disablePadding sx={{ px: 1.5 }}>
       <ListItemButton
         onClick={() => onNavigateToUserProfile(user.username)}
         sx={{ py: 2.5 }}

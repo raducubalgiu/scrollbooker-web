@@ -2,7 +2,6 @@
 
 import {
   Avatar,
-  Badge,
   Box,
   Button,
   ListItem,
@@ -14,8 +13,6 @@ import {
 import React from "react";
 import { Notification } from "@/ts/models/user/Notification";
 import { NotificationTypeEnum } from "@/ts/enums/NotificationTypeEnum";
-import { formatRating } from "@/utils/formatters";
-import StarIcon from "@mui/icons-material/Star";
 
 type NotificationItemProps = {
   notification: Notification;
@@ -47,7 +44,7 @@ export default function NotificationItem({
   switch (true) {
     case type === NotificationTypeEnum.FOLLOW:
       return (
-        <ListItem disablePadding>
+        <ListItem disablePadding sx={{ px: 1.5 }}>
           <ListItemButton onClick={() => {}} sx={{ py: 2.5 }}>
             <Stack
               flexDirection="row"
@@ -56,41 +53,11 @@ export default function NotificationItem({
               flex={1}
             >
               <Stack flexDirection="row" alignItems="center">
-                {sender.is_business_or_employee ? (
-                  <Badge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                    badgeContent={
-                      <Stack
-                        flexDirection="row"
-                        alignItems="center"
-                        justifyContent="center"
-                        sx={styles.badgeContent}
-                      >
-                        <StarIcon
-                          sx={{ fontSize: 18, mr: 0.5 }}
-                          color="primary"
-                        />
-                        <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-                          {formatRating(sender.ratings_average)}
-                        </Typography>
-                      </Stack>
-                    }
-                    sx={styles.badge}
-                  >
-                    <Avatar
-                      sx={styles.avatar}
-                      src={sender.avatar ?? ""}
-                      alt={sender.fullname}
-                    />
-                  </Badge>
-                ) : (
-                  <Avatar
-                    sx={styles.avatar}
-                    src={sender.avatar ?? ""}
-                    alt={sender.fullname}
-                  />
-                )}
+                <Avatar
+                  sx={styles.avatar}
+                  src={sender.avatar ?? ""}
+                  alt={sender.fullname}
+                />
 
                 <Box sx={{ ml: 2.5 }}>
                   <Typography sx={{ fontWeight: 600, fontSize: 17 }}>
