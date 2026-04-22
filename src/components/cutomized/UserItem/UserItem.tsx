@@ -1,10 +1,19 @@
-import { Avatar, Badge, Box, Button, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  ListItem,
+  ListItemButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useMemo } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import { formatRating } from "@/utils/formatters";
 import { UserMini } from "@/ts/models/user/UserMini";
-import Link from "next/link";
 import { useFollowMutation } from "@/hooks/mutations/useFollowMutation";
+import Link from "next/link";
 
 type UserItemProps = {
   user: UserMini;
@@ -86,32 +95,35 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
   );
 
   return (
-    <Stack
-      flexDirection="row"
-      alignItems="center"
-      justifyContent="space-between"
-      sx={{ py: 2.5 }}
-    >
-      <Link
-        href={`/profile/${username}`}
-        style={{ textDecoration: "none", color: "inherit" }}
+    <ListItem disablePadding>
+      <ListItemButton
+        LinkComponent={Link}
+        href={`/profile/${user.username}`}
+        sx={{ py: 2.5 }}
       >
-        <Stack flexDirection="row" alignItems="center">
-          {user_avatar}
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          flex={1}
+        >
+          <Stack flexDirection="row" alignItems="center">
+            {user_avatar}
 
-          <Box sx={{ ml: 2.5 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {fullname}
-            </Typography>
-            <Typography color="text.secondary">
-              {is_business_or_employee ? profession : `@${username}`}
-            </Typography>
-          </Box>
+            <Box sx={{ ml: 2.5 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                {fullname}
+              </Typography>
+              <Typography color="text.secondary">
+                {is_business_or_employee ? profession : `@${username}`}
+              </Typography>
+            </Box>
+          </Stack>
+
+          {followButton}
         </Stack>
-      </Link>
-
-      {followButton}
-    </Stack>
+      </ListItemButton>
+    </ListItem>
   );
 };
 

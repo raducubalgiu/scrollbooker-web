@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme, Theme } from "@mui/material/styles";
 import { Backdrop, Box, CssBaseline, Drawer, Slide } from "@mui/material";
 
@@ -18,6 +18,7 @@ const OVERLAY_WIDTH = 450;
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const pathname = usePathname() || "";
   const theme = useTheme();
   const [activeView, setActiveView] = React.useState<ActiveView>(null);
@@ -51,11 +52,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       case "notifications":
         return <NotificationsModule />;
       case "search":
-        return <SearchUsersModule />;
+        return (
+          <SearchUsersModule
+            onSearchUser={(username) => {
+              handleCloseAll();
+              router.push(`/profile/${username}`);
+            }}
+          />
+        );
       default:
         return null;
     }
-  }, [activeView]);
+  }, [activeView, router]);
 
   const handleOpenSearch = React.useCallback(() => setActiveView("search"), []);
   const handleOpenNotifications = React.useCallback(

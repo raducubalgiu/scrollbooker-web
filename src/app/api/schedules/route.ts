@@ -1,12 +1,12 @@
 import { NextResponse, NextRequest } from "next/server";
 import { get, put } from "@/utils/requests";
-import { ScheduleResponse } from "@/ts/models/booking/schedule/Schedule";
+import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 
 export const GET = async (req: NextRequest) => {
   const userId = req.nextUrl.searchParams.get("userId");
 
   const response = (
-    await get<ScheduleResponse>({
+    await get<Schedule>({
       url: `/users/${userId}/schedules`,
     })
   ).data;

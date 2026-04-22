@@ -2,6 +2,7 @@ import ProfileModule from "@/components/modules/Marketplace/ProfileModule/Profil
 import { get } from "@/utils/requests";
 import React from "react";
 import { UserProfile } from "@/ts/models/user/UserProfile";
+import { Box } from "@mui/material";
 
 interface UserProfilePageProps {
   params: { username: string };
@@ -25,5 +26,9 @@ export default async function UserProfilePage({
     })
   ).data;
 
-  return <ProfileModule profile={profile} tab={tab} />;
+  return (
+    <Box p={2.5}>
+      <ProfileModule profile={profile} tab={tab} />
+    </Box>
+  );
 }
