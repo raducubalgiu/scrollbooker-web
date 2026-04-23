@@ -11,9 +11,9 @@ import {
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import MoodOutlinedIcon from "@mui/icons-material/MoodOutlined";
 import CloseIcon from "@mui/icons-material/Close";
+import { useSession } from "next-auth/react";
 
 type CommentComposerProps = {
-  authUserAvatar: string | null;
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
@@ -27,7 +27,6 @@ type CommentComposerProps = {
 };
 
 const CommentComposer = ({
-  authUserAvatar,
   value,
   onChange,
   onSubmit,
@@ -118,6 +117,8 @@ const CommentComposer = ({
     handleClose();
   };
 
+  const { data: session } = useSession();
+
   return (
     <Box>
       {replyingTo && (
@@ -134,7 +135,7 @@ const CommentComposer = ({
       )}
 
       <Stack direction="row" alignItems="center" gap={1}>
-        <Avatar src={authUserAvatar ?? ""} sx={{ width: 40, height: 40 }} />
+        <Avatar src={session?.avatar ?? ""} sx={{ width: 40, height: 40 }} />
 
         <Stack
           flexDirection="row"

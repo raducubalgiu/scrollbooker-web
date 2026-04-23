@@ -14,7 +14,6 @@ import { useInfiniteCommentReplies } from "@/hooks/infiniteQuery/useInfiniteComm
 type CommentThreadProps = {
   postId: number;
   rootComment: PostComment;
-  currentUserAvatar: string | null;
   postAuthorAvatar: string | null;
   activeReplyTarget: ReplyTarget | null;
   replyText: string;
@@ -31,7 +30,6 @@ type CommentThreadProps = {
 const CommentThread = ({
   postId,
   rootComment,
-  currentUserAvatar,
   postAuthorAvatar,
   activeReplyTarget,
   replyText,
@@ -154,7 +152,6 @@ const CommentThread = ({
       {isReplyComposerVisible && (
         <Box sx={{ pl: 7 }}>
           <CommentComposer
-            authUserAvatar={currentUserAvatar}
             value={replyText}
             onChange={onReplyTextChange}
             onSubmit={() => onSubmitReply(rootComment)}

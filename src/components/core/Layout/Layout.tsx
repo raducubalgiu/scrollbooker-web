@@ -15,7 +15,7 @@ const DRAWER_WIDTH = 340;
 const COLLAPSED_WIDTH = 110;
 const OVERLAY_WIDTH = 500;
 
-type ActiveView = "search" | "notifications" | "appointments" | null;
+export type ActiveView = "search" | "notifications" | "appointments" | null;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -95,6 +95,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           >
             <LayoutDrawer
               isCollapsed={isCollapsed}
+              activeView={activeView}
               onOpenSearchView={handleOpenSearch}
               onOpenNotificationsView={handleOpenNotifications}
               onOpenAppointmentsView={handleOpenAppointments}
@@ -170,7 +171,6 @@ const getStyles = (
     borderRight: "1px solid",
     borderColor: "divider",
     boxShadow: "20px 0 40px rgba(0,0,0,0.05)",
-    // px: 3,
     pb: 3,
     overflowY: "auto",
     "&::-webkit-scrollbar": { width: "6px" },

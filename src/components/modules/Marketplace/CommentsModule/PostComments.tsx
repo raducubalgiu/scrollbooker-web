@@ -14,7 +14,6 @@ import { useMutate } from "@/hooks/useHttp";
 
 type PostCommentsProps = {
   postId: number | undefined;
-  avatar: string | null;
   postAuthorAvatar: string | null;
 };
 
@@ -25,11 +24,7 @@ type CreateCommentPayload = {
   reply_to_comment_id: number | null;
 };
 
-const PostComments = ({
-  postId,
-  avatar,
-  postAuthorAvatar,
-}: PostCommentsProps) => {
+const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
   if (!postId) {
     return (
       <Stack alignItems="center" justifyContent="center" py={4}>
@@ -169,7 +164,6 @@ const PostComments = ({
               key={comment.id}
               postId={postId}
               rootComment={comment}
-              currentUserAvatar={avatar}
               postAuthorAvatar={postAuthorAvatar}
               activeReplyTarget={activeReplyTarget}
               replyText={replyText}
@@ -201,7 +195,6 @@ const PostComments = ({
 
       <Box sx={{ p: 2 }}>
         <CommentComposer
-          authUserAvatar={avatar}
           value={newCommentText}
           onChange={setNewCommentText}
           onSubmit={handleCreateRootComment}

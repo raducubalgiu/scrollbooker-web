@@ -19,8 +19,11 @@ import DrawerPopper from "./DrawerPopper";
 import PublicRoutes from "./PublicRoutes";
 import AdminRoutes from "./AdminRoutes";
 
+type ActiveView = "search" | "notifications" | "appointments" | null;
+
 type LayoutDrawerProps = {
   isCollapsed: boolean;
+  activeView: ActiveView;
   onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
   onOpenAppointmentsView: () => void;
@@ -33,6 +36,7 @@ const CONTENT_START = DRAWER_PADDING_X + ICON_SLOT_SIZE + ITEM_GAP;
 
 const LayoutDrawer = ({
   isCollapsed,
+  activeView,
   onOpenSearchView,
   onOpenNotificationsView,
   onOpenAppointmentsView,
@@ -125,9 +129,17 @@ const LayoutDrawer = ({
             {isCollapsed ? (
               <IconButton
                 onClick={onOpenSearchView}
-                sx={styles.searchIconButton}
+                sx={[
+                  styles.searchIconButton,
+                  activeView === "search" && styles.searchIconButtonActive,
+                ]}
               >
-                <SearchIcon sx={styles.searchCollapsedIcon} />
+                <SearchIcon
+                  sx={[
+                    styles.searchCollapsedIcon,
+                    activeView === "search" && styles.searchCollapsedIconActive,
+                  ]}
+                />
               </IconButton>
             ) : (
               <TextField
@@ -155,7 +167,9 @@ const LayoutDrawer = ({
               session={session}
               isSelected={isSelected}
               isCollapsed={isCollapsed}
+              activeView={activeView}
               onNavigate={navigate}
+              onOpenSearchView={onOpenSearchView}
               onOpenNotificationsView={onOpenNotificationsView}
               onOpenAppointmentsView={onOpenAppointmentsView}
             />
@@ -175,7 +189,7 @@ const LayoutDrawer = ({
               />
             )}
 
-            {!isAuthenticated && !isLoading && !isCollapsed && (
+            {!isAuthenticated && !isCollapsed && (
               <Button
                 variant="outlined"
                 disableElevation
@@ -208,6 +222,7 @@ const styles = {
     minHeight: 56,
     mb: 2,
   },
+
   brandRowExpanded: {
     px: `${DRAWER_PADDING_X}px`,
     display: "flex",
@@ -220,13 +235,16 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
   },
+
   brandText: {
     lineHeight: 1.1,
   },
+
   brandTextExpanded: {
     fontSize: 30,
     textAlign: "left",
   },
+
   brandTextCollapsed: {
     width: ICON_SLOT_SIZE,
     textAlign: "center",
@@ -236,9 +254,11 @@ const styles = {
   searchRow: {
     mb: 1.5,
   },
+
   searchRowExpanded: {
     px: `${DRAWER_PADDING_X}px`,
   },
+
   searchRowCollapsed: {
     width: "100%",
     display: "flex",
@@ -266,9 +286,22 @@ const styles = {
     },
   },
 
+  searchIconButtonActive: {
+    bgcolor: "action.hover",
+    //borderColor: "primary.main",
+    "&:hover": {
+      bgcolor: "action.hover",
+      //borderColor: "primary.main",
+    },
+  },
+
   searchCollapsedIcon: {
     color: "text.secondary",
     fontSize: 28,
+  },
+
+  searchCollapsedIconActive: {
+    color: "primary.main",
   },
 
   searchFieldIcon: {

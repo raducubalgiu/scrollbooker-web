@@ -20,14 +20,18 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Session } from "next-auth";
 
+type ActiveView = "search" | "notifications" | "appointments" | null;
+
 type PublicRoutesProps = {
   session: Session | null;
   isSelected: (route: string) => boolean;
   isCollapsed: boolean;
+  activeView: ActiveView;
   onNavigate: (
     route: string,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
+  onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
   onOpenAppointmentsView: () => void;
 };
@@ -37,6 +41,7 @@ type NavigationItem = {
   icon: React.ReactNode;
   permission: PermissionEnum;
   route?: string;
+  overlayView?: Exclude<ActiveView, null>;
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
@@ -52,6 +57,7 @@ const getPublicRoutes = ({
 }: {
   username: string | undefined;
   avatar: string | null | undefined;
+  onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
   onOpenAppointmentsView: () => void;
 }): NavigationItem[] => [
@@ -69,7 +75,7 @@ const getPublicRoutes = ({
   },
   {
     label: "Rezervări",
-    route: "/appointments",
+    overlayView: "appointments",
     icon: (
       <Badge badgeContent={0} color="error">
         <QueryBuilderOutlinedIcon />
@@ -80,6 +86,7 @@ const getPublicRoutes = ({
   },
   {
     label: "Notificări",
+    overlayView: "notifications",
     icon: (
       <Badge badgeContent={4} color="error">
         <NotificationsNoneOutlinedIcon />
@@ -100,7 +107,9 @@ const getPublicRoutes = ({
           height: 32,
           fontSize: 14,
         }}
-      />
+      >
+        {username.charAt(0).toUpperCase()}
+      </Avatar>
     ) : (
       <PersonOutlineOutlinedIcon />
     ),
@@ -124,7 +133,9 @@ const PublicRoutes = ({
   session,
   isSelected,
   isCollapsed,
+  activeView,
   onNavigate,
+  onOpenSearchView,
   onOpenNotificationsView,
   onOpenAppointmentsView,
 }: PublicRoutesProps) => {
@@ -133,10 +144,17 @@ const PublicRoutes = ({
       getPublicRoutes({
         username: session?.username,
         avatar: session?.avatar,
+        onOpenSearchView,
         onOpenNotificationsView,
         onOpenAppointmentsView,
       }),
-    [session?.username, session?.avatar, onOpenNotificationsView]
+    [
+      session?.username,
+      session?.avatar,
+      onOpenSearchView,
+      onOpenNotificationsView,
+      onOpenAppointmentsView,
+    ]
   );
 
   const styles = React.useMemo(
@@ -177,6 +195,8 @@ const PublicRoutes = ({
         "& .MuiAvatar-root": {
           width: 32,
           height: 32,
+          outline: selected ? "2px solid currentColor" : "none",
+          outlineOffset: 2,
         },
       }),
 
@@ -217,10 +237,25 @@ const PublicRoutes = ({
     [onNavigate]
   );
 
+  const getItemSelected = React.useCallback(
+    (item: NavigationItem) => {
+      if (activeView) {
+        return item.overlayView === activeView;
+      }
+
+      if (item.overlayView) {
+        return false;
+      }
+
+      return item.route ? isSelected(item.route) : false;
+    },
+    [activeView, isSelected]
+  );
+
   return (
     <>
       {publicRoutes.map((item) => {
-        const selected = item.route ? isSelected(item.route) : false;
+        const selected = getItemSelected(item);
 
         return (
           <ListItem disablePadding sx={{ px: 0 }} key={item.label}>
