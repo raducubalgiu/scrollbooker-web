@@ -16,9 +16,13 @@ import AppointmentCardSkeleton from "./AppointmentCardSkeleton";
 
 type AppointmentsModuleProps = {
   scrollRootRef: React.RefObject<HTMLDivElement | null>;
+  onNavigateToAppointment: (appointmentId: number) => void;
 };
 
-const AppointmentsModule = ({ scrollRootRef }: AppointmentsModuleProps) => {
+const AppointmentsModule = ({
+  scrollRootRef,
+  onNavigateToAppointment,
+}: AppointmentsModuleProps) => {
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
@@ -97,9 +101,7 @@ const AppointmentsModule = ({ scrollRootRef }: AppointmentsModuleProps) => {
           <Box key={`${appointment.id}-${index}`}>
             <AppointmentCard
               appointment={appointment}
-              navigateToAppointmentDetails={(appt) =>
-                console.log("Navigate to:", appt)
-              }
+              navigateToAppointmentDetails={onNavigateToAppointment}
             />
             {index < appointments.length - 1 && <Divider sx={{ my: 1.5 }} />}
           </Box>

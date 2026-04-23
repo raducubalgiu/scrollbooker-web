@@ -17,12 +17,8 @@ import { formatPrice } from "@/utils/formatPrice";
 
 type AppointmentCardProps = {
   appointment: Appointment;
-  navigateToAppointmentDetails: (appointment: Appointment) => void;
+  navigateToAppointmentDetails: (appointmentId: number) => void;
 };
-
-// const formatTwoDecimals = (value: number) => {
-//   return Number(value).toFixed(2);
-// };
 
 const formatDuration = (minutes: number) => {
   if (!minutes) return "0 min";
@@ -267,7 +263,7 @@ function AppointmentCardInfo({ appointment }: AppointmentCardInfoProps) {
                   color: "error.main",
                 }}
               >
-                (-{appointment.total_discount}%)
+                (-{Number(appointment.total_discount).toFixed(2)}%)
               </Typography>
             </>
           )}
@@ -287,7 +283,7 @@ export default function AppointmentCard({
     <ListItem disablePadding sx={{ px: 1.5 }}>
       <ListItemButton>
         <Stack
-          onClick={() => navigateToAppointmentDetails(appointment)}
+          onClick={() => navigateToAppointmentDetails(appointment.id)}
           sx={{
             width: "100%",
             cursor: "pointer",

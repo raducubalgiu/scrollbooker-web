@@ -10,6 +10,7 @@ import AppointmentsModule from "@/components/modules/Marketplace/AppointmentsMod
 import SearchUsersModule from "@/components/modules/Marketplace/SearchUsersModule/SearchUsersModule";
 import LayoutDrawer from "./LayoutDrawer";
 import BottomBar from "./BottomBar";
+import { useSession } from "next-auth/react";
 
 const DRAWER_WIDTH = 340;
 const COLLAPSED_WIDTH = 110;
@@ -18,6 +19,10 @@ const OVERLAY_WIDTH = 500;
 export type ActiveView = "search" | "notifications" | "appointments" | null;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
+  const isSessionLoading = status === "loading";
+  const isAuthenticated = status === "authenticated";
+
   const router = useRouter();
   const pathname = usePathname() || "";
   const theme = useTheme();
@@ -85,7 +90,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const expandedDrawer = React.useMemo(() => {
     switch (activeView) {
       case "appointments":
-        return <AppointmentsModule scrollRootRef={overlayScrollRef} />;
+        return (
+          <AppointmentsModule
+            scrollRootRef={overlayScrollRef}
+            onNavigateToAppointment={(appointmentId) => {
+              handleCloseAll();
+              router.push(`/appointments/${appointmentId}`);
+            }}
+          />
+        );
       case "notifications":
         return <NotificationsModule scrollRootRef={overlayScrollRef} />;
       case "search":
@@ -149,6 +162,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             sx={styles.drawerRoot}
           >
             <LayoutDrawer
+              session={session}
+              isSessionLoading={isSessionLoading}
+              isAuthenticated={isAuthenticated}
               isCollapsed={visualDrawerCollapsed}
               activeView={activeView}
               onOpenSearchView={handleOpenSearch}

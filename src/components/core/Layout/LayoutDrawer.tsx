@@ -16,7 +16,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
 import DrawerPopper from "./DrawerPopper";
 import PublicRoutes from "./PublicRoutes";
 import AdminRoutes from "./AdminRoutes";
@@ -24,6 +24,9 @@ import AdminRoutes from "./AdminRoutes";
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
 type LayoutDrawerProps = {
+  session: Session | null;
+  isSessionLoading: boolean;
+  isAuthenticated: boolean;
   isCollapsed: boolean;
   activeView: ActiveView;
   onOpenSearchView: () => void;
@@ -39,6 +42,9 @@ const CONTENT_START = DRAWER_PADDING_X + ICON_SLOT_SIZE + ITEM_GAP;
 const BOTTOM_BAR_HEIGHT = 72;
 
 const LayoutDrawer = ({
+  session,
+  isSessionLoading,
+  isAuthenticated,
   isCollapsed,
   activeView,
   onOpenSearchView,
@@ -46,10 +52,6 @@ const LayoutDrawer = ({
   onOpenAppointmentsView,
   onToggleDrawer,
 }: LayoutDrawerProps) => {
-  const { data: session, status } = useSession();
-  const isAuthenticated = status === "authenticated";
-  const isLoading = status === "loading";
-
   const pathname = usePathname() || "/";
   const router = useRouter();
 
@@ -90,7 +92,7 @@ const LayoutDrawer = ({
   return (
     <Box sx={styles.root}>
       <Box sx={styles.scrollArea}>
-        {isLoading ? (
+        {isSessionLoading ? (
           <Box sx={styles.loadingWrapper}>
             {Array.from({ length: 10 }).map((_, i) => (
               <Skeleton
