@@ -8,6 +8,12 @@ import AuthListener from "@/components/core/AuthListener/AuthListener";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import { Inter } from "next/font/google";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import "dayjs/locale/ro";
+
+dayjs.extend(utc);
+dayjs.locale("ro");
 
 type ChildrenType = { children: React.ReactNode };
 

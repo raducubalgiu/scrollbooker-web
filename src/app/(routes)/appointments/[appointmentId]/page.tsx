@@ -1,3 +1,6 @@
+import AppointmentDetailsModule from "@/components/modules/Marketplace/AppointmentDetailsModule/AppointmentDetailsModule";
+import { Appointment } from "@/ts/models/booking/appointment/Appointment";
+import { get } from "@/utils/requests";
 import React from "react";
 
 interface AppointmentPageProps {
@@ -15,5 +18,15 @@ export default async function AppointmentPage({
     return <div>Invalid params</div>;
   }
 
-  return <>{appointmentId}</>;
+  const appointment = (
+    await get<Appointment>({
+      url: `/appointments/${appointmentId}`,
+    })
+  ).data;
+
+  if (!appointment) {
+    return <>Not Found</>;
+  }
+
+  return <AppointmentDetailsModule appointment={appointment} />;
 }

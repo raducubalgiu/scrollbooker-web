@@ -1,19 +1,21 @@
 import { Currency } from "../../nomenclatures/currency/Currency";
+import { BusinessCoordinates } from "../business/Business";
 import { AppointmentChannelEnum } from "./AppointmentChannelEnum";
 import { AppointmentStatusEnum } from "./AppointmentStatusEnum";
 
-interface AppointmentProducts {
+export interface AppointmentProduct {
   id?: number | null;
   name: string;
   price: number;
   price_with_discount: number;
+  discount: number;
   duration: number;
   currency: Currency;
   converted_price_with_discount: number;
   exchange_rate?: number | null;
 }
 
-interface AppointmentUser {
+export interface AppointmentUser {
   id?: number;
   fullname: string;
   username?: string | null;
@@ -23,15 +25,15 @@ interface AppointmentUser {
   ratings_count?: number | null;
 }
 
-interface AppointmentBusiness {
+export interface AppointmentBusiness {
   id?: number | null;
   address: string;
   formatted_address: string;
-  coordinates: [number, number];
+  coordinates: BusinessCoordinates;
   map_url: string | null;
 }
 
-interface AppointmentWrittenReview {
+export interface AppointmentWrittenReview {
   id: number;
   review: string;
   rating: number;
@@ -46,7 +48,7 @@ export interface Appointment {
   status: AppointmentStatusEnum;
   message?: string | null;
   is_customer: boolean;
-  products: AppointmentProducts[];
+  products: AppointmentProduct[];
   user: AppointmentUser;
   customer: AppointmentUser;
   business: AppointmentBusiness;
