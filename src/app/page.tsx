@@ -1,6 +1,6 @@
 import ExploreModule from "@/components/modules/Marketplace/ExploreModule/ExploreModule";
 import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 export default async function HomePage() {
   const { userId } = await getUserServerSession();
@@ -13,9 +13,5 @@ export default async function HomePage() {
     );
   }
 
-  return (
-    <Box p={2.5}>
-      <ExploreModule />
-    </Box>
-  );
+  return <ExploreModule />;
 }

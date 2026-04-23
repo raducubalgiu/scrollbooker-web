@@ -21,10 +21,29 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname() || "";
   const theme = useTheme();
-  const [activeView, setActiveView] = React.useState<ActiveView>(null);
 
-  const isCollapsed = activeView !== null;
+  const [activeView, setActiveView] = React.useState<ActiveView>(null);
+  const [isDrawerCollapsed, setIsDrawerCollapsed] = React.useState(false);
+
+  const isOverlayOpen = activeView !== null;
+
+  const visualDrawerCollapsed = isOverlayOpen || isDrawerCollapsed;
+  const navWidth = isOverlayOpen
+    ? DRAWER_WIDTH
+    : isDrawerCollapsed
+      ? COLLAPSED_WIDTH
+      : DRAWER_WIDTH;
+
   const handleCloseAll = React.useCallback(() => setActiveView(null), []);
+
+  const handleToggleDrawer = React.useCallback(() => {
+    if (isOverlayOpen) {
+      setActiveView(null);
+      return;
+    }
+
+    setIsDrawerCollapsed((prev) => !prev);
+  }, [isOverlayOpen]);
 
   const isSpecialPage = React.useMemo(() => {
     const specialPaths = ["/business/", "/post/", "/booking/"];
@@ -41,8 +60,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     theme.palette.mode === "dark" ? "background.default" : "background.paper";
 
   const styles = React.useMemo(
-    () => getStyles(theme, isCollapsed, isAdminPage, bgColor),
-    [theme, isCollapsed, isAdminPage, bgColor]
+    () =>
+      getStyles(
+        theme,
+        {
+          isOverlayOpen,
+          visualDrawerCollapsed,
+          navWidth,
+        },
+        isAdminPage,
+        bgColor
+      ),
+    [
+      theme,
+      isOverlayOpen,
+      visualDrawerCollapsed,
+      navWidth,
+      isAdminPage,
+      bgColor,
+    ]
   );
 
   const expandedDrawer = React.useMemo(() => {
@@ -80,7 +116,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <CssBaseline />
 
       <Backdrop
-        open={isCollapsed}
+        open={isOverlayOpen}
         onClick={handleCloseAll}
         sx={styles.backdrop}
       />
@@ -94,18 +130,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             sx={styles.drawerRoot}
           >
             <LayoutDrawer
-              isCollapsed={isCollapsed}
+              isCollapsed={visualDrawerCollapsed}
               activeView={activeView}
               onOpenSearchView={handleOpenSearch}
               onOpenNotificationsView={handleOpenNotifications}
               onOpenAppointmentsView={handleOpenAppointments}
+              onToggleDrawer={handleToggleDrawer}
             />
           </Drawer>
         </Box>
       )}
 
       <Slide
-        in={isCollapsed}
+        in={isOverlayOpen}
         direction="right"
         timeout={300}
         mountOnEnter
@@ -116,7 +153,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Box>
       </Slide>
 
-      <Box component="main" sx={styles.mainContent}>
+      <Box
+        component="main"
+        sx={{ ...styles.mainContent, p: isSpecialPage ? 0 : 2.5 }}
+      >
         {children}
       </Box>
 
@@ -127,66 +167,83 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 const getStyles = (
   theme: Theme,
-  isCollapsed: boolean,
+  layoutState: {
+    isOverlayOpen: boolean;
+    visualDrawerCollapsed: boolean;
+    navWidth: number;
+  },
   isAdminPage: boolean,
   bgColor: string
-) => ({
-  layoutContainer: {
-    display: "flex",
-    minHeight: "100vh",
-  },
-  backdrop: {
-    zIndex: theme.zIndex.drawer - 2,
-    bgcolor: "rgba(0, 0, 0, 0.4)",
-  },
-  navWrapper: {
-    width: { lg: DRAWER_WIDTH },
-    flexShrink: 0,
-    display: { xs: "none", lg: "block" },
-  },
-  drawerRoot: {
-    "& .MuiDrawer-paper": {
-      transition: "none !important",
+) => {
+  const { isOverlayOpen, visualDrawerCollapsed, navWidth } = layoutState;
+
+  return {
+    layoutContainer: {
+      display: "flex",
+      minHeight: "100vh",
     },
-  },
-  drawerPaper: {
-    width: isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH,
-    bgcolor: bgColor,
-    boxSizing: "border-box",
-    boxShadow: "none",
-    borderRight: "1px solid",
-    borderColor: isCollapsed ? "divider" : "transparent",
-    overflowX: "hidden",
-    transition: "none !important",
-    zIndex: theme.zIndex.drawer,
-  },
-  overlayContainer: {
-    position: "fixed",
-    left: COLLAPSED_WIDTH,
-    top: 0,
-    bottom: 0,
-    width: OVERLAY_WIDTH,
-    bgcolor: "background.paper",
-    zIndex: theme.zIndex.drawer - 1,
-    borderRight: "1px solid",
-    borderColor: "divider",
-    boxShadow: "20px 0 40px rgba(0,0,0,0.05)",
-    pb: 3,
-    overflowY: "auto",
-    "&::-webkit-scrollbar": { width: "6px" },
-    "&::-webkit-scrollbar-thumb": {
-      backgroundColor: theme.palette.divider,
-      borderRadius: "10px",
+
+    backdrop: {
+      zIndex: theme.zIndex.drawer - 2,
+      bgcolor: "rgba(0, 0, 0, 0.4)",
     },
-  },
-  overlayContent: {
-    opacity: isCollapsed ? 1 : 0,
-    transition: "opacity 0.2s",
-  },
-  mainContent: {
-    flexGrow: 1,
-    width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
-    bgcolor: isAdminPage ? "background.default" : bgColor,
-    minWidth: 0,
-  },
-});
+
+    navWrapper: {
+      width: { lg: `${navWidth}px` },
+      flexShrink: 0,
+      display: { xs: "none", lg: "block" },
+      transition: "width 220ms ease",
+    },
+
+    drawerRoot: {
+      "& .MuiDrawer-paper": {
+        transition: "width 220ms ease",
+      },
+    },
+
+    drawerPaper: {
+      width: visualDrawerCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH,
+      bgcolor: bgColor,
+      boxSizing: "border-box",
+      boxShadow: "none",
+      borderRight: "1px solid",
+      borderColor: visualDrawerCollapsed ? "divider" : "transparent",
+      overflowX: "hidden",
+      zIndex: theme.zIndex.drawer,
+      transition: "width 220ms ease, border-color 220ms ease",
+    },
+
+    overlayContainer: {
+      position: "fixed",
+      left: COLLAPSED_WIDTH,
+      top: 0,
+      bottom: 0,
+      width: OVERLAY_WIDTH,
+      bgcolor: "background.paper",
+      zIndex: theme.zIndex.drawer - 1,
+      borderRight: "1px solid",
+      borderColor: "divider",
+      boxShadow: "20px 0 40px rgba(0,0,0,0.05)",
+      pb: 3,
+      overflowY: "auto",
+      "&::-webkit-scrollbar": { width: "6px" },
+      "&::-webkit-scrollbar-thumb": {
+        backgroundColor: theme.palette.divider,
+        borderRadius: "10px",
+      },
+    },
+
+    overlayContent: {
+      opacity: isOverlayOpen ? 1 : 0,
+      transition: "opacity 0.2s",
+    },
+
+    mainContent: {
+      flexGrow: 1,
+      width: { lg: `calc(100% - ${navWidth}px)` },
+      bgcolor: isAdminPage ? "background.default" : bgColor,
+      minWidth: 0,
+      transition: "width 220ms ease",
+    },
+  };
+};

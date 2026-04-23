@@ -5,14 +5,16 @@ import {
   alpha,
   Box,
   Button,
+  IconButton,
   InputAdornment,
   Skeleton,
   TextField,
-  Typography,
   Theme,
-  IconButton,
+  Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import DrawerPopper from "./DrawerPopper";
@@ -27,12 +29,14 @@ type LayoutDrawerProps = {
   onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
   onOpenAppointmentsView: () => void;
+  onToggleDrawer: () => void;
 };
 
 const DRAWER_PADDING_X = 20;
 const ICON_SLOT_SIZE = 72;
 const ITEM_GAP = 10;
 const CONTENT_START = DRAWER_PADDING_X + ICON_SLOT_SIZE + ITEM_GAP;
+const BOTTOM_BAR_HEIGHT = 72;
 
 const LayoutDrawer = ({
   isCollapsed,
@@ -40,6 +44,7 @@ const LayoutDrawer = ({
   onOpenSearchView,
   onOpenNotificationsView,
   onOpenAppointmentsView,
+  onToggleDrawer,
 }: LayoutDrawerProps) => {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
@@ -84,128 +89,150 @@ const LayoutDrawer = ({
 
   return (
     <Box sx={styles.root}>
-      {isLoading ? (
-        Array.from({ length: 10 }).map((_, i) => (
-          <Skeleton
-            key={i}
-            variant="rectangular"
-            width="100%"
-            height={50}
-            sx={{ mx: 2.5, mb: 2.5, borderRadius: 2 }}
-          />
-        ))
-      ) : (
-        <>
-          <Box
-            sx={[
-              styles.brandRow,
-              isCollapsed ? styles.brandRowCollapsed : styles.brandRowExpanded,
-            ]}
-          >
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              fontWeight={700}
+      <Box sx={styles.scrollArea}>
+        {isLoading ? (
+          <Box sx={styles.loadingWrapper}>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                variant="rectangular"
+                width="100%"
+                height={50}
+                sx={{ mb: 2, borderRadius: 2 }}
+              />
+            ))}
+          </Box>
+        ) : (
+          <>
+            <Box
               sx={[
-                styles.brandText,
+                styles.brandRow,
                 isCollapsed
-                  ? styles.brandTextCollapsed
-                  : styles.brandTextExpanded,
+                  ? styles.brandRowCollapsed
+                  : styles.brandRowExpanded,
               ]}
             >
-              {isCollapsed ? "S" : "ScrollBooker"}
-            </Typography>
-          </Box>
-
-          <Box
-            sx={[
-              styles.searchRow,
-              isCollapsed
-                ? styles.searchRowCollapsed
-                : styles.searchRowExpanded,
-            ]}
-          >
-            {isCollapsed ? (
-              <IconButton
-                onClick={onOpenSearchView}
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                fontWeight={700}
                 sx={[
-                  styles.searchIconButton,
-                  activeView === "search" && styles.searchIconButtonActive,
+                  styles.brandText,
+                  isCollapsed
+                    ? styles.brandTextCollapsed
+                    : styles.brandTextExpanded,
                 ]}
               >
-                <SearchIcon
+                {isCollapsed ? "S" : "ScrollBooker"}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={[
+                styles.searchRow,
+                isCollapsed
+                  ? styles.searchRowCollapsed
+                  : styles.searchRowExpanded,
+              ]}
+            >
+              {isCollapsed ? (
+                <IconButton
+                  onClick={onOpenSearchView}
                   sx={[
-                    styles.searchCollapsedIcon,
-                    activeView === "search" && styles.searchCollapsedIconActive,
+                    styles.searchIconButton,
+                    activeView === "search" && styles.searchIconButtonActive,
                   ]}
+                >
+                  <SearchIcon
+                    sx={[
+                      styles.searchCollapsedIcon,
+                      activeView === "search" &&
+                        styles.searchCollapsedIconActive,
+                    ]}
+                  />
+                </IconButton>
+              ) : (
+                <TextField
+                  autoFocus={false}
+                  placeholder="Caută"
+                  variant="outlined"
+                  fullWidth
+                  onFocus={onOpenSearchView}
+                  sx={styles.search}
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon sx={styles.searchFieldIcon} />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                 />
-              </IconButton>
-            ) : (
-              <TextField
-                autoFocus={false}
-                placeholder="Caută utilizatori"
-                variant="outlined"
-                fullWidth
-                onFocus={onOpenSearchView}
-                sx={styles.search}
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon sx={styles.searchFieldIcon} />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-              />
-            )}
-          </Box>
+              )}
+            </Box>
 
-          <Box sx={styles.routesWrapper}>
-            <PublicRoutes
-              session={session}
-              isSelected={isSelected}
-              isCollapsed={isCollapsed}
-              activeView={activeView}
-              onNavigate={navigate}
-              onOpenSearchView={onOpenSearchView}
-              onOpenNotificationsView={onOpenNotificationsView}
-              onOpenAppointmentsView={onOpenAppointmentsView}
-            />
-
-            <DrawerPopper
-              moreOpen={moreOpen}
-              moreAnchorEl={moreAnchorEl}
-              onCloseMore={handleCloseMorePopper}
-            />
-
-            {isAuthenticated && (
-              <AdminRoutes
-                hasEmployees={session?.has_employees ?? false}
+            <Box sx={styles.routesWrapper}>
+              <PublicRoutes
+                session={session}
                 isSelected={isSelected}
-                onNavigate={navigate}
                 isCollapsed={isCollapsed}
+                activeView={activeView}
+                onNavigate={navigate}
+                onOpenSearchView={onOpenSearchView}
+                onOpenNotificationsView={onOpenNotificationsView}
+                onOpenAppointmentsView={onOpenAppointmentsView}
               />
-            )}
 
-            {!isAuthenticated && !isCollapsed && (
-              <Button
-                variant="outlined"
-                disableElevation
-                sx={{
-                  mt: 2.5,
-                  ml: `${CONTENT_START}px`,
-                  mr: `${DRAWER_PADDING_X}px`,
-                }}
-                onClick={() => router.push("/api/auth/signin")}
-              >
-                Conectare
-              </Button>
-            )}
-          </Box>
-        </>
-      )}
+              <DrawerPopper
+                moreOpen={moreOpen}
+                moreAnchorEl={moreAnchorEl}
+                onCloseMore={handleCloseMorePopper}
+              />
+
+              {isAuthenticated && (
+                <AdminRoutes
+                  hasEmployees={session?.has_employees ?? false}
+                  isSelected={isSelected}
+                  onNavigate={navigate}
+                  isCollapsed={isCollapsed}
+                />
+              )}
+
+              {!isAuthenticated && !isCollapsed && (
+                <Button
+                  variant="outlined"
+                  disableElevation
+                  sx={{
+                    mt: 2.5,
+                    ml: `${CONTENT_START}px`,
+                    mr: `${DRAWER_PADDING_X}px`,
+                  }}
+                  onClick={() => router.push("/api/auth/signin")}
+                >
+                  Conectare
+                </Button>
+              )}
+            </Box>
+          </>
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          ...styles.bottomBar,
+          justifyContent: isCollapsed ? "center" : "flex-end",
+        }}
+      >
+        <IconButton sx={styles.bottomBarButton} onClick={onToggleDrawer}>
+          {isCollapsed ? (
+            <ChevronRightRoundedIcon sx={styles.bottomBarIcon} />
+          ) : (
+            <ChevronLeftRoundedIcon sx={styles.bottomBarIcon} />
+          )}
+        </IconButton>
+      </Box>
     </Box>
   );
 };
@@ -214,8 +241,30 @@ export default LayoutDrawer;
 
 const styles = {
   root: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    minHeight: 0,
+  },
+
+  scrollArea: {
+    flex: 1,
+    minHeight: 0,
+    overflowY: "auto",
+    overflowX: "hidden",
     pt: 2.5,
     pb: 2,
+    "&::-webkit-scrollbar": {
+      width: 6,
+    },
+    "&::-webkit-scrollbar-thumb": {
+      bgcolor: "divider",
+      borderRadius: 999,
+    },
+  },
+
+  loadingWrapper: {
+    px: 2.5,
   },
 
   brandRow: {
@@ -288,10 +337,10 @@ const styles = {
 
   searchIconButtonActive: {
     bgcolor: "action.hover",
-    //borderColor: "primary.main",
+    borderColor: "primary.main",
     "&:hover": {
       bgcolor: "action.hover",
-      //borderColor: "primary.main",
+      borderColor: "primary.main",
     },
   },
 
@@ -334,5 +383,33 @@ const styles = {
         color: (theme: Theme) => alpha(theme.palette.text.disabled, 0.5),
       },
     },
+  },
+
+  bottomBar: {
+    height: `${BOTTOM_BAR_HEIGHT}px`,
+    minHeight: `${BOTTOM_BAR_HEIGHT}px`,
+    borderTop: "1px solid",
+    borderColor: "divider",
+    display: "flex",
+    alignItems: "center",
+    px: 2,
+    bgcolor: "background.paper",
+    flexShrink: 0,
+  },
+
+  bottomBarButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 2,
+    color: "text.secondary",
+    bgcolor: "action.hover",
+    "&:hover": {
+      bgcolor: "action.hover",
+      color: "text.primary",
+    },
+  },
+
+  bottomBarIcon: {
+    fontSize: 24,
   },
 };
