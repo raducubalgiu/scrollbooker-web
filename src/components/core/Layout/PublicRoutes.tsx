@@ -46,10 +46,12 @@ const ITEM_GAP = 10;
 
 const getPublicRoutes = ({
   username,
+  avatar,
   onOpenNotificationsView,
   onOpenAppointmentsView,
 }: {
   username: string | undefined;
+  avatar: string | null | undefined;
   onOpenNotificationsView: () => void;
   onOpenAppointmentsView: () => void;
 }): NavigationItem[] => [
@@ -91,7 +93,7 @@ const getPublicRoutes = ({
     route: username ? `/profile/${username}` : "/api/auth/signin",
     icon: username ? (
       <Avatar
-        src=""
+        src={avatar ?? ""}
         alt={username}
         sx={{
           width: 32,
@@ -130,10 +132,11 @@ const PublicRoutes = ({
     () =>
       getPublicRoutes({
         username: session?.username,
+        avatar: session?.avatar,
         onOpenNotificationsView,
         onOpenAppointmentsView,
       }),
-    [session?.username, onOpenNotificationsView]
+    [session?.username, session?.avatar, onOpenNotificationsView]
   );
 
   const styles = React.useMemo(

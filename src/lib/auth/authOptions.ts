@@ -85,6 +85,7 @@ export const authOptions: AuthOptions = {
           user_id: userInfo.id,
           business_id: userInfo.business_id,
           business_type_id: userInfo.business_type_id,
+          avatar: userInfo.avatar,
           has_employees: userInfo.has_employees,
           is_employee: userInfo.is_employee,
         };
@@ -113,6 +114,7 @@ export const authOptions: AuthOptions = {
         session.accessToken = token.accessToken;
         session.username = token.username;
         session.user_id = token.user_id;
+        session.avatar = token.avatar;
         session.business_id = token.business_id;
         session.business_type_id = token.business_type_id;
         session.permissions = token.permissions;
@@ -234,6 +236,7 @@ async function refreshToken(refreshToken: string): Promise<JWT> {
       username: userInfo.username,
       permissions: permissions,
       user_id: userInfo.id,
+      avatar: userInfo.avatar,
       business_id: userInfo.business_id,
       business_type_id: userInfo.business_type_id,
       has_employees: userInfo.has_employees,

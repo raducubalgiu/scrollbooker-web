@@ -19,7 +19,7 @@ import DrawerPopper from "./DrawerPopper";
 import PublicRoutes from "./PublicRoutes";
 import AdminRoutes from "./AdminRoutes";
 
-type MarketplaceDrawerProps = {
+type LayoutDrawerProps = {
   isCollapsed: boolean;
   onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
@@ -31,12 +31,12 @@ const ICON_SLOT_SIZE = 72;
 const ITEM_GAP = 10;
 const CONTENT_START = DRAWER_PADDING_X + ICON_SLOT_SIZE + ITEM_GAP;
 
-const MarketplaceDrawer = ({
+const LayoutDrawer = ({
   isCollapsed,
   onOpenSearchView,
   onOpenNotificationsView,
   onOpenAppointmentsView,
-}: MarketplaceDrawerProps) => {
+}: LayoutDrawerProps) => {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const isLoading = status === "loading";
@@ -80,113 +80,123 @@ const MarketplaceDrawer = ({
 
   return (
     <Box sx={styles.root}>
-      <Box
-        sx={[
-          styles.brandRow,
-          isCollapsed ? styles.brandRowCollapsed : styles.brandRowExpanded,
-        ]}
-      >
-        <Typography
-          variant="h6"
-          noWrap
-          component="div"
-          fontWeight={700}
-          sx={[
-            styles.brandText,
-            isCollapsed ? styles.brandTextCollapsed : styles.brandTextExpanded,
-          ]}
-        >
-          {isCollapsed ? "S" : "ScrollBooker"}
-        </Typography>
-      </Box>
-
-      <Box
-        sx={[
-          styles.searchRow,
-          isCollapsed ? styles.searchRowCollapsed : styles.searchRowExpanded,
-        ]}
-      >
-        {isCollapsed ? (
-          <IconButton onClick={onOpenSearchView} sx={styles.searchIconButton}>
-            <SearchIcon sx={styles.searchCollapsedIcon} />
-          </IconButton>
-        ) : (
-          <TextField
-            autoFocus={false}
-            placeholder="Caută utilizatori"
-            variant="outlined"
-            fullWidth
-            onFocus={onOpenSearchView}
-            sx={styles.search}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon sx={styles.searchFieldIcon} />
-                  </InputAdornment>
-                ),
-              },
-            }}
+      {isLoading ? (
+        Array.from({ length: 10 }).map((_, i) => (
+          <Skeleton
+            key={i}
+            variant="rectangular"
+            width="100%"
+            height={50}
+            sx={{ mx: 2.5, mb: 2.5, borderRadius: 2 }}
           />
-        )}
-      </Box>
-
-      <Box sx={styles.routesWrapper}>
-        <PublicRoutes
-          session={session}
-          isSelected={isSelected}
-          isCollapsed={isCollapsed}
-          onNavigate={navigate}
-          onOpenNotificationsView={onOpenNotificationsView}
-          onOpenAppointmentsView={onOpenAppointmentsView}
-        />
-
-        <DrawerPopper
-          moreOpen={moreOpen}
-          moreAnchorEl={moreAnchorEl}
-          onCloseMore={handleCloseMorePopper}
-        />
-
-        {isLoading &&
-          Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton
-              key={i}
-              variant="rectangular"
-              width="100%"
-              height={56}
-              sx={{ mx: 2.5, mt: 1.25, borderRadius: 2 }}
-            />
-          ))}
-
-        {isAuthenticated && (
-          <AdminRoutes
-            hasEmployees={session?.has_employees ?? false}
-            isSelected={isSelected}
-            onNavigate={navigate}
-            isCollapsed={isCollapsed}
-          />
-        )}
-
-        {!isAuthenticated && !isLoading && !isCollapsed && (
-          <Button
-            variant="outlined"
-            disableElevation
-            sx={{
-              mt: 2.5,
-              ml: `${CONTENT_START}px`,
-              mr: `${DRAWER_PADDING_X}px`,
-            }}
-            onClick={() => router.push("/api/auth/signin")}
+        ))
+      ) : (
+        <>
+          <Box
+            sx={[
+              styles.brandRow,
+              isCollapsed ? styles.brandRowCollapsed : styles.brandRowExpanded,
+            ]}
           >
-            Conectare
-          </Button>
-        )}
-      </Box>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              fontWeight={700}
+              sx={[
+                styles.brandText,
+                isCollapsed
+                  ? styles.brandTextCollapsed
+                  : styles.brandTextExpanded,
+              ]}
+            >
+              {isCollapsed ? "S" : "ScrollBooker"}
+            </Typography>
+          </Box>
+
+          <Box
+            sx={[
+              styles.searchRow,
+              isCollapsed
+                ? styles.searchRowCollapsed
+                : styles.searchRowExpanded,
+            ]}
+          >
+            {isCollapsed ? (
+              <IconButton
+                onClick={onOpenSearchView}
+                sx={styles.searchIconButton}
+              >
+                <SearchIcon sx={styles.searchCollapsedIcon} />
+              </IconButton>
+            ) : (
+              <TextField
+                autoFocus={false}
+                placeholder="Caută utilizatori"
+                variant="outlined"
+                fullWidth
+                onFocus={onOpenSearchView}
+                sx={styles.search}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon sx={styles.searchFieldIcon} />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+            )}
+          </Box>
+
+          <Box sx={styles.routesWrapper}>
+            <PublicRoutes
+              session={session}
+              isSelected={isSelected}
+              isCollapsed={isCollapsed}
+              onNavigate={navigate}
+              onOpenNotificationsView={onOpenNotificationsView}
+              onOpenAppointmentsView={onOpenAppointmentsView}
+            />
+
+            <DrawerPopper
+              moreOpen={moreOpen}
+              moreAnchorEl={moreAnchorEl}
+              onCloseMore={handleCloseMorePopper}
+            />
+
+            {isAuthenticated && (
+              <AdminRoutes
+                hasEmployees={session?.has_employees ?? false}
+                isSelected={isSelected}
+                onNavigate={navigate}
+                isCollapsed={isCollapsed}
+              />
+            )}
+
+            {!isAuthenticated && !isLoading && !isCollapsed && (
+              <Button
+                variant="outlined"
+                disableElevation
+                sx={{
+                  mt: 2.5,
+                  ml: `${CONTENT_START}px`,
+                  mr: `${DRAWER_PADDING_X}px`,
+                }}
+                onClick={() => router.push("/api/auth/signin")}
+              >
+                Conectare
+              </Button>
+            )}
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
 
-export default MarketplaceDrawer;
+export default LayoutDrawer;
 
 const styles = {
   root: {

@@ -5,11 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme, Theme } from "@mui/material/styles";
 import { Backdrop, Box, CssBaseline, Drawer, Slide } from "@mui/material";
 
-import MarketplaceDrawer from "./MarketplaceDrawer";
-import MarketplaceBottomBar from "./MarketplaceBottomBar";
 import NotificationsModule from "@/components/modules/Admin/NotificationsModule/NotificationsModule";
 import AppointmentsModule from "@/components/modules/Marketplace/AppointmentsModule/AppointmentsModule";
 import SearchUsersModule from "@/components/modules/Marketplace/SearchUsersModule/SearchUsersModule";
+import LayoutDrawer from "./LayoutDrawer";
+import BottomBar from "./BottomBar";
 
 const DRAWER_WIDTH = 340;
 const COLLAPSED_WIDTH = 110;
@@ -93,7 +93,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             slotProps={{ paper: { sx: styles.drawerPaper } }}
             sx={styles.drawerRoot}
           >
-            <MarketplaceDrawer
+            <LayoutDrawer
               isCollapsed={isCollapsed}
               onOpenSearchView={handleOpenSearch}
               onOpenNotificationsView={handleOpenNotifications}
@@ -119,7 +119,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </Box>
 
-      <MarketplaceBottomBar />
+      <BottomBar />
     </Box>
   );
 }
