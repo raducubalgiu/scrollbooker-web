@@ -4,33 +4,49 @@ import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationS
 import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
 import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
-import { useEffect, useRef } from "react";
 import { useInfiniteNotifications } from "@/hooks/infiniteQuery/useInfiniteNotifications";
+import React from "react";
 
-const NotificationsModule = () => {
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+type NotificationsModuleProps = {
+  scrollRootRef: React.RefObject<HTMLDivElement | null>;
+};
+
+const NotificationsModule = ({ scrollRootRef }: NotificationsModuleProps) => {
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     useInfiniteNotifications();
 
-  useEffect(() => {
+  const notifications = React.useMemo(
+    () => data?.pages.flatMap((p) => p.results) ?? [],
+    [data]
+  );
+
+  React.useEffect(() => {
+    const root = scrollRootRef.current;
+    const sentinel = sentinelRef.current;
+
+    if (!root || !sentinel || !hasNextPage || isFetchingNextPage) return;
+
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+      ([entry]) => {
+        if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      {
+        root,
+        threshold: 0.1,
+        rootMargin: "0px 0px 80px 0px",
+      }
     );
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
-    }
+    observer.observe(sentinel);
 
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  const notifications = data?.pages.flatMap((p) => p.results) ?? [];
+    return () => {
+      observer.disconnect();
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, scrollRootRef]);
 
   return (
     <>
@@ -51,7 +67,7 @@ const NotificationsModule = () => {
           fontWeight={700}
           fontSize={25}
         >
-          Notificari
+          Notificări
         </Typography>
 
         <Divider sx={{ mt: 2.5, mb: 1.5 }} />
@@ -60,19 +76,43 @@ const NotificationsModule = () => {
       {isLoading && <NotificationSkeleton />}
 
       {!isLoading &&
-        notifications?.map((notification) => (
-          <NotificationItem key={notification.id} notification={notification} />
+        notifications.map((notification, index) => (
+          <NotificationItem
+            key={`${notification.id}-${index}`}
+            notification={notification}
+          />
         ))}
 
-      <Box
-        ref={loadMoreRef}
-        sx={{ py: 3, display: "flex", justifyContent: "center" }}
-      >
-        {isFetchingNextPage && <CircularProgress size={25} />}
-      </Box>
+      {/* Sentinel vizibil doar când mai există date de încărcat */}
+      {hasNextPage && (
+        <Box
+          ref={sentinelRef}
+          sx={{
+            py: 4,
+            display: "flex",
+            justifyContent: "center",
+            minHeight: 60,
+          }}
+        >
+          {isFetchingNextPage && <CircularProgress size={25} />}
+        </Box>
+      )}
+
+      {!isLoading && !hasNextPage && !isEmpty(notifications) && (
+        <Typography
+          sx={{
+            textAlign: "center",
+            py: 5,
+            color: "text.disabled",
+            fontSize: 14,
+          }}
+        >
+          Nu mai sunt notificări de afișat
+        </Typography>
+      )}
 
       {!isLoading && isEmpty(notifications) && (
-        <Typography sx={{ textAlign: "center" }} color="text.secondary">
+        <Typography sx={{ textAlign: "center", py: 3 }} color="text.secondary">
           Nu au fost găsite notificări
         </Typography>
       )}

@@ -18,9 +18,9 @@ export const useInfiniteNotifications = () => {
     queryKey: ["notifications"],
     queryFn: fetchNotifications,
     initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) => {
-      const totalFetched = pages.flatMap((p) => p.results).length;
-      return totalFetched < lastPage.count ? pages.length + 1 : undefined;
+    getNextPageParam: (lastPage) => {
+      if (lastPage.results.length < 10) return undefined;
+      return lastPage.page + 1;
     },
   });
 };

@@ -21,6 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname() || "";
   const theme = useTheme();
+  const overlayScrollRef = React.useRef<HTMLDivElement | null>(null);
 
   const [activeView, setActiveView] = React.useState<ActiveView>(null);
   const [isDrawerCollapsed, setIsDrawerCollapsed] = React.useState(false);
@@ -84,9 +85,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const expandedDrawer = React.useMemo(() => {
     switch (activeView) {
       case "appointments":
-        return <AppointmentsModule />;
+        return <AppointmentsModule scrollRootRef={overlayScrollRef} />;
       case "notifications":
-        return <NotificationsModule />;
+        return <NotificationsModule scrollRootRef={overlayScrollRef} />;
       case "search":
         return (
           <SearchUsersModule
@@ -101,15 +102,33 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }, [activeView, handleCloseAll, router]);
 
-  const handleOpenSearch = React.useCallback(() => setActiveView("search"), []);
+  const handleOpenSearch = React.useCallback(
+    () =>
+      activeView === "search" ? handleCloseAll() : setActiveView("search"),
+    [activeView]
+  );
+
   const handleOpenNotifications = React.useCallback(
-    () => setActiveView("notifications"),
-    []
+    () =>
+      activeView === "notifications"
+        ? handleCloseAll()
+        : setActiveView("notifications"),
+    [activeView]
   );
+
   const handleOpenAppointments = React.useCallback(
-    () => setActiveView("appointments"),
-    []
+    () =>
+      activeView === "appointments"
+        ? handleCloseAll()
+        : setActiveView("appointments"),
+    [activeView]
   );
+
+  React.useEffect(() => {
+    if (overlayScrollRef.current) {
+      overlayScrollRef.current.scrollTop = 0;
+    }
+  }, [activeView]);
 
   return (
     <Box sx={styles.layoutContainer}>
@@ -148,8 +167,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         mountOnEnter
         unmountOnExit
       >
-        <Box sx={styles.overlayContainer}>
-          <Box sx={styles.overlayContent}>{expandedDrawer}</Box>
+        <Box ref={overlayScrollRef} sx={styles.overlayContainer}>
+          <Box key={activeView} sx={styles.overlayContent}>
+            {expandedDrawer}
+          </Box>
         </Box>
       </Slide>
 
