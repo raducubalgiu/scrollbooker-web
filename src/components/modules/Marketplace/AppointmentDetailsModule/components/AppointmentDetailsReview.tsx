@@ -23,7 +23,7 @@ type AppointmentDetailsReviewProps = {
   hasVideoReview: boolean;
   isCustomer: boolean;
   status: AppointmentStatusEnum;
-  onRatingClick: (rating: number) => void;
+  onRatingClick: (rating: number, review: string | null) => void;
 };
 
 const AppointmentDetailsReview = ({
@@ -117,7 +117,7 @@ const AppointmentDetailsReview = ({
                 marginRight: "8px",
               },
             }}
-            onChange={(_, v) => v !== null && onRatingClick(v)}
+            //onChange={(_, v) => v !== null && onRatingClick(v)}
           />
         </Stack>
       )}

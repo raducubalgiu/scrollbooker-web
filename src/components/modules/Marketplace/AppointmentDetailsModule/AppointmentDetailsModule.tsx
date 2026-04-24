@@ -10,6 +10,8 @@ import AppointmentDetailsMap from "./components/AppointmentDetailsMap";
 import AppointmentDetailsReview from "./components/AppointmentDetailsReview";
 import CancelAppointmentModal from "./CancelAppointmentModal";
 import CreateWrittenReviewModal from "./CreateWrittenReviewModal";
+import { useMutate } from "@/hooks/useHttp";
+import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 
 type AppointmentDetailsModuleProps = {
   appointment: Appointment;
@@ -18,18 +20,22 @@ type AppointmentDetailsModuleProps = {
 type CreateReviewType = {
   open: boolean;
   rating: number;
+  review: string | null;
 };
 
 const AppointmentDetailsModule = ({
   appointment,
 }: AppointmentDetailsModuleProps) => {
-  const [openCancel, setOpenCancel] = useState(false);
+  const [status, setStatus] = useState(appointment.status);
+  const [message, setMessage] = useState(appointment.message);
+
+  const [openCancel, setOpenCancel] = useState<boolean>(false);
   const [openCreateReview, setOpenCreateReview] =
     useState<CreateReviewType | null>(null);
 
   const {
+    id,
     start_date,
-    status,
     user,
     customer,
     is_customer,
@@ -43,11 +49,26 @@ const AppointmentDetailsModule = ({
     has_video_review,
   } = appointment;
 
+  const { mutate: handleCancel, isPending: isLoadingCancel } = useMutate({
+    key: ["cancel-appointment", id],
+    url: `/api/appointments/${id}/cancel`,
+    method: "PUT",
+    options: {
+      onSuccess: (response: Appointment) => {
+        setOpenCancel(false);
+        setStatus(AppointmentStatusEnum.CANCELED);
+        setMessage(response.message);
+      },
+    },
+  });
+
   return (
     <Box sx={styles.container}>
       <CancelAppointmentModal
         open={openCancel}
         onClose={() => setOpenCancel(false)}
+        onCancel={(message) => handleCancel({ message })}
+        isLoadingCancel={isLoadingCancel}
       />
 
       <CreateWrittenReviewModal
@@ -64,6 +85,7 @@ const AppointmentDetailsModule = ({
           user={user}
           customer={customer}
           isCustomer={is_customer}
+          message={message}
         />
 
         <AppointmentDetailsProducts
@@ -86,7 +108,7 @@ const AppointmentDetailsModule = ({
           isCustomer={is_customer}
           status={status}
           customerAvatar={customer.avatar}
-          onRatingClick={(r) => setOpenCreateReview({ open: true, rating: r })}
+          onRatingClick={(r) => {}}
         />
       </Box>
 

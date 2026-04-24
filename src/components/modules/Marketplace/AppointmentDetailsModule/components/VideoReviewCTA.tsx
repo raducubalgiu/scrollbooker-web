@@ -55,6 +55,7 @@ const VideoReviewCTA = ({
         transition: "transform 0.2s ease",
         "&:active": { transform: "scale(0.98)" },
         p: 1.5,
+        mt: 2.5,
       }}
     >
       <Box

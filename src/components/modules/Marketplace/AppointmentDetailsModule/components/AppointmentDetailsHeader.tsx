@@ -2,7 +2,15 @@ import dayjs from "@/lib/dayjs";
 import { AppointmentUser } from "@/ts/models/booking/appointment/Appointment";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 import { formatRating } from "@/utils/formatters";
-import { Avatar, Badge, Box, Chip, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  Avatar,
+  Badge,
+  Box,
+  Chip,
+  Stack,
+  Typography,
+} from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import React from "react";
 
@@ -13,6 +21,7 @@ type AppointmentDetailsHeaderProps = {
   user: AppointmentUser;
   customer: AppointmentUser;
   isCustomer: boolean;
+  message: string | null | undefined;
 };
 
 const AppointmentDetailsHeader = ({
@@ -22,12 +31,19 @@ const AppointmentDetailsHeader = ({
   user,
   customer,
   isCustomer,
+  message,
 }: AppointmentDetailsHeaderProps) => {
   const { fullname, profession, avatar, ratings_average, ratings_count } = user;
 
   return (
     <Box>
       <Chip label={status} />
+
+      {status === AppointmentStatusEnum.CANCELED && message && (
+        <Alert variant="outlined" severity="error" sx={{ mt: 1.5 }}>
+          Motiv: {message}
+        </Alert>
+      )}
 
       <Typography variant="h4" fontWeight={700} mt={2}>
         {dayjs.utc(startDate).format("dddd, D MMMM YYYY HH:mm")}
