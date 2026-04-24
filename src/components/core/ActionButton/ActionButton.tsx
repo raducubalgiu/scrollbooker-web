@@ -3,7 +3,6 @@ import { Button, ButtonProps, SxProps, Stack, Theme } from "@mui/material";
 export type ActionButtonType = {
   title: string;
   props?: ButtonProps;
-  hidden?: boolean;
 };
 
 type ActionButtonProps = {
@@ -25,7 +24,6 @@ const ActionButton = ({ actions, sx }: ActionButtonProps) => {
             mt: 2,
             fontWeight: 600,
             "&:nth-child(1)": { ml: 0 },
-            display: btn.hidden ? "none" : "block",
           }}
           {...btn.props}
         >

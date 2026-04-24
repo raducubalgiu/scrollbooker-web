@@ -1,5 +1,8 @@
 import dayjs from "@/lib/dayjs";
-import { AppointmentUser } from "@/ts/models/booking/appointment/Appointment";
+import {
+  AppointmentUser,
+  AppointmentUtils,
+} from "@/ts/models/booking/appointment/Appointment";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 import { formatRating } from "@/utils/formatters";
 import {
@@ -19,9 +22,7 @@ type AppointmentDetailsHeaderProps = {
   startDate: string;
   totalDuration: number;
   user: AppointmentUser;
-  customer: AppointmentUser;
-  isCustomer: boolean;
-  message: string | null | undefined;
+  canceledReason: string | null;
 };
 
 const AppointmentDetailsHeader = ({
@@ -29,19 +30,18 @@ const AppointmentDetailsHeader = ({
   startDate,
   totalDuration,
   user,
-  customer,
-  isCustomer,
-  message,
+  canceledReason,
 }: AppointmentDetailsHeaderProps) => {
   const { fullname, profession, avatar, ratings_average, ratings_count } = user;
+  const statusLabel = AppointmentUtils.getStatusLabel(status);
 
   return (
     <Box>
-      <Chip label={status} />
+      <Chip label={statusLabel} />
 
-      {status === AppointmentStatusEnum.CANCELED && message && (
-        <Alert variant="outlined" severity="error" sx={{ mt: 1.5 }}>
-          Motiv: {message}
+      {status === AppointmentStatusEnum.CANCELED && canceledReason && (
+        <Alert variant="outlined" severity="error" sx={{ mt: 2.5 }}>
+          Motiv: {canceledReason}
         </Alert>
       )}
 
@@ -53,30 +53,26 @@ const AppointmentDetailsHeader = ({
       </Typography>
 
       <Stack flexDirection="row" alignItems="center" gap={2} my={5}>
-        {isCustomer && ratings_average != null ? (
-          <Avatar src={customer.avatar ?? ""} sx={styles.avatar} />
-        ) : (
-          <Badge
-            overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            badgeContent={
-              <Stack
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="center"
-                sx={styles.badgeContent}
-              >
-                <StarIcon sx={{ fontSize: 18, mr: 0.5 }} color="primary" />
-                <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-                  {formatRating(ratings_average)}
-                </Typography>
-              </Stack>
-            }
-            sx={styles.badge}
-          >
-            <Avatar sx={styles.avatar} src={avatar ?? ""} />
-          </Badge>
-        )}
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          badgeContent={
+            <Stack
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="center"
+              sx={styles.badgeContent}
+            >
+              <StarIcon sx={{ fontSize: 18, mr: 0.5 }} color="primary" />
+              <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
+                {formatRating(ratings_average)}
+              </Typography>
+            </Stack>
+          }
+          sx={styles.badge}
+        >
+          <Avatar sx={styles.avatar} src={avatar ?? ""} />
+        </Badge>
         <Box>
           <Typography variant="h6" fontWeight={600}>
             {fullname}

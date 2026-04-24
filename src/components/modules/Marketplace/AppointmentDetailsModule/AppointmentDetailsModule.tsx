@@ -1,6 +1,11 @@
 "use client";
 
-import { Appointment } from "@/ts/models/booking/appointment/Appointment";
+import {
+  Appointment,
+  AppointmentCancel,
+  AppointmentCreate,
+  AppointmentWrittenReview,
+} from "@/ts/models/booking/appointment/Appointment";
 import { Box } from "@mui/material";
 import React, { useState } from "react";
 import AppointmentDetailsHeader from "./components/AppointmentDetailsHeader";
@@ -12,26 +17,31 @@ import CancelAppointmentModal from "./CancelAppointmentModal";
 import CreateWrittenReviewModal from "./CreateWrittenReviewModal";
 import { useMutate } from "@/hooks/useHttp";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
+import { Review } from "@/ts/models/booking/review/Review";
+import { isEmpty } from "lodash";
+import { useSession } from "next-auth/react";
 
 type AppointmentDetailsModuleProps = {
   appointment: Appointment;
 };
 
-type CreateReviewType = {
-  open: boolean;
-  rating: number;
-  review: string | null;
-};
-
 const AppointmentDetailsModule = ({
   appointment,
 }: AppointmentDetailsModuleProps) => {
+  const { data: session } = useSession();
   const [status, setStatus] = useState(appointment.status);
-  const [message, setMessage] = useState(appointment.message);
-
+  const [canceledReason, setCanceledReason] = useState(
+    appointment.canceled_reason
+  );
   const [openCancel, setOpenCancel] = useState<boolean>(false);
-  const [openCreateReview, setOpenCreateReview] =
-    useState<CreateReviewType | null>(null);
+
+  const [writtenReview, setWrittenReview] =
+    useState<AppointmentWrittenReview | null>(appointment.written_review);
+
+  const [openReview, setOpenReview] = useState(false);
+  const [draftRating, setDraftRating] = useState<number | null>(
+    appointment.written_review?.rating ?? null
+  );
 
   const {
     id,
@@ -44,10 +54,10 @@ const AppointmentDetailsModule = ({
     total_price_with_discount,
     total_price,
     total_discount,
-    written_review,
     business,
     has_video_review,
   } = appointment;
+  const isFinished = status === AppointmentStatusEnum.FINISHED;
 
   const { mutate: handleCancel, isPending: isLoadingCancel } = useMutate({
     key: ["cancel-appointment", id],
@@ -57,24 +67,77 @@ const AppointmentDetailsModule = ({
       onSuccess: (response: Appointment) => {
         setOpenCancel(false);
         setStatus(AppointmentStatusEnum.CANCELED);
-        setMessage(response.message);
+        setCanceledReason(response.canceled_reason);
       },
     },
   });
+
+  const { mutate: handleCreateReview, isPending: isPendingCreateReview } =
+    useMutate({
+      key: ["create-written-review"],
+      url: `/api/appointments/${id}/create-review`,
+      options: {
+        onSuccess: (review: Review) => {
+          setWrittenReview(review);
+          setDraftRating(review.rating);
+          setOpenReview(false);
+        },
+      },
+    });
+
+  const { mutate: handleDeleteReview } = useMutate({
+    key: ["create-written-review"],
+    url: `/api/reviews/${writtenReview?.id}/delete-review`,
+    method: "DELETE",
+    options: {
+      onSuccess: () => {
+        setWrittenReview(null);
+        setDraftRating(null);
+      },
+    },
+  });
+
+  const onHandleCreateReview = (review: string, finalRating: number) => {
+    const firstProductId = appointment.products[0]?.id;
+    if (!finalRating || !appointment.user.id || !firstProductId) return;
+
+    const body: AppointmentCreate = {
+      review,
+      rating: finalRating,
+      user_id: appointment.user.id,
+      product_id: firstProductId,
+      parent_id: null,
+    };
+
+    handleCreateReview(body);
+  };
+
+  const onHandleCancelAppointment = (canceledReason: string) => {
+    const authUserId = session?.user_id;
+    if (!authUserId) return;
+
+    const body: AppointmentCancel = {
+      canceled_reason: canceledReason,
+      canceled_by_user_id: authUserId,
+    };
+    handleCancel(body);
+  };
 
   return (
     <Box sx={styles.container}>
       <CancelAppointmentModal
         open={openCancel}
         onClose={() => setOpenCancel(false)}
-        onCancel={(message) => handleCancel({ message })}
+        onCancel={onHandleCancelAppointment}
         isLoadingCancel={isLoadingCancel}
       />
 
       <CreateWrittenReviewModal
-        open={openCreateReview?.open === true}
-        rating={openCreateReview?.rating}
-        onClose={() => setOpenCreateReview(null)}
+        open={openReview}
+        rating={draftRating}
+        onClose={() => setOpenReview(false)}
+        onCreateReview={onHandleCreateReview}
+        isLoadingCreateReview={isPendingCreateReview}
       />
 
       <Box sx={{ minWidth: 0 }}>
@@ -83,9 +146,7 @@ const AppointmentDetailsModule = ({
           startDate={start_date}
           totalDuration={total_duration}
           user={user}
-          customer={customer}
-          isCustomer={is_customer}
-          message={message}
+          canceledReason={canceledReason}
         />
 
         <AppointmentDetailsProducts
@@ -102,14 +163,21 @@ const AppointmentDetailsModule = ({
             onCancel={() => setOpenCancel(true)}
           />
         )}
-        <AppointmentDetailsReview
-          writtenReview={written_review}
-          hasVideoReview={has_video_review}
-          isCustomer={is_customer}
-          status={status}
-          customerAvatar={customer.avatar}
-          onRatingClick={(r) => {}}
-        />
+
+        {!isEmpty(products) && isFinished && (
+          <AppointmentDetailsReview
+            writtenReview={writtenReview}
+            hasVideoReview={has_video_review}
+            isCustomer={is_customer}
+            status={status}
+            customerAvatar={customer.avatar}
+            onRatingClick={(rating) => {
+              setDraftRating(rating);
+              setOpenReview(true);
+            }}
+            onDeleteReview={() => handleDeleteReview({})}
+          />
+        )}
       </Box>
 
       <AppointmentDetailsMap business={business} />

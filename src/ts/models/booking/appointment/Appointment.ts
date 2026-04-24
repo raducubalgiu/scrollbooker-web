@@ -4,7 +4,7 @@ import { AppointmentChannelEnum } from "./AppointmentChannelEnum";
 import { AppointmentStatusEnum } from "./AppointmentStatusEnum";
 
 export interface AppointmentProduct {
-  id?: number | null;
+  id: number | null;
   name: string;
   price: number;
   price_with_discount: number;
@@ -16,13 +16,13 @@ export interface AppointmentProduct {
 }
 
 export interface AppointmentUser {
-  id?: number;
+  id: number | null;
   fullname: string;
-  username?: string | null;
-  avatar?: string | null;
-  profession?: string | null;
-  ratings_average?: number | null;
-  ratings_count?: number | null;
+  username: string | null;
+  avatar: string | null;
+  profession: string | null;
+  ratings_average: number | null;
+  ratings_count: number | null;
 }
 
 export interface AppointmentBusiness {
@@ -46,7 +46,8 @@ export interface Appointment {
   end_date: string;
   channel: AppointmentChannelEnum;
   status: AppointmentStatusEnum;
-  message?: string | null;
+  blocked_message: string | null;
+  canceled_reason: string | null;
   is_customer: boolean;
   products: AppointmentProduct[];
   user: AppointmentUser;
@@ -59,5 +60,33 @@ export interface Appointment {
   payment_currency: Currency;
   has_written_review: boolean;
   has_video_review: boolean;
-  written_review: AppointmentWrittenReview;
+  written_review: AppointmentWrittenReview | null;
 }
+
+export interface AppointmentCreate {
+  review: string;
+  rating: number;
+  user_id: number;
+  product_id: number;
+  parent_id: number | null;
+}
+
+export interface AppointmentCancel {
+  canceled_reason: string;
+  canceled_by_user_id: number;
+}
+
+export const AppointmentUtils = {
+  getStatusLabel(status: AppointmentStatusEnum): string {
+    switch (status) {
+      case AppointmentStatusEnum.IN_PROGRESS:
+        return "Confirmat";
+      case AppointmentStatusEnum.CANCELED:
+        return "Anulat";
+      case AppointmentStatusEnum.FINISHED:
+        return "Finalizat";
+      default:
+        return String(status);
+    }
+  },
+};

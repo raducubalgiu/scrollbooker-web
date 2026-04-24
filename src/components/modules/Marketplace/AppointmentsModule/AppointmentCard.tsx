@@ -11,7 +11,10 @@ import {
 } from "@mui/material";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import { Appointment } from "@/ts/models/booking/appointment/Appointment";
+import {
+  Appointment,
+  AppointmentUtils,
+} from "@/ts/models/booking/appointment/Appointment";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 import { formatPrice } from "@/utils/formatPrice";
 
@@ -29,19 +32,6 @@ const formatDuration = (minutes: number) => {
   if (hours > 0 && mins > 0) return `${hours}h ${mins}m`;
   if (hours > 0) return `${hours}h`;
   return `${mins} min`;
-};
-
-const getStatusLabel = (status: AppointmentStatusEnum) => {
-  switch (status) {
-    case AppointmentStatusEnum.IN_PROGRESS:
-      return "Confirmed";
-    case AppointmentStatusEnum.CANCELED:
-      return "Cancelled";
-    case AppointmentStatusEnum.FINISHED:
-      return "Finished";
-    default:
-      return String(status);
-  }
 };
 
 const getStatusColor = (status: AppointmentStatusEnum) => {
@@ -278,6 +268,7 @@ export default function AppointmentCard({
   navigateToAppointmentDetails,
 }: AppointmentCardProps) {
   const startDate = new Date(appointment.start_date);
+  const statusLabel = AppointmentUtils.getStatusLabel(appointment.status);
 
   return (
     <ListItem disablePadding sx={{ px: 1.5 }}>
@@ -298,7 +289,7 @@ export default function AppointmentCard({
                 fontWeight: 600,
               }}
             >
-              {getStatusLabel(appointment.status)}
+              {statusLabel}
             </Typography>
 
             <Box sx={{ height: 24 }} />

@@ -18,12 +18,13 @@ import VideoReviewCTA from "./VideoReviewCTA";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 
 type AppointmentDetailsReviewProps = {
-  writtenReview: AppointmentWrittenReview;
+  writtenReview: AppointmentWrittenReview | null;
   customerAvatar: string | null | undefined;
   hasVideoReview: boolean;
   isCustomer: boolean;
   status: AppointmentStatusEnum;
-  onRatingClick: (rating: number, review: string | null) => void;
+  onRatingClick: (rating: number) => void;
+  onDeleteReview: () => void;
 };
 
 const AppointmentDetailsReview = ({
@@ -33,6 +34,7 @@ const AppointmentDetailsReview = ({
   isCustomer,
   status,
   onRatingClick,
+  onDeleteReview,
 }: AppointmentDetailsReviewProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -86,7 +88,14 @@ const AppointmentDetailsReview = ({
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Editează</MenuItem>
-                <MenuItem onClick={handleClose}>Șterge</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setAnchorEl(null);
+                    onDeleteReview();
+                  }}
+                >
+                  Șterge
+                </MenuItem>
               </Menu>
             </div>
           </Stack>
@@ -117,7 +126,7 @@ const AppointmentDetailsReview = ({
                 marginRight: "8px",
               },
             }}
-            //onChange={(_, v) => v !== null && onRatingClick(v)}
+            onChange={(_, r) => r && onRatingClick(r)}
           />
         </Stack>
       )}

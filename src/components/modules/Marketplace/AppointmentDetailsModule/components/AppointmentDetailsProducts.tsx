@@ -45,17 +45,22 @@ const AppointmentDetailsProducts = ({
                 <Typography fontWeight={600}>
                   {formatPrice(price_with_discount)} RON
                 </Typography>
-                <Typography
-                  sx={{
-                    textDecoration: "line-through",
-                    color: "text.disabled",
-                  }}
-                >
-                  {formatPrice(price)}
-                </Typography>
-                <Typography sx={{ color: "error.main", fontWeight: 600 }}>
-                  (-{Number(discount).toFixed(2)}%)
-                </Typography>
+
+                {discount > 0 && (
+                  <>
+                    <Typography
+                      sx={{
+                        textDecoration: "line-through",
+                        color: "text.disabled",
+                      }}
+                    >
+                      {formatPrice(price)}
+                    </Typography>
+                    <Typography sx={{ color: "error.main", fontWeight: 600 }}>
+                      (-{Number(discount).toFixed(2)}%)
+                    </Typography>
+                  </>
+                )}
               </Stack>
             </Stack>
 
@@ -79,18 +84,24 @@ const AppointmentDetailsProducts = ({
           justifyContent="flex-end"
           alignItems="baseline"
         >
-          <Typography fontWeight={600}>{totalPriceWithDiscount} RON</Typography>
-          <Typography
-            sx={{
-              textDecoration: "line-through",
-              color: "text.disabled",
-            }}
-          >
-            {totalPrice}
+          <Typography fontWeight={600}>
+            {formatPrice(totalPriceWithDiscount)} RON
           </Typography>
-          <Typography sx={{ color: "error.main", fontWeight: 600 }}>
-            (-{Number(totalDiscount).toFixed(2)}%)
-          </Typography>
+          {totalDiscount > 0 && (
+            <>
+              <Typography
+                sx={{
+                  textDecoration: "line-through",
+                  color: "text.disabled",
+                }}
+              >
+                {formatPrice(totalPrice)}
+              </Typography>
+              <Typography sx={{ color: "error.main", fontWeight: 600 }}>
+                (-{Number(totalDiscount).toFixed(2)}%)
+              </Typography>
+            </>
+          )}
         </Stack>
       </Stack>
     </Box>

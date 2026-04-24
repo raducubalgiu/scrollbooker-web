@@ -20,7 +20,7 @@ import { find } from "lodash";
 type CancelAppointmentModalProps = {
   open: boolean;
   onClose: () => void;
-  onCancel: (message: string) => void;
+  onCancel: (canceledReason: string) => void;
   isLoadingCancel: boolean;
 };
 
@@ -54,11 +54,11 @@ const CancelAppointmentModal = ({
   const minLength = minField(2);
   const maxLength = maxField(100);
 
-  const methods = useForm({ defaultValues: { message: "" } });
+  const methods = useForm({ defaultValues: { canceledReason: "" } });
   const { handleSubmit, reset, watch } = methods;
 
   const handleChangeReason = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (watch("message")) reset();
+    if (watch("canceledReason")) reset();
     setReason((event.target as HTMLInputElement).value);
   };
 
@@ -68,7 +68,7 @@ const CancelAppointmentModal = ({
       props: {
         onClick: handleSubmit((data) => {
           if (reason === "OTHER") {
-            onCancel(data.message);
+            onCancel(data.canceledReason);
           } else {
             const reasonMessage = find(REASONS, { id: reason })?.label;
             if (!reasonMessage) return;
@@ -116,7 +116,7 @@ const CancelAppointmentModal = ({
 
         <Collapse in={reason === "OTHER"} timeout={300} unmountOnExit>
           <Input
-            name="message"
+            name="canceledReason"
             multiline
             minRows={4}
             maxRows={4}
@@ -138,7 +138,7 @@ const CancelAppointmentModal = ({
           />
           <Stack alignItems="flex-end" mt={1}>
             <Stack flexDirection="row" alignItems="center">
-              <Typography>{watch("message").length}</Typography>
+              <Typography>{watch("canceledReason").length}</Typography>
               <Typography mx={1}>/</Typography>
               <Typography>100</Typography>
             </Stack>
