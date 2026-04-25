@@ -10,13 +10,13 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import BookingAppBar from "./components/BookingAppBar";
 import BookingSidebar from "./components/BookingSidebar";
 import { useScrollSync } from "./useScrollSync";
 import ProductsStep from "./steps/Products/ProductsStep";
-import CalendarStep from "./steps/CalendarStep";
+import AvailabilityStep from "./steps/Availability/AvailabilityStep";
 
 type BookingModuleProps = {
   businessId: number;
@@ -25,6 +25,13 @@ type BookingModuleProps = {
 
 const SCROLL_OFFSET = 180;
 const SIDEBAR_WIDTH = 600;
+
+enum BookingStepEnum {
+  SERVICES,
+  SPECIALISTS,
+  DATE_AND_HOUR,
+  CONFIRM,
+}
 
 const BookingModule = ({ businessId, userId }: BookingModuleProps) => {
   const router = useRouter();
@@ -36,6 +43,31 @@ const BookingModule = ({ businessId, userId }: BookingModuleProps) => {
 
   const businessProducts = useMemo(() => data ?? [], [data]);
   const sync = useScrollSync(businessProducts, SCROLL_OFFSET);
+
+  const [currentStep, setCurrentStep] = useState<BookingStepEnum>(
+    BookingStepEnum.DATE_AND_HOUR
+  );
+
+  const stepContent = useMemo(() => {
+    switch (currentStep) {
+      case BookingStepEnum.SERVICES:
+        return (
+          <ProductsStep
+            sync={sync}
+            businessProducts={businessProducts}
+            scrollOffset={SCROLL_OFFSET}
+          />
+        );
+      case BookingStepEnum.SPECIALISTS:
+        return <></>;
+      case BookingStepEnum.DATE_AND_HOUR:
+        return <AvailabilityStep />;
+      case BookingStepEnum.CONFIRM:
+        return <></>;
+      default:
+        return null;
+    }
+  }, []);
 
   if (isLoading)
     return (
@@ -83,13 +115,7 @@ const BookingModule = ({ businessId, userId }: BookingModuleProps) => {
             gap: 8,
           }}
         >
-          {/* <ProductsStep
-            sync={sync}
-            businessProducts={businessProducts}
-            scrollOffset={SCROLL_OFFSET}
-          /> */}
-
-          <CalendarStep />
+          {stepContent}
 
           <BookingSidebar />
         </Box>
