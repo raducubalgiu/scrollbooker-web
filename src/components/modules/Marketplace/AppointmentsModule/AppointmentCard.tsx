@@ -34,19 +34,6 @@ const formatDuration = (minutes: number) => {
   return `${mins} min`;
 };
 
-const getStatusColor = (status: AppointmentStatusEnum) => {
-  switch (status) {
-    case AppointmentStatusEnum.IN_PROGRESS:
-      return "#059669";
-    case AppointmentStatusEnum.CANCELED:
-      return "#DC2626";
-    case AppointmentStatusEnum.FINISHED:
-      return "gray";
-    default:
-      return "#111827";
-  }
-};
-
 const formatDay = (date: Date) => {
   return new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
@@ -269,6 +256,7 @@ export default function AppointmentCard({
 }: AppointmentCardProps) {
   const startDate = new Date(appointment.start_date);
   const statusLabel = AppointmentUtils.getStatusLabel(appointment.status);
+  const statusColor = AppointmentUtils.getStatusColor(appointment.status);
 
   return (
     <ListItem disablePadding sx={{ px: 1.5 }}>
@@ -283,8 +271,9 @@ export default function AppointmentCard({
         >
           <Stack sx={{ width: "100%" }}>
             <Typography
+              color={statusColor}
               sx={{
-                color: getStatusColor(appointment.status),
+                //color: statusColor,
                 fontSize: 18,
                 fontWeight: 600,
               }}

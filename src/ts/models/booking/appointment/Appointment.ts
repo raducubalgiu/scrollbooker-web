@@ -81,4 +81,19 @@ export const AppointmentUtils = {
         return String(status);
     }
   },
+
+  getStatusColor(
+    status: AppointmentStatusEnum
+  ): "success" | "error" | "warning" | "default" {
+    switch (status) {
+      case AppointmentStatusEnum.FINISHED:
+        return "default";
+      case AppointmentStatusEnum.CANCELED:
+        return "error";
+      case AppointmentStatusEnum.IN_PROGRESS:
+        return "success";
+      default:
+        return "default";
+    }
+  },
 };

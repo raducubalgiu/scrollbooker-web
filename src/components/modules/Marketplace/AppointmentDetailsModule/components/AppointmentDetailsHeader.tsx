@@ -7,6 +7,7 @@ import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/Appointme
 import { formatRating } from "@/utils/formatters";
 import {
   Alert,
+  alpha,
   Avatar,
   Badge,
   Box,
@@ -45,7 +46,40 @@ const AppointmentDetailsHeader = ({
 
   return (
     <Box>
-      <Chip label={statusLabel} />
+      <Chip
+        label={statusLabel}
+        sx={{
+          bgcolor: (theme) => {
+            const colorKey = AppointmentUtils.getStatusColor(status);
+
+            if (status === AppointmentStatusEnum.IN_PROGRESS) {
+              return alpha(theme.palette.grey[500], 0.4);
+            }
+
+            const mainColor =
+              (theme.palette[colorKey as "success" | "error"] as any)?.main ||
+              theme.palette.grey[600];
+            return alpha(mainColor, 0.12);
+          },
+          color: (theme) => {
+            if (status === AppointmentStatusEnum.IN_PROGRESS) {
+              return theme.palette.grey;
+            }
+
+            const colorKey = AppointmentUtils.getStatusColor(status);
+            return (
+              (theme.palette[colorKey as "success" | "error"] as any)?.dark ||
+              theme.palette.text.primary
+            );
+          },
+          fontWeight: 600,
+          fontSize: "0.85rem",
+          borderRadius: "8px",
+          "& .MuiChip-label": {
+            px: 1.5,
+          },
+        }}
+      />
 
       {status === AppointmentStatusEnum.CANCELED && canceledReason && (
         <Alert variant="outlined" severity="error" sx={{ mt: 2.5 }}>
