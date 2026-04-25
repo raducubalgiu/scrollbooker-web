@@ -66,10 +66,10 @@ const BookingModule = ({ businessId, userId }: BookingModuleProps) => {
             Servicii
           </Link>
           <Typography sx={{ color: "text.secondary", fontSize: 20 }}>
-            Profesionisti
+            Profesioniști
           </Typography>
           <Typography sx={{ color: "text.secondary", fontSize: 20 }}>
-            Data si Ora
+            Data și Ora
           </Typography>
           <Typography sx={{ color: "text.secondary", fontSize: 20 }}>
             Confirmare

@@ -72,9 +72,18 @@ const ProductCard = ({
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
+        gap={2}
       >
-        <Box>
-          <Typography fontSize={19} fontWeight={500}>
+        <Box sx={{ minWidth: 0, flex: 1 }}>
+          <Typography
+            fontSize={19}
+            fontWeight={500}
+            noWrap
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
             {name}
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -143,6 +152,7 @@ const ProductCard = ({
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            maxWidth: 200,
           }}
         >
           {description}

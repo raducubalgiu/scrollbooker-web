@@ -1,5 +1,5 @@
 import { alpha, AppBar, IconButton, Theme, Toolbar } from "@mui/material";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 
 type BookingAppBarProps = {
@@ -17,7 +17,7 @@ const BookingAppBar = ({ onBack }: BookingAppBarProps) => {
           }}
           sx={styles.back}
         >
-          <ArrowBackRoundedIcon fontSize="large" />
+          <CloseIcon fontSize="large" />
         </IconButton>
       </Toolbar>
     </AppBar>

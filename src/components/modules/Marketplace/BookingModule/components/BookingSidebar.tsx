@@ -1,4 +1,4 @@
-import { alpha, Box, Button, Typography } from "@mui/material";
+import { alpha, Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 
 const BookingSidebar = () => {
@@ -44,15 +44,27 @@ const BookingSidebar = () => {
           borderColor: "divider",
         }}
       >
-        <Button
-          variant="contained"
-          size="large"
-          disableElevation
-          fullWidth
-          sx={{ p: 1.75, fontSize: 19, fontWeight: 600 }}
-        >
-          Continua
-        </Button>
+        <Stack flexDirection="row" alignItems="center" gap={1}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="large"
+            disableElevation
+            fullWidth
+            sx={{ p: 1.75, fontSize: 19, fontWeight: 600 }}
+          >
+            Înapoi
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            disableElevation
+            fullWidth
+            sx={{ p: 1.75, fontSize: 19, fontWeight: 600 }}
+          >
+            Continuă
+          </Button>
+        </Stack>
       </Box>
     </Box>
   );
