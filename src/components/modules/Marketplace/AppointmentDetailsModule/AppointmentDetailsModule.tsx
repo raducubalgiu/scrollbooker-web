@@ -3,11 +3,10 @@
 import {
   Appointment,
   AppointmentCancel,
-  AppointmentCreate,
   AppointmentWrittenReview,
 } from "@/ts/models/booking/appointment/Appointment";
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import AppointmentDetailsHeader from "./components/AppointmentDetailsHeader";
 import AppointmentDetailsActions from "./components/AppointmentDetailsActions";
 import AppointmentDetailsProducts from "./components/AppointmentDetailsProducts";
@@ -17,7 +16,11 @@ import CancelAppointmentModal from "./CancelAppointmentModal";
 import CreateWrittenReviewModal from "./CreateWrittenReviewModal";
 import { useMutate } from "@/hooks/useHttp";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
-import { Review } from "@/ts/models/booking/review/Review";
+import {
+  Review,
+  ReviewCreate,
+  ReviewUpdate,
+} from "@/ts/models/booking/review/Review";
 import { isEmpty } from "lodash";
 import { useSession } from "next-auth/react";
 
@@ -97,20 +100,19 @@ const AppointmentDetailsModule = ({
     },
   });
 
-  const onHandleCreateReview = (review: string, finalRating: number) => {
-    const firstProductId = appointment.products[0]?.id;
-    if (!finalRating || !appointment.user.id || !firstProductId) return;
-
-    const body: AppointmentCreate = {
-      review,
-      rating: finalRating,
-      user_id: appointment.user.id,
-      product_id: firstProductId,
-      parent_id: null,
-    };
-
-    handleCreateReview(body);
-  };
+  const { mutate: handleUpdateReview, isPending: isPendingUpdateReview } =
+    useMutate({
+      key: ["update-written-review"],
+      url: `/api/reviews/${writtenReview?.id}/update-review`,
+      method: "PUT",
+      options: {
+        onSuccess: (review: Review) => {
+          setWrittenReview(review);
+          setDraftRating(review.rating);
+          setOpenReview(false);
+        },
+      },
+    });
 
   const onHandleCancelAppointment = (canceledReason: string) => {
     const authUserId = session?.user_id;
@@ -122,6 +124,43 @@ const AppointmentDetailsModule = ({
     };
     handleCancel(body);
   };
+
+  const onHandleSaveReview = (reviewText: string, finalRating: number) => {
+    const firstProductId = appointment.products[0]?.id;
+    if (!finalRating || !appointment.user.id || !firstProductId) return;
+
+    const createBody: ReviewCreate = {
+      review: reviewText,
+      rating: finalRating,
+      user_id: appointment.user.id,
+      product_id: firstProductId,
+      parent_id: null,
+    };
+
+    const updateBody: ReviewUpdate = {
+      review: reviewText,
+      rating: finalRating,
+    };
+
+    if (writtenReview?.id) {
+      handleUpdateReview(updateBody);
+    } else {
+      handleCreateReview(createBody);
+    }
+  };
+
+  const onHandleRatingClick = useCallback((rating: number) => {
+    setDraftRating(rating);
+    setOpenReview(true);
+  }, []);
+
+  const onHandleEditReview = useCallback(() => {
+    setOpenReview(true);
+  }, []);
+
+  const onHandleDeleteReview = useCallback(() => {
+    handleDeleteReview({});
+  }, []);
 
   return (
     <Box sx={styles.container}>
@@ -135,9 +174,10 @@ const AppointmentDetailsModule = ({
       <CreateWrittenReviewModal
         open={openReview}
         rating={draftRating}
+        existingReviewText={writtenReview?.review || ""}
         onClose={() => setOpenReview(false)}
-        onCreateReview={onHandleCreateReview}
-        isLoadingCreateReview={isPendingCreateReview}
+        onCreateReview={onHandleSaveReview}
+        isLoadingCreateReview={isPendingCreateReview || isPendingUpdateReview}
       />
 
       <Box sx={{ minWidth: 0 }}>
@@ -171,11 +211,9 @@ const AppointmentDetailsModule = ({
             isCustomer={is_customer}
             status={status}
             customerAvatar={customer.avatar}
-            onRatingClick={(rating) => {
-              setDraftRating(rating);
-              setOpenReview(true);
-            }}
-            onDeleteReview={() => handleDeleteReview({})}
+            onRatingClick={onHandleRatingClick}
+            onEditReview={onHandleEditReview}
+            onDeleteReview={onHandleDeleteReview}
           />
         )}
       </Box>

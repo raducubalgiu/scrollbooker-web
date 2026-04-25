@@ -1,4 +1,4 @@
-import { AppointmentCreate } from "@/ts/models/booking/appointment/Appointment";
+import { ReviewCreate } from "@/ts/models/booking/review/Review";
 import { post } from "@/utils/requests";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +10,7 @@ type RouteContext = {
 
 export const POST = async (req: NextRequest, context: RouteContext) => {
   const { appointmentId } = await context.params;
-  const data: AppointmentCreate = await req.json();
+  const data: ReviewCreate = await req.json();
 
   const response = (
     await post({

@@ -63,14 +63,6 @@ export interface Appointment {
   written_review: AppointmentWrittenReview | null;
 }
 
-export interface AppointmentCreate {
-  review: string;
-  rating: number;
-  user_id: number;
-  product_id: number;
-  parent_id: number | null;
-}
-
 export interface AppointmentCancel {
   canceled_reason: string;
   canceled_by_user_id: number;

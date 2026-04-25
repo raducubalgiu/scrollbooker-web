@@ -19,19 +19,32 @@ export interface ReviewProductBusinessOwner {
   avatar?: string | null;
 }
 
-export type ReviewCustomer = {
+export interface ReviewCustomer {
   id: number;
   fullname: string;
   username: string;
-  avatar?: string | null;
-};
+  avatar: string | null;
+}
 
-export type ReviewService = {
+export interface ReviewService {
   id: number;
   name: string;
-};
+}
 
-export type ReviewProduct = {
+export interface ReviewProduct {
   id: number;
   name: string;
-};
+}
+
+export interface ReviewCreate {
+  review: string;
+  rating: number;
+  user_id: number;
+  product_id: number;
+  parent_id: number | null;
+}
+
+export interface ReviewUpdate {
+  review: string;
+  rating: number;
+}

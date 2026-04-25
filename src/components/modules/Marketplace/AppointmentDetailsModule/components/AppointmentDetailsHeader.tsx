@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import React from "react";
+import Link from "next/link";
 
 type AppointmentDetailsHeaderProps = {
   status: AppointmentStatusEnum;
@@ -32,7 +33,14 @@ const AppointmentDetailsHeader = ({
   user,
   canceledReason,
 }: AppointmentDetailsHeaderProps) => {
-  const { fullname, profession, avatar, ratings_average, ratings_count } = user;
+  const {
+    username,
+    fullname,
+    profession,
+    avatar,
+    ratings_average,
+    ratings_count,
+  } = user;
   const statusLabel = AppointmentUtils.getStatusLabel(status);
 
   return (
@@ -52,36 +60,41 @@ const AppointmentDetailsHeader = ({
         ({totalDuration} min)
       </Typography>
 
-      <Stack flexDirection="row" alignItems="center" gap={2} my={5}>
-        <Badge
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          badgeContent={
-            <Stack
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="center"
-              sx={styles.badgeContent}
-            >
-              <StarIcon sx={{ fontSize: 18, mr: 0.5 }} color="primary" />
-              <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-                {formatRating(ratings_average)}
-              </Typography>
-            </Stack>
-          }
-          sx={styles.badge}
-        >
-          <Avatar sx={styles.avatar} src={avatar ?? ""} />
-        </Badge>
-        <Box>
-          <Typography variant="h6" fontWeight={600}>
-            {fullname}
-          </Typography>
-          <Typography color="text.secondary">
-            {profession} • {ratings_count} recenzii
-          </Typography>
-        </Box>
-      </Stack>
+      <Link
+        href={`/profile/${username}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <Stack flexDirection="row" alignItems="center" gap={2} my={5}>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            badgeContent={
+              <Stack
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="center"
+                sx={styles.badgeContent}
+              >
+                <StarIcon sx={{ fontSize: 18, mr: 0.5 }} color="primary" />
+                <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
+                  {formatRating(ratings_average)}
+                </Typography>
+              </Stack>
+            }
+            sx={styles.badge}
+          >
+            <Avatar sx={styles.avatar} src={avatar ?? ""} />
+          </Badge>
+          <Box>
+            <Typography variant="h6" fontWeight={600}>
+              {fullname}
+            </Typography>
+            <Typography color="text.secondary">
+              {profession} • {ratings_count} recenzii
+            </Typography>
+          </Box>
+        </Stack>
+      </Link>
     </Box>
   );
 };

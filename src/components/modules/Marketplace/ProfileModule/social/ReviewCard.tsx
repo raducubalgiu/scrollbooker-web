@@ -5,7 +5,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import React, { useMemo } from "react";
 import { Review } from "@/ts/models/booking/review/Review";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 
 type ReviewCardProps = {
   review: Review;

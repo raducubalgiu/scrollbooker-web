@@ -1,15 +1,18 @@
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Input from "@/components/core/Input/Input";
 import Modal from "@/components/core/Modal/Modal";
+import { reviewLabelText } from "@/ts/enums/ReviewLabel";
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Box, Rating, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import EmojiPicker from "@/components/core/EmojiPicker/EmojiPicker";
 
 type CreateWrittenReviewModalProps = {
   open: boolean;
   rating: number | null;
   isLoadingCreateReview: boolean;
+  existingReviewText?: string;
   onClose: () => void;
   onCreateReview: (review: string, finalRating: number) => void;
 };
@@ -17,6 +20,7 @@ type CreateWrittenReviewModalProps = {
 const CreateWrittenReviewModal = ({
   open,
   rating,
+  existingReviewText = "",
   isLoadingCreateReview,
   onClose,
   onCreateReview,
@@ -27,25 +31,40 @@ const CreateWrittenReviewModal = ({
     setFinalRating(rating ?? 0);
   }, [rating]);
 
-  const methods = useForm({ defaultValues: { review: "" } });
-  const { handleSubmit } = methods;
+  const methods = useForm({ defaultValues: { review: existingReviewText } });
+  const { handleSubmit, reset, setValue, getValues } = methods;
 
   const isRequired = required();
   const minLength = minField(3);
   const maxLength = maxField(200);
 
+  useEffect(() => {
+    if (open) {
+      setFinalRating(rating ?? 0);
+      reset({ review: existingReviewText });
+    }
+  }, [open, rating, existingReviewText, reset]);
+
   const actions: ActionButtonType[] = [
     {
       title: "Trimite",
       props: {
-        onClick: handleSubmit((data) =>
-          onCreateReview(data.review, finalRating)
-        ),
+        onClick: handleSubmit((data) => {
+          onCreateReview(data.review, finalRating);
+        }),
         disabled: isLoadingCreateReview,
         loading: isLoadingCreateReview,
       },
     },
   ];
+
+  const handleEmojiClick = (emoji: string) => {
+    const currentText = getValues("review") || "";
+    setValue("review", currentText + emoji, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
 
   return (
     <FormProvider {...methods}>
@@ -61,7 +80,6 @@ const CreateWrittenReviewModal = ({
             {finalRating && (
               <Rating
                 name="custom-size-rating"
-                value={finalRating}
                 precision={1}
                 sx={{
                   fontSize: "3rem",
@@ -69,13 +87,20 @@ const CreateWrittenReviewModal = ({
                     marginRight: "8px",
                   },
                 }}
-                onChange={(_, v) => v && setFinalRating(v)}
+                value={finalRating}
+                onChange={(_, newValue) => setFinalRating(newValue ?? 0)}
               />
             )}
 
-            <Typography color="text.secondary">
-              {finalRating} din 5 • A fost ok
-            </Typography>
+            <Stack flexDirection="row" alignItems="center" gap={1}>
+              <Typography color="text.secondary">
+                {finalRating} din 5
+              </Typography>
+              <Typography color="text.secondary">•</Typography>
+              <Typography color="text.primary" fontWeight={600}>
+                {reviewLabelText(finalRating)}
+              </Typography>
+            </Stack>
           </Stack>
 
           <Box>
@@ -94,27 +119,57 @@ const CreateWrittenReviewModal = ({
               Recenzia ta
             </Typography>
 
-            <Input
-              name="review"
-              multiline
-              minRows={4}
-              maxRows={4}
-              fullWidth
-              placeholder="Împărtășește câteva detalii (atmosferă, rezultate, comunicare..)"
-              slotProps={{
-                htmlInput: {
-                  maxLength: 200,
-                },
-              }}
+            <Box
               sx={{
-                mt: 1,
-                "& .MuiInputBase-root": {
-                  transition: "all 0.3s ease",
-                  borderRadius: 5,
-                },
+                bgcolor: "grey.100",
+                borderRadius: 4,
+                p: 1,
+                border: "1px solid",
+                borderColor: "divider",
+                transition: "all 0.2s ease",
               }}
-              rules={{ ...isRequired, ...minLength, ...maxLength }}
-            />
+            >
+              <Input
+                name="review"
+                multiline
+                minRows={4}
+                maxRows={6}
+                fullWidth
+                placeholder="Împărtășește câteva detalii..."
+                sx={{
+                  "& .MuiInputBase-root": {
+                    bgcolor: "transparent !important",
+                    border: "none !important",
+                    boxShadow: "none !important",
+                    p: 1,
+                    "&:hover, &.Mui-focused": {
+                      bgcolor: "transparent !important",
+                      border: "none !important",
+                      boxShadow: "none !important",
+                    },
+                  },
+                  "& .MuiInputBase-inputMultiline": {
+                    p: 0,
+                  },
+                  "& fieldset": {
+                    border: "none !important",
+                  },
+                }}
+                rules={{ ...isRequired, ...minLength, ...maxLength }}
+              />
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  mt: 1,
+                  pt: 0.5,
+                }}
+              >
+                <EmojiPicker onEmojiSelect={handleEmojiClick} />
+              </Box>
+            </Box>
           </Box>
         </Stack>
       </Modal>
