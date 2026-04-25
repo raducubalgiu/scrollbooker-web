@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import AppointmentCard from "./AppointmentCard";
+import AppointmentCard from "./AppointmentCard/AppointmentCard";
 import { useInfiniteAppointments } from "@/hooks/infiniteQuery/useInfiniteAppointments";
 import { isEmpty } from "lodash";
 import AppointmentCardSkeleton from "./AppointmentCardSkeleton";

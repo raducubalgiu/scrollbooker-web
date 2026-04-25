@@ -69,6 +69,18 @@ export interface AppointmentCancel {
 }
 
 export const AppointmentUtils = {
+  getDurationText(minutes: number): string {
+    if (minutes === 0) return "0min";
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    const hoursPart = hours > 0 ? `${hours}h` : "";
+    const minutesPart = remainingMinutes > 0 ? `${remainingMinutes}min` : "";
+
+    return [hoursPart, minutesPart].filter(Boolean).join(" ");
+  },
+
   getStatusLabel(status: AppointmentStatusEnum): string {
     switch (status) {
       case AppointmentStatusEnum.IN_PROGRESS:

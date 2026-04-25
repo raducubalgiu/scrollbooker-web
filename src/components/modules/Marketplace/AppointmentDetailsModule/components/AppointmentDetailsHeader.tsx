@@ -43,6 +43,7 @@ const AppointmentDetailsHeader = ({
     ratings_count,
   } = user;
   const statusLabel = AppointmentUtils.getStatusLabel(status);
+  const totalDurationText = AppointmentUtils.getDurationText(totalDuration);
 
   return (
     <Box>
@@ -91,7 +92,7 @@ const AppointmentDetailsHeader = ({
         {dayjs.utc(startDate).format("dddd, D MMMM YYYY HH:mm")}
       </Typography>
       <Typography variant="h6" color="text.secondary" fontWeight={500} mt={1}>
-        ({totalDuration} min)
+        ({totalDurationText})
       </Typography>
 
       <Link

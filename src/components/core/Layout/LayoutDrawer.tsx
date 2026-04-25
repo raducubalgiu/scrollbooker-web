@@ -395,7 +395,6 @@ const styles = {
     display: "flex",
     alignItems: "center",
     px: 2,
-    bgcolor: "background.paper",
     flexShrink: 0,
   },
 

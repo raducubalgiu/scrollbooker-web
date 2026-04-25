@@ -97,20 +97,20 @@ const CreateWrittenReviewModal = ({
                 {finalRating} din 5
               </Typography>
               <Typography color="text.secondary">•</Typography>
-              <Typography color="text.primary" fontWeight={600}>
+              <Typography variant="h6" color="text.primary" fontWeight={600}>
                 {reviewLabelText(finalRating)}
               </Typography>
             </Stack>
           </Stack>
 
           <Box>
-            <Typography variant="h4" fontWeight={600}>
-              Cum a fost experienta ta?
+            <Typography variant="h4" fontWeight={600} mt={1.5}>
+              Cum a fost experiența ta?
             </Typography>
 
-            <Typography color="text.secondary">
-              Recenzia ta ii ajuta pe altii sa faca alegeri potrivite, iar
-              business-ul sa isi imbunatateasca serviciile.
+            <Typography color="text.secondary" mb={1.5}>
+              Recenzia ta îi ajută pe alții să faca alegeri potrivite, iar
+              business-ul să își îmbunătățească serviciile.
             </Typography>
           </Box>
 
@@ -121,7 +121,7 @@ const CreateWrittenReviewModal = ({
 
             <Box
               sx={{
-                bgcolor: "grey.100",
+                bgcolor: "background.default",
                 borderRadius: 4,
                 p: 1,
                 border: "1px solid",
@@ -132,7 +132,7 @@ const CreateWrittenReviewModal = ({
               <Input
                 name="review"
                 multiline
-                minRows={4}
+                minRows={3}
                 maxRows={6}
                 fullWidth
                 placeholder="Împărtășește câteva detalii..."
