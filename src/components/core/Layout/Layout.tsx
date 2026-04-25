@@ -100,7 +100,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           />
         );
       case "notifications":
-        return <NotificationsModule scrollRootRef={overlayScrollRef} />;
+        return (
+          <NotificationsModule
+            scrollRootRef={overlayScrollRef}
+            onNavigateToUserProfile={(username) => {
+              handleCloseAll();
+              router.push(`/profile/${username}`);
+            }}
+          />
+        );
       case "search":
         return (
           <SearchUsersModule

@@ -9,9 +9,13 @@ import React from "react";
 
 type NotificationsModuleProps = {
   scrollRootRef: React.RefObject<HTMLDivElement | null>;
+  onNavigateToUserProfile: (username: string) => void;
 };
 
-const NotificationsModule = ({ scrollRootRef }: NotificationsModuleProps) => {
+const NotificationsModule = ({
+  scrollRootRef,
+  onNavigateToUserProfile,
+}: NotificationsModuleProps) => {
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
@@ -80,10 +84,10 @@ const NotificationsModule = ({ scrollRootRef }: NotificationsModuleProps) => {
           <NotificationItem
             key={`${notification.id}-${index}`}
             notification={notification}
+            onNavigateToUserProfile={onNavigateToUserProfile}
           />
         ))}
 
-      {/* Sentinel vizibil doar când mai există date de încărcat */}
       {hasNextPage && (
         <Box
           ref={sentinelRef}

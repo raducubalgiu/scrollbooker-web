@@ -29,6 +29,7 @@ declare module "@mui/material/styles" {
     neutral: Palette["primary"];
     surface: Palette["primary"];
     table: Palette["primary"];
+    border: Palette["primary"];
     slotBlocked: Palette["primary"];
     slotBookedOwnClient: Palette["primary"];
     slotBookedScrollBooker: Palette["primary"];
@@ -38,6 +39,7 @@ declare module "@mui/material/styles" {
     neutral?: PaletteOptions["primary"];
     surface?: PaletteOptions["primary"];
     table?: PaletteOptions["primary"];
+    border?: PaletteOptions["primary"];
     slotBlocked?: PaletteOptions["primary"];
     slotBookedOwnClient?: PaletteOptions["primary"];
     slotBookedScrollBooker?: PaletteOptions["primary"];
@@ -104,7 +106,7 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           borderRadius: 0,
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.palette.background.default,
           backgroundImage: "none",
         }),
       },

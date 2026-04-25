@@ -16,10 +16,12 @@ import { NotificationTypeEnum } from "@/ts/enums/NotificationTypeEnum";
 
 type NotificationItemProps = {
   notification: Notification;
+  onNavigateToUserProfile: (username: string) => void;
 } & ListItemProps;
 
 export default function NotificationItem({
   notification,
+  onNavigateToUserProfile,
 }: NotificationItemProps) {
   const { type, sender } = notification || {};
 
@@ -45,7 +47,12 @@ export default function NotificationItem({
     case type === NotificationTypeEnum.FOLLOW:
       return (
         <ListItem disablePadding sx={{ px: 1.5 }}>
-          <ListItemButton onClick={() => {}} sx={{ py: 2.5 }}>
+          <ListItemButton
+            onClick={() =>
+              onNavigateToUserProfile(notification.sender.username)
+            }
+            sx={{ py: 2.5 }}
+          >
             <Stack
               flexDirection="row"
               alignItems="center"

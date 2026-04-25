@@ -14,7 +14,7 @@ const BookingSidebar = () => {
 
         bgcolor: "background.paper",
         borderRadius: 8,
-        border: "1px solid",
+        border: 1.5,
         borderColor: (theme) => alpha(theme.palette.divider, 0.1),
         p: 6,
 
