@@ -106,6 +106,8 @@ const getPublicRoutes = ({
           width: 32,
           height: 32,
           fontSize: 14,
+          border: 1,
+          borderColor: "divider",
         }}
       >
         {username.charAt(0).toUpperCase()}

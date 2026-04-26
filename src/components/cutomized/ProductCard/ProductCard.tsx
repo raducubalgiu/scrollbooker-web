@@ -20,6 +20,7 @@ type ProductCardProps = {
   product: Product;
   isSelected: boolean;
   showIcon: boolean;
+  showDescription?: boolean;
   onOpenDetail: () => void;
   onNavigateToBooking: (product: Product) => void;
   sx?: SxProps<Theme>;
@@ -29,6 +30,7 @@ const ProductCard = ({
   product,
   isSelected,
   showIcon,
+  showDescription = true,
   onOpenDetail,
   onNavigateToBooking,
   sx = {},
@@ -141,7 +143,7 @@ const ProductCard = ({
         </Protected>
       </Stack>
 
-      {description && (
+      {description && showDescription && (
         <Typography
           variant="body2"
           color="text.secondary"

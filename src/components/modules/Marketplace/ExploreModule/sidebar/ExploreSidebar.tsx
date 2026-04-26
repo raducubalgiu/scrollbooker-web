@@ -63,9 +63,7 @@ const ExploreSidebar = ({
           />
         );
       case ExploreSidebarTab.COMMENTS:
-        return (
-          <PostComments postId={postId} avatar={null} postAuthorAvatar={null} />
-        );
+        return <PostComments postId={postId} postAuthorAvatar={null} />;
       case ExploreSidebarTab.REVIEWS:
         return <ReviewsTab userId={user?.id} />;
       default:

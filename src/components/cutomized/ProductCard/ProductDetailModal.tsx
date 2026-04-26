@@ -16,7 +16,7 @@ const ProductDetailModal = ({
   onClose,
 }: ProductDetailModalProps) => {
   const durationText = product
-    ? ProductUtils.getDurationText(product.duration)
+    ? ProductUtils.getDurationText(product.starting_duration)
     : "";
 
   return (
@@ -31,11 +31,9 @@ const ProductDetailModal = ({
         <Typography variant="h4" fontWeight={500} mb={2.5}>
           {product?.name}
         </Typography>
-
         {product?.description && (
           <Typography color="text.secondary">{product?.description}</Typography>
         )}
-
         <Stack spacing={4} mt={5} mb={7.5}>
           {product?.filters.map((filter) => {
             return (
@@ -76,7 +74,7 @@ const ProductDetailModal = ({
             );
           })}
         </Stack>
-
+        {/* Here we need to include the variants */}
         <Stack
           flexDirection="row"
           alignItems="center"
@@ -85,19 +83,19 @@ const ProductDetailModal = ({
           <Stack spacing={0.5}>
             <Stack flexDirection="row" alignItems="center" gap={1}>
               <Typography variant="h5" fontWeight={600}>
-                {formatPrice(product?.price_with_discount)} RON
+                {formatPrice(product?.starting_price_with_discount)} RON
               </Typography>
-              {product && product.discount > 0 && (
+              {product && product.starting_discount > 0 && (
                 <>
                   <Typography
                     variant="body2"
                     color="text.secondary"
                     sx={{ textDecoration: "line-through" }}
                   >
-                    {formatPrice(product?.price)}
+                    {formatPrice(product?.starting_price)}
                   </Typography>
                   <Typography fontWeight={600} color="error.main">
-                    (-{product?.discount}%)
+                    (-{product?.starting_discount}%)
                   </Typography>
                 </>
               )}

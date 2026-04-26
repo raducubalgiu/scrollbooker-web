@@ -82,6 +82,7 @@ const ExploreServicesTab = ({
                 product={prod}
                 isSelected={false}
                 showIcon={false}
+                showDescription={false}
                 onOpenDetail={() => handleOpen(prod)}
                 onNavigateToBooking={onNavigateToBooking}
                 sx={{ borderColor: "transparent", p: 1.5 }}
