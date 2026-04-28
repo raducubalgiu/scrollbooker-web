@@ -23,6 +23,8 @@ type AuthResponseType = {
   token_type: string;
 };
 
+const THIRTY_DAYS = 30 * 24 * 60 * 60;
+
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
@@ -63,10 +65,10 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
-    maxAge: 10 * 60, // 10 min
+    maxAge: THIRTY_DAYS,
   },
   jwt: {
-    maxAge: 10 * 60, // 10 min
+    maxAge: THIRTY_DAYS,
   },
   callbacks: {
     async jwt({ token, user }): Promise<JWT> {
@@ -80,14 +82,16 @@ export const authOptions: AuthOptions = {
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
           accessTokenExpires: user.accessTokenExpires,
-          username: user.username,
-          permissions: permissions,
           user_id: userInfo.id,
+          is_validated: userInfo.is_validated,
+          registration_step: userInfo.registration_step,
+          username: userInfo.username,
           business_id: userInfo.business_id,
           business_type_id: userInfo.business_type_id,
           avatar: userInfo.avatar,
           has_employees: userInfo.has_employees,
           is_employee: userInfo.is_employee,
+          permissions: permissions,
         };
       }
       if (token) {
@@ -112,8 +116,10 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       if (token.user_id && token.permissions) {
         session.accessToken = token.accessToken;
-        session.username = token.username;
         session.user_id = token.user_id;
+        session.username = token.username;
+        session.is_validated = token.is_validated;
+        session.registration_step = token.registration_step;
         session.avatar = token.avatar;
         session.business_id = token.business_id;
         session.business_type_id = token.business_type_id;
@@ -134,7 +140,7 @@ export const authOptions: AuthOptions = {
     },
   },
   pages: {
-    signIn: "auth/signin",
+    signIn: "/auth/signin",
   },
 };
 
@@ -186,11 +192,6 @@ async function verifyToken(token: string): Promise<DecodedTokenType | null> {
       return null;
     }
 
-    // if (decoded.role == process.env.UNATHORIZED_ROLE) {
-    //   LOG.error(`This role is not authorized to login. Role: ${decoded.role}`);
-    //   return null;
-    // }
-
     return decoded;
   } catch (err) {
     LOG.error(`JWT verification failed, ${err}`);
@@ -233,9 +234,11 @@ async function refreshToken(refreshToken: string): Promise<JWT> {
       accessToken: data.access_token,
       refreshToken: data.refresh_token,
       accessTokenExpires: decoded.exp * 1000,
-      username: userInfo.username,
-      permissions: permissions,
       user_id: userInfo.id,
+      username: userInfo.username,
+      is_validated: userInfo.is_validated,
+      registration_step: userInfo.registration_step,
+      permissions: permissions,
       avatar: userInfo.avatar,
       business_id: userInfo.business_id,
       business_type_id: userInfo.business_type_id,
