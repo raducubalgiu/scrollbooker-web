@@ -9,47 +9,32 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { toast } from "react-toastify";
+import { useMutate } from "@/hooks/useHttp";
+import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function CollectEmailVerificationStep() {
+  const router = useRouter();
+  const { update } = useSession();
   const [code, setCode] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [resending, setResending] = useState(false);
 
-  const handleVerify = async () => {
-    if (code.length < 4) {
-      toast.error("Introdu codul primit pe email");
-      return;
-    }
+  const { mutate: handleVerify, isPending } = useMutate({
+    key: ["verify-email"],
+    url: "/api/auth/verify-email",
+    options: {
+      onSuccess: async (data: OnboardingResponse) => {
+        await update({
+          is_validated: data.is_validated,
+          registration_step: data.registration_step,
+        });
 
-    setLoading(true);
+        router.refresh();
+      },
+    },
+  });
 
-    try {
-      // TODO: call BE verify endpoint
-      // await verifyEmail(code);
-
-      toast.success("Email verificat!");
-    } catch (e) {
-      toast.error("Cod invalid sau expirat");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResend = async () => {
-    setResending(true);
-
-    try {
-      // TODO: call BE resend endpoint
-      // await resendEmail();
-
-      toast.success("Email trimis din nou");
-    } catch (e) {
-      toast.error("Nu am putut retrimite emailul");
-    } finally {
-      setResending(false);
-    }
-  };
+  const handleResend = async () => {};
 
   return (
     <Stack
@@ -59,7 +44,6 @@ export default function CollectEmailVerificationStep() {
     >
       <Container maxWidth="sm">
         <Stack spacing={3}>
-          {/* Title */}
           <Stack spacing={1} textAlign="center">
             <Typography variant="h4" fontWeight={700}>
               Verifică emailul
@@ -92,8 +76,8 @@ export default function CollectEmailVerificationStep() {
             variant="contained"
             size="large"
             fullWidth
-            loading={loading}
-            onClick={handleVerify}
+            loading={isPending}
+            onClick={() => handleVerify({})}
             disableElevation
             sx={{ py: 1.5, fontSize: 16, fontWeight: 600 }}
           >
@@ -107,7 +91,6 @@ export default function CollectEmailVerificationStep() {
 
             <Button
               onClick={handleResend}
-              disabled={resending}
               sx={{ textTransform: "none", fontWeight: 600 }}
             >
               Trimite din nou

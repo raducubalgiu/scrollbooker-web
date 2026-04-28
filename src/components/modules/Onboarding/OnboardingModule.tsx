@@ -11,6 +11,7 @@ import CollectBusinessServicesStep from "./business/CollectBusinessServicesStep"
 import CollectBusinessSchedulesStep from "./business/CollectBusinessSchedulesStep";
 import CollectBusinessHasEmployeesStep from "./business/CollectBusinessHasEmployeesStep";
 import CollectBusinessValidationStep from "./business/CollectBusinessValidationStep";
+import CollectLocationPermission from "./client/CollectLocationPermission";
 
 type OnboardingModuleProps = {
   session: Session | null;
@@ -29,7 +30,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
     case RegistrationStepEnum.COLLECT_CLIENT_GENDER:
       return <CollectGenderStep />;
     case RegistrationStepEnum.COLLECT_CLIENT_LOCATION_PERMISSION:
-      return <CollectGenderStep />;
+      return <CollectLocationPermission />;
     case RegistrationStepEnum.COLLECT_BUSINESS:
       return <CollectBusinessStep />;
     case RegistrationStepEnum.COLLECT_BUSINESS_SERVICES:

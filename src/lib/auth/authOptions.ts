@@ -71,7 +71,15 @@ export const authOptions: AuthOptions = {
     maxAge: THIRTY_DAYS,
   },
   callbacks: {
-    async jwt({ token, user }): Promise<JWT> {
+    async jwt({ token, user, trigger, session }): Promise<JWT> {
+      if (trigger === "update" && session) {
+        return {
+          ...token,
+          is_validated: session.is_validated,
+          registration_step: session.registration_step,
+        };
+      }
+
       if (user) {
         const [permissions, userInfo] = await Promise.all([
           getPermissions(user.accessToken),
