@@ -48,10 +48,22 @@ const PostOverlay = ({
           color: "common.white",
         }}
       >
+        <Box
+          sx={{
+            bgcolor: "rgba(255,255,255,0.1)",
+            px: 1.5,
+            py: 1,
+            width: "fit-content",
+            borderRadius: 20,
+          }}
+        >
+          <Typography fontWeight={600}>În apropiere</Typography>
+        </Box>
+
         {isVideoReview && (
           <Box
             sx={{
-              bgcolor: "rgba(255,255,255,0.2)",
+              bgcolor: "rgba(255,255,255,0.1)",
               px: 1.5,
               py: 1,
               width: "fit-content",
@@ -71,50 +83,48 @@ const PostOverlay = ({
           </Box>
         </Stack>
 
-        <Box>
-          <Stack
-            flexDirection="row"
-            alignItems="flex-end"
-            justifyContent="space-between"
-            gap={2}
-          >
-            <Box sx={{ flex: 1 }}>
-              <Collapse in={isExpanded} collapsedSize={48} timeout="auto">
-                <Typography
-                  ref={textRef}
-                  sx={{
-                    opacity: 0.9,
-                    ...(!isExpanded && {
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }),
-                  }}
-                >
-                  {description || "..."}
-                </Typography>
-              </Collapse>
-            </Box>
-
-            {(showButton || isExpanded) && (
-              <Button
-                size="small"
-                onClick={handleToggle}
+        <Stack
+          flexDirection="row"
+          alignItems="flex-end"
+          justifyContent="space-between"
+          gap={2}
+        >
+          <Box sx={{ flex: 1 }}>
+            <Collapse in={isExpanded} collapsedSize={48} timeout="auto">
+              <Typography
+                ref={textRef}
                 sx={{
-                  minWidth: "fit-content",
-                  textTransform: "none",
-                  fontWeight: 700,
-                  alignSelf: "flex-end",
-                  color: "common.white",
+                  opacity: 0.9,
+                  ...(!isExpanded && {
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }),
                 }}
               >
-                {isExpanded ? "Mai puțin" : "Mai mult"}
-              </Button>
-            )}
-          </Stack>
-        </Box>
+                {description || "..."}
+              </Typography>
+            </Collapse>
+          </Box>
+
+          {(showButton || isExpanded) && (
+            <Button
+              size="small"
+              onClick={handleToggle}
+              sx={{
+                minWidth: "fit-content",
+                textTransform: "none",
+                fontWeight: 700,
+                alignSelf: "flex-end",
+                color: "common.white",
+              }}
+            >
+              {isExpanded ? "Mai puțin" : "Mai mult"}
+            </Button>
+          )}
+        </Stack>
 
         <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
           <Button
@@ -136,7 +146,7 @@ const PostOverlay = ({
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.15) 25%, rgba(0,0,0,0) 60%)",
+            "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 15%, rgba(0,0,0,0) 40%)",
           pointerEvents: "none",
         }}
       />

@@ -1,22 +1,14 @@
 "use client";
 
-import { useCustomQuery } from "@/hooks/useHttp";
-import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
-import {
-  Box,
-  Breadcrumbs,
-  CircularProgress,
-  Container,
-  Link,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import BookingAppBar from "./components/BookingAppBar";
 import BookingSidebar from "./components/BookingSidebar";
-import { useScrollSync } from "./useScrollSync";
 import ProductsStep from "./steps/Products/ProductsStep";
 import AvailabilityStep from "./steps/Availability/AvailabilityStep";
+import BookingBreadcrumbs from "./components/BookingBreadcrumbs";
+import Specialists from "./steps/Specialists/Specialists";
 
 type BookingModuleProps = {
   businessId: number;
@@ -26,98 +18,71 @@ type BookingModuleProps = {
 const SCROLL_OFFSET = 180;
 const SIDEBAR_WIDTH = 600;
 
-enum BookingStepEnum {
-  SERVICES,
-  SPECIALISTS,
-  DATE_AND_HOUR,
-  CONFIRM,
+export enum BookingStepEnum {
+  SERVICES = 0,
+  SPECIALISTS = 1,
+  DATE_AND_HOUR = 2,
+  CONFIRM = 3,
 }
 
 const BookingModule = ({ businessId, userId }: BookingModuleProps) => {
   const router = useRouter();
-  const { data, isLoading } = useCustomQuery<BusinessProductsResponse[]>({
-    key: ["business-products", businessId, !!userId],
-    url: businessId ? `/api/businesses/${businessId}/products` : "",
-    options: { enabled: !!businessId },
-  });
-
-  const businessProducts = useMemo(() => data ?? [], [data]);
-  const sync = useScrollSync(businessProducts, SCROLL_OFFSET);
 
   const [currentStep, setCurrentStep] = useState<BookingStepEnum>(
-    BookingStepEnum.DATE_AND_HOUR
+    BookingStepEnum.SERVICES
   );
+
+  const handleNext = () => setCurrentStep((prev) => prev + 1);
+  const handleBack = () => setCurrentStep((prev) => prev - 1);
 
   const stepContent = useMemo(() => {
     switch (currentStep) {
       case BookingStepEnum.SERVICES:
         return (
-          <ProductsStep
-            sync={sync}
-            businessProducts={businessProducts}
-            scrollOffset={SCROLL_OFFSET}
-          />
+          <ProductsStep businessId={businessId} scrollOffset={SCROLL_OFFSET} />
         );
       case BookingStepEnum.SPECIALISTS:
-        return <></>;
+        return <Specialists />;
       case BookingStepEnum.DATE_AND_HOUR:
         return <AvailabilityStep />;
       case BookingStepEnum.CONFIRM:
-        return <></>;
+        return (
+          <Box sx={{ minWidth: 0 }}>
+            <Typography fontWeight={800} fontSize={47.5} mt={3}>
+              Confirmare
+            </Typography>
+          </Box>
+        );
       default:
         return null;
     }
-  }, []);
-
-  if (isLoading)
-    return (
-      <Box display="flex" justifyContent="center" p={5}>
-        <CircularProgress />
-      </Box>
-    );
+  }, [currentStep, businessId]);
 
   return (
-    <Box sx={{ minHeight: "100vh" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+      }}
+    >
       <BookingAppBar onBack={() => router.back()} />
       <Container maxWidth="xl">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{
-            "& .MuiBreadcrumbs-separator": {
-              mx: 2,
-            },
-          }}
-        >
-          <Link
-            underline="hover"
-            color="text.primary"
-            href="/"
-            style={{ fontSize: 20, fontWeight: 600 }}
-          >
-            Servicii
-          </Link>
-          <Typography sx={{ color: "text.secondary", fontSize: 20 }}>
-            Profesioniști
-          </Typography>
-          <Typography sx={{ color: "text.secondary", fontSize: 20 }}>
-            Data și Ora
-          </Typography>
-          <Typography sx={{ color: "text.secondary", fontSize: 20 }}>
-            Confirmare
-          </Typography>
-        </Breadcrumbs>
+        <BookingBreadcrumbs currentStep={currentStep} />
 
         <Box
           sx={{
             display: "grid",
             gridTemplateColumns: `minmax(0, 1fr) ${SIDEBAR_WIDTH}px`,
             gap: 8,
+            alignItems: "start",
           }}
         >
-          {stepContent}
+          <Box>{stepContent}</Box>
 
-          <BookingSidebar />
+          <BookingSidebar
+            currentStep={currentStep}
+            onNext={handleNext}
+            onBack={handleBack}
+          />
         </Box>
       </Container>
     </Box>

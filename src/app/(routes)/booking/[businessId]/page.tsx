@@ -14,9 +14,9 @@ export default async function BookingPage({
   params,
   searchParams,
 }: BookingPageProps) {
-  const businessId = Number(params.businessId);
-  const employeeId = searchParams.employeeId
-    ? Number(searchParams.employeeId)
+  const businessId = await Number(params?.businessId);
+  const employeeId = (await searchParams?.employeeId)
+    ? Number(searchParams?.employeeId)
     : null;
 
   if (Number.isNaN(businessId)) {

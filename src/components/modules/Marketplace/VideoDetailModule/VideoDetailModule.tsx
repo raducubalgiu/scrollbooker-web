@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { alpha, Box, IconButton, Theme } from "@mui/material";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import CloseIcon from "@mui/icons-material/Close";
 import { useRouter } from "next/navigation";
 import { Post } from "@/ts/models/social/Post";
 import { useMutate } from "@/hooks/useHttp";
@@ -202,7 +202,7 @@ export default function VideoDetailModule({
         }}
         sx={styles.backButton}
       >
-        <ArrowBackRoundedIcon fontSize="large" />
+        <CloseIcon fontSize="large" />
       </IconButton>
 
       <Box sx={styles.mainContent}>

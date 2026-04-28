@@ -1,7 +1,6 @@
 "use client";
 
 import { Avatar, Badge, Box, Button, Stack, Typography } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import { formatRating } from "@/utils/formatters";
 import React from "react";
@@ -101,7 +100,7 @@ const VideoHeader = ({
             alignItems="center"
             justifyContent="space-between"
             sx={{ width: "100%", minWidth: 0 }}
-            gap={1}
+            gap={3}
           >
             <Box sx={{ minWidth: 0, flex: 1 }}>
               <Stack
@@ -134,11 +133,9 @@ const VideoHeader = ({
 
             {!is_follow && (
               <Button
-                variant="outlined"
-                color="secondary"
+                variant="contained"
                 disableElevation
                 sx={{ textTransform: "none", flexShrink: 0 }}
-                startIcon={<AddIcon />}
               >
                 Urmărește
               </Button>

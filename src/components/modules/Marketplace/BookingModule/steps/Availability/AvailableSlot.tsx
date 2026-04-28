@@ -1,4 +1,4 @@
-import { alpha, Stack, Theme, Typography } from "@mui/material";
+import { lighten, Stack, Theme, Typography } from "@mui/material";
 import React from "react";
 
 type AvailableSlotProps = {
@@ -25,9 +25,12 @@ const styles = {
     borderRadius: 2.5,
     mb: 2.5,
     cursor: "pointer",
+    transition: "all 0.2s ease",
     "&:hover": {
-      color: theme.palette.text.primary + "90",
-      backgroundColor: alpha(theme.palette.divider, 0),
+      bgcolor:
+        theme.palette.mode === "dark"
+          ? lighten(theme.palette.background.default, 0.1)
+          : lighten(theme.palette.background.default, 0.2),
     },
   }),
 };

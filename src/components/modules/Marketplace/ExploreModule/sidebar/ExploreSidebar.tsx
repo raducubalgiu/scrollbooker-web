@@ -141,7 +141,7 @@ const styles = {
     border: 1,
     borderColor: "divider",
     borderRadius: 4,
-    display: "flex",
+    display: { xs: "none", md: "flex" },
     flexDirection: "column",
     minHeight: 0,
     height: "100%",

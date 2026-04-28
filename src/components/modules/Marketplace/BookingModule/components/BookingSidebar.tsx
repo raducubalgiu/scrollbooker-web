@@ -1,7 +1,21 @@
-import { alpha, Box, Button, Stack, Typography } from "@mui/material";
+import { alpha, Box, Button, Fade, Stack, Typography } from "@mui/material";
 import React from "react";
+import { BookingStepEnum } from "../BookingModule";
 
-const BookingSidebar = () => {
+type BookingSidebarProps = {
+  currentStep: BookingStepEnum;
+  onNext: () => void;
+  onBack: () => void;
+};
+
+const BookingSidebar = ({
+  currentStep,
+  onBack,
+  onNext,
+}: BookingSidebarProps) => {
+  const isFirstStep = currentStep === BookingStepEnum.SERVICES;
+  const isLastStep = currentStep === BookingStepEnum.CONFIRM;
+
   return (
     <Box
       sx={{
@@ -45,24 +59,39 @@ const BookingSidebar = () => {
         }}
       >
         <Stack flexDirection="row" alignItems="center" gap={1}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="large"
-            disableElevation
-            fullWidth
-            sx={{ p: 1.75, fontSize: 19, fontWeight: 600 }}
-          >
-            Înapoi
-          </Button>
+          <Fade in={!isFirstStep} unmountOnExit>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={onBack}
+              fullWidth
+              sx={{
+                p: 1.75,
+                fontSize: 18,
+                fontWeight: 700,
+                textTransform: "none",
+                transition: "all 0.3s ease-in-out",
+              }}
+            >
+              Înapoi
+            </Button>
+          </Fade>
+
           <Button
             variant="contained"
             size="large"
             disableElevation
             fullWidth
-            sx={{ p: 1.75, fontSize: 19, fontWeight: 600 }}
+            sx={{
+              p: 1.75,
+              fontSize: 18,
+              fontWeight: 700,
+              textTransform: "none",
+              transition: "all 0.3s ease-in-out",
+            }}
+            onClick={onNext}
           >
-            Continuă
+            {isLastStep ? "Finalizează" : "Continuă"}
           </Button>
         </Stack>
       </Box>

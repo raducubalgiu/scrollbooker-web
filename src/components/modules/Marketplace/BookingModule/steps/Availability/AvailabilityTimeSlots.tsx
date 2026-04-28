@@ -33,9 +33,11 @@ const AvailabilityTimeSlots = ({
 
       {!isLoading && (is_closed || isEmpty(available_slots)) && (
         <Stack flexDirection="row" sx={styles.slotContainer}>
-          <Typography variant="h6" fontWeight={600}>
-            Nu au fost gasite locuri libere
-          </Typography>
+          <Box minHeight={400}>
+            <Typography variant="h6" fontWeight={600}>
+              Nu au fost gasite locuri libere
+            </Typography>
+          </Box>
         </Stack>
       )}
 
