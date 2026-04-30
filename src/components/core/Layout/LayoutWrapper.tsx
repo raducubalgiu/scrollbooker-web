@@ -12,7 +12,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const isLoginPage = React.useMemo(
     () =>
       pathname === "/auth/signin" ||
-      pathname === "auth/register" ||
+      pathname === "/auth/register" ||
       pathname === "/onboarding",
     [pathname]
   );

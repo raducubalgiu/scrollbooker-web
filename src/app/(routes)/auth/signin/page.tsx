@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Button, Container, Stack, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -118,16 +111,6 @@ export default function SignInPage() {
               </Button>
             </Stack>
           </Stack>
-
-          <Box>
-            <Divider />
-
-            <Typography>Ai un business care primeste programari?</Typography>
-
-            <Button variant="outlined" color="secondary">
-              Inregistreaza
-            </Button>
-          </Box>
         </Container>
       </Stack>
     </FormProvider>
