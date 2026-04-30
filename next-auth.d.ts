@@ -45,6 +45,6 @@ declare module "next-auth/jwt" {
     has_employees?: boolean | null;
     is_employee?: boolean | null;
     permissions: string[];
-    error?: "RefreshAccessTokenError";
+    error?: "RefreshAccessTokenError" | undefined;
   }
 }
