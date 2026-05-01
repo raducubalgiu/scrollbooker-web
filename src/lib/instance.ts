@@ -11,7 +11,7 @@ import {
 import { LOG } from "@/utils/logger";
 import { redirect } from "next/navigation";
 
-const BASE_URL = process.env.BE_BASE_ENDPOINT;
+const BASE_URL = process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT;
 
 const random16Hex = () => crypto.randomBytes(8).toString("hex");
 

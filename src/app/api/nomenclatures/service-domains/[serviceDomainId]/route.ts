@@ -27,7 +27,7 @@ export async function PATCH(
   const outgoing = new FormData();
   outgoing.set("photo", photo, photo.name);
 
-  const backendBase = process.env.BE_BASE_ENDPOINT;
+  const backendBase = process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT;
   if (!backendBase) {
     return NextResponse.json({ error: "Missing BACKEND_URL" }, { status: 500 });
   }

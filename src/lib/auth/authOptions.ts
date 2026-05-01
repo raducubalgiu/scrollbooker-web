@@ -73,11 +73,31 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user, trigger, session }): Promise<JWT> {
       if (trigger === "update" && session) {
-        return {
-          ...token,
-          is_validated: session.is_validated,
-          registration_step: session.registration_step,
-        };
+        try {
+          const userInfo = await getUserInfo(token.accessToken);
+          const permissions = await getPermissions(token.accessToken);
+
+          return {
+            ...token,
+            user_id: userInfo.id,
+            username: userInfo.username,
+            is_validated: userInfo.is_validated,
+            registration_step: userInfo.registration_step,
+            avatar: userInfo.avatar,
+            business_id: userInfo.business_id,
+            business_type_id: userInfo.business_type_id,
+            has_employees: userInfo.has_employees,
+            is_employee: userInfo.is_employee,
+            permissions: permissions,
+          };
+        } catch (error: unknown) {
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
+          LOG.error(
+            "Error updating token with fresh user info: " + errorMessage
+          );
+          return { ...token, error: "RefreshAccessTokenError" as const };
+        }
       }
 
       if (user) {
@@ -114,6 +134,11 @@ export const authOptions: AuthOptions = {
           const refreshed = await refreshToken(token.refreshToken);
           return { ...token, ...refreshed, error: undefined };
         } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
+          LOG.error(
+            "Error updating token with fresh user info: " + errorMessage
+          );
           return { ...token, error: "RefreshAccessTokenError" as const };
         }
       }
@@ -158,7 +183,7 @@ async function login(
 ): Promise<AuthResponseType | null> {
   try {
     const response = await axios.post(
-      `${process.env.BE_BASE_ENDPOINT}/auth/login`,
+      `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/login`,
       new URLSearchParams({ username, password }),
       { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
     );
@@ -209,7 +234,7 @@ async function verifyToken(token: string): Promise<DecodedTokenType | null> {
 
 async function getPermissions(token: string): Promise<string[]> {
   const userPermissions: AxiosResponse<Permission[]> = await axios.get(
-    `${process.env.BE_BASE_ENDPOINT}/auth/user-permissions`,
+    `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/user-permissions`,
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return map(userPermissions.data, "code");
@@ -217,7 +242,7 @@ async function getPermissions(token: string): Promise<string[]> {
 
 async function getUserInfo(token: string) {
   const user = await axios.get(
-    `${process.env.BE_BASE_ENDPOINT}/auth/user-info`,
+    `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/user-info`,
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return user.data;
@@ -226,7 +251,7 @@ async function getUserInfo(token: string) {
 async function refreshToken(refreshToken: string): Promise<JWT> {
   try {
     const { data } = await axios.post(
-      `${process.env.BE_BASE_ENDPOINT}/auth/refresh`,
+      `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/refresh`,
       { refresh_token: refreshToken }
     );
 

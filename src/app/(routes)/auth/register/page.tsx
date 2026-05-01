@@ -6,16 +6,24 @@ import { useRouter } from "next/navigation";
 
 import Input from "@/components/core/Input/Input";
 import { required } from "@/utils/validation-rules";
-import { useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
 import { UserRegister } from "@/ts/models/auth/auth";
+import { useState } from "react";
+import axios, { AxiosError } from "axios";
+import { signIn, SignInResponse, useSession } from "next-auth/react";
 
 type RegisterForm = {
   email: string;
   password: string;
 };
 
+interface BackendError {
+  detail: string | Array<{ msg: string; loc: string[] }>;
+}
+
 export default function RegisterPage() {
+  const { update } = useSession();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const methods = useForm<RegisterForm>({
@@ -27,24 +35,58 @@ export default function RegisterPage() {
 
   const isRequired = required();
 
-  const { mutate: handleRegister, isPending } = useMutate({
-    key: ["register-user"],
-    url: "/api/auth/register",
-    options: {
-      onSuccess: () => {
-        toast.success("Userul a fost inregistrat cu success");
-      },
-    },
-  });
+  const onSubmit = async (data: RegisterForm): Promise<void> => {
+    setLoading(true);
 
-  const onSubmit = (data: RegisterForm) => {
     const registerPayload: UserRegister = {
       email: data.email,
       password: data.password,
       role_name: "client",
     };
 
-    handleRegister(registerPayload);
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/register`,
+        registerPayload
+      );
+
+      const result: SignInResponse | undefined = await signIn("credentials", {
+        redirect: false,
+        username: data.email,
+        password: data.password,
+      });
+
+      if (result?.error) {
+        toast.error("Cont creat, dar autentificarea automată a eșuat.");
+        router.push("/auth/signin");
+        return;
+      }
+
+      await update();
+
+      toast.success("Cont creat cu succes!");
+      router.refresh();
+    } catch (error: unknown) {
+      let message = "Eroare la înregistrare.";
+
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError<BackendError>;
+        const detail = axiosError.response?.data?.detail;
+
+        if (typeof detail === "string") {
+          message = detail;
+        } else if (Array.isArray(detail)) {
+          message = detail[0]?.msg || message;
+        }
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+
+      toast.error(message);
+      console.error("Register error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -87,7 +129,7 @@ export default function RegisterPage() {
               variant="contained"
               size="large"
               fullWidth
-              loading={isPending}
+              loading={loading}
               onClick={methods.handleSubmit(onSubmit)}
               disableElevation
               sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}

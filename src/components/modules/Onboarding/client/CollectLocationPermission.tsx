@@ -29,7 +29,7 @@ const CollectLocationPermission = () => {
     <Stack
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: "100vh" }}
+      sx={{ minHeight: "100vh", bgcolor: "background.paper" }}
     >
       <Container maxWidth="sm">
         <Stack spacing={3}>

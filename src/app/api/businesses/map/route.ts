@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     };
 
     const [markersResult, listResult] = await Promise.allSettled([
-      fetch(`${process.env.BE_BASE_ENDPOINT}/businesses/markers`, {
+      fetch(`${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/businesses/markers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
         cache: "no-store",
       }),
       fetch(
-        `${process.env.BE_BASE_ENDPOINT}/businesses/locations?page=1&limit=10`,
+        `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/businesses/locations?page=1&limit=10`,
         {
           method: "POST",
           headers: {

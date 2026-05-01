@@ -44,6 +44,7 @@ const CollectUsernameStep = () => {
     options: {
       onSuccess: async (data: OnboardingResponse) => {
         await update({
+          username: username,
           is_validated: data.is_validated,
           registration_step: data.registration_step,
         });
