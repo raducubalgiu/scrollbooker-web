@@ -13,8 +13,8 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
     return (
       pathname.startsWith("/auth") ||
       pathname.startsWith("/onboarding") ||
-      pathname === "/not-found" ||
-      pathname === "unathorized"
+      pathname === "/unauthorized" ||
+      pathname === "/_not-found"
     );
   }, [pathname]);
 

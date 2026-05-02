@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import CollectBusinessType from "./CollectBusinessType";
 import CollectBusinessLocationDescription from "./CollectBusinessLocationDescription";
 import CollectBusinessAddress from "./CollectBusinessAddress";
-import CollectBusinessGallery from "./CollectBusinessGallery";
+import CollectBusinessGallery from "../CollectBusinessGalleryStep";
 
 enum BusinessStep {
   BUSINESS_TYPE,

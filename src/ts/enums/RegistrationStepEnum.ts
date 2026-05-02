@@ -11,6 +11,7 @@ export enum RegistrationStepEnum {
 
   // Business
   COLLECT_BUSINESS = "collect_business",
+  COLLECT_BUSINESS_GALLERY = "collect_business_gallery",
   COLLECT_BUSINESS_SERVICES = "collect_business_services",
   COLLECT_BUSINESS_SCHEDULES = "collect_business_schedules",
   COLLECT_BUSINESS_HAS_EMPLOYEES = "collect_business_has_employees",
@@ -48,6 +49,8 @@ export const displayStepLabel = (step: RegistrationStepEnum) => {
     // Business
     case RegistrationStepEnum.COLLECT_BUSINESS:
       return "Detalii Locație";
+    case RegistrationStepEnum.COLLECT_BUSINESS_GALLERY:
+      return "Galerie Foto";
     case RegistrationStepEnum.COLLECT_BUSINESS_SERVICES:
       return "Servicii";
     case RegistrationStepEnum.COLLECT_BUSINESS_SCHEDULES:

@@ -143,7 +143,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
           size="large"
           onClick={() => setOpenAddModal(true)}
         >
-          Adaugă produs
+          Adaugă un serviciu
         </Button>
         {!session?.is_employee && (
           <EmployeeButton
@@ -166,14 +166,14 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
       return [
         <MRT_ActionMenuItem
           key="edit"
-          label="Editează produsul"
+          label="Editează serviciul"
           icon={<ModeEditOutlineOutlinedIcon />}
           onClick={() => {}}
           table={table}
         />,
         <MRT_ActionMenuItem
           key="delete"
-          label="Șterge produsul"
+          label="Șterge serviciul"
           icon={<DeleteOutlineOutlinedIcon />}
           onClick={() => setOpenDeleteConfirm(true)}
           table={table}
@@ -184,11 +184,11 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
   );
 
   return (
-    <MainLayout title="Produse" hideAction>
+    <MainLayout title="Serviciile mele" hideAction>
       <ConfirmationModal
         open={openDeleteConfirm}
         title="Confirmare ștergere"
-        message="Ești sigur că vrei să ștergi acest produs? Această acțiune nu poate fi anulată."
+        message="Ești sigur că vrei să ștergi acest serviciu? Această acțiune nu poate fi anulată."
         handleClose={() => setOpenDeleteConfirm(false)}
         handleSubmit={() => {}}
       />

@@ -1,4 +1,4 @@
-import { Box, Container, Typography, Button } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import Link from "next/link";
 
 export default function UnauthorizedPage() {
@@ -21,11 +21,7 @@ export default function UnauthorizedPage() {
           Nu ai permisiunea necesară pentru a accesa această pagină.
         </Typography>
         <Box sx={{ display: "flex", gap: 2 }}>
-          <Link href="/">
-            <Button variant="contained" component="a">
-              Înapoi la pagina principală
-            </Button>
-          </Link>
+          <Link href="/">Înapoi la pagina principală</Link>
         </Box>
       </Box>
     </Container>

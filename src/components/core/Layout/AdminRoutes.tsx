@@ -86,13 +86,13 @@ const AdminRoutes = ({
         permission: PermissionEnum.MY_SCHEDULES_VIEW,
       },
       {
-        label: "Servicii",
+        label: "Categorii",
         route: "/admin/my-business/services",
         icon: <AssignmentTurnedInOutlinedIcon />,
         permission: PermissionEnum.MY_SERVICES_VIEW,
       },
       {
-        label: "Produse",
+        label: "Serviciile mele",
         route: "/admin/my-business/products",
         icon: <ShoppingBagOutlinedIcon />,
         permission: PermissionEnum.MY_PRODUCTS_VIEW,

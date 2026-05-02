@@ -29,10 +29,10 @@ const CollectUsernameStep = () => {
     key: ["search-users", debouncedValue],
     url: "/api/user/search-username",
     params: {
-      query: debouncedValue,
+      query: debouncedValue.replace(/\s+/g, ""),
     },
     options: {
-      enabled: debouncedValue.trim().length > 2,
+      enabled: debouncedValue.replace(/\s+/g, "").length > 2,
       staleTime: 1000 * 60,
     },
   });
@@ -117,7 +117,7 @@ const CollectUsernameStep = () => {
           variant="contained"
           size="large"
           fullWidth
-          loading={isLoadingSave}
+          loading={isLoadingSave || isLoadingSearch}
           disabled={isLoadingSearch || !data?.available}
           onClick={() => handleSaveUsername({ username })}
           disableElevation

@@ -41,7 +41,7 @@ export default function RegisterPage() {
     const registerPayload: UserRegister = {
       email: data.email,
       password: data.password,
-      role_name: "client",
+      role_name: "business",
     };
 
     try {

@@ -108,7 +108,7 @@ export const MyServicesModule = () => {
   ];
 
   return (
-    <MainLayout title="Serviciile mele" hideAction>
+    <MainLayout title="Categorii de servicii" hideAction>
       {isLoading && <MyServicesSkeleton />}
       {data?.map((serviceDomain) => (
         <Accordion

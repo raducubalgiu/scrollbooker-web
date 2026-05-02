@@ -27,6 +27,7 @@ import CollectBusinessSchedulesStep from "./business/CollectBusinessSchedulesSte
 import CollectBusinessHasEmployeesStep from "./business/CollectBusinessHasEmployeesStep";
 import CollectBusinessValidationStep from "./business/CollectBusinessValidationStep";
 import CollectLocationPermission from "./client/CollectLocationPermission";
+import CollectBusinessGalleryStep from "./business/CollectBusinessGalleryStep";
 
 type OnboardingModuleProps = {
   session: Session | null;
@@ -40,7 +41,6 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
     RegistrationStepEnum.COLLECT_BUSINESS_SERVICES,
     RegistrationStepEnum.COLLECT_BUSINESS_SCHEDULES,
     RegistrationStepEnum.COLLECT_BUSINESS_HAS_EMPLOYEES,
-    RegistrationStepEnum.COLLECT_BUSINESS_VALIDATION,
   ];
 
   const activeStepIndex = steps.findIndex((s) => s === step);
@@ -62,6 +62,8 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
         return <CollectLocationPermission />;
       case RegistrationStepEnum.COLLECT_BUSINESS:
         return <CollectBusinessStep />;
+      case RegistrationStepEnum.COLLECT_BUSINESS_GALLERY:
+        return <CollectBusinessGalleryStep />;
       case RegistrationStepEnum.COLLECT_BUSINESS_SERVICES:
         return <CollectBusinessServicesStep />;
       case RegistrationStepEnum.COLLECT_BUSINESS_SCHEDULES:
