@@ -38,6 +38,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
 
   const steps = [
     RegistrationStepEnum.COLLECT_BUSINESS,
+    RegistrationStepEnum.COLLECT_BUSINESS_GALLERY,
     RegistrationStepEnum.COLLECT_BUSINESS_SERVICES,
     RegistrationStepEnum.COLLECT_BUSINESS_SCHEDULES,
     RegistrationStepEnum.COLLECT_BUSINESS_HAS_EMPLOYEES,
@@ -78,25 +79,11 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
   }, [step]);
 
   return (
-    <Box
-      sx={{ bgcolor: "background.paper", height: "100vh", overflow: "hidden" }}
-    >
+    <Box sx={styles.container}>
       <Container maxWidth="xl" sx={{ height: "100%" }}>
         <Grid container sx={{ height: "100%" }} spacing={0}>
           {shouldDisplayStepper && (
-            <Grid
-              size={{ xs: 0, md: 3 }}
-              sx={{
-                display: { xs: "none", md: "flex" },
-                flexDirection: "column",
-                justifyContent: "flex-start",
-                borderRight: "1px solid",
-                borderColor: "divider",
-                height: "100%",
-                pr: 4,
-                pt: 5,
-              }}
-            >
+            <Grid size={{ xs: 0, md: 3 }} sx={styles.leftColumnContainer}>
               <Typography variant="h4" sx={{ mb: 6, fontWeight: 800 }}>
                 Configurare Business
               </Typography>
@@ -104,80 +91,11 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
               <Stepper
                 activeStep={activeStepIndex}
                 orientation="vertical"
-                sx={{
-                  "& .MuiStepConnector-line": {
-                    minHeight: 40,
-                    borderLeftWidth: 2,
-                    borderColor: "grey.100",
-                  },
-                  "& .MuiStepConnector-root.Mui-active .MuiStepConnector-line":
-                    {
-                      borderColor: "primary.main",
-                    },
-                  "& .MuiStepConnector-root.Mui-completed .MuiStepConnector-line":
-                    {
-                      borderColor: "primary.main",
-                    },
-
-                  "& .MuiStepLabel-root": {
-                    py: 1.5,
-                  },
-                  "& .MuiStepLabel-label": {
-                    fontSize: "1.05rem",
-                    ml: 1,
-                    color: "text.disabled",
-                    fontWeight: 500,
-                  },
-                  "& .MuiStepLabel-label.Mui-active": {
-                    color: "text.primary",
-                    fontWeight: 700,
-                  },
-                  "& .MuiStepLabel-label.Mui-completed": {
-                    color: "text.secondary",
-                  },
-
-                  "& .MuiStepIcon-root": {
-                    fontSize: 30,
-                    color: "grey.200",
-                    "&.Mui-active": {
-                      color: "primary.main",
-                    },
-                    "&.Mui-completed": {
-                      color: "primary.main",
-                    },
-                  },
-                  "& .MuiStepIcon-text": {
-                    fill: "grey.500",
-                    fontSize: "14px",
-                    fontWeight: 700,
-                  },
-                  "& .Mui-active .MuiStepIcon-text": {
-                    fill: "white",
-                  },
-                }}
+                sx={styles.stepper}
               >
                 {steps.map((label) => (
                   <Step key={label}>
-                    <StepLabel
-                      sx={{
-                        py: 1.5,
-                        "& .MuiStepLabel-label": {
-                          fontSize: "1.05rem",
-                          ml: 1,
-                          color: "text.disabled",
-                          fontWeight: 500,
-                        },
-                        "& .MuiStepLabel-label.Mui-active": {
-                          color: "text.primary",
-                          fontWeight: 700,
-                        },
-                        "& .MuiStepIcon-root": {
-                          fontSize: 30,
-                          "&.Mui-active": { color: "primary.main" },
-                          "&.Mui-completed": { color: "primary.main" },
-                        },
-                      }}
-                    >
+                    <StepLabel sx={styles.stepLabel}>
                       {displayStepLabel(label)}
                     </StepLabel>
                   </Step>
@@ -188,12 +106,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
 
           <Grid
             size={{ xs: 12, md: shouldDisplayStepper ? 8 : 13 }}
-            sx={{
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-            }}
+            sx={styles.rightColumn}
           >
             {stepContent}
           </Grid>
@@ -202,3 +115,94 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
     </Box>
   );
 }
+
+const styles = {
+  container: {
+    bgcolor: "background.paper",
+    height: "100vh",
+    overflow: "hidden",
+  },
+  leftColumnContainer: {
+    display: { xs: "none", md: "flex" },
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    borderRight: "1px solid",
+    borderColor: "divider",
+    height: "100%",
+    pr: 4,
+    pt: 5,
+  },
+  stepper: {
+    "& .MuiStepConnector-line": {
+      minHeight: 40,
+      borderLeftWidth: 2,
+      borderColor: "grey.100",
+    },
+    "& .MuiStepConnector-root.Mui-active .MuiStepConnector-line": {
+      borderColor: "primary.main",
+    },
+    "& .MuiStepConnector-root.Mui-completed .MuiStepConnector-line": {
+      borderColor: "primary.main",
+    },
+
+    "& .MuiStepLabel-root": {
+      py: 1.5,
+    },
+    "& .MuiStepLabel-label": {
+      fontSize: "1.05rem",
+      ml: 1,
+      color: "text.disabled",
+      fontWeight: 500,
+    },
+    "& .MuiStepLabel-label.Mui-active": {
+      color: "text.primary",
+      fontWeight: 700,
+    },
+    "& .MuiStepLabel-label.Mui-completed": {
+      color: "text.secondary",
+    },
+
+    "& .MuiStepIcon-root": {
+      fontSize: 30,
+      color: "grey.200",
+      "&.Mui-active": {
+        color: "primary.main",
+      },
+      "&.Mui-completed": {
+        color: "primary.main",
+      },
+    },
+    "& .MuiStepIcon-text": {
+      fill: "grey.500",
+      fontSize: "14px",
+      fontWeight: 700,
+    },
+    "& .Mui-active .MuiStepIcon-text": {
+      fill: "white",
+    },
+  },
+  stepLabel: {
+    py: 1.5,
+    "& .MuiStepLabel-label": {
+      fontSize: "1.05rem",
+      ml: 1,
+      color: "text.disabled",
+      fontWeight: 500,
+    },
+    "& .MuiStepLabel-label.Mui-active": {
+      color: "text.primary",
+      fontWeight: 700,
+    },
+    "& .MuiStepIcon-root": {
+      fontSize: 30,
+      "&.Mui-active": { color: "primary.main" },
+      "&.Mui-completed": { color: "primary.main" },
+    },
+  },
+  rightColumn: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+  },
+};
