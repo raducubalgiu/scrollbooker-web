@@ -26,3 +26,37 @@ export function RegistrationStepfromKey(
     ? (key as RegistrationStepEnum)
     : null;
 }
+
+export const displayStepLabel = (step: RegistrationStepEnum) => {
+  switch (step) {
+    // Shared
+    case RegistrationStepEnum.COLLECT_USER_EMAIL_VALIDATION:
+      return "Validare Email";
+    case RegistrationStepEnum.COLLECT_USER_USERNAME:
+      return "Username";
+    case RegistrationStepEnum.COLLECT_USER_PHONE_HUMBER:
+      return "Phone Number";
+
+    // Client
+    case RegistrationStepEnum.COLLECT_CLIENT_BIRTHDATE:
+      return "Birthdate";
+    case RegistrationStepEnum.COLLECT_CLIENT_GENDER:
+      return "Gender";
+    case RegistrationStepEnum.COLLECT_CLIENT_LOCATION_PERMISSION:
+      return "Location Permission";
+
+    // Business
+    case RegistrationStepEnum.COLLECT_BUSINESS:
+      return "Detalii Locatie";
+    case RegistrationStepEnum.COLLECT_BUSINESS_SERVICES:
+      return "Servicii";
+    case RegistrationStepEnum.COLLECT_BUSINESS_SCHEDULES:
+      return "Programul locatiei";
+    case RegistrationStepEnum.COLLECT_BUSINESS_HAS_EMPLOYEES:
+      return "Angajati";
+    case RegistrationStepEnum.COLLECT_BUSINESS_VALIDATION:
+      return "Validare";
+    default:
+      return null;
+  }
+};

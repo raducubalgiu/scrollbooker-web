@@ -90,14 +90,10 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
 
   useEffect(() => {
     const handleScroll = (): void => {
-      // 1. Logica pentru Vizibilitatea Tab-urilor (Apar doar la Services)
       const servicesElement = sectionRefs.current["services"];
       if (servicesElement) {
         const rect = servicesElement.getBoundingClientRect();
 
-        // Activăm tab-urile când marginea de sus a secțiunii Services
-        // ajunge aproape de top (ex: 80px distanță)
-        // Folosim un prag fix pentru a evita "tremuratul"
         const shouldBeVisible = rect.top <= 80;
 
         if (isTabsVisible !== shouldBeVisible) {
@@ -105,9 +101,8 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
         }
       }
 
-      // 2. Logica pentru Tab-ul Activ (Care secțiune e în focus)
       const stickyTabsHeight = tabsContainerRef.current?.offsetHeight ?? 0;
-      const activationOffset = stickyTabsHeight + 100; // Offset mai generos pentru precizie
+      const activationOffset = stickyTabsHeight + 100;
 
       let currentActiveTab = TAB_SECTIONS[0]?.id ?? "services";
 
@@ -117,7 +112,6 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
 
         const rect = element.getBoundingClientRect();
 
-        // Dacă secțiunea a trecut de pragul de sus, o considerăm activă
         if (rect.top <= activationOffset) {
           currentActiveTab = section.id;
         }
@@ -128,7 +122,6 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
       );
     };
 
-    // Executăm o dată la mount pentru a seta starea inițială corectă
     handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -136,7 +129,7 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isTabsVisible]); // Adăugăm isTabsVisible în dependențe pentru a reflecta starea corect în clousur
+  }, [isTabsVisible]);
 
   const scrollToSection = (sectionId: string): void => {
     const element = sectionRefs.current[sectionId];

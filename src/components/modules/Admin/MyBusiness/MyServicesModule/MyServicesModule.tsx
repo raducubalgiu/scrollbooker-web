@@ -10,7 +10,7 @@ import Accordion from "@/components/core/Accordion/Accordion";
 import ActionButton, {
   ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import MyServicesSkeleton from "./MyServicesSkeleton";
 
 export const MyServicesModule = () => {

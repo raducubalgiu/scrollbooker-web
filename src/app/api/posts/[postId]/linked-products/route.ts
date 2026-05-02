@@ -3,13 +3,13 @@ import { get } from "@/utils/requests";
 import { Product } from "@/ts/models/booking/product/Product";
 
 type RouteParams = {
-  params: {
-    postId: number;
-  };
+  params: Promise<{
+    postId: string;
+  }>;
 };
 
 export const GET = async (_req: NextRequest, { params }: RouteParams) => {
-  const { postId } = params;
+  const { postId } = await params;
 
   const response = (
     await get<Product[]>({

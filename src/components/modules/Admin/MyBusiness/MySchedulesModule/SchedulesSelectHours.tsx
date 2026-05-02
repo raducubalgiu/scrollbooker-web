@@ -1,13 +1,13 @@
 "use client";
 
 import { TableCell, TableRow } from "@mui/material";
-import { ScheduleResponseType } from "@/ts/models/booking/schedule/Schedule";
 import InputSelect from "@/components/core/Input/InputSelect";
 import { useTimeSlots } from "@/hooks/useTimeSlots";
 import { useFormContext } from "react-hook-form";
+import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 
 type SchedulesSelectHoursProps = {
-  schedule: ScheduleResponseType;
+  schedule: Schedule;
   namePath: string;
   disabled: boolean;
 };

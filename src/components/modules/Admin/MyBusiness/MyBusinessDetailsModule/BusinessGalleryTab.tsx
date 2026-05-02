@@ -11,23 +11,20 @@ import {
 } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
 
 type GalleryItem = {
-  id: string; // local id
-  src: string | null; // preview URL (objectURL or remote URL)
-  file?: File; // if newly added/replaced
-  remote?: boolean; // whether src is a remote existing image
+  id: string;
+  src: string | null;
+  file?: File;
+  remote?: boolean;
 };
 
 type Props = {
   businessId: number;
-  initialImages?: string[]; // optional existing image URLs
+  initialImages?: string[];
 };
 
 const MAX_IMAGES = 5;
@@ -44,27 +41,23 @@ const BusinessGalleryTab: React.FC<Props> = ({
         src: url,
         remote: true,
       }));
-    // fill remaining slots with empty placeholders
     while (initial.length < MAX_IMAGES)
       initial.push({ id: `empty-${initial.length}-${Date.now()}`, src: null });
     return initial;
   });
 
-  // keep refs to inputs for each slot
   const inputRefs = useRef<Array<HTMLInputElement | null>>(
     Array(MAX_IMAGES).fill(null)
   );
 
   useEffect(() => {
     return () => {
-      // cleanup object URLs
       items.forEach((it) => {
         if (it?.file && it.src && it.src.startsWith("blob:")) {
           URL.revokeObjectURL(it.src);
         }
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { mutate, isPending } = useMutate<FormData, unknown>({
@@ -91,7 +84,6 @@ const BusinessGalleryTab: React.FC<Props> = ({
 
     setItems((prev) => {
       const copy = [...prev];
-      // revoke previous objectURL if it was a blob
       const prevItem = copy[index];
       if (prevItem?.file && prevItem.src && prevItem.src.startsWith("blob:")) {
         URL.revokeObjectURL(prevItem.src);
@@ -110,7 +102,6 @@ const BusinessGalleryTab: React.FC<Props> = ({
       if (it?.file && it.src && it.src.startsWith("blob:")) {
         URL.revokeObjectURL(it.src);
       }
-      // clear slot
       copy[index] = { id: `empty-${index}-${Date.now()}`, src: null };
       return copy;
     });

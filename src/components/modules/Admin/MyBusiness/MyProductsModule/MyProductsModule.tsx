@@ -13,7 +13,6 @@ import { MRT_ActionMenuItem, MRT_ColumnDef } from "material-react-table";
 import * as React from "react";
 import EmployeeButton from "../../AppointmentsModule/EmployeeButton";
 import { Session } from "next-auth/core/types";
-import { useTheme } from "@mui/material/styles";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import ProductTypeButton from "./ProductTypeButton";
@@ -28,7 +27,6 @@ type MyProductsModuleProps = {
 };
 
 export default function MyProductsModule({ session }: MyProductsModuleProps) {
-  const theme = useTheme();
   const [openDeleteConfirm, setOpenDeleteConfirm] = React.useState(false);
   const [openAddModal, setOpenAddModal] = React.useState(false);
 
@@ -90,18 +88,6 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
         ),
       },
       {
-        accessorKey: "service_domain_id",
-        header: "Categoria",
-        size: 150,
-        Cell: ({ row }) => <span>Tuns si Barba</span>,
-      },
-      {
-        accessorKey: "service_id",
-        header: "Serviciu",
-        size: 150,
-        Cell: ({ row }) => <span>Tuns</span>,
-      },
-      {
         accessorKey: "type",
         header: "Tip serviciu",
         size: 100,
@@ -121,28 +107,6 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
         size: 200,
         Cell: ({ row }) => (
           <span>{row.original.validity_days ?? "Nelimitat"}</span>
-        ),
-      },
-      {
-        accessorKey: "price",
-        header: "Preț",
-        size: 100,
-        Cell: ({ row }) => <span>{row.original.price} RON</span>,
-      },
-      {
-        accessorKey: "discount",
-        header: "Discount",
-        size: 50,
-        Cell: ({ row }) => <span>{row.original.discount}%</span>,
-      },
-      {
-        accessorKey: "price_with_discount",
-        header: "Preț final",
-        size: 50,
-        Cell: ({ row }) => (
-          <span style={{ fontWeight: 600 }}>
-            {row.original.price_with_discount} RON
-          </span>
         ),
       },
       {
@@ -204,9 +168,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
           key="edit"
           label="Editează produsul"
           icon={<ModeEditOutlineOutlinedIcon />}
-          onClick={() => {
-            // TODO: implement view details action
-          }}
+          onClick={() => {}}
           table={table}
         />,
         <MRT_ActionMenuItem

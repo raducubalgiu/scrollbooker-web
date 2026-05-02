@@ -77,7 +77,6 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
   const actions: ActionButtonType[] = [
     {
       title: "Renunță",
-      hidden: disabled,
       props: {
         variant: "outlined",
         color: "secondary",
@@ -90,7 +89,6 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
     },
     {
       title: "Editează",
-      hidden: !disabled,
       props: {
         onClick: () => setDisabled(false),
         disableElevation: true,
@@ -98,7 +96,6 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
     },
     {
       title: "Salvează",
-      hidden: disabled,
       props: {
         onClick: handleSubmit(handleSave),
         loading: isPending,
