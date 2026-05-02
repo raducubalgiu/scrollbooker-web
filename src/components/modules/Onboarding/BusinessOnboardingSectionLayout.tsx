@@ -3,7 +3,7 @@ import React from "react";
 
 type BusinessOnboardingSectionLayoutProps = {
   title: string;
-  description: string;
+  description?: string;
   children: React.ReactNode;
   onClick: () => void;
   isLoading: boolean;

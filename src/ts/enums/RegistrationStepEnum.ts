@@ -47,13 +47,13 @@ export const displayStepLabel = (step: RegistrationStepEnum) => {
 
     // Business
     case RegistrationStepEnum.COLLECT_BUSINESS:
-      return "Detalii Locatie";
+      return "Detalii Locație";
     case RegistrationStepEnum.COLLECT_BUSINESS_SERVICES:
       return "Servicii";
     case RegistrationStepEnum.COLLECT_BUSINESS_SCHEDULES:
-      return "Programul locatiei";
+      return "Programul locației";
     case RegistrationStepEnum.COLLECT_BUSINESS_HAS_EMPLOYEES:
-      return "Angajati";
+      return "Echipă";
     case RegistrationStepEnum.COLLECT_BUSINESS_VALIDATION:
       return "Validare";
     default:
