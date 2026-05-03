@@ -21,6 +21,12 @@ import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurned
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOutlined";
+import AddModeratorOutlinedIcon from "@mui/icons-material/AddModeratorOutlined";
+import BeenhereOutlinedIcon from "@mui/icons-material/BeenhereOutlined";
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
+import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
@@ -112,13 +118,13 @@ const AdminRoutes = ({
       {
         label: "Validează afacerea",
         route: "/admin/businesses/approve",
-        icon: <PlaylistAddCheckOutlinedIcon />,
+        icon: <BeenhereOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Roluri și permisiuni",
         route: "/admin/nomenclatures/roles-and-permissions",
-        icon: <PlaylistAddCheckOutlinedIcon />,
+        icon: <AddModeratorOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
@@ -140,7 +146,7 @@ const AdminRoutes = ({
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
-        label: "Servicii",
+        label: "Categorie Serviciu",
         route: "/admin/nomenclatures/services",
         icon: <PlaylistAddCheckOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
@@ -148,19 +154,25 @@ const AdminRoutes = ({
       {
         label: "Filtre",
         route: "/admin/nomenclatures/filters",
-        icon: <PlaylistAddCheckOutlinedIcon />,
+        icon: <FilterAltOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Profesii",
         route: "/admin/nomenclatures/professions",
-        icon: <PlaylistAddCheckOutlinedIcon />,
+        icon: <BusinessCenterOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Monede",
         route: "/admin/nomenclatures/currencies",
-        icon: <PlaylistAddCheckOutlinedIcon />,
+        icon: <MonetizationOnOutlinedIcon />,
+        permission: PermissionEnum.NO_PROTECTION,
+      },
+      {
+        label: "Consents",
+        route: "/admin/nomenclatures/consents",
+        icon: <FeedOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
     ],

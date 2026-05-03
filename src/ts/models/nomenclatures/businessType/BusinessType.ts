@@ -2,6 +2,7 @@ import { Filter } from "../filter/FilterType";
 import { ServiceDomain } from "../serviceDomain/ServiceDomainType";
 
 export interface BusinessType {
+  [x: string]: unknown;
   id: number;
   name: string;
   active: boolean;

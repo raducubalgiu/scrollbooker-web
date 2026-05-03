@@ -22,3 +22,10 @@ export interface Business {
   schedules: Schedule[];
   has_employees: boolean;
 }
+
+export interface BusinessCreate {
+  description?: string;
+  place_id: string;
+  business_type_id: number;
+  owner_fullname: string;
+}

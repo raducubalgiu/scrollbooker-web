@@ -69,10 +69,10 @@ export default function SignInPage() {
             </Typography>
 
             <Input
-              label="Nume"
+              label="Username sau email"
               name="username"
               rules={isRequired}
-              placeholder="Username"
+              placeholder="Username sau email"
               sx={{ mb: 1.5 }}
               size="medium"
             />

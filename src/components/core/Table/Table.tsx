@@ -79,7 +79,11 @@ export default function Table<T extends Record<string, unknown>>({
           color="primary"
         />
       ) : (
-        <Button onClick={() => table.setCreatingRow(true)} variant="contained">
+        <Button
+          onClick={() => table.setCreatingRow(true)}
+          variant="contained"
+          disableElevation
+        >
           Adaugă
         </Button>
       ),

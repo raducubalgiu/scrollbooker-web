@@ -6,6 +6,7 @@ type BusinessOnboardingSectionLayoutProps = {
   description?: string;
   children: React.ReactNode;
   onClick: () => void;
+  displayButton?: boolean;
   isLoading: boolean;
   isDisabled: boolean;
 };
@@ -14,6 +15,7 @@ const BusinessOnboardingSectionLayout = ({
   title,
   description,
   children,
+  displayButton = true,
   onClick,
   isLoading,
   isDisabled,
@@ -34,19 +36,21 @@ const BusinessOnboardingSectionLayout = ({
         </Box>
       </Box>
 
-      <Box sx={styles.buttonContainer}>
-        <Button
-          variant="contained"
-          size="large"
-          loading={isLoading}
-          disabled={isDisabled}
-          onClick={onClick}
-          disableElevation
-          sx={{ px: 6, py: 1.5, fontWeight: 700 }}
-        >
-          Salvează și continuă
-        </Button>
-      </Box>
+      {displayButton && (
+        <Box sx={styles.buttonContainer}>
+          <Button
+            variant="contained"
+            size="large"
+            loading={isLoading}
+            disabled={isDisabled}
+            onClick={onClick}
+            disableElevation
+            sx={{ px: 6, py: 1.5, fontWeight: 700 }}
+          >
+            Salvează și continuă
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

@@ -200,7 +200,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <Box
         component="main"
-        sx={{ ...styles.mainContent, p: isSpecialPage ? 0 : 2.5 }}
+        sx={{
+          ...styles.mainContent,
+          p: isSpecialPage ? 0 : 2.5,
+        }}
       >
         {children}
       </Box>
@@ -286,9 +289,9 @@ const getStyles = (
     mainContent: {
       flexGrow: 1,
       width: { lg: `calc(100% - ${navWidth}px)` },
-      bgcolor: isAdminPage ? "background.default" : bgColor,
       minWidth: 0,
       transition: "width 220ms ease",
+      bgcolor: isAdminPage ? "background.default" : bgColor,
     },
   };
 };

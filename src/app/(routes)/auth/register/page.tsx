@@ -141,7 +141,7 @@ export default function RegisterPage() {
               <Typography color="text.secondary">Ai deja un cont?</Typography>
               <Button
                 sx={{ textTransform: "none" }}
-                onClick={() => router.push("/auth/login")}
+                onClick={() => router.push("/auth/signin")}
               >
                 Login
               </Button>
