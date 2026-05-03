@@ -152,6 +152,9 @@ const CollectBusinessStep = () => {
     addressQuery,
   ]);
 
+  const isNextDisabled =
+    !businessTypeId || !ownerFullName.length || !selectedPlaceId;
+
   return (
     <Box sx={styles.container}>
       <CollectBusinessStepper step={step} />
@@ -162,6 +165,7 @@ const CollectBusinessStep = () => {
         isFirstStep={isFirstStep}
         isLastStep={isLastStep}
         isLoading={isPending}
+        isDisabledNext={isNextDisabled}
         onHandleBack={handleBackSubStep}
         onHandleNext={handleNextSubStep}
       />

@@ -5,6 +5,7 @@ type CollectBusinessFooterProps = {
   isFirstStep: boolean;
   isLastStep: boolean;
   isLoading: boolean;
+  isDisabledNext: boolean;
   onHandleBack: () => void;
   onHandleNext: () => void;
 };
@@ -13,6 +14,7 @@ const CollectBusinessFooter = ({
   isFirstStep,
   isLastStep,
   isLoading,
+  isDisabledNext,
   onHandleBack,
   onHandleNext,
 }: CollectBusinessFooterProps) => {
@@ -42,6 +44,7 @@ const CollectBusinessFooter = ({
         loading={isLoading}
         size="large"
         disableElevation
+        disabled={isDisabledNext}
       >
         {isLastStep ? "Finalizează pasul" : "Continuă"}
       </Button>

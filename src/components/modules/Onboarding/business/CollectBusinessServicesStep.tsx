@@ -1,7 +1,13 @@
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import { Paper } from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import MyServicesSkeleton from "../../Admin/MyBusiness/MyServicesModule/MyServicesSkeleton";
 import SelectedServiceItem from "../../Admin/MyBusiness/MyServicesModule/SelectedServiceItem";
 import Accordion from "@/components/core/Accordion/Accordion";
@@ -13,6 +19,7 @@ import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout"
 const CollectBusinessServicesStep = () => {
   const { update } = useSession();
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const { data, isLoading } = useCustomQuery<
     SelectedServiceDomainWithServices[]
@@ -61,7 +68,9 @@ const CollectBusinessServicesStep = () => {
           registration_step: data.registration_step,
         });
 
-        router.refresh();
+        startTransition(() => {
+          router.refresh();
+        });
       },
     },
   });
@@ -70,8 +79,8 @@ const CollectBusinessServicesStep = () => {
     <BusinessOnboardingSectionLayout
       title="Categorii de servicii"
       description="Adauga serviciile pe care le desfasori la locatie"
-      isLoading={isLoadingUpdate}
-      isDisabled={isLoadingUpdate || selectedServices.size === 0}
+      isLoading={isLoadingUpdate || isPending}
+      isDisabled={isPending || isLoadingUpdate || selectedServices.size === 0}
       onClick={() => handleSave(Array.from(selectedServices))}
     >
       {isLoading && <MyServicesSkeleton />}

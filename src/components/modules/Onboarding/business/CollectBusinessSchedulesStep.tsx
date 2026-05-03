@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
+import { every } from "lodash";
 
 type SchedulesFormValues = {
   schedules: Schedule[];
@@ -24,6 +25,7 @@ type SchedulesFormValues = {
 const CollectBusinessSchedulesStep = () => {
   const { update } = useSession();
   const router = useRouter();
+
   const { data, isLoading } = useCustomQuery<Schedule[]>({
     key: ["business-schedules"],
     url: "/api/my-business/schedules",
@@ -54,21 +56,22 @@ const CollectBusinessSchedulesStep = () => {
     }
   }, [data, reset]);
 
-  const { mutate: handleUpdateSchedules, isPending } = useMutate({
-    key: ["update-schedules"],
-    url: "/api/onboarding/collect-business-schedules",
-    method: "PATCH",
-    options: {
-      onSuccess: async (data: OnboardingResponse) => {
-        await update({
-          is_validated: data.is_validated,
-          registration_step: data.registration_step,
-        });
+  const { mutate: handleUpdateSchedules, isPending: isLoadingUpdate } =
+    useMutate({
+      key: ["update-schedules"],
+      url: "/api/onboarding/collect-business-schedules",
+      method: "PATCH",
+      options: {
+        onSuccess: async (data: OnboardingResponse) => {
+          await update({
+            is_validated: data.is_validated,
+            registration_step: data.registration_step,
+          });
 
-        router.refresh();
+          router.refresh();
+        },
       },
-    },
-  });
+    });
 
   const handleSave = (new_data: { schedules: Schedule[] }) => {
     const updated_schedules = new_data.schedules.map((schedule) => {
@@ -84,12 +87,14 @@ const CollectBusinessSchedulesStep = () => {
     handleUpdateSchedules(updated_schedules);
   };
 
+  const isNextDisabled = every(schedules, { start_time: "closed" });
+
   return (
     <BusinessOnboardingSectionLayout
       title="Programul de lucru"
       description="Adauga intervalele orare in care locatia ta este deschisa pentru clienti"
-      isLoading={isPending}
-      isDisabled={isPending || isLoading}
+      isLoading={isLoadingUpdate}
+      isDisabled={isLoading || isLoadingUpdate || isNextDisabled}
       onClick={handleSubmit(handleSave)}
     >
       <FormProvider {...methods}>

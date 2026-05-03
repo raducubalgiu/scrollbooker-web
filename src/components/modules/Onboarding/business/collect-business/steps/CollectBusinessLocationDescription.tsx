@@ -31,7 +31,7 @@ const CollectBusinessLocationDescription = ({
         value={ownerFullName}
         onChange={onHandleOwnerFullName}
         autoFocus={false}
-        placeholder="Nume"
+        placeholder="Nume*"
         variant="outlined"
         fullWidth
         sx={{ mb: 2.5 }}

@@ -16,6 +16,7 @@ const CollectBusinessStepper = ({ step }: CollectBusinessStepperProps) => {
       <Stack direction="row" justifyContent="space-between" mb={1.5}>
         {subStepLabels.map((label, index) => (
           <CollectBusinessStepperLabel
+            key={label}
             label={label}
             isActive={index === step}
             isCompleted={index < step}

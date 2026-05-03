@@ -9,9 +9,10 @@ import { useRouter } from "next/navigation";
 const CollectBusinessHasEmployeesStep = () => {
   const { update } = useSession();
   const router = useRouter();
+
   const [hasEmployees, setHasEmployees] = useState(false);
 
-  const { mutate: handleSave, isPending } = useMutate({
+  const { mutate: handleSave, isPending: isLoadingSave } = useMutate({
     key: ["collect-business-has-employees"],
     url: "/api/onboarding/collect-business-has-employees",
     method: "PATCH",
@@ -34,8 +35,8 @@ const CollectBusinessHasEmployeesStep = () => {
             un calendar individual pentru a-și gestiona propriile servicii și
             clienți. Dacă lucrezi singur, totul va fi centralizat într-un singur
             calendar business."
-      isLoading={isPending}
-      isDisabled={isPending}
+      isLoading={isLoadingSave}
+      isDisabled={isLoadingSave}
       onClick={() => handleSave({ has_employees: hasEmployees })}
     >
       <Divider sx={{ mt: 5, mb: 2.5 }} />
@@ -50,13 +51,7 @@ const CollectBusinessHasEmployeesStep = () => {
           control={<Radio sx={{ "& .MuiSvgIcon-root": { fontSize: 32.5 } }} />}
           label="DA, am angajați care primesc programari"
           labelPlacement="start"
-          sx={{
-            justifyContent: "space-between",
-            m: 0,
-            py: 2.5,
-            borderBottom: "1px solid",
-            borderColor: "divider",
-          }}
+          sx={styles.formControl}
         />
 
         <FormControlLabel
@@ -64,13 +59,7 @@ const CollectBusinessHasEmployeesStep = () => {
           control={<Radio sx={{ "& .MuiSvgIcon-root": { fontSize: 32.5 } }} />}
           label="NU am angajati care primesc programari"
           labelPlacement="start"
-          sx={{
-            justifyContent: "space-between",
-            m: 0,
-            py: 2.5,
-            borderBottom: "1px solid",
-            borderColor: "divider",
-          }}
+          sx={styles.formControl}
         />
       </RadioGroup>
     </BusinessOnboardingSectionLayout>
@@ -78,3 +67,13 @@ const CollectBusinessHasEmployeesStep = () => {
 };
 
 export default CollectBusinessHasEmployeesStep;
+
+const styles = {
+  formControl: {
+    justifyContent: "space-between",
+    m: 0,
+    py: 2.5,
+    borderBottom: "1px solid",
+    borderColor: "divider",
+  },
+};
