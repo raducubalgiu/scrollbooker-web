@@ -6,6 +6,7 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import { useInfiniteUserPosts } from "@/hooks/infiniteQuery/userInfiniteUserPosts";
 import { isEmpty } from "lodash";
+import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
 
 type ProfilePostsTabProps = {
   userId: number;
@@ -15,7 +16,7 @@ type ProfilePostsTabProps = {
 const ProfilePostsTab = ({ userId, username }: ProfilePostsTabProps) => {
   const router = useRouter();
 
-  const { data, isLoading } = useInfiniteUserPosts(userId);
+  const { data, isLoading, isError } = useInfiniteUserPosts(userId);
 
   const posts = useMemo(() => {
     return data?.pages.flatMap((page) => page.results) ?? [];
@@ -37,13 +38,14 @@ const ProfilePostsTab = ({ userId, username }: ProfilePostsTabProps) => {
             />
           ))}
       </PostGridContainer>
-      {!isLoading && isEmpty(posts) && (
+      {!isLoading && isEmpty(posts) && !isError && (
         <NotFound
           title="Nu au fost găsite postări"
           description="Acest utilizator nu a postat niciun videoclip încă."
           icon={<VideoLibraryIcon sx={{ fontSize: 50 }} />}
         />
       )}
+      {!isLoading && isError && <ErrorMessage resource="postări" />}
     </>
   );
 };

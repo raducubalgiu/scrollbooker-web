@@ -7,6 +7,7 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import { useInfiniteUserBookmarkedPosts } from "@/hooks/infiniteQuery/useInfiniteUserBookmarkedPosts";
 import { isEmpty } from "lodash";
 import { CircularProgress, Stack } from "@mui/material";
+import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
 
 type ProfileBookmarksTabProps = {
   username: string;
@@ -15,7 +16,7 @@ type ProfileBookmarksTabProps = {
 const ProfileBookmarksTab = ({ username }: ProfileBookmarksTabProps) => {
   const router = useRouter();
 
-  const { data, isLoading } = useInfiniteUserBookmarkedPosts();
+  const { data, isLoading, isError } = useInfiniteUserBookmarkedPosts();
 
   const posts = useMemo(() => {
     return data?.pages.flatMap((page) => page.results) ?? [];
@@ -46,13 +47,15 @@ const ProfileBookmarksTab = ({ username }: ProfileBookmarksTabProps) => {
           ))}
       </PostGridContainer>
 
-      {!isLoading && isEmpty(posts) && (
+      {!isLoading && isEmpty(posts) && !isError && (
         <NotFound
           title="Nu există postări salvate"
           description="Salvează postările tale preferate pentru a le viziona mai târziu"
           icon={<VideoLibraryIcon sx={{ fontSize: 50 }} />}
         />
       )}
+
+      {!isLoading && isError && <ErrorMessage resource="salvări" />}
     </>
   );
 };
