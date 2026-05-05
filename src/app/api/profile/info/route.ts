@@ -1,4 +1,4 @@
-import { UserProfileInfoResponse } from "@/ts/models/user/UserProfileInfo";
+import { UserProfileInfoResponse } from "@/ts/models/user/UserProfileAbout";
 import { get } from "@/utils/requests";
 import { NextRequest, NextResponse } from "next/server";
 

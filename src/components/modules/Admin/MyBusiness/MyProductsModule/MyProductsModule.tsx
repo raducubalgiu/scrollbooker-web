@@ -17,16 +17,21 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import ProductTypeButton from "./ProductTypeButton";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
-import AddProductModal from "./AddProductModal";
+import AddProductModal from "./AddProductModal/AddProductModal";
 import ServiceDomainButton from "./ServiceDomainButton";
 import ServiceButton from "./ServiceButton";
 import { Product } from "@/ts/models/booking/product/Product";
+import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 
 type MyProductsModuleProps = {
   session: Session | null;
+  employees: BusinessEmployee[];
 };
 
-export default function MyProductsModule({ session }: MyProductsModuleProps) {
+export default function MyProductsModule({
+  session,
+  employees,
+}: MyProductsModuleProps) {
   const [openDeleteConfirm, setOpenDeleteConfirm] = React.useState(false);
   const [openAddModal, setOpenAddModal] = React.useState(false);
 
@@ -147,6 +152,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
         </Button>
         {!session?.is_employee && (
           <EmployeeButton
+            employees={employees}
             employee={employeeId}
             onSetEmployee={(id) => setEmployeeId(id)}
           />
@@ -195,7 +201,10 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
       <AddProductModal
         open={openAddModal}
         handleClose={() => setOpenAddModal(false)}
+        hasEmployees={session?.has_employees ?? false}
+        employees={employees}
       />
+
       <Table<Product>
         data={data?.results}
         rowCount={data?.count}

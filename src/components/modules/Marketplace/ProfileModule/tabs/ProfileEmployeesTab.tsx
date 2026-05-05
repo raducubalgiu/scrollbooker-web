@@ -29,12 +29,12 @@ const ProfileEmployeesTab = ({ businessOwnerId }: ProfileEmployeesTabProps) => {
           <CircularProgress />
         </Stack>
       )}
-      {!isLoading &&
-        employees.map((employee) => (
-          <Box sx={{ maxWidth: "md" }}>
+      <Box sx={{ maxWidth: "md" }}>
+        {!isLoading &&
+          employees.map((employee) => (
             <EmployeeItem key={employee.id} employee={employee} />
-          </Box>
-        ))}
+          ))}
+      </Box>
       {!isLoading && isEmpty(employees) && !isError && (
         <NotFound
           title="Nu au fost găsite angajați"

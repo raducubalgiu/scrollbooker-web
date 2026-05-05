@@ -9,7 +9,7 @@ import ProfilePostsTab from "./ProfilePostsTab";
 import ProfileProductsTab from "./ProfileProductsTab";
 import ProfileEmployeesTab from "./ProfileEmployeesTab";
 import ProfileBookmarksTab from "./ProfileBookmarksTab";
-import ProfileInfoTab from "./ProfileInfoTab";
+import ProfileInfoTab from "./info/ProfileInfoTab";
 import { useSession } from "next-auth/react";
 
 enum ProfileTabEnum {

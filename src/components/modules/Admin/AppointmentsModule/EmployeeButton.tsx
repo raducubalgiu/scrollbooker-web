@@ -1,28 +1,16 @@
+import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Button, MenuItem, Avatar, Box, Menu } from "@mui/material";
 import React from "react";
 
-const EMPLOYEES = [
-  {
-    id: 13,
-    username: "raducu_balgiu",
-    fullname: "Radu Ion",
-    avatar: "https://avatars.githubusercontent.com/u/24688771?v=4",
-  },
-  {
-    id: 14,
-    username: "raducu_balgiu",
-    fullname: "Cristi Dumitrache",
-    avatar: "https://avatars.githubusercontent.com/u/24688771?v=4",
-  },
-];
-
 type EmployeeButtonProps = {
+  employees: BusinessEmployee[];
   employee: number | null;
   onSetEmployee: (s: number | null) => void;
 };
 
 const EmployeeButton: React.FC<EmployeeButtonProps> = ({
+  employees,
   employee,
   onSetEmployee,
 }) => {
@@ -36,7 +24,7 @@ const EmployeeButton: React.FC<EmployeeButtonProps> = ({
 
   const isOpen = Boolean(anchorEmployeeEl);
 
-  const selectedEmployee = EMPLOYEES.find((e) => e.id === employee) ?? null;
+  const selectedEmployee = employees.find((e) => e.id === employee) ?? null;
 
   return (
     <div>
@@ -55,7 +43,7 @@ const EmployeeButton: React.FC<EmployeeButtonProps> = ({
         {selectedEmployee ? (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Avatar
-              src={selectedEmployee.avatar}
+              src={selectedEmployee.avatar ?? ""}
               sx={{ width: 32, height: 32, mr: 1 }}
             />
             <Box component="span">{selectedEmployee.fullname}</Box>
@@ -84,7 +72,7 @@ const EmployeeButton: React.FC<EmployeeButtonProps> = ({
           Toti angajații
         </MenuItem>
 
-        {EMPLOYEES.map((e) => (
+        {employees.map((e) => (
           <MenuItem
             key={e.id}
             onClick={() => {
@@ -94,7 +82,10 @@ const EmployeeButton: React.FC<EmployeeButtonProps> = ({
             selected={employee === e.id}
             disableRipple
           >
-            <Avatar src={e.avatar} sx={{ width: 32, height: 32, mr: 1 }} />
+            <Avatar
+              src={e.avatar ?? ""}
+              sx={{ width: 32, height: 32, mr: 1 }}
+            />
             {e.fullname}
           </MenuItem>
         ))}

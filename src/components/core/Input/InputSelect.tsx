@@ -3,9 +3,11 @@ import { Controller, useFormContext } from "react-hook-form";
 import Select from "./Select";
 import { has, get } from "lodash";
 
+export type SelectOptionType = { value: string; name: string };
+
 export type SelectProps = {
   multiple?: boolean;
-  options: { value: string; name: string }[];
+  options: SelectOptionType[];
   rules?: object;
 } & TextFieldProps;
 
