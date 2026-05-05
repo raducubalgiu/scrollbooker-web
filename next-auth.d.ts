@@ -4,11 +4,10 @@ import { DefaultSession } from "next-auth";
 declare module "next-auth" {
   interface User {
     id: string;
-    name?: string | null;
-    email?: string | null;
-
-    accessToken: string;
+    name: string;
+    email: string;
     username: string;
+    accessToken: string;
     refreshToken: string;
     accessTokenExpires: number;
   }
@@ -18,12 +17,13 @@ declare module "next-auth" {
     user_id: number;
     username: string;
     is_validated: boolean | null;
-    registration_step: RegistrationStepEnum | null;
-    avatar: string | null | undefined;
-    business_id: number | null | undefined;
-    business_type_id: number | null | undefined;
-    has_employees: boolean | null | undefined;
-    is_employee: boolean | null | undefined;
+    registration_step: string | null;
+    avatar: string | null;
+    business_id: number | null;
+    business_owner_id: number | null;
+    business_type_id: number | null;
+    has_employees: boolean | null;
+    is_employee: boolean | null;
     permissions: string[];
   }
 }
@@ -38,12 +38,13 @@ declare module "next-auth/jwt" {
     user_id: number;
     username: string;
     is_validated: boolean | null;
-    registration_step: RegistrationStepEnum | null;
+    registration_step: string | null;
     avatar: string | null;
-    business_id?: number | null;
-    business_type_id?: number | null;
-    has_employees?: boolean | null;
-    is_employee?: boolean | null;
+    business_id: number | null;
+    business_owner_id: number | null;
+    business_type_id: number | null;
+    has_employees: boolean | null;
+    is_employee: boolean | null;
     permissions: string[];
     error?: "RefreshAccessTokenError" | undefined;
   }

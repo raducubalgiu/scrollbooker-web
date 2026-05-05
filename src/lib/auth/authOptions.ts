@@ -7,6 +7,7 @@ import axios, { AxiosResponse } from "axios";
 import { map } from "lodash";
 import { JWT } from "next-auth/jwt";
 import { Permission } from "@/ts/models/user/Permission";
+import { UserInfo } from "@/ts/models/auth/auth";
 
 type DecodedTokenType = {
   id: number;
@@ -85,6 +86,7 @@ export const authOptions: AuthOptions = {
             registration_step: userInfo.registration_step,
             avatar: userInfo.avatar,
             business_id: userInfo.business_id,
+            business_owner_id: userInfo.business_owner_id,
             business_type_id: userInfo.business_type_id,
             has_employees: userInfo.has_employees,
             is_employee: userInfo.is_employee,
@@ -115,6 +117,7 @@ export const authOptions: AuthOptions = {
           registration_step: userInfo.registration_step,
           username: userInfo.username,
           business_id: userInfo.business_id,
+          business_owner_id: userInfo.business_owner_id,
           business_type_id: userInfo.business_type_id,
           avatar: userInfo.avatar,
           has_employees: userInfo.has_employees,
@@ -155,6 +158,7 @@ export const authOptions: AuthOptions = {
         session.registration_step = token.registration_step;
         session.avatar = token.avatar;
         session.business_id = token.business_id;
+        session.business_owner_id = token.business_owner_id;
         session.business_type_id = token.business_type_id;
         session.permissions = token.permissions;
         session.has_employees = token.has_employees;
@@ -240,7 +244,7 @@ async function getPermissions(token: string): Promise<string[]> {
   return map(userPermissions.data, "code");
 }
 
-async function getUserInfo(token: string) {
+async function getUserInfo(token: string): Promise<UserInfo> {
   const user = await axios.get(
     `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/user-info`,
     { headers: { Authorization: `Bearer ${token}` } }
@@ -274,6 +278,7 @@ async function refreshToken(refreshToken: string): Promise<JWT> {
       permissions: permissions,
       avatar: userInfo.avatar,
       business_id: userInfo.business_id,
+      business_owner_id: userInfo.business_owner_id,
       business_type_id: userInfo.business_type_id,
       has_employees: userInfo.has_employees,
       is_employee: userInfo.is_employee,
