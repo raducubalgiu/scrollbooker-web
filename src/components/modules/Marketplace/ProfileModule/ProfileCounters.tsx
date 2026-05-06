@@ -19,17 +19,19 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       alignItems: "center",
       justifyContent: "center",
       px: 1,
-      py: 2,
+      py: 1.5,
       minHeight: "auto",
       textAlign: "center",
-      maxWidth: 200,
+      maxWidth: { xs: 100, sm: 150, md: 200 },
+      borderRadius: 2,
     },
     title: {
       color: "text.secondary",
-      fontSize: { xs: 12, sm: 14, md: 16, lg: 18, xl: 20 },
+      fontSize: { xs: 15, md: 16, lg: 18, xl: 20 },
+      fontWeight: 500,
     },
     counter: {
-      fontWeight: 600,
+      fontWeight: 700,
       fontSize: { xs: 16, sm: 20, md: 25, lg: 30, xl: 35 },
     },
   };
@@ -39,13 +41,17 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       direction="row"
       alignItems="center"
       justifyContent="center"
-      sx={{ width: "100%" }}
+      sx={{
+        width: "100%",
+        px: { xs: 2, sm: 4, md: 0 },
+        mt: { xs: 1, md: 2 },
+      }}
     >
       <ListItemButton
         sx={styles.button}
         onClick={() => onClick(SocialTabEnum.REVIEWS)}
       >
-        <Stack alignItems="center" spacing={1}>
+        <Stack alignItems="center" spacing={0.5}>
           <Typography sx={styles.title}>Recenzii</Typography>
           <Typography sx={styles.counter}>{ratings_count}</Typography>
         </Stack>
@@ -54,15 +60,15 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       <Divider
         orientation="vertical"
         flexItem
-        sx={{ height: 40, alignSelf: "center" }}
+        sx={{ height: 30, alignSelf: "center", opacity: 0.6 }}
       />
 
       <ListItemButton
         sx={styles.button}
         onClick={() => onClick(SocialTabEnum.FOLLOWERS)}
       >
-        <Stack alignItems="center" spacing={1}>
-          <Typography sx={styles.title}>Urmaritori</Typography>
+        <Stack alignItems="center" spacing={0.5}>
+          <Typography sx={styles.title}>Urmăritori</Typography>
           <Typography sx={styles.counter}>{followers_count}</Typography>
         </Stack>
       </ListItemButton>
@@ -70,15 +76,15 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       <Divider
         orientation="vertical"
         flexItem
-        sx={{ height: 40, alignSelf: "center" }}
+        sx={{ height: 30, alignSelf: "center", opacity: 0.6 }}
       />
 
       <ListItemButton
         sx={styles.button}
         onClick={() => onClick(SocialTabEnum.FOLLOWINGS)}
       >
-        <Stack alignItems="center" spacing={1}>
-          <Typography sx={styles.title}>Urmaresti</Typography>
+        <Stack alignItems="center" spacing={0.5}>
+          <Typography sx={styles.title}>Urmărești</Typography>
           <Typography sx={styles.counter}>{followings_count}</Typography>
         </Stack>
       </ListItemButton>

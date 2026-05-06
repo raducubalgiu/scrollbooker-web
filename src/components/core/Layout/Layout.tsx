@@ -202,13 +202,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         component="main"
         sx={{
           ...styles.mainContent,
-          p: isSpecialPage ? 0 : 2.5,
+          md: {
+            p: isSpecialPage ? 0 : 2.5,
+          },
         }}
       >
         {children}
       </Box>
 
-      <BottomBar />
+      <BottomBar username={session?.username} />
     </Box>
   );
 }

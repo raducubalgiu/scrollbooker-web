@@ -3,31 +3,43 @@
 import React from "react";
 import { Box, BottomNavigation, BottomNavigationAction } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
-import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { usePathname, useRouter } from "next/navigation";
+import SearchIcon from "@mui/icons-material/Search";
 
-const actions = [
-  { label: "Home", route: "/", icon: <HomeIcon /> },
-  { label: "Explore", route: "/explore", icon: <ExploreOutlinedIcon /> },
-  {
-    label: "Notificări",
-    route: "/notifications",
-    icon: <NotificationsNoneOutlinedIcon />,
-  },
-  {
-    label: "Rezervări",
-    route: "/appointments",
-    icon: <QueryBuilderOutlinedIcon />,
-  },
-  { label: "Profil", route: "/profile", icon: <PersonOutlineOutlinedIcon /> },
-];
+type BottomBarProps = {
+  username: string | undefined;
+};
 
-export default function BottomBar() {
+export default function BottomBar({ username }: BottomBarProps) {
   const pathname = usePathname() || "/";
   const router = useRouter();
+
+  const actions = [
+    { label: "Home", route: "/", icon: <HomeIcon /> },
+    {
+      label: "Notificări",
+      route: "/notifications",
+      icon: <NotificationsNoneOutlinedIcon />,
+    },
+    {
+      label: "Caută",
+      route: "/search",
+      icon: <SearchIcon />,
+    },
+    {
+      label: "Rezervări",
+      route: "/appointments",
+      icon: <QueryBuilderOutlinedIcon />,
+    },
+    {
+      label: "Profil",
+      route: username ? `/profile/${username}` : "/api/auth/signin",
+      icon: <PersonOutlineOutlinedIcon />,
+    },
+  ];
 
   const currentIndex = React.useMemo(() => {
     const idx = actions.findIndex(

@@ -14,6 +14,13 @@ const OwnProfileActions = ({
 }: OwnProfileActionsProps) => {
   const router = useRouter();
 
+  const buttonSx = {
+    textTransform: "capitalize",
+    flex: { xs: 1, sm: "none" },
+    whiteSpace: "nowrap",
+    minWidth: "max-content",
+  };
+
   return (
     <>
       <Button
@@ -21,35 +28,32 @@ const OwnProfileActions = ({
         color="secondary"
         onClick={onOpenEditModal}
         size="large"
-        disableElevation
-        sx={{ mr: 1.5, textTransform: "capitalize" }}
+        sx={buttonSx}
       >
-        Editează profilul
+        Editează
       </Button>
-      {is_business_or_employee && (
+
+      {is_business_or_employee ? (
         <Button
           variant="outlined"
           color="secondary"
           onClick={() => router.push("/admin/calendar")}
           size="large"
-          disableElevation
           startIcon={<DateRangeOutlinedIcon />}
-          sx={{ textTransform: "capitalize" }}
+          sx={buttonSx}
         >
           Calendar
         </Button>
-      )}
-      {!is_business_or_employee && (
+      ) : (
         <Button
           variant="outlined"
           color="secondary"
           onClick={() => {}}
           size="large"
-          disableElevation
           startIcon={<DateRangeOutlinedIcon />}
-          sx={{ textTransform: "capitalize" }}
+          sx={buttonSx}
         >
-          Distribuie profilul
+          Distribuie
         </Button>
       )}
     </>

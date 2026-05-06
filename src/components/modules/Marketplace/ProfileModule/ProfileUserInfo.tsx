@@ -124,69 +124,118 @@ const ProfileUserInfo = ({
   };
 
   return (
-    <Stack flexDirection="row" alignItems="center" sx={{ p: { xs: 2, lg: 0 } }}>
-      <UserAvatar
-        isBusinessOrEmployee={is_business_or_employee}
-        openNow={opening_hours.open_now}
-        url={avatar}
-        size="xxl"
-      />
+    <Box sx={{ p: { xs: 2, lg: 0 } }}>
+      <Stack
+        flexDirection="row"
+        alignItems="center"
+        sx={{ width: "100%", minWidth: 0 }}
+      >
+        <UserAvatar
+          isBusinessOrEmployee={is_business_or_employee}
+          openNow={opening_hours.open_now}
+          url={avatar}
+          size={{ xs: "lg", md: "xxl" }}
+        />
 
-      <Box sx={{ ml: 3 }}>
-        <Stack flexDirection="row" alignItems="center">
-          <Typography variant="h5" sx={styles.fullName}>
-            {fullname}
-          </Typography>
-          <Typography variant="body1" sx={{ ml: 1.5, color: "text.secondary" }}>
-            @{username}
-          </Typography>
-        </Stack>
-
-        <Stack flexDirection="row" alignItems="center">
-          <Typography
-            variant="subtitle1"
-            sx={{ mr: 1.5, color: "text.secondary" }}
+        <Box sx={{ ml: 3, width: "100%", minWidth: 0 }}>
+          <Stack
+            flexDirection="row"
+            alignItems="center"
+            sx={{ width: "100%", minWidth: 0 }}
           >
-            {profession}
-          </Typography>
-          {is_business_or_employee && (
-            <>
-              <Stack flexDirection="row" alignItems="center">
-                <GradeIcon color="primary" sx={styles.star} />
-                <Typography variant="h6" sx={styles.rating}>
-                  {formatRating(counters.ratings_average)}
-                </Typography>
-              </Stack>
+            <Typography
+              variant="h5"
+              sx={{
+                ...styles.fullName,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                flexShrink: 1,
+                minWidth: 0,
+              }}
+            >
+              {fullname}
+            </Typography>
 
+            <Typography
+              variant="body1"
+              sx={{
+                ml: 1.5,
+                color: "text.secondary",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                flexShrink: 2,
+                minWidth: 0,
+              }}
+            >
+              @{username}
+            </Typography>
+          </Stack>
+
+          <Stack
+            flexDirection={{ xs: "column", sm: "row" }}
+            alignItems={{ xs: "flex-start", sm: "center" }}
+          >
+            <Stack flexDirection="row" alignItems="center">
               <Typography
-                sx={{ mx: 1.5, fontSize: 25, color: "text.secondary" }}
+                variant="subtitle1"
+                sx={{ mr: 1.5, color: "text.secondary" }}
               >
-                &#x2022;
+                {profession}
               </Typography>
 
-              <ButtonBase
-                sx={{ borderRadius: 5 }}
-                onClick={onOpenScheduleModal}
-              >
+              {is_business_or_employee && (
                 <Stack flexDirection="row" alignItems="center">
-                  <QueryBuilderOutlinedIcon
-                    color="action"
-                    sx={{ fontSize: 25, mr: 0.5 }}
-                  />
-                  <Typography sx={{ ml: 0.5, mr: 1, color: "text.secondary" }}>
-                    {openingStatus}
+                  <GradeIcon color="primary" sx={styles.star} />
+                  <Typography variant="h6" sx={styles.rating}>
+                    {formatRating(counters.ratings_average)}
                   </Typography>
-                  <ExpandMoreOutlinedIcon
-                    color="action"
-                    sx={{ fontSize: 30, mr: 0.5 }}
-                  />
                 </Stack>
-              </ButtonBase>
-            </>
-          )}
-        </Stack>
+              )}
+            </Stack>
 
-        {/* {business_owner && (
+            {is_business_or_employee && (
+              <>
+                <Typography
+                  sx={{
+                    mx: 1.5,
+                    fontSize: 25,
+                    color: "text.secondary",
+                    display: { xs: "none", sm: "block" },
+                  }}
+                >
+                  &#x2022;
+                </Typography>
+
+                <ButtonBase
+                  sx={{
+                    borderRadius: 5,
+                    mt: { xs: 0.5, sm: 0 },
+                  }}
+                  onClick={onOpenScheduleModal}
+                >
+                  <Stack flexDirection="row" alignItems="center">
+                    <QueryBuilderOutlinedIcon
+                      color="action"
+                      sx={{ fontSize: 25, mr: 0.5 }}
+                    />
+                    <Typography
+                      sx={{ ml: 0.5, mr: 1, color: "text.secondary" }}
+                    >
+                      {openingStatus}
+                    </Typography>
+                    <ExpandMoreOutlinedIcon
+                      color="action"
+                      sx={{ fontSize: 30, mr: 0.5 }}
+                    />
+                  </Stack>
+                </ButtonBase>
+              </>
+            )}
+          </Stack>
+
+          {/* {business_owner && (
           <Stack flexDirection="row" alignItems="center" mt={0.5}>
             {business_owner.id !== id && (
               <>
@@ -290,13 +339,32 @@ const ProfileUserInfo = ({
           </Stack>
         )} */}
 
-        <Box sx={{ maxWidth: "sm", mt: 1.5 }}>{bio}</Box>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Box sx={{ maxWidth: "sm", mt: 1.5 }}>{bio}</Box>
 
-        <Stack flexDirection="row" alignItems="center" sx={{ mt: 1.5 }}>
+            <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
+              {actions}
+            </Stack>
+          </Box>
+        </Box>
+      </Stack>
+
+      <Box sx={{ display: { xs: "block", sm: "none" } }}>
+        <Box sx={{ maxWidth: "sm", mt: 1.5 }}>
+          <Typography sx={{ textAlign: "center" }}>{bio}</Typography>
+        </Box>
+
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          gap={1}
+          mt={1.5}
+          sx={{ width: "100%" }}
+        >
           {actions}
         </Stack>
       </Box>
-    </Stack>
+    </Box>
   );
 };
 

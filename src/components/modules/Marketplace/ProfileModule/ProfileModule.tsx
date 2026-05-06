@@ -1,6 +1,6 @@
 "use client";
 
-import { Box } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import React, { useEffect, useState, useCallback } from "react";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
@@ -11,6 +11,7 @@ import ScheduleModal from "./ScheduleModal";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import { UserCounter, UserProfile } from "@/ts/models/user/UserProfile";
 import EditProfileModal from "./edit/EditProfileModal";
+import MenuIcon from "@mui/icons-material/Menu";
 
 export type ProfileModuleProps = {
   profile: UserProfile | null;
@@ -70,6 +71,41 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
 
   return (
     <Box>
+      <AppBar
+        position="sticky"
+        elevation={0}
+        sx={{
+          display: { xs: "flex", lg: "none" },
+          top: 0,
+          zIndex: 1100,
+        }}
+      >
+        <Toolbar sx={{ justifyContent: "center", position: "relative" }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+              color: "text.primary",
+              textTransform: "lowercase",
+            }}
+          >
+            @{profile.username}
+          </Typography>
+
+          <IconButton
+            edge="end"
+            size="large"
+            sx={{
+              position: "absolute",
+              right: 16,
+              color: "text.primary",
+            }}
+            onClick={() => {}}
+          >
+            <MenuIcon sx={{ fontSize: 27.5 }} />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
       <SocialModal
         open={isSocialModalOpen}
         counters={updatedCounters}

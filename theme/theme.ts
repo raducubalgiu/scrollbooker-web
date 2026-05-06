@@ -62,6 +62,8 @@ declare module "@mui/material/styles" {
   }
 }
 
+const defaultTheme = createTheme();
+
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -99,6 +101,60 @@ export const darkTheme = createTheme({
     fontWeightMedium: 500,
     fontWeightSemiBold: 600,
     fontWeightBold: 700,
+
+    // --- TITLURI RESPONSIVE ---
+    h1: {
+      fontSize: "2rem", // Dimensiune Mobile (XS)
+      fontWeight: 700,
+      lineHeight: 1.2,
+      [defaultTheme.breakpoints.up("md")]: {
+        fontSize: "3rem", // Dimensiune Desktop (MD+)
+      },
+    },
+    h2: {
+      fontSize: "1.75rem",
+      fontWeight: 700,
+      lineHeight: 1.2,
+      [defaultTheme.breakpoints.up("md")]: {
+        fontSize: "2.25rem",
+      },
+    },
+    h3: {
+      fontSize: "1.5rem",
+      fontWeight: 600,
+      lineHeight: 1.2,
+      [defaultTheme.breakpoints.up("md")]: {
+        fontSize: "1.875rem",
+      },
+    },
+    h4: {
+      fontSize: "1.25rem",
+      fontWeight: 600,
+      [defaultTheme.breakpoints.up("md")]: {
+        fontSize: "1.5rem",
+      },
+    },
+    // h5, h6 și body rămân de obicei constante sau cu variații minime
+    h5: {
+      fontSize: "1.125rem",
+      fontWeight: 600,
+    },
+    h6: {
+      fontSize: "1rem",
+      fontWeight: 600,
+    },
+    body1: {
+      fontSize: "1rem", // 16px - Standardul de aur pentru citit
+      lineHeight: 1.6,
+    },
+    body2: {
+      fontSize: "0.875rem", // 14px
+      lineHeight: 1.6,
+    },
+    button: {
+      textTransform: "none",
+      fontWeight: 600,
+    },
   },
 
   components: {
@@ -341,6 +397,60 @@ export const lightTheme = createTheme({
     fontWeightMedium: 500,
     fontWeightSemiBold: 600,
     fontWeightBold: 700,
+
+    // --- TITLURI RESPONSIVE ---
+    h1: {
+      fontSize: "2rem", // Dimensiune Mobile (XS)
+      fontWeight: 700,
+      lineHeight: 1.2,
+      [defaultTheme.breakpoints.up("md")]: {
+        fontSize: "3rem", // Dimensiune Desktop (MD+)
+      },
+    },
+    h2: {
+      fontSize: "1.75rem",
+      fontWeight: 700,
+      lineHeight: 1.2,
+      [defaultTheme.breakpoints.up("md")]: {
+        fontSize: "2.25rem",
+      },
+    },
+    h3: {
+      fontSize: "1.5rem",
+      fontWeight: 600,
+      lineHeight: 1.2,
+      [defaultTheme.breakpoints.up("md")]: {
+        fontSize: "1.875rem",
+      },
+    },
+    h4: {
+      fontSize: "1.25rem",
+      fontWeight: 600,
+      [defaultTheme.breakpoints.up("md")]: {
+        fontSize: "1.5rem",
+      },
+    },
+    // h5, h6 și body rămân de obicei constante sau cu variații minime
+    h5: {
+      fontSize: "1.125rem",
+      fontWeight: 600,
+    },
+    h6: {
+      fontSize: "1rem",
+      fontWeight: 600,
+    },
+    body1: {
+      fontSize: "1rem", // 16px - Standardul de aur pentru citit
+      lineHeight: 1.6,
+    },
+    body2: {
+      fontSize: "0.875rem", // 14px
+      lineHeight: 1.6,
+    },
+    button: {
+      textTransform: "none",
+      fontWeight: 600,
+    },
   },
 
   components: {

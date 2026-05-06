@@ -147,7 +147,14 @@ const ProfileTabs = ({
   return (
     <>
       <Box sx={styles.container}>
-        <Tabs value={safeCurrentTab} onChange={handleChange} sx={styles.tabs}>
+        <Tabs
+          value={safeCurrentTab}
+          onChange={handleChange}
+          sx={styles.tabs}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
+        >
           {tabs.map((tab) => (
             <Tab
               key={tab.route}
@@ -170,12 +177,8 @@ export default ProfileTabs;
 const styles = {
   container: {
     width: "100%",
-    //position: "sticky",
-    //height: 58,
-    //top: 0,
-    //zIndex: 1200,
     bgcolor: "background.paper",
-    mt: 5,
+    mt: { md: 0, lg: 5 },
     borderBottom: 1,
     borderColor: "divider",
     boxShadow: (theme: Theme) => `0 1px 0 ${theme.palette.divider}`,
@@ -190,17 +193,16 @@ const styles = {
       textTransform: "none",
       minHeight: 56,
       minWidth: {
+        xs: 75,
+        md: 150,
         lg: 150,
         xl: 200,
       },
-      flex: {
-        xs: "1 1 auto",
-        lg: "0 1 auto",
-      },
+      px: { xs: 1, sm: 2 },
     },
     "& .MuiTab-icon": {
       fontSize: {
-        xs: 20,
+        xs: 22.5,
         md: 25,
         lg: 30,
       },
@@ -211,9 +213,7 @@ const styles = {
     fontWeight: 600,
     display: {
       xs: "none",
-      sm: "none",
-      md: "none",
-      lg: "block",
+      sm: "block",
     },
   },
 };
