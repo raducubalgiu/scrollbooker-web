@@ -1,13 +1,12 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Dialog } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import AddProductHeader from "./AddProductHeader";
 import ProductGeneralInfo from "./ProductGeneralInfo";
 import ProductVariants from "./ProductVariants";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
+import { ProductTypeEnum } from "@/ts/enums/ProductTypeEnum";
 
 type AddProductModalProps = {
   open: boolean;
@@ -31,6 +30,10 @@ export interface ProductFormValues {
     starting_price_with_discount?: number;
     offerings: {
       user_id: number;
+      fullname: string;
+      username: string;
+      profession: string;
+      avatar: string | null;
       price: number;
       price_with_discount: number;
       discount: number;
@@ -47,7 +50,7 @@ const AddProductModal = ({
 }: AddProductModalProps) => {
   const methods = useForm<ProductFormValues>({
     defaultValues: {
-      type: "",
+      type: ProductTypeEnum.SINGLE,
       serviceDomainId: "",
       serviceId: "",
       name: "",
@@ -56,82 +59,40 @@ const AddProductModal = ({
       variants: [
         {
           name: "",
-          duration: 30,
-          has_different_prices: false,
-          offerings: [],
+          duration: 0,
+          offerings: employees.map((emp) => ({
+            user_id: emp.id,
+            fullname: emp.fullname,
+            username: emp.username,
+            profession: emp.job,
+            avatar: emp.avatar,
+            price: 0,
+            price_with_discount: 0,
+            discount: 0,
+            is_offering: true,
+          })),
         },
       ],
     },
   });
 
   const { control, handleSubmit, reset, watch } = methods;
-
-  const { data: serviceDomainServices } = useCustomQuery<
-    SelectedServiceDomainWithServices[]
-  >({
-    key: "my-services",
-    url: "/api/my-services",
-  });
-
   const selectedDomainId = watch("serviceDomainId");
-
-  const validDomains = useMemo(() => {
-    if (!serviceDomainServices) return [];
-
-    return serviceDomainServices.filter((domain) =>
-      domain.services.some((s) => s.is_selected === true)
-    );
-  }, [serviceDomainServices]);
-
-  const domainOptions = useMemo(
-    () =>
-      validDomains.map((d) => ({
-        value: d.id.toString(),
-        name: d.name,
-      })),
-    [validDomains]
-  );
-
-  console.log("DOMAIN OPTIONS!!", domainOptions);
-
-  const serviceOptions = useMemo(() => {
-    if (!selectedDomainId || !validDomains.length) return [];
-
-    const domain = validDomains.find((d) => d.id === Number(selectedDomainId));
-
-    if (!domain) return [];
-
-    return domain.services
-      .filter((s) => s.is_selected)
-      .map((s) => ({
-        value: s.id.toString(),
-        name: s.name,
-      }));
-  }, [selectedDomainId, validDomains]);
 
   return (
     <Dialog fullScreen open={open} onClose={handleClose}>
       <AddProductHeader
         onHandleClose={handleClose}
-        onReset={() => methods.reset()}
-        onSaveProduct={methods.handleSubmit((d) => console.log(d))}
+        onReset={() => reset()}
+        onSaveProduct={handleSubmit((d) => console.log(d))}
       />
 
       <FormProvider {...methods}>
-        <Grid
-          container
-          sx={{
-            height: "100vh",
-            overflow: "hidden",
-          }}
-        >
-          <ProductGeneralInfo
-            domainOptions={domainOptions}
-            serviceOptions={serviceOptions}
-          />
-
+        <Grid container sx={{ height: "100vh", overflow: "hidden" }}>
+          <ProductGeneralInfo selectedDomainId={selectedDomainId} />
           <ProductVariants
             hasEmployees={hasEmployees}
+            employees={employees}
             control={control}
             watch={watch}
           />

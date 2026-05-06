@@ -1,18 +1,29 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { Control, useFieldArray, UseFormWatch } from "react-hook-form";
 import VariantAccordion from "./VariantAccordion";
 import { ProductFormValues } from "./AddProductModal";
+import { Add } from "@mui/icons-material";
+import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 
 type ProductVariantsProps = {
   hasEmployees: boolean;
+  employees: BusinessEmployee[];
   control: Control<ProductFormValues>;
   watch: UseFormWatch<ProductFormValues>;
 };
 
 const ProductVariants = ({
   hasEmployees,
+  employees,
   control,
   watch,
 }: ProductVariantsProps) => {
@@ -24,6 +35,25 @@ const ProductVariants = ({
     control,
     name: "variants",
   });
+
+  const onAddVariant = () => {
+    append({
+      name: "",
+      duration: 30,
+      has_different_prices: false,
+      offerings: employees.map((emp) => ({
+        user_id: emp.id,
+        fullname: emp.fullname,
+        username: emp.username,
+        profession: emp.job,
+        avatar: emp.avatar,
+        price: 0,
+        price_with_discount: 0,
+        discount: 0,
+        is_offering: true,
+      })),
+    });
+  };
 
   return (
     <Grid size={{ xs: 12, md: 8 }} sx={styles.container}>
@@ -41,9 +71,21 @@ const ProductVariants = ({
             Gestionează duratele și prețurile angajaților.
           </Typography>
         </Box>
-        <Button variant="contained" disableElevation>
-          Adaugă Variantă
-        </Button>
+        <Tooltip title="Adauga o varianta">
+          <IconButton
+            onClick={onAddVariant}
+            size="large"
+            sx={{
+              bgcolor: "primary.main",
+              transition: "all 0.2s ease",
+              "&:hover": {
+                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.9),
+              },
+            }}
+          >
+            <Add fontSize="medium" sx={{ color: "white" }} />
+          </IconButton>
+        </Tooltip>
       </Stack>
 
       <Stack spacing={2}>

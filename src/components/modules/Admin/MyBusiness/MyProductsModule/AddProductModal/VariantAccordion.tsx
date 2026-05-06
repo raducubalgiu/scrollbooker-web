@@ -52,24 +52,24 @@ const VariantAccordion = ({
       }}
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
-            width: "100%",
-          }}
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          gap={2}
+          sx={{ width: "100%" }}
         >
-          <Alarm color="primary" fontSize="small" />
-          <Typography fontWeight="700">Varianta #1</Typography>
+          <Alarm color="primary" fontSize="medium" />
+          <Typography fontWeight="700">
+            {variantName || `Varianta #${index + 1}`}
+          </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{ ml: "auto", mr: 2 }}
           >
-            30 min
+            {variantDuration ? `${variantDuration} min` : "-- min"}
           </Typography>
-        </Box>
+        </Stack>
       </AccordionSummary>
 
       <AccordionDetails
@@ -118,24 +118,32 @@ const VariantAccordion = ({
 
         {hasEmployees && (
           <Box sx={{ mt: 2 }}>
-            <Typography
-              variant="subtitle2"
-              fontWeight="700"
-              mb={2}
-              color="primary"
-            >
-              Configurare prețuri per angajat
+            <Typography fontWeight="700" mb={2} color="primary">
+              Prețuri per angajat
             </Typography>
 
             <Stack spacing={1.5}>
               {offeringFields.map((field, empIndex) => {
-                // Aici isOffering ar putea fi controlat de un switch/checkbox din formular
-                const isOffering = true;
+                // 1. Monitorizăm valorile pentru a calcula prețul cu discount în timp real
+                const currentPrice =
+                  watch(`variants.${index}.offerings.${empIndex}.price`) || 0;
+                const currentDiscount =
+                  watch(`variants.${index}.offerings.${empIndex}.discount`) ||
+                  0;
+
+                // 2. Calculăm prețul final
+                const priceWithDiscount =
+                  currentPrice - (currentPrice * currentDiscount) / 100;
+
+                // 3. Monitorizăm dacă angajatul oferă serviciul
+                const isOffering = watch(
+                  `variants.${index}.offerings.${empIndex}.is_offering`
+                );
 
                 return (
                   <Paper
                     variant="outlined"
-                    key={field.id} // Folosim field.id de la useFieldArray
+                    key={field.id}
                     sx={{
                       p: 2,
                       borderRadius: 3,
@@ -143,39 +151,73 @@ const VariantAccordion = ({
                       alignItems: "center",
                       gap: 3,
                       bgcolor: isOffering ? "background.paper" : "action.hover",
-                      opacity: isOffering ? 1 : 0.7,
+                      opacity: isOffering ? 1 : 0.6,
+                      transition: "all 0.2s",
                     }}
                   >
-                    <Avatar sx={{ width: 40, height: 40 }} />
+                    <Avatar
+                      src={field.avatar ?? ""}
+                      sx={{ width: 40, height: 40 }}
+                    />
                     <Box sx={{ minWidth: 180 }}>
                       <Typography variant="subtitle2" fontWeight="700">
-                        Nume Angajat
+                        {field.fullname}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        Expert
+                        {field.profession}
                       </Typography>
                     </Box>
 
-                    <Stack direction="row" spacing={2} sx={{ flex: 1 }}>
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      sx={{
+                        flex: 1,
+                        visibility: isOffering ? "visible" : "hidden",
+                      }}
+                    >
                       <Input
                         size="small"
                         name={`variants.${index}.offerings.${empIndex}.price`}
                         label="Preț standard"
+                        type="number"
                       />
                       <Input
                         size="small"
+                        name={`variants.${index}.offerings.${empIndex}.discount`} // Corectat din 'price' în 'discount'
+                        label="Discount %"
+                        type="number"
+                      />
+                      {/* Folosim value manual pentru prețul calculat, deoarece e disabled */}
+                      <Input
+                        size="small"
                         name={`variants.${index}.offerings.${empIndex}.price_with_discount`}
-                        label="Preț cu discount"
+                        label="Preț final"
+                        type="number"
+                        disabled
+                        value={
+                          priceWithDiscount > 0
+                            ? priceWithDiscount.toFixed(2)
+                            : ""
+                        }
                       />
                     </Stack>
 
                     <Button
-                      variant="text"
-                      color="error"
+                      variant={isOffering ? "text" : "contained"}
+                      color={isOffering ? "error" : "primary"}
                       size="small"
-                      sx={{ textTransform: "none" }}
+                      sx={{
+                        textTransform: "none",
+                        fontWeight: "700",
+                        minWidth: 140,
+                      }}
+                      // Aici va trebui să implementezi logica de toggle pentru is_offering
+                      onClick={() => {
+                        // setValue(`variants.${index}.offerings.${empIndex}.is_offering`, !isOffering)
+                      }}
                     >
-                      Nu oferă
+                      {isOffering ? "Nu oferă" : "Activează"}
                     </Button>
                   </Paper>
                 );

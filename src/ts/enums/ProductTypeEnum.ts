@@ -20,7 +20,7 @@ export function getProductTypeLabel(
   const key = (type ?? "").toString().toLowerCase();
   switch (key) {
     case ProductTypeEnum.SINGLE:
-      return "Single";
+      return "Individual";
     case ProductTypeEnum.PACK:
       return "Pachet de ședințe";
     case ProductTypeEnum.MEMBERSHIP:

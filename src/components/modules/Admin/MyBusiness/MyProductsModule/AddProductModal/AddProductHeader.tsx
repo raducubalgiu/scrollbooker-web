@@ -1,5 +1,12 @@
 import { Close } from "@mui/icons-material";
-import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import {
+  alpha,
+  AppBar,
+  Button,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import React from "react";
 
 type AddProductHeaderProps = {
@@ -16,9 +23,23 @@ const AddProductHeader = ({
   return (
     <AppBar sx={styles.container}>
       <Toolbar>
-        <IconButton edge="start" color="inherit" onClick={onHandleClose}>
-          <Close />
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={onHandleClose}
+          size="large"
+          sx={{
+            bgcolor: "action.hover",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              bgcolor: (theme) => alpha(theme.palette.action.active, 0.12),
+              transform: "scale(1.05)",
+            },
+          }}
+        >
+          <Close fontSize="medium" />
         </IconButton>
+
         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" fontWeight="700">
           Adaugă Serviciu Nou
         </Typography>

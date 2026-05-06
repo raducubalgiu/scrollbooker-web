@@ -1,24 +1,63 @@
 import Input from "@/components/core/Input/Input";
-import InputSelect, {
-  SelectOptionType,
-} from "@/components/core/Input/InputSelect";
+import InputSelect from "@/components/core/Input/InputSelect";
+import { useCustomQuery } from "@/hooks/useHttp";
+import {
+  getProductTypeLabel,
+  ProductTypeEnum,
+} from "@/ts/enums/ProductTypeEnum";
+import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Box, Checkbox, Divider, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import React from "react";
+import React, { useMemo } from "react";
 
 type ProductGeneralInfoProps = {
-  domainOptions: SelectOptionType[];
-  serviceOptions: SelectOptionType[];
+  selectedDomainId: string;
 };
 
-const ProductGeneralInfo = ({
-  domainOptions,
-  serviceOptions,
-}: ProductGeneralInfoProps) => {
+const ProductGeneralInfo = ({ selectedDomainId }: ProductGeneralInfoProps) => {
   const isRequired = required();
   const nameMinLength = minField(3);
   const nameMaxLength = maxField(100);
+
+  const { data: serviceDomainServices } = useCustomQuery<
+    SelectedServiceDomainWithServices[]
+  >({
+    key: "my-services",
+    url: "/api/my-services",
+  });
+
+  const validDomains = useMemo(() => {
+    if (!serviceDomainServices) return [];
+
+    return serviceDomainServices.filter((domain) =>
+      domain.services.some((s) => s.is_selected === true)
+    );
+  }, [serviceDomainServices]);
+
+  const domainOptions = useMemo(
+    () =>
+      validDomains.map((d) => ({
+        value: d.id.toString(),
+        name: d.name,
+      })),
+    [validDomains]
+  );
+
+  const serviceOptions = useMemo(() => {
+    if (!selectedDomainId || !validDomains.length) return [];
+
+    const domain = validDomains.find((d) => d.id === Number(selectedDomainId));
+
+    if (!domain) return [];
+
+    return domain.services
+      .filter((s) => s.is_selected)
+      .map((s) => ({
+        value: s.id.toString(),
+        name: s.name,
+      }));
+  }, [selectedDomainId, validDomains]);
 
   return (
     <Grid size={{ xs: 12, md: 4 }} sx={styles.container}>
@@ -30,7 +69,10 @@ const ProductGeneralInfo = ({
         <InputSelect
           name="type"
           label="Tip serviciu"
-          options={[]}
+          options={ProductTypeEnum.all.map((type) => ({
+            value: type,
+            name: getProductTypeLabel(type),
+          }))}
           rules={isRequired}
         />
         <InputSelect

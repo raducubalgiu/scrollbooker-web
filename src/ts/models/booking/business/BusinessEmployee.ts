@@ -3,7 +3,7 @@ export interface BusinessEmployee {
   id: number;
   username: string;
   fullname: string;
-  avatar?: string | null;
+  avatar: string | null;
   job: string;
   hire_date: string;
   followers_count: number;
