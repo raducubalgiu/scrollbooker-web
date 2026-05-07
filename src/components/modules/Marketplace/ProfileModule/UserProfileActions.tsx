@@ -1,5 +1,4 @@
 import { Button } from "@mui/material";
-import CheckIcon from "@mui/icons-material/Check";
 import React, { useEffect, useState, useRef } from "react";
 import { useMutate } from "@/hooks/useHttp";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
@@ -108,10 +107,12 @@ const UserProfileActions = ({
   };
 
   const buttonSx = {
-    textTransform: "capitalize",
+    textTransform: "none",
     flex: { xs: 1, sm: "none" },
     whiteSpace: "nowrap",
     minWidth: "max-content",
+    py: { xs: 1, lg: 1.5 },
+    px: { xs: 2.5, lg: 2 },
   };
 
   return (
@@ -128,7 +129,7 @@ const UserProfileActions = ({
         </Button>
       )}
       <Button
-        variant="outlined"
+        variant={localFollow ? "outlined" : "contained"}
         color="secondary"
         onClick={handleToggleFollow}
         size="large"
@@ -136,6 +137,7 @@ const UserProfileActions = ({
         sx={{
           ...buttonSx,
           textTransform: "capitalize",
+          color: "text.primary",
           "&.Mui-disabled": {
             opacity: 1,
             color: "inherit",
@@ -144,7 +146,6 @@ const UserProfileActions = ({
             borderColor: "secondary",
           },
         }}
-        endIcon={localFollow ? <CheckIcon color="primary" /> : null}
         disabled={isFollowing || isUnfollowing}
       >
         {localFollow ? "Urmărești" : "Urmărește"}

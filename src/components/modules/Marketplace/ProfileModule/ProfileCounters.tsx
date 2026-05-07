@@ -27,7 +27,7 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
     },
     title: {
       color: "text.secondary",
-      fontSize: { xs: 15, md: 16, lg: 18, xl: 20 },
+      fontSize: { xs: 14, md: 16, lg: 18, xl: 20 },
       fontWeight: 500,
     },
     counter: {
@@ -48,9 +48,8 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       justifyContent="center"
       sx={{
         width: "100%",
-        py: { xs: 1, sm: 4, md: 0 },
+        py: { xs: 3, sm: 4, md: 0 },
         px: { xs: 2, sm: 4, md: 0 },
-        mt: { xs: 1, md: 2 },
       }}
     >
       <ListItemButton

@@ -182,6 +182,7 @@ const styles = {
     top: { xs: 56, lg: "auto" },
     zIndex: 1000,
     mt: { md: 0, lg: 5 },
+    borderTop: 1,
     borderBottom: 1,
     borderColor: "divider",
     boxShadow: (theme: Theme) => `0 1px 0 ${theme.palette.divider}`,
@@ -194,7 +195,7 @@ const styles = {
     },
     "& .MuiTab-root": {
       textTransform: "none",
-      minHeight: 56,
+      minHeight: 40,
       minWidth: {
         xs: 75,
         md: 150,
@@ -216,7 +217,7 @@ const styles = {
     fontWeight: 600,
     display: {
       xs: "none",
-      sm: "block",
+      lg: "block",
     },
   },
 };

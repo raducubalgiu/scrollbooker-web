@@ -15,43 +15,49 @@ const OwnProfileActions = ({
   const router = useRouter();
 
   const buttonSx = {
-    textTransform: "capitalize",
+    textTransform: "none",
     flex: { xs: 1, sm: "none" },
     whiteSpace: "nowrap",
     minWidth: "max-content",
+    py: { xs: 1, lg: 1.5 },
+    px: { xs: 2.5, lg: 2 },
+    color: "text.primary",
   };
 
   return (
     <>
       <Button
-        variant="outlined"
+        variant="contained"
         color="secondary"
         onClick={onOpenEditModal}
         size="large"
         sx={buttonSx}
+        disableElevation
       >
         Editează
       </Button>
 
       {is_business_or_employee ? (
         <Button
-          variant="outlined"
+          variant="contained"
           color="secondary"
           onClick={() => router.push("/admin/calendar")}
           size="large"
           startIcon={<DateRangeOutlinedIcon />}
           sx={buttonSx}
+          disableElevation
         >
           Calendar
         </Button>
       ) : (
         <Button
-          variant="outlined"
+          variant="contained"
           color="secondary"
           onClick={() => {}}
           size="large"
           startIcon={<DateRangeOutlinedIcon />}
           sx={buttonSx}
+          disableElevation
         >
           Distribuie
         </Button>

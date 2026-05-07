@@ -86,6 +86,8 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
           zIndex: 10,
           backgroundColor: "background.paper",
           px: 1,
+          borderBottom: 1,
+          borderColor: "divider",
         }}
       >
         <IconButton

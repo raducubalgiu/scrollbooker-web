@@ -98,9 +98,9 @@ const ProfileUserInfo = ({
     fullName: {
       fontWeight: 600,
       fontSize: {
-        xs: 20,
-        sm: 24,
-        md: 28,
+        xs: 18,
+        sm: 20,
+        md: 24,
         lg: 30,
         xl: 32,
       },
@@ -127,7 +127,7 @@ const ProfileUserInfo = ({
   };
 
   return (
-    <Box sx={{ p: { xs: 2, lg: 0 } }}>
+    <Box sx={{ px: { xs: 2, lg: 0 }, pb: { xs: 2, lg: 0 } }}>
       <Stack
         flexDirection="row"
         alignItems="center"
@@ -181,7 +181,13 @@ const ProfileUserInfo = ({
             alignItems={{ xs: "flex-start", sm: "center" }}
           >
             <Stack flexDirection="row" alignItems="center" gap={1}>
-              <Typography variant="subtitle1" sx={{ color: "text.secondary" }}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  color: "text.secondary",
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
+                }}
+              >
                 {profession}
               </Typography>
 
@@ -217,7 +223,7 @@ const ProfileUserInfo = ({
                   <Stack flexDirection="row" alignItems="center" gap={0.5}>
                     <QueryBuilderOutlinedIcon
                       color="action"
-                      sx={{ fontSize: 25 }}
+                      sx={{ fontSize: { xs: 20, lg: 25 } }}
                     />
                     <Typography
                       sx={{
@@ -230,7 +236,7 @@ const ProfileUserInfo = ({
                     </Typography>
                     <ExpandMoreOutlinedIcon
                       color="action"
-                      sx={{ fontSize: 30 }}
+                      sx={{ fontSize: { xs: 20, lg: 25 } }}
                     />
                   </Stack>
                 </ButtonBase>
