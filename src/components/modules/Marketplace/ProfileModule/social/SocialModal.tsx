@@ -1,5 +1,12 @@
 import Modal from "@/components/core/Modal/Modal";
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Tab,
+  Tabs,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React, {
   useCallback,
   useMemo,
@@ -145,7 +152,9 @@ const SocialModal = ({
     }
   }, [currentTab, socialModal?.userId]);
 
+  const theme = useTheme();
   const isReviewsStep = currentTab === SocialTabEnum.REVIEWS;
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Modal
@@ -154,8 +163,9 @@ const SocialModal = ({
       dividers={false}
       title={`@${socialModal?.username}`}
       align="center"
-      {...(isReviewsStep && { maxWidth: "md" })}
-      fullWidth={isReviewsStep}
+      fullScreen={isMobile}
+      {...(isReviewsStep && !isMobile && { maxWidth: "md" })}
+      fullWidth={isReviewsStep || isMobile}
     >
       <Box
         sx={{

@@ -140,7 +140,7 @@ export default PostActions;
 
 const styles = {
   root: {
-    display: "flex",
+    display: { xs: "none", lg: "flex" },
     flexDirection: "column",
     gap: 1,
     pb: 1,

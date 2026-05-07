@@ -67,8 +67,8 @@ const AppointmentsModule = ({
           top: 0,
           zIndex: 10,
           backgroundColor: "background.paper",
-          px: 3,
-          pt: 3,
+          px: { xs: 1.5, lg: 3 },
+          pt: { xs: 1, sm: 3 },
         }}
       >
         <Typography
@@ -76,8 +76,8 @@ const AppointmentsModule = ({
           noWrap
           component="div"
           fontWeight={700}
-          fontSize={25}
-          sx={{ mb: 2.5 }}
+          fontSize={{ xs: 20, lg: 25 }}
+          sx={{ mb: { xs: 1.5, md: 2.5 } }}
         >
           Rezervări și abonamente
         </Typography>
@@ -91,7 +91,7 @@ const AppointmentsModule = ({
           </Button>
         </Stack>
 
-        <Divider sx={{ my: 2.5 }} />
+        <Divider sx={{ mt: { xs: 1.5, md: 2.5 }, mb: 1.5 }} />
       </Box>
 
       {isLoading && <AppointmentCardSkeleton />}

@@ -60,8 +60,8 @@ const NotificationsModule = ({
           top: 0,
           zIndex: 10,
           backgroundColor: "background.paper",
-          px: 3,
-          pt: 3,
+          px: { xs: 1.5, sm: 3 },
+          pt: { xs: 1, sm: 3 },
         }}
       >
         <Typography
@@ -69,12 +69,12 @@ const NotificationsModule = ({
           noWrap
           component="div"
           fontWeight={700}
-          fontSize={25}
+          fontSize={{ xs: 20, lg: 25 }}
+          sx={{ textAlign: { xs: "center", sm: "left" } }}
         >
           Notificări
         </Typography>
-
-        <Divider sx={{ mt: 2.5, mb: 1.5 }} />
+        <Divider sx={{ mt: { xs: 1, md: 2.5 }, mb: 1.5 }} />
       </Box>
 
       {isLoading && <NotificationSkeleton />}

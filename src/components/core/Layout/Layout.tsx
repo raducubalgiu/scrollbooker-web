@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme, Theme } from "@mui/material/styles";
 import { Backdrop, Box, CssBaseline, Drawer, Slide } from "@mui/material";
 
-import NotificationsModule from "@/components/modules/Admin/NotificationsModule/NotificationsModule";
+import NotificationsModule from "@/components/modules/Marketplace/NotificationsModule/NotificationsModule";
 import AppointmentsModule from "@/components/modules/Marketplace/AppointmentsModule/AppointmentsModule";
 import SearchUsersModule from "@/components/modules/Marketplace/SearchUsersModule/SearchUsersModule";
 import LayoutDrawer from "./LayoutDrawer";
@@ -202,13 +202,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         component="main"
         sx={{
           ...styles.mainContent,
-          p: isSpecialPage ? 0 : 2.5,
+          p: { xs: 0, md: isSpecialPage ? 0 : 2.5 },
         }}
       >
         {children}
       </Box>
 
-      <BottomBar />
+      <BottomBar username={session?.username} />
     </Box>
   );
 }

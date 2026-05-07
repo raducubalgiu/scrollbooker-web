@@ -9,6 +9,7 @@ type UserProfileActionsProps = {
   is_business_or_employee: boolean;
   is_follow: boolean;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
+  onBookNow: () => void;
 };
 
 const UserProfileActions = ({
@@ -16,6 +17,7 @@ const UserProfileActions = ({
   is_business_or_employee,
   is_follow,
   onUpdateFollows,
+  onBookNow,
 }: UserProfileActionsProps) => {
   const [localFollow, setLocalFollow] = useState<boolean>(is_follow);
   const previousLocalRef = useRef<boolean>(is_follow);
@@ -105,15 +107,22 @@ const UserProfileActions = ({
     }
   };
 
+  const buttonSx = {
+    textTransform: "capitalize",
+    flex: { xs: 1, sm: "none" },
+    whiteSpace: "nowrap",
+    minWidth: "max-content",
+  };
+
   return (
     <>
       {is_business_or_employee && (
         <Button
           variant="contained"
-          onClick={() => {}}
+          onClick={onBookNow}
           size="large"
           disableElevation
-          sx={{ mr: 1.5, textTransform: "none" }}
+          sx={buttonSx}
         >
           Rezervă acum
         </Button>
@@ -125,7 +134,7 @@ const UserProfileActions = ({
         size="large"
         disableElevation
         sx={{
-          mr: 1.5,
+          ...buttonSx,
           textTransform: "capitalize",
           "&.Mui-disabled": {
             opacity: 1,

@@ -1,7 +1,10 @@
-import React, { useMemo } from "react";
 import { Avatar, Badge, Box, SxProps, Theme, useTheme } from "@mui/material";
 
 type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+
+type ResponsiveAvatarSize =
+  | AvatarSize
+  | Partial<Record<"xs" | "sm" | "md" | "lg" | "xl", AvatarSize>>;
 
 type SizeConfig = {
   avatar: number;
@@ -20,7 +23,7 @@ const SIZE_MAP: Record<AvatarSize, SizeConfig> = {
 type UserAvatarProps = {
   isBusinessOrEmployee: boolean;
   openNow?: boolean | null;
-  size?: AvatarSize;
+  size?: ResponsiveAvatarSize; // Tipul actualizat
   url?: string | null;
   alt?: string;
 };
@@ -33,37 +36,49 @@ export default function UserAvatar({
   size = "md",
 }: UserAvatarProps) {
   const theme = useTheme();
-  const { avatar, badge } = SIZE_MAP[size];
 
-  const color = openNow ? theme.palette.success.main : theme.palette.grey[500];
+  // Funcție helper pentru a extrage valorile din SIZE_MAP în funcție de breakpoint
+  const getResponsiveValue = (property: keyof SizeConfig) => {
+    if (typeof size === "string") {
+      return SIZE_MAP[size][property];
+    }
+
+    // Dacă size este un obiect { xs: 'md', md: 'xxl' }
+    const responsiveStyles: any = {};
+    Object.entries(size).forEach(([breakpoint, s]) => {
+      responsiveStyles[breakpoint] = SIZE_MAP[s as AvatarSize][property];
+    });
+    return responsiveStyles;
+  };
+
+  const color = (
+    openNow ? theme.palette.success.main : theme.palette.text.disabled
+  ) as string;
   const boxShadow = `0 0 0 2px ${theme.palette.background.paper}`;
 
-  const badgeSx = useMemo<SxProps<Theme>>(
-    () => ({
-      "& .MuiBadge-badge": {
-        backgroundColor: color,
-        width: badge,
-        height: badge,
-        minWidth: badge,
+  const badgeSx: SxProps<Theme> = {
+    "& .MuiBadge-badge": {
+      backgroundColor: color,
+      width: getResponsiveValue("badge"),
+      height: getResponsiveValue("badge"),
+      minWidth: getResponsiveValue("badge"),
+      borderRadius: "50%",
+      boxShadow,
+      "&::after": {
+        position: "absolute",
+        inset: 0,
         borderRadius: "50%",
-        boxShadow,
-        "&::after": {
-          position: "absolute",
-          inset: 0,
-          borderRadius: "50%",
-          content: '""',
-        },
+        content: '""',
       },
-    }),
-    [color, boxShadow, badge]
-  );
+    },
+  };
 
   const avatarContent = (
     <Box
       sx={{
         position: "relative",
-        width: avatar,
-        height: avatar,
+        width: getResponsiveValue("avatar"),
+        height: getResponsiveValue("avatar"),
         borderRadius: "50%",
         overflow: "hidden",
         border: `1px solid ${theme.palette.divider}`,
@@ -80,7 +95,7 @@ export default function UserAvatar({
   );
 
   if (!isBusinessOrEmployee) {
-    return avatarContent;
+    return <Box sx={{ display: "inline-flex" }}>{avatarContent}</Box>;
   }
 
   return (

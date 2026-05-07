@@ -7,6 +7,8 @@ import {
   Typography,
   DialogActions,
   Stack,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { ActionButtonType } from "../ActionButton/ActionButton";
@@ -23,15 +25,20 @@ type ModalPropsType = DialogProps & {
 type ModalTitlePropsType = {
   title?: string;
   onClose: () => void;
+  fullScreen?: boolean;
   align?: "center" | "left";
 };
 
 const ModalTitle = ({
   title,
   onClose,
+  fullScreen = false,
   align = "left",
   ...other
 }: ModalTitlePropsType) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <DialogTitle component="div" {...other}>
       <Stack
@@ -40,8 +47,15 @@ const ModalTitle = ({
         justifyContent={"space-between"}
       >
         {align === "center" && (
-          <IconButton aria-label="close" size="large" disabled={true}>
-            <CloseIcon fontSize="large" sx={{ color: "transparent" }} />
+          <IconButton
+            aria-label="close"
+            size={isMobile ? "medium" : "large"}
+            disabled={true}
+          >
+            <CloseIcon
+              fontSize={isMobile ? "medium" : "large"}
+              sx={{ color: "transparent" }}
+            />
           </IconButton>
         )}
         <Typography
@@ -51,8 +65,12 @@ const ModalTitle = ({
         >
           {title}
         </Typography>
-        <IconButton aria-label="close" onClick={onClose} size="large">
-          <CloseIcon fontSize="large" />
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          size={isMobile ? "medium" : "large"}
+        >
+          <CloseIcon fontSize={isMobile ? "medium" : "large"} />
         </IconButton>
       </Stack>
     </DialogTitle>
@@ -72,6 +90,7 @@ export default function Modal({
   open,
   actions = [],
   dividers = true,
+  fullScreen,
   align = "left",
   ...others
 }: ModalPropsType) {
@@ -83,10 +102,12 @@ export default function Modal({
       aria-labelledby="customized-dialog"
       open={open}
       maxWidth="lg"
+      fullScreen={fullScreen ?? false}
       {...others}
       sx={{
         "& .MuiDialog-paper": {
-          borderRadius: 10,
+          borderRadius: fullScreen ? 0 : 10,
+          transition: "border-radius 0.2s ease-in-out",
         },
       }}
     >

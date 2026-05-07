@@ -233,7 +233,8 @@ const styles = {
       md: "1fr 1fr",
     },
     gap: { xs: 4, md: 10 },
-    p: { md: 2.5 },
+    p: 2.5,
+    pb: 10,
     alignItems: "start",
   },
 };

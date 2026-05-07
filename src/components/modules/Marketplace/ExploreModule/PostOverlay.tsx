@@ -37,119 +37,123 @@ const PostOverlay = ({
 
   return (
     <>
-      <Stack
-        spacing={1.5}
-        sx={{
-          position: "absolute",
-          left: 20,
-          right: 20,
-          bottom: 20,
-          zIndex: 20,
-          color: "common.white",
-        }}
-      >
-        <Box
-          sx={{
-            bgcolor: "rgba(255,255,255,0.1)",
-            px: 1.5,
-            py: 1,
-            width: "fit-content",
-            borderRadius: 20,
-          }}
-        >
-          <Typography fontWeight={600}>În apropiere</Typography>
-        </Box>
-
-        {isVideoReview && (
-          <Box
-            sx={{
-              bgcolor: "rgba(255,255,255,0.1)",
-              px: 1.5,
-              py: 1,
-              width: "fit-content",
-              borderRadius: 20,
-            }}
-          >
-            <Typography fontWeight={600}>Recenzie video</Typography>
-          </Box>
-        )}
-
-        <Stack direction="row" spacing={1.25} alignItems="center">
-          <Box>
-            <Typography fontWeight={800}>{user?.fullname}</Typography>
-            <Typography color="primary" sx={{ opacity: 0.92, fontWeight: 600 }}>
-              {user?.profession}
-            </Typography>
-          </Box>
-        </Stack>
-
-        <Stack
-          flexDirection="row"
-          alignItems="flex-end"
-          justifyContent="space-between"
-          gap={2}
-        >
-          <Box sx={{ flex: 1 }}>
-            <Collapse in={isExpanded} collapsedSize={48} timeout="auto">
-              <Typography
-                ref={textRef}
-                sx={{
-                  opacity: 0.9,
-                  ...(!isExpanded && {
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }),
-                }}
-              >
-                {description || "..."}
-              </Typography>
-            </Collapse>
-          </Box>
-
-          {(showButton || isExpanded) && (
-            <Button
-              size="small"
-              onClick={handleToggle}
-              sx={{
-                minWidth: "fit-content",
-                textTransform: "none",
-                fontWeight: 700,
-                alignSelf: "flex-end",
-                color: "common.white",
-              }}
-            >
-              {isExpanded ? "Mai puțin" : "Mai mult"}
-            </Button>
-          )}
-        </Stack>
-
-        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-          <Button
-            variant="contained"
-            size="large"
-            sx={{
-              display: { xs: "inline-flex", lg: "none" },
-              alignSelf: "flex-start",
-              px: 2.5,
-            }}
-          >
-            Rezervă acum
-          </Button>
-        </Protected>
-      </Stack>
-
       <Box
         sx={{
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 15%, rgba(0,0,0,0) 40%)",
+            "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 25%, transparent 50%)",
           pointerEvents: "none",
+          zIndex: 10,
         }}
       />
+
+      <Box
+        sx={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          p: { xs: 2, md: 3 },
+          zIndex: 20,
+          color: "common.white",
+        }}
+      >
+        <Stack direction="row" alignItems="flex-end" spacing={2}>
+          <Stack spacing={1.5} sx={{ flex: 1, minWidth: 0 }}>
+            {isVideoReview && (
+              <Box
+                sx={{
+                  bgcolor: "rgba(255,255,255,0.15)",
+                  backdropFilter: "blur(10px)",
+                  px: 1.5,
+                  py: 0.5,
+                  width: "fit-content",
+                  borderRadius: 5,
+                  border: "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                <Typography variant="caption" fontWeight={700}>
+                  RECENZIE VIDEO
+                </Typography>
+              </Box>
+            )}
+
+            <Box>
+              <Typography
+                variant="subtitle1"
+                fontWeight={800}
+                sx={{ lineHeight: 1.2 }}
+              >
+                {user?.fullname}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="primary"
+                sx={{ fontWeight: 600 }}
+              >
+                {user?.profession}
+              </Typography>
+            </Box>
+
+            <Box sx={{ position: "relative" }}>
+              <Collapse in={isExpanded} collapsedSize={40}>
+                <Typography
+                  ref={textRef}
+                  variant="body2"
+                  sx={{
+                    opacity: 0.95,
+                    lineHeight: 1.4,
+                    ...(!isExpanded && {
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }),
+                  }}
+                >
+                  {description}
+                </Typography>
+              </Collapse>
+
+              {(showButton || isExpanded) && (
+                <Typography
+                  component="span"
+                  onClick={handleToggle}
+                  sx={{
+                    cursor: "pointer",
+                    fontWeight: 800,
+                    fontSize: "0.875rem",
+                    mt: 0.5,
+                    display: "block",
+                  }}
+                >
+                  {isExpanded ? "Mai puțin" : "Mai mult"}
+                </Typography>
+              )}
+            </Box>
+
+            <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  display: { xs: "flex", lg: "none" },
+                  pb: 1,
+                }}
+              >
+                Rezervă acum
+              </Button>
+            </Protected>
+          </Stack>
+
+          <Box
+            sx={{ display: { xs: "block", md: "none" }, pb: { xs: 1, md: 0 } }}
+          >
+            <Box>Actions</Box>
+          </Box>
+        </Stack>
+      </Box>
     </>
   );
 };

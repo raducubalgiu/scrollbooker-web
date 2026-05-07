@@ -51,7 +51,7 @@ export default function AppointmentCard({
   const statusColor = AppointmentUtils.getStatusColor(appointment.status);
 
   return (
-    <ListItem disablePadding sx={{ px: 1.5 }}>
+    <ListItem disablePadding>
       <ListItemButton>
         <Stack
           onClick={() => navigateToAppointmentDetails(appointment.id)}

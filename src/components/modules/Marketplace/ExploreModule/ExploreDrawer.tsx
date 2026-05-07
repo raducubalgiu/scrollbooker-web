@@ -54,7 +54,7 @@ const ExploreDrawer = ({
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
-        sx={{ lexShrink: 0 }}
+        sx={{ flexShrink: 0 }}
       >
         <Typography
           variant="h4"

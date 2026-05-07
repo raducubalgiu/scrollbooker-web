@@ -13,25 +13,25 @@ export default function NotificationSkeletons() {
             justifyContent="space-between"
             p={2.5}
             flexGrow={1}
+            gap={2}
           >
             <Stack
               flexDirection="row"
               alignItems="center"
               justifyContent="flex-start"
               maxWidth={400}
+              gap={1}
             >
-              <Skeleton
-                variant="circular"
-                sx={{ width: 50, height: 50, mr: 1.5 }}
-              />
+              <Skeleton variant="circular" sx={{ width: 55, height: 55 }} />
               <Stack flexWrap="wrap">
-                <Skeleton width={200} />
-                <Skeleton width={200} />
+                <Skeleton width={80} />
+                <Skeleton width={120} />
               </Stack>
             </Stack>
+
             <Skeleton
-              variant="circular"
-              sx={{ width: 40, height: 40, mr: 1.5 }}
+              variant="rounded"
+              sx={{ width: 90, height: 40, borderRadius: 50 }}
             />
           </Stack>
         </ListItem>

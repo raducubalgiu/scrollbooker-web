@@ -46,7 +46,7 @@ export default function NotificationItem({
   switch (true) {
     case type === NotificationTypeEnum.FOLLOW:
       return (
-        <ListItem disablePadding sx={{ px: 1.5 }}>
+        <ListItem disablePadding>
           <ListItemButton
             onClick={() =>
               onNavigateToUserProfile(notification.sender.username)
@@ -59,18 +59,21 @@ export default function NotificationItem({
               justifyContent="space-between"
               flex={1}
             >
-              <Stack flexDirection="row" alignItems="center">
+              <Stack flexDirection="row" alignItems="center" gap={2}>
                 <Avatar
                   sx={styles.avatar}
                   src={sender.avatar ?? ""}
                   alt={sender.fullname}
                 />
 
-                <Box sx={{ ml: 2.5 }}>
+                <Box>
                   <Typography sx={{ fontWeight: 600, fontSize: 17 }}>
                     {sender.fullname}
                   </Typography>
-                  <Typography color="text.secondary">
+                  <Typography
+                    color="text.secondary"
+                    sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
+                  >
                     a început să te urmărească
                   </Typography>
                 </Box>
@@ -79,7 +82,6 @@ export default function NotificationItem({
               <Button
                 variant={sender.is_follow ? "outlined" : "contained"}
                 color={sender.is_follow ? "secondary" : "primary"}
-                size="small"
                 disableElevation
               >
                 {sender.is_follow ? "Urmărești" : "Urmărește"}

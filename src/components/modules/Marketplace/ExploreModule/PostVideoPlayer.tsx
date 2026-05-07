@@ -659,7 +659,6 @@ const videoStyles: React.CSSProperties = {
   width: "100%",
   height: "100%",
   objectFit: "cover",
-  borderRadius: 15,
   display: "block",
   backgroundColor: "black",
 };
@@ -670,7 +669,6 @@ const styles = {
     height: "100%",
     position: "relative",
     cursor: "pointer",
-    borderRadius: 3,
     overflow: "hidden",
     backgroundColor: "black",
   },
