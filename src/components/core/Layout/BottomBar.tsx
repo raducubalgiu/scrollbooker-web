@@ -6,6 +6,7 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   useTheme,
+  Badge,
 } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -28,21 +29,26 @@ export default function BottomBar({ username }: BottomBarProps) {
   const pathname = usePathname() || "/";
   const router = useRouter();
 
+  const notificationsCount = 5;
+  const appointmentsCount = 2;
+
   const isDarkPage = pathname === "/";
   const isDarkMode = theme.palette.mode === "dark";
+  const isAnyVideoPage = pathname.includes("/video/");
 
   const getActiveColor = () => {
-    if (isDarkPage || isDarkMode) return "#ffffff";
+    if (isDarkPage || isDarkMode || isAnyVideoPage) return "#ffffff";
     return "#000000";
   };
 
   const getInactiveColor = () => {
-    if (isDarkPage || isDarkMode) return "rgba(255, 255, 255, 0.6)";
+    if (isDarkPage || isDarkMode || isAnyVideoPage)
+      return "rgba(255, 255, 255, 0.6)";
     return "rgba(0, 0, 0, 0.6)";
   };
 
   const getBgColor = () => {
-    if (isDarkPage) return "#000000 !important";
+    if (isDarkPage || isAnyVideoPage) return "#000000 !important";
     return theme.palette.background.paper;
   };
 
@@ -58,6 +64,7 @@ export default function BottomBar({ username }: BottomBarProps) {
       route: "/notifications",
       activeIcon: <NotificationsIcon />,
       inactiveIcon: <NotificationsNoneOutlinedIcon />,
+      badge: notificationsCount,
     },
     {
       label: "Caută",
@@ -70,6 +77,7 @@ export default function BottomBar({ username }: BottomBarProps) {
       route: "/appointments",
       activeIcon: <AccessTimeFilledIcon />,
       inactiveIcon: <AccessTimeIcon />,
+      badge: appointmentsCount,
     },
     {
       label: "Profil",
@@ -110,7 +118,7 @@ export default function BottomBar({ username }: BottomBarProps) {
         }}
         sx={{
           backgroundColor: getBgColor(),
-          height: 65,
+          //height: 65,
           "& .MuiBottomNavigationAction-root": {
             minWidth: 0,
             color: getInactiveColor(),
@@ -123,13 +131,32 @@ export default function BottomBar({ username }: BottomBarProps) {
           },
         }}
       >
-        {actions.map((a, index) => (
-          <BottomNavigationAction
-            key={a.route}
-            label={a.label}
-            icon={currentIndex === index ? a.activeIcon : a.inactiveIcon}
-          />
-        ))}
+        {actions.map((a, index) => {
+          const baseIcon =
+            currentIndex === index ? a.activeIcon : a.inactiveIcon;
+
+          return (
+            <BottomNavigationAction
+              key={a.route}
+              label={a.label}
+              icon={
+                <Badge
+                  badgeContent={a.badge}
+                  color="error"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      fontSize: 10,
+                      height: 16,
+                      minWidth: 16,
+                    },
+                  }}
+                >
+                  {baseIcon}
+                </Badge>
+              }
+            />
+          );
+        })}
       </BottomNavigation>
     </Box>
   );

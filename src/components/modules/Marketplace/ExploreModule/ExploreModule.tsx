@@ -88,6 +88,8 @@ export default function ExploreModule() {
               user={currentPost?.user ?? null}
               description={currentPost?.description ?? null}
               isVideoReview={is_video_review ?? false}
+              onNext={goToNext}
+              onPrev={goToPrev}
             />
 
             <Box
@@ -104,9 +106,8 @@ export default function ExploreModule() {
               <Box
                 sx={{
                   position: "absolute",
-                  top: 0,
-                  left: 0,
-                  m: { xs: 1, lg: 2.5 },
+                  left: { xs: 8, lg: 16 },
+                  top: { xs: 8, lg: 16 },
                   zIndex: 11,
                   pointerEvents: "auto",
                 }}
@@ -200,16 +201,13 @@ const styles = {
   container: {
     position: "relative",
     display: "grid",
-    // Pe mobil o singură coloană, pe desktop 1fr auto
     gridTemplateColumns: { xs: "1fr", md: "1fr auto" },
     alignItems: "stretch",
     width: "100%",
-    // Înălțime adaptivă (scădem bottom bar pe mobil)
     height: {
       xs: "calc(100vh - 56px)",
       md: "calc(100vh - 40px)",
     },
-    // Eliminăm marginea de sus pe mobil
     marginTop: { xs: 0, md: "20px" },
     overflow: "hidden",
   },
@@ -220,7 +218,6 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    // Fără gap pe mobil pentru a nu împinge video-ul
     gap: { xs: 0, md: 3 },
   },
 
@@ -238,9 +235,6 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     gap: { xs: 0, md: 2.5 },
-
-    // ADAUGĂ ASTA pentru desktop:
-    // Forțează secțiunea să aibă lățimea corespunzătoare raportului 9:16
     width: { md: "calc((100vh - 40px) * 9 / 16)" },
   },
 
@@ -248,13 +242,11 @@ const styles = {
     position: "relative",
     height: "100%",
     width: "100%",
-    // Eliminăm aspect-ratio pe mobil ca să ocupe tot ecranul, păstrăm 9/16 pe desktop
     aspectRatio: { xs: "unset", md: "9 / 16" },
-    // Eliminăm rotunjirea pe mobil pentru look-ul fullscreen
     borderRadius: { xs: 0, md: 4 },
     overflow: "hidden",
     flexShrink: 0,
-    backgroundColor: "black", // Negru pentru a nu vedea borduri gri
+    backgroundColor: "black",
   },
 
   drawerContainer: {
@@ -267,6 +259,6 @@ const styles = {
     bgcolor: "common.black",
     display: "flex",
     flexDirection: "column",
-    p: 5,
+    p: 2.5,
   },
 } as const;

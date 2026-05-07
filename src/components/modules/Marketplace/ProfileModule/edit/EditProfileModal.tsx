@@ -1,10 +1,16 @@
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
-import FormTextarea from "@/components/core/Input/FormTextarea";
 import Input from "@/components/core/Input/Input";
 import Modal from "@/components/core/Modal/Modal";
 import { UserProfile } from "@/ts/models/user/UserProfile";
 import { maxField, minField, required } from "@/utils/validation-rules";
-import { Avatar, Box, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -26,7 +32,7 @@ const EditProfileModal = ({
       bio: profile.bio,
     },
   });
-  const { reset } = methods;
+  const { reset, handleSubmit } = methods;
   const isRequired = required();
   const minLength = minField(35);
   const maxLength = maxField(35);
@@ -43,21 +49,9 @@ const EditProfileModal = ({
 
   const actions: ActionButtonType[] = [
     {
-      title: "Renunta",
-      props: {
-        variant: "outlined",
-        color: "secondary",
-        onClick: () => {},
-        sx: {
-          py: 1.5,
-          px: 2,
-        },
-      },
-    },
-    {
       title: "Salvează",
       props: {
-        onClick: () => {},
+        onClick: handleSubmit((data) => console.log(data)),
         sx: {
           py: 1.5,
           px: 2,
@@ -66,6 +60,10 @@ const EditProfileModal = ({
       },
     },
   ];
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const LABEL_WIDTH = { xs: 110, sm: 140, md: 180 };
 
   return (
     <Modal
@@ -77,16 +75,22 @@ const EditProfileModal = ({
       fullWidth
       actions={actions}
       dividers={false}
+      fullScreen={isMobile}
     >
       <FormProvider {...methods}>
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: { md: 2 } }}>
           <Stack alignItems="center" justifyContent="center">
             <Avatar
               src={profile.avatar ?? ""}
-              sx={{ width: 150, height: 150 }}
+              sx={{
+                width: { xs: 100, md: 150 },
+                height: { xs: 100, md: 150 },
+                my: { xs: 2.5, md: 0 },
+              }}
             />
           </Stack>
-          <Box sx={{ mt: 2 }}>
+
+          <Stack sx={{ mt: 2 }} gap={2.5}>
             <Stack flexDirection="row" alignItems="center" gap={1} mb={2}>
               <Typography variant="h5" fontWeight={600}>
                 {profile.fullname}
@@ -102,43 +106,70 @@ const EditProfileModal = ({
               )}
             </Stack>
 
-            <Stack flexDirection="row" alignItems="center" gap={5} mb={2}>
-              <Typography variant="h6" width={250} color="text.secondary">
+            <Stack flexDirection="row" alignItems="center" gap={2}>
+              <Typography
+                variant="body1"
+                sx={{
+                  flexBasis: LABEL_WIDTH,
+                  flexShrink: 0,
+                  color: "text.secondary",
+                  fontWeight: 500,
+                }}
+              >
                 Nume
               </Typography>
               <Input
                 name="name"
                 placeholder="Nume"
-                label=""
+                fullWidth
                 rules={{ ...isRequired, ...minLength, ...maxLength }}
               />
             </Stack>
 
-            <Stack flexDirection="row" alignItems="center" gap={5} mb={2}>
-              <Typography variant="h6" width={250} color="text.secondary">
-                Nume utilizator
+            <Stack flexDirection="row" alignItems="center" gap={2}>
+              <Typography
+                variant="body1"
+                sx={{
+                  flexBasis: LABEL_WIDTH,
+                  flexShrink: 0,
+                  color: "text.secondary",
+                  fontWeight: 500,
+                }}
+              >
+                Utilizator
               </Typography>
               <Input
                 name="username"
                 placeholder="Nume utilizator"
-                label=""
+                fullWidth
                 rules={{ ...isRequired, ...minLength, ...maxLength }}
               />
             </Stack>
 
-            <Stack flexDirection="row" alignItems="center" gap={5} mb={2}>
-              <Typography variant="h6" width={250} color="text.secondary">
+            <Stack flexDirection="row" alignItems="flex-start" gap={2}>
+              <Typography
+                variant="body1"
+                sx={{
+                  flexBasis: LABEL_WIDTH,
+                  flexShrink: 0,
+                  color: "text.secondary",
+                  fontWeight: 500,
+                  pt: 1.5,
+                }}
+              >
                 Bio
               </Typography>
-              <FormTextarea
-                name="bio"
-                placeholder="Bio"
-                minRows={1}
-                maxRows={1}
-                maxLength={255}
-              />
+              <Box sx={{ flexGrow: 1 }}>
+                <Input
+                  name="bio"
+                  placeholder="Scrie ceva despre tine..."
+                  minRows={4}
+                  maxRows={6}
+                  multiline
+                />
+              </Box>
             </Stack>
-          </Box>
+          </Stack>
         </Box>
       </FormProvider>
     </Modal>

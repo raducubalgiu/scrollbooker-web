@@ -44,14 +44,14 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
       <Stack flexDirection="row" alignItems="center" gap={2}>
         <Avatar
           src={review.customer.avatar ?? ""}
-          sx={{ width: 70, height: 70 }}
+          sx={{ width: { xs: 55, lg: 70 }, height: { xs: 55, lg: 70 } }}
         />
 
         <Box>
           <Typography variant="h6" fontWeight={600}>
             {customer.fullname}
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
+          <Typography variant="body2" color="text.secondary">
             {dayjs(created_at).format("DD MMMM YYYY HH:mm")}
           </Typography>
         </Box>

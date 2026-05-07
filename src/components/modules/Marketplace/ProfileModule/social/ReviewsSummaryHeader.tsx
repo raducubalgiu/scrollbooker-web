@@ -12,7 +12,7 @@ const ReviewsSummaryHeader = ({
   ratings_count,
 }: ReviewsSummaryHeaderProps) => {
   return (
-    <Stack alignItems="center" justifyContent="center" sx={{ my: 1.5 }}>
+    <Stack alignItems="center" justifyContent="center" sx={{ my: 1 }}>
       <Stack flexDirection="row" alignItems="center">
         <Typography variant="h4" fontWeight={600}>
           {ratings_average}

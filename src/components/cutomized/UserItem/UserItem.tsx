@@ -86,7 +86,11 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
         onClick={handleFollowClick}
         size="large"
         disableElevation
-        sx={{ textTransform: "capitalize", minWidth: 120 }}
+        sx={{
+          py: { xs: 0.35, lg: 0.5 },
+          px: { xs: 1.25, lg: 1.5 },
+          fontSize: { xs: "0.875rem", sm: "1rem" },
+        }}
       >
         {is_follow ? "Urmărești" : "Urmărește"}
       </Button>
@@ -107,10 +111,10 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
           justifyContent="space-between"
           flex={1}
         >
-          <Stack flexDirection="row" alignItems="center">
+          <Stack flexDirection="row" alignItems="center" gap={2}>
             {user_avatar}
 
-            <Box sx={{ ml: 2.5 }}>
+            <Box>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 {fullname}
               </Typography>
@@ -139,10 +143,15 @@ const styles = {
   },
   badgeContent: {
     backgroundColor: "background.paper",
-    px: 1.5,
-    py: 0.5,
+    px: { xs: 1, lg: 1.5 },
+    py: { xs: 0.2, lg: 0.5 },
     borderRadius: 50,
     boxShadow: 1,
   },
-  avatar: { width: 70, height: 70, border: 1, borderColor: "divider" },
+  avatar: {
+    width: { xs: 55, lg: 70 },
+    height: { xs: 55, lg: 70 },
+    border: 1,
+    borderColor: "divider",
+  },
 };

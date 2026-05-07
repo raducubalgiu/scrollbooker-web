@@ -23,7 +23,12 @@ const ProfileInfoLocationSection = ({
       <Typography variant="h6" fontWeight="800" mb={2}>
         Locație și Adresă
       </Typography>
-      <Link href={mapsUrl} target="_blank" rel="noopener noreferrer">
+      <Link
+        href={mapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
         <Paper elevation={0} sx={styles.paper}>
           <Box sx={styles.imageContainer}>
             <Image

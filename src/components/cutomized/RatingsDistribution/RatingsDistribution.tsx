@@ -1,12 +1,12 @@
 import React, { useMemo, memo } from "react";
 import { Box, Checkbox, Stack, styled, Typography } from "@mui/material";
-import type { ReviewsSummaryType } from "@/ts/models/booking/review/ReviewsSummaryType";
+import type { ReviewsSummary } from "@/ts/models/booking/review/ReviewsSummaryType";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 
 type RatingsDistributionProps = {
-  summary: ReviewsSummaryType | undefined;
+  summary: ReviewsSummary | undefined;
   selectedRatings: Set<number>;
   onRatingClick: (rating: number) => void;
 };
@@ -18,7 +18,7 @@ const RatingsDistribution = ({
 }: RatingsDistributionProps) => {
   const breakdown = useMemo(() => {
     if (!summary || !Array.isArray(summary.breakdown))
-      return [] as ReviewsSummaryType["breakdown"];
+      return [] as ReviewsSummary["breakdown"];
     return [...summary.breakdown].sort((a, b) => b.rating - a.rating);
   }, [summary]);
 
@@ -64,7 +64,21 @@ const RatingsDistribution = ({
     "&.Mui-checked": {
       color: theme.palette.primary.main,
     },
-    padding: 6,
+    padding: 4,
+
+    [theme.breakpoints.up("md")]: {
+      padding: 8,
+    },
+
+    [theme.breakpoints.up("lg")]: {
+      padding: 8,
+    },
+    "& .MuiSvgIcon-root": {
+      fontSize: 30,
+      [theme.breakpoints.up("md")]: {
+        fontSize: 32.5,
+      },
+    },
   }));
 
   return (
@@ -75,9 +89,8 @@ const RatingsDistribution = ({
         const checked = selectedRatings?.has(b.rating) ?? false;
 
         return (
-          <Stack key={b.rating} direction="row" alignItems="center" spacing={2}>
+          <Stack key={b.rating} direction="row" alignItems="center" spacing={1}>
             <StyledCheckbox
-              size="large"
               checked={checked}
               onChange={() => onRatingClick?.(b.rating)}
             />
@@ -95,7 +108,7 @@ const RatingsDistribution = ({
 
             <Typography
               variant="h6"
-              sx={{ width: 56, textAlign: "right", fontWeight: 600 }}
+              sx={{ width: 40, textAlign: "right", fontWeight: 600 }}
             >
               {count}
             </Typography>
@@ -114,7 +127,6 @@ function areEqual(
   const nextSummary = next.summary;
 
   if (prevSummary === nextSummary) {
-    // same reference, still need to check selectedRatings and handler
   } else {
     if (!prevSummary || !nextSummary) return false;
 
@@ -124,8 +136,8 @@ function areEqual(
     if (prevBreak.length !== nextBreak.length) return false;
     for (let i = 0; i < prevBreak.length; i++) {
       if (
-        prevBreak[i].rating !== nextBreak[i].rating ||
-        prevBreak[i].count !== nextBreak[i].count
+        prevBreak[i]?.rating !== nextBreak[i]?.rating ||
+        prevBreak[i]?.count !== nextBreak[i]?.count
       )
         return false;
     }

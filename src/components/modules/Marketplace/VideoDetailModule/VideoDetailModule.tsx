@@ -2,13 +2,13 @@
 
 import * as React from "react";
 import { alpha, Box, IconButton, Theme } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import { useRouter } from "next/navigation";
 import { Post } from "@/ts/models/social/Post";
 import { useMutate } from "@/hooks/useHttp";
 import PostActions from "../ExploreModule/PostActions";
 import ExploreSidebar from "../ExploreModule/sidebar/ExploreSidebar";
 import { PostVideoPlayer } from "../ExploreModule/PostVideoPlayer";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -202,7 +202,7 @@ export default function VideoDetailModule({
         }}
         sx={styles.backButton}
       >
-        <CloseIcon fontSize="large" />
+        <ArrowBackIcon sx={{ fontSize: { xs: "1.5rem", sm: "2.1875rem" } }} />
       </IconButton>
 
       <Box sx={styles.mainContent}>
@@ -246,29 +246,25 @@ const styles = {
   container: {
     position: "relative",
     display: "grid",
-    // Pe mobil o singură coloană, pe desktop 1fr auto
     gridTemplateColumns: { xs: "1fr", md: "1fr auto" },
     alignItems: "stretch",
     width: "100%",
-    // Înălțime adaptivă (scădem bottom bar pe mobil)
     height: {
       xs: "calc(100vh - 56px)",
       md: "calc(100vh - 40px)",
     },
-    // Eliminăm marginea de sus pe mobil
     marginTop: { xs: 0, md: "20px" },
     overflow: "hidden",
   },
 
   backButton: {
     position: "absolute",
-    // Poziție ajustată pentru mobil (să nu fie lipit de margini)
     top: { xs: 10, md: 0 },
     left: { xs: 10, md: "20px" },
     zIndex: 20,
     width: { xs: 50, md: 65 },
     height: { xs: 50, md: 65 },
-    color: "text.primary",
+    color: { xs: "#fff", lg: "text.primary" },
     border: (theme: Theme) =>
       `1px solid ${alpha(theme.palette.text.primary, 0.2)}`,
     "&:hover": {
@@ -282,12 +278,10 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    // Fără gap pe mobil pentru a nu împinge video-ul
     gap: { xs: 0, md: 3 },
   },
 
   leftSection: {
-    // Forțăm 100% pe mobil, auto pe desktop
     flex: { xs: "1 1 100%", md: "0 0 auto" },
     height: "100%",
     display: "flex",
@@ -300,13 +294,11 @@ const styles = {
     position: "relative",
     height: "100%",
     width: "100%",
-    // Eliminăm aspect-ratio pe mobil ca să ocupe tot ecranul, păstrăm 9/16 pe desktop
     aspectRatio: { xs: "unset", md: "9 / 16" },
-    // Eliminăm rotunjirea pe mobil pentru look-ul fullscreen
     borderRadius: { xs: 0, md: 4 },
     overflow: "hidden",
     flexShrink: 0,
-    backgroundColor: "black", // Negru pentru a nu vedea borduri gri
+    backgroundColor: "black",
   },
 
   drawerContainer: {

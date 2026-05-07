@@ -2,6 +2,10 @@ html,
 body {
   padding: 0;
   margin: 0;
+  /* overscroll-behavior-y: none; */
+  /* Opțional: previne și swipe-ul stânga/dreapta pentru „back/forward” în browser */
+  /* overscroll-behavior-x: none; */
+  overscroll-behavior: none;
 }
 
 * {

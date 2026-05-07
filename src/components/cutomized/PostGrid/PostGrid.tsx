@@ -7,7 +7,6 @@ import React from "react";
 
 type PostGridProps = {
   thumbnailUrl: string | null;
-  videoUrl?: string | null;
   viewsCount: number;
   onNavigateToVideo: () => void;
 };
@@ -20,31 +19,12 @@ export function formatViews(n: number) {
 
 const PostGrid = ({
   thumbnailUrl,
-  videoUrl,
   viewsCount = 0,
   onNavigateToVideo,
 }: PostGridProps) => {
-  const [isHovered, setIsHovered] = React.useState(false);
-  const videoRef = React.useRef<HTMLVideoElement | null>(null);
-
-  // React.useEffect(() => {
-  //   const video = videoRef.current;
-  //   if (!video) return;
-
-  //   if (isHovered && videoUrl) {
-  //     video.currentTime = 0;
-  //     video.play().catch(() => {});
-  //   } else {
-  //     video.pause();
-  //     video.currentTime = 0;
-  //   }
-  // }, [isHovered, videoUrl]);
-
   return (
     <ButtonBase
       onClick={onNavigateToVideo}
-      //onMouseEnter={() => setIsHovered(true)}
-      //onMouseLeave={() => setIsHovered(false)}
       sx={{ width: "100%", display: "block" }}
     >
       <Box
@@ -66,28 +46,6 @@ const PostGrid = ({
             objectFit: "cover",
           }}
         />
-
-        {/* {videoUrl && (
-          <video
-            ref={videoRef}
-            src={videoUrl}
-            muted={true}
-            playsInline
-            loop
-            preload="metadata"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              opacity: isHovered ? 1 : 0,
-              transition: "opacity 120ms ease",
-              pointerEvents: "none",
-            }}
-          />
-        )} */}
 
         <Box
           sx={{

@@ -19,7 +19,7 @@ const ProfileEmployeesTab = ({ businessOwnerId }: ProfileEmployeesTabProps) => {
   }, [data]);
 
   return (
-    <>
+    <Box sx={{ px: { xs: 2.5, lg: 0 } }}>
       {isLoading && (
         <Stack
           alignItems="center"
@@ -44,7 +44,7 @@ const ProfileEmployeesTab = ({ businessOwnerId }: ProfileEmployeesTabProps) => {
       )}
 
       {!isLoading && isError && <ErrorMessage resource="specialiști" />}
-    </>
+    </Box>
   );
 };
 

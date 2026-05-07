@@ -53,11 +53,6 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
               mr: 0.75,
               minWidth: "auto",
               borderRadius: 50,
-              bgcolor: "background.paper",
-              boxShadow: (theme) =>
-                theme.palette.mode === "light"
-                  ? "0 6px 18px rgba(0,0,0,0.06)"
-                  : "none",
               fontSize: 16,
               color: "text.secondary",
               "& .MuiTab-iconWrapper": {

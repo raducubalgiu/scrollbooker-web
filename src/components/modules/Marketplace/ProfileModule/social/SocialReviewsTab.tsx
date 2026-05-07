@@ -78,19 +78,6 @@ const SocialReviewsTab = ({
     });
   }, []);
 
-  const styles = {
-    tabsContainer: {
-      position: "sticky",
-      top: 0,
-      zIndex: 8,
-      backgroundColor: "background.paper",
-      py: 1,
-      borderTop: "1px solid transparent",
-      display: "flex",
-      justifyContent: "center",
-    },
-  };
-
   return (
     <>
       {isLoading && (
@@ -113,7 +100,7 @@ const SocialReviewsTab = ({
       )}
 
       {!isLoading && ratings_count && ratings_count > 0 && (
-        <>
+        <Box sx={{ mx: 2 }}>
           {ratings_average !== undefined && ratings_count !== undefined && (
             <ReviewsSummaryHeader
               ratings_average={ratings_average}
@@ -136,10 +123,23 @@ const SocialReviewsTab = ({
           </Box>
 
           {tabsContent}
-        </>
+        </Box>
       )}
     </>
   );
 };
 
 export default memo(SocialReviewsTab);
+
+const styles = {
+  tabsContainer: {
+    position: "sticky",
+    top: 0,
+    zIndex: 8,
+    backgroundColor: "background.paper",
+    py: 1,
+    borderTop: "1px solid transparent",
+    display: "flex",
+    justifyContent: "center",
+  },
+};

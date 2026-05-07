@@ -116,9 +116,9 @@ const ProfileUserInfo = ({
       },
     },
     rating: {
-      fontWeight: 600,
+      fontWeight: { xs: 800, lg: 600 },
       fontSize: {
-        sm: 15,
+        sm: 17,
         md: 20,
         lg: 25,
         xl: 28,
@@ -180,11 +180,8 @@ const ProfileUserInfo = ({
             flexDirection={{ xs: "column", sm: "row" }}
             alignItems={{ xs: "flex-start", sm: "center" }}
           >
-            <Stack flexDirection="row" alignItems="center">
-              <Typography
-                variant="subtitle1"
-                sx={{ mr: 1.5, color: "text.secondary" }}
-              >
+            <Stack flexDirection="row" alignItems="center" gap={1}>
+              <Typography variant="subtitle1" sx={{ color: "text.secondary" }}>
                 {profession}
               </Typography>
 
@@ -214,7 +211,6 @@ const ProfileUserInfo = ({
                 <ButtonBase
                   sx={{
                     borderRadius: 5,
-                    mt: { xs: 0.5, sm: 0 },
                   }}
                   onClick={onOpenScheduleModal}
                 >

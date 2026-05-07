@@ -532,9 +532,19 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   );
 
   const volumeButtonIcon = isMuted ? (
-    <VolumeOffRoundedIcon sx={{ color: "#fff" }} fontSize="large" />
+    <VolumeOffRoundedIcon
+      sx={{
+        color: "#fff",
+        fontSize: { xs: "1.5rem", sm: "2.1875rem" },
+      }}
+    />
   ) : (
-    <VolumeUpRoundedIcon sx={{ color: "#fff" }} fontSize="large" />
+    <VolumeUpRoundedIcon
+      sx={{
+        color: "#fff",
+        fontSize: { xs: "1.5rem", sm: "2.1875rem" },
+      }}
+    />
   );
 
   const showPausedOverlay =
@@ -552,7 +562,13 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   }
 
   return (
-    <Box sx={styles.root} onClick={handleTogglePlay}>
+    <Box
+      sx={styles.root}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleTogglePlay();
+      }}
+    >
       <video
         ref={videoRef}
         controls={false}
@@ -671,6 +687,11 @@ const styles = {
     cursor: "pointer",
     overflow: "hidden",
     backgroundColor: "black",
+    WebkitTapHighlightColor: "transparent",
+    userSelect: "none",
+    "&:focus": {
+      outline: "none",
+    },
   },
   skeletonContainer: {
     width: "100%",
@@ -745,11 +766,11 @@ const styles = {
   },
   volumeButton: {
     position: "absolute",
-    right: 16,
-    top: 16,
+    right: { xs: 8, lg: 16 },
+    top: { xs: 8, lg: 16 },
     zIndex: 25,
-    width: 60,
-    height: 60,
+    width: { xs: 50, lg: 60 },
+    height: { xs: 50, lg: 60 },
     borderRadius: "50%",
     display: "flex",
     alignItems: "center",

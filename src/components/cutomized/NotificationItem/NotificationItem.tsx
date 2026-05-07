@@ -51,7 +51,7 @@ export default function NotificationItem({
             onClick={() =>
               onNavigateToUserProfile(notification.sender.username)
             }
-            sx={{ py: 2.5 }}
+            sx={{ py: { xs: 1.5, lg: 2.5 } }}
           >
             <Stack
               flexDirection="row"
@@ -67,7 +67,9 @@ export default function NotificationItem({
                 />
 
                 <Box>
-                  <Typography sx={{ fontWeight: 600, fontSize: 17 }}>
+                  <Typography
+                    sx={{ fontWeight: 600, fontSize: { xs: 15, lg: 17 } }}
+                  >
                     {sender.fullname}
                   </Typography>
                   <Typography
@@ -83,6 +85,11 @@ export default function NotificationItem({
                 variant={sender.is_follow ? "outlined" : "contained"}
                 color={sender.is_follow ? "secondary" : "primary"}
                 disableElevation
+                sx={{
+                  py: { xs: 0.35, lg: 0.5 },
+                  px: { xs: 1.25, lg: 1.5 },
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
+                }}
               >
                 {sender.is_follow ? "Urmărești" : "Urmărește"}
               </Button>

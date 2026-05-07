@@ -1,6 +1,6 @@
 "use client";
 
-import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState, useCallback } from "react";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
@@ -12,6 +12,8 @@ import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import { UserCounter, UserProfile } from "@/ts/models/user/UserProfile";
 import EditProfileModal from "./edit/EditProfileModal";
 import MenuIcon from "@mui/icons-material/Menu";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useRouter } from "next/navigation";
 
 export type ProfileModuleProps = {
   profile: UserProfile | null;
@@ -69,43 +71,54 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
 
   const { is_business_or_employee, is_own_profile, business_owner } = profile;
 
+  const router = useRouter();
+
   return (
     <Box>
-      <AppBar
-        position="sticky"
-        elevation={0}
+      <Stack
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
         sx={{
           display: { xs: "flex", lg: "none" },
+          position: "sticky",
           top: 0,
-          zIndex: 1100,
+          zIndex: 10,
+          backgroundColor: "background.paper",
+          px: 1,
         }}
       >
-        <Toolbar sx={{ justifyContent: "center", position: "relative" }}>
-          <Typography
-            variant="h6"
+        <IconButton
+          onClick={() => router.back()}
+          disabled={profile.is_own_profile}
+        >
+          <ArrowBackIcon
             sx={{
-              fontWeight: "bold",
-              color: "text.primary",
-              textTransform: "lowercase",
+              fontSize: 27.5,
+              color: profile.is_own_profile ? "transparent" : "text.primary",
             }}
-          >
-            @{profile.username}
-          </Typography>
+          />
+        </IconButton>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: "bold",
+            color: "text.primary",
+            textTransform: "lowercase",
+          }}
+        >
+          @{profile.username}
+        </Typography>
+        <IconButton size="large" onClick={() => {}}>
+          <MenuIcon
+            sx={{
+              fontSize: 27.5,
+              color: "text.primary",
+            }}
+          />
+        </IconButton>
+      </Stack>
 
-          <IconButton
-            edge="end"
-            size="large"
-            sx={{
-              position: "absolute",
-              right: 16,
-              color: "text.primary",
-            }}
-            onClick={() => {}}
-          >
-            <MenuIcon sx={{ fontSize: 27.5 }} />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
       <SocialModal
         open={isSocialModalOpen}
         counters={updatedCounters}

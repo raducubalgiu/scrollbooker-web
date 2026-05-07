@@ -57,18 +57,25 @@ const ExploreDrawer = ({
         sx={{ flexShrink: 0 }}
       >
         <Typography
-          variant="h4"
           fontWeight={700}
-          sx={{ color: "text.primary" }}
+          sx={{ color: "text.primary", fontSize: 30 }}
         >
           ScrollBooker
         </Typography>
+
         <IconButton
           onClick={onCloseDrawer}
-          size="large"
-          sx={{ bgcolor: "background.paper" }}
+          sx={{
+            bgcolor: "background.paper",
+            p: { xs: 1.5, sm: 1.5 },
+          }}
         >
-          <CloseIcon fontSize="large" />
+          <CloseIcon
+            sx={{
+              fontSize: { xs: "1.5rem", sm: "2.1875rem" },
+              color: "text.primary",
+            }}
+          />
         </IconButton>
       </Stack>
 

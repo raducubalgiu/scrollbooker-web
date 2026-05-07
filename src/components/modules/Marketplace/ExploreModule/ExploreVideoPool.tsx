@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { PoolItem } from "./useExplorePlayerPool";
 import { PostUser } from "@/ts/models/social/Post";
 import { PostVideoPlayer } from "./PostVideoPlayer";
+import { useRef } from "react";
 
 type ExploreVideoPoolProps = {
   items: PoolItem[];
@@ -9,6 +10,8 @@ type ExploreVideoPoolProps = {
   user: PostUser | null;
   description: string | null;
   isVideoReview: boolean;
+  onNext: () => void;
+  onPrev: () => void;
 };
 
 export function ExploreVideoPool({
@@ -17,9 +20,40 @@ export function ExploreVideoPool({
   user,
   description,
   isVideoReview,
+  onNext,
+  onPrev,
 }: ExploreVideoPoolProps) {
+  const touchStartY = useRef<number | undefined>(undefined);
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartY.current = e.touches[0]?.clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartY.current === undefined) return;
+
+    const touchEndY = e.changedTouches[0]?.clientY;
+
+    if (touchEndY !== undefined) {
+      const deltaY = touchStartY.current - touchEndY;
+      const swipeThreshold = 50;
+
+      if (deltaY > swipeThreshold) {
+        onNext();
+      } else if (deltaY < -swipeThreshold) {
+        onPrev();
+      }
+    }
+
+    touchStartY.current = undefined;
+  };
+
   return (
-    <Box sx={poolStyles.root}>
+    <Box
+      sx={poolStyles.root}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {items.map((item) => {
         if (!item.post || !item.src) return null;
 

@@ -114,7 +114,7 @@ export default function Modal({
       <ModalTitle title={title} onClose={handleClose} align={align} />
       <DialogContent
         dividers={dividers}
-        sx={{ pb: showFooter ? undefined : 0 }}
+        sx={{ pb: showFooter ? undefined : 0, p: { xs: 0, lg: 2 } }}
       >
         {children}
       </DialogContent>

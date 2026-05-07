@@ -24,12 +24,17 @@ const EmployeeItem = ({ employee }: { employee: BusinessEmployee }) => {
     },
     badgeContent: {
       backgroundColor: "background.paper",
-      px: 1.5,
-      py: 0.5,
+      px: { xs: 1, md: 1.5 },
+      py: { xs: 0.25, md: 0.5 },
       borderRadius: 50,
       boxShadow: 1,
     },
-    avatar: { width: 70, height: 70, border: 1, borderColor: "divider" },
+    avatar: {
+      width: { xs: 55, md: 70 },
+      height: { xs: 55, md: 70 },
+      border: 1,
+      borderColor: "divider",
+    },
   };
 
   return (
@@ -74,7 +79,13 @@ const EmployeeItem = ({ employee }: { employee: BusinessEmployee }) => {
         </Stack>
       </ButtonBase>
 
-      <Button variant="outlined" color="secondary" size="large">
+      <Button
+        variant="outlined"
+        color="secondary"
+        sx={{
+          px: { xs: 1.5, sm: 2.5 },
+        }}
+      >
         Servicii
       </Button>
     </Stack>

@@ -18,7 +18,7 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      px: 1,
+      px: 1.5,
       py: 1.5,
       minHeight: "auto",
       textAlign: "center",
@@ -34,6 +34,11 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       fontWeight: 700,
       fontSize: { xs: 18, sm: 20, md: 25, lg: 30, xl: 35 },
     },
+    divider: {
+      height: { xs: 22.5, lg: 30 },
+      alignSelf: "center",
+      opacity: 0.6,
+    },
   };
 
   return (
@@ -43,7 +48,7 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       justifyContent="center"
       sx={{
         width: "100%",
-        py: { xs: 2, sm: 4, md: 0 },
+        py: { xs: 1, sm: 4, md: 0 },
         px: { xs: 2, sm: 4, md: 0 },
         mt: { xs: 1, md: 2 },
       }}
@@ -58,11 +63,7 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
         </Stack>
       </ListItemButton>
 
-      <Divider
-        orientation="vertical"
-        flexItem
-        sx={{ height: 30, alignSelf: "center", opacity: 0.6 }}
-      />
+      <Divider orientation="vertical" flexItem sx={styles.divider} />
 
       <ListItemButton
         sx={styles.button}
@@ -74,11 +75,7 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
         </Stack>
       </ListItemButton>
 
-      <Divider
-        orientation="vertical"
-        flexItem
-        sx={{ height: 30, alignSelf: "center", opacity: 0.6 }}
-      />
+      <Divider orientation="vertical" flexItem sx={styles.divider} />
 
       <ListItemButton
         sx={styles.button}

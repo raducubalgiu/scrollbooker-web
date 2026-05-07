@@ -23,6 +23,7 @@ import {
 } from "@/ts/models/booking/review/Review";
 import { isEmpty } from "lodash";
 import { useSession } from "next-auth/react";
+import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
 
 type AppointmentDetailsModuleProps = {
   appointment: Appointment;
@@ -163,63 +164,66 @@ const AppointmentDetailsModule = ({
   }, []);
 
   return (
-    <Box sx={styles.container}>
-      <CancelAppointmentModal
-        open={openCancel}
-        onClose={() => setOpenCancel(false)}
-        onCancel={onHandleCancelAppointment}
-        isLoadingCancel={isLoadingCancel}
-      />
-
-      <CreateWrittenReviewModal
-        open={openReview}
-        rating={draftRating}
-        existingReviewText={writtenReview?.review || ""}
-        onClose={() => setOpenReview(false)}
-        onCreateReview={onHandleSaveReview}
-        isLoadingCreateReview={isPendingCreateReview || isPendingUpdateReview}
-      />
-
-      <Box sx={{ minWidth: 0 }}>
-        <AppointmentDetailsHeader
-          status={status}
-          startDate={start_date}
-          totalDuration={total_duration}
-          user={user}
-          canceledReason={canceledReason}
+    <>
+      <HeaderMobile title="" />
+      <Box sx={styles.container}>
+        <CancelAppointmentModal
+          open={openCancel}
+          onClose={() => setOpenCancel(false)}
+          onCancel={onHandleCancelAppointment}
+          isLoadingCancel={isLoadingCancel}
         />
 
-        <AppointmentDetailsProducts
-          products={products}
-          totalPriceWithDiscount={total_price_with_discount}
-          totalPrice={total_price}
-          totalDiscount={total_discount}
+        <CreateWrittenReviewModal
+          open={openReview}
+          rating={draftRating}
+          existingReviewText={writtenReview?.review || ""}
+          onClose={() => setOpenReview(false)}
+          onCreateReview={onHandleSaveReview}
+          isLoadingCreateReview={isPendingCreateReview || isPendingUpdateReview}
         />
 
-        {products.length > 0 && (
-          <AppointmentDetailsActions
+        <Box sx={{ minWidth: 0 }}>
+          <AppointmentDetailsHeader
             status={status}
-            onBookAgain={() => {}}
-            onCancel={() => setOpenCancel(true)}
+            startDate={start_date}
+            totalDuration={total_duration}
+            user={user}
+            canceledReason={canceledReason}
           />
-        )}
 
-        {!isEmpty(products) && isFinished && (
-          <AppointmentDetailsReview
-            writtenReview={writtenReview}
-            hasVideoReview={has_video_review}
-            isCustomer={is_customer}
-            status={status}
-            customerAvatar={customer.avatar}
-            onRatingClick={onHandleRatingClick}
-            onEditReview={onHandleEditReview}
-            onDeleteReview={onHandleDeleteReview}
+          <AppointmentDetailsProducts
+            products={products}
+            totalPriceWithDiscount={total_price_with_discount}
+            totalPrice={total_price}
+            totalDiscount={total_discount}
           />
-        )}
+
+          {products.length > 0 && (
+            <AppointmentDetailsActions
+              status={status}
+              onBookAgain={() => {}}
+              onCancel={() => setOpenCancel(true)}
+            />
+          )}
+
+          {!isEmpty(products) && isFinished && (
+            <AppointmentDetailsReview
+              writtenReview={writtenReview}
+              hasVideoReview={has_video_review}
+              isCustomer={is_customer}
+              status={status}
+              customerAvatar={customer.avatar}
+              onRatingClick={onHandleRatingClick}
+              onEditReview={onHandleEditReview}
+              onDeleteReview={onHandleDeleteReview}
+            />
+          )}
+        </Box>
+
+        <AppointmentDetailsMap business={business} />
       </Box>
-
-      <AppointmentDetailsMap business={business} />
-    </Box>
+    </>
   );
 };
 

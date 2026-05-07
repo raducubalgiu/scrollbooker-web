@@ -5,6 +5,7 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { PostUser } from "@/ts/models/social/Post";
 import { Box, Button, Collapse, Stack, Typography } from "@mui/material";
+import Link from "next/link";
 
 type PostOverlayProps = {
   user: PostUser | undefined;
@@ -65,56 +66,63 @@ const PostOverlay = ({
               <Box
                 sx={{
                   bgcolor: "rgba(255,255,255,0.15)",
-                  backdropFilter: "blur(10px)",
+                  //backdropFilter: "blur(10px)",
                   px: 1.5,
-                  py: 0.5,
+                  py: 1,
                   width: "fit-content",
-                  borderRadius: 5,
+                  borderRadius: 50,
                   border: "1px solid rgba(255,255,255,0.1)",
                 }}
               >
-                <Typography variant="caption" fontWeight={700}>
-                  RECENZIE VIDEO
+                <Typography variant="body2" fontWeight={700}>
+                  Recenzie Video
                 </Typography>
               </Box>
             )}
 
-            <Box>
-              <Typography
-                variant="subtitle1"
-                fontWeight={800}
-                sx={{ lineHeight: 1.2 }}
+            <Box onClick={(e) => e.stopPropagation()}>
+              <Link
+                href={`/profile/${user?.username}`}
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                {user?.fullname}
-              </Typography>
-              <Typography
-                variant="body2"
-                color="primary"
-                sx={{ fontWeight: 600 }}
-              >
-                {user?.profession}
-              </Typography>
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={800}
+                  sx={{ lineHeight: 1.2 }}
+                >
+                  {user?.fullname}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="primary"
+                  sx={{ fontWeight: 600 }}
+                >
+                  {user?.profession}
+                </Typography>
+              </Link>
             </Box>
 
             <Box sx={{ position: "relative" }}>
-              <Collapse in={isExpanded} collapsedSize={40}>
-                <Typography
-                  ref={textRef}
-                  variant="body2"
-                  sx={{
-                    opacity: 0.95,
-                    lineHeight: 1.4,
-                    ...(!isExpanded && {
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                    }),
-                  }}
-                >
-                  {description}
-                </Typography>
-              </Collapse>
+              {description && description?.length && (
+                <Collapse in={isExpanded} collapsedSize={40}>
+                  <Typography
+                    ref={textRef}
+                    variant="body2"
+                    sx={{
+                      opacity: 0.95,
+                      lineHeight: 1.4,
+                      ...(!isExpanded && {
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }),
+                    }}
+                  >
+                    {description}
+                  </Typography>
+                </Collapse>
+              )}
 
               {(showButton || isExpanded) && (
                 <Typography
@@ -139,7 +147,6 @@ const PostOverlay = ({
                 fullWidth
                 sx={{
                   display: { xs: "flex", lg: "none" },
-                  pb: 1,
                 }}
               >
                 Rezervă acum

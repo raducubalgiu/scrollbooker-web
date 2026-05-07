@@ -61,14 +61,19 @@ const AppointmentsModule = ({
 
   return (
     <>
-      <Box
+      <Stack
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="center"
         sx={{
+          display: { xs: "block", lg: "none" },
           position: "sticky",
+          borderBottom: 1,
+          borderColor: "divider",
           top: 0,
           zIndex: 10,
           backgroundColor: "background.paper",
-          px: { xs: 1.5, lg: 3 },
-          pt: { xs: 1, sm: 3 },
+          p: 1,
         }}
       >
         <Typography
@@ -76,23 +81,44 @@ const AppointmentsModule = ({
           noWrap
           component="div"
           fontWeight={700}
-          fontSize={{ xs: 20, lg: 25 }}
+          fontSize={{ xs: 17, lg: 25 }}
+          sx={{ textAlign: { xs: "center", sm: "left" } }}
+        >
+          Rezervări și abonamente
+        </Typography>
+      </Stack>
+      <Box
+        sx={{
+          display: { xs: "none", lg: "block" },
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+          backgroundColor: "background.paper",
+          px: { xs: 1.5, lg: 3 },
+          pt: { xs: 1.5, sm: 3 },
+        }}
+      >
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          fontWeight={700}
+          fontSize={{ xs: 17, lg: 25 }}
           sx={{ mb: { xs: 1.5, md: 2.5 } }}
         >
           Rezervări și abonamente
         </Typography>
-
-        <Stack flexDirection="row" alignItems="center" gap={1}>
-          <Button variant="contained" color="primary" disableElevation>
-            Rezervări
-          </Button>
-          <Button variant="outlined" color="secondary" disableElevation>
-            Abonamente
-          </Button>
-        </Stack>
-
-        <Divider sx={{ mt: { xs: 1.5, md: 2.5 }, mb: 1.5 }} />
+        <Divider sx={{ mt: { xs: 2, md: 2.5 }, mb: 1.5 }} />
       </Box>
+
+      <Stack flexDirection="row" alignItems="center" gap={1} m={1.5}>
+        <Button variant="contained" color="primary" disableElevation>
+          Rezervări
+        </Button>
+        <Button variant="outlined" color="secondary" disableElevation>
+          Abonamente
+        </Button>
+      </Stack>
 
       {isLoading && <AppointmentCardSkeleton />}
 

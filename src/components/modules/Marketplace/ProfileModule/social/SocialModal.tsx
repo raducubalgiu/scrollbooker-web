@@ -171,12 +171,19 @@ const SocialModal = ({
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "80vh",
-          px: 2,
+          height: { xs: "100vh", lg: "80vh" },
+          px: { xs: 0, lg: 2 },
         }}
       >
         <Box sx={styles.container}>
-          <Tabs value={currentTab} onChange={handleChange} sx={styles.tabs}>
+          <Tabs
+            value={currentTab}
+            onChange={handleChange}
+            sx={styles.tabs}
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
+          >
             {tabs.map((tab) => {
               return (
                 <Tab
@@ -187,7 +194,7 @@ const SocialModal = ({
                       {tab.label} {counters[tab.key]}
                     </Typography>
                   }
-                  sx={{ minWidth: 200 }}
+                  sx={{ minWidth: { xs: 50, lg: 200 } }}
                 />
               );
             })}
@@ -225,9 +232,9 @@ const styles = {
       minHeight: 56,
     },
   },
-  label: { fontSize: 20, fontWeight: 600 },
+  label: { fontSize: { xs: 16, lg: 20 }, fontWeight: 600 },
   tabsContent: {
-    mx: 1,
+    mx: { xs: 0, lg: 1 },
     flex: 1,
     overflowY: "auto",
     pt: 0,

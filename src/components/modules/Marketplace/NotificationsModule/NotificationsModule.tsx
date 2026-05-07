@@ -69,7 +69,7 @@ const NotificationsModule = ({
           noWrap
           component="div"
           fontWeight={700}
-          fontSize={{ xs: 20, lg: 25 }}
+          fontSize={{ xs: 17, lg: 25 }}
           sx={{ textAlign: { xs: "center", sm: "left" } }}
         >
           Notificări
