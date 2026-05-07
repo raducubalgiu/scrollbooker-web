@@ -9,10 +9,6 @@ import {
 } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 
-type BottomBarProps = {
-  username: string | undefined;
-};
-
 import HomeIcon from "@mui/icons-material/Home";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -22,6 +18,10 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+
+type BottomBarProps = {
+  username: string | undefined;
+};
 
 export default function BottomBar({ username }: BottomBarProps) {
   const theme = useTheme();
