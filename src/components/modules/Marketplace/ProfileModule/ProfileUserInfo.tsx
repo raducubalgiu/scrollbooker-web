@@ -98,8 +98,8 @@ const ProfileUserInfo = ({
     fullName: {
       fontWeight: 600,
       fontSize: {
-        xs: 18,
-        sm: 20,
+        xs: 17,
+        sm: 18,
         md: 24,
         lg: 30,
         xl: 32,
@@ -132,6 +132,7 @@ const ProfileUserInfo = ({
         flexDirection="row"
         alignItems="center"
         sx={{ width: "100%", minWidth: 0 }}
+        gap={{ xs: 2, lg: 3 }}
       >
         <UserAvatar
           isBusinessOrEmployee={is_business_or_employee}
@@ -140,7 +141,7 @@ const ProfileUserInfo = ({
           size={{ xs: "lg", md: "xxl" }}
         />
 
-        <Box sx={{ ml: 3, width: "100%", minWidth: 0 }}>
+        <Box sx={{ width: "100%", minWidth: 0 }}>
           <Stack
             flexDirection="row"
             alignItems="center"
@@ -170,6 +171,7 @@ const ProfileUserInfo = ({
                 flexShrink: 2,
                 minWidth: 0,
                 fontSize: { xs: "0.875rem", sm: "1rem" },
+                display: { xs: "none", lg: "block" },
               }}
             >
               @{username}

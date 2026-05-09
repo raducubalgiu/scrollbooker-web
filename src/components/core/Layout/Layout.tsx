@@ -202,7 +202,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         component="main"
         sx={{
           ...styles.mainContent,
-          p: { xs: 0, md: isSpecialPage ? 0 : 2.5 },
+          p: { xs: isAdminPage ? 2.5 : 0, md: isSpecialPage ? 0 : 2.5 },
+          pb: { xs: "65px", lg: 0 },
         }}
       >
         {children}

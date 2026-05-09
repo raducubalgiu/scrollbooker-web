@@ -4,7 +4,7 @@ import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import ProfilePostsTab from "./ProfilePostsTab";
 import ProfileProductsTab from "./ProfileProductsTab";
 import ProfileEmployeesTab from "./ProfileEmployeesTab";
@@ -57,7 +57,7 @@ const getTabs = (
   const Info: ProfileTabType = {
     route: ProfileTabEnum.INFO,
     label: "Info",
-    icon: <LocationOnOutlinedIcon sx={{ fontSize: 30 }} />,
+    icon: <FmdGoodOutlinedIcon sx={{ fontSize: 30 }} />,
   };
 
   return [
@@ -179,7 +179,7 @@ const styles = {
     width: "100%",
     bgcolor: "background.paper",
     position: { xs: "sticky", lg: "relative" },
-    top: { xs: 56, lg: "auto" },
+    top: { xs: 50, lg: "auto" },
     zIndex: 1000,
     mt: { md: 0, lg: 5 },
     borderTop: 1,

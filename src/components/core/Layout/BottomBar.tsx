@@ -118,7 +118,8 @@ export default function BottomBar({ username }: BottomBarProps) {
         }}
         sx={{
           backgroundColor: getBgColor(),
-          //height: 65,
+          height: 65,
+          pb: "safe-area-inset-bottom",
           "& .MuiBottomNavigationAction-root": {
             minWidth: 0,
             color: getInactiveColor(),

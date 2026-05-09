@@ -57,8 +57,8 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
         onClick={() => onClick(SocialTabEnum.REVIEWS)}
       >
         <Stack alignItems="center" spacing={0.5}>
-          <Typography sx={styles.title}>Recenzii</Typography>
           <Typography sx={styles.counter}>{ratings_count}</Typography>
+          <Typography sx={styles.title}>Recenzii</Typography>
         </Stack>
       </ListItemButton>
 
@@ -69,8 +69,8 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
         onClick={() => onClick(SocialTabEnum.FOLLOWERS)}
       >
         <Stack alignItems="center" spacing={0.5}>
-          <Typography sx={styles.title}>Urmăritori</Typography>
           <Typography sx={styles.counter}>{followers_count}</Typography>
+          <Typography sx={styles.title}>Urmăritori</Typography>
         </Stack>
       </ListItemButton>
 
@@ -81,8 +81,8 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
         onClick={() => onClick(SocialTabEnum.FOLLOWINGS)}
       >
         <Stack alignItems="center" spacing={0.5}>
-          <Typography sx={styles.title}>Urmărești</Typography>
           <Typography sx={styles.counter}>{followings_count}</Typography>
+          <Typography sx={styles.title}>Urmărești</Typography>
         </Stack>
       </ListItemButton>
     </Stack>

@@ -1,6 +1,14 @@
 "use client";
 
-import { Box, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import React, { useEffect, useState, useCallback } from "react";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
@@ -11,9 +19,10 @@ import ScheduleModal from "./ScheduleModal";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import { UserCounter, UserProfile } from "@/ts/models/user/UserProfile";
 import EditProfileModal from "./edit/EditProfileModal";
-import MenuIcon from "@mui/icons-material/Menu";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useRouter } from "next/navigation";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
+import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
+import ProfileHeaderMobile from "./ProfileHeaderMobile";
 
 export type ProfileModuleProps = {
   profile: UserProfile | null;
@@ -41,6 +50,7 @@ const emptyCounters: UserCounter = {
 };
 
 const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [openScheduleModal, setOpenScheduleModal] = useState<boolean>(false);
   const [openEditProfileModal, setOpenEditProfileModal] =
     useState<boolean>(false);
@@ -71,55 +81,72 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
 
   const { is_business_or_employee, is_own_profile, business_owner } = profile;
 
-  const router = useRouter();
-
   return (
     <Box>
-      <Stack
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{
-          display: { xs: "flex", lg: "none" },
-          position: "sticky",
-          top: 0,
-          zIndex: 10,
-          backgroundColor: "background.paper",
-          px: 1,
-          borderBottom: 1,
-          borderColor: "divider",
+      <ProfileHeaderMobile
+        username={profile.username}
+        isOwnProfile={profile.is_own_profile}
+        onSetIsMenuOpen={() => setIsMenuOpen(true)}
+      />
+
+      <Drawer
+        anchor="bottom"
+        open={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        sx={{ display: { xs: "block", lg: "none" } }}
+        slotProps={{
+          paper: {
+            sx: {
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+              backgroundColor: "background.paper",
+              paddingBottom: 2,
+            },
+          },
         }}
       >
-        <IconButton
-          onClick={() => router.back()}
-          disabled={profile.is_own_profile}
-        >
-          <ArrowBackIcon
+        <Box sx={{ width: "100%", pb: 3 }}>
+          <Box
             sx={{
-              fontSize: 27.5,
-              color: profile.is_own_profile ? "transparent" : "text.primary",
+              width: 40,
+              height: 4,
+              bgcolor: "divider",
+              borderRadius: 2,
+              mx: "auto",
+              mb: 2,
             }}
           />
-        </IconButton>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: "bold",
-            color: "text.primary",
-            textTransform: "lowercase",
-          }}
-        >
-          @{profile.username}
-        </Typography>
-        <IconButton size="large" onClick={() => {}}>
-          <MenuIcon
-            sx={{
-              fontSize: 27.5,
-              color: "text.primary",
-            }}
-          />
-        </IconButton>
-      </Stack>
+
+          <List>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => {}}>
+                <ListItemIcon>
+                  <VideocamOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Creeaza o postare" />
+              </ListItemButton>
+            </ListItem>
+
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => {}}>
+                <ListItemIcon>
+                  <BusinessCenterOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Afacerea mea" />
+              </ListItemButton>
+            </ListItem>
+
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => {}}>
+                <ListItemIcon>
+                  <SettingsOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Setari" />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </Box>
+      </Drawer>
 
       <SocialModal
         open={isSocialModalOpen}

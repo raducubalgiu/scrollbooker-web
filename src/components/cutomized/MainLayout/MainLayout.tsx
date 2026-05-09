@@ -28,7 +28,7 @@ export default function MainLayout({
         sx={{ mb: 2.5 }}
       >
         <Box>
-          <Typography fontWeight={600} variant="h4">
+          <Typography fontWeight={700} variant="h4">
             {title}
           </Typography>
           {description && (

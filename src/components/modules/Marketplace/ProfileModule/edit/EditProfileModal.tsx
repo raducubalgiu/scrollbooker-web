@@ -90,7 +90,7 @@ const EditProfileModal = ({
             />
           </Stack>
 
-          <Stack sx={{ mt: 2 }} gap={2.5}>
+          <Stack sx={{ mt: 2, p: 2.5 }} gap={2.5}>
             <Stack flexDirection="row" alignItems="center" gap={1} mb={2}>
               <Typography variant="h5" fontWeight={600}>
                 {profile.fullname}
