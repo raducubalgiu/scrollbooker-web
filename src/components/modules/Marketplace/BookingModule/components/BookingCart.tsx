@@ -8,6 +8,7 @@ type BookingCartProps = {
   selectedItems: SelectedBookingItem[];
   currentStep: BookingStepEnum;
   isNextDisabled: boolean;
+  isLoadingNext: boolean;
   onNext: () => void;
   onBack: () => void;
 };
@@ -15,6 +16,7 @@ type BookingCartProps = {
 const BookingCart = ({
   selectedItems,
   isNextDisabled,
+  isLoadingNext,
   currentStep,
   onBack,
   onNext,
@@ -157,7 +159,8 @@ const BookingCart = ({
               transition: "all 0.3s ease-in-out",
             }}
             onClick={onNext}
-            disabled={isNextDisabled}
+            loading={isLoadingNext}
+            disabled={isNextDisabled || isLoadingNext}
           >
             {isLastStep ? "Finalizează" : "Continuă"}
           </Button>

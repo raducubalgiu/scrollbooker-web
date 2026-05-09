@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, put } from "@/utils/requests";
+import { get, post, put } from "@/utils/requests";
 import { omit } from "lodash";
-import { Appointment } from "@/ts/models/booking/appointment/Appointment";
+import {
+  Appointment,
+  ScrollBookerAppointmentCreate,
+} from "@/ts/models/booking/appointment/Appointment";
 
 export const GET = async (req: NextRequest) => {
   const page = req.nextUrl.searchParams.get("page");
@@ -40,6 +43,19 @@ export const GET = async (req: NextRequest) => {
 
         return `/appointments${params.length ? `?${params.join("&")}` : ""}`;
       })(),
+    })
+  ).data;
+
+  return NextResponse.json(response);
+};
+
+export const POST = async (req: NextRequest) => {
+  const data: ScrollBookerAppointmentCreate = await req.json();
+
+  const response = (
+    await post({
+      url: `/appointments/create-scrollbooker-appointment`,
+      data,
     })
   ).data;
 

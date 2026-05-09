@@ -13,6 +13,11 @@ import BookingCart from "./components/BookingCart";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { sumBy } from "lodash";
 import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
+import {
+  Appointment,
+  ScrollBookerAppointmentCreate,
+} from "@/ts/models/booking/appointment/Appointment";
+import { useMutate } from "@/hooks/useHttp";
 
 type BookingModuleProps = {
   businessId: number;
@@ -46,6 +51,8 @@ const BookingModule = ({
   employeeId,
   businessEmployees,
 }: BookingModuleProps) => {
+  const router = useRouter();
+
   const [selectedItems, setSelectedItems] = useState<SelectedBookingItem[]>([]);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
     businessEmployees[0]?.id ?? null
@@ -56,7 +63,19 @@ const BookingModule = ({
     BookingStepEnum.SERVICES
   );
 
-  const router = useRouter();
+  const { mutate: handleSaveAppointment, isPending } = useMutate<
+    ScrollBookerAppointmentCreate,
+    Appointment
+  >({
+    key: ["create-scrollbooker-appointment"],
+    url: "/api/appointments",
+    method: "POST",
+    options: {
+      onSuccess: (appointment: Appointment) => {
+        router.push(`/appointments/${appointment.id}`);
+      },
+    },
+  });
 
   const handleSelectItem = useCallback((item: SelectedBookingItem) => {
     setSelectedItems((prev) => {
@@ -69,13 +88,39 @@ const BookingModule = ({
   }, []);
 
   const handleNext = useCallback(() => {
-    setCurrentStep((prev) => {
-      if (prev === BookingStepEnum.SERVICES && employeeId) {
-        return BookingStepEnum.DATE_AND_HOUR;
-      }
-      return prev + 1;
-    });
-  }, [employeeId]);
+    if (currentStep === BookingStepEnum.CONFIRM) {
+      const { start_date_utc, end_date_utc } = selectedTimeSlot || {};
+
+      if (!start_date_utc || !end_date_utc) return;
+
+      const body: ScrollBookerAppointmentCreate = {
+        start_date: start_date_utc,
+        end_date: end_date_utc,
+        product_variants: selectedItems.map((item) => {
+          return {
+            id: item.variantId,
+            offering: { user_id: item.offering.user_id },
+          };
+        }),
+        payment_currency_id: 1,
+      };
+
+      handleSaveAppointment(body);
+    } else {
+      setCurrentStep((prev) => {
+        if (prev === BookingStepEnum.SERVICES && employeeId) {
+          return BookingStepEnum.DATE_AND_HOUR;
+        }
+        return prev + 1;
+      });
+    }
+  }, [
+    currentStep,
+    selectedTimeSlot,
+    selectedItems,
+    employeeId,
+    handleSaveAppointment,
+  ]);
 
   const handleBack = useCallback(() => {
     setCurrentStep((prev) => {
@@ -178,6 +223,7 @@ const BookingModule = ({
             selectedItems={selectedItems}
             currentStep={currentStep}
             isNextDisabled={isNextDisabled}
+            isLoadingNext={isPending}
             onNext={handleNext}
             onBack={handleBack}
           />

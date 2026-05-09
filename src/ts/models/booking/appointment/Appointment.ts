@@ -109,3 +109,19 @@ export const AppointmentUtils = {
     }
   },
 };
+
+export interface AppointmentProductOfferingCreate {
+  user_id: number;
+}
+
+export interface AppointmentProductVariantCreate {
+  id: number;
+  offering: AppointmentProductOfferingCreate;
+}
+
+export interface ScrollBookerAppointmentCreate {
+  start_date: string;
+  end_date: string;
+  product_variants: AppointmentProductVariantCreate[];
+  payment_currency_id: number;
+}
