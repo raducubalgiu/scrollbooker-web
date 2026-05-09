@@ -4,7 +4,7 @@ import { useCustomQuery } from "@/hooks/useHttp";
 import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { Box } from "@mui/material";
 import React, { memo, useMemo } from "react";
-import BookingSidebar from "../../BookingModule/components/BookingSidebar";
+import BookingSidebar from "../../BookingModule/components/BookingCart";
 import ProductsStep from "../../BookingModule/steps/Products/ProductsStep";
 import { useScrollSync } from "../../BookingModule/useScrollSync";
 

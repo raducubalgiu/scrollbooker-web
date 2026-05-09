@@ -1,18 +1,24 @@
-import { AvailableTimeslotsResponse } from "@/ts/models/booking/availability/AvailableTimeSlot";
+import {
+  AvailableTimeSlot,
+  AvailableTimeslotsResponse,
+} from "@/ts/models/booking/availability/AvailableTimeSlot";
 import { alpha, Box, Skeleton, Stack, Theme, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
-import dayjs from "@/lib/dayjs";
 import React from "react";
 import AvailableSlot from "./AvailableSlot";
 
 type AvailabilityTimeSlotsProps = {
   data: AvailableTimeslotsResponse | undefined;
   isLoading: boolean;
+  selectedTimeSlot: AvailableTimeSlot | null;
+  onSelectTimeSlot: (slot: AvailableTimeSlot) => void;
 };
 
 const AvailabilityTimeSlots = ({
   data,
   isLoading,
+  selectedTimeSlot,
+  onSelectTimeSlot,
 }: AvailabilityTimeSlotsProps) => {
   const { is_closed, available_slots } = data || {};
 
@@ -45,7 +51,11 @@ const AvailabilityTimeSlots = ({
         available_slots?.map((slot) => (
           <AvailableSlot
             key={slot.start_date_locale}
-            time={dayjs.utc(slot.start_date_locale).format("HH:mm")}
+            slot={slot}
+            isSelected={
+              selectedTimeSlot?.start_date_utc === slot.start_date_utc
+            }
+            onSelectSlot={onSelectTimeSlot}
           />
         ))}
     </Box>

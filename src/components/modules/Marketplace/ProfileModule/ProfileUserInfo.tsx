@@ -89,42 +89,14 @@ const ProfileUserInfo = ({
         is_business_or_employee={is_business_or_employee}
         is_follow={is_follow}
         onUpdateFollows={onUpdateFollows}
-        onBookNow={() => router.push(`/booking/${profile.business_id}`)}
+        onBookNow={() =>
+          router.push(
+            `/booking/${profile.business_id}?businessOwnerId=${profile.business_owner?.id}&employeeId=${profile.id}`
+          )
+        }
       />
     );
   }, [is_business_or_employee, is_own_profile, is_follow, id, onUpdateFollows]);
-
-  const styles = {
-    fullName: {
-      fontWeight: 600,
-      fontSize: {
-        xs: 17,
-        sm: 18,
-        md: 24,
-        lg: 30,
-        xl: 32,
-      },
-    },
-    star: {
-      mr: 0.5,
-      fontWeight: 600,
-      fontSize: {
-        sm: 20,
-        md: 25,
-        lg: 30,
-        xl: 32,
-      },
-    },
-    rating: {
-      fontWeight: { xs: 800, lg: 600 },
-      fontSize: {
-        sm: 17,
-        md: 20,
-        lg: 25,
-        xl: 28,
-      },
-    },
-  };
 
   return (
     <Box sx={{ px: { xs: 2, lg: 0 }, pb: { xs: 2, lg: 0 } }}>
@@ -394,3 +366,35 @@ const ProfileUserInfo = ({
 };
 
 export default ProfileUserInfo;
+
+const styles = {
+  fullName: {
+    fontWeight: 600,
+    fontSize: {
+      xs: 17,
+      sm: 18,
+      md: 24,
+      lg: 30,
+      xl: 32,
+    },
+  },
+  star: {
+    mr: 0.5,
+    fontWeight: 600,
+    fontSize: {
+      sm: 20,
+      md: 25,
+      lg: 30,
+      xl: 32,
+    },
+  },
+  rating: {
+    fontWeight: { xs: 800, lg: 600 },
+    fontSize: {
+      sm: 17,
+      md: 20,
+      lg: 25,
+      xl: 28,
+    },
+  },
+};

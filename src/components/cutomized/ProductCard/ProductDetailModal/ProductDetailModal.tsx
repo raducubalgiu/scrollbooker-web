@@ -1,23 +1,52 @@
 import Modal from "@/components/core/Modal/Modal";
+import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingModule/BookingModule";
 import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
-import { formatPrice } from "@/utils/formatPrice";
-import { Box, Button, Chip, Stack, Tooltip, Typography } from "@mui/material";
-import React from "react";
+import { Box, Chip, Stack, Tooltip, Typography } from "@mui/material";
+import { minBy } from "lodash";
+import React, { ChangeEvent, useState } from "react";
+import ProductDetailFooter from "./ProductDetailFooter";
+import ProductDetailVariantsOptions from "./ProductDetailVariantsOptions";
 
 type ProductDetailModalProps = {
   open: boolean;
   product: Product | null;
   onClose: () => void;
+  onAdd: (item: SelectedBookingItem) => void;
 };
 
 const ProductDetailModal = ({
   product,
   open,
   onClose,
+  onAdd,
 }: ProductDetailModalProps) => {
-  const durationText = product
-    ? ProductUtils.getDurationText(product.starting_duration)
-    : "";
+  const [selectedVariant, setSelectedVariant] = useState(
+    product?.variants[0]?.id || ""
+  );
+
+  const currentVariant = product?.variants.find(
+    (v) => v.id === Number(selectedVariant)
+  );
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSelectedVariant(event.target.value);
+  };
+
+  const bestOffering = minBy(currentVariant?.offerings, "price_with_discount");
+
+  const handleAddClick = () => {
+    if (!product || !currentVariant || !bestOffering) return;
+
+    onAdd({
+      productId: product.id,
+      variantId: currentVariant.id,
+      variantDuration: currentVariant.duration,
+      offering: bestOffering,
+      productName: product.name,
+      variantName: currentVariant.name,
+    });
+    onClose();
+  };
 
   return (
     <Modal
@@ -26,9 +55,16 @@ const ProductDetailModal = ({
       maxWidth="md"
       fullWidth
       dividers={false}
+      customFooter={
+        <ProductDetailFooter
+          price={currentVariant?.starting_price_with_discount}
+          durationText={product ? ProductUtils.getGlobalDuration(product) : ""}
+          onHandleAdd={handleAddClick}
+        />
+      }
     >
       <Stack p={2.5}>
-        <Typography variant="h4" fontWeight={500} mb={2.5}>
+        <Typography variant="h2" fontWeight={600} mb={2.5}>
           {product?.name}
         </Typography>
         {product?.description && (
@@ -73,42 +109,14 @@ const ProductDetailModal = ({
               </Box>
             );
           })}
-        </Stack>
-        {/* Here we need to include the variants */}
-        <Stack
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Stack spacing={0.5}>
-            <Stack flexDirection="row" alignItems="center" gap={1}>
-              <Typography variant="h5" fontWeight={600}>
-                {formatPrice(product?.starting_price_with_discount)} RON
-              </Typography>
-              {product && product.starting_discount > 0 && (
-                <>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ textDecoration: "line-through" }}
-                  >
-                    {formatPrice(product?.starting_price)}
-                  </Typography>
-                  <Typography fontWeight={600} color="error.main">
-                    (-{product?.starting_discount}%)
-                  </Typography>
-                </>
-              )}
-            </Stack>
-            <Typography color="text.secondary">{durationText}</Typography>
-          </Stack>
-          <Button
-            variant="contained"
-            disableElevation
-            sx={{ py: 1.75, px: 3, fontSize: 18, fontWeight: 600 }}
-          >
-            Adaugă
-          </Button>
+
+          {(product?.variants?.length ?? 0) > 1 && (
+            <ProductDetailVariantsOptions
+              selectedVariantId={selectedVariant}
+              variants={product?.variants ?? []}
+              onHandleChange={handleChange}
+            />
+          )}
         </Stack>
       </Stack>
     </Modal>

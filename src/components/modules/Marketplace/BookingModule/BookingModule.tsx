@@ -1,18 +1,24 @@
 "use client";
 
-import { Box, Container, Typography } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import { Box, Container, SelectChangeEvent, Typography } from "@mui/material";
+import React, { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import BookingAppBar from "./components/BookingAppBar";
-import BookingSidebar from "./components/BookingSidebar";
 import ProductsStep from "./steps/Products/ProductsStep";
 import AvailabilityStep from "./steps/Availability/AvailabilityStep";
 import BookingBreadcrumbs from "./components/BookingBreadcrumbs";
 import Specialists from "./steps/Specialists/Specialists";
+import { ProductOffering } from "@/ts/models/booking/product/Product";
+import BookingCart from "./components/BookingCart";
+import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
+import { sumBy } from "lodash";
+import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
 
 type BookingModuleProps = {
   businessId: number;
-  userId: number | null;
+  businessOwnerId: number;
+  employeeId: number | null;
+  businessEmployees: BusinessEmployee[];
 };
 
 const SCROLL_OFFSET = 180;
@@ -25,26 +31,101 @@ export enum BookingStepEnum {
   CONFIRM = 3,
 }
 
-const BookingModule = ({ businessId, userId }: BookingModuleProps) => {
-  const router = useRouter();
+export interface SelectedBookingItem {
+  productId: number;
+  variantId: number;
+  variantDuration: number;
+  offering: ProductOffering;
+  productName: string;
+  variantName: string;
+}
 
+const BookingModule = ({
+  businessId,
+  businessOwnerId,
+  employeeId,
+  businessEmployees,
+}: BookingModuleProps) => {
+  const [selectedItems, setSelectedItems] = useState<SelectedBookingItem[]>([]);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
+    businessEmployees[0]?.id ?? null
+  );
+  const [selectedTimeSlot, setSelectedTimeSlot] =
+    useState<AvailableTimeSlot | null>(null);
   const [currentStep, setCurrentStep] = useState<BookingStepEnum>(
     BookingStepEnum.SERVICES
   );
 
-  const handleNext = () => setCurrentStep((prev) => prev + 1);
-  const handleBack = () => setCurrentStep((prev) => prev - 1);
+  const router = useRouter();
 
-  const stepContent = useMemo(() => {
+  const handleSelectItem = useCallback((item: SelectedBookingItem) => {
+    setSelectedItems((prev) => {
+      const exists = prev.find((i) => i.productId === item.productId);
+      if (exists) {
+        return prev.filter((i) => i.productId !== item.productId);
+      }
+      return [...prev, item];
+    });
+  }, []);
+
+  const handleNext = useCallback(() => {
+    setCurrentStep((prev) => {
+      if (prev === BookingStepEnum.SERVICES && employeeId) {
+        return BookingStepEnum.DATE_AND_HOUR;
+      }
+      return prev + 1;
+    });
+  }, [employeeId]);
+
+  const handleBack = useCallback(() => {
+    setCurrentStep((prev) => {
+      if (prev === BookingStepEnum.DATE_AND_HOUR && employeeId) {
+        return BookingStepEnum.SERVICES;
+      }
+      return prev - 1;
+    });
+  }, [employeeId]);
+
+  const handleChangeEmployeeId = useCallback(
+    (event: SelectChangeEvent<number>) => {
+      setSelectedEmployeeId(Number(event.target.value));
+    },
+    []
+  );
+
+  const handleSelectSlot = useCallback((slot: AvailableTimeSlot) => {
+    setSelectedTimeSlot(slot);
+  }, []);
+
+  const renderStepContent = () => {
     switch (currentStep) {
       case BookingStepEnum.SERVICES:
         return (
-          <ProductsStep businessId={businessId} scrollOffset={SCROLL_OFFSET} />
+          <ProductsStep
+            businessId={businessId}
+            selectedItems={selectedItems}
+            scrollOffset={SCROLL_OFFSET}
+            onAdd={handleSelectItem}
+          />
         );
       case BookingStepEnum.SPECIALISTS:
-        return <Specialists />;
+        return (
+          <Specialists
+            selectedItems={selectedItems}
+            employees={businessEmployees}
+            selectedEmployeeId={selectedEmployeeId}
+            onChangeSelectedEmployeeId={handleChangeEmployeeId}
+          />
+        );
       case BookingStepEnum.DATE_AND_HOUR:
-        return <AvailabilityStep />;
+        return (
+          <AvailabilityStep
+            userId={selectedEmployeeId ?? businessOwnerId}
+            slotDuration={sumBy(selectedItems, "variantDuration")}
+            selectedTimeSlot={selectedTimeSlot}
+            onSelectTimeSlot={handleSelectSlot}
+          />
+        );
       case BookingStepEnum.CONFIRM:
         return (
           <Box sx={{ minWidth: 0 }}>
@@ -56,17 +137,32 @@ const BookingModule = ({ businessId, userId }: BookingModuleProps) => {
       default:
         return null;
     }
-  }, [currentStep, businessId]);
+  };
+
+  const isNextDisabled = useMemo(() => {
+    switch (currentStep) {
+      case BookingStepEnum.SERVICES:
+        return selectedItems.length === 0;
+
+      case BookingStepEnum.SPECIALISTS:
+        return selectedEmployeeId === null;
+
+      case BookingStepEnum.DATE_AND_HOUR:
+        return selectedTimeSlot === null;
+
+      case BookingStepEnum.CONFIRM:
+        return false;
+
+      default:
+        return true;
+    }
+  }, [currentStep, selectedItems, selectedEmployeeId, selectedTimeSlot]);
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-      }}
-    >
+    <Box sx={{ minHeight: "100vh" }}>
       <BookingAppBar onBack={() => router.back()} />
       <Container maxWidth="xl">
-        <BookingBreadcrumbs currentStep={currentStep} />
+        <BookingBreadcrumbs currentStep={currentStep} employeeId={employeeId} />
 
         <Box
           sx={{
@@ -76,10 +172,12 @@ const BookingModule = ({ businessId, userId }: BookingModuleProps) => {
             alignItems: "start",
           }}
         >
-          <Box>{stepContent}</Box>
+          <Box>{renderStepContent()}</Box>
 
-          <BookingSidebar
+          <BookingCart
+            selectedItems={selectedItems}
             currentStep={currentStep}
+            isNextDisabled={isNextDisabled}
             onNext={handleNext}
             onBack={handleBack}
           />

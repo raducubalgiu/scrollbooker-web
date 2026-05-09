@@ -9,11 +9,21 @@ import AvailabilityHeader from "./AvailabilityHeader";
 import AvailabilityTimeSlots from "./AvailabilityTimeSlots";
 import { useCalendarNavigation } from "./useCalendarNavigation";
 import { useAvailabilityData } from "./useAvailabilityData";
+import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
 
-const USER_ID = 13;
-const SLOT_DURATION = 30;
+type AvailabilityStepProps = {
+  userId: number;
+  slotDuration: number;
+  selectedTimeSlot: AvailableTimeSlot | null;
+  onSelectTimeSlot: (slot: AvailableTimeSlot) => void;
+};
 
-const AvailabilityStep = () => {
+const AvailabilityStep = ({
+  userId,
+  slotDuration,
+  selectedTimeSlot,
+  onSelectTimeSlot,
+}: AvailabilityStepProps) => {
   const {
     activeDate,
     setActiveDate,
@@ -27,7 +37,7 @@ const AvailabilityStep = () => {
   } = useCalendarNavigation(dayjs());
 
   const { timeslots, isLoadingSlots, isLoadingDays, availableDaysSet } =
-    useAvailabilityData(USER_ID, SLOT_DURATION, activeDate, maxDate);
+    useAvailabilityData(userId, slotDuration, activeDate, maxDate);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -54,7 +64,12 @@ const AvailabilityStep = () => {
         availableDaysSet={availableDaysSet}
       />
 
-      <AvailabilityTimeSlots data={timeslots} isLoading={isLoadingSlots} />
+      <AvailabilityTimeSlots
+        data={timeslots}
+        isLoading={isLoadingSlots}
+        selectedTimeSlot={selectedTimeSlot}
+        onSelectTimeSlot={onSelectTimeSlot}
+      />
     </Box>
   );
 };

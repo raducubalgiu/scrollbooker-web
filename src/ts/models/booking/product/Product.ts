@@ -54,6 +54,28 @@ export interface Product {
 }
 
 export const ProductUtils = {
+  getGlobalDuration(product: Product): string {
+    const variants = product.variants || [];
+
+    if (variants.length === 0) {
+      return this.getDurationText(product.starting_duration || 0);
+    }
+
+    if (variants.length === 1) {
+      return this.getDurationText(variants[0]?.duration ?? 0);
+    }
+
+    const durations = variants.map((v) => v.duration);
+    const minDuration = Math.min(...durations);
+    const maxDuration = Math.max(...durations);
+
+    if (minDuration === maxDuration) {
+      return this.getDurationText(minDuration);
+    }
+
+    return `${this.getDurationText(minDuration)} - ${this.getDurationText(maxDuration)}`;
+  },
+
   getDurationText(minutes: number): string {
     if (minutes === 0) return "0min";
 
@@ -67,7 +89,7 @@ export const ProductUtils = {
   },
 
   getFiltersSummary(product: Product): string {
-    const durationText = this.getDurationText(product.starting_duration);
+    const durationText = this.getGlobalDuration(product);
 
     const filterParts = product.filters
       .map((filter) => {

@@ -20,6 +20,7 @@ type ModalPropsType = DialogProps & {
   actions?: ActionButtonType[];
   dividers?: boolean;
   align?: "center" | "left";
+  customFooter?: React.ReactNode;
 };
 
 type ModalTitlePropsType = {
@@ -92,6 +93,7 @@ export default function Modal({
   dividers = true,
   fullScreen,
   align = "left",
+  customFooter,
   ...others
 }: ModalPropsType) {
   const showFooter = actions.length > 0;
@@ -119,6 +121,7 @@ export default function Modal({
         {children}
       </DialogContent>
       {showFooter && <ModalFooter actions={actions} />}
+      {customFooter && <DialogActions>{customFooter}</DialogActions>}
     </Dialog>
   );
 }

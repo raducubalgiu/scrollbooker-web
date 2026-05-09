@@ -1,19 +1,27 @@
 "use client";
 
 import { Box, Stack, Typography } from "@mui/material";
-import React, { memo, useMemo } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import { BookingTabs } from "./BookingTabs";
 import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
-import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
+import {
+  BusinessProductsResponse,
+  Product,
+} from "@/ts/models/booking/product/Product";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { useScrollSync } from "../../useScrollSync";
 import ProductsStepSkeleton from "./ProductsStepSkeleton";
+import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
+import { SelectedProductType } from "../../../ExploreModule/sidebar/ExploreServicesTab";
+import { SelectedBookingItem } from "../../BookingModule";
 
 type ProductsStepProps = {
   businessId: number;
   scrollOffset: number;
   displayTitle?: boolean;
   top?: number;
+  selectedItems: SelectedBookingItem[];
+  onAdd: (item: SelectedBookingItem) => void;
 };
 
 const ProductsStep = ({
@@ -21,7 +29,14 @@ const ProductsStep = ({
   scrollOffset,
   top = 90,
   displayTitle = true,
+  selectedItems,
+  onAdd,
 }: ProductsStepProps) => {
+  const [selectedProduct, setSelectedProduct] = useState<SelectedProductType>({
+    product: null,
+    open: false,
+  });
+
   const { data, isLoading } = useCustomQuery<BusinessProductsResponse[]>({
     key: ["business-products", businessId],
     url: `/api/businesses/${businessId}/products`,
@@ -30,8 +45,27 @@ const ProductsStep = ({
   const businessProducts = useMemo(() => data ?? [], [data]);
   const sync = useScrollSync(businessProducts, scrollOffset);
 
+  const handleOpen = useCallback(
+    (product: Product) => setSelectedProduct({ product, open: true }),
+    []
+  );
+
+  const handleClose = useCallback(
+    () => setSelectedProduct({ product: null, open: false }),
+    []
+  );
+
   return (
     <Box sx={{ minWidth: 0 }}>
+      {selectedProduct.open && (
+        <ProductDetailModal
+          open={selectedProduct.open}
+          product={selectedProduct.product}
+          onClose={handleClose}
+          onAdd={onAdd}
+        />
+      )}
+
       {displayTitle && (
         <Typography fontWeight={800} fontSize={47.5} mt={3}>
           Servicii
@@ -59,16 +93,22 @@ const ProductsStep = ({
                   {group.service.short_name}
                 </Typography>
                 <Stack spacing={2}>
-                  {group.products.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      isSelected={false}
-                      showIcon={false}
-                      onOpenDetail={() => {}}
-                      onNavigateToBooking={() => {}}
-                    />
-                  ))}
+                  {group.products.map((prod) => {
+                    const isSelected = selectedItems.some(
+                      (item) => item.productId === prod.id
+                    );
+
+                    return (
+                      <ProductCard
+                        key={prod.id}
+                        product={prod}
+                        isSelected={isSelected}
+                        showIcon={true}
+                        onOpenDetail={() => handleOpen(prod)}
+                        onNavigateToBooking={() => {}}
+                      />
+                    );
+                  })}
                 </Stack>
               </Box>
             ))}

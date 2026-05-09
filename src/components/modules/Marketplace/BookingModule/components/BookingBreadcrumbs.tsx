@@ -3,6 +3,7 @@ import React from "react";
 
 type BookingBreadcrumbsProps = {
   currentStep: BookingStepEnum;
+  employeeId: number | null;
 };
 
 export enum BookingStepEnum {
@@ -19,10 +20,20 @@ const STEPS = [
   { id: BookingStepEnum.CONFIRM, label: "Confirmare" },
 ];
 
-const BookingBreadcrumbs = ({ currentStep }: BookingBreadcrumbsProps) => {
+const BookingBreadcrumbs = ({
+  currentStep,
+  employeeId,
+}: BookingBreadcrumbsProps) => {
+  const visibleSteps = STEPS.filter((step) => {
+    if (employeeId && step.id === BookingStepEnum.SPECIALISTS) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <Breadcrumbs aria-label="breadcrumb" separator="›" sx={styles.container}>
-      {STEPS.map((step) => {
+      {visibleSteps.map((step) => {
         const isActive = step.id === currentStep;
 
         return (

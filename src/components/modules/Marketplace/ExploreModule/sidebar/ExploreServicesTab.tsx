@@ -7,7 +7,7 @@ import { Product } from "@/ts/models/booking/product/Product";
 import { Box, Divider, Button, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { memo, useCallback, useMemo, useState } from "react";
-import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal";
+import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
 
 type ExploreServicesTabProps = {
   postId: number | undefined;
@@ -16,7 +16,7 @@ type ExploreServicesTabProps = {
   onNavigateToBooking: (product: Product) => void;
 };
 
-type SelectedProduct = {
+export type SelectedProductType = {
   product: Product | null;
   open: boolean;
 };
@@ -26,7 +26,7 @@ const ExploreServicesTab = ({
   isLoadingPosts,
   onNavigateToBooking,
 }: ExploreServicesTabProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<SelectedProduct>({
+  const [selectedProduct, setSelectedProduct] = useState<SelectedProductType>({
     product: null,
     open: false,
   });

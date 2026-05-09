@@ -142,7 +142,7 @@ const ProfileTabs = ({
       default:
         return null;
     }
-  }, [currentTab, isAuthenticated, businessOwnerId, userId]);
+  }, [currentTab, isAuthenticated, businessOwnerId, businessId, userId]);
 
   return (
     <>
