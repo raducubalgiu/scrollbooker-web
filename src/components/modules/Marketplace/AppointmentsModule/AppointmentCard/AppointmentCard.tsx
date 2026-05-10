@@ -16,37 +16,18 @@ import {
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 import AppointmentCardDate from "./AppointmentCardDate";
 import AppointmentCardInfo from "./AppointmentCardInfo";
+import dayjs from "@/lib/dayjs";
 
 type AppointmentCardProps = {
   appointment: Appointment;
   navigateToAppointmentDetails: (appointmentId: number) => void;
 };
 
-const formatDay = (date: Date) => {
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-  }).format(date);
-};
-
-const formatMonth = (date: Date) => {
-  return new Intl.DateTimeFormat("en-GB", {
-    month: "short",
-  }).format(date);
-};
-
-const formatTime = (date: Date) => {
-  return new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(date);
-};
-
 export default function AppointmentCard({
   appointment,
   navigateToAppointmentDetails,
 }: AppointmentCardProps) {
-  const startDate = new Date(appointment.start_date);
+  const start = dayjs(appointment.start_date);
   const statusLabel = AppointmentUtils.getStatusLabel(appointment.status);
   const statusColor = AppointmentUtils.getStatusColor(appointment.status);
 
@@ -86,9 +67,9 @@ export default function AppointmentCard({
               </Box>
 
               <AppointmentCardDate
-                day={formatDay(startDate)}
-                month={formatMonth(startDate)}
-                startTime={formatTime(startDate)}
+                day={start.format("DD")}
+                month={start.format("MMM")}
+                startTime={start.format("HH:mm")}
               />
             </Stack>
           </Stack>

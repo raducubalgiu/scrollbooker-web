@@ -17,6 +17,7 @@ import { SelectedBookingItem } from "../../BookingModule";
 
 type ProductsStepProps = {
   businessId: number;
+  employeeId: number | null;
   scrollOffset: number;
   displayTitle?: boolean;
   top?: number;
@@ -26,6 +27,7 @@ type ProductsStepProps = {
 
 const ProductsStep = ({
   businessId,
+  employeeId,
   scrollOffset,
   top = 90,
   displayTitle = true,
@@ -38,8 +40,9 @@ const ProductsStep = ({
   });
 
   const { data, isLoading } = useCustomQuery<BusinessProductsResponse[]>({
-    key: ["business-products", businessId],
-    url: `/api/businesses/${businessId}/products`,
+    key: ["business-products", businessId, employeeId ?? undefined],
+
+    url: `/api/businesses/${businessId}/products${employeeId ? `?employeeId=${employeeId}` : ""}`,
   });
 
   const businessProducts = useMemo(() => data ?? [], [data]);
@@ -105,6 +108,7 @@ const ProductsStep = ({
                         isSelected={isSelected}
                         showIcon={true}
                         onOpenDetail={() => handleOpen(prod)}
+                        onAdd={onAdd}
                         onNavigateToBooking={() => {}}
                       />
                     );

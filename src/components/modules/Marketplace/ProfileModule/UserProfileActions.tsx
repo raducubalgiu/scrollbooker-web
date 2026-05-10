@@ -2,6 +2,8 @@ import { Button } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
 import { useMutate } from "@/hooks/useHttp";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
+import Protected from "@/components/cutomized/Protected/Protected";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 type UserProfileActionsProps = {
   userId: number;
@@ -118,15 +120,17 @@ const UserProfileActions = ({
   return (
     <>
       {is_business_or_employee && (
-        <Button
-          variant="contained"
-          onClick={onBookNow}
-          size="large"
-          disableElevation
-          sx={buttonSx}
-        >
-          Rezervă acum
-        </Button>
+        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+          <Button
+            variant="contained"
+            onClick={onBookNow}
+            size="large"
+            disableElevation
+            sx={buttonSx}
+          >
+            Rezervă acum
+          </Button>
+        </Protected>
       )}
       <Button
         variant={localFollow ? "outlined" : "contained"}

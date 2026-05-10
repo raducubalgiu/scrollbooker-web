@@ -1,5 +1,5 @@
 import { Box, Tab, Tabs, Typography, Theme } from "@mui/material";
-import React, { useMemo, ReactElement, useEffect, useCallback } from "react";
+import React, { useMemo, ReactElement, useCallback, useEffect } from "react";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
@@ -10,7 +10,6 @@ import ProfileProductsTab from "./ProfileProductsTab";
 import ProfileEmployeesTab from "./ProfileEmployeesTab";
 import ProfileBookmarksTab from "./ProfileBookmarksTab";
 import ProfileInfoTab from "./info/ProfileInfoTab";
-import { useSession } from "next-auth/react";
 
 enum ProfileTabEnum {
   POSTS,
@@ -87,38 +86,37 @@ const ProfileTabs = ({
   businessOwnerId,
   tab,
 }: ProfileTabsProps) => {
-  const { status } = useSession();
-  const isAuthenticated = status === "authenticated";
-
   const tabs = useMemo<ProfileTabType[]>(
     () => getTabs(isBusinessOrEmployee, isMyProfile),
     [isBusinessOrEmployee, isMyProfile]
   );
 
-  const searchParamTab = useMemo<ProfileTabEnum | null>(() => {
-    if (!tab) return null;
-    if (tab === "posts") return ProfileTabEnum.POSTS;
-    if (tab === "products") return ProfileTabEnum.PRODUCTS;
-    if (tab === "employees") return ProfileTabEnum.EMPLOYEES;
-    if (tab === "bookmarks") return ProfileTabEnum.BOOKMARKS;
-    if (tab === "info") return ProfileTabEnum.INFO;
-    return null;
+  const searchParamTab = useMemo(() => {
+    const map: Record<string, ProfileTabEnum> = {
+      posts: ProfileTabEnum.POSTS,
+      products: ProfileTabEnum.PRODUCTS,
+      employees: ProfileTabEnum.EMPLOYEES,
+      bookmarks: ProfileTabEnum.BOOKMARKS,
+      info: ProfileTabEnum.INFO,
+    };
+    return tab ? map[tab] : null;
   }, [tab]);
 
   const [currentTab, setCurrentTab] = React.useState<ProfileTabEnum>(
     searchParamTab ?? ProfileTabEnum.POSTS
   );
 
-  const safeCurrentTab = useMemo(() => {
-    const exists = tabs.some((t) => t.route === currentTab);
-    return exists ? currentTab : (tabs[0]?.route ?? ProfileTabEnum.POSTS);
-  }, [currentTab, tabs]);
-
   useEffect(() => {
-    if (!tabs.find((t) => t.route === currentTab)) {
-      setCurrentTab(tabs[0]?.route ?? ProfileTabEnum.POSTS);
+    if (searchParamTab !== null && searchParamTab !== undefined) {
+      setCurrentTab(searchParamTab);
     }
-  }, [tabs, currentTab]);
+  }, [searchParamTab]);
+
+  const safeValue = useMemo(() => {
+    return tabs.some((t) => t.route === currentTab)
+      ? currentTab
+      : (tabs[0]?.route ?? ProfileTabEnum.POSTS);
+  }, [currentTab, tabs]);
 
   const handleChange = useCallback(
     (_: React.SyntheticEvent, newValue: ProfileTabEnum) => {
@@ -127,8 +125,8 @@ const ProfileTabs = ({
     []
   );
 
-  const tabsContent = useMemo(() => {
-    switch (currentTab) {
+  const renderTabContent = () => {
+    switch (safeValue) {
       case ProfileTabEnum.POSTS:
         return <ProfilePostsTab userId={userId} username={username} />;
       case ProfileTabEnum.PRODUCTS:
@@ -142,13 +140,13 @@ const ProfileTabs = ({
       default:
         return null;
     }
-  }, [currentTab, isAuthenticated, businessOwnerId, businessId, userId]);
+  };
 
   return (
     <>
       <Box sx={styles.container}>
         <Tabs
-          value={safeCurrentTab}
+          value={safeValue}
           onChange={handleChange}
           sx={styles.tabs}
           variant="scrollable"
@@ -167,7 +165,7 @@ const ProfileTabs = ({
         </Tabs>
       </Box>
 
-      {tabsContent}
+      {renderTabContent()}
     </>
   );
 };

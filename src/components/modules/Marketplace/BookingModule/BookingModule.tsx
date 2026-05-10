@@ -18,6 +18,7 @@ import {
   ScrollBookerAppointmentCreate,
 } from "@/ts/models/booking/appointment/Appointment";
 import { useMutate } from "@/hooks/useHttp";
+import { toast } from "react-toastify";
 
 type BookingModuleProps = {
   businessId: number;
@@ -72,6 +73,7 @@ const BookingModule = ({
     method: "POST",
     options: {
       onSuccess: (appointment: Appointment) => {
+        toast.success("Rezervarea ta este confirmată");
         router.push(`/appointments/${appointment.id}`);
       },
     },
@@ -80,9 +82,15 @@ const BookingModule = ({
   const handleSelectItem = useCallback((item: SelectedBookingItem) => {
     setSelectedItems((prev) => {
       const exists = prev.find((i) => i.productId === item.productId);
+
       if (exists) {
-        return prev.filter((i) => i.productId !== item.productId);
+        if (!item.variantId || exists.variantId === item.variantId) {
+          return prev.filter((i) => i.productId !== item.productId);
+        }
+
+        return prev.map((i) => (i.productId === item.productId ? item : i));
       }
+
       return [...prev, item];
     });
   }, []);
@@ -148,6 +156,7 @@ const BookingModule = ({
         return (
           <ProductsStep
             businessId={businessId}
+            employeeId={employeeId}
             selectedItems={selectedItems}
             scrollOffset={SCROLL_OFFSET}
             onAdd={handleSelectItem}

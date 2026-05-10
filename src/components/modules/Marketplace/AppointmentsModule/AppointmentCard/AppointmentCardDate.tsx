@@ -42,7 +42,7 @@ const styles = {
   },
   startTime: {
     mt: 0.75,
-    fontSize: 13,
+    fontSize: 17,
     fontWeight: 600,
     color: "text.primary",
   },

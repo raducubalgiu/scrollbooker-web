@@ -54,7 +54,7 @@ const AppointmentDetailsHeader = ({
             const colorKey = AppointmentUtils.getStatusColor(status);
 
             if (status === AppointmentStatusEnum.IN_PROGRESS) {
-              return alpha(theme.palette.grey[500], 0.4);
+              return alpha(theme.palette.success.main, 0.4);
             }
 
             const mainColor =
@@ -64,7 +64,7 @@ const AppointmentDetailsHeader = ({
           },
           color: (theme) => {
             if (status === AppointmentStatusEnum.IN_PROGRESS) {
-              return theme.palette.grey;
+              return theme.palette.success.dark;
             }
 
             const colorKey = AppointmentUtils.getStatusColor(status);

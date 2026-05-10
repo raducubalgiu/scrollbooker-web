@@ -15,6 +15,8 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import React from "react";
 import Protected from "../Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingModule/BookingModule";
+import { minBy } from "lodash";
 
 type ProductCardProps = {
   product: Product;
@@ -22,6 +24,7 @@ type ProductCardProps = {
   showIcon: boolean;
   showDescription?: boolean;
   onOpenDetail: () => void;
+  onAdd: (item: SelectedBookingItem) => void;
   onNavigateToBooking: (product: Product) => void;
   sx?: SxProps<Theme>;
 };
@@ -32,6 +35,7 @@ const ProductCard = ({
   showIcon,
   showDescription = true,
   onOpenDetail,
+  onAdd,
   onNavigateToBooking,
   sx = {},
 }: ProductCardProps) => {
@@ -42,6 +46,42 @@ const ProductCard = ({
   const displayed_price_with_discount =
     ProductUtils.getPriceWithDiscount(product);
   const displayedDiscount = ProductUtils.getDiscount(product);
+
+  const onSelectProduct = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+
+    if (isSelected) {
+      onAdd({
+        productId: product.id,
+      } as SelectedBookingItem);
+      return;
+    }
+
+    const variants = product.variants || [];
+    if (variants.length > 1) {
+      onOpenDetail();
+      return;
+    }
+
+    const firstVariant = variants[0];
+    const cheapestOffering = minBy(
+      firstVariant?.offerings,
+      "price_with_discount"
+    );
+
+    if (firstVariant && cheapestOffering) {
+      onAdd({
+        productId: product.id,
+        variantId: firstVariant.id,
+        variantDuration: firstVariant.duration,
+        offering: cheapestOffering,
+        productName: product.name,
+        variantName: firstVariant.name,
+      });
+    }
+  };
 
   return (
     <Box
@@ -116,7 +156,7 @@ const ProductCard = ({
 
         <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
           {showIcon ? (
-            <IconButton size="large">
+            <IconButton size="large" onClick={onSelectProduct}>
               {isSelected ? (
                 <Tooltip title="Elimină">
                   <CheckCircleRoundedIcon fontSize="large" color="primary" />

@@ -73,6 +73,18 @@ const ProfileUserInfo = ({
     return `Închis`;
   }, [opening_hours]);
 
+  const handleBookNow = () => {
+    const isBusiness = profile.business_owner?.id === profile.id;
+
+    let url = `/booking/${profile.business_id}?businessOwnerId=${profile.business_owner?.id}`;
+
+    if (!isBusiness) {
+      url += `&employeeId=${profile.id}`;
+    }
+
+    router.push(url);
+  };
+
   const actions = useMemo(() => {
     if (is_own_profile) {
       return (
@@ -89,11 +101,7 @@ const ProfileUserInfo = ({
         is_business_or_employee={is_business_or_employee}
         is_follow={is_follow}
         onUpdateFollows={onUpdateFollows}
-        onBookNow={() =>
-          router.push(
-            `/booking/${profile.business_id}?businessOwnerId=${profile.business_owner?.id}&employeeId=${profile.id}`
-          )
-        }
+        onBookNow={handleBookNow}
       />
     );
   }, [is_business_or_employee, is_own_profile, is_follow, id, onUpdateFollows]);
