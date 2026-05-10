@@ -27,7 +27,7 @@ const AvailabiltyActions = ({
       mb={3}
     >
       <Typography
-        variant="h5"
+        variant="h4"
         fontWeight={800}
         sx={{ textTransform: "capitalize" }}
       >

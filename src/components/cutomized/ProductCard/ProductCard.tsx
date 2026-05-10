@@ -16,7 +16,6 @@ import React from "react";
 import Protected from "../Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingModule/BookingModule";
-import { minBy } from "lodash";
 
 type ProductCardProps = {
   product: Product;
@@ -66,17 +65,13 @@ const ProductCard = ({
     }
 
     const firstVariant = variants[0];
-    const cheapestOffering = minBy(
-      firstVariant?.offerings,
-      "price_with_discount"
-    );
 
-    if (firstVariant && cheapestOffering) {
+    if (firstVariant) {
       onAdd({
         productId: product.id,
         variantId: firstVariant.id,
         variantDuration: firstVariant.duration,
-        offering: cheapestOffering,
+        offerings: firstVariant.offerings,
         productName: product.name,
         variantName: firstVariant.name,
       });
@@ -118,8 +113,8 @@ const ProductCard = ({
       >
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography
-            fontSize={19}
-            fontWeight={500}
+            fontSize={20}
+            fontWeight={700}
             noWrap
             sx={{
               overflow: "hidden",

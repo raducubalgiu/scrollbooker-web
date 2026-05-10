@@ -43,9 +43,12 @@ const ProductDetailVariantsOptions = ({
                   <Box>
                     <Stack mb={2} spacing={0.5}>
                       <Typography
+                        fontSize={20}
+                        fontWeight={700}
+                        noWrap
                         sx={{
-                          fontSize: { xs: 18, lg: 22 },
-                          fontWeight: 500,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
                         }}
                       >
                         {variant.name}

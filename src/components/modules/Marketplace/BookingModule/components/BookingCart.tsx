@@ -1,11 +1,13 @@
 import { alpha, Box, Button, Stack, Typography } from "@mui/material";
-import React, { useMemo } from "react";
 import { BookingStepEnum, SelectedBookingItem } from "../BookingModule";
 import { ProductUtils } from "@/ts/models/booking/product/Product";
-import { isEmpty, sumBy } from "lodash";
+import { isEmpty, maxBy, minBy } from "lodash";
+import { useMemo } from "react";
+import { formatPrice } from "@/utils/formatPrice";
 
 type BookingCartProps = {
   selectedItems: SelectedBookingItem[];
+  selectedEmployeeId: number | null;
   currentStep: BookingStepEnum;
   isNextDisabled: boolean;
   isLoadingNext: boolean;
@@ -15,6 +17,7 @@ type BookingCartProps = {
 
 const BookingCart = ({
   selectedItems,
+  selectedEmployeeId,
   isNextDisabled,
   isLoadingNext,
   currentStep,
@@ -24,19 +27,43 @@ const BookingCart = ({
   const isFirstStep = currentStep === BookingStepEnum.SERVICES;
   const isLastStep = currentStep === BookingStepEnum.CONFIRM;
 
-  const totalPrice = useMemo(
-    () =>
-      sumBy(
-        selectedItems,
-        (item) => Number(item.offering.price_with_discount) || 0
-      ),
-    [selectedItems]
-  );
+  const totals = useMemo(() => {
+    let minTotal = 0;
+    let fixedTotal = 0;
+    let hasGlobalVariance = false;
+    let totalDuration = 0;
 
-  const totalDuration = useMemo(
-    () => sumBy(selectedItems, "variantDuration"),
-    [selectedItems]
-  );
+    selectedItems.forEach((item) => {
+      const offerings = item.offerings || [];
+      const prices = offerings.map((o) => Number(o.price_with_discount));
+
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+
+      // Verificăm dacă acest produs specific are preț variabil
+      if (offerings.length > 1 && minPrice !== maxPrice) {
+        hasGlobalVariance = true;
+      }
+
+      // Calculăm prețul fix pentru specialistul curent (dacă există)
+      const currentOffering = offerings.find(
+        (o) => o.user_id === selectedEmployeeId
+      );
+
+      minTotal += minPrice;
+      fixedTotal += currentOffering
+        ? Number(currentOffering.price_with_discount)
+        : minPrice;
+      totalDuration += item.variantDuration;
+    });
+
+    return {
+      // Dacă avem specialist selectat, afișăm totalul lui fix, altfel totalul minim cu "de la"
+      displayPrice: selectedEmployeeId ? fixedTotal : minTotal,
+      showFromLabel: !selectedEmployeeId && hasGlobalVariance,
+      totalDuration,
+    };
+  }, [selectedItems, selectedEmployeeId]);
 
   return (
     <Box
@@ -71,25 +98,70 @@ const BookingCart = ({
           claritate.
         </Typography>
 
-        {selectedItems.map((item) => (
-          <Stack
-            key={item.productId}
-            flexDirection="row"
-            alignItems="flex-start"
-            justifyContent="space-between"
-            mb={2}
-          >
-            <Stack spacing={0.5}>
-              <Typography variant="h5">{item.productName}</Typography>
-              <Typography color="text.secondary">
-                {ProductUtils.getDurationText(item.variantDuration)}
+        {selectedItems.map((item) => {
+          const offerings = item.offerings || [];
+
+          // 1. Găsim oferta specialistului selectat (dacă există)
+          const currentOffering = offerings.find(
+            (o) => o.user_id === selectedEmployeeId
+          );
+
+          // 2. Logica de preț minim/maxim pentru când nu avem specialist selectat
+          const minPrice = minBy(
+            offerings,
+            "price_with_discount"
+          )?.price_with_discount;
+          const maxPrice = maxBy(
+            offerings,
+            "price_with_discount"
+          )?.price_with_discount;
+          const hasDifferentPrices = minPrice !== maxPrice;
+
+          // 3. DETERMINĂM CE AFIȘĂM
+          // Dacă avem un specialist selectat ȘI acesta oferă serviciul, afișăm prețul LUI fix
+          // Altfel, afișăm "de la"
+          const isPriceFixed = !!currentOffering;
+          const displayPrice = isPriceFixed
+            ? currentOffering.price_with_discount
+            : minPrice;
+          const showFromLabel =
+            !isPriceFixed && offerings.length > 1 && hasDifferentPrices;
+
+          return (
+            <Stack
+              key={item.productId}
+              flexDirection="row"
+              alignItems="flex-start"
+              justifyContent="space-between"
+              mb={3}
+            >
+              <Stack spacing={0.5} sx={{ minWidth: 0, pr: 2 }}>
+                <Typography variant="h5" fontWeight={600} noWrap>
+                  {item.productName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {ProductUtils.getDurationText(item.variantDuration)}
+                </Typography>
+              </Stack>
+
+              <Typography
+                variant="h5"
+                fontWeight={700}
+                sx={{ whiteSpace: "nowrap" }}
+              >
+                {showFromLabel && (
+                  <Box
+                    component="span"
+                    sx={{ fontSize: "0.8em", fontWeight: 500, mr: 0.5 }}
+                  >
+                    de la
+                  </Box>
+                )}
+                {displayPrice} RON
               </Typography>
             </Stack>
-            <Typography variant="h5">
-              {item.offering.price_with_discount} RON
-            </Typography>
-          </Stack>
-        ))}
+          );
+        })}
       </Box>
 
       <Box
@@ -111,18 +183,36 @@ const BookingCart = ({
               alignItems="center"
             >
               <Typography variant="h5" fontWeight={500} color="text.secondary">
-                Total ({selectedItems.length} servicii)
+                Total ({selectedItems.length}{" "}
+                {selectedItems.length === 1 ? "serviciu" : "servicii"})
               </Typography>
+
               <Typography variant="h4" fontWeight={900}>
-                {totalPrice} RON
+                {totals.showFromLabel && (
+                  <Box
+                    component="span"
+                    sx={{
+                      fontSize: "0.7em",
+                      fontWeight: 600,
+                      mr: 0.5,
+                      color: "text.secondary",
+                    }}
+                  >
+                    de la
+                  </Box>
+                )}
+                {formatPrice(totals.displayPrice)} RON
               </Typography>
             </Stack>
+
             <Typography
               variant="body2"
               color="text.secondary"
               textAlign="right"
+              fontWeight={500}
             >
-              Durată totală: {ProductUtils.getDurationText(totalDuration)}
+              Durată totală:{" "}
+              {ProductUtils.getDurationText(totals.totalDuration)}
             </Typography>
           </Stack>
         )}

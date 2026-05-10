@@ -238,7 +238,6 @@ const styles = {
     },
     gap: { xs: 4, md: 10 },
     p: 2.5,
-    pb: 10,
     alignItems: "start",
   },
 };

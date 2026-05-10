@@ -89,7 +89,7 @@ const AppointmentDetailsHeader = ({
       )}
 
       <Typography variant="h4" fontWeight={700} mt={2}>
-        {dayjs.utc(startDate).format("dddd, D MMMM YYYY HH:mm")}
+        {dayjs(startDate).format("dddd, D MMMM YYYY HH:mm")}
       </Typography>
       <Typography variant="h6" color="text.secondary" fontWeight={500} mt={1}>
         ({totalDurationText})

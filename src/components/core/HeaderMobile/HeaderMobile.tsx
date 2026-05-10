@@ -16,8 +16,11 @@ const HeaderMobile = ({ title }: HeaderMobileProps) => {
       alignItems="center"
       justifyContent="space-between"
       sx={{
-        xs: "inline-block",
-        lg: "none",
+        display: {
+          xs: "flex",
+          lg: "none",
+        },
+        width: "100%",
         position: "sticky",
         borderBottom: 1,
         borderColor: "divider",

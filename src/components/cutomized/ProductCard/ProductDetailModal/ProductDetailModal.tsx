@@ -2,7 +2,6 @@ import Modal from "@/components/core/Modal/Modal";
 import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingModule/BookingModule";
 import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
 import { Box, Chip, Stack, Tooltip, Typography } from "@mui/material";
-import { minBy } from "lodash";
 import React, { ChangeEvent, useState } from "react";
 import ProductDetailFooter from "./ProductDetailFooter";
 import ProductDetailVariantsOptions from "./ProductDetailVariantsOptions";
@@ -32,16 +31,14 @@ const ProductDetailModal = ({
     setSelectedVariant(event.target.value);
   };
 
-  const bestOffering = minBy(currentVariant?.offerings, "price_with_discount");
-
   const handleAddClick = () => {
-    if (!product || !currentVariant || !bestOffering) return;
+    if (!product || !currentVariant) return;
 
     onAdd({
       productId: product.id,
       variantId: currentVariant.id,
       variantDuration: currentVariant.duration,
-      offering: bestOffering,
+      offerings: currentVariant.offerings,
       productName: product.name,
       variantName: currentVariant.name,
     });

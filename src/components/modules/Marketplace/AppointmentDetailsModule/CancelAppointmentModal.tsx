@@ -4,6 +4,7 @@ import React from "react";
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
 import {
+  Box,
   Collapse,
   FormControl,
   FormControlLabel,
@@ -11,6 +12,8 @@ import {
   RadioGroup,
   Stack,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "@/components/core/Input/Input";
@@ -82,6 +85,9 @@ const CancelAppointmentModal = ({
     },
   ];
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <FormProvider {...methods}>
       <Modal
@@ -91,59 +97,62 @@ const CancelAppointmentModal = ({
         actions={actions}
         maxWidth="sm"
         fullWidth
+        fullScreen={isMobile}
       >
-        <Typography variant="h6" fontWeight={600}>
-          Motivul anulării
-        </Typography>
-        <FormControl sx={{ my: 1.5 }}>
-          <RadioGroup
-            aria-labelledby="group-reason"
-            defaultValue="other"
-            name="radio-buttons-group"
-            value={reason}
-            onChange={handleChangeReason}
-          >
-            {REASONS.map((item) => (
-              <FormControlLabel
-                key={item.id}
-                value={item.id}
-                control={<Radio />}
-                label={item.label}
-              />
-            ))}
-          </RadioGroup>
-        </FormControl>
+        <Box sx={{ px: 3 }}>
+          <Typography variant="h6" fontWeight={600}>
+            Motivul anulării
+          </Typography>
+          <FormControl sx={{ my: 1.5 }}>
+            <RadioGroup
+              aria-labelledby="group-reason"
+              defaultValue="other"
+              name="radio-buttons-group"
+              value={reason}
+              onChange={handleChangeReason}
+            >
+              {REASONS.map((item) => (
+                <FormControlLabel
+                  key={item.id}
+                  value={item.id}
+                  control={<Radio />}
+                  label={item.label}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
 
-        <Collapse in={reason === "OTHER"} timeout={300} unmountOnExit>
-          <Input
-            name="canceledReason"
-            multiline
-            minRows={4}
-            maxRows={4}
-            fullWidth
-            placeholder="Scrie motivul anularii"
-            slotProps={{
-              htmlInput: {
-                maxLength: 100,
-              },
-            }}
-            sx={{
-              mt: 1,
-              "& .MuiInputBase-root": {
-                transition: "all 0.3s ease",
-                borderRadius: 5,
-              },
-            }}
-            rules={{ ...isRequired, ...minLength, ...maxLength }}
-          />
-          <Stack alignItems="flex-end" mt={1}>
-            <Stack flexDirection="row" alignItems="center">
-              <Typography>{watch("canceledReason").length}</Typography>
-              <Typography mx={1}>/</Typography>
-              <Typography>100</Typography>
+          <Collapse in={reason === "OTHER"} timeout={300} unmountOnExit>
+            <Input
+              name="canceledReason"
+              multiline
+              minRows={4}
+              maxRows={4}
+              fullWidth
+              placeholder="Scrie motivul anularii"
+              slotProps={{
+                htmlInput: {
+                  maxLength: 100,
+                },
+              }}
+              sx={{
+                mt: 1,
+                "& .MuiInputBase-root": {
+                  transition: "all 0.3s ease",
+                  borderRadius: 5,
+                },
+              }}
+              rules={{ ...isRequired, ...minLength, ...maxLength }}
+            />
+            <Stack alignItems="flex-end" mt={1}>
+              <Stack flexDirection="row" alignItems="center">
+                <Typography>{watch("canceledReason").length}</Typography>
+                <Typography mx={1}>/</Typography>
+                <Typography>100</Typography>
+              </Stack>
             </Stack>
-          </Stack>
-        </Collapse>
+          </Collapse>
+        </Box>
       </Modal>
     </FormProvider>
   );

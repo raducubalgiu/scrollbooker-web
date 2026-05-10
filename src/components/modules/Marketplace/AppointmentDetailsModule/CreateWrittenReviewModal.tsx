@@ -3,7 +3,14 @@ import Input from "@/components/core/Input/Input";
 import Modal from "@/components/core/Modal/Modal";
 import { reviewLabelText } from "@/ts/enums/ReviewLabel";
 import { maxField, minField, required } from "@/utils/validation-rules";
-import { Box, Rating, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Rating,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import EmojiPicker from "@/components/core/EmojiPicker/EmojiPicker";
@@ -66,6 +73,9 @@ const CreateWrittenReviewModal = ({
     });
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <FormProvider {...methods}>
       <Modal
@@ -74,8 +84,9 @@ const CreateWrittenReviewModal = ({
         maxWidth="md"
         fullWidth
         actions={actions}
+        fullScreen={isMobile}
       >
-        <Stack spacing={2}>
+        <Stack spacing={2} px={3}>
           <Stack justifyContent="center" alignItems="center" spacing={2}>
             {finalRating && (
               <Rating

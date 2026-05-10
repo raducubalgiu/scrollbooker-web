@@ -41,7 +41,7 @@ export interface SelectedBookingItem {
   productId: number;
   variantId: number;
   variantDuration: number;
-  offering: ProductOffering;
+  offerings: ProductOffering[];
   productName: string;
   variantName: string;
 }
@@ -56,7 +56,7 @@ const BookingModule = ({
 
   const [selectedItems, setSelectedItems] = useState<SelectedBookingItem[]>([]);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
-    businessEmployees[0]?.id ?? null
+    employeeId
   );
   const [selectedTimeSlot, setSelectedTimeSlot] =
     useState<AvailableTimeSlot | null>(null);
@@ -97,23 +97,20 @@ const BookingModule = ({
 
   const handleNext = useCallback(() => {
     if (currentStep === BookingStepEnum.CONFIRM) {
-      const { start_date_utc, end_date_utc } = selectedTimeSlot || {};
-
-      if (!start_date_utc || !end_date_utc) return;
-
-      const body: ScrollBookerAppointmentCreate = {
-        start_date: start_date_utc,
-        end_date: end_date_utc,
-        product_variants: selectedItems.map((item) => {
-          return {
-            id: item.variantId,
-            offering: { user_id: item.offering.user_id },
-          };
-        }),
-        payment_currency_id: 1,
-      };
-
-      handleSaveAppointment(body);
+      // const { start_date_utc, end_date_utc } = selectedTimeSlot || {};
+      // if (!start_date_utc || !end_date_utc) return;
+      // const body: ScrollBookerAppointmentCreate = {
+      //   start_date: start_date_utc,
+      //   end_date: end_date_utc,
+      //   product_variants: selectedItems.map((item) => {
+      //     return {
+      //       id: item.variantId,
+      //       offering: { user_id: item.offering.user_id },
+      //     };
+      //   }),
+      //   payment_currency_id: 1,
+      // };
+      // handleSaveAppointment(body);
     } else {
       setCurrentStep((prev) => {
         if (prev === BookingStepEnum.SERVICES && employeeId) {
@@ -230,6 +227,7 @@ const BookingModule = ({
 
           <BookingCart
             selectedItems={selectedItems}
+            selectedEmployeeId={selectedEmployeeId}
             currentStep={currentStep}
             isNextDisabled={isNextDisabled}
             isLoadingNext={isPending}
