@@ -81,8 +81,7 @@ const VideoHeader = ({
               sx={styles.badgeContent}
             >
               <StarRateRoundedIcon
-                sx={{ fontSize: 18, mr: 0.5 }}
-                color="primary"
+                sx={{ fontSize: 20, mr: 0.5, color: "rating.main" }}
               />
               <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
                 {ratings_average ? formatRating(ratings_average) : "-"}

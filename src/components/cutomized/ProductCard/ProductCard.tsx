@@ -114,7 +114,7 @@ const ProductCard = ({
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography
             fontSize={20}
-            fontWeight={700}
+            fontWeight={600}
             noWrap
             sx={{
               overflow: "hidden",

@@ -1,6 +1,5 @@
 "use client";
 
-import RatingsStars from "@/components/cutomized/RatingsDistribution/RatingsStars";
 import { AppointmentWrittenReview } from "@/ts/models/booking/appointment/Appointment";
 import {
   Avatar,
@@ -62,7 +61,11 @@ const AppointmentDetailsReview = ({
                 <Typography variant="body2" color="text.secondary">
                   A evaluat {writtenReview.rating} din 5
                 </Typography>
-                <RatingsStars rating={writtenReview.rating} />
+                <Rating
+                  name="rating"
+                  readOnly
+                  defaultValue={writtenReview.rating}
+                />
               </Stack>
             </Stack>
 

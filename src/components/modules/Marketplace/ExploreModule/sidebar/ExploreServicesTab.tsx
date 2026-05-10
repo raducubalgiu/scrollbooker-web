@@ -69,6 +69,7 @@ const ExploreServicesTab = ({
           open={selectedProduct.open}
           product={selectedProduct.product}
           onClose={handleClose}
+          onAdd={() => {}}
         />
       )}
 
@@ -86,6 +87,7 @@ const ExploreServicesTab = ({
                 onOpenDetail={() => handleOpen(prod)}
                 onNavigateToBooking={onNavigateToBooking}
                 sx={{ borderColor: "transparent", p: 1.5 }}
+                onAdd={() => {}}
               />
 
               {i < products?.length - 1 && <Divider sx={{ my: 1.5 }} />}

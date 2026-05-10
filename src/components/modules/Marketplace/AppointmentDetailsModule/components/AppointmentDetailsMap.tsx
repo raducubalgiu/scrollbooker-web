@@ -5,7 +5,6 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { AppointmentBusiness } from "@/ts/models/booking/appointment/Appointment";
-import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 type AppointmentDetailsMapProps = {
   business: AppointmentBusiness;
@@ -38,17 +37,14 @@ const AppointmentDetailsMap = ({ business }: AppointmentDetailsMapProps) => {
           />
         </Box>
 
-        <Stack direction="row" mt={2.5} gap={2} alignItems="center">
-          <FmdGoodOutlinedIcon color="primary" />
-          <Box>
-            <Typography color="text.secondary" variant="h6">
-              {business.address}
-            </Typography>
+        <Stack mt={2.5} gap={1}>
+          <Typography color="text.secondary" variant="h6">
+            {business.address}
+          </Typography>
 
-            <Typography color="primary" variant="h6" fontWeight={600}>
-              Obține indicații
-            </Typography>
-          </Box>
+          <Typography color="primary" variant="h6" fontWeight={600}>
+            Obține indicații
+          </Typography>
         </Stack>
       </Paper>
     </Link>

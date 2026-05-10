@@ -110,7 +110,9 @@ const AppointmentDetailsHeader = ({
                 justifyContent="center"
                 sx={styles.badgeContent}
               >
-                <StarIcon sx={{ fontSize: 18, mr: 0.5 }} color="primary" />
+                <StarIcon
+                  sx={{ fontSize: 20, mr: 0.5, color: "rating.main" }}
+                />
                 <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
                   {formatRating(ratings_average)}
                 </Typography>

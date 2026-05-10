@@ -1,6 +1,6 @@
 "use client";
 
-import { alpha, Box, Button, IconButton, Slide, Stack } from "@mui/material";
+import { Box, Slide } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PostActions from "./PostActions";
 import ExploreControls from "./ExploreControls";
@@ -11,8 +11,9 @@ import { useExplorePlayerPool } from "./useExplorePlayerPool";
 import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
 import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
 import { ExploreVideoPool } from "./ExploreVideoPool";
-import MenuIcon from "@mui/icons-material/Menu";
 import { useRouter } from "next/navigation";
+import { Product } from "@/ts/models/booking/product/Product";
+import ExploreHeaderMenu from "./ExploreHeaderMenu";
 
 const PREFETCH_OFFSET = 2;
 
@@ -75,6 +76,24 @@ export default function ExploreModule() {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
   }, []);
 
+  const navigateToBooking = useCallback(
+    (product: Product) => {
+      const businessOwnerId = currentPost?.business_owner?.id;
+      const employeeId = currentPost?.employee?.id;
+
+      if (businessOwnerId) {
+        let url = `/booking/${product.business_id}?businessOwnerId=${businessOwnerId}`;
+
+        if (employeeId) {
+          url += `&employeeId=${employeeId}`;
+        }
+
+        router.push(url);
+      }
+    },
+    [router, currentPost]
+  );
+
   const { user_actions, counters, is_video_review } = currentPost ?? {};
 
   return (
@@ -92,56 +111,7 @@ export default function ExploreModule() {
               onPrev={goToPrev}
             />
 
-            <Box
-              sx={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: 100,
-                background:
-                  "linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent)",
-              }}
-            >
-              <Box
-                sx={{
-                  position: "absolute",
-                  left: { xs: 8, lg: 16 },
-                  top: { xs: 8, lg: 16 },
-                  zIndex: 11,
-                  pointerEvents: "auto",
-                }}
-              >
-                <Stack flexDirection="row" alignItems="center">
-                  <IconButton size="large" onClick={handleToggleDrawer}>
-                    <MenuIcon
-                      sx={{ color: "common.white", width: 30, height: 30 }}
-                    />
-                  </IconButton>
-
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    disableElevation
-                    sx={{
-                      mr: 1,
-                      bgcolor: (theme) =>
-                        alpha(theme.palette.primary.main, 0.7),
-                      "&:hover": {
-                        bgcolor: (theme) =>
-                          alpha(theme.palette.primary.main, 0.3),
-                      },
-                    }}
-                  >
-                    Explorează
-                  </Button>
-
-                  <Button sx={{ color: "common.white" }} disableElevation>
-                    Urmărești
-                  </Button>
-                </Stack>
-              </Box>
-            </Box>
+            <ExploreHeaderMenu onHandleToggleDrawer={handleToggleDrawer} />
 
             <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
               <Box sx={styles.drawerContainer}>
@@ -175,9 +145,7 @@ export default function ExploreModule() {
           postId={currentPost?.id}
           user={currentPost?.user}
           businessLocation={currentPost?.business_location}
-          onNavigateToBooking={(product) =>
-            router.push(`/booking/${product.business_id}`)
-          }
+          onNavigateToBooking={navigateToBooking}
         />
       </Box>
 

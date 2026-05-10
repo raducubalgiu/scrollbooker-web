@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
+import IosShareIcon from "@mui/icons-material/IosShare";
 import React from "react";
 import { useRouter } from "next/navigation";
 
@@ -55,11 +56,11 @@ const OwnProfileActions = ({
           color="secondary"
           onClick={() => {}}
           size="large"
-          startIcon={<DateRangeOutlinedIcon />}
+          startIcon={<IosShareIcon />}
           sx={buttonSx}
           disableElevation
         >
-          Distribuie
+          Distribuie profilul
         </Button>
       )}
     </>

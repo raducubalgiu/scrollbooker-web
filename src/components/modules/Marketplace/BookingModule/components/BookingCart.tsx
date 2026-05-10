@@ -40,12 +40,10 @@ const BookingCart = ({
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);
 
-      // Verificăm dacă acest produs specific are preț variabil
       if (offerings.length > 1 && minPrice !== maxPrice) {
         hasGlobalVariance = true;
       }
 
-      // Calculăm prețul fix pentru specialistul curent (dacă există)
       const currentOffering = offerings.find(
         (o) => o.user_id === selectedEmployeeId
       );
@@ -58,7 +56,6 @@ const BookingCart = ({
     });
 
     return {
-      // Dacă avem specialist selectat, afișăm totalul lui fix, altfel totalul minim cu "de la"
       displayPrice: selectedEmployeeId ? fixedTotal : minTotal,
       showFromLabel: !selectedEmployeeId && hasGlobalVariance,
       totalDuration,
@@ -89,24 +86,13 @@ const BookingCart = ({
       </Typography>
 
       <Box sx={{ flex: 1 }}>
-        <Typography
-          variant="body1"
-          color="text.secondary"
-          sx={{ lineHeight: 1.6, mb: 2.5 }}
-        >
-          Aici vei vedea serviciile selectate. Spațiul generos ajută la
-          claritate.
-        </Typography>
-
         {selectedItems.map((item) => {
           const offerings = item.offerings || [];
 
-          // 1. Găsim oferta specialistului selectat (dacă există)
           const currentOffering = offerings.find(
             (o) => o.user_id === selectedEmployeeId
           );
 
-          // 2. Logica de preț minim/maxim pentru când nu avem specialist selectat
           const minPrice = minBy(
             offerings,
             "price_with_discount"
@@ -117,9 +103,6 @@ const BookingCart = ({
           )?.price_with_discount;
           const hasDifferentPrices = minPrice !== maxPrice;
 
-          // 3. DETERMINĂM CE AFIȘĂM
-          // Dacă avem un specialist selectat ȘI acesta oferă serviciul, afișăm prețul LUI fix
-          // Altfel, afișăm "de la"
           const isPriceFixed = !!currentOffering;
           const displayPrice = isPriceFixed
             ? currentOffering.price_with_discount

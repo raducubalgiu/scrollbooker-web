@@ -1,5 +1,5 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import React, { memo, useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import PostComments from "../../CommentsModule/PostComments";
 import VideoHeader from "../VideoHeader";
@@ -51,7 +51,7 @@ const ExploreSidebar = ({
     [commentsCount, ratings_count]
   );
 
-  const tabsContent = useMemo(() => {
+  const renderTabContent = () => {
     switch (activeTab) {
       case ExploreSidebarTab.SERVICES:
         return (
@@ -69,7 +69,14 @@ const ExploreSidebar = ({
       default:
         return null;
     }
-  }, [activeTab, postId, user, isLoading]);
+  };
+
+  const handleTabChange = useCallback(
+    (_: React.SyntheticEvent, newValue: ExploreSidebarTab) => {
+      setActiveTab(newValue);
+    },
+    []
+  );
 
   return (
     <Box sx={styles.container}>
@@ -86,19 +93,10 @@ const ExploreSidebar = ({
         )}
       </Box>
 
-      <Box
-        sx={{
-          borderTop: 1,
-          borderColor: "divider",
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          minHeight: 0,
-        }}
-      >
+      <Box sx={styles.tabsContainer}>
         <Tabs
           value={activeTab}
-          onChange={(_, newValue) => setActiveTab(newValue)}
+          onChange={handleTabChange}
           sx={{ borderBottom: 1, borderColor: "divider" }}
         >
           {tabs.map((tab) => (
@@ -111,20 +109,7 @@ const ExploreSidebar = ({
           ))}
         </Tabs>
 
-        <Box
-          sx={{
-            flex: 1,
-            minHeight: 0,
-            overflowY: "auto",
-            scrollBarWidth: "none",
-            msOverflowStyle: "none",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-          }}
-        >
-          {tabsContent}
-        </Box>
+        <Box sx={styles.tabsContent}>{renderTabContent()}</Box>
       </Box>
     </Box>
   );
@@ -147,11 +132,29 @@ const styles = {
     height: "100%",
     overflow: "hidden",
   },
+  tabsContainer: {
+    borderTop: 1,
+    borderColor: "divider",
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    minHeight: 0,
+  },
   tab: {
     fontWeight: 600,
     textTransform: "none",
     fontSize: 17,
     p: 2.5,
     minWidth: 120,
+  },
+  tabsContent: {
+    flex: 1,
+    minHeight: 0,
+    overflowY: "auto",
+    scrollBarWidth: "none",
+    msOverflowStyle: "none",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
   },
 };

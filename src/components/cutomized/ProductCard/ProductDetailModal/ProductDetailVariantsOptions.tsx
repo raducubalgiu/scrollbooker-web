@@ -44,7 +44,7 @@ const ProductDetailVariantsOptions = ({
                     <Stack mb={2} spacing={0.5}>
                       <Typography
                         fontSize={20}
-                        fontWeight={700}
+                        fontWeight={600}
                         noWrap
                         sx={{
                           overflow: "hidden",

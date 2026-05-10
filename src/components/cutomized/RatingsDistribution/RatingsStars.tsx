@@ -25,12 +25,12 @@ const RatingsStars = ({
       isSolid ? (
         <StarRateRoundedIcon
           key={i}
-          sx={{ fontSize: starSize, color: color ?? "primary.main" }}
+          sx={{ fontSize: starSize, color: color ?? "rating.main" }}
         />
       ) : (
         <StarOutlineRoundedIcon
           key={i}
-          sx={{ fontSize: starSize, color: color ?? "primary.main" }}
+          sx={{ fontSize: starSize, color: color ?? "rating.main" }}
         />
       )
     );
