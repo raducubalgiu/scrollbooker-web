@@ -29,3 +29,14 @@ export interface BusinessCreate {
   business_type_id: number;
   owner_fullname: string;
 }
+
+export interface BusinessBookingSummary {
+  owner: {
+    id: number;
+    fullname: number;
+    username: number;
+    profession: string;
+    avatar: string | null;
+    ratings_average: number;
+  };
+}

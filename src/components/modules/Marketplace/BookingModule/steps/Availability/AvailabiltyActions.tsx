@@ -23,7 +23,7 @@ const AvailabiltyActions = ({
       flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
-      mt={5}
+      //mt={2.5}
       mb={3}
     >
       <Typography

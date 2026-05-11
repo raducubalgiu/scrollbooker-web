@@ -66,7 +66,6 @@ const PostOverlay = ({
               <Box
                 sx={{
                   bgcolor: "rgba(255,255,255,0.15)",
-                  //backdropFilter: "blur(10px)",
                   px: 1.5,
                   py: 1,
                   width: "fit-content",

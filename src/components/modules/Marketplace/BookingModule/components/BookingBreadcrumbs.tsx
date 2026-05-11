@@ -17,7 +17,7 @@ const STEPS = [
   { id: BookingStepEnum.SERVICES, label: "Servicii" },
   { id: BookingStepEnum.SPECIALISTS, label: "Profesioniști" },
   { id: BookingStepEnum.DATE_AND_HOUR, label: "Data și Ora" },
-  { id: BookingStepEnum.CONFIRM, label: "Confirmare" },
+  { id: BookingStepEnum.CONFIRM, label: "Confirmă" },
 ];
 
 const BookingBreadcrumbs = ({

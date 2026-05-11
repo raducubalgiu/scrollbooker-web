@@ -14,6 +14,9 @@ import ProductsStepSkeleton from "./ProductsStepSkeleton";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
 import { SelectedBookingItem } from "../../BookingModule";
 import { SelectedProductType } from "@/components/cutomized/PostVideo/sidebar/ExploreServicesTab";
+import { isEmpty } from "lodash";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 
 type ProductsStepProps = {
   businessId: number;
@@ -76,6 +79,14 @@ const ProductsStep = ({
       )}
 
       {isLoading && <ProductsStepSkeleton />}
+
+      {!isLoading && isEmpty(businessProducts) && (
+        <NotFound
+          icon={<ShoppingBagOutlinedIcon sx={{ fontSize: 50 }} />}
+          title="Servicii"
+          description="Nu au fost gasite servicii"
+        />
+      )}
 
       {!isLoading && (
         <Box>

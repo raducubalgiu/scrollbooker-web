@@ -2,7 +2,15 @@ import {
   AvailableTimeSlot,
   AvailableTimeslotsResponse,
 } from "@/ts/models/booking/availability/AvailableTimeSlot";
-import { alpha, Box, Skeleton, Stack, Theme, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Button,
+  Skeleton,
+  Stack,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { isEmpty } from "lodash";
 import React from "react";
 import AvailableSlot from "./AvailableSlot";
@@ -38,12 +46,25 @@ const AvailabilityTimeSlots = ({
         ))}
 
       {!isLoading && (is_closed || isEmpty(available_slots)) && (
-        <Stack flexDirection="row" sx={styles.slotContainer}>
-          <Box minHeight={400}>
-            <Typography variant="h6" fontWeight={600}>
-              Nu au fost gasite locuri libere
-            </Typography>
-          </Box>
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          spacing={2.5}
+          sx={{
+            p: 3,
+            border: 1.5,
+            borderColor: "divider",
+            borderRadius: 2.5,
+            minHeight: 300,
+          }}
+        >
+          <Typography variant="h4" fontWeight={600}>
+            Nu au fost găsite locuri libere
+          </Typography>
+
+          <Button variant="outlined" color="secondary" size="large">
+            Mergi la următoarea zi disponibilă
+          </Button>
         </Stack>
       )}
 

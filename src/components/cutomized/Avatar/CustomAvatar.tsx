@@ -9,6 +9,7 @@ type CustomAvatarProps = {
   ratingsAverage: number | null | undefined;
   showBadge?: boolean;
   size?: ResponsiveStyleValue<number>;
+  variant?: "circular" | "rounded" | "square";
 };
 
 const CustomAvatar = ({
@@ -16,6 +17,7 @@ const CustomAvatar = ({
   ratingsAverage,
   showBadge = true,
   size = 70,
+  variant = "circular",
 }: CustomAvatarProps) => {
   const styles = {
     badge: {
@@ -53,7 +55,9 @@ const CustomAvatar = ({
     },
   };
 
-  const content = <Avatar sx={styles.avatar} src={avatar ?? ""} />;
+  const content = (
+    <Avatar variant={variant} sx={styles.avatar} src={avatar ?? ""} />
+  );
 
   if (!showBadge) return content;
 

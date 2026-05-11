@@ -100,6 +100,26 @@ const PostActions = ({
     ]
   );
 
+  const getActionStyles = (actionId: string, theme: Theme) => {
+    const isOptions = actionId === "options";
+    const size = isOptions ? 40 : 60;
+
+    return {
+      width: size,
+      height: size,
+      borderRadius: "50%",
+      bgcolor: isOptions
+        ? "transparent"
+        : theme.palette.mode === "light"
+          ? "background.default"
+          : "background.paper",
+      color: isOptions ? "text.primary" : "text.primary",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    };
+  };
+
   if (isLoading) {
     return (
       <Box sx={styles.root}>
@@ -124,7 +144,11 @@ const PostActions = ({
     <Box sx={styles.root}>
       {actions.map((action) => (
         <Box key={action.id} sx={styles.actionItem}>
-          <IconButton onClick={action.onClick} disableRipple sx={styles.button}>
+          <IconButton
+            onClick={action.onClick}
+            disableRipple
+            sx={(theme) => getActionStyles(action.id, theme)}
+          >
             {action.icon}
           </IconButton>
 
@@ -163,11 +187,6 @@ const styles = {
     width: 60,
     height: 60,
     borderRadius: "50%",
-    bgcolor: (theme: Theme) =>
-      theme.palette.mode === "light"
-        ? "background.default"
-        : "background.paper",
-    color: "common.white",
   },
   count: {
     mt: 0.5,

@@ -1,11 +1,22 @@
-import { alpha, Box, Button, Stack, Typography } from "@mui/material";
+import {
+  alpha,
+  Avatar,
+  Box,
+  Button,
+  Rating,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { BookingStepEnum, SelectedBookingItem } from "../BookingModule";
 import { ProductUtils } from "@/ts/models/booking/product/Product";
 import { isEmpty, maxBy, minBy } from "lodash";
 import { useMemo } from "react";
 import { formatPrice } from "@/utils/formatPrice";
+import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
+import { formatRating } from "@/utils/formatters";
 
 type BookingCartProps = {
+  businessSummary: BusinessBookingSummary;
   selectedItems: SelectedBookingItem[];
   selectedEmployeeId: number | null;
   currentStep: BookingStepEnum;
@@ -16,6 +27,7 @@ type BookingCartProps = {
 };
 
 const BookingCart = ({
+  businessSummary,
   selectedItems,
   selectedEmployeeId,
   isNextDisabled,
@@ -69,103 +81,189 @@ const BookingCart = ({
         position: "sticky",
         top: 130,
         height: "calc(100vh - 170px)",
-        overflowY: "auto",
-        "&::-webkit-scrollbar": { display: "none" },
-
         bgcolor: "background.paper",
         borderRadius: 8,
         border: 1.5,
         borderColor: (theme) => alpha(theme.palette.divider, 0.1),
-        p: 6,
-
         flexDirection: "column",
+        overflow: "hidden",
       }}
     >
-      <Typography variant="h4" fontWeight={900} mb={4} letterSpacing="-0.02em">
-        Coșul tău
-      </Typography>
+      <Box
+        p={5}
+        pb={3}
+        sx={{ borderBottom: "1px solid", borderColor: "divider" }}
+      >
+        <Stack flexDirection="row" gap={2}>
+          <Avatar
+            src={businessSummary.owner.avatar ?? ""}
+            variant="rounded"
+            sx={{
+              width: 80,
+              height: 80,
+              border: 1,
+              borderColor: "divider",
+              borderRadius: 4,
+            }}
+          />
+          <Stack justifyContent="center" sx={{ minWidth: 0 }}>
+            <Typography fontSize={23} fontWeight={700} noWrap>
+              {businessSummary.owner.fullname}
+            </Typography>
 
-      <Box sx={{ flex: 1 }}>
-        {selectedItems.map((item) => {
-          const offerings = item.offerings || [];
-
-          const currentOffering = offerings.find(
-            (o) => o.user_id === selectedEmployeeId
-          );
-
-          const minPrice = minBy(
-            offerings,
-            "price_with_discount"
-          )?.price_with_discount;
-          const maxPrice = maxBy(
-            offerings,
-            "price_with_discount"
-          )?.price_with_discount;
-          const hasDifferentPrices = minPrice !== maxPrice;
-
-          const isPriceFixed = !!currentOffering;
-          const displayPrice = isPriceFixed
-            ? currentOffering.price_with_discount
-            : minPrice;
-          const showFromLabel =
-            !isPriceFixed && offerings.length > 1 && hasDifferentPrices;
-
-          return (
-            <Stack
-              key={item.productId}
-              flexDirection="row"
-              alignItems="flex-start"
-              justifyContent="space-between"
-              mb={3}
-            >
-              <Stack spacing={0.5} sx={{ minWidth: 0, pr: 2 }}>
-                <Typography variant="h5" fontWeight={600} noWrap>
-                  {item.productName}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {ProductUtils.getDurationText(item.variantDuration)}
-                </Typography>
-              </Stack>
-
-              <Typography
-                variant="h5"
-                fontWeight={700}
-                sx={{ whiteSpace: "nowrap" }}
-              >
-                {showFromLabel && (
-                  <Box
-                    component="span"
-                    sx={{ fontSize: "0.8em", fontWeight: 500, mr: 0.5 }}
-                  >
-                    de la
-                  </Box>
-                )}
-                {formatPrice(displayPrice)} RON
+            <Stack flexDirection="row" alignItems="center" gap={1}>
+              <Typography fontSize={20} fontWeight={700}>
+                {formatRating(businessSummary.owner.ratings_average)}
+              </Typography>
+              <Rating
+                readOnly
+                value={businessSummary.owner.ratings_average}
+                precision={0.5}
+              />
+              <Typography fontSize={18} color="text.secondary">
+                (100)
               </Typography>
             </Stack>
-          );
-        })}
+          </Stack>
+        </Stack>
+
+        <Stack flexDirection="row" alignItems="center" gap={1} mt={2.5}>
+          <Avatar
+            src={
+              // businessEmployees?.find((e) => e.id === selectedEmployeeId)
+              //   ?.avatar ?? ""
+              "https://media.scrollbooker.ro/avatar-male-17.jpg"
+            }
+            sx={{ width: 30, height: 30, border: 1, borderColor: "divider" }}
+          />
+          <Typography
+            fontSize={15}
+            //color="text.secondary"
+            fontWeight={500}
+            noWrap
+          >
+            Specialist:{" "}
+            <strong>
+              {/* {
+                businessEmployees?.find((e) => e.id === selectedEmployeeId)
+                  ?.fullname
+              } */}
+              Radu Ion
+            </strong>
+          </Typography>
+        </Stack>
       </Box>
 
       <Box
         sx={{
+          flex: 1,
+          overflowY: "auto",
+          p: 4,
+          py: 3,
+          "&::-webkit-scrollbar": {
+            width: "6px",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: (theme) => alpha(theme.palette.divider, 0.2),
+            borderRadius: "10px",
+            "&:hover": {
+              backgroundColor: (theme) => alpha(theme.palette.divider, 0.4),
+            },
+          },
+          // Pentru Firefox
+          scrollbarWidth: "thin",
+          scrollbarColor: (theme) =>
+            `${alpha(theme.palette.divider, 0.2)} transparent`,
+        }}
+      >
+        {isEmpty(selectedItems) ? (
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ textAlign: "center", mt: 4 }}
+          >
+            Coșul tău este gol
+          </Typography>
+        ) : (
+          selectedItems.map((item) => {
+            const offerings = item.offerings || [];
+            const currentOffering = offerings.find(
+              (o) => o.user_id === selectedEmployeeId
+            );
+            const minPrice = minBy(
+              offerings,
+              "price_with_discount"
+            )?.price_with_discount;
+            const maxPrice = maxBy(
+              offerings,
+              "price_with_discount"
+            )?.price_with_discount;
+            const hasDifferentPrices = minPrice !== maxPrice;
+
+            const displayPrice = currentOffering
+              ? currentOffering.price_with_discount
+              : minPrice;
+            const showFromLabel =
+              !currentOffering && offerings.length > 1 && hasDifferentPrices;
+
+            return (
+              <Stack
+                key={item.productId}
+                flexDirection="row"
+                alignItems="flex-start"
+                justifyContent="space-between"
+                mb={3}
+              >
+                <Stack spacing={0.5} sx={{ minWidth: 0, pr: 2 }}>
+                  <Typography fontSize={20} fontWeight={600} noWrap>
+                    {item.productName}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {ProductUtils.getDurationText(item.variantDuration)}
+                  </Typography>
+                </Stack>
+
+                <Typography
+                  fontSize={20}
+                  fontWeight={700}
+                  sx={{ whiteSpace: "nowrap" }}
+                >
+                  {showFromLabel && (
+                    <Box
+                      component="span"
+                      sx={{ fontSize: "0.75em", fontWeight: 500, mr: 0.5 }}
+                    >
+                      de la
+                    </Box>
+                  )}
+                  {formatPrice(displayPrice)} RON
+                </Typography>
+              </Stack>
+            );
+          })
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          p: 4,
           pt: 3,
-          mt: "auto",
           borderTop: "1px solid",
           borderColor: "divider",
           bgcolor: "background.paper",
-          borderBottomLeftRadius: 8,
-          borderBottomRightRadius: 8,
         }}
       >
         {!isEmpty(selectedItems) && (
-          <Stack mb={4} spacing={1}>
+          <Stack mb={3} spacing={0.5}>
             <Stack
               flexDirection="row"
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography variant="h5" fontWeight={500} color="text.secondary">
+              <Typography variant="h6" fontWeight={600} color="text.secondary">
                 Total ({selectedItems.length}{" "}
                 {selectedItems.length === 1 ? "serviciu" : "servicii"})
               </Typography>
@@ -175,13 +273,14 @@ const BookingCart = ({
                   <Box
                     component="span"
                     sx={{
-                      fontSize: "0.7em",
-                      fontWeight: 600,
+                      fontSize: "0.6em",
+                      fontWeight: 700,
                       mr: 0.5,
                       color: "text.secondary",
+                      verticalAlign: "middle",
                     }}
                   >
-                    de la
+                    DE LA
                   </Box>
                 )}
                 {formatPrice(totals.displayPrice)} RON
@@ -200,19 +299,18 @@ const BookingCart = ({
           </Stack>
         )}
 
-        <Stack flexDirection="row" alignItems="center" gap={1}>
+        <Stack flexDirection="row" alignItems="center" gap={1.5}>
           {!isFirstStep && (
             <Button
               variant="outlined"
               color="secondary"
               onClick={onBack}
-              fullWidth
               sx={{
+                flex: 1,
                 p: 1.75,
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: 700,
                 textTransform: "none",
-                transition: "all 0.3s ease-in-out",
               }}
             >
               Înapoi
@@ -224,16 +322,16 @@ const BookingCart = ({
             size="large"
             disableElevation
             fullWidth
+            onClick={onNext}
+            loading={isLoadingNext}
+            disabled={isNextDisabled || isLoadingNext}
             sx={{
+              flex: 2,
               p: 1.75,
               fontSize: 18,
               fontWeight: 700,
               textTransform: "none",
-              transition: "all 0.3s ease-in-out",
             }}
-            onClick={onNext}
-            loading={isLoadingNext}
-            disabled={isNextDisabled || isLoadingNext}
           >
             {isLastStep ? "Finalizează" : "Continuă"}
           </Button>

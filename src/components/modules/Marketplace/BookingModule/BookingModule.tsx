@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, SelectChangeEvent, Typography } from "@mui/material";
+import { Box, Container, SelectChangeEvent } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import BookingAppBar from "./components/BookingAppBar";
@@ -19,12 +19,15 @@ import {
 } from "@/ts/models/booking/appointment/Appointment";
 import { useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
+import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
+import ConfirmStep from "./steps/ConfirmStep";
 
 type BookingModuleProps = {
   businessId: number;
   businessOwnerId: number;
   employeeId: number | null;
   businessEmployees: BusinessEmployee[];
+  businessSummary: BusinessBookingSummary;
 };
 
 const SCROLL_OFFSET = 180;
@@ -51,6 +54,7 @@ const BookingModule = ({
   businessOwnerId,
   employeeId,
   businessEmployees,
+  businessSummary,
 }: BookingModuleProps) => {
   const router = useRouter();
 
@@ -97,20 +101,29 @@ const BookingModule = ({
 
   const handleNext = useCallback(() => {
     if (currentStep === BookingStepEnum.CONFIRM) {
-      // const { start_date_utc, end_date_utc } = selectedTimeSlot || {};
-      // if (!start_date_utc || !end_date_utc) return;
-      // const body: ScrollBookerAppointmentCreate = {
-      //   start_date: start_date_utc,
-      //   end_date: end_date_utc,
-      //   product_variants: selectedItems.map((item) => {
-      //     return {
-      //       id: item.variantId,
-      //       offering: { user_id: item.offering.user_id },
-      //     };
-      //   }),
-      //   payment_currency_id: 1,
-      // };
-      // handleSaveAppointment(body);
+      if (!selectedTimeSlot || !selectedEmployeeId) return;
+
+      const { start_date_utc, end_date_utc } = selectedTimeSlot;
+
+      const body: ScrollBookerAppointmentCreate = {
+        start_date: start_date_utc,
+        end_date: end_date_utc,
+        payment_currency_id: 1,
+        product_variants: selectedItems.map((item) => {
+          const activeOffering = item.offerings.find(
+            (o) => o.user_id === selectedEmployeeId
+          );
+
+          return {
+            id: item.variantId,
+            offering: {
+              user_id: activeOffering?.user_id || selectedEmployeeId,
+            },
+          };
+        }),
+      };
+
+      handleSaveAppointment(body);
     } else {
       setCurrentStep((prev) => {
         if (prev === BookingStepEnum.SERVICES && employeeId) {
@@ -123,6 +136,7 @@ const BookingModule = ({
     currentStep,
     selectedTimeSlot,
     selectedItems,
+    selectedEmployeeId,
     employeeId,
     handleSaveAppointment,
   ]);
@@ -178,13 +192,7 @@ const BookingModule = ({
           />
         );
       case BookingStepEnum.CONFIRM:
-        return (
-          <Box sx={{ minWidth: 0 }}>
-            <Typography fontWeight={800} fontSize={47.5} mt={3}>
-              Confirmare
-            </Typography>
-          </Box>
-        );
+        return <ConfirmStep />;
       default:
         return null;
     }
@@ -196,7 +204,16 @@ const BookingModule = ({
         return selectedItems.length === 0;
 
       case BookingStepEnum.SPECIALISTS:
-        return selectedEmployeeId === null;
+        if (selectedEmployeeId === null) return true;
+
+        const hasIncompleteServices = selectedItems.some((item) => {
+          const offering = item.offerings.find(
+            (o) => o.user_id === selectedEmployeeId
+          );
+          return !offering;
+        });
+
+        return hasIncompleteServices;
 
       case BookingStepEnum.DATE_AND_HOUR:
         return selectedTimeSlot === null;
@@ -226,6 +243,7 @@ const BookingModule = ({
           <Box>{renderStepContent()}</Box>
 
           <BookingCart
+            businessSummary={businessSummary}
             selectedItems={selectedItems}
             selectedEmployeeId={selectedEmployeeId}
             currentStep={currentStep}

@@ -4,7 +4,6 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import { useRouter } from "next/navigation";
-import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import Link from "next/link";
 import CustomAvatar from "@/components/cutomized/Avatar/CustomAvatar";
 
@@ -63,7 +62,7 @@ const VideoHeader = ({
                 sx={{ minWidth: 0 }}
               >
                 <Typography
-                  variant="h6"
+                  variant="h5"
                   fontWeight={700}
                   sx={{ ...styles.ellipsisText, flexShrink: 1 }}
                 >
@@ -79,7 +78,11 @@ const VideoHeader = ({
                 </Typography>
               </Stack>
 
-              <Typography color="text.secondary" sx={styles.ellipsisText}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={styles.ellipsisText}
+              >
                 {user?.profession}
               </Typography>
             </Box>
@@ -105,25 +108,20 @@ const VideoHeader = ({
               prefetch={false}
               onClick={(e) => e.stopPropagation()}
             >
-              <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
-                <FmdGoodOutlinedIcon color="primary" fontSize="medium" />
-
-                <Typography
-                  mt={0.5}
-                  variant="body1"
-                  color="text.secondary"
-                  sx={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    wordBreak: "break-word",
-                  }}
-                >
-                  {businessLocation?.formatted_address}
-                </Typography>
-              </Stack>
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  wordBreak: "break-word",
+                }}
+              >
+                {businessLocation?.formatted_address}
+              </Typography>
             </Link>
           )}
         </Box>
