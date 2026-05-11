@@ -33,7 +33,7 @@ const BookingCart = ({
     let hasGlobalVariance = false;
     let totalDuration = 0;
 
-    selectedItems.forEach((item) => {
+    selectedItems?.forEach((item) => {
       const offerings = item.offerings || [];
       const prices = offerings.map((o) => Number(o.price_with_discount));
 

@@ -60,7 +60,7 @@ const OwnProfileActions = ({
           sx={buttonSx}
           disableElevation
         >
-          Distribuie profilul
+          Distribuie
         </Button>
       )}
     </>

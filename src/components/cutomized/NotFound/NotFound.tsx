@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import React from "react";
 
 type NotFoundProps = {
@@ -9,34 +9,42 @@ type NotFoundProps = {
 
 const NotFound = ({ title, description, icon }: NotFoundProps) => {
   return (
-    <Stack
-      alignItems="center"
-      justifyContent="center"
-      spacing={2}
-      sx={{ mt: 4, width: "100%" }}
-    >
-      <Box
-        sx={{
-          bgcolor: "background.default",
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: { xs: 90, md: 120 },
-          height: { xs: 90, md: 120 },
-        }}
+    <Container maxWidth="xs">
+      <Stack
+        alignItems="center"
+        justifyContent="center"
+        spacing={2}
+        sx={{ mt: 4, width: "100%" }}
       >
-        {icon}
-      </Box>
-      <Typography variant="h4" color="text.primary" fontWeight={600}>
-        {title}
-      </Typography>
-      {description && (
-        <Typography variant="h6" color="text.secondary">
-          {description}
+        <Box
+          sx={{
+            bgcolor: "background.default",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: { xs: 90, md: 120 },
+            height: { xs: 90, md: 120 },
+          }}
+        >
+          {icon}
+        </Box>
+        <Typography
+          sx={{
+            color: "text.primary",
+            fontWeight: 600,
+            fontSize: { xs: 18, lg: 25 },
+          }}
+        >
+          {title}
         </Typography>
-      )}
-    </Stack>
+        {description && (
+          <Typography sx={{ color: "text.secondary", textAlign: "center" }}>
+            {description}
+          </Typography>
+        )}
+      </Stack>
+    </Container>
   );
 };
 

@@ -177,7 +177,6 @@ const styles = {
       xs: "calc(100vh - 56px)",
       md: "calc(100vh - 40px)",
     },
-    marginTop: { xs: 0, md: "20px" },
     overflow: "hidden",
   },
 

@@ -13,6 +13,8 @@ import {
 import React from "react";
 import { Notification } from "@/ts/models/user/Notification";
 import { NotificationTypeEnum } from "@/ts/enums/NotificationTypeEnum";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 type NotificationItemProps = {
   notification: Notification;
@@ -25,22 +27,66 @@ export default function NotificationItem({
 }: NotificationItemProps) {
   const { type, sender } = notification || {};
 
-  const styles = {
-    badge: {
-      "& .MuiBadge-badge": {
-        right: "auto",
-        left: "50%",
-        transform: `translate(-50%, 100%)`,
-      },
+  const queryClient = useQueryClient();
+
+  const { mutate: toggleFollow } = useMutation({
+    mutationFn: async ({
+      targetUserId,
+      isFollow,
+    }: {
+      targetUserId: number;
+      isFollow: boolean;
+    }) => {
+      const url = `/api/follow`;
+      const data = { followeeId: targetUserId };
+      return isFollow ? axios.delete(url, { data }) : axios.post(url, data);
     },
-    badgeContent: {
-      backgroundColor: "background.paper",
-      px: 1.5,
-      py: 0.5,
-      borderRadius: 50,
-      boxShadow: 1,
+    onMutate: async ({ targetUserId }) => {
+      const queryKey = ["notifications"];
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousData = queryClient.getQueryData(queryKey);
+
+      queryClient.setQueryData(queryKey, (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: any) => ({
+            ...page,
+            results: page.results.map((notif: Notification) =>
+              notif.sender.id === targetUserId
+                ? {
+                    ...notif,
+                    sender: {
+                      ...notif.sender,
+                      is_follow: !notif.sender.is_follow,
+                    },
+                  }
+                : notif
+            ),
+          })),
+        };
+      });
+
+      return { previousData };
     },
-    avatar: { width: 55, height: 55, border: 1, borderColor: "divider" },
+    onError: (_err, _variables, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(["notifications"], context.previousData);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+
+  const handleFollow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    toggleFollow({
+      targetUserId: sender.id,
+      isFollow: !!sender.is_follow,
+    });
   };
 
   switch (true) {
@@ -85,11 +131,9 @@ export default function NotificationItem({
                 variant={sender.is_follow ? "outlined" : "contained"}
                 color={sender.is_follow ? "secondary" : "primary"}
                 disableElevation
-                sx={{
-                  py: { xs: 0.35, lg: 0.5 },
-                  px: { xs: 1.25, lg: 1.5 },
-                  fontSize: { xs: "0.875rem", sm: "1rem" },
-                }}
+                onClick={handleFollow}
+                onMouseDown={(e) => e.stopPropagation()}
+                sx={styles.followButton}
               >
                 {sender.is_follow ? "Urmărești" : "Urmărește"}
               </Button>
@@ -101,3 +145,12 @@ export default function NotificationItem({
       return null;
   }
 }
+
+const styles = {
+  avatar: { width: 55, height: 55, border: 1, borderColor: "divider" },
+  followButton: {
+    py: { xs: 0.35, lg: 0.5 },
+    px: { xs: 1.25, lg: 1.5 },
+    fontSize: { xs: "0.875rem", sm: "0.9rem" },
+  },
+};

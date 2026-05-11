@@ -37,7 +37,6 @@ const ProfileBookmarksTab = ({ username }: ProfileBookmarksTabProps) => {
               key={post.id}
               viewsCount={post.counters.views_count}
               thumbnailUrl={post.media_files[0]?.thumbnail_url ?? null}
-              videoUrl={post.media_files[0]?.url ?? null}
               onNavigateToVideo={() =>
                 router.push(
                   `/profile/${username}/video/${post.id}?tab=bookmarks`
