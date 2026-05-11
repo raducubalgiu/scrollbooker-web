@@ -2,10 +2,9 @@
 
 import { Box, Slide } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import PostActions from "./PostActions";
+import PostActions from "../../../cutomized/PostVideo/PostActions";
 import ExploreControls from "./ExploreControls";
 import { useInfiniteExplorePosts } from "@/hooks/infiniteQuery/useInfiniteExplorePosts";
-import ExploreSidebar from "./sidebar/ExploreSidebar";
 import ExploreDrawer from "./ExploreDrawer";
 import { useExplorePlayerPool } from "./useExplorePlayerPool";
 import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
@@ -14,6 +13,7 @@ import { ExploreVideoPool } from "./ExploreVideoPool";
 import { useRouter } from "next/navigation";
 import { Product } from "@/ts/models/booking/product/Product";
 import ExploreHeaderMenu from "./ExploreHeaderMenu";
+import ExploreSidebar from "@/components/cutomized/PostVideo/sidebar/ExploreSidebar";
 
 const PREFETCH_OFFSET = 2;
 

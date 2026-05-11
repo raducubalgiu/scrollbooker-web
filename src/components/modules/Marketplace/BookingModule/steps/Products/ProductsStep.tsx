@@ -12,8 +12,8 @@ import { useCustomQuery } from "@/hooks/useHttp";
 import { useScrollSync } from "../../useScrollSync";
 import ProductsStepSkeleton from "./ProductsStepSkeleton";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
-import { SelectedProductType } from "../../../ExploreModule/sidebar/ExploreServicesTab";
 import { SelectedBookingItem } from "../../BookingModule";
+import { SelectedProductType } from "@/components/cutomized/PostVideo/sidebar/ExploreServicesTab";
 
 type ProductsStepProps = {
   businessId: number;

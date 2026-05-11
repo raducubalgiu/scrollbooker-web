@@ -5,9 +5,9 @@ import { alpha, Box, IconButton, Theme } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Post } from "@/ts/models/social/Post";
 import { useMutate } from "@/hooks/useHttp";
-import PostActions from "../ExploreModule/PostActions";
+import PostActions from "../../../cutomized/PostVideo/PostActions";
 import ExploreSidebar from "../ExploreModule/sidebar/ExploreSidebar";
-import { PostVideoPlayer } from "../ExploreModule/PostVideoPlayer";
+import { PostVideoPlayer } from "../../../cutomized/PostVideo/PostVideoPlayer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 type ProfileVideoDetailPageProps = {

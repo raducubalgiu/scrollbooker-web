@@ -1,12 +1,12 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import React, { memo, useCallback, useMemo } from "react";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
-import PostComments from "../../CommentsModule/PostComments";
-import VideoHeader from "../VideoHeader";
 import ReviewsTab from "./ReviewsTab";
 import ExploreServicesTab from "./ExploreServicesTab";
-import VideoHeaderSkeleton from "../VideoHeaderSkeleton";
 import { Product } from "@/ts/models/booking/product/Product";
+import PostComments from "@/components/modules/Marketplace/CommentsModule/PostComments";
+import VideoHeaderSkeleton from "../VideoHeaderSkeleton";
+import VideoHeader from "../VideoHeader";
 
 enum ExploreSidebarTab {
   SERVICES,

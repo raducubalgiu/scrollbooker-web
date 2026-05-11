@@ -1,7 +1,7 @@
+import ReviewCard from "@/components/modules/Marketplace/ProfileModule/social/ReviewCard";
 import { useInfiniteReviews } from "@/hooks/infiniteQuery/useInfiniteReviews";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import React, { memo } from "react";
-import ReviewCard from "../../ProfileModule/social/ReviewCard";
 
 type ReviewsTabProps = {
   userId: number | undefined;

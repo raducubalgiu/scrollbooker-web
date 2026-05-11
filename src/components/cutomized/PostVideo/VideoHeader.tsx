@@ -31,36 +31,6 @@ const VideoHeader = ({
     `${lat},${lng}`
   )}`;
 
-  const styles = {
-    badge: {
-      flexShrink: 0,
-      "& .MuiBadge-badge": {
-        right: "auto",
-        left: "50%",
-        transform: `translate(-50%, 100%)`,
-      },
-    },
-    badgeContent: {
-      backgroundColor: "background.paper",
-      px: 1.5,
-      py: 0.5,
-      borderRadius: 50,
-      boxShadow: 1,
-    },
-    avatar: {
-      width: 70,
-      height: 70,
-      border: 1,
-      borderColor: "divider",
-    },
-    ellipsisText: {
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      whiteSpace: "nowrap",
-      minWidth: 0,
-    },
-  };
-
   return (
     <Box>
       <Stack
@@ -169,3 +139,33 @@ const VideoHeader = ({
 };
 
 export default VideoHeader;
+
+const styles = {
+  badge: {
+    flexShrink: 0,
+    "& .MuiBadge-badge": {
+      right: "auto",
+      left: "50%",
+      transform: `translate(-50%, 100%)`,
+    },
+  },
+  badgeContent: {
+    backgroundColor: "background.paper",
+    px: 1.5,
+    py: 0.5,
+    borderRadius: 50,
+    boxShadow: 1,
+  },
+  avatar: {
+    width: 70,
+    height: 70,
+    border: 1,
+    borderColor: "divider",
+  },
+  ellipsisText: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    minWidth: 0,
+  },
+};
