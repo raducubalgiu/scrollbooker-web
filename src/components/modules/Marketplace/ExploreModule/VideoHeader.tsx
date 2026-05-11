@@ -1,23 +1,24 @@
 "use client";
 
-import { Avatar, Badge, Box, Button, Stack, Typography } from "@mui/material";
-import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
-import { formatRating } from "@/utils/formatters";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import { useRouter } from "next/navigation";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import Link from "next/link";
+import CustomAvatar from "@/components/cutomized/Avatar/CustomAvatar";
 
 type VideoHeaderProps = {
   displayDescription: boolean;
   description: string | null;
   businessLocation: PostBusinessLocation | null | undefined;
   user: PostUser | undefined;
+  isVideoReview: boolean;
 };
 
 const VideoHeader = ({
   user,
+  isVideoReview,
   description,
   businessLocation,
   displayDescription = false,
@@ -70,28 +71,11 @@ const VideoHeader = ({
         sx={{ cursor: "pointer", minWidth: 0 }}
         gap={0.5}
       >
-        <Badge
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          badgeContent={
-            <Stack
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="center"
-              sx={styles.badgeContent}
-            >
-              <StarRateRoundedIcon
-                sx={{ fontSize: 20, mr: 0.5, color: "rating.main" }}
-              />
-              <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-                {ratings_average ? formatRating(ratings_average) : "-"}
-              </Typography>
-            </Stack>
-          }
-          sx={styles.badge}
-        >
-          <Avatar sx={styles.avatar} src={avatar ?? ""} />
-        </Badge>
+        <CustomAvatar
+          avatar={avatar}
+          ratingsAverage={ratings_average}
+          showBadge={!isVideoReview}
+        />
 
         <Box flex={1} sx={{ minWidth: 0 }}>
           <Stack

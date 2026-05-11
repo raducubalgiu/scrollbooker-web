@@ -15,7 +15,7 @@ const AppointmentDetailsActions = ({
 }: AppointmentDetailsActionsProps) => {
   return (
     <Box>
-      {status === AppointmentStatusEnum.FINISHED && (
+      {status !== AppointmentStatusEnum.IN_PROGRESS && (
         <Button
           variant="contained"
           fullWidth

@@ -19,6 +19,7 @@ type ExploreSidebarProps = {
   commentsCount: number | undefined;
   postId: number | undefined;
   user: PostUser | undefined;
+  isVideoReview: boolean;
   businessLocation: PostBusinessLocation | null | undefined;
   onNavigateToBooking: (product: Product) => void;
 };
@@ -27,6 +28,7 @@ const ExploreSidebar = ({
   commentsCount,
   postId,
   user,
+  isVideoReview,
   businessLocation,
   isLoading,
   onNavigateToBooking,
@@ -89,6 +91,7 @@ const ExploreSidebar = ({
             user={user}
             businessLocation={businessLocation}
             displayDescription={false}
+            isVideoReview={isVideoReview}
           />
         )}
       </Box>

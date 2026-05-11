@@ -140,7 +140,7 @@ const BookingCart = ({
                     de la
                   </Box>
                 )}
-                {displayPrice} RON
+                {formatPrice(displayPrice)} RON
               </Typography>
             </Stack>
           );

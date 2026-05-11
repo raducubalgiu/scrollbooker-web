@@ -60,7 +60,7 @@ const PostActions = ({
             fontSize="large"
             sx={{
               color: userActions?.is_bookmarked
-                ? "primary.main"
+                ? "rating.main"
                 : "text.primary",
             }}
           />

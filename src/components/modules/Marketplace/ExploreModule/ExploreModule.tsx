@@ -144,6 +144,7 @@ export default function ExploreModule() {
           commentsCount={currentPost?.counters.comment_count}
           postId={currentPost?.id}
           user={currentPost?.user}
+          isVideoReview={currentPost?.is_video_review === true}
           businessLocation={currentPost?.business_location}
           onNavigateToBooking={navigateToBooking}
         />

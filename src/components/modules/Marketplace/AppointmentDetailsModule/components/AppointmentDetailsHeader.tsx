@@ -4,20 +4,10 @@ import {
   AppointmentUtils,
 } from "@/ts/models/booking/appointment/Appointment";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
-import { formatRating } from "@/utils/formatters";
-import {
-  Alert,
-  alpha,
-  Avatar,
-  Badge,
-  Box,
-  Chip,
-  Stack,
-  Typography,
-} from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
+import { Alert, alpha, Box, Chip, Stack, Typography } from "@mui/material";
 import React from "react";
 import Link from "next/link";
+import CustomAvatar from "@/components/cutomized/Avatar/CustomAvatar";
 
 type AppointmentDetailsHeaderProps = {
   status: AppointmentStatusEnum;
@@ -100,28 +90,7 @@ const AppointmentDetailsHeader = ({
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <Stack flexDirection="row" alignItems="center" gap={2} my={5}>
-          <Badge
-            overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            badgeContent={
-              <Stack
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="center"
-                sx={styles.badgeContent}
-              >
-                <StarIcon
-                  sx={{ fontSize: 20, mr: 0.5, color: "rating.main" }}
-                />
-                <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-                  {formatRating(ratings_average)}
-                </Typography>
-              </Stack>
-            }
-            sx={styles.badge}
-          >
-            <Avatar sx={styles.avatar} src={avatar ?? ""} />
-          </Badge>
+          <CustomAvatar avatar={avatar} ratingsAverage={ratings_average} />
           <Box>
             <Typography variant="h6" fontWeight={600}>
               {fullname}
@@ -137,21 +106,3 @@ const AppointmentDetailsHeader = ({
 };
 
 export default AppointmentDetailsHeader;
-
-const styles = {
-  badge: {
-    "& .MuiBadge-badge": {
-      right: "auto",
-      left: "50%",
-      transform: `translate(-50%, 100%)`,
-    },
-  },
-  badgeContent: {
-    backgroundColor: "background.paper",
-    px: 1.5,
-    py: 0.5,
-    borderRadius: 50,
-    boxShadow: 1,
-  },
-  avatar: { width: 80, height: 80, border: 1, borderColor: "divider" },
-};

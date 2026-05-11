@@ -24,6 +24,7 @@ import { ProductUtils } from "@/ts/models/booking/product/Product";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import GroupIcon from "@mui/icons-material/Group";
+import { formatPrice } from "@/utils/formatPrice";
 
 type SpecialistsProps = {
   selectedItems: SelectedBookingItem[];
@@ -227,7 +228,7 @@ const Specialists = ({
 
                 {hasOffering && (
                   <Typography variant="h6" fontWeight={700}>
-                    {currentOffering.price_with_discount} RON
+                    {formatPrice(currentOffering.price_with_discount)} RON
                   </Typography>
                 )}
               </Stack>

@@ -79,7 +79,9 @@ const CancelAppointmentModal = ({
             onCancel(reasonMessage);
           }
         }),
-        disabled: isLoadingCancel,
+        disabled:
+          isLoadingCancel ||
+          (reason === "OTHER" && watch("canceledReason") === ""),
         loading: isLoadingCancel,
       },
     },
