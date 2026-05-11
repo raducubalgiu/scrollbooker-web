@@ -117,8 +117,8 @@ export default function BottomBar({ username }: BottomBarProps) {
           if (route) router.push(route);
         }}
         sx={{
+          height: "65px",
           backgroundColor: getBgColor(),
-          height: 65,
           pb: "safe-area-inset-bottom",
           "& .MuiBottomNavigationAction-root": {
             minWidth: 0,

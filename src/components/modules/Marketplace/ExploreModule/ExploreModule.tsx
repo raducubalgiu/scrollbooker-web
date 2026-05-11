@@ -136,6 +136,7 @@ export default function ExploreModule() {
             onBookmarkClick={() => {}}
             onLike={() => {}}
             onShareClick={() => {}}
+            onOptionsClick={() => {}}
           />
         </Box>
 
@@ -174,7 +175,7 @@ const styles = {
     alignItems: "stretch",
     width: "100%",
     height: {
-      xs: "calc(100vh - 56px)",
+      xs: "calc(100vh - 65px)",
       md: "calc(100vh - 40px)",
     },
     overflow: "hidden",

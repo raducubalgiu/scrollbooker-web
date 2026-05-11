@@ -710,7 +710,7 @@ const styles = {
     zIndex: 6,
   },
   centerIcon: {
-    fontSize: 150,
+    fontSize: { xs: 100, md: 120, xl: 150 },
     color: "#fff",
     opacity: 0.65,
   },

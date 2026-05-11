@@ -4,6 +4,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import IosShareRoundedIcon from "@mui/icons-material/IosShareRounded";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { PostCounters, PostUserActions } from "@/ts/models/social/Post";
 
 type PostActionsProps = {
@@ -14,10 +15,11 @@ type PostActionsProps = {
   onCommentClick: () => void;
   onBookmarkClick: () => void;
   onShareClick: () => void;
+  onOptionsClick: () => void;
 };
 
 type PostActionItem = {
-  id: "like" | "comment" | "bookmark" | "share";
+  id: "like" | "comment" | "bookmark" | "share" | "options";
   icon: React.ReactNode;
   count?: number;
   onClick: () => void;
@@ -31,6 +33,7 @@ const PostActions = ({
   onCommentClick,
   onBookmarkClick,
   onShareClick,
+  onOptionsClick,
 }: PostActionsProps) => {
   const actions = useMemo<PostActionItem[]>(
     () => [
@@ -67,6 +70,11 @@ const PostActions = ({
         ),
         count: counters?.bookmark_count ?? 0,
         onClick: onBookmarkClick,
+      },
+      {
+        id: "options",
+        icon: <MoreHorizIcon fontSize="large" sx={{ color: "text.primary" }} />,
+        onClick: onOptionsClick,
       },
       {
         id: "share",

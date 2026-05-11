@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import { Post } from "@/ts/models/social/Post";
 import { useMutate } from "@/hooks/useHttp";
 import PostActions from "../../../cutomized/PostVideo/PostActions";
-import ExploreSidebar from "../ExploreModule/sidebar/ExploreSidebar";
 import { PostVideoPlayer } from "../../../cutomized/PostVideo/PostVideoPlayer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ExploreSidebar from "@/components/cutomized/PostVideo/sidebar/ExploreSidebar";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -226,6 +226,7 @@ export default function VideoDetailModule({
             onLike={handleLike}
             onBookmarkClick={handleBookmark}
             onShareClick={() => {}}
+            onOptionsClick={() => {}}
           />
         </Box>
 
@@ -236,6 +237,7 @@ export default function VideoDetailModule({
           user={post.user}
           businessLocation={post?.business_location}
           onNavigateToBooking={() => router.back()}
+          isVideoReview={post.is_video_review}
         />
       </Box>
     </Box>
@@ -250,10 +252,9 @@ const styles = {
     alignItems: "stretch",
     width: "100%",
     height: {
-      xs: "calc(100vh - 56px)",
+      xs: "calc(100vh - 65px)",
       md: "calc(100vh - 40px)",
     },
-    marginTop: { xs: 0, md: "20px" },
     overflow: "hidden",
   },
 
