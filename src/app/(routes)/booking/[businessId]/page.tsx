@@ -34,11 +34,9 @@ export default async function BookingPage({
 
   try {
     const [employeesRes, summaryRes] = await Promise.all([
-      !employeeId
-        ? get<BusinessEmployee[]>({
-            url: `/businesses/owner/${businessOwnerId}/employees`,
-          })
-        : Promise.resolve({ data: [] as BusinessEmployee[] }),
+      get<BusinessEmployee[]>({
+        url: `/businesses/owner/${businessOwnerId}/employees`,
+      }),
 
       get<BusinessBookingSummary>({
         url: `/booking/businesses/${businessId}/summary`,

@@ -30,13 +30,16 @@ export interface BusinessCreate {
   owner_fullname: string;
 }
 
+export interface BusinessBookingOwner {
+  id: number;
+  fullname: number;
+  username: number;
+  profession: string;
+  avatar: string | null;
+  ratings_average: number;
+  ratings_count: number;
+}
+
 export interface BusinessBookingSummary {
-  owner: {
-    id: number;
-    fullname: number;
-    username: number;
-    profession: string;
-    avatar: string | null;
-    ratings_average: number;
-  };
+  owner: BusinessBookingOwner;
 }

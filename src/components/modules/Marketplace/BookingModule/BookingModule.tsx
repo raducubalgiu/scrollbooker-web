@@ -9,7 +9,6 @@ import AvailabilityStep from "./steps/Availability/AvailabilityStep";
 import BookingBreadcrumbs from "./components/BookingBreadcrumbs";
 import Specialists from "./steps/Specialists/Specialists";
 import { ProductOffering } from "@/ts/models/booking/product/Product";
-import BookingCart from "./components/BookingCart";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { sumBy } from "lodash";
 import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
@@ -21,6 +20,7 @@ import { useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
 import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
 import ConfirmStep from "./steps/ConfirmStep";
+import BookingCart, { EmployeeDataType } from "./components/cart/BookingCart";
 
 type BookingModuleProps = {
   businessId: number;
@@ -226,26 +226,29 @@ const BookingModule = ({
     }
   }, [currentStep, selectedItems, selectedEmployeeId, selectedTimeSlot]);
 
+  const employeeData: EmployeeDataType = {
+    selectedEmployeeId,
+    avatar:
+      businessEmployees?.find((e) => e.id === selectedEmployeeId)?.avatar ??
+      null,
+    fullname:
+      businessEmployees?.find((e) => e.id === selectedEmployeeId)?.fullname ??
+      null,
+  };
+
   return (
     <Box sx={{ minHeight: "100vh" }}>
       <BookingAppBar onBack={() => router.back()} />
       <Container maxWidth="xl">
         <BookingBreadcrumbs currentStep={currentStep} employeeId={employeeId} />
 
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: `minmax(0, 1fr) ${SIDEBAR_WIDTH}px`,
-            gap: 8,
-            alignItems: "start",
-          }}
-        >
+        <Box sx={styles.container}>
           <Box>{renderStepContent()}</Box>
 
           <BookingCart
             businessSummary={businessSummary}
             selectedItems={selectedItems}
-            selectedEmployeeId={selectedEmployeeId}
+            employeeData={employeeData}
             currentStep={currentStep}
             isNextDisabled={isNextDisabled}
             isLoadingNext={isPending}
@@ -259,3 +262,12 @@ const BookingModule = ({
 };
 
 export default BookingModule;
+
+const styles = {
+  container: {
+    display: "grid",
+    gridTemplateColumns: `minmax(0, 1fr) ${SIDEBAR_WIDTH}px`,
+    gap: 8,
+    alignItems: "start",
+  },
+};

@@ -4,8 +4,6 @@ import { useCustomQuery } from "@/hooks/useHttp";
 import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { Box } from "@mui/material";
 import React, { memo, useMemo } from "react";
-import BookingSidebar from "../../BookingModule/components/BookingCart";
-import ProductsStep from "../../BookingModule/steps/Products/ProductsStep";
 import { useScrollSync } from "../../BookingModule/useScrollSync";
 
 type ProfileProductsTabProps = {
@@ -41,7 +39,7 @@ const ProfileProductsTab = ({
         alignItems: "start",
       }}
     >
-      <ProductsStep
+      {/* <ProductsStep
         sync={sync}
         businessProducts={businessProducts}
         scrollOffset={SCROLL_OFFSET}
@@ -49,7 +47,7 @@ const ProfileProductsTab = ({
         top={0}
       />
 
-      <BookingSidebar />
+      <BookingSidebar /> */}
     </Box>
   );
 };
