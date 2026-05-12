@@ -7,6 +7,8 @@ import UploadIcon from "@mui/icons-material/Upload";
 import UploadVideoSidebar from "./UploadVideoSidebar";
 import { PostCreate } from "@/ts/models/social/PostCreate";
 import ProgressWithFeedback from "@/components/cutomized/ProgressWithFeedback/ProgressWithFeedback";
+import { Product } from "@/ts/models/booking/product/Product";
+import ProductsSelectionModal from "./ProductsSelectionModal";
 
 const UploadVideoModule = () => {
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
@@ -15,6 +17,17 @@ const UploadVideoModule = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [openProducts, setOpenProducts] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+
+  const handleOpenProducts = useCallback(() => {
+    setOpenProducts(true);
+  }, []);
+
+  const handleCloseProducts = useCallback(() => {
+    setOpenProducts(false);
+  }, []);
 
   const handleVideoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -153,72 +166,91 @@ const UploadVideoModule = () => {
     }
   };
 
+  const handleSelectProduct = (product: Product) => {
+    setSelectedProducts((products) => products.concat(product));
+  };
+
   return (
-    <Box sx={styles.container}>
-      <Box sx={styles.leftSection}>
-        <input
-          type="file"
-          accept="video/*"
-          hidden
-          ref={fileInputRef}
-          onChange={handleVideoChange}
-        />
-
-        <Stack
-          spacing={2}
-          alignItems="center"
-          sx={{ width: "100%", height: "100%" }}
-        >
-          {isUploading && <ProgressWithFeedback progress={uploadProgress} />}
-          <Box
-            sx={{
-              ...styles.videoContainer,
-              cursor: "pointer",
-              flex: 1,
-              width: "100%",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            <Stack
-              alignItems="center"
-              justifyContent="center"
-              sx={{ width: "100%", height: "100%" }}
-            >
-              {videoPreview && (
-                <video
-                  src={videoPreview}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  controls
-                />
-              )}
-            </Stack>
-          </Box>
-
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={handleContainerClick}
-            startIcon={<UploadIcon />}
-            fullWidth
-            sx={{
-              p: 1.5,
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-          >
-            {videoPreview ? "Schimbă videoclipul" : "Selectează video"}
-          </Button>
-        </Stack>
-      </Box>
-
-      <UploadVideoSidebar
-        description={description}
-        onDescriptionChange={handleDescription}
-        onHandleUpload={handleUpload}
-        isDisabled={isUploading || !selectedVideo}
+    <>
+      <ProductsSelectionModal
+        selectedProducts={selectedProducts}
+        onSelectProduct={handleSelectProduct}
+        open={openProducts}
+        onClose={handleCloseProducts}
       />
-    </Box>
+
+      <Box sx={styles.container}>
+        <Box sx={styles.leftSection}>
+          <input
+            type="file"
+            accept="video/*"
+            hidden
+            ref={fileInputRef}
+            onChange={handleVideoChange}
+          />
+
+          <Stack
+            spacing={2}
+            alignItems="center"
+            sx={{ width: "100%", height: "100%" }}
+          >
+            {isUploading && <ProgressWithFeedback progress={uploadProgress} />}
+            <Box
+              sx={{
+                ...styles.videoContainer,
+                cursor: "pointer",
+                flex: 1,
+                width: "100%",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              <Stack
+                alignItems="center"
+                justifyContent="center"
+                sx={{ width: "100%", height: "100%" }}
+              >
+                {videoPreview && (
+                  <video
+                    src={videoPreview}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                    controls
+                  />
+                )}
+              </Stack>
+            </Box>
+
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleContainerClick}
+              startIcon={<UploadIcon />}
+              fullWidth
+              sx={{
+                p: 1.5,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              {videoPreview ? "Schimbă videoclipul" : "Selectează video"}
+            </Button>
+          </Stack>
+        </Box>
+
+        <UploadVideoSidebar
+          selectedProducts={selectedProducts}
+          description={description}
+          onHandleOpenProducts={handleOpenProducts}
+          onDescriptionChange={handleDescription}
+          onHandleUpload={handleUpload}
+          isDisabled={isUploading || !selectedVideo}
+        />
+      </Box>
+    </>
   );
 };
 

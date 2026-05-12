@@ -1,85 +1,40 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
 import React from "react";
+import { Product } from "@/ts/models/booking/product/Product";
+import { Box, Button, Divider, Stack } from "@mui/material";
+import UploadVideoDescription from "./UploadVideoDescription";
+import UploadVideoProducts from "./UploadVideoProducts";
 
 type UploadVideoSidebarProps = {
   description: string;
+  selectedProducts: Product[];
   onDescriptionChange: (d: string) => void;
+  onHandleOpenProducts: () => void;
   onHandleUpload: () => void;
   isDisabled: boolean;
 };
 
 const UploadVideoSidebar = ({
   description,
+  selectedProducts,
+  onHandleOpenProducts,
   onDescriptionChange,
   onHandleUpload,
   isDisabled,
 }: UploadVideoSidebarProps) => {
   return (
-    <Box
-      flex={1}
-      sx={{
-        maxWidth: 600,
-        border: 1,
-        borderColor: "divider",
-        borderRadius: 4,
-        height: "100%",
-        overflow: "hidden",
-      }}
-    >
+    <Box flex={1} sx={styles.container}>
       <Stack sx={{ height: "100%" }}>
-        <Box
-          sx={{
-            flex: 1,
-            position: "relative",
-            overflow: "hidden",
-            px: 2.5,
-            py: 1,
-          }}
-        >
-          <Box
-            sx={{
-              height: "100%",
-              width: "calc(100% - 40px)",
-              position: "absolute",
-              top: 0,
-              pt: 2.5,
-            }}
-          >
-            <Typography variant="h5" fontWeight={600} mb={1}>
-              Descriere
-            </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              Descrierea ar trebui să reflecte clar conținutul videoclipului și
-              valoarea oferită utilizatorilor.
-            </Typography>
-            <TextField
-              fullWidth
-              multiline
-              minRows={2}
-              maxRows={2}
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              placeholder="Descriere..."
-              sx={{ mt: 2.5 }}
+        <Box sx={styles.contentContainer}>
+          <Box sx={styles.content}>
+            <UploadVideoDescription
+              description={description}
+              onDescriptionChange={onDescriptionChange}
             />
 
-            <Stack flexDirection="row" justifyContent="flex-end" mt={1}>
-              <Typography color="text.secondary">0 / 500</Typography>
-            </Stack>
-
-            <Typography variant="h5" fontWeight={600} mb={1}>
-              Produse
-            </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              Poți atașa acestei postări maxim 5 produse din lista ta existentă.
-            </Typography>
+            <UploadVideoProducts
+              selectedProducts={selectedProducts}
+              onOpenProducts={onHandleOpenProducts}
+            />
           </Box>
         </Box>
 
@@ -109,3 +64,28 @@ const UploadVideoSidebar = ({
 };
 
 export default UploadVideoSidebar;
+
+const styles = {
+  container: {
+    maxWidth: 600,
+    border: 1,
+    borderColor: "divider",
+    borderRadius: 4,
+    height: "100%",
+    overflow: "hidden",
+  },
+  contentContainer: {
+    flex: 1,
+    position: "relative",
+    overflow: "hidden",
+    px: 2.5,
+    py: 1,
+  },
+  content: {
+    height: "100%",
+    width: "calc(100% - 40px)",
+    position: "absolute",
+    top: 0,
+    pt: 2.5,
+  },
+};
