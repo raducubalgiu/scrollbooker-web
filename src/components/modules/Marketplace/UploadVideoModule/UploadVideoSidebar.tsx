@@ -47,13 +47,7 @@ const UploadVideoSidebar = ({
             fullWidth
             disableElevation
             disabled={isDisabled}
-            sx={{
-              p: 1.8,
-              fontWeight: 600,
-              textTransform: "none",
-              fontSize: "1rem",
-              transition: "all 0.3s ease-in-out",
-            }}
+            sx={styles.button}
           >
             Postează
           </Button>
@@ -87,5 +81,12 @@ const styles = {
     position: "absolute",
     top: 0,
     pt: 2.5,
+  },
+  button: {
+    p: 1.8,
+    fontWeight: 600,
+    textTransform: "none",
+    fontSize: "1rem",
+    transition: "all 0.3s ease-in-out",
   },
 };

@@ -166,15 +166,15 @@ const UploadVideoModule = () => {
     }
   };
 
-  const handleSelectProduct = (product: Product) => {
-    setSelectedProducts((products) => products.concat(product));
+  const handleSelectProducts = (products: Product[]) => {
+    setSelectedProducts(products);
   };
 
   return (
     <>
       <ProductsSelectionModal
         selectedProducts={selectedProducts}
-        onSelectProduct={handleSelectProduct}
+        onAddProducts={handleSelectProducts}
         open={openProducts}
         onClose={handleCloseProducts}
       />
@@ -195,6 +195,7 @@ const UploadVideoModule = () => {
             sx={{ width: "100%", height: "100%" }}
           >
             {isUploading && <ProgressWithFeedback progress={uploadProgress} />}
+
             <Box
               sx={{
                 ...styles.videoContainer,

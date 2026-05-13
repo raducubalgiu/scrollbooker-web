@@ -11,7 +11,6 @@ import {
   CircularProgress,
   IconButton,
   Stack,
-  Theme,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -20,18 +19,17 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useRef, useState } from "react";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 
 type ProductsSelectionModalProps = {
   selectedProducts: Product[];
-  onSelectProduct: (product: Product) => void;
+  onAddProducts: (products: Product[]) => void;
   open: boolean;
   onClose: () => void;
 };
 
 const ProductsSelectionModal = ({
   selectedProducts,
-  onSelectProduct,
+  onAddProducts,
   open,
   onClose,
 }: ProductsSelectionModalProps) => {
@@ -165,23 +163,31 @@ const ProductsSelectionModal = ({
                   </Typography>
                 </Box>
 
-                <Button
-                  variant="contained"
-                  disabled={localSelectedProducts.length === 0}
-                  disableElevation
-                  // onClick={() => {
-                  //   onAddServices(localSelectedProducts); // Funcția care trimite datele către Sidebar
-                  //   onClose();
-                  // }}
-                  sx={{
-                    borderRadius: 2,
-                    textTransform: "none",
-                    px: 3,
-                    fontWeight: 600,
-                  }}
-                >
-                  Adaugă servicii
-                </Button>
+                <Stack flexDirection="row" alignItems="center" gap={1}>
+                  <Button
+                    disabled={localSelectedProducts.length === 0}
+                    onClick={() => setLocalSelectedProducts([])}
+                  >
+                    Reset
+                  </Button>
+                  <Button
+                    variant="contained"
+                    disabled={localSelectedProducts.length === 0}
+                    disableElevation
+                    onClick={() => {
+                      onAddProducts(localSelectedProducts);
+                      onClose();
+                    }}
+                    sx={{
+                      borderRadius: 2,
+                      textTransform: "none",
+                      px: 3,
+                      fontWeight: 600,
+                    }}
+                  >
+                    Adaugă servicii
+                  </Button>
+                </Stack>
               </Stack>
 
               {/* TABS (Sub rezumat) */}

@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   IconButton,
   List,
   ListItem,
@@ -32,9 +33,20 @@ const UploadVideoProducts = ({
 
       <ProductsInfoSection />
 
-      <Typography variant="subtitle1" fontWeight={700} mb={2}>
-        Servicii selectate ({selectedProducts.length}/5)
-      </Typography>
+      <Stack
+        mb={2}
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Typography variant="subtitle1" fontWeight={700}>
+          Servicii selectate ({selectedProducts.length}/5)
+        </Typography>
+
+        {selectedProducts.length > 0 && (
+          <Button onClick={onOpenProducts}>Modifică serviciile</Button>
+        )}
+      </Stack>
 
       {isEmpty(selectedProducts) && (
         <EmptyProductsSection onOpenProducts={onOpenProducts} />
