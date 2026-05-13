@@ -28,6 +28,11 @@ const UploadVideoDescription = ({
         onChange={(e) => onDescriptionChange(e.target.value)}
         placeholder="Descriere..."
         sx={{ mt: 2.5 }}
+        slotProps={{
+          htmlInput: {
+            maxLength: 500,
+          },
+        }}
       />
 
       <Stack flexDirection="row" justifyContent="flex-end" mt={1}>

@@ -7,9 +7,10 @@ import UploadVideoProducts from "./UploadVideoProducts";
 type UploadVideoSidebarProps = {
   description: string;
   selectedProducts: Product[];
-  onDescriptionChange: (d: string) => void;
   onHandleOpenProducts: () => void;
+  onDescriptionChange: (d: string) => void;
   onHandleUpload: () => void;
+  onRemoveProduct: (product: Product) => void;
   isDisabled: boolean;
 };
 
@@ -19,6 +20,7 @@ const UploadVideoSidebar = ({
   onHandleOpenProducts,
   onDescriptionChange,
   onHandleUpload,
+  onRemoveProduct,
   isDisabled,
 }: UploadVideoSidebarProps) => {
   return (
@@ -34,11 +36,12 @@ const UploadVideoSidebar = ({
             <UploadVideoProducts
               selectedProducts={selectedProducts}
               onOpenProducts={onHandleOpenProducts}
+              onRemoveProduct={onRemoveProduct}
             />
           </Box>
         </Box>
 
-        <Box sx={{ p: 2.5, pt: 0, zIndex: 10, bgcolor: "background.paper" }}>
+        <Box sx={styles.actionContainer}>
           <Divider sx={{ mb: 2, opacity: 0.6 }} />
 
           <Button
@@ -70,17 +73,23 @@ const styles = {
   },
   contentContainer: {
     flex: 1,
-    position: "relative",
-    overflow: "hidden",
+    overflowY: "auto",
     px: 2.5,
-    py: 1,
+    pt: 2.5,
+    pb: 1,
+    "&::-webkit-scrollbar": { display: "none" },
+    scrollbarWidth: "none" as const,
   },
   content: {
-    height: "100%",
-    width: "calc(100% - 40px)",
-    position: "absolute",
-    top: 0,
-    pt: 2.5,
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+  },
+  actionContainer: {
+    p: 2.5,
+    pt: 0,
+    zIndex: 10,
+    bgcolor: "background.paper",
   },
   button: {
     p: 1.8,
@@ -89,4 +98,4 @@ const styles = {
     fontSize: "1rem",
     transition: "all 0.3s ease-in-out",
   },
-};
+} as const;

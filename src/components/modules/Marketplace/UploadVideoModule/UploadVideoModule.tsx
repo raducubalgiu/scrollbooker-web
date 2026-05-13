@@ -8,7 +8,7 @@ import UploadVideoSidebar from "./UploadVideoSidebar";
 import { PostCreate } from "@/ts/models/social/PostCreate";
 import ProgressWithFeedback from "@/components/cutomized/ProgressWithFeedback/ProgressWithFeedback";
 import { Product } from "@/ts/models/booking/product/Product";
-import ProductsSelectionModal from "./ProductsSelectionModal";
+import ProductsSelectionModal from "./products/ProductsSelectionModal";
 
 const UploadVideoModule = () => {
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
@@ -170,6 +170,12 @@ const UploadVideoModule = () => {
     setSelectedProducts(products);
   };
 
+  const handleRemoveProduct = (product: Product) => {
+    setSelectedProducts((prevProducts) =>
+      prevProducts.filter((p) => p.id !== product.id)
+    );
+  };
+
   return (
     <>
       <ProductsSelectionModal
@@ -248,6 +254,7 @@ const UploadVideoModule = () => {
           onHandleOpenProducts={handleOpenProducts}
           onDescriptionChange={handleDescription}
           onHandleUpload={handleUpload}
+          onRemoveProduct={handleRemoveProduct}
           isDisabled={isUploading || !selectedVideo}
         />
       </Box>
