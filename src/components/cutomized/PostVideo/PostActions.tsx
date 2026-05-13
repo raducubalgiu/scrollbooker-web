@@ -1,10 +1,22 @@
-import React, { useMemo } from "react";
-import { Box, IconButton, Skeleton, Typography, Theme } from "@mui/material";
+import React, { useMemo, useState } from "react";
+import {
+  Box,
+  IconButton,
+  Skeleton,
+  Typography,
+  Theme,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import IosShareRoundedIcon from "@mui/icons-material/IosShareRounded";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
 import { PostCounters, PostUserActions } from "@/ts/models/social/Post";
 
 type PostActionsProps = {
@@ -16,13 +28,15 @@ type PostActionsProps = {
   onBookmarkClick: () => void;
   onShareClick: () => void;
   onOptionsClick: () => void;
+  onDeleteClick?: () => void;
+  onReportClick?: () => void;
 };
 
 type PostActionItem = {
   id: "like" | "comment" | "bookmark" | "share" | "options";
   icon: React.ReactNode;
   count?: number;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 const PostActions = ({
@@ -34,7 +48,21 @@ const PostActions = ({
   onBookmarkClick,
   onShareClick,
   onOptionsClick,
+  onDeleteClick,
+  onReportClick,
 }: PostActionsProps) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isMenuOpen = Boolean(anchorEl);
+
+  const handleOptionsOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+    onOptionsClick();
+  };
+
+  const handleOptionsClose = () => {
+    setAnchorEl(null);
+  };
+
   const actions = useMemo<PostActionItem[]>(
     () => [
       {
@@ -74,7 +102,7 @@ const PostActions = ({
       {
         id: "options",
         icon: <MoreHorizIcon fontSize="large" sx={{ color: "text.primary" }} />,
-        onClick: onOptionsClick,
+        onClick: handleOptionsOpen,
       },
       {
         id: "share",
@@ -113,7 +141,7 @@ const PostActions = ({
         : theme.palette.mode === "light"
           ? "background.default"
           : "background.paper",
-      color: isOptions ? "text.primary" : "text.primary",
+      color: "text.primary",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -164,6 +192,58 @@ const PostActions = ({
           )}
         </Box>
       ))}
+
+      <Menu
+        anchorEl={anchorEl}
+        open={isMenuOpen}
+        onClose={handleOptionsClose}
+        onClick={handleOptionsClose}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        slotProps={{
+          paper: {
+            sx: {
+              mt: 1,
+              borderRadius: 3,
+              minWidth: 160,
+              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={() => onReportClick?.()} sx={{ py: 1.2 }}>
+          <ListItemIcon>
+            <ReportOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText
+            primary="Raportează"
+            slotProps={{
+              primary: {
+                variant: "body2",
+                fontWeight: 500,
+              },
+            }}
+          />
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => onDeleteClick?.()}
+          sx={{ color: "error.main", py: 1.2 }}
+        >
+          <ListItemIcon>
+            <DeleteOutlineIcon fontSize="small" color="error" />
+          </ListItemIcon>
+          <ListItemText
+            primary="Șterge"
+            slotProps={{
+              primary: {
+                variant: "body2",
+                fontWeight: 500,
+              },
+            }}
+          />
+        </MenuItem>
+      </Menu>
     </Box>
   );
 };
@@ -182,11 +262,6 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  button: {
-    width: 60,
-    height: 60,
-    borderRadius: "50%",
   },
   count: {
     mt: 0.5,
