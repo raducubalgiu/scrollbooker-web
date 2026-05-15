@@ -11,16 +11,14 @@ type BusinessProductCardProps = {
 const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
   const { name, price_with_discount, duration } = product;
   const filtersText = ProductUtils.getFiltersSummary(product);
+  const displayedPrice = ProductUtils.getPriceLabel(product);
+  const displayedDuration = ProductUtils.getDurationText(
+    product.starting_duration
+  );
 
   return (
     <Box
-      sx={{
-        p: 2,
-        borderRadius: 5,
-        mb: 1.5,
-        bgcolor: "secondary.main",
-        cursor: "pointer",
-      }}
+      sx={styles.container}
       role="button"
       tabIndex={0}
       aria-label={`prod.name ${name} price ${price_with_discount} RON duration ${duration} minutes`}
@@ -36,7 +34,7 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
             {name}
           </Typography>
           <Typography sx={{ fontWeight: 700 }}>
-            {formatPrice(price_with_discount)} RON
+            {formatPrice(displayedPrice)} RON
           </Typography>
         </Stack>
 
@@ -44,7 +42,7 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
           <Chip
             size="small"
             icon={<AccessTimeOutlinedIcon />}
-            label={`${duration} min`}
+            label={`${displayedDuration} min`}
           />
           <Typography variant="body2" color="text.secondary">
             {filtersText}
@@ -56,3 +54,13 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
 };
 
 export default BusinessProductCard;
+
+const styles = {
+  container: {
+    p: 2,
+    borderRadius: 5,
+    mb: 1.5,
+    bgcolor: "secondary.main",
+    cursor: "pointer",
+  },
+};

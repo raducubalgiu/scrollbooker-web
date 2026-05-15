@@ -20,34 +20,10 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
         target="_blank"
         href={`/business/${owner.username}`}
         rel="noopener noreferrer"
-        sx={{
-          textDecoration: "none",
-          display: "block",
-          color: "inherit",
-          cursor: "pointer",
-          "&:hover .imageWrapper": {
-            transform: "scale(1.05)",
-          },
-        }}
+        sx={styles.container}
       >
-        <Box
-          sx={{
-            position: "relative",
-            width: "100%",
-            height: 280,
-            overflow: "hidden",
-            borderRadius: 5,
-          }}
-        >
-          <Box
-            className="imageWrapper"
-            sx={{
-              position: "absolute",
-              inset: 0,
-              transition: "transform 0.3s",
-              backgroundColor: "background.default",
-            }}
-          >
+        <Box sx={styles.imageContainer}>
+          <Box className="imageWrapper" sx={styles.imageWrapper}>
             {media_files?.[0]?.thumbnail_url && (
               <Image
                 src={media_files?.[0]?.thumbnail_url}
@@ -107,3 +83,28 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 };
 
 export default memo(BusinessCard);
+
+const styles = {
+  container: {
+    textDecoration: "none",
+    display: "block",
+    color: "inherit",
+    cursor: "pointer",
+    "&:hover .imageWrapper": {
+      transform: "scale(1.05)",
+    },
+  },
+  imageContainer: {
+    position: "relative",
+    width: "100%",
+    height: 280,
+    overflow: "hidden",
+    borderRadius: 5,
+  },
+  imageWrapper: {
+    position: "absolute",
+    inset: 0,
+    transition: "transform 0.3s",
+    backgroundColor: "background.default",
+  },
+};
