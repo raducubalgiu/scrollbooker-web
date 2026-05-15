@@ -2,12 +2,13 @@
 
 import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
 import Table from "@/components/core/Table/Table";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import { useMemo } from "react";
 import { MRT_ColumnDef } from "material-react-table";
 import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
 import BusinessDomainsServiceDomains from "./BusinessDomainsServiceDomains";
+import { Switch } from "@mui/material";
 
 export default function BusinessDomainsModule() {
   const {
@@ -18,11 +19,11 @@ export default function BusinessDomainsModule() {
     onCreatingRowSave,
     onDeletingRowSave,
     onEditingRowSave,
-  } = useTableHandlers<BusinessDomainType>({
+  } = useTableHandlers<BusinessDomain>({
     route: "nomenclatures/business-domains",
   });
 
-  const columns = useMemo<MRT_ColumnDef<BusinessDomainType>[]>(
+  const columns = useMemo<MRT_ColumnDef<BusinessDomain>[]>(
     () => [
       {
         accessorKey: "id",
@@ -61,13 +62,16 @@ export default function BusinessDomainsModule() {
         ),
       },
       {
-        accessorKey: "created_at",
-        header: "Created_at",
-        enableEditing: false,
+        accessorKey: "active",
+        header: "Active",
+        size: 300,
+        Cell: ({ row }) => (
+          <Switch checked={row.original.active} disabled={true} />
+        ),
       },
       {
-        accessorKey: "updated_at",
-        header: "updated_at",
+        accessorKey: "created_at",
+        header: "Created_at",
         enableEditing: false,
       },
     ],
@@ -76,7 +80,7 @@ export default function BusinessDomainsModule() {
 
   return (
     <MainLayout title="Domeniu Business" hideAction>
-      <Table<BusinessDomainType>
+      <Table<BusinessDomain>
         data={data?.results}
         rowCount={data?.count}
         columns={columns}

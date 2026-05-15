@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Delete as DeleteIcon } from "@mui/icons-material";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import React from "react";
 import ProductsInfoSection from "./ProductsInfoSection";
 import EmptyProductsSection from "./EmptyProductsSection";
@@ -48,7 +48,11 @@ const UploadVideoProducts = ({
         </Typography>
 
         {hasProducts && (
-          <Button onClick={onOpenProducts} sx={styles.modifyButton}>
+          <Button
+            variant="outlined"
+            onClick={onOpenProducts}
+            sx={styles.modifyButton}
+          >
             Modifică serviciile
           </Button>
         )}
@@ -76,9 +80,8 @@ const UploadVideoProducts = ({
                         edge="end"
                         onClick={() => onRemoveProduct(product)}
                         color="error"
-                        size="small"
                       >
-                        <DeleteIcon fontSize="small" />
+                        <DeleteOutlineOutlinedIcon />
                       </IconButton>
                     </Tooltip>
                   }

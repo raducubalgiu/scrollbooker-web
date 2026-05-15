@@ -1,3 +1,4 @@
+import dayjs from "@/lib/dayjs";
 import { Currency } from "../../nomenclatures/currency/Currency";
 import { BusinessCoordinates } from "../business/Business";
 import { AppointmentChannelEnum } from "./AppointmentChannelEnum";
@@ -69,6 +70,11 @@ export interface AppointmentCancel {
 }
 
 export const AppointmentUtils = {
+  isInPast(startDate: string): boolean {
+    if (!startDate) return false;
+    return dayjs(startDate).isBefore(dayjs());
+  },
+
   getDurationText(minutes: number): string {
     if (minutes === 0) return "0min";
 

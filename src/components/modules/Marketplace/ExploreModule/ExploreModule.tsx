@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { Product } from "@/ts/models/booking/product/Product";
 import ExploreHeaderMenu from "./ExploreHeaderMenu";
 import ExploreSidebar from "@/components/cutomized/PostVideo/sidebar/ExploreSidebar";
+import { useMutate } from "@/hooks/useHttp";
 
 const PREFETCH_OFFSET = 2;
 
@@ -96,6 +97,15 @@ export default function ExploreModule() {
 
   const { user_actions, counters, is_video_review } = currentPost ?? {};
 
+  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
+    key: ["delete-post", currentPost?.id ?? undefined],
+    url: `/api/posts/${currentPost?.id}`,
+    method: "DELETE",
+    options: {
+      onSuccess: () => {},
+    },
+  });
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.mainContent}>
@@ -130,13 +140,16 @@ export default function ExploreModule() {
 
           <PostActions
             isLoading={isLoading}
+            isOwnPost={currentPost?.is_own_post ?? false}
             counters={counters}
             userActions={user_actions}
             onCommentClick={() => {}}
             onBookmarkClick={() => {}}
             onLike={() => {}}
+            onDeleteClick={() => handleDelete({})}
+            isLoadingDelete={isPendingDelete}
             onShareClick={() => {}}
-            onOptionsClick={() => {}}
+            onReportClick={() => {}}
           />
         </Box>
 

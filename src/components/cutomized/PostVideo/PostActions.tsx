@@ -1,35 +1,25 @@
 import React, { useMemo, useState } from "react";
-import {
-  Box,
-  IconButton,
-  Skeleton,
-  Typography,
-  Theme,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Box, IconButton, Skeleton, Typography, Theme } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import IosShareRoundedIcon from "@mui/icons-material/IosShareRounded";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
 import { PostCounters, PostUserActions } from "@/ts/models/social/Post";
+import MoreOptionsMenu from "./MoreOptionsMenu";
 
 type PostActionsProps = {
   isLoading: boolean;
+  isOwnPost: boolean;
   counters?: PostCounters | undefined;
   userActions?: PostUserActions | undefined;
   onLike: () => void;
   onCommentClick: () => void;
   onBookmarkClick: () => void;
   onShareClick: () => void;
-  onOptionsClick: () => void;
-  onDeleteClick?: () => void;
-  onReportClick?: () => void;
+  onDeleteClick: () => void;
+  isLoadingDelete: boolean;
+  onReportClick: () => void;
 };
 
 type PostActionItem = {
@@ -43,12 +33,13 @@ const PostActions = ({
   counters,
   userActions,
   isLoading = false,
+  isOwnPost,
   onLike,
   onCommentClick,
   onBookmarkClick,
   onShareClick,
-  onOptionsClick,
   onDeleteClick,
+  isLoadingDelete,
   onReportClick,
 }: PostActionsProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -56,7 +47,6 @@ const PostActions = ({
 
   const handleOptionsOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    onOptionsClick();
   };
 
   const handleOptionsClose = () => {
@@ -193,57 +183,15 @@ const PostActions = ({
         </Box>
       ))}
 
-      <Menu
+      <MoreOptionsMenu
         anchorEl={anchorEl}
-        open={isMenuOpen}
-        onClose={handleOptionsClose}
-        onClick={handleOptionsClose}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        slotProps={{
-          paper: {
-            sx: {
-              mt: 1,
-              borderRadius: 3,
-              minWidth: 160,
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-            },
-          },
-        }}
-      >
-        <MenuItem onClick={() => onReportClick?.()} sx={{ py: 1.2 }}>
-          <ListItemIcon>
-            <ReportOutlinedIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText
-            primary="Raportează"
-            slotProps={{
-              primary: {
-                variant: "body2",
-                fontWeight: 500,
-              },
-            }}
-          />
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => onDeleteClick?.()}
-          sx={{ color: "error.main", py: 1.2 }}
-        >
-          <ListItemIcon>
-            <DeleteOutlineIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText
-            primary="Șterge"
-            slotProps={{
-              primary: {
-                variant: "body2",
-                fontWeight: 500,
-              },
-            }}
-          />
-        </MenuItem>
-      </Menu>
+        isMenuOpen={isMenuOpen}
+        isOwnPost={isOwnPost}
+        handleOptionsClose={handleOptionsClose}
+        onReportClick={onReportClick}
+        onDeleteClick={onDeleteClick}
+        isLoadingDelete={isLoadingDelete}
+      />
     </Box>
   );
 };

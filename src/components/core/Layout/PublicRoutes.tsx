@@ -19,6 +19,7 @@ import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Session } from "next-auth";
+import Protected from "@/components/cutomized/Protected/Protected";
 
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
@@ -121,7 +122,7 @@ const getPublicRoutes = ({
     label: "Upload",
     route: "/upload-video",
     icon: <AddBoxOutlinedIcon />,
-    permission: PermissionEnum.NO_PROTECTION,
+    permission: PermissionEnum.CREATE_POST,
   },
   {
     label: "Mai mult",
@@ -260,27 +261,29 @@ const PublicRoutes = ({
         const selected = getItemSelected(item);
 
         return (
-          <ListItem disablePadding sx={{ px: 0 }} key={item.label}>
-            <ListItemButton
-              onClick={(e) => handleItemClick(item, e)}
-              selected={selected}
-              sx={styles.button}
-            >
-              <ListItemIcon sx={styles.getIconStyles(selected)}>
-                {item.icon}
-              </ListItemIcon>
+          <Protected key={item.label} permission={item.permission}>
+            <ListItem disablePadding sx={{ px: 0 }}>
+              <ListItemButton
+                onClick={(e) => handleItemClick(item, e)}
+                selected={selected}
+                sx={styles.button}
+              >
+                <ListItemIcon sx={styles.getIconStyles(selected)}>
+                  {item.icon}
+                </ListItemIcon>
 
-              <Box sx={styles.textWrapper}>
-                <ListItemText
-                  primary={
-                    <Typography sx={styles.getTextStyles(selected)}>
-                      {item.label}
-                    </Typography>
-                  }
-                />
-              </Box>
-            </ListItemButton>
-          </ListItem>
+                <Box sx={styles.textWrapper}>
+                  <ListItemText
+                    primary={
+                      <Typography sx={styles.getTextStyles(selected)}>
+                        {item.label}
+                      </Typography>
+                    }
+                  />
+                </Box>
+              </ListItemButton>
+            </ListItem>
+          </Protected>
         );
       })}
     </>

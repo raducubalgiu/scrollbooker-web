@@ -1,18 +1,23 @@
+import { AppointmentUtils } from "@/ts/models/booking/appointment/Appointment";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 import { Box, Button } from "@mui/material";
 import React from "react";
 
 type AppointmentDetailsActionsProps = {
+  startDate: string;
   status: AppointmentStatusEnum;
   onBookAgain: () => void;
   onCancel: () => void;
 };
 
 const AppointmentDetailsActions = ({
+  startDate,
   status,
   onBookAgain,
   onCancel,
 }: AppointmentDetailsActionsProps) => {
+  const isInPast = AppointmentUtils.isInPast(startDate);
+
   return (
     <Box>
       {status !== AppointmentStatusEnum.IN_PROGRESS && (
@@ -28,7 +33,7 @@ const AppointmentDetailsActions = ({
         </Button>
       )}
 
-      {status === AppointmentStatusEnum.IN_PROGRESS && (
+      {status === AppointmentStatusEnum.IN_PROGRESS && !isInPast && (
         <Button
           variant="contained"
           color="error"

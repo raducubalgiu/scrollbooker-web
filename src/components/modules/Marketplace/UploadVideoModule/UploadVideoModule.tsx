@@ -29,17 +29,20 @@ const UploadVideoModule = () => {
     setOpenProducts(false);
   }, []);
 
-  const handleVideoChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedVideo(file);
-      setVideoPreview(URL.createObjectURL(file));
-    }
-  };
+  const handleVideoChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        setSelectedVideo(file);
+        setVideoPreview(URL.createObjectURL(file));
+      }
+    },
+    []
+  );
 
-  const handleContainerClick = (): void => {
+  const handleContainerClick = useCallback(() => {
     fileInputRef.current?.click();
-  };
+  }, []);
 
   const handleDescription = useCallback((d: string) => {
     setDescription(d);
@@ -166,15 +169,15 @@ const UploadVideoModule = () => {
     }
   };
 
-  const handleSelectProducts = (products: Product[]) => {
+  const handleSelectProducts = useCallback((products: Product[]) => {
     setSelectedProducts(products);
-  };
+  }, []);
 
-  const handleRemoveProduct = (product: Product) => {
+  const handleRemoveProduct = useCallback((product: Product) => {
     setSelectedProducts((prevProducts) =>
       prevProducts.filter((p) => p.id !== product.id)
     );
-  };
+  }, []);
 
   return (
     <>

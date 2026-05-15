@@ -201,13 +201,14 @@ const AppointmentDetailsModule = ({
 
           {products.length > 0 && (
             <AppointmentDetailsActions
+              startDate={appointment.start_date}
               status={status}
               onBookAgain={() => {}}
               onCancel={() => setOpenCancel(true)}
             />
           )}
 
-          {!isEmpty(products) && isFinished && (
+          {!isEmpty(products) && isFinished && is_customer && (
             <AppointmentDetailsReview
               writtenReview={writtenReview}
               hasVideoReview={has_video_review}

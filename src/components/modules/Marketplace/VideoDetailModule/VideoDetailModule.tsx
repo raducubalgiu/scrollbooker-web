@@ -193,6 +193,17 @@ export default function VideoDetailModule({
     );
   }, [bookmark, unbookmark, post]);
 
+  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
+    key: ["delete-post", post.id ?? undefined],
+    url: `/api/posts/${post.id}`,
+    method: "DELETE",
+    options: {
+      onSuccess: () => {
+        router.back();
+      },
+    },
+  });
+
   return (
     <Box sx={styles.container}>
       <IconButton
@@ -220,13 +231,16 @@ export default function VideoDetailModule({
 
           <PostActions
             isLoading={false}
+            isOwnPost={post.is_own_post}
             counters={post.counters}
             userActions={post.user_actions}
             onCommentClick={() => {}}
             onLike={handleLike}
             onBookmarkClick={handleBookmark}
+            onDeleteClick={() => handleDelete({})}
+            isLoadingDelete={isPendingDelete}
             onShareClick={() => {}}
-            onOptionsClick={() => {}}
+            onReportClick={() => {}}
           />
         </Box>
 

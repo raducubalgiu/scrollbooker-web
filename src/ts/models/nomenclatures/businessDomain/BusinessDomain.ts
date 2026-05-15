@@ -1,4 +1,5 @@
 export interface BusinessDomain {
+  [x: string]: unknown;
   id: number;
   name: string;
   short_name: string;
