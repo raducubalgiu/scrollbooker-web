@@ -99,7 +99,7 @@ const SocialReviewsTab = ({
         </Box>
       )}
 
-      {!isLoading && ratings_count && ratings_count > 0 && (
+      {!isLoading && (ratings_count ?? 0) > 0 && (
         <Box sx={{ mx: 2 }}>
           {ratings_average !== undefined && ratings_count !== undefined && (
             <ReviewsSummaryHeader

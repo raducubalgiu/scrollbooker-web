@@ -333,9 +333,9 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         }}
       />
 
-      <Grid container spacing={isMapExpanded ? 0 : 4} mt={1}>
+      <Grid container spacing={isMapExpanded ? 0 : 4}>
         {!isMapExpanded && (
-          <Grid size={{ xs: 12, lg: leftGridSize }}>
+          <Grid size={{ xs: 12, lg: leftGridSize }} sx={{ mt: 1 }}>
             {isLoading ? (
               <BusinessCardSkeletons listSx={styles.list} />
             ) : locations.length === 0 ? (

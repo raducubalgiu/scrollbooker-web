@@ -1,7 +1,7 @@
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
 import { Box, Button, Slider, Stack, Typography } from "@mui/material";
-import PercentIcon from "@mui/icons-material/Percent";
+import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import React, { useState, useEffect } from "react";
 import { formatPrice } from "@/utils/formatPrice";
 
@@ -105,10 +105,10 @@ export default function SearchFiltersModal({
           color={state.hasDiscount ? "primary" : "inherit"}
           size="large"
           sx={{ mt: 2.5 }}
-          startIcon={<PercentIcon />}
+          startIcon={<LocalOfferOutlinedIcon />}
           onClick={handleDiscountToggle}
         >
-          Reducere
+          Oferte
         </Button>
 
         <Stack

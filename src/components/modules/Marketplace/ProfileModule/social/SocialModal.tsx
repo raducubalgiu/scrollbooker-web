@@ -118,7 +118,7 @@ const SocialModal = ({
 
   const handleChange = handleTabChange;
 
-  const tabsContent = useMemo(() => {
+  const tabsContent = () => {
     const saved = positionsRef.current[String(currentTab)];
     const allowImmediateIntersection = typeof saved === "number" && saved > 0;
 
@@ -150,7 +150,7 @@ const SocialModal = ({
       default:
         return null;
     }
-  }, [currentTab, socialModal?.userId]);
+  };
 
   const theme = useTheme();
   const isReviewsStep = currentTab === SocialTabEnum.REVIEWS;
@@ -202,7 +202,7 @@ const SocialModal = ({
         </Box>
 
         <Box sx={styles.tabsContent} ref={scrollRootRef}>
-          {tabsContent}
+          {tabsContent()}
         </Box>
       </Box>
     </Modal>
