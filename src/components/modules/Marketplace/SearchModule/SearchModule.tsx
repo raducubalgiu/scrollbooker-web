@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Grid from "@mui/material/Grid2";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import SearchHeader from "./SearchHeader/SearchHeader";
 import BusinessCard from "./BusinessCard";
 import FiltersModal from "./FiltersModal";
@@ -90,7 +90,6 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
   const buildUrlParams = React.useCallback((state: SearchState) => {
     const params = new URLSearchParams();
-
     if (state.bbox) {
       params.set("min_lng", state.bbox.min_lng.toFixed(6));
       params.set("min_lat", state.bbox.min_lat.toFixed(6));
@@ -98,49 +97,44 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       params.set("max_lat", state.bbox.max_lat.toFixed(6));
     }
     if (state.zoom) params.set("zoom", String(state.zoom));
-
-    if (state.businessDomainId != null) {
+    if (state.businessDomainId != null)
       params.set("businessDomain", String(state.businessDomainId));
-    }
-
-    if (state.serviceDomainId != null) {
+    if (state.serviceDomainId != null)
       params.set("serviceDomain", String(state.serviceDomainId));
-    }
-
-    if (state.serviceId != null) {
-      params.set("service", String(state.serviceId));
-    }
-
-    if (state.subfilterIds.length > 0) {
+    if (state.serviceId != null) params.set("service", String(state.serviceId));
+    if (state.subfilterIds.length > 0)
       params.set("subfilterIds", state.subfilterIds.join(","));
-    }
-
-    if (state.startDate) {
-      params.set("startDate", state.startDate);
-    }
-
-    if (state.startTime) {
-      params.set("startTime", state.startTime);
-    }
-
-    if (state.endTime) {
-      params.set("endTime", state.endTime);
-    }
-
-    if (state.hasDiscount) {
-      params.set("hasDiscount", "true");
-    }
-
-    if (state.maxPrice != null) {
-      params.set("maxPrice", String(state.maxPrice));
-    }
-
+    if (state.startDate) params.set("startDate", state.startDate);
+    if (state.startTime) params.set("startTime", state.startTime);
+    if (state.endTime) params.set("endTime", state.endTime);
+    if (state.hasDiscount) params.set("hasDiscount", "true");
+    if (state.maxPrice != null) params.set("maxPrice", String(state.maxPrice));
     return params;
   }, []);
 
-  const { data, isLoading } = useInfiniteBusinessLocations(searchState);
-  const locations = data ? data.pages.flatMap((page) => page.results) : [];
-  const locationsCount = data ? data.pages[0]?.count : 0;
+  const {
+    data,
+    isLoading,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteBusinessLocations(searchState);
+
+  const locations = React.useMemo(() => {
+    if (!data) return [];
+
+    const allResults = data.pages.flatMap((page) => page.results || []);
+
+    const seenIds = new Set<number>();
+    return allResults.filter((loc) => {
+      if (loc?.id == null || seenIds.has(loc.id)) {
+        return false;
+      }
+      seenIds.add(loc.id);
+      return true;
+    });
+  }, [data]);
 
   const {
     data: markers,
@@ -153,14 +147,14 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   const [openFilters, setOpenFilters] = React.useState(false);
   const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
 
+  const loadMoreRef = React.useRef<HTMLDivElement | null>(null);
+
   const leftGridSize = isMapVisible ? 7 : 12;
 
   const handleToggleMap = React.useCallback(() => {
     setIsMapVisible((prev) => !prev);
-    if (isMapExpanded) {
-      setIsMapExpanded(false);
-    }
-  }, []);
+    if (isMapExpanded) setIsMapExpanded(false);
+  }, [isMapExpanded]);
 
   const handleMapExpandToggle = React.useCallback(() => {
     setIsMapExpanded((prev) => !prev);
@@ -172,9 +166,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
   const styles = React.useMemo(
     () => ({
-      root: {
-        px: isMapExpanded ? 0 : mainPagePadding,
-      },
+      root: { px: isMapExpanded ? 0 : mainPagePadding },
       list: {
         display: "grid",
         gridTemplateColumns: {
@@ -184,9 +176,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         gap: 5,
         px: { xs: 1, md: 0 },
       },
-      mapGrid: {
-        width: "100%",
-      },
+      mapGrid: { width: "100%" },
     }),
     [isMapExpanded, mainPagePadding, isMapVisible]
   );
@@ -238,6 +228,35 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     }
   }, [searchState, buildUrlParams, router]);
 
+  React.useEffect(() => {
+    const target = loadMoreRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [firstEntry] = entries;
+        if (
+          firstEntry?.isIntersecting &&
+          hasNextPage &&
+          !isFetchingNextPage &&
+          !isFetching
+        ) {
+          fetchNextPage();
+        }
+      },
+      {
+        rootMargin: "300px",
+        threshold: 0.0,
+      }
+    );
+
+    observer.observe(target);
+
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, [hasNextPage, isFetchingNextPage, isFetching, fetchNextPage]);
+
   const selectedServiceDomainName = getServiceDomainNameById(
     searchState.businessDomainId,
     searchState.serviceDomainId
@@ -268,24 +287,57 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         }}
       />
 
-      <Grid container spacing={isMapExpanded ? 0 : 5}>
+      <Grid container spacing={isMapExpanded ? 0 : 4} mt={1}>
         {!isMapExpanded && (
-          <Grid size={{ lg: leftGridSize }}>
-            <Typography variant="h5" my={2.5} fontWeight={600}>
-              {locationsCount?.toLocaleString() ?? 0} rezultate
-            </Typography>
+          <Grid size={{ xs: 12, lg: leftGridSize }}>
+            {isLoading ? (
+              <BusinessCardSkeletons listSx={styles.list} />
+            ) : locations.length === 0 ? (
+              <Typography variant="h6" align="center" mt={4}>
+                Nu s-au găsit rezultate.
+              </Typography>
+            ) : (
+              <>
+                <Box sx={styles.list}>
+                  {locations.map((b) => (
+                    <BusinessCard key={b.id} business={b} />
+                  ))}
+                </Box>
 
-            <Box sx={styles.list}>
-              {isLoading && <BusinessCardSkeletons />}
-              {!isLoading &&
-                locations?.map((b) => <BusinessCard key={b.id} business={b} />)}
-            </Box>
+                <Box
+                  ref={loadMoreRef}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "80px",
+                    py: 2,
+                    width: "100%",
+                  }}
+                >
+                  {isFetchingNextPage && <CircularProgress size={28} />}
+                  {!hasNextPage && locations.length > 0 && (
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mt: 2 }}
+                    >
+                      Ai explorat toate locațiile disponibile.
+                    </Typography>
+                  )}
+                </Box>
+              </>
+            )}
           </Grid>
         )}
+
         {isMapVisible && (
-          <Grid size={isMapExpanded ? 12 : { md: 5 }} sx={styles.mapGrid}>
+          <Grid
+            size={{ xs: 12, lg: isMapExpanded ? 12 : 5 }}
+            sx={styles.mapGrid}
+          >
             <SearchMap
-              markers={markers}
+              markers={markers || []}
               isMapVisible={isMapVisible}
               onMapExpandToggle={handleMapExpandToggle}
               isMapExpanded={isMapExpanded}

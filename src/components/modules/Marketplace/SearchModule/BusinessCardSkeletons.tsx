@@ -1,9 +1,14 @@
 import { Box, Skeleton, Stack } from "@mui/material";
 import React, { memo } from "react";
+import { SxProps, Theme } from "@mui/material/styles";
 
-const BusinessCardSkeletons = () => {
+type BusinessCardSkeletonsProps = {
+  listSx: SxProps<Theme>;
+};
+
+const BusinessCardSkeletons = ({ listSx }: BusinessCardSkeletonsProps) => {
   return (
-    <>
+    <Box sx={listSx}>
       {Array.from({ length: 4 }).map((_, i) => (
         <Box key={i}>
           <Skeleton
@@ -59,7 +64,7 @@ const BusinessCardSkeletons = () => {
           />
         </Box>
       ))}
-    </>
+    </Box>
   );
 };
 

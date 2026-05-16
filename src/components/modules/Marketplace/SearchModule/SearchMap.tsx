@@ -81,6 +81,10 @@ const SearchMap = ({
         padding: 20,
       },
       trackResize: false,
+      minZoom: 4,
+      maxPitch: 0,
+      dragRotate: false,
+      projection: { name: "mercator" },
     });
 
     map.on("moveend", () => {

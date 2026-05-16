@@ -47,9 +47,17 @@ export const useInfiniteBusinessLocations = (searchState: SearchState) => {
     queryKey: ["businessLocations", searchState],
     queryFn: ({ pageParam = 1 }) => fetchLocations({ pageParam, searchState }),
     initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) => {
-      const totalFetched = pages.flatMap((p) => p.results).length;
-      return totalFetched < lastPage.count ? pages.length + 1 : undefined;
+    getNextPageParam: (lastPage, allPages) => {
+      const totalFetched = allPages.reduce(
+        (sum, p) => sum + (p.results?.length || 0),
+        0
+      );
+      return totalFetched < (lastPage.count || 0)
+        ? lastPage.page + 1
+        : undefined;
     },
+    staleTime: 30000,
+    gcTime: 5 * 60 * 1000,
+    retry: 1,
   });
 };
