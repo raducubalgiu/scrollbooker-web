@@ -13,7 +13,7 @@ type ExploreServicesTabProps = {
   postId: number | undefined;
   userId: number | undefined;
   isLoadingPosts: boolean;
-  onNavigateToBooking: (product: Product) => void;
+  onNavigateToBooking: (selectedProductId: number | null) => void;
 };
 
 export type SelectedProductType = {
@@ -85,7 +85,7 @@ const ExploreServicesTab = ({
                 showIcon={false}
                 showDescription={false}
                 onOpenDetail={() => handleOpen(prod)}
-                onNavigateToBooking={onNavigateToBooking}
+                onNavigateToBooking={(prod) => onNavigateToBooking(prod.id)}
                 sx={{ borderColor: "transparent", p: 1.5 }}
                 onAdd={() => {}}
               />
@@ -100,9 +100,9 @@ const ExploreServicesTab = ({
             color="secondary"
             size="large"
             sx={{ mt: 2.5 }}
-            onClick={() => {}}
+            onClick={() => onNavigateToBooking(null)}
           >
-            Vezi tot
+            Vezi toate serviciile
           </Button>
         )}
 

@@ -1,4 +1,3 @@
-import { formatPrice } from "@/utils/formatPrice";
 import { SubFilter } from "../../nomenclatures/subFilter/SubFilter";
 import { Service } from "../../nomenclatures/service/Service";
 
@@ -13,6 +12,16 @@ export interface ProductFilter {
   display_as_tab: boolean;
 }
 
+export interface StartingOffering {
+  variant_id: number;
+  variant_name: string;
+  duration: number;
+  user_id: number;
+  price: number;
+  price_with_discount: number;
+  discount: number;
+}
+
 export interface ProductOffering {
   user_id: number;
   price: number;
@@ -24,8 +33,7 @@ export interface ProductVariant {
   id: number;
   name: string;
   duration: number;
-  starting_price: number;
-  starting_price_with_discount: number;
+  starting_offering: StartingOffering;
   has_different_prices: boolean;
   offerings: ProductOffering[];
 }
@@ -37,15 +45,13 @@ export interface Product {
   description: string | null;
   service_id: number;
   business_id: number;
+  business_owner_id: number;
   currency_id: number;
   can_be_booked: boolean;
   type: string;
   sessions_count?: number | null;
   validity_days?: number | null;
-  starting_duration: number;
-  starting_price: number;
-  starting_price_with_discount: number;
-  starting_discount: number;
+  starting_offering: StartingOffering;
   has_different_prices: boolean;
   variants: ProductVariant[];
   filters: ProductFilter[];
@@ -54,28 +60,6 @@ export interface Product {
 }
 
 export const ProductUtils = {
-  getGlobalDuration(product: Product): string {
-    const variants = product.variants || [];
-
-    if (variants.length === 0) {
-      return this.getDurationText(product.starting_duration || 0);
-    }
-
-    if (variants.length === 1) {
-      return this.getDurationText(variants[0]?.duration ?? 0);
-    }
-
-    const durations = variants.map((v) => v.duration);
-    const minDuration = Math.min(...durations);
-    const maxDuration = Math.max(...durations);
-
-    if (minDuration === maxDuration) {
-      return this.getDurationText(minDuration);
-    }
-
-    return `${this.getDurationText(minDuration)} - ${this.getDurationText(maxDuration)}`;
-  },
-
   getDurationText(minutes: number): string {
     if (minutes === 0) return "0min";
 
@@ -89,8 +73,6 @@ export const ProductUtils = {
   },
 
   getFiltersSummary(product: Product): string {
-    const durationText = this.getGlobalDuration(product);
-
     const filterParts = product.filters
       .map((filter) => {
         if (filter.type === "options") {
@@ -106,24 +88,7 @@ export const ProductUtils = {
       })
       .filter(Boolean);
 
-    return [durationText, ...filterParts].join(" \u2022 ");
-  },
-
-  getPrice(product: Product): string {
-    return formatPrice(product.starting_price);
-  },
-
-  getPriceWithDiscount(product: Product): string {
-    return formatPrice(product.starting_price_with_discount);
-  },
-
-  getDiscount(product: Product): number {
-    return product.starting_discount ?? 0;
-  },
-
-  getPriceLabel(product: Product): string {
-    const prefix = product.has_different_prices ? "de la " : "";
-    return `${prefix}${this.getPrice(product)}`;
+    return [filterParts].join(" \u2022 ");
   },
 };
 

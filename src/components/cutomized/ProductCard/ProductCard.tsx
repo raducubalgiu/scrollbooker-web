@@ -16,6 +16,7 @@ import React from "react";
 import Protected from "../Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingModule/BookingModule";
+import { formatPrice } from "@/utils/formatPrice";
 
 type ProductCardProps = {
   product: Product;
@@ -38,13 +39,10 @@ const ProductCard = ({
   onNavigateToBooking,
   sx = {},
 }: ProductCardProps) => {
-  const { name, description, has_different_prices } = product;
+  const { name, description, starting_offering, has_different_prices } =
+    product;
 
   const filtersText = ProductUtils.getFiltersSummary(product);
-  const displayedPrice = ProductUtils.getPrice(product);
-  const displayed_price_with_discount =
-    ProductUtils.getPriceWithDiscount(product);
-  const displayedDiscount = ProductUtils.getDiscount(product);
 
   const onSelectProduct = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -129,20 +127,20 @@ const ProductCard = ({
 
           <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
             <Typography fontSize={18} fontWeight={600}>
-              {has_different_prices && "de la"} {displayed_price_with_discount}{" "}
-              RON
+              {has_different_prices && "de la"}{" "}
+              {`${formatPrice(starting_offering.price_with_discount)} RON`}
             </Typography>
-            {displayedDiscount > 0 && (
+            {starting_offering.discount > 0 && (
               <>
                 <Typography
                   variant="body1"
                   color="text.secondary"
                   sx={{ textDecoration: "line-through" }}
                 >
-                  {displayedPrice}
+                  {formatPrice(starting_offering.price)}
                 </Typography>
                 <Typography fontWeight={600} color="error.main">
-                  (-{displayedDiscount}%)
+                  (-{starting_offering.discount}%)
                 </Typography>
               </>
             )}

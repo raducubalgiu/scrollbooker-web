@@ -5,7 +5,7 @@ import PercentIcon from "@mui/icons-material/Percent";
 import React, { useState } from "react";
 import { formatPrice } from "@/utils/formatPrice";
 
-type FiltersModalProps = {
+type SearchFiltersModalProps = {
   hasDiscount: boolean;
   maxPrice: number | null;
   open: boolean;
@@ -16,13 +16,13 @@ type FiltersModalProps = {
   }) => void;
 };
 
-export default function FiltersModal({
+export default function SearchFiltersModal({
   open,
   onClose,
   hasDiscount,
   maxPrice,
   onApplyFilters,
-}: FiltersModalProps) {
+}: SearchFiltersModalProps) {
   const [state, setState] = useState(() => ({
     hasDiscount,
     maxPrice,

@@ -4,8 +4,6 @@ import * as React from "react";
 import Grid from "@mui/material/Grid2";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import SearchHeader from "./SearchHeader/SearchHeader";
-import BusinessCard from "./BusinessCard";
-import FiltersModal from "./FiltersModal";
 import SearchMap from "./SearchMap";
 import { useTheme } from "@mui/material/styles";
 import { BoundingBox } from "@/ts/models/booking/business/search/BusinessMapCombined";
@@ -13,9 +11,11 @@ import { useRouter } from "next/navigation";
 import { useInfiniteBusinessLocations } from "@/hooks/infiniteQuery/useInfiniteBusinessLocations";
 import { useBusinessMarkers } from "@/hooks/useMarkers";
 import { LngLatBounds } from "mapbox-gl";
-import BusinessCardSkeletons from "./BusinessCardSkeletons";
+import BusinessCardSkeletons from "./BusinessCard/BusinessCardSkeletons";
 import { getServiceDomainNameById } from "@/utils/mvp-hardcoded/mvp-business-domains";
 import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
+import BusinessCard from "./BusinessCard/BusinessCard";
+import SearchFiltersModal from "./SearchFilters/SearchFiltersModal";
 
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -120,6 +120,8 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteBusinessLocations(searchState);
+
+  console.log("DATA!!!", data);
 
   const locations = React.useMemo(() => {
     if (!data) return [];
@@ -264,7 +266,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
   return (
     <Box sx={styles.root}>
-      <FiltersModal
+      <SearchFiltersModal
         open={openFilters}
         onClose={handleCloseFilters}
         hasDiscount={searchState.hasDiscount}

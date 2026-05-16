@@ -1,27 +1,28 @@
 import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { alpha, Box, Chip, Stack, Theme, Typography } from "@mui/material";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import React from "react";
 import { formatPrice } from "@/utils/formatPrice";
+import Link from "next/link";
 
 type BusinessProductCardProps = {
   product: Product;
 };
 
 const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
-  const { name, price_with_discount, duration } = product;
+  const { id, business_id, business_owner_id, name, starting_offering } =
+    product;
   const filtersText = ProductUtils.getFiltersSummary(product);
-  const displayedPrice = ProductUtils.getPriceLabel(product);
-  const displayedDuration = ProductUtils.getDurationText(
-    product.starting_duration
-  );
+
+  const navigateUrl = `/booking/${business_id}?businessOwnerId=${business_owner_id}&selectedServiceId=${id}`;
 
   return (
     <Box
       sx={styles.container}
-      role="button"
-      tabIndex={0}
-      aria-label={`prod.name ${name} price ${price_with_discount} RON duration ${duration} minutes`}
+      component={Link}
+      target="_blank"
+      rel="noopener noreferrer"
+      href={navigateUrl}
     >
       <Stack spacing={0.5}>
         <Stack
@@ -34,7 +35,7 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
             {name}
           </Typography>
           <Typography sx={{ fontWeight: 700 }}>
-            {formatPrice(displayedPrice)} RON
+            {formatPrice(starting_offering.price_with_discount)} RON
           </Typography>
         </Stack>
 
@@ -42,7 +43,7 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
           <Chip
             size="small"
             icon={<AccessTimeOutlinedIcon />}
-            label={`${displayedDuration}`}
+            label={`${starting_offering.duration} min`}
           />
           <Typography variant="body2" color="text.secondary">
             {filtersText}
@@ -57,10 +58,18 @@ export default BusinessProductCard;
 
 const styles = {
   container: {
+    display: "block", // IMPORTANT: Transformă tag-ul <a> într-un element de tip block
     p: 2,
     borderRadius: 5,
     mb: 1.5,
     bgcolor: "secondary.main",
     cursor: "pointer",
+    transition: "background-color 0.2s ease",
+    textDecoration: "none !important", // Forțează eliminarea sublinierii textului în unele browsere
+    color: "text.primary", // Folosește culoarea principală a textului din tema MUI în loc de albastrul nativ link-urilor
+
+    "&:hover": {
+      bgcolor: (theme: Theme) => alpha(theme.palette.secondary.dark, 0.4),
+    },
   },
 };

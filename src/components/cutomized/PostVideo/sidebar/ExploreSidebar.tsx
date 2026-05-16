@@ -3,7 +3,6 @@ import React, { memo, useCallback, useMemo } from "react";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import ReviewsTab from "./ReviewsTab";
 import ExploreServicesTab from "./ExploreServicesTab";
-import { Product } from "@/ts/models/booking/product/Product";
 import PostComments from "@/components/modules/Marketplace/CommentsModule/PostComments";
 import VideoHeaderSkeleton from "../VideoHeaderSkeleton";
 import VideoHeader from "../VideoHeader";
@@ -21,7 +20,7 @@ type ExploreSidebarProps = {
   user: PostUser | undefined;
   isVideoReview: boolean;
   businessLocation: PostBusinessLocation | null | undefined;
-  onNavigateToBooking: (product: Product) => void;
+  onNavigateToBooking: (selectedProductId: number | null) => void;
 };
 
 const ExploreSidebar = ({

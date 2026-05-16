@@ -2,6 +2,7 @@ import {
   ProductUtils,
   ProductVariant,
 } from "@/ts/models/booking/product/Product";
+import { formatPrice } from "@/utils/formatPrice";
 import {
   Box,
   Divider,
@@ -11,7 +12,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { minBy } from "lodash";
 import React, { ChangeEvent } from "react";
 
 type ProductDetailVariantsOptionsProps = {
@@ -32,8 +32,7 @@ const ProductDetailVariantsOptions = ({
       </Typography>
       <RadioGroup value={selectedVariantId} onChange={onHandleChange}>
         {variants?.map((variant, index) => {
-          const minOffering = minBy(variant.offerings, "price_with_discount");
-          const lowestPrice = minOffering?.price_with_discount;
+          const { starting_offering } = variant;
 
           return (
             <React.Fragment key={variant.id}>
@@ -58,7 +57,10 @@ const ProductDetailVariantsOptions = ({
                       </Typography>
                     </Stack>
 
-                    <Typography variant="h5">{lowestPrice} RON</Typography>
+                    <Typography variant="h5">
+                      {variant.has_different_prices && "de la"}{" "}
+                      {`${formatPrice(starting_offering.price_with_discount)} RON`}
+                    </Typography>
                   </Box>
                 }
                 labelPlacement="start"

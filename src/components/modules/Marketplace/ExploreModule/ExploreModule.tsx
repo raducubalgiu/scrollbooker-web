@@ -11,7 +11,6 @@ import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
 import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
 import { ExploreVideoPool } from "./ExploreVideoPool";
 import { useRouter } from "next/navigation";
-import { Product } from "@/ts/models/booking/product/Product";
 import ExploreHeaderMenu from "./ExploreHeaderMenu";
 import ExploreSidebar from "@/components/cutomized/PostVideo/sidebar/ExploreSidebar";
 import { useMutate } from "@/hooks/useHttp";
@@ -78,15 +77,20 @@ export default function ExploreModule() {
   }, []);
 
   const navigateToBooking = useCallback(
-    (product: Product) => {
+    (selectedProductId: number | null) => {
       const businessOwnerId = currentPost?.business_owner?.id;
       const employeeId = currentPost?.employee?.id;
+      const businessId = currentPost?.business_id;
 
       if (businessOwnerId) {
-        let url = `/booking/${product.business_id}?businessOwnerId=${businessOwnerId}`;
+        let url = `/booking/${businessId}?businessOwnerId=${businessOwnerId}`;
 
         if (employeeId) {
           url += `&employeeId=${employeeId}`;
+        }
+
+        if (selectedProductId) {
+          url += `&selectedServiceId=${selectedProductId}`;
         }
 
         router.push(url);

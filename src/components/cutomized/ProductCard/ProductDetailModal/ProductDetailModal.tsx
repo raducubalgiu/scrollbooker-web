@@ -54,8 +54,12 @@ const ProductDetailModal = ({
       dividers={false}
       customFooter={
         <ProductDetailFooter
-          price={currentVariant?.starting_price_with_discount}
-          durationText={product ? ProductUtils.getGlobalDuration(product) : ""}
+          currentVariant={currentVariant}
+          durationText={
+            currentVariant?.duration
+              ? ProductUtils.getDurationText(currentVariant?.duration)
+              : ""
+          }
           onHandleAdd={handleAddClick}
         />
       }

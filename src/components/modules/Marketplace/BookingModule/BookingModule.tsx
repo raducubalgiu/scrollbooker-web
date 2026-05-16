@@ -26,6 +26,7 @@ type BookingModuleProps = {
   businessId: number;
   businessOwnerId: number;
   employeeId: number | null;
+  selectedServiceId: number | null;
   businessEmployees: BusinessEmployee[];
   businessSummary: BusinessBookingSummary;
 };
@@ -53,6 +54,7 @@ const BookingModule = ({
   businessId,
   businessOwnerId,
   employeeId,
+  selectedServiceId,
   businessEmployees,
   businessSummary,
 }: BookingModuleProps) => {

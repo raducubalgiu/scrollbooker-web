@@ -1,18 +1,24 @@
-import { formatPrice } from "@/utils/formatPrice";
+import { ProductVariant } from "@/ts/models/booking/product/Product";
 import { Button, Stack, Typography } from "@mui/material";
 import React from "react";
 
 type ProductDetailFooterProps = {
-  price: number | undefined;
+  currentVariant: ProductVariant | undefined;
   durationText: string;
   onHandleAdd: () => void;
 };
 
 const ProductDetailFooter = ({
-  price,
+  currentVariant,
   durationText,
   onHandleAdd,
 }: ProductDetailFooterProps) => {
+  const { has_different_prices, starting_offering } = currentVariant || {};
+
+  const displayedPrice = has_different_prices
+    ? `de la ${starting_offering?.price_with_discount} RON`
+    : `${starting_offering?.price_with_discount} RON`;
+
   return (
     <Stack
       flexDirection="row"
@@ -29,7 +35,7 @@ const ProductDetailFooter = ({
     >
       <Stack spacing={0.5}>
         <Typography variant="h4" fontWeight={600}>
-          {formatPrice(price)} RON
+          {displayedPrice}
         </Typography>
         <Typography color="text.secondary">{durationText}</Typography>
       </Stack>
