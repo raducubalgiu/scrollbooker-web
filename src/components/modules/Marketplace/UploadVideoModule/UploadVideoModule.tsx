@@ -110,12 +110,15 @@ const UploadVideoModule = () => {
         },
 
         onSuccess: async () => {
+          const linked_product_ids = selectedProducts.map((prod) => prod.id);
+
           try {
             const postData: PostCreate = {
               description,
               provider: "cloudflare_stream",
               provider_uid: initData.uid,
               order_index: 0,
+              linked_product_ids,
               video_review_message: null,
               is_video_review: false,
               rating: null,

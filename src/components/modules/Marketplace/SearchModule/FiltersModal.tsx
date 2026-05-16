@@ -3,6 +3,7 @@ import Modal from "@/components/core/Modal/Modal";
 import { Box, Button, Slider, Stack, Typography } from "@mui/material";
 import PercentIcon from "@mui/icons-material/Percent";
 import React, { useState } from "react";
+import { formatPrice } from "@/utils/formatPrice";
 
 type FiltersModalProps = {
   hasDiscount: boolean;
@@ -39,6 +40,10 @@ export default function FiltersModal({
     {
       title: "Aplică",
       props: {
+        sx: {
+          py: 1.75,
+          px: 3.5,
+        },
         onClick: () => {
           onApplyFilters?.(state);
         },
@@ -56,7 +61,7 @@ export default function FiltersModal({
       actions={actions}
     >
       <Box sx={{ p: 2 }}>
-        <Typography variant="h6" fontWeight={600}>
+        <Typography variant="h5" fontWeight={600}>
           Optiuni
         </Typography>
 
@@ -78,12 +83,12 @@ export default function FiltersModal({
           mt={5}
           mb={2.5}
         >
-          <Typography variant="h6" fontWeight={600}>
+          <Typography variant="h5" fontWeight={600}>
             Pretul maxim
           </Typography>
 
-          <Typography variant="h6" fontWeight={600}>
-            {state.maxPrice ?? 5000} RON
+          <Typography variant="h5" fontWeight={600}>
+            {formatPrice(state.maxPrice) ?? 5000} RON
           </Typography>
         </Stack>
 
@@ -95,7 +100,7 @@ export default function FiltersModal({
           onChange={handlePriceChange}
         />
 
-        <Typography variant="h6" fontWeight={600} mt={5}>
+        <Typography variant="h5" fontWeight={600} mt={5}>
           Sorteaza dupa
         </Typography>
       </Box>

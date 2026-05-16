@@ -42,7 +42,7 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
           <Chip
             size="small"
             icon={<AccessTimeOutlinedIcon />}
-            label={`${displayedDuration} min`}
+            label={`${displayedDuration}`}
           />
           <Typography variant="body2" color="text.secondary">
             {filtersText}

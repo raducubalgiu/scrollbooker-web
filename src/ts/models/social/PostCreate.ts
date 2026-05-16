@@ -3,6 +3,7 @@ export interface PostCreate {
   provider: string;
   provider_uid: string;
   order_index: number;
+  linked_product_ids: number[];
   video_review_message: string | null;
   is_video_review: boolean;
   rating: number | null;

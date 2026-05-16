@@ -60,7 +60,7 @@ const ModalTitle = ({
           </IconButton>
         )}
         <Typography
-          variant="h5"
+          variant="h4"
           fontWeight={600}
           sx={align === "center" ? { flex: 1, textAlign: "center" } : {}}
         >
