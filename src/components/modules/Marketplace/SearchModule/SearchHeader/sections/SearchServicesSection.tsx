@@ -1,19 +1,21 @@
 import { Box, Typography, Button } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { MVP_BUSINESS_DOMAINS } from "@/utils/mvp-hardcoded/mvp-business-domains";
 import ServiceDomainsSection from "./services/ServiceDomainsSection";
 import ServicesSection from "./services/ServicesSection";
 import {
   SearchHeaderActionsType,
   SearchHeaderStateType,
 } from "../search-header-types";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type SearchServicesSectionProps = {
+  businessDomains: BusinessDomain[];
   state: SearchHeaderStateType;
   actions: SearchHeaderActionsType;
 };
 
 const SearchServicesSection = ({
+  businessDomains,
   state,
   actions,
 }: SearchServicesSectionProps) => {
@@ -34,7 +36,7 @@ const SearchServicesSection = ({
         active: false,
         service_domains: [],
       },
-      ...MVP_BUSINESS_DOMAINS,
+      ...businessDomains,
     ],
     []
   );

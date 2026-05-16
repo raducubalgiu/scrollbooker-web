@@ -12,12 +12,14 @@ import { useInfiniteBusinessLocations } from "@/hooks/infiniteQuery/useInfiniteB
 import { useBusinessMarkers } from "@/hooks/useMarkers";
 import { LngLatBounds } from "mapbox-gl";
 import BusinessCardSkeletons from "./BusinessCard/BusinessCardSkeletons";
-import { getServiceDomainNameById } from "@/utils/mvp-hardcoded/mvp-business-domains";
 import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
 import BusinessCard from "./BusinessCard/BusinessCard";
 import SearchFiltersModal from "./SearchFilters/SearchFiltersModal";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import StoreMallDirectoryOutlinedIcon from "@mui/icons-material/StoreMallDirectoryOutlined";
+import { useCustomQuery } from "@/hooks/useHttp";
+import { find } from "lodash";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -259,6 +261,36 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     };
   }, [hasNextPage, isFetchingNextPage, isFetching, fetchNextPage]);
 
+  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+  const { data: businessDomains } = useCustomQuery<BusinessDomain[]>({
+    key: ["business-domains"],
+    url: "/api/nomenclatures/business-domains",
+    options: {
+      staleTime: ONE_DAY_IN_MS,
+      gcTime: ONE_DAY_IN_MS,
+
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
+  });
+
+  const getServiceDomainNameById = (
+    businessDomainId: number | null,
+    serviceDomainId: number | null
+  ) => {
+    if (!businessDomainId || !serviceDomainId) return null;
+
+    const selectedBusinessDomain = find(businessDomains, {
+      id: businessDomainId,
+    });
+
+    if (!selectedBusinessDomain) return null;
+
+    return find(selectedBusinessDomain.service_domains, { id: serviceDomainId })
+      ?.name;
+  };
+
   const selectedServiceDomainName = getServiceDomainNameById(
     searchState.businessDomainId,
     searchState.serviceDomainId
@@ -285,6 +317,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       />
 
       <SearchHeader
+        businessDomains={businessDomains || []}
         selectedServiceDomainName={selectedServiceDomainName}
         isMapVisible={isMapVisible}
         onToggleMap={handleToggleMap}

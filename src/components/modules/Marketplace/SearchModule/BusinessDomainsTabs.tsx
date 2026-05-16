@@ -2,21 +2,21 @@ import { Box, Button, Stack } from "@mui/material";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import React from "react";
-import { MVP_BUSINESS_DOMAINS } from "@/utils/mvp-hardcoded/mvp-business-domains";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type BusinessDomainsTabsProps = {
+  businessDomains: BusinessDomain[];
   areFiltersActive: boolean;
   isExpanded: boolean;
   isMapVisible: boolean;
   onOpenFilters: (() => void) | undefined;
   onToggleMap: (() => void) | undefined;
-  businessDomains?: BusinessDomain;
   selectedBusinessDomainId: number | null;
   onSelectBusinessDomain: (id: number | null) => void;
 };
 
 const BusinessDomainsTabs = ({
+  businessDomains,
   areFiltersActive,
   isExpanded,
   isMapVisible,
@@ -25,7 +25,7 @@ const BusinessDomainsTabs = ({
   selectedBusinessDomainId,
   onSelectBusinessDomain,
 }: BusinessDomainsTabsProps) => {
-  const businessDomains = [
+  const allBusinessDomains = [
     {
       id: null,
       name: "Toate",
@@ -33,7 +33,7 @@ const BusinessDomainsTabs = ({
       active: false,
       service_domains: [],
     },
-    ...MVP_BUSINESS_DOMAINS,
+    ...businessDomains,
   ];
 
   return (
@@ -51,7 +51,7 @@ const BusinessDomainsTabs = ({
         sx={{ mt: 2.5 }}
       >
         <Stack flexDirection="row" alignItems="center" gap={1}>
-          {businessDomains.map((d) => {
+          {allBusinessDomains.map((d) => {
             const isSelected = d.id === selectedBusinessDomainId;
 
             return (

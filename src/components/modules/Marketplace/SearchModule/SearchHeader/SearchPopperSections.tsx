@@ -9,6 +9,7 @@ import {
   SearchHeaderActionsType,
   SearchHeaderStateType,
 } from "./search-header-types";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 const SearchLocationSection = React.lazy(
   () => import("./sections/SearchLocationSection")
@@ -18,6 +19,7 @@ const SearchDateTimeSection = React.lazy(
 );
 
 type SearchPopperSectionsProps = {
+  businessDomains: BusinessDomain[];
   state: SearchHeaderStateType;
   actions: SearchHeaderActionsType;
   isExpanded: boolean;
@@ -30,6 +32,7 @@ type SearchPopperSectionsProps = {
 const POPPER_MODIFIERS = [{ name: "offset", options: { offset: [0, 12] } }];
 
 const SearchPopperSections = ({
+  businessDomains,
   state,
   actions,
   isExpanded,
@@ -51,6 +54,7 @@ const SearchPopperSections = ({
       case SearchHeaderSectionEnum.Services:
         return (
           <SearchServicesSection
+            businessDomains={businessDomains}
             state={{
               selectedBusinessDomainId,
               selectedServiceDomainId,

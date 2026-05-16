@@ -10,8 +10,10 @@ import {
   useSearchHeaderScrollLock,
 } from "./search-header-utils";
 import { SearchHeaderStateType } from "./search-header-types";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type SearchHeaderProps = {
+  businessDomains: BusinessDomain[];
   areFiltersActive: boolean;
   headerState: SearchHeaderStateType;
   onSearch: (state: SearchHeaderStateType) => void;
@@ -25,6 +27,7 @@ type SearchHeaderProps = {
 };
 
 const SearchHeader = ({
+  businessDomains,
   areFiltersActive,
   headerState,
   onSearch,
@@ -200,6 +203,7 @@ const SearchHeader = ({
             />
 
             <SearchPopperSections
+              businessDomains={businessDomains}
               isExpanded={isExpanded}
               pillRef={pillRef}
               popperRef={popperRef}
@@ -217,8 +221,9 @@ const SearchHeader = ({
 
         {displayFiltersSection && (
           <BusinessDomainsTabs
-            isExpanded={isExpanded}
+            businessDomains={businessDomains}
             areFiltersActive={areFiltersActive}
+            isExpanded={isExpanded}
             isMapVisible={isMapVisible ?? false}
             onOpenFilters={onOpenFilters}
             onToggleMap={onToggleMap}

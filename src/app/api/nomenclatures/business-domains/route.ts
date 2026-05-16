@@ -4,12 +4,10 @@ import { omit } from "lodash";
 import { PaginatedData } from "@/components/core/Table/Table";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
-export const GET = async (req: NextRequest) => {
-  const pagination = req.nextUrl.searchParams;
-
+export const GET = async (_req: NextRequest) => {
   const response = (
     await get<PaginatedData<BusinessDomain>>({
-      url: `/business-domains?${pagination}`,
+      url: `/business-domains`,
     })
   ).data;
 

@@ -1,4 +1,3 @@
-import { MVP_BUSINESS_DOMAINS } from "@/utils/mvp-hardcoded/mvp-business-domains";
 import {
   Accordion,
   AccordionDetails,
@@ -96,7 +95,7 @@ const ExploreDrawer = ({
           msOverflowStyle: "none",
         }}
       >
-        {MVP_BUSINESS_DOMAINS.map((bDomain) => (
+        {/* {MVP_BUSINESS_DOMAINS.map((bDomain) => (
           <Accordion
             key={bDomain.id}
             sx={{
@@ -139,7 +138,7 @@ const ExploreDrawer = ({
               ))}
             </AccordionDetails>
           </Accordion>
-        ))}
+        ))} */}
       </Box>
 
       <Box sx={{ flexShrink: 0, pt: 1 }}>
