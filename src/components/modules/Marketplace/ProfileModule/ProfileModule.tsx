@@ -9,7 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
 import ProfileTabs from "./tabs/ProfileTabs";
@@ -17,7 +17,11 @@ import SocialModal from "./social/SocialModal";
 import { SocialTabEnum } from "./social/SocialTabEnum";
 import ScheduleModal from "./ScheduleModal";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
-import { UserCounter, UserProfile } from "@/ts/models/user/UserProfile";
+import {
+  UserCounter,
+  UserProfile,
+  UserProfileUpdateResponse,
+} from "@/ts/models/user/UserProfile";
 import EditProfileModal from "./edit/EditProfileModal";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
@@ -57,35 +61,52 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
   const [openSocialModal, setOpenSocialModal] =
     useState<SocialModalProps | null>(null);
   const isSocialModalOpen = openSocialModal !== null;
-  const [updatedCounters, setUpdatedCounters] = useState<UserCounter>(
-    profile?.counters ?? emptyCounters
-  );
 
-  useEffect(() => {
-    if (profile) setUpdatedCounters(profile.counters);
-  }, [profile]);
+  const [localProfile, setLocalProfile] = useState<UserProfile | null>(profile);
 
-  const handleUpdateFollows = useCallback(
-    (action: UpdateFollowersAction) => {
-      setUpdatedCounters((prev) => {
-        if (!prev) return prev;
-        const delta = action === UpdateFollowersAction.FOLLOW ? 1 : -1;
-        const nextCount = Math.max(0, (prev.followers_count ?? 0) + delta);
-        return { ...prev, followers_count: nextCount };
+  const handleUpdateFollows = useCallback((action: UpdateFollowersAction) => {
+    setLocalProfile((prev) => {
+      if (!prev) return null;
+      const delta = action === UpdateFollowersAction.FOLLOW ? 1 : -1;
+      const nextCount = Math.max(
+        0,
+        (prev.counters?.followers_count ?? 0) + delta
+      );
+
+      return {
+        ...prev,
+        counters: {
+          ...prev.counters,
+          followers_count: nextCount,
+        },
+      };
+    });
+  }, []);
+
+  const handleProfileUpdated = useCallback(
+    (updatedFields: UserProfileUpdateResponse) => {
+      setLocalProfile((prev) => {
+        if (!prev) return null;
+
+        return {
+          ...prev,
+          fullname: updatedFields.fullname,
+          username: updatedFields.username,
+          avatar: updatedFields.avatar,
+          bio: updatedFields.bio,
+        };
       });
     },
-    [setUpdatedCounters]
+    []
   );
 
-  if (!profile) return null;
-
-  const { is_business_or_employee, is_own_profile, business_owner } = profile;
+  if (!localProfile) return;
 
   return (
     <Box>
       <ProfileHeaderMobile
-        username={profile.username}
-        isOwnProfile={profile.is_own_profile}
+        username={localProfile.username}
+        isOwnProfile={localProfile.is_own_profile}
         onSetIsMenuOpen={() => setIsMenuOpen(true)}
       />
 
@@ -150,48 +171,49 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
 
       <SocialModal
         open={isSocialModalOpen}
-        counters={updatedCounters}
+        counters={localProfile?.counters ?? emptyCounters}
         socialModal={openSocialModal}
         handleClose={() => setOpenSocialModal(null)}
       />
 
       <ScheduleModal
         open={openScheduleModal}
-        userId={profile.id}
+        userId={localProfile.id}
         handleClose={() => setOpenScheduleModal(false)}
       />
 
       <EditProfileModal
         open={openEditProfileModal}
         handleClose={() => setOpenEditProfileModal(false)}
-        profile={profile}
+        onProfileUpdated={handleProfileUpdated}
+        profile={localProfile}
       />
 
       <ProfileCounters
         onClick={(tab) => {
           setOpenSocialModal({
             selectedTab: tab,
-            userId: profile.id,
-            username: profile.username,
+            userId: localProfile.id,
+            username: localProfile.username,
           });
         }}
-        counters={updatedCounters}
+        counters={localProfile?.counters ?? emptyCounters}
       />
 
       <ProfileUserInfo
-        profile={profile}
+        profile={localProfile}
         onOpenScheduleModal={() => setOpenScheduleModal(true)}
         onOpenEditModal={() => setOpenEditProfileModal(true)}
         onUpdateFollows={handleUpdateFollows}
       />
 
       <ProfileTabs
-        userId={profile.id}
-        businessId={profile.business_id}
-        username={profile.username}
-        businessOwnerId={business_owner?.id}
-        isBusinessOrEmployee={is_business_or_employee}
-        isMyProfile={is_own_profile}
+        userId={localProfile.id}
+        businessId={localProfile.business_id}
+        username={localProfile.username}
+        businessOwnerId={localProfile.business_owner?.id}
+        isBusinessOrEmployee={localProfile.is_business_or_employee}
+        isMyProfile={localProfile.is_own_profile}
         tab={tab}
       />
     </Box>

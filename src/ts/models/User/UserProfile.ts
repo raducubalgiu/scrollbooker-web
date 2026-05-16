@@ -46,3 +46,15 @@ export interface BusinessOwner {
   avatar: string | null;
   is_follow: boolean;
 }
+
+export interface UserProfileUpdateResponse {
+  id: number;
+  fullname: string;
+  username: string;
+  bio: string | null;
+  avatar: string | null;
+  date_of_birth: string | null;
+  gender: string | null;
+  website: string | null;
+  public_email: string | null;
+}
