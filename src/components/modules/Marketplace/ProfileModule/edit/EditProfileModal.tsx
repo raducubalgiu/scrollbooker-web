@@ -15,7 +15,7 @@ import {
   useTheme,
 } from "@mui/material";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   useUpdateProfileMutation,
@@ -51,11 +51,18 @@ const EditProfileModal = ({
     },
   });
 
-  const { reset, handleSubmit, setValue } = methods;
+  const { reset, handleSubmit, setValue, watch } = methods;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const [avatarPreview, setAvatarPreview] = useState<string>(
     profile.avatar || ""
   );
+
+  const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
+
+  const watchedName = watch("name");
+  const watchedUsername = watch("username");
+  const watchedBio = watch("bio");
 
   const { mutate, isPending } = useUpdateProfileMutation((updatedUser) => {
     onProfileUpdated(updatedUser);
@@ -75,6 +82,7 @@ const EditProfileModal = ({
         avatar: profile.avatar || "",
       });
       setAvatarPreview(profile.avatar || "");
+      setIsAvatarChanged(false);
     }
   }, [open, profile, reset]);
 
@@ -87,8 +95,11 @@ const EditProfileModal = ({
     if (!file) return;
 
     setValue("avatar", file);
+
     const previewUrl = URL.createObjectURL(file);
     setAvatarPreview(previewUrl);
+
+    setIsAvatarChanged(true);
   };
 
   const onSubmit = (data: ProfileFormValues) => {
@@ -101,12 +112,21 @@ const EditProfileModal = ({
     mutate(payload);
   };
 
+  const isFormDirty = useMemo(() => {
+    const hasTextChanges =
+      watchedName !== profile.fullname ||
+      watchedUsername !== profile.username ||
+      (watchedBio || null) !== (profile.bio || null);
+
+    return hasTextChanges || isAvatarChanged;
+  }, [watchedName, watchedUsername, watchedBio, isAvatarChanged, profile]);
+
   const actions: ActionButtonType[] = [
     {
-      title: isPending ? "Se salvează..." : "Salvează",
+      title: "Salvează",
       props: {
         onClick: handleSubmit(onSubmit),
-        disabled: isPending,
+        disabled: isPending || !isFormDirty,
         loading: isPending,
         sx: {
           py: 1.5,
