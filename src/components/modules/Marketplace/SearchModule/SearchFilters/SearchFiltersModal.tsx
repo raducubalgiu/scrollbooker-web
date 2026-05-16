@@ -2,7 +2,7 @@ import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
 import { Box, Button, Slider, Stack, Typography } from "@mui/material";
 import PercentIcon from "@mui/icons-material/Percent";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { formatPrice } from "@/utils/formatPrice";
 
 type SearchFiltersModalProps = {
@@ -16,6 +16,8 @@ type SearchFiltersModalProps = {
   }) => void;
 };
 
+const DEFAULT_MAX_PRICE = 5000;
+
 export default function SearchFiltersModal({
   open,
   onClose,
@@ -25,8 +27,17 @@ export default function SearchFiltersModal({
 }: SearchFiltersModalProps) {
   const [state, setState] = useState(() => ({
     hasDiscount,
-    maxPrice,
+    maxPrice: maxPrice ?? DEFAULT_MAX_PRICE,
   }));
+
+  useEffect(() => {
+    if (open) {
+      setState({
+        hasDiscount,
+        maxPrice: maxPrice ?? DEFAULT_MAX_PRICE,
+      });
+    }
+  }, [open, hasDiscount, maxPrice]);
 
   const handleDiscountToggle = () => {
     setState((prev) => ({ ...prev, hasDiscount: !prev.hasDiscount }));
@@ -36,17 +47,41 @@ export default function SearchFiltersModal({
     setState((prev) => ({ ...prev, maxPrice: value as number }));
   };
 
+  const isStateUnchanged =
+    state.hasDiscount === hasDiscount &&
+    state.maxPrice === (maxPrice ?? DEFAULT_MAX_PRICE);
+
+  const isAlreadyReset =
+    state.hasDiscount === false && state.maxPrice === DEFAULT_MAX_PRICE;
+
   const actions: ActionButtonType[] = [
     {
-      title: "Aplică",
+      title: "Reset",
       props: {
+        variant: "text",
+        disabled: isAlreadyReset,
         sx: {
           py: 1.75,
           px: 3.5,
         },
         onClick: () => {
-          onApplyFilters?.(state);
+          setState({
+            hasDiscount: false,
+            maxPrice: DEFAULT_MAX_PRICE,
+          });
         },
+      },
+    },
+    {
+      title: "Aplică",
+      props: {
+        disabled: isStateUnchanged,
+        variant: "contained",
+        sx: {
+          py: 1.75,
+          px: 3.5,
+        },
+        onClick: () => onApplyFilters?.(state),
       },
     },
   ];
@@ -62,12 +97,12 @@ export default function SearchFiltersModal({
     >
       <Box sx={{ p: 2 }}>
         <Typography variant="h5" fontWeight={600}>
-          Optiuni
+          Opțiuni
         </Typography>
 
         <Button
-          variant="outlined"
-          color={state.hasDiscount ? "primary" : "secondary"}
+          variant={state.hasDiscount ? "contained" : "outlined"}
+          color={state.hasDiscount ? "primary" : "inherit"}
           size="large"
           sx={{ mt: 2.5 }}
           startIcon={<PercentIcon />}
@@ -84,24 +119,25 @@ export default function SearchFiltersModal({
           mb={2.5}
         >
           <Typography variant="h5" fontWeight={600}>
-            Pretul maxim
+            Prețul maxim
           </Typography>
 
           <Typography variant="h5" fontWeight={600}>
-            {formatPrice(state.maxPrice) ?? 5000} RON
+            {formatPrice(state.maxPrice)} RON
           </Typography>
         </Stack>
 
         <Slider
-          value={state.maxPrice ?? 5000}
-          aria-label="Small"
+          value={state.maxPrice}
+          aria-label="Preț maxim"
           valueLabelDisplay="auto"
-          max={5000}
+          min={0}
+          max={DEFAULT_MAX_PRICE}
           onChange={handlePriceChange}
         />
 
         <Typography variant="h5" fontWeight={600} mt={5}>
-          Sorteaza dupa
+          Sortează după
         </Typography>
       </Box>
     </Modal>

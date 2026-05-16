@@ -12,6 +12,7 @@ import {
 import { SearchHeaderStateType } from "./search-header-types";
 
 type SearchHeaderProps = {
+  areFiltersActive: boolean;
   headerState: SearchHeaderStateType;
   onSearch: (state: SearchHeaderStateType) => void;
   selectedServiceDomainName: string | null | undefined;
@@ -24,6 +25,7 @@ type SearchHeaderProps = {
 };
 
 const SearchHeader = ({
+  areFiltersActive,
   headerState,
   onSearch,
   selectedServiceDomainName,
@@ -216,6 +218,7 @@ const SearchHeader = ({
         {displayFiltersSection && (
           <BusinessDomainsTabs
             isExpanded={isExpanded}
+            areFiltersActive={areFiltersActive}
             isMapVisible={isMapVisible ?? false}
             onOpenFilters={onOpenFilters}
             onToggleMap={onToggleMap}

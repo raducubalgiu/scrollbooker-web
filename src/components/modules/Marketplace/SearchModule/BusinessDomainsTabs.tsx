@@ -6,6 +6,7 @@ import { MVP_BUSINESS_DOMAINS } from "@/utils/mvp-hardcoded/mvp-business-domains
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type BusinessDomainsTabsProps = {
+  areFiltersActive: boolean;
   isExpanded: boolean;
   isMapVisible: boolean;
   onOpenFilters: (() => void) | undefined;
@@ -16,6 +17,7 @@ type BusinessDomainsTabsProps = {
 };
 
 const BusinessDomainsTabs = ({
+  areFiltersActive,
   isExpanded,
   isMapVisible,
   onOpenFilters,
@@ -75,7 +77,7 @@ const BusinessDomainsTabs = ({
         >
           <Button
             variant="outlined"
-            color="secondary"
+            color={areFiltersActive ? "primary" : "secondary"}
             size="large"
             disableElevation
             sx={{ py: 1.5, px: 3 }}

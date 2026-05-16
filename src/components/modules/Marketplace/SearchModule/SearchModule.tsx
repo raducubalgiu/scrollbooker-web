@@ -16,6 +16,8 @@ import { getServiceDomainNameById } from "@/utils/mvp-hardcoded/mvp-business-dom
 import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
 import BusinessCard from "./BusinessCard/BusinessCard";
 import SearchFiltersModal from "./SearchFilters/SearchFiltersModal";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import StoreMallDirectoryOutlinedIcon from "@mui/icons-material/StoreMallDirectoryOutlined";
 
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -120,8 +122,6 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteBusinessLocations(searchState);
-
-  console.log("DATA!!!", data);
 
   const locations = React.useMemo(() => {
     if (!data) return [];
@@ -264,6 +264,16 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     searchState.serviceDomainId
   );
 
+  const areFiltersActive = React.useMemo(() => {
+    const isDiscountApplied = searchState.hasDiscount === true;
+
+    const currentMaxPrice =
+      searchState.maxPrice !== null ? Number(searchState.maxPrice) : 5000;
+    const isPriceApplied = currentMaxPrice < 5000;
+
+    return isDiscountApplied || isPriceApplied;
+  }, [searchState.hasDiscount, searchState.maxPrice]);
+
   return (
     <Box sx={styles.root}>
       <SearchFiltersModal
@@ -281,6 +291,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         onHeightChange={setSearchHeaderHeight}
         onOpenFilters={handleOpenFilters}
         mainPagePadding={mainPagePadding}
+        areFiltersActive={areFiltersActive}
         onSearch={handleSearch}
         headerState={{
           selectedBusinessDomainId: searchState.businessDomainId,
@@ -295,9 +306,11 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
             {isLoading ? (
               <BusinessCardSkeletons listSx={styles.list} />
             ) : locations.length === 0 ? (
-              <Typography variant="h6" align="center" mt={4}>
-                Nu s-au găsit rezultate.
-              </Typography>
+              <NotFound
+                icon={<StoreMallDirectoryOutlinedIcon sx={{ fontSize: 50 }} />}
+                title="Nu au fost găsite potriviri exacte"
+                description="Încearcă să schimbi sau să elimini unele filtre sau să ajustezi zona de căutare."
+              />
             ) : (
               <>
                 <Box sx={styles.list}>
