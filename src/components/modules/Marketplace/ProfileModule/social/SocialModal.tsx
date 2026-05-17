@@ -155,13 +155,14 @@ const SocialModal = ({
   const theme = useTheme();
   const isReviewsStep = currentTab === SocialTabEnum.REVIEWS;
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { username } = socialModal || {};
 
   return (
     <Modal
       open={open}
       handleClose={handleClose}
       dividers={false}
-      title={`@${socialModal?.username}`}
+      title={username ? `@${username}` : ""}
       align="center"
       fullScreen={isMobile}
       {...(isReviewsStep && !isMobile && { maxWidth: "md" })}

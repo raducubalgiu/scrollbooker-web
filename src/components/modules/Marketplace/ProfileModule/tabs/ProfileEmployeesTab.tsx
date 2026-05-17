@@ -37,7 +37,7 @@ const ProfileEmployeesTab = ({ businessOwnerId }: ProfileEmployeesTabProps) => {
       </Box>
       {!isLoading && isEmpty(employees) && !isError && (
         <NotFound
-          title="Nu au fost găsite angajați"
+          title="Nu au fost găsiți specialiști"
           description="Acest business nu și-a adăugat încă specialiștii"
           icon={<PeopleAltOutlinedIcon sx={{ fontSize: 50 }} />}
         />

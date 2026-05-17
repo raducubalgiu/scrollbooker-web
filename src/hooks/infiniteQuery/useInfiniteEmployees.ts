@@ -15,7 +15,7 @@ const fetchBusinessEmployees = async ({
   businessOwnerId,
 }: FetchBusinessEmployeesType) => {
   const { data } = await axios.get<PaginatedData<BusinessEmployee>>(
-    `/api/employees?businessOwnerId=${businessOwnerId}&page=${pageParam}&limit=${PAGE_LIMIT}`
+    `/api/businesses/owner/${businessOwnerId}/employees?page=${pageParam}&limit=${PAGE_LIMIT}`
   );
   return {
     ...data,
