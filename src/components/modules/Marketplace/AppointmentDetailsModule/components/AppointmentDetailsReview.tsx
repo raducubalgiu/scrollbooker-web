@@ -69,17 +69,19 @@ const AppointmentDetailsReview = ({
               </Stack>
             </Stack>
 
-            <ReviewMenu
-              onEditReview={onEditReview}
-              onDeleteReview={onDeleteReview}
-            />
+            {isCustomer && (
+              <ReviewMenu
+                onEditReview={onEditReview}
+                onDeleteReview={onDeleteReview}
+              />
+            )}
           </Stack>
 
           <Typography mt={1.5}>{writtenReview.review}</Typography>
         </Box>
       )}
 
-      {!writtenReview?.id && (
+      {!writtenReview?.id && isCustomer && (
         <Stack
           justifyContent="center"
           alignItems="center"

@@ -208,7 +208,7 @@ const AppointmentDetailsModule = ({
             />
           )}
 
-          {!isEmpty(products) && isFinished && is_customer && (
+          {!isEmpty(products) && isFinished && (
             <AppointmentDetailsReview
               writtenReview={writtenReview}
               hasVideoReview={has_video_review}
