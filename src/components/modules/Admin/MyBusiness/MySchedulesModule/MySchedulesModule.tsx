@@ -39,7 +39,12 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
       }),
     },
   });
-  const { watch, reset, handleSubmit } = methods;
+  const {
+    watch,
+    reset,
+    handleSubmit,
+    formState: { isDirty },
+  } = methods;
   const { schedules } = watch();
 
   const { mutate: handleUpdateSchedules, isPending } = useMutate<
@@ -74,35 +79,39 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
     handleUpdateSchedules(updated_schedules);
   };
 
-  const actions: ActionButtonType[] = [
-    {
-      title: "Renunță",
-      props: {
-        variant: "outlined",
-        color: "secondary",
-        onClick: () => {
-          reset();
-          setDisabled(true);
+  const actions: ActionButtonType[] = disabled
+    ? [
+        {
+          title: "Editează",
+          props: {
+            onClick: () => setDisabled(false),
+            disableElevation: true,
+          },
         },
-        disableElevation: true,
-      },
-    },
-    {
-      title: "Editează",
-      props: {
-        onClick: () => setDisabled(false),
-        disableElevation: true,
-      },
-    },
-    {
-      title: "Salvează",
-      props: {
-        onClick: handleSubmit(handleSave),
-        loading: isPending,
-        disableElevation: true,
-      },
-    },
-  ];
+      ]
+    : [
+        {
+          title: "Renunță",
+          props: {
+            variant: "outlined",
+            color: "secondary",
+            onClick: () => {
+              reset();
+              setDisabled(true);
+            },
+            disableElevation: true,
+          },
+        },
+        {
+          title: isPending ? "Se salvează..." : "Salvează",
+          props: {
+            onClick: handleSubmit(handleSave),
+            loading: isPending,
+            disabled: isPending || !isDirty,
+            disableElevation: true,
+          },
+        },
+      ];
 
   return (
     <FormProvider {...methods}>
@@ -146,7 +155,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
             ))}
           </TableBody>
         </Table>
-        <Stack alignItems="flex-end" sx={{ py: 1.5 }}>
+        <Stack alignItems="flex-end" sx={{ p: 1.5 }}>
           <ActionButton actions={actions} />
         </Stack>
       </Box>

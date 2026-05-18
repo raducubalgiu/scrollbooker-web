@@ -34,12 +34,17 @@ export default function EmploymentRequestsModal({
   >(null);
   const [stepIndex, setStepIndex] = useState<number>(0);
 
-  // Funcție pentru a reseta totul la închidere (reluarea procesului)
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const handleResetAndClose = () => {
     setStepIndex(0);
     setSelectedUserId(null);
     setSelectedProfessionId(null);
     setAcknowledged(false);
+
+    setSearch("");
+    setDebouncedSearch("");
     handleClose();
   };
 
@@ -78,38 +83,47 @@ export default function EmploymentRequestsModal({
     (isNull(selectedProfessionId) && isSecondStep);
 
   const actions: ActionButtonType[] = [
-    {
-      title: "Înapoi",
-      props: {
-        onClick: () => setStepIndex((prev) => prev - 1),
-        variant: "outlined",
-        color: "secondary",
-        disabled: isPending,
-      },
-      hidden: isFirstStep,
-    },
-    {
-      title: "Pasul următor",
-      props: {
-        onClick: () => setStepIndex((prev) => prev + 1),
-        disabled: disabledNextStep,
-      },
-      hidden: isThirdStep,
-    },
-    {
-      title: "Trimite cererea",
-      props: {
-        onClick: () =>
-          createEmploymentRequest({
-            employee_id: selectedUserId,
-            consent_id: consent?.id,
-            profession_id: selectedProfessionId,
-          }),
-        disabled: !acknowledged || isPending,
-        loading: isPending,
-      },
-      hidden: !isThirdStep,
-    },
+    ...(!isFirstStep
+      ? [
+          {
+            title: "Înapoi",
+            props: {
+              onClick: () => setStepIndex((prev) => prev - 1),
+              variant: "outlined" as const,
+              color: "secondary" as const,
+              disabled: isPending,
+            },
+          },
+        ]
+      : []),
+    ...(!isThirdStep
+      ? [
+          {
+            title: "Pasul următor",
+            props: {
+              onClick: () => setStepIndex((prev) => prev + 1),
+              disabled: disabledNextStep,
+            },
+          },
+        ]
+      : []),
+    ...(isThirdStep
+      ? [
+          {
+            title: "Trimite cererea",
+            props: {
+              onClick: () =>
+                createEmploymentRequest({
+                  employee_id: selectedUserId,
+                  consent_id: consent?.id,
+                  profession_id: selectedProfessionId,
+                }),
+              disabled: !acknowledged || isPending,
+              loading: isPending,
+            },
+          },
+        ]
+      : []),
   ];
 
   const stepContent = useMemo(() => {
@@ -119,6 +133,10 @@ export default function EmploymentRequestsModal({
           <EmploymentRequestsStepOne
             selectedUserId={selectedUserId}
             onSelectUserId={setSelectedUserId}
+            search={search}
+            setSearch={setSearch}
+            debouncedSearch={debouncedSearch}
+            setDebouncedSearch={setDebouncedSearch}
           />
         );
       case 1:
@@ -142,7 +160,6 @@ export default function EmploymentRequestsModal({
       default:
         return null;
     }
-    // Adăugat toate dependințele necesare pentru re-render
   }, [
     stepIndex,
     selectedUserId,
@@ -152,6 +169,8 @@ export default function EmploymentRequestsModal({
     consent,
     isLoadingConsent,
     acknowledged,
+    search,
+    debouncedSearch,
   ]);
 
   return (

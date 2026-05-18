@@ -1,23 +1,32 @@
+"use client";
+
 import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItemSkeletons";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { UserMini } from "@/ts/models/user/UserMini";
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import SelectedEmployeeItem from "./SelectedEmployeeItem";
 
 type EmploymentRequestsStepOneProps = {
   selectedUserId: number | null;
   onSelectUserId: (id: number | null) => void;
+  search: string;
+  setSearch: (val: string) => void;
+  debouncedSearch: string;
+  setDebouncedSearch: (val: string) => void;
 };
 
 export default function EmploymentRequestsStepOne({
   selectedUserId,
   onSelectUserId,
+  search,
+  setSearch,
+  debouncedSearch,
+  setDebouncedSearch,
 }: EmploymentRequestsStepOneProps) {
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [hasTypedAfterSelection, setHasTypesAfterSelection] = useState(false);
+  const [hasTypedAfterSelection, setHasTypedAfterSelection] =
+    React.useState(false);
 
   const { data: users, isLoading } = useCustomQuery<UserMini[]>({
     key: ["search-users", debouncedSearch],
@@ -36,7 +45,7 @@ export default function EmploymentRequestsStepOne({
     }, 500);
 
     return () => clearTimeout(timeout);
-  }, [search]);
+  }, [search, setDebouncedSearch]);
 
   const styles = {
     input: {
@@ -55,15 +64,15 @@ export default function EmploymentRequestsStepOne({
 
       if (selectedUserId !== null && !hasTypedAfterSelection) {
         onSelectUserId(null);
-        setHasTypesAfterSelection(true);
+        setHasTypedAfterSelection(true);
       }
     },
-    [hasTypedAfterSelection, selectedUserId, onSelectUserId]
+    [hasTypedAfterSelection, selectedUserId, onSelectUserId, setSearch]
   );
 
   const handleUserSelect = (userId: number) => {
     onSelectUserId(userId);
-    setHasTypesAfterSelection(false);
+    setHasTypedAfterSelection(false);
   };
 
   return (
@@ -71,6 +80,7 @@ export default function EmploymentRequestsStepOne({
       <Stack justifyContent="center">
         <TextField
           placeholder="Caută angajatul.."
+          value={search}
           onChange={handleSearch}
           sx={styles.input}
         />
