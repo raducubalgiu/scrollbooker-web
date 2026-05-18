@@ -14,7 +14,7 @@ type BusinessAboutTabProps = {
 const BusinessAboutTab = ({ profile, id, innerRef }: BusinessAboutTabProps) => {
   return (
     <Box id={id} ref={innerRef} sx={{ minHeight: "500px" }}>
-      <Typography variant="h4" fontWeight={600} gutterBottom mb={2.5}>
+      <Typography variant="h3" fontWeight={600} gutterBottom mb={2.5}>
         Despre
       </Typography>
 
@@ -31,7 +31,7 @@ const BusinessAboutTab = ({ profile, id, innerRef }: BusinessAboutTabProps) => {
       <Image
         src={profile.location.map_url ?? ""}
         alt=""
-        height={600}
+        height={400}
         width={1200}
         style={{
           borderRadius: 15,

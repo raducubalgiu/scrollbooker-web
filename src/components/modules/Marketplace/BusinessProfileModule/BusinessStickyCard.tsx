@@ -31,6 +31,7 @@ export default function BusinessStickyCard({
   return (
     <Box
       sx={{
+        mt: 5,
         position: { lg: "sticky" },
         top: { lg: 88 },
       }}
@@ -49,7 +50,7 @@ export default function BusinessStickyCard({
             openNow={true}
             url={business.owner.avatar ?? ""}
             alt=""
-            size="xl"
+            size="lg"
           />
 
           <Stack
@@ -95,14 +96,14 @@ export default function BusinessStickyCard({
           fullWidth
           disableElevation
           sx={{
-            p: 2,
+            p: 1.5,
             textTransform: "none",
             fontWeight: 700,
             mt: 5,
             fontSize: 17,
           }}
         >
-          Rezerva acum
+          Rezervă acum
         </Button>
 
         <Box my={5}>
@@ -167,12 +168,12 @@ function UserInfoCounter({
   return (
     <Stack alignItems="center" {...props}>
       <Typography
-        sx={{ mb: 1.5, fontWeight: 500, fontSize: 17 }}
+        sx={{ mb: 1.5, fontWeight: 500, fontSize: 15 }}
         color="text.secondary"
       >
         {label}
       </Typography>
-      <Typography sx={{ fontWeight: 800, fontSize: 25 }}>{counter}</Typography>
+      <Typography sx={{ fontWeight: 800, fontSize: 20 }}>{counter}</Typography>
     </Stack>
   );
 }

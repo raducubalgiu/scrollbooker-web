@@ -9,7 +9,7 @@ type BusinessServicesTabProps = {
 const BusinessServicesTab = ({ id, innerRef }: BusinessServicesTabProps) => {
   return (
     <Box id={id} ref={innerRef}>
-      <Typography variant="h4" fontWeight={600} gutterBottom mt={5}>
+      <Typography variant="h3" fontWeight={600} gutterBottom mt={5}>
         Servicii
       </Typography>
 

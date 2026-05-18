@@ -15,14 +15,16 @@ export default function BusinessProfileGallery({
   businessName = "Business",
   onOpenGallery,
 }: BusinessProfileGalleryProps) {
+  // Selectăm cele 5 imagini (1 Hero + 4 în sub-grid)
   const safeImages = mediaFiles.filter(Boolean).slice(0, 5);
+  const totalCount = mediaFiles.filter(Boolean).length;
 
   if (safeImages.length === 0) {
     return (
       <Box
         sx={{
           width: "100%",
-          height: { xs: 260, md: 640 },
+          aspectRatio: { xs: "1.5/1", md: "2/1" },
           borderRadius: 3,
           bgcolor: "action.hover",
         }}
@@ -31,88 +33,97 @@ export default function BusinessProfileGallery({
   }
 
   const heroImage = safeImages[0]?.url;
-  const rightImages = safeImages.slice(1, 3).map((file) => file.thumbnail_url);
-  const remainingCount = safeImages.length - 3;
+  const gridImages = safeImages.slice(1, 5);
+  const remainingCount = totalCount - safeImages.length;
 
   return (
     <Box
       sx={{
         display: "grid",
+        // Împărțire exactă în două jumătăți egale (50% - 50%)
         gridTemplateColumns: {
           xs: "1fr",
-          md: "1.45fr 1fr",
+          md: "1fr 1fr",
         },
-        gap: 3,
+        gap: 1, // Distanța mică de 8px între poze (stil Airbnb)
         width: "100%",
+        borderRadius: 3,
+        overflow: "hidden",
       }}
     >
-      {/* Hero image */}
+      {/* 1. Imaginea Hero (Stânga - Ocupă 50% din lățime și dă înălțimea totală) */}
       <GalleryTile
         src={heroImage ?? ""}
-        alt={`${businessName} image 1`}
+        alt={`${businessName} imagine hero`}
         priority
-        height={{ xs: 260, md: 640 }}
         onClick={() => onOpenGallery?.(0)}
+        sx={{
+          // REPARAT: Am trecut de la 1.25/1 la un raport de 1.85/1 (lățime / înălțime).
+          // Acest lucru scade drastic înălțimea totală a galeriei pe ecrane mari (maxWidth="xl").
+          // Automat, cele 4 poze mici din dreapta devin dreptunghiuri foarte late, ideale pentru formatul landscape.
+          aspectRatio: { xs: "1.5/1", md: "1.55/1" },
+        }}
       />
 
-      {/* Right stacked images */}
+      {/* 2. Sub-grid-ul din dreapta (Ocupă celelalte 50% din lățime) */}
       <Box
         sx={{
-          display: "grid",
-          gridTemplateRows: "1fr 1fr",
-          gap: 2.5,
-          height: { xs: 220, md: 640 },
+          display: { xs: "none", md: "grid" }, // Ascuns pe mobil
+          gridTemplateColumns: "1fr 1fr", // Două coloane în jumătatea dreaptă
+          gridTemplateRows: "1fr 1fr", // Două rânduri în jumătatea dreaptă
+          gap: 1,
+          // IMPORTANT: Îi spunem să se întindă pe exact aceeași înălțime pe care o generează Hero în stânga
+          height: "100%",
         }}
       >
-        {rightImages[0] ? (
-          <GalleryTile
-            src={rightImages[0]}
-            alt={`${businessName} image 2`}
-            height="100%"
-            onClick={() => onOpenGallery?.(1)}
-          />
-        ) : (
-          <EmptyTile />
-        )}
+        {Array.from({ length: 4 }).map((_, index) => {
+          const file = gridImages[index];
+          const imageIndex = index + 1;
+          const isLast = index === 3; // Ultima celulă (dreapta-jos)
 
-        {rightImages[1] ? (
-          <GalleryTile
-            src={rightImages[1]}
-            alt={`${businessName} image 3`}
-            height="100%"
-            onClick={() => onOpenGallery?.(2)}
-            overlay={
-              remainingCount > 0 ? (
-                <OverlayButton onClick={() => onOpenGallery?.(0)}>
-                  Vezi toate
-                </OverlayButton>
-              ) : undefined
-            }
-            extraOverlay={
-              remainingCount > 0 ? (
-                <Typography
-                  sx={{
-                    position: "absolute",
-                    top: 12,
-                    right: 12,
-                    zIndex: 2,
-                    px: 1,
-                    py: 0.35,
-                    borderRadius: 999,
-                    bgcolor: "rgba(0,0,0,0.55)",
-                    color: "#fff",
-                    fontSize: 12,
-                    fontWeight: 700,
-                  }}
-                >
-                  +{remainingCount}
-                </Typography>
-              ) : undefined
-            }
-          />
-        ) : (
-          <EmptyTile />
-        )}
+          if (!file) return <EmptyTile key={index} />;
+
+          return (
+            <GalleryTile
+              key={index}
+              src={file.thumbnail_url || file.url || ""}
+              alt={`${businessName} imagine secundară ${imageIndex + 1}`}
+              onClick={() => onOpenGallery?.(imageIndex)}
+              sx={{
+                // Ocupă tot spațiul alocat de rândul și coloana sa din grid-ul de 100% height
+                height: "100%",
+              }}
+              overlay={
+                isLast && remainingCount > 0 ? (
+                  <OverlayButton onClick={() => onOpenGallery?.(imageIndex)}>
+                    Vezi toate
+                  </OverlayButton>
+                ) : undefined
+              }
+              extraOverlay={
+                isLast && remainingCount > 0 ? (
+                  <Typography
+                    sx={{
+                      position: "absolute",
+                      top: 12,
+                      right: 12,
+                      zIndex: 2,
+                      px: 1,
+                      py: 0.35,
+                      borderRadius: 999,
+                      bgcolor: "rgba(0,0,0,0.65)",
+                      color: "#fff",
+                      fontSize: 12,
+                      fontWeight: 700,
+                    }}
+                  >
+                    +{remainingCount}
+                  </Typography>
+                ) : undefined
+              }
+            />
+          );
+        })}
       </Box>
     </Box>
   );
@@ -121,21 +132,21 @@ export default function BusinessProfileGallery({
 type GalleryTileProps = {
   src: string;
   alt: string;
-  height: number | string | Record<string, string | number>;
   onClick?: () => void;
   priority?: boolean;
   overlay?: React.ReactNode;
   extraOverlay?: React.ReactNode;
+  sx?: Record<string, any>;
 };
 
 function GalleryTile({
   src,
   alt,
-  height,
   onClick,
   priority = false,
   overlay,
   extraOverlay,
+  sx,
 }: GalleryTileProps) {
   return (
     <ButtonBase
@@ -144,13 +155,12 @@ function GalleryTile({
         position: "relative",
         display: "block",
         width: "100%",
-        height,
         overflow: "hidden",
-        borderRadius: 3,
         textAlign: "initial",
         "&:hover img": {
-          transform: "scale(1.03)",
+          transform: "scale(1.02)",
         },
+        ...sx,
       }}
     >
       <Image
@@ -161,21 +171,21 @@ function GalleryTile({
         sizes="(max-width: 900px) 100vw, 50vw"
         style={{
           objectFit: "cover",
-          transition: "transform 0.35s ease",
+          transition: "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
         }}
       />
-
       {extraOverlay}
-
       {overlay}
-
       {!overlay && (
         <Box
           sx={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0) 45%)",
+            background: "rgba(0,0,0,0)",
+            transition: "background-color 0.2s ease",
+            "&:hover": {
+              bgcolor: "rgba(0,0,0,0.03)",
+            },
             pointerEvents: "none",
           }}
         />
@@ -190,7 +200,6 @@ function EmptyTile() {
       sx={{
         width: "100%",
         height: "100%",
-        borderRadius: 3,
         bgcolor: "action.hover",
       }}
     />
@@ -217,22 +226,27 @@ function OverlayButton({
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "flex-end",
-        p: 1.5,
+        p: 2.5,
         background:
-          "linear-gradient(to top, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.10) 45%, rgba(0,0,0,0) 75%)",
+          "linear-gradient(to top, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 50%)",
       }}
     >
       <Box
         sx={{
-          px: 1.5,
-          py: 0.9,
-          borderRadius: 999,
-          bgcolor: "rgba(255,255,255,0.92)",
-          color: "text.primary",
-          fontSize: 13,
-          fontWeight: 700,
+          px: 2.5,
+          py: 1,
+          borderRadius: 2,
+          bgcolor: "#ffffff",
+          color: "#222222",
+          fontSize: 14,
+          fontWeight: 600,
           lineHeight: 1,
-          boxShadow: 1,
+          boxShadow: "0px 2px 8px rgba(0,0,0,0.12)",
+          border: "1px solid #222222",
+          cursor: "pointer",
+          "&:hover": {
+            bgcolor: "#f7f7f7",
+          },
         }}
       >
         {children}

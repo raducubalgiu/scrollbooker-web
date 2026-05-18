@@ -1,4 +1,5 @@
 import RatingsStars from "@/components/cutomized/RatingsDistribution/RatingsStars";
+import dayjs from "@/lib/dayjs";
 import { reviewLabelText } from "@/ts/enums/ReviewLabel";
 import { BusinessProfileReviews } from "@/ts/models/booking/business/BusinessProfile";
 import { Avatar, Box, Rating, Stack, Typography } from "@mui/material";
@@ -19,17 +20,17 @@ const BusinessReviewsTab = ({
 
   return (
     <Box id={id} ref={innerRef}>
-      <Typography variant="h4" fontWeight={600} gutterBottom>
+      <Typography variant="h3" fontWeight={600} gutterBottom>
         Recenzii
       </Typography>
 
       <Box mb={5}>
         <Stack flexDirection="row" alignItems="center" gap={1}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            5,0
+          <Typography variant="h4" sx={{ fontWeight: 600 }}>
+            4,5
           </Typography>
-          <RatingsStars rating={4.5} starSize={35} />
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          <Rating readOnly size="large" precision={0.5} value={4.5} />
+          <Typography variant="h4" sx={{ fontWeight: 600 }}>
             (2)
           </Typography>
         </Stack>
@@ -72,7 +73,7 @@ const BusinessReviewsTab = ({
                       {r.reviewer.fullname}
                     </Typography>
                     <Typography color="text.secondary">
-                      {r.created_at}
+                      {dayjs(r.created_at).format("DD-MM-YYYY HH:mm")}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -86,7 +87,7 @@ const BusinessReviewsTab = ({
                     readOnly
                     value={r.rating}
                     size="medium"
-                    sx={{ color: "primary.main" }}
+                    precision={0.5}
                   />
 
                   <Typography color="text.secondary">4 din 5</Typography>

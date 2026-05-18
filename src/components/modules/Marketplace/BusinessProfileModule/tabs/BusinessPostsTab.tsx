@@ -49,7 +49,7 @@ const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
         width: "100%",
       }}
     >
-      <Typography variant="h4" fontWeight={600} gutterBottom>
+      <Typography variant="h3" fontWeight={600} gutterBottom>
         Postări video
       </Typography>
 
