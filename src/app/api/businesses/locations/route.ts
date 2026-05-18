@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
         end_time: body.end_time ?? null,
         has_discount: Boolean(body.has_discount),
         max_price: body.max_price ?? null,
+        //sort: "price",
       },
     })
   ).data;

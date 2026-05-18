@@ -1,12 +1,8 @@
-import { PaginatedData } from "@/components/core/Table/Table";
-import { BusinessMarker } from "./BusinessMarker";
-import { BusinessSheet } from "./BusinessSheet";
-
 export enum SearchSortEnum {
-  Recommended = "recommended",
-  Distance = "distance",
-  Price = "price",
-  Rating = "rating",
+  RECOMMENDED = "recommended",
+  DISTANCE = "distance",
+  PRICE = "price",
+  RATING = "rating",
 }
 
 export interface BusinessMapRequest {

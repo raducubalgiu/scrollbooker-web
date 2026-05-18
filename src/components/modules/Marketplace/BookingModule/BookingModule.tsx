@@ -8,7 +8,11 @@ import ProductsStep from "./steps/Products/ProductsStep";
 import AvailabilityStep from "./steps/Availability/AvailabilityStep";
 import BookingBreadcrumbs from "./components/BookingBreadcrumbs";
 import Specialists from "./steps/Specialists/Specialists";
-import { ProductOffering } from "@/ts/models/booking/product/Product";
+import {
+  ProductOffering,
+  BusinessProductsResponse,
+  Product,
+} from "@/ts/models/booking/product/Product";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { sumBy } from "lodash";
 import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
@@ -21,6 +25,8 @@ import { toast } from "react-toastify";
 import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
 import ConfirmStep from "./steps/ConfirmStep";
 import BookingCart, { EmployeeDataType } from "./components/cart/BookingCart";
+import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
+import { SelectedProductType } from "@/components/cutomized/PostVideo/sidebar/ExploreServicesTab";
 
 type BookingModuleProps = {
   businessId: number;
@@ -70,6 +76,11 @@ const BookingModule = ({
     BookingStepEnum.SERVICES
   );
 
+  const [selectedProduct, setSelectedProduct] = useState<SelectedProductType>({
+    product: null,
+    open: false,
+  });
+
   const { mutate: handleSaveAppointment, isPending } = useMutate<
     ScrollBookerAppointmentCreate,
     Appointment
@@ -88,18 +99,57 @@ const BookingModule = ({
   const handleSelectItem = useCallback((item: SelectedBookingItem) => {
     setSelectedItems((prev) => {
       const exists = prev.find((i) => i.productId === item.productId);
-
       if (exists) {
         if (!item.variantId || exists.variantId === item.variantId) {
           return prev.filter((i) => i.productId !== item.productId);
         }
-
         return prev.map((i) => (i.productId === item.productId ? item : i));
       }
-
       return [...prev, item];
     });
   }, []);
+
+  const handleCloseDetailModal = useCallback(() => {
+    setSelectedProduct({ product: null, open: false });
+  }, []);
+
+  const handleOpenDetailModal = useCallback((product: Product) => {
+    setSelectedProduct({ product, open: true });
+  }, []);
+
+  const handleDataLoaded = useCallback(
+    (businessProducts: BusinessProductsResponse[]) => {
+      if (!selectedServiceId || businessProducts.length === 0) return;
+
+      let foundProduct: Product | undefined;
+      for (const group of businessProducts) {
+        foundProduct = group.products.find((p) => p.id === selectedServiceId);
+        if (foundProduct) break;
+      }
+
+      if (!foundProduct) return;
+
+      const variantsCount = foundProduct.variants?.length || 0;
+
+      if (variantsCount === 1) {
+        const soleVariant = foundProduct.variants[0];
+
+        if (soleVariant) {
+          handleSelectItem({
+            productId: foundProduct.id,
+            variantId: soleVariant.id,
+            variantDuration: soleVariant.duration,
+            offerings: soleVariant.offerings || [],
+            productName: foundProduct.name,
+            variantName: soleVariant.name,
+          });
+        }
+      } else if (variantsCount > 1) {
+        setSelectedProduct({ product: foundProduct, open: true });
+      }
+    },
+    [selectedServiceId, handleSelectItem]
+  );
 
   const handleNext = useCallback(() => {
     if (currentStep === BookingStepEnum.CONFIRM) {
@@ -115,7 +165,6 @@ const BookingModule = ({
           const activeOffering = item.offerings.find(
             (o) => o.user_id === selectedEmployeeId
           );
-
           return {
             id: item.variantId,
             offering: {
@@ -172,7 +221,10 @@ const BookingModule = ({
             employeeId={employeeId}
             selectedItems={selectedItems}
             scrollOffset={SCROLL_OFFSET}
+            selectedServiceId={selectedServiceId}
             onAdd={handleSelectItem}
+            onOpenDetail={handleOpenDetailModal}
+            onDataLoaded={handleDataLoaded}
           />
         );
       case BookingStepEnum.SPECIALISTS:
@@ -204,25 +256,16 @@ const BookingModule = ({
     switch (currentStep) {
       case BookingStepEnum.SERVICES:
         return selectedItems.length === 0;
-
       case BookingStepEnum.SPECIALISTS:
         if (selectedEmployeeId === null) return true;
-
-        const hasIncompleteServices = selectedItems.some((item) => {
-          const offering = item.offerings.find(
-            (o) => o.user_id === selectedEmployeeId
-          );
-          return !offering;
-        });
-
-        return hasIncompleteServices;
-
+        return selectedItems.some(
+          (item) =>
+            !item.offerings.find((o) => o.user_id === selectedEmployeeId)
+        );
       case BookingStepEnum.DATE_AND_HOUR:
         return selectedTimeSlot === null;
-
       case BookingStepEnum.CONFIRM:
         return false;
-
       default:
         return true;
     }
@@ -259,6 +302,15 @@ const BookingModule = ({
           />
         </Box>
       </Container>
+
+      {selectedProduct.open && (
+        <ProductDetailModal
+          open={selectedProduct.open}
+          product={selectedProduct.product}
+          onClose={handleCloseDetailModal}
+          onAdd={handleSelectItem}
+        />
+      )}
     </Box>
   );
 };

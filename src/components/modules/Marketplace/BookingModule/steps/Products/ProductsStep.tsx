@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Stack, Typography } from "@mui/material";
-import React, { memo, useCallback, useMemo, useState } from "react";
+import React, { memo, useMemo, useEffect } from "react";
 import { BookingTabs } from "./BookingTabs";
 import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
 import {
@@ -11,9 +11,7 @@ import {
 import { useCustomQuery } from "@/hooks/useHttp";
 import { useScrollSync } from "../../useScrollSync";
 import ProductsStepSkeleton from "./ProductsStepSkeleton";
-import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
 import { SelectedBookingItem } from "../../BookingModule";
-import { SelectedProductType } from "@/components/cutomized/PostVideo/sidebar/ExploreServicesTab";
 import { isEmpty } from "lodash";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
@@ -25,7 +23,10 @@ type ProductsStepProps = {
   displayTitle?: boolean;
   top?: number;
   selectedItems: SelectedBookingItem[];
+  selectedServiceId: number | null;
   onAdd: (item: SelectedBookingItem) => void;
+  onOpenDetail: (product: Product) => void;
+  onDataLoaded: (products: BusinessProductsResponse[]) => void;
 };
 
 const ProductsStep = ({
@@ -36,42 +37,39 @@ const ProductsStep = ({
   displayTitle = true,
   selectedItems,
   onAdd,
+  onOpenDetail,
+  onDataLoaded,
+  selectedServiceId,
 }: ProductsStepProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<SelectedProductType>({
-    product: null,
-    open: false,
-  });
-
   const { data, isLoading } = useCustomQuery<BusinessProductsResponse[]>({
     key: ["business-products", businessId, employeeId ?? undefined],
-
     url: `/api/businesses/${businessId}/products${employeeId ? `?employeeId=${employeeId}` : ""}`,
   });
 
   const businessProducts = useMemo(() => data ?? [], [data]);
   const sync = useScrollSync(businessProducts, scrollOffset);
 
-  const handleOpen = useCallback(
-    (product: Product) => setSelectedProduct({ product, open: true }),
-    []
-  );
+  useEffect(() => {
+    if (!isLoading && businessProducts.length > 0) {
+      onDataLoaded(businessProducts);
 
-  const handleClose = useCallback(
-    () => setSelectedProduct({ product: null, open: false }),
-    []
-  );
+      if (selectedServiceId) {
+        const groupIndex = businessProducts.findIndex((group) =>
+          group.products.some((product) => product.id === selectedServiceId)
+        );
+
+        if (groupIndex !== -1) {
+          setTimeout(() => {
+            sync.scrollToSection(groupIndex);
+          }, 100);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [businessProducts, isLoading, selectedServiceId]);
 
   return (
     <Box sx={{ minWidth: 0 }}>
-      {selectedProduct.open && (
-        <ProductDetailModal
-          open={selectedProduct.open}
-          product={selectedProduct.product}
-          onClose={handleClose}
-          onAdd={onAdd}
-        />
-      )}
-
       {displayTitle && (
         <Typography fontWeight={800} fontSize={47.5} mt={3}>
           Servicii
@@ -118,7 +116,7 @@ const ProductsStep = ({
                         product={prod}
                         isSelected={isSelected}
                         showIcon={true}
-                        onOpenDetail={() => handleOpen(prod)}
+                        onOpenDetail={() => onOpenDetail(prod)}
                         onAdd={onAdd}
                         onNavigateToBooking={() => {}}
                       />

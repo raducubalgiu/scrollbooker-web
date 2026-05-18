@@ -101,8 +101,8 @@ export default function SearchFiltersModal({
         </Typography>
 
         <Button
-          variant={state.hasDiscount ? "contained" : "outlined"}
-          color={state.hasDiscount ? "primary" : "inherit"}
+          variant="outlined"
+          color={state.hasDiscount ? "primary" : "secondary"}
           size="large"
           sx={{ mt: 2.5 }}
           startIcon={<LocalOfferOutlinedIcon />}

@@ -76,6 +76,7 @@ export const MyServicesModule = () => {
         toast.success("Serviciile au fost actualizate cu succes.");
       },
       onError: () => {
+        setSelectedServices(new Set(defaultServicesIds));
         refetchServiceDomains();
         toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu");
       },
@@ -102,7 +103,7 @@ export const MyServicesModule = () => {
       props: {
         onClick: () => mutate(Array.from(selectedServices)),
         loading: isLoadingUpdate,
-        disabled: isDisabled,
+        //disabled: isDisabled,
       },
     },
   ];
