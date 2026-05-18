@@ -1,9 +1,25 @@
-export enum SearchSortEnum {
-  RECOMMENDED = "recommended",
-  DISTANCE = "distance",
-  PRICE = "price",
-  RATING = "rating",
-}
+const SortEnumBase = {
+  RECOMMENDED: "recommended",
+  DISTANCE: "distance",
+  PRICE: "price",
+  RATING: "rating",
+} as const;
+
+export type SearchSortEnum = (typeof SortEnumBase)[keyof typeof SortEnumBase];
+
+const sortLabels: Record<SearchSortEnum, string> = {
+  [SortEnumBase.RECOMMENDED]: "Recomandat",
+  [SortEnumBase.DISTANCE]: "Distanță",
+  [SortEnumBase.PRICE]: "Preț",
+  [SortEnumBase.RATING]: "Evaluare",
+};
+
+export const SearchSortEnum = Object.assign(SortEnumBase, {
+  all: Object.values(SortEnumBase).map((val) => ({
+    value: val,
+    label: sortLabels[val],
+  })),
+});
 
 export interface BusinessMapRequest {
   bbox: BoundingBox;

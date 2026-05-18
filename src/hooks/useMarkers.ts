@@ -16,6 +16,7 @@ const fetchMarkers = async (searchState: SearchState) => {
     end_time: searchState.endTime,
     has_discount: searchState.hasDiscount,
     max_price: searchState.maxPrice,
+    sort: searchState.sort,
   };
 
   const { data } = await axios.post("/api/businesses/markers", payload);
@@ -40,6 +41,7 @@ export const useBusinessMarkers = (searchState: SearchState) => {
       searchState.bbox?.min_lat,
       searchState.bbox?.max_lng,
       searchState.bbox?.max_lat,
+      searchState.sort,
     ],
     queryFn: () => fetchMarkers(searchState),
     enabled: !!searchState.bbox,

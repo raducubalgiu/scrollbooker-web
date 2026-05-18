@@ -4,15 +4,18 @@ import { Box, Button, Slider, Stack, Typography } from "@mui/material";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import React, { useState, useEffect } from "react";
 import { formatPrice } from "@/utils/formatPrice";
+import { SearchSortEnum } from "@/ts/models/booking/business/search/BusinessMapCombined";
 
 type SearchFiltersModalProps = {
   hasDiscount: boolean;
   maxPrice: number | null;
   open: boolean;
+  sort: SearchSortEnum | null;
   onClose: () => void;
   onApplyFilters: (filters: {
     hasDiscount: boolean;
     maxPrice: number | null;
+    sort: SearchSortEnum | null;
   }) => void;
 };
 
@@ -21,6 +24,7 @@ const DEFAULT_MAX_PRICE = 5000;
 export default function SearchFiltersModal({
   open,
   onClose,
+  sort,
   hasDiscount,
   maxPrice,
   onApplyFilters,
@@ -28,6 +32,7 @@ export default function SearchFiltersModal({
   const [state, setState] = useState(() => ({
     hasDiscount,
     maxPrice: maxPrice ?? DEFAULT_MAX_PRICE,
+    sort: sort ?? SearchSortEnum.RECOMMENDED,
   }));
 
   useEffect(() => {
@@ -35,6 +40,7 @@ export default function SearchFiltersModal({
       setState({
         hasDiscount,
         maxPrice: maxPrice ?? DEFAULT_MAX_PRICE,
+        sort: sort ?? SearchSortEnum.RECOMMENDED,
       });
     }
   }, [open, hasDiscount, maxPrice]);
@@ -49,10 +55,13 @@ export default function SearchFiltersModal({
 
   const isStateUnchanged =
     state.hasDiscount === hasDiscount &&
-    state.maxPrice === (maxPrice ?? DEFAULT_MAX_PRICE);
+    state.maxPrice === (maxPrice ?? DEFAULT_MAX_PRICE) &&
+    state.sort === (sort ?? SearchSortEnum.RECOMMENDED);
 
   const isAlreadyReset =
-    state.hasDiscount === false && state.maxPrice === DEFAULT_MAX_PRICE;
+    state.hasDiscount === false &&
+    state.maxPrice === DEFAULT_MAX_PRICE &&
+    state.sort === SearchSortEnum.RECOMMENDED;
 
   const actions: ActionButtonType[] = [
     {
@@ -68,6 +77,7 @@ export default function SearchFiltersModal({
           setState({
             hasDiscount: false,
             maxPrice: DEFAULT_MAX_PRICE,
+            sort: SearchSortEnum.RECOMMENDED,
           });
         },
       },
@@ -77,10 +87,7 @@ export default function SearchFiltersModal({
       props: {
         disabled: isStateUnchanged,
         variant: "contained",
-        sx: {
-          py: 1.75,
-          px: 3.5,
-        },
+        sx: { py: 1.75, px: 3.5 },
         onClick: () => onApplyFilters?.(state),
       },
     },
@@ -136,9 +143,22 @@ export default function SearchFiltersModal({
           onChange={handlePriceChange}
         />
 
-        <Typography variant="h5" fontWeight={600} mt={5}>
+        <Typography variant="h5" fontWeight={600} mt={5} mb={2.5}>
           Sortează după
         </Typography>
+
+        {SearchSortEnum.all.map((s) => (
+          <Button
+            key={s.value}
+            variant="outlined"
+            color={s.value === state.sort ? "primary" : "secondary"}
+            size="large"
+            sx={{ mr: 1 }}
+            onClick={() => setState({ ...state, sort: s.value })}
+          >
+            {s.label}
+          </Button>
+        ))}
       </Box>
     </Modal>
   );

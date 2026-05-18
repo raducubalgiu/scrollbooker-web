@@ -27,6 +27,7 @@ const fetchLocations = async ({
     end_time: searchState.endTime,
     has_discount: searchState.hasDiscount,
     max_price: searchState.maxPrice,
+    sort: searchState.sort,
     page: pageParam,
     limit: PAGE_LIMIT,
   };

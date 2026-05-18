@@ -6,7 +6,10 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import SearchHeader from "./SearchHeader/SearchHeader";
 import SearchMap from "./SearchMap";
 import { useTheme } from "@mui/material/styles";
-import { BoundingBox } from "@/ts/models/booking/business/search/BusinessMapCombined";
+import {
+  BoundingBox,
+  SearchSortEnum,
+} from "@/ts/models/booking/business/search/BusinessMapCombined";
 import { useRouter } from "next/navigation";
 import { useInfiniteBusinessLocations } from "@/hooks/infiniteQuery/useInfiniteBusinessLocations";
 import { useBusinessMarkers } from "@/hooks/useMarkers";
@@ -37,6 +40,7 @@ export type SearchState = {
   endTime: string | null;
   hasDiscount: boolean;
   maxPrice: number | null;
+  sort: SearchSortEnum | null;
 };
 
 export default function SearchModule({ searchParams }: SearchPageProps) {
@@ -90,6 +94,11 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       typeof searchParams.maxPrice === "string"
         ? Number(searchParams.maxPrice) || 1500
         : null,
+    sort: Object.values(SearchSortEnum).includes(
+      searchParams.sort as SearchSortEnum
+    )
+      ? (searchParams.sort as SearchSortEnum)
+      : SearchSortEnum.RECOMMENDED,
   }));
 
   const buildUrlParams = React.useCallback((state: SearchState) => {
@@ -113,6 +122,9 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     if (state.endTime) params.set("endTime", state.endTime);
     if (state.hasDiscount) params.set("hasDiscount", "true");
     if (state.maxPrice != null) params.set("maxPrice", String(state.maxPrice));
+    if (state.sort != null) {
+      params.set("sort", state.sort);
+    }
     return params;
   }, []);
 
@@ -195,11 +207,16 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   }, []);
 
   const handleApplyFilters = React.useCallback(
-    (filters: { hasDiscount: boolean | null; maxPrice: number | null }) => {
+    (filters: {
+      hasDiscount: boolean | null;
+      maxPrice: number | null;
+      sort: SearchSortEnum | null;
+    }) => {
       setSearchState((prev) => ({
         ...prev,
         hasDiscount: filters.hasDiscount ?? prev.hasDiscount,
         maxPrice: filters.maxPrice ?? prev.maxPrice,
+        sort: filters.sort ?? SearchSortEnum.RECOMMENDED,
       }));
       handleCloseFilters();
     },
@@ -302,9 +319,12 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     const currentMaxPrice =
       searchState.maxPrice !== null ? Number(searchState.maxPrice) : 5000;
     const isPriceApplied = currentMaxPrice < 5000;
+    const isSortApplied =
+      searchState.sort !== null &&
+      searchState.sort !== SearchSortEnum.RECOMMENDED;
 
-    return isDiscountApplied || isPriceApplied;
-  }, [searchState.hasDiscount, searchState.maxPrice]);
+    return isDiscountApplied || isPriceApplied || isSortApplied;
+  }, [searchState.hasDiscount, searchState.maxPrice, searchState.sort]);
 
   return (
     <Box sx={styles.root}>
@@ -313,6 +333,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         onClose={handleCloseFilters}
         hasDiscount={searchState.hasDiscount}
         maxPrice={searchState.maxPrice}
+        sort={searchState.sort}
         onApplyFilters={handleApplyFilters}
       />
 
