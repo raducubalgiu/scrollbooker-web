@@ -189,6 +189,8 @@ const AppointmentDetailsModule = ({
             startDate={start_date}
             totalDuration={total_duration}
             user={user}
+            isCustomer={is_customer}
+            customer={customer}
             canceledReason={canceledReason}
           />
 

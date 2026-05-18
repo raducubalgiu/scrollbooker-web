@@ -4,7 +4,15 @@ import {
   AppointmentUtils,
 } from "@/ts/models/booking/appointment/Appointment";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
-import { Alert, alpha, Box, Chip, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  alpha,
+  Avatar,
+  Box,
+  Chip,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import Link from "next/link";
 import CustomAvatar from "@/components/cutomized/Avatar/CustomAvatar";
@@ -13,7 +21,9 @@ type AppointmentDetailsHeaderProps = {
   status: AppointmentStatusEnum;
   startDate: string;
   totalDuration: number;
+  isCustomer: boolean;
   user: AppointmentUser;
+  customer: AppointmentUser;
   canceledReason: string | null;
 };
 
@@ -22,18 +32,14 @@ const AppointmentDetailsHeader = ({
   startDate,
   totalDuration,
   user,
+  customer,
+  isCustomer,
   canceledReason,
 }: AppointmentDetailsHeaderProps) => {
-  const {
-    username,
-    fullname,
-    profession,
-    avatar,
-    ratings_average,
-    ratings_count,
-  } = user;
   const statusLabel = AppointmentUtils.getStatusLabel(status);
   const totalDurationText = AppointmentUtils.getDurationText(totalDuration);
+
+  const navigateToUsername = isCustomer ? user.username : customer.username;
 
   return (
     <Box>
@@ -86,17 +92,29 @@ const AppointmentDetailsHeader = ({
       </Typography>
 
       <Link
-        href={`/profile/${username}`}
+        href={`/profile/${navigateToUsername}`}
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <Stack flexDirection="row" alignItems="center" gap={2} my={5}>
-          <CustomAvatar avatar={avatar} ratingsAverage={ratings_average} />
+          {isCustomer ? (
+            <CustomAvatar
+              avatar={user.avatar}
+              ratingsAverage={user.ratings_average}
+            />
+          ) : (
+            <Avatar
+              src={customer.avatar ?? ""}
+              sx={{ width: 70, height: 70 }}
+            />
+          )}
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              {fullname}
+              {isCustomer ? user.fullname : customer.fullname}
             </Typography>
             <Typography color="text.secondary">
-              {profession} • {ratings_count} recenzii
+              {isCustomer
+                ? `${user.profession} • ${user.ratings_count} recenzii`
+                : customer.profession}
             </Typography>
           </Box>
         </Stack>
