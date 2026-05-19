@@ -15,6 +15,7 @@ import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
 import UserAvatar from "@/components/core/Avatar/UserAvatar";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type BusinessStickyCardProps = {
   business: BusinessProfile;
@@ -23,6 +24,7 @@ type BusinessStickyCardProps = {
 export default function BusinessStickyCard({
   business,
 }: BusinessStickyCardProps) {
+  const router = useRouter();
   const { followers_count, followings_count, ratings_count } =
     business.owner.counters;
   const { lng, lat } = business.location.coordinates;
@@ -102,6 +104,11 @@ export default function BusinessStickyCard({
             mt: 5,
             fontSize: 17,
           }}
+          onClick={() =>
+            router.push(
+              `/booking/${business.id}?businessOwnerId=${business.owner.id}`
+            )
+          }
         >
           Rezervă acum
         </Button>

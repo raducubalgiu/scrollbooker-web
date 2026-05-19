@@ -1,4 +1,3 @@
-import { Post } from "@/ts/models/social/Post";
 import { Box, Stack, Typography } from "@mui/material";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import React, { memo } from "react";
@@ -6,11 +5,12 @@ import Image from "next/image";
 import { formatViews } from "@/components/cutomized/PostGrid/PostGrid";
 import Link from "next/link";
 import { isEmpty } from "lodash";
+import { BusinessProfilePost } from "@/ts/models/booking/business/BusinessProfile";
 
 type BusinessPostsTabProps = {
   id: string;
   innerRef: (element: HTMLDivElement | null) => void;
-  posts: Post[];
+  posts: BusinessProfilePost[];
 };
 
 const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
@@ -121,7 +121,7 @@ const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
                         textShadow: "0 1px 3px rgba(0,0,0,0.7)",
                       }}
                     >
-                      {formatViews(post.counters.views_count)}
+                      {formatViews(post.views_count)}
                     </Typography>
                   </Stack>
                 </Box>

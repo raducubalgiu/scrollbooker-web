@@ -1,5 +1,5 @@
 import { Plan } from "../../nomenclatures/plan/Plan";
-import { Post } from "../../social/Post";
+import { PostMediaFile } from "../../social/Post";
 import { OpeningHours } from "../../user/UserProfile";
 import { Product } from "../product/Product";
 import { Schedule } from "../schedule/Schedule";
@@ -19,7 +19,14 @@ export interface BusinessProfile {
   employees: BusinessProfileEmployee[];
   schedules: Schedule[];
   reviews: BusinessProfileReviews;
-  posts: Post[];
+  posts: BusinessProfilePost[];
+}
+
+export interface BusinessProfilePost {
+  id: number;
+  business_id: number;
+  views_count: number;
+  media_files: PostMediaFile[];
 }
 
 export interface BusinessProfileReviews {
