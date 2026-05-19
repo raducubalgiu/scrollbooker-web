@@ -25,6 +25,12 @@ type SearchMapProps = {
   refetchData: (bounds: LngLatBounds, zoom: number) => void;
 };
 
+const BUSINESS_DOMAIN_MAP = new Map<string, string>([
+  ["Beauty", "#9B4A55"],
+  ["Medical", "#36CFC9"],
+  ["Auto", "#3A86FF"],
+]);
+
 const SearchMap = ({
   markers,
   isMapVisible,
@@ -70,12 +76,18 @@ const SearchMap = ({
   }, [refetchData]);
 
   React.useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return;
+    if (!mapContainerRef.current) return;
+
+    // Dacă există deja o hartă veche (la schimbarea stilului), o curățăm mai întâi
+    if (mapRef.current) {
+      mapRef.current.remove();
+      mapRef.current = null;
+    }
 
     mapboxgl.accessToken = MAPBOX_TOKEN;
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: mapStyle,
+      style: mapStyle, // <--- Va primi noul stil corect la reconstrucție
       bounds: initialBounds,
       fitBoundsOptions: {
         padding: 20,
@@ -90,13 +102,11 @@ const SearchMap = ({
     map.on("moveend", () => {
       const center = map.getCenter();
       const zoom = map.getZoom();
-
       const currentCamera = { lat: center.lat, lng: center.lng, zoom };
       const lastCamera = lastCameraRef.current;
 
       const MIN_ZOOM_DELTA = 0.5;
       const MIN_MOVE_METERS = 10000;
-
       let shouldRequest = false;
 
       if (!lastCamera) {
@@ -112,24 +122,20 @@ const SearchMap = ({
         if (zoomDiff >= MIN_ZOOM_DELTA || distance >= MIN_MOVE_METERS)
           shouldRequest = true;
       }
+
       if (shouldRequest) {
-        if (debounceTimerRef.current) {
-          clearTimeout(debounceTimerRef.current);
-        }
+        if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
 
         debounceTimerRef.current = setTimeout(() => {
-          // 1. Extragem datele proaspete de la instanța hărții
           const bounds = map.getBounds();
           const zoom = map.getZoom();
 
-          // 2. TYPE GUARD: Verificăm dacă bounds există (nu este null)
           if (bounds && typeof zoom === "number") {
             lastCameraRef.current = {
               lat: map.getCenter().lat,
               lng: map.getCenter().lng,
               zoom,
             };
-
             refetchRef.current(bounds, zoom);
           }
         }, 500);
@@ -143,33 +149,48 @@ const SearchMap = ({
       map.remove();
       mapRef.current = null;
     };
-  }, []);
-
-  const businessDomainMap = new Map<string, string>([
-    ["Beauty", "#9B4A55"],
-    ["Medical", "#36CFC9"],
-    ["Auto", "#3A86FF"],
-  ]);
+  }, [mapStyle]);
 
   // 2. EFECT PENTRU ACTUALIZARE MARKERI (Rulează la fiecare schimbare de date)
   React.useEffect(() => {
     const map = mapRef.current;
     if (!map || !isMapVisible || !Array.isArray(markers)) return;
 
+    // GARDA ANTI-FLICKER: Dacă react-query încarcă sau reface cererea,
+    // lăsăm markerii existenți pe ecran și oprim execuția până vin noile date.
+    if (isLoadingMarkers || isRefetchingMarkers) return;
+
     if (!(markersRef.current instanceof Map)) {
       markersRef.current = new Map();
     }
 
     const currentMarkersMap = markersRef.current;
+
+    // VERIFICARE INSTANȚĂ: Dacă vreun marker din memorie nu mai are elementul în DOM
+    // (pentru că s-a schimbat tema și s-a dat map.remove()), curățăm referințele vechi ca să-i forțăm redesenarea.
+    let isMapRebuilt = false;
+    if (currentMarkersMap.size > 0) {
+      const firstMarker = currentMarkersMap.values().next().value;
+      if (firstMarker && !firstMarker.getElement().isConnected) {
+        isMapRebuilt = true;
+      }
+    }
+
+    if (isMapRebuilt) {
+      currentMarkersMap.clear();
+    }
+
     const newMarkerIds = new Set(markers.map((m) => m.id));
 
+    // Ștergem doar markerii care au ieșit din Bounding Box-ul curent
     currentMarkersMap.forEach((marker, id) => {
       if (!newMarkerIds.has(id)) {
         marker.remove();
-        currentMarkersMap.delete(id); // Acum va merge garantat
+        currentMarkersMap.delete(id);
       }
     });
 
+    // Adăugăm incremental DOAR markerii noi
     markers.forEach((m) => {
       if (!currentMarkersMap.has(m.id)) {
         const lat = m?.coordinates?.lat;
@@ -177,7 +198,7 @@ const SearchMap = ({
         if (lat == null || lng == null) return;
 
         const domainColor =
-          businessDomainMap.get(m.business_short_domain) || "#000";
+          BUSINESS_DOMAIN_MAP.get(m.business_short_domain) || "#000";
         const el = document.createElement("div");
 
         el.style.borderRadius = "50%";
@@ -213,14 +234,7 @@ const SearchMap = ({
         currentMarkersMap.set(m.id, marker);
       }
     });
-  }, [markers, isMapVisible]);
-
-  // 3. EFECT PENTRU SCHIMBARE STIL (Dark/Light) fără recreare
-  React.useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setStyle(mapStyle);
-    }
-  }, [mapStyle]);
+  }, [markers, isMapVisible, mapStyle, isLoadingMarkers, isRefetchingMarkers]);
 
   const handleZoomIn = useCallback(() => {
     if (mapRef.current) {
