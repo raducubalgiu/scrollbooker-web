@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import { LocationInfo } from "@/ts/models/user/UserProfileAbout";
+import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
 
 type ProfileInfoLocationSectionProps = {
   location: LocationInfo;
@@ -12,11 +13,7 @@ type ProfileInfoLocationSectionProps = {
 const ProfileInfoLocationSection = ({
   location,
 }: ProfileInfoLocationSectionProps) => {
-  const { lng, lat } = location?.coordinates || {};
-
-  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-    `${lat},${lng}`
-  )}`;
+  const mapsUrl = getGoogleMapsDirectionsUrl(location?.coordinates);
 
   return (
     <Box>

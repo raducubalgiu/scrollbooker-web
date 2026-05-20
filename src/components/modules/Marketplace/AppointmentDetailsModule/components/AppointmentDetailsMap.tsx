@@ -5,17 +5,16 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { AppointmentBusiness } from "@/ts/models/booking/appointment/Appointment";
+import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
+import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
 
 type AppointmentDetailsMapProps = {
   business: AppointmentBusiness;
 };
 
 const AppointmentDetailsMap = ({ business }: AppointmentDetailsMapProps) => {
-  const { lng, lat } = business?.coordinates || {};
-
-  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-    `${lat},${lng}`
-  )}`;
+  const mapsUrl = getGoogleMapsDirectionsUrl(business?.coordinates);
+  const hasImage = !!business.map_url;
 
   return (
     <Link
@@ -35,6 +34,22 @@ const AppointmentDetailsMap = ({ business }: AppointmentDetailsMapProps) => {
             sizes="(max-width: 900px) 100vw, 50vw"
             style={{ objectFit: "cover", borderRadius: 15 }}
           />
+          {hasImage ? (
+            <Image
+              src={business.map_url || "/placeholder.jpg"}
+              alt="Locație Business"
+              fill
+              sizes="(max-width: 900px) 100vw, 50vw"
+              style={{ objectFit: "cover", borderRadius: 15 }}
+            />
+          ) : (
+            <Box sx={styles.placeholderContainer}>
+              <InsertPhotoOutlinedIcon sx={{ fontSize: 40, opacity: 0.7 }} />
+              <Typography variant="body2" fontWeight={500}>
+                Momentan nu există fotografii
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         <Stack mt={2.5} gap={1}>
@@ -72,5 +87,16 @@ const styles = {
     position: "relative",
     height: { xs: 250, md: 400 },
     width: "100%",
+  },
+  placeholderContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    gap: 1,
+    color: "text.disabled",
+    p: 2,
+    textAlign: "center",
   },
 };

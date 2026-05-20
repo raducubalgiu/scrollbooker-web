@@ -5,17 +5,19 @@ import {
   Button,
   Divider,
   Paper,
+  Rating,
   Stack,
-  StackProps,
   Typography,
 } from "@mui/material";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
 import UserAvatar from "@/components/core/Avatar/UserAvatar";
-import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
+import { formatRating } from "@/utils/formatters";
 
 type BusinessStickyCardProps = {
   business: BusinessProfile;
@@ -25,10 +27,9 @@ export default function BusinessStickyCard({
   business,
 }: BusinessStickyCardProps) {
   const router = useRouter();
-  const { followers_count, followings_count, ratings_count } =
-    business.owner.counters;
-  const { lng, lat } = business.location.coordinates;
-  const mapsUrl = `https://google.com/maps/dir/?api=1&?destination=${lat},${lng})`;
+  const { fullname } = business.owner;
+  const { ratings_average, ratings_count } = business.owner.counters;
+  const mapsUrl = getGoogleMapsDirectionsUrl(business.location.coordinates);
 
   return (
     <Box
@@ -40,57 +41,42 @@ export default function BusinessStickyCard({
     >
       <Paper
         sx={{
-          p: { xs: 2, md: 5 },
-          borderRadius: 10,
-          border: 1,
+          p: { xs: 3, md: 4 },
+          borderRadius: 6,
+          border: "1px solid",
           borderColor: "divider",
         }}
       >
-        <Stack alignItems="center" justifyContent="center">
+        <Stack direction="row" alignItems="center" gap={2.5} mb={3}>
           <UserAvatar
             isBusinessOrEmployee={true}
             openNow={true}
             url={business.owner.avatar ?? ""}
-            alt=""
+            alt={business.owner.fullname}
             size="lg"
           />
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-            sx={{ mt: 5, gap: 2 }}
-          >
-            <UserInfoCounter
-              label="Urmărești"
-              counter={followings_count}
-              isLoading={false}
-            />
-
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ height: 20, mx: 1.5, alignSelf: "center" }}
-            />
-
-            <UserInfoCounter
-              label="Urmăritori"
-              counter={followers_count}
-              isLoading={false}
-            />
-
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ height: 20, mx: 1.5, alignSelf: "center" }}
-            />
-
-            <UserInfoCounter
-              label="Recenzii"
-              counter={ratings_count}
-              isLoading={false}
-            />
-          </Stack>
+          <Box sx={{ minWidth: 0 }}>
+            <Stack spacing={0.5}>
+              <Typography variant="h3" fontWeight={600}>
+                {fullname}
+              </Typography>
+              <Stack flexDirection="row" alignItems="center" gap={1}>
+                <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  {formatRating(ratings_average)}
+                </Typography>
+                <Rating
+                  value={ratings_average || 0}
+                  precision={0.5}
+                  readOnly
+                  size="large"
+                />
+                <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  ({ratings_count || 0})
+                </Typography>
+              </Stack>
+            </Stack>
+          </Box>
         </Stack>
 
         <Button
@@ -98,10 +84,9 @@ export default function BusinessStickyCard({
           fullWidth
           disableElevation
           sx={{
-            p: 1.5,
+            py: 1.8,
             textTransform: "none",
             fontWeight: 700,
-            mt: 5,
             fontSize: 17,
           }}
           onClick={() =>
@@ -113,74 +98,47 @@ export default function BusinessStickyCard({
           Rezervă acum
         </Button>
 
-        <Box my={5}>
-          <Stack direction="row" alignItems="center" gap={2} mb={3}>
-            <AccessTimeOutlinedIcon
-              fontSize="large"
-              sx={{ color: "text.secondary" }}
-            />
-            <Typography variant="h6" color="text.primary" fontWeight={400}>
-              Deschis pana la 12:00
-            </Typography>
+        <Divider sx={{ my: 3 }} />
 
-            <KeyboardArrowDownOutlinedIcon />
+        <Stack spacing={3.5}>
+          <Stack direction="row" alignItems="center" gap={2} mb={2.5}>
+            <AccessTimeOutlinedIcon sx={{ fontSize: 30 }} />
+            <Typography color="text.primary" fontSize={18} fontWeight={500}>
+              Deschis până la 12:00
+            </Typography>
+            <KeyboardArrowDownOutlinedIcon fontSize="medium" />
           </Stack>
 
           <Stack direction="row" gap={2}>
-            <FmdGoodOutlinedIcon
-              fontSize="large"
-              sx={{ color: "text.secondary" }}
-            />
-            <Box>
-              <Typography variant="h6" color="text.primary" fontWeight={400}>
+            <FmdGoodOutlinedIcon sx={{ fontSize: 32.5 }} />
+            <Box sx={{ minWidth: 0 }}>
+              <Typography
+                color="text.primary"
+                fontSize={18}
+                fontWeight={500}
+                sx={{ lineHeight: 1.4 }}
+              >
                 {business.location.formatted_address}
               </Typography>
               <Link
                 href={mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="card-container"
                 style={{ textDecoration: "none" }}
                 prefetch={false}
               >
                 <Typography
                   fontWeight={600}
-                  variant="h6"
-                  sx={{ color: "primary.main" }}
-                  mt={1}
+                  fontSize={18}
+                  sx={{ color: "primary.main", display: "inline-block", mt: 1 }}
                 >
                   Obține indicații de orientare
                 </Typography>
               </Link>
             </Box>
           </Stack>
-        </Box>
+        </Stack>
       </Paper>
     </Box>
-  );
-}
-
-type UserInfoCounterProps = {
-  label: string;
-  counter: number | undefined;
-  isLoading: boolean;
-} & StackProps;
-
-function UserInfoCounter({
-  label,
-  counter,
-  isLoading,
-  ...props
-}: UserInfoCounterProps) {
-  return (
-    <Stack alignItems="center" {...props}>
-      <Typography
-        sx={{ mb: 1.5, fontWeight: 500, fontSize: 15 }}
-        color="text.secondary"
-      >
-        {label}
-      </Typography>
-      <Typography sx={{ fontWeight: 800, fontSize: 20 }}>{counter}</Typography>
-    </Stack>
   );
 }

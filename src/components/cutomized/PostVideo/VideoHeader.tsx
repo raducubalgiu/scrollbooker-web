@@ -6,6 +6,7 @@ import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CustomAvatar from "@/components/cutomized/Avatar/CustomAvatar";
+import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
 
 type VideoHeaderProps = {
   displayDescription: boolean;
@@ -24,11 +25,7 @@ const VideoHeader = ({
 }: VideoHeaderProps) => {
   const router = useRouter();
   const { avatar, fullname, username, ratings_average, is_follow } = user || {};
-  const { lng, lat } = businessLocation?.coordinates || {};
-
-  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-    `${lat},${lng}`
-  )}`;
+  const mapsUrl = getGoogleMapsDirectionsUrl(businessLocation?.coordinates);
 
   return (
     <Box>
@@ -98,32 +95,23 @@ const VideoHeader = ({
             )}
           </Stack>
 
-          {lat && lng && (
-            <Link
-              href={mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card-container"
-              style={{ textDecoration: "none" }}
-              prefetch={false}
-              onClick={(e) => e.stopPropagation()}
+          <Link
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="card-container"
+            style={{ textDecoration: "none" }}
+            prefetch={false}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              sx={styles.formattedAddress}
             >
-              <Typography
-                variant="body1"
-                color="text.secondary"
-                sx={{
-                  display: "-webkit-box",
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  wordBreak: "break-word",
-                }}
-              >
-                {businessLocation?.formatted_address}
-              </Typography>
-            </Link>
-          )}
+              {businessLocation?.formatted_address}
+            </Typography>
+          </Link>
         </Box>
       </Stack>
 
@@ -165,5 +153,13 @@ const styles = {
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     minWidth: 0,
+  },
+  formattedAddress: {
+    display: "-webkit-box",
+    WebkitLineClamp: 1,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    wordBreak: "break-word",
   },
 };
