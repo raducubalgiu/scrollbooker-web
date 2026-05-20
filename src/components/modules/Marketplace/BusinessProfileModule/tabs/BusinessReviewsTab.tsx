@@ -1,22 +1,28 @@
-import RatingsStars from "@/components/cutomized/RatingsDistribution/RatingsStars";
 import dayjs from "@/lib/dayjs";
 import { reviewLabelText } from "@/ts/enums/ReviewLabel";
-import { BusinessProfileReviews } from "@/ts/models/booking/business/BusinessProfile";
+import {
+  BusinessOwnerProfile,
+  BusinessProfileReviews,
+} from "@/ts/models/booking/business/BusinessProfile";
+import { formatRating } from "@/utils/formatters";
 import { Avatar, Box, Rating, Stack, Typography } from "@mui/material";
 import React, { memo } from "react";
 
 type BusinessReviewsTabProps = {
   id: string;
   innerRef: (element: HTMLDivElement | null) => void;
+  owner: BusinessOwnerProfile;
   reviews: BusinessProfileReviews;
 };
 
 const BusinessReviewsTab = ({
   id,
   innerRef,
+  owner,
   reviews,
 }: BusinessReviewsTabProps) => {
-  console.log("REVIEWS", reviews);
+  const { counters } = owner;
+  const { ratings_average, ratings_count } = counters;
 
   return (
     <Box id={id} ref={innerRef}>
@@ -27,11 +33,16 @@ const BusinessReviewsTab = ({
       <Box mb={5}>
         <Stack flexDirection="row" alignItems="center" gap={1}>
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            4,5
+            {formatRating(ratings_average)}
           </Typography>
-          <Rating readOnly size="large" precision={0.5} value={4.5} />
+          <Rating
+            readOnly
+            size="large"
+            precision={0.5}
+            value={ratings_average}
+          />
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            (2)
+            ({ratings_count})
           </Typography>
         </Stack>
       </Box>

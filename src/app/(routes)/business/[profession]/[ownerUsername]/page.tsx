@@ -4,7 +4,10 @@ import { get } from "@/utils/requests";
 import React from "react";
 
 interface BusinessProfilePageProps {
-  params: { ownerUsername: string };
+  params: {
+    ownerUsername: string;
+    profession: string;
+  };
 }
 
 export default async function BusinessProfilePage({
@@ -18,5 +21,9 @@ export default async function BusinessProfilePage({
     })
   ).data;
 
-  return <BusinessProfileModule profile={profile} />;
+  if (!profile) {
+    return <>Profile not found</>;
+  }
+
+  return <BusinessProfileModule initialProfile={profile} />;
 }

@@ -6,6 +6,7 @@ import StarIcon from "@mui/icons-material/Star";
 import BusinessProductCard from "./BusinessProductCard";
 import { BusinessSheet } from "@/ts/models/booking/business/search/BusinessSheet";
 import Link from "next/link";
+import { makeProfessionSlug } from "@/utils/make-profession-slug";
 
 type BusinessCardProps = { business: BusinessSheet };
 
@@ -13,12 +14,14 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
   const { owner, media_files, address, products } = business;
   const { fullname, ratings_average, ratings_count, profession } = owner;
 
+  const professionSlug = makeProfessionSlug(profession);
+
   return (
     <Box sx={{ overflow: "hidden", borderRadius: 2 }}>
       <Box
         component={Link}
         target="_blank"
-        href={`/business/${owner.username}`}
+        href={`/business/${professionSlug}/${owner.username}`}
         rel="noopener noreferrer"
         sx={styles.container}
       >

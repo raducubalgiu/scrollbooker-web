@@ -4,6 +4,7 @@ import { Box, Link, Stack, Typography } from "@mui/material";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import Image from "next/image";
 import React from "react";
+import { makeProfessionSlug } from "@/utils/make-profession-slug";
 
 type NearbyBusinessItemProps = {
   business: NearbyBusiness;
@@ -13,8 +14,14 @@ const NearbyBusinessItem = ({ business }: NearbyBusinessItemProps) => {
   const { owner, location } = business;
   const { fullname, username, counters, profession } = owner;
 
+  const professionSlug = makeProfessionSlug(profession);
+
   return (
-    <Box component={Link} href={`/business/${username}`} sx={styles.container}>
+    <Box
+      component={Link}
+      href={`/business/${professionSlug}/${username}`}
+      sx={styles.container}
+    >
       <Box sx={styles.imageContainer}>
         <Image
           src={business.media_files[0]?.thumbnail_url ?? ""}
