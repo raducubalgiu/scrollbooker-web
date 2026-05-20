@@ -1,32 +1,21 @@
 "use client";
 
-import { Box, Container, SelectChangeEvent } from "@mui/material";
-import React, { useCallback, useMemo, useState } from "react";
+import { Box, Container } from "@mui/material";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import BookingAppBar from "./components/BookingAppBar";
 import ProductsStep from "./steps/Products/ProductsStep";
 import AvailabilityStep from "./steps/Availability/AvailabilityStep";
 import BookingBreadcrumbs from "./components/BookingBreadcrumbs";
 import Specialists from "./steps/Specialists/Specialists";
-import {
-  ProductOffering,
-  BusinessProductsResponse,
-  Product,
-} from "@/ts/models/booking/product/Product";
+import { ProductOffering } from "@/ts/models/booking/product/Product";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { sumBy } from "lodash";
-import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
-import {
-  Appointment,
-  ScrollBookerAppointmentCreate,
-} from "@/ts/models/booking/appointment/Appointment";
-import { useMutate } from "@/hooks/useHttp";
-import { toast } from "react-toastify";
 import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
 import ConfirmStep from "./steps/Confirm/ConfirmStep";
-import BookingCart, { EmployeeDataType } from "./components/cart/BookingCart";
+import BookingCart from "./components/cart/BookingCart";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
-import { SelectedProductType } from "@/components/cutomized/PostVideo/sidebar/ExploreServicesTab";
+import { useBookingState } from "./useBookingState";
 
 type BookingModuleProps = {
   businessId: number;
@@ -56,177 +45,33 @@ export interface SelectedBookingItem {
   variantName: string;
 }
 
-const BookingModule = ({
-  businessId,
-  businessOwnerId,
-  employeeId,
-  selectedServiceId,
-  businessEmployees,
-  businessSummary,
-}: BookingModuleProps) => {
+const BookingModule = (props: BookingModuleProps) => {
+  const {
+    businessId,
+    employeeId,
+    selectedServiceId,
+    businessEmployees,
+    businessSummary,
+  } = props;
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState<BookingStepEnum>(
-    BookingStepEnum.SERVICES
-  );
 
-  const [selectedItems, setSelectedItems] = useState<SelectedBookingItem[]>([]);
-  const [targetUserId, setTargetUserId] = useState<number | null>(() => {
-    if (employeeId) {
-      return employeeId;
-    }
-
-    if (!businessSummary.has_employees && businessOwnerId) {
-      return businessOwnerId;
-    }
-    return null;
-  });
-
-  const [selectedTimeSlot, setSelectedTimeSlot] =
-    useState<AvailableTimeSlot | null>(null);
-
-  const [selectedProduct, setSelectedProduct] = useState<SelectedProductType>({
-    product: null,
-    open: false,
-  });
-
-  const { mutate: handleSaveAppointment, isPending } = useMutate<
-    ScrollBookerAppointmentCreate,
-    Appointment
-  >({
-    key: ["create-scrollbooker-appointment"],
-    url: "/api/appointments",
-    method: "POST",
-    options: {
-      onSuccess: (appointment: Appointment) => {
-        toast.success("Rezervarea ta este confirmată");
-        router.push(`/appointments/${appointment.id}`);
-      },
-    },
-  });
-
-  const handleSelectItem = useCallback((item: SelectedBookingItem) => {
-    setSelectedItems((prev) => {
-      const exists = prev.find((i) => i.productId === item.productId);
-      if (exists) {
-        if (!item.variantId || exists.variantId === item.variantId) {
-          return prev.filter((i) => i.productId !== item.productId);
-        }
-        return prev.map((i) => (i.productId === item.productId ? item : i));
-      }
-      return [...prev, item];
-    });
-  }, []);
-
-  const handleCloseDetailModal = useCallback(() => {
-    setSelectedProduct({ product: null, open: false });
-  }, []);
-
-  const handleOpenDetailModal = useCallback((product: Product) => {
-    setSelectedProduct({ product, open: true });
-  }, []);
-
-  const handleDataLoaded = useCallback(
-    (businessProducts: BusinessProductsResponse[]) => {
-      if (!selectedServiceId || businessProducts.length === 0) return;
-
-      let foundProduct: Product | undefined;
-      for (const group of businessProducts) {
-        foundProduct = group.products.find((p) => p.id === selectedServiceId);
-        if (foundProduct) break;
-      }
-
-      if (!foundProduct) return;
-
-      const variantsCount = foundProduct.variants?.length || 0;
-
-      if (variantsCount === 1) {
-        const soleVariant = foundProduct.variants[0];
-
-        if (soleVariant) {
-          handleSelectItem({
-            productId: foundProduct.id,
-            variantId: soleVariant.id,
-            variantDuration: soleVariant.duration,
-            offerings: soleVariant.offerings || [],
-            productName: foundProduct.name,
-            variantName: soleVariant.name,
-          });
-        }
-      } else if (variantsCount > 1) {
-        setSelectedProduct({ product: foundProduct, open: true });
-      }
-    },
-    [selectedServiceId, handleSelectItem]
-  );
-
-  const handleNext = useCallback(() => {
-    if (currentStep === BookingStepEnum.CONFIRM) {
-      if (!selectedTimeSlot || !targetUserId) return;
-
-      const { start_date_utc, end_date_utc } = selectedTimeSlot;
-
-      const body: ScrollBookerAppointmentCreate = {
-        start_date: start_date_utc,
-        end_date: end_date_utc,
-        payment_currency_id: 1,
-        product_variants: selectedItems.map((item) => {
-          const activeOffering = item.offerings.find(
-            (o) => o.user_id === targetUserId
-          );
-
-          return {
-            id: item.variantId,
-            offering: {
-              user_id: activeOffering?.user_id || targetUserId,
-            },
-          };
-        }),
-      };
-
-      handleSaveAppointment(body);
-    } else {
-      setCurrentStep((prev) => {
-        if (prev === BookingStepEnum.SERVICES && employeeId) {
-          return BookingStepEnum.DATE_AND_HOUR;
-        }
-        if (
-          prev === BookingStepEnum.SERVICES &&
-          !employeeId &&
-          !businessSummary.has_employees
-        ) {
-          return BookingStepEnum.DATE_AND_HOUR;
-        }
-        return prev + 1;
-      });
-    }
-  }, [
+  const {
     currentStep,
-    selectedTimeSlot,
     selectedItems,
     targetUserId,
-    employeeId,
-    handleSaveAppointment,
-  ]);
-
-  const handleBack = useCallback(() => {
-    setCurrentStep((prev) => {
-      if (prev === BookingStepEnum.DATE_AND_HOUR && employeeId) {
-        return BookingStepEnum.SERVICES;
-      }
-      return prev - 1;
-    });
-  }, [employeeId]);
-
-  const handleChangeEmployeeId = useCallback(
-    (event: SelectChangeEvent<number>) => {
-      setTargetUserId(Number(event.target.value));
-    },
-    []
-  );
-
-  const handleSelectSlot = useCallback((slot: AvailableTimeSlot) => {
-    setSelectedTimeSlot(slot);
-  }, []);
+    selectedTimeSlot,
+    selectedProduct,
+    employeeData,
+    isNextDisabled,
+    isPending,
+    setTargetUserId,
+    setSelectedTimeSlot,
+    setSelectedProduct,
+    handleSelectItem,
+    handleDataLoaded,
+    handleNext,
+    handleBack,
+  } = useBookingState(props);
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -239,7 +84,9 @@ const BookingModule = ({
             scrollOffset={SCROLL_OFFSET}
             selectedServiceId={selectedServiceId}
             onAdd={handleSelectItem}
-            onOpenDetail={handleOpenDetailModal}
+            onOpenDetail={(product) =>
+              setSelectedProduct({ product, open: true })
+            }
             onDataLoaded={handleDataLoaded}
           />
         );
@@ -249,7 +96,9 @@ const BookingModule = ({
             selectedItems={selectedItems}
             employees={businessEmployees}
             selectedEmployeeId={targetUserId}
-            onChangeSelectedEmployeeId={handleChangeEmployeeId}
+            onChangeSelectedEmployeeId={(e) =>
+              setTargetUserId(Number(e.target.value))
+            }
           />
         );
       case BookingStepEnum.DATE_AND_HOUR:
@@ -258,7 +107,7 @@ const BookingModule = ({
             userId={targetUserId}
             slotDuration={sumBy(selectedItems, "variantDuration")}
             selectedTimeSlot={selectedTimeSlot}
-            onSelectTimeSlot={handleSelectSlot}
+            onSelectTimeSlot={setSelectedTimeSlot}
           />
         );
       case BookingStepEnum.CONFIRM:
@@ -273,31 +122,9 @@ const BookingModule = ({
     }
   };
 
-  const isNextDisabled = useMemo(() => {
-    switch (currentStep) {
-      case BookingStepEnum.SERVICES:
-        return selectedItems.length === 0;
-      case BookingStepEnum.SPECIALISTS:
-        if (targetUserId === null) return true;
-        return selectedItems.some(
-          (item) => !item.offerings.find((o) => o.user_id === targetUserId)
-        );
-      case BookingStepEnum.DATE_AND_HOUR:
-        return selectedTimeSlot === null;
-      case BookingStepEnum.CONFIRM:
-        return false;
-      default:
-        return true;
-    }
-  }, [currentStep, selectedItems, targetUserId, selectedTimeSlot]);
-
-  const employeeData: EmployeeDataType = {
-    selectedEmployeeId: targetUserId,
-    avatar:
-      businessEmployees?.find((e) => e.id === targetUserId)?.avatar ?? null,
-    fullname:
-      businessEmployees?.find((e) => e.id === targetUserId)?.fullname ?? null,
-  };
+  const handleCloseDetailModal = useCallback(() => {
+    setSelectedProduct({ product: null, open: false });
+  }, []);
 
   return (
     <Box sx={{ minHeight: "100vh" }}>
