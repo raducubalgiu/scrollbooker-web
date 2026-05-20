@@ -2,19 +2,21 @@ import { NearbyBusiness } from "@/ts/models/booking/business/BusinessProfile";
 import { formatRating } from "@/utils/formatters";
 import { Box, Link, Stack, Typography } from "@mui/material";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
-import Image from "next/image";
 import React from "react";
 import { makeProfessionSlug } from "@/utils/make-profession-slug";
+import NearbyBusinessImage from "./NearbyBusinessImage";
 
 type NearbyBusinessItemProps = {
   business: NearbyBusiness;
 };
 
 const NearbyBusinessItem = ({ business }: NearbyBusinessItemProps) => {
-  const { owner, location } = business;
+  const { owner, location, media_files } = business;
   const { fullname, username, counters, profession } = owner;
 
   const professionSlug = makeProfessionSlug(profession);
+  const hasImage = !!business.media_files?.[0]?.thumbnail_url;
+  const url = media_files[0]?.thumbnail_url;
 
   return (
     <Box
@@ -22,19 +24,12 @@ const NearbyBusinessItem = ({ business }: NearbyBusinessItemProps) => {
       href={`/business/${professionSlug}/${username}`}
       sx={styles.container}
     >
-      <Box sx={styles.imageContainer}>
-        <Image
-          src={business.media_files[0]?.thumbnail_url ?? ""}
-          alt={username}
-          fill
-          sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 25vw"
-          className="business-image"
-          style={{
-            objectFit: "cover",
-            transition: "transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
-          }}
-        />
-      </Box>
+      <NearbyBusinessImage
+        hasImage={hasImage}
+        url={url || "placeholder.jpg"}
+        username={username}
+      />
+
       <Box sx={{ minWidth: 0, width: "100%" }}>
         <Stack
           flexDirection="row"
@@ -80,13 +75,5 @@ const styles = {
     "&:hover .business-image": {
       transform: "scale(1.02)",
     },
-  },
-  imageContainer: {
-    position: "relative",
-    width: "100%",
-    aspectRatio: "1.4/1",
-    borderRadius: 4,
-    overflow: "hidden",
-    bgcolor: "action.hover",
   },
 };
