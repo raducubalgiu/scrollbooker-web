@@ -12,7 +12,7 @@ import { useAvailabilityData } from "./useAvailabilityData";
 import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
 
 type AvailabilityStepProps = {
-  userId: number;
+  userId: number | null;
   slotDuration: number;
   selectedTimeSlot: AvailableTimeSlot | null;
   onSelectTimeSlot: (slot: AvailableTimeSlot) => void;
@@ -24,6 +24,8 @@ const AvailabilityStep = ({
   selectedTimeSlot,
   onSelectTimeSlot,
 }: AvailabilityStepProps) => {
+  if (!userId) return;
+
   const {
     activeDate,
     setActiveDate,

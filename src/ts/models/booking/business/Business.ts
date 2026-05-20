@@ -42,4 +42,6 @@ export interface BusinessBookingOwner {
 
 export interface BusinessBookingSummary {
   owner: BusinessBookingOwner;
+  has_employees: boolean;
+  formatted_address: string;
 }

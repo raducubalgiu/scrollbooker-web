@@ -118,7 +118,7 @@ const SearchHeader = ({
             sx={{
               position: "fixed",
               inset: 0,
-              zIndex: theme.zIndex.drawer + 1,
+              zIndex: theme.zIndex.appBar + 1,
               bgcolor: "rgba(0,0,0,0.28)",
             }}
           />
@@ -136,7 +136,7 @@ const SearchHeader = ({
       position: "sticky",
       top: 0,
       mt: `calc(-1 * ${mainPagePadding})`,
-      zIndex: theme.zIndex.drawer + 2,
+      zIndex: theme.zIndex.appBar + 2,
       backgroundColor: bg,
       pt: `calc(${mainPagePadding} + ${theme.spacing(1)})`,
       pb: 2.5,
@@ -149,7 +149,7 @@ const SearchHeader = ({
               inset: 0,
               bgcolor: "rgba(0,0,0,0.28)",
               pointerEvents: "none",
-              zIndex: theme.zIndex.drawer + 1,
+              zIndex: theme.zIndex.appBar + 1,
             },
           }
         : {}),

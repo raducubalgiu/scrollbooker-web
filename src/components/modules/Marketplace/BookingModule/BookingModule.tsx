@@ -23,7 +23,7 @@ import {
 import { useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
 import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
-import ConfirmStep from "./steps/ConfirmStep";
+import ConfirmStep from "./steps/Confirm/ConfirmStep";
 import BookingCart, { EmployeeDataType } from "./components/cart/BookingCart";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
 import { SelectedProductType } from "@/components/cutomized/PostVideo/sidebar/ExploreServicesTab";
@@ -65,16 +65,24 @@ const BookingModule = ({
   businessSummary,
 }: BookingModuleProps) => {
   const router = useRouter();
-
-  const [selectedItems, setSelectedItems] = useState<SelectedBookingItem[]>([]);
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
-    employeeId
-  );
-  const [selectedTimeSlot, setSelectedTimeSlot] =
-    useState<AvailableTimeSlot | null>(null);
   const [currentStep, setCurrentStep] = useState<BookingStepEnum>(
     BookingStepEnum.SERVICES
   );
+
+  const [selectedItems, setSelectedItems] = useState<SelectedBookingItem[]>([]);
+  const [targetUserId, setTargetUserId] = useState<number | null>(() => {
+    if (employeeId) {
+      return employeeId;
+    }
+
+    if (!businessSummary.has_employees && businessOwnerId) {
+      return businessOwnerId;
+    }
+    return null;
+  });
+
+  const [selectedTimeSlot, setSelectedTimeSlot] =
+    useState<AvailableTimeSlot | null>(null);
 
   const [selectedProduct, setSelectedProduct] = useState<SelectedProductType>({
     product: null,
@@ -153,7 +161,7 @@ const BookingModule = ({
 
   const handleNext = useCallback(() => {
     if (currentStep === BookingStepEnum.CONFIRM) {
-      if (!selectedTimeSlot || !selectedEmployeeId) return;
+      if (!selectedTimeSlot || !targetUserId) return;
 
       const { start_date_utc, end_date_utc } = selectedTimeSlot;
 
@@ -163,12 +171,13 @@ const BookingModule = ({
         payment_currency_id: 1,
         product_variants: selectedItems.map((item) => {
           const activeOffering = item.offerings.find(
-            (o) => o.user_id === selectedEmployeeId
+            (o) => o.user_id === targetUserId
           );
+
           return {
             id: item.variantId,
             offering: {
-              user_id: activeOffering?.user_id || selectedEmployeeId,
+              user_id: activeOffering?.user_id || targetUserId,
             },
           };
         }),
@@ -180,6 +189,13 @@ const BookingModule = ({
         if (prev === BookingStepEnum.SERVICES && employeeId) {
           return BookingStepEnum.DATE_AND_HOUR;
         }
+        if (
+          prev === BookingStepEnum.SERVICES &&
+          !employeeId &&
+          !businessSummary.has_employees
+        ) {
+          return BookingStepEnum.DATE_AND_HOUR;
+        }
         return prev + 1;
       });
     }
@@ -187,7 +203,7 @@ const BookingModule = ({
     currentStep,
     selectedTimeSlot,
     selectedItems,
-    selectedEmployeeId,
+    targetUserId,
     employeeId,
     handleSaveAppointment,
   ]);
@@ -203,7 +219,7 @@ const BookingModule = ({
 
   const handleChangeEmployeeId = useCallback(
     (event: SelectChangeEvent<number>) => {
-      setSelectedEmployeeId(Number(event.target.value));
+      setTargetUserId(Number(event.target.value));
     },
     []
   );
@@ -232,21 +248,26 @@ const BookingModule = ({
           <Specialists
             selectedItems={selectedItems}
             employees={businessEmployees}
-            selectedEmployeeId={selectedEmployeeId}
+            selectedEmployeeId={targetUserId}
             onChangeSelectedEmployeeId={handleChangeEmployeeId}
           />
         );
       case BookingStepEnum.DATE_AND_HOUR:
         return (
           <AvailabilityStep
-            userId={selectedEmployeeId ?? businessOwnerId}
+            userId={targetUserId}
             slotDuration={sumBy(selectedItems, "variantDuration")}
             selectedTimeSlot={selectedTimeSlot}
             onSelectTimeSlot={handleSelectSlot}
           />
         );
       case BookingStepEnum.CONFIRM:
-        return <ConfirmStep />;
+        return (
+          <ConfirmStep
+            selectedTimeSlot={selectedTimeSlot}
+            address={businessSummary.formatted_address}
+          />
+        );
       default:
         return null;
     }
@@ -257,10 +278,9 @@ const BookingModule = ({
       case BookingStepEnum.SERVICES:
         return selectedItems.length === 0;
       case BookingStepEnum.SPECIALISTS:
-        if (selectedEmployeeId === null) return true;
+        if (targetUserId === null) return true;
         return selectedItems.some(
-          (item) =>
-            !item.offerings.find((o) => o.user_id === selectedEmployeeId)
+          (item) => !item.offerings.find((o) => o.user_id === targetUserId)
         );
       case BookingStepEnum.DATE_AND_HOUR:
         return selectedTimeSlot === null;
@@ -269,23 +289,25 @@ const BookingModule = ({
       default:
         return true;
     }
-  }, [currentStep, selectedItems, selectedEmployeeId, selectedTimeSlot]);
+  }, [currentStep, selectedItems, targetUserId, selectedTimeSlot]);
 
   const employeeData: EmployeeDataType = {
-    selectedEmployeeId,
+    selectedEmployeeId: targetUserId,
     avatar:
-      businessEmployees?.find((e) => e.id === selectedEmployeeId)?.avatar ??
-      null,
+      businessEmployees?.find((e) => e.id === targetUserId)?.avatar ?? null,
     fullname:
-      businessEmployees?.find((e) => e.id === selectedEmployeeId)?.fullname ??
-      null,
+      businessEmployees?.find((e) => e.id === targetUserId)?.fullname ?? null,
   };
 
   return (
     <Box sx={{ minHeight: "100vh" }}>
       <BookingAppBar onBack={() => router.back()} />
       <Container maxWidth="xl">
-        <BookingBreadcrumbs currentStep={currentStep} employeeId={employeeId} />
+        <BookingBreadcrumbs
+          currentStep={currentStep}
+          hasEmployees={businessSummary.has_employees}
+          employeeId={employeeId}
+        />
 
         <Box sx={styles.container}>
           <Box>{renderStepContent()}</Box>

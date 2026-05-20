@@ -36,17 +36,18 @@ const BookingCartHeader = ({
         </Stack>
       </Stack>
 
-      {employeeData.selectedEmployeeId && (
-        <Stack flexDirection="row" alignItems="center" gap={1} mt={2.5}>
-          <Avatar
-            src={employeeData.avatar ?? ""}
-            sx={{ width: 30, height: 30, border: 1, borderColor: "divider" }}
-          />
-          <Typography fontSize={15} fontWeight={500} noWrap>
-            Specialist: <strong>{employeeData.fullname}</strong>
-          </Typography>
-        </Stack>
-      )}
+      {employeeData.selectedEmployeeId &&
+        employeeData.selectedEmployeeId !== businessOwner.id && (
+          <Stack flexDirection="row" alignItems="center" gap={1} mt={2.5}>
+            <Avatar
+              src={employeeData.avatar ?? ""}
+              sx={{ width: 30, height: 30, border: 1, borderColor: "divider" }}
+            />
+            <Typography fontSize={15} fontWeight={500} noWrap>
+              Specialist: <strong>{employeeData.fullname}</strong>
+            </Typography>
+          </Stack>
+        )}
     </Box>
   );
 };
