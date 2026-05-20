@@ -18,13 +18,7 @@ const BusinessAboutTab = ({ profile, id, innerRef }: BusinessAboutTabProps) => {
       </Typography>
 
       <Typography mb={2.5} fontWeight={400} variant="h6">
-        Adara Spa is more than a place. It is an experience, a journey, a
-        ceremony. It is the perfect space to enjoy peace and serenity and to
-        refresh your mind, body and soul. Adara Spa treatments will surrender
-        your senses from head to toe, taking your body through a journey of
-        exfoliation, numerous types of massages, Oriental Hammam, Foot
-        Reflexology and other techniques that will leave your body and mind in
-        perfect equilibrium.
+        {profile.description}
       </Typography>
 
       <Image
