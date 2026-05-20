@@ -20,6 +20,24 @@ export interface BusinessProfile {
   schedules: Schedule[];
   reviews: BusinessProfileReviews;
   posts: BusinessProfilePost[];
+  nearby_businesses: NearbyBusiness[];
+}
+
+export interface NearbyBusinessOwner {
+  id: number;
+  fullname: string;
+  username: string;
+  profession: string;
+  avatar: string | null;
+  counters: BusinessProfileCounters;
+}
+
+export interface NearbyBusiness {
+  id: number;
+  owner: NearbyBusinessOwner;
+  media_files: PostMediaFile[];
+  location: BusinessLocation;
+  distance_km: number | null;
 }
 
 export interface BusinessProfilePost {

@@ -1,6 +1,5 @@
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
 import { Box, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 import React, { memo } from "react";
 import Image from "next/image";
 import SchedulesSection from "@/components/cutomized/SchedulesSection/SchedulesSection";
@@ -39,20 +38,11 @@ const BusinessAboutTab = ({ profile, id, innerRef }: BusinessAboutTabProps) => {
         }}
       />
 
-      <Grid container spacing={5} mt={5}>
-        <Grid size={6}>
-          <Typography variant="h5" fontWeight={600} mt={5} mb={2.5}>
-            Programul de lucru
-          </Typography>
+      <Typography variant="h4" fontWeight={600} mt={5} mb={2.5}>
+        Programul de lucru
+      </Typography>
 
-          <SchedulesSection schedules={profile.schedules} />
-        </Grid>
-        <Grid size={6}>
-          <Typography variant="h5" fontWeight={600} mt={5} mb={2.5}>
-            Altceva
-          </Typography>
-        </Grid>
-      </Grid>
+      <SchedulesSection schedules={profile.schedules} />
     </Box>
   );
 };

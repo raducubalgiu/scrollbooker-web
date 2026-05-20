@@ -4,11 +4,11 @@ import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
 import { Container, Stack } from "@mui/material";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Grid from "@mui/material/Grid2";
-import BusinessStickyCard from "./BusinessStickyCard";
+import BusinessStickyCard from "./components/BusinessStickyCard";
 
 import dynamic from "next/dynamic";
-import NearbyBusinesses from "./NearbyBusinesses";
-import BusinessProfileHeader from "./BusinessProfileHeader";
+import NearbyBusinesses from "./components/NearbyBusinesses";
+import BusinessProfileHeader from "./components/BusinessProfileHeader";
 import BusinessProfileTabs from "./tabs/BusinessProfileTabs";
 
 const BusinessPhotosTab = dynamic(() => import("./tabs/BusinessPhotosTab"), {
@@ -160,10 +160,7 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
     <>
       <BusinessProfileHeader />
 
-      <Container
-        maxWidth="xl"
-        sx={{ px: 5, py: 1, bgcolor: "background.paper" }}
-      >
+      <Container maxWidth="xl" sx={{ px: 5, py: 1 }}>
         <BusinessProfileTabs
           tabsContainerRef={tabsContainerRef}
           isTabsVisible={isTabsVisible}
@@ -208,7 +205,7 @@ const BusinessProfileModule = ({ profile }: BusinessProfileModuleProps) => {
           </Grid>
         </Grid>
 
-        <NearbyBusinesses profile={profile} />
+        <NearbyBusinesses businesses={profile.nearby_businesses} />
       </Container>
     </>
   );

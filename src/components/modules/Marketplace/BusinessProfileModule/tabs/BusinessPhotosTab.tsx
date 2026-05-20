@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import BusinessProfileGallery from "../BusinessGallery";
+import BusinessProfileGallery from "../components/BusinessGallery";
 import { Box, Button, Rating, Stack, Typography } from "@mui/material";
 import { BusinessMediaFile } from "@/ts/models/booking/business/BusinessMediaFile";
 import IosShareIcon from "@mui/icons-material/IosShare";

@@ -96,14 +96,16 @@ export default function SchedulesSection({ schedules }: SchedulesSectionProps) {
                   sx={{
                     fontWeight: isToday ? 800 : 400,
                     lineHeight: 1.75,
+                    fontSize: 20,
                   }}
-                  variant="h6"
                 >
                   {daysMap[s.day_of_week] ?? s.day_of_week}
                 </Typography>
               </Stack>
 
-              <Typography variant="h6" sx={{ fontWeight: isToday ? 800 : 400 }}>
+              <Typography
+                sx={{ fontWeight: isToday ? 800 : 400, fontSize: 18 }}
+              >
                 {text}
               </Typography>
             </Stack>

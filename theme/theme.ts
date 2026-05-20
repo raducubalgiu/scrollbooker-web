@@ -64,6 +64,18 @@ declare module "@mui/material/styles" {
   }
 }
 
+declare module "@mui/material/IconButton" {
+  interface IconButtonPropsColorOverrides {
+    rating: true;
+  }
+}
+
+declare module "@mui/material/SvgIcon" {
+  interface SvgIconPropsColorOverrides {
+    rating: true;
+  }
+}
+
 const defaultTheme = createTheme();
 
 export const darkTheme = createTheme({

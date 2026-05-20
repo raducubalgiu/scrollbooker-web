@@ -1,7 +1,7 @@
 import { Box, Link, Stack, Typography, useTheme } from "@mui/material";
-import SearchHeader from "../SearchModule/SearchHeader/SearchHeader";
-import { SearchHeaderStateType } from "../SearchModule/SearchHeader/search-header-types";
 import { useRouter } from "next/navigation";
+import { SearchHeaderStateType } from "../../SearchModule/SearchHeader/search-header-types";
+import SearchHeader from "../../SearchModule/SearchHeader/SearchHeader";
 
 const BusinessProfileHeader = () => {
   const theme = useTheme();

@@ -15,7 +15,6 @@ export default function BusinessProfileGallery({
   businessName = "Business",
   onOpenGallery,
 }: BusinessProfileGalleryProps) {
-  // Selectăm cele 5 imagini (1 Hero + 4 în sub-grid)
   const safeImages = mediaFiles.filter(Boolean).slice(0, 5);
   const totalCount = mediaFiles.filter(Boolean).length;
 
@@ -40,46 +39,37 @@ export default function BusinessProfileGallery({
     <Box
       sx={{
         display: "grid",
-        // Împărțire exactă în două jumătăți egale (50% - 50%)
         gridTemplateColumns: {
           xs: "1fr",
           md: "1fr 1fr",
         },
-        gap: 1, // Distanța mică de 8px între poze (stil Airbnb)
+        gap: 1,
         width: "100%",
         borderRadius: 3,
         overflow: "hidden",
       }}
     >
-      {/* 1. Imaginea Hero (Stânga - Ocupă 50% din lățime și dă înălțimea totală) */}
       <GalleryTile
         src={heroImage ?? ""}
         alt={`${businessName} imagine hero`}
         priority
         onClick={() => onOpenGallery?.(0)}
-        sx={{
-          // REPARAT: Am trecut de la 1.25/1 la un raport de 1.85/1 (lățime / înălțime).
-          // Acest lucru scade drastic înălțimea totală a galeriei pe ecrane mari (maxWidth="xl").
-          // Automat, cele 4 poze mici din dreapta devin dreptunghiuri foarte late, ideale pentru formatul landscape.
-          aspectRatio: { xs: "1.5/1", md: "1.55/1" },
-        }}
+        sx={{ aspectRatio: { xs: "1.5/1", md: "1.55/1" } }}
       />
 
-      {/* 2. Sub-grid-ul din dreapta (Ocupă celelalte 50% din lățime) */}
       <Box
         sx={{
-          display: { xs: "none", md: "grid" }, // Ascuns pe mobil
-          gridTemplateColumns: "1fr 1fr", // Două coloane în jumătatea dreaptă
-          gridTemplateRows: "1fr 1fr", // Două rânduri în jumătatea dreaptă
+          display: { xs: "none", md: "grid" },
+          gridTemplateColumns: "1fr 1fr",
+          gridTemplateRows: "1fr 1fr",
           gap: 1,
-          // IMPORTANT: Îi spunem să se întindă pe exact aceeași înălțime pe care o generează Hero în stânga
           height: "100%",
         }}
       >
         {Array.from({ length: 4 }).map((_, index) => {
           const file = gridImages[index];
           const imageIndex = index + 1;
-          const isLast = index === 3; // Ultima celulă (dreapta-jos)
+          const isLast = index === 3;
 
           if (!file) return <EmptyTile key={index} />;
 
@@ -89,10 +79,7 @@ export default function BusinessProfileGallery({
               src={file.thumbnail_url || file.url || ""}
               alt={`${businessName} imagine secundară ${imageIndex + 1}`}
               onClick={() => onOpenGallery?.(imageIndex)}
-              sx={{
-                // Ocupă tot spațiul alocat de rândul și coloana sa din grid-ul de 100% height
-                height: "100%",
-              }}
+              sx={{ height: "100%" }}
               overlay={
                 isLast && remainingCount > 0 ? (
                   <OverlayButton onClick={() => onOpenGallery?.(imageIndex)}>
