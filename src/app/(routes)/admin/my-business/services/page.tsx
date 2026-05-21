@@ -9,20 +9,20 @@ async function Services() {
   const session = await getServerSession(authOptions);
 
   if (!session?.business_id) {
-    throw Error("Business Id not provided");
+    throw new Error("Business Id not provided");
   }
 
-  try {
-    const response = await get<SelectedServiceDomainWithServices[]>({
-      url: `/businesses/${session.business_id}/service-domains`,
-    });
+  const response = await get<SelectedServiceDomainWithServices[]>({
+    url: `/businesses/${session.business_id}/service-domains`,
+  });
 
-    return <MyServicesModule initialServices={response?.data || []} />;
-  } catch (error) {
-    console.error("Failed to fetch service domains:", error);
+  const businessServices = response?.data;
 
-    return <MyServicesModule initialServices={[]} />;
+  if (!businessServices) {
+    throw new Error("An error occured when fetching business services");
   }
+
+  return <MyServicesModule initialServices={businessServices} />;
 }
 
 export default ProtectedPage(Services, "MY_SERVICES_VIEW");

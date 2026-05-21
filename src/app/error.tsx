@@ -66,7 +66,7 @@ export default function Error({
             <Button
               variant="contained"
               startIcon={<Replay />}
-              onClick={() => reset()} // Încearcă să re-rendereze componenta care a dat eroare
+              onClick={() => reset()}
               sx={{ borderRadius: 2, px: 3 }}
             >
               Reîncearcă
