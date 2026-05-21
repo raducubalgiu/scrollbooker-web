@@ -1,27 +1,115 @@
 "use client";
 
 import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
-import Table from "@/components/core/Table/Table";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
-import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { useMemo } from "react";
-import { MRT_ColumnDef } from "material-react-table";
-import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
+import { useCallback, useMemo, useState } from "react";
+import {
+  MaterialReactTable,
+  MRT_ActionMenuItem,
+  MRT_ColumnDef,
+  MRT_Row,
+  MRT_TableInstance,
+  useMaterialReactTable,
+} from "material-react-table";
+import { Button, Switch } from "@mui/material";
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
+import { Delete, Edit } from "@mui/icons-material";
+import BusinessDomainModal from "./BusinessDomainModal";
 import BusinessDomainsServiceDomains from "./BusinessDomainsServiceDomains";
-import { Switch } from "@mui/material";
 
-export default function BusinessDomainsModule() {
-  const {
-    data,
-    isLoading,
-    pagination,
-    setPagination,
-    onCreatingRowSave,
-    onDeletingRowSave,
-    onEditingRowSave,
-  } = useTableHandlers<BusinessDomain>({
-    route: "nomenclatures/business-domains",
+type RenderRowActionMenuItemsProps = {
+  row: MRT_Row<BusinessDomain>;
+  table: MRT_TableInstance<BusinessDomain>;
+  closeMenu: () => void;
+};
+
+type BusinessDomainModalState = {
+  open: boolean;
+  data: BusinessDomain | null;
+};
+
+type BusinessDomainsModuleProps = {
+  initialData: BusinessDomain[];
+};
+
+export default function BusinessDomainsModule({
+  initialData,
+}: BusinessDomainsModuleProps) {
+  const [openModal, setOpenModal] = useState<BusinessDomainModalState>({
+    open: false,
+    data: null,
   });
+
+  const { data, isLoading, refetch } = useCustomQuery<BusinessDomain[]>({
+    key: ["businessDomains"],
+    url: `/api/nomenclatures/business-domains?all=true`,
+    options: {
+      initialData: initialData ?? [],
+    },
+  });
+
+  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
+    key: ["delete-business-domain"],
+    url: "/api/nomenclatures/business-domains",
+    method: "DELETE",
+    options: {
+      onSuccess: () => refetch(),
+    },
+  });
+
+  const memoizedData = useMemo(() => {
+    return data || [];
+  }, [data]);
+
+  const renderRowActionMenuItems = useCallback(
+    ({ row, table, closeMenu }: RenderRowActionMenuItemsProps) => [
+      <MRT_ActionMenuItem
+        key={0}
+        label="Editeaza"
+        icon={<Edit />}
+        onClick={() => {
+          setOpenModal({
+            open: true,
+            data: row.original,
+          });
+
+          closeMenu();
+        }}
+        table={table}
+      />,
+      <MRT_ActionMenuItem
+        key={1}
+        label="Șterge"
+        icon={<Delete />}
+        onClick={() => {
+          handleDelete({ businessDomainId: row.original.id });
+
+          closeMenu();
+        }}
+        table={table}
+      />,
+    ],
+    []
+  );
+
+  const renderTopToolbarCustomActions = useCallback(
+    () => (
+      <Button
+        onClick={() => {
+          setOpenModal({
+            open: true,
+            data: null,
+          });
+        }}
+        variant="contained"
+        disableElevation
+      >
+        Adaugă
+      </Button>
+    ),
+    []
+  );
 
   const columns = useMemo<MRT_ColumnDef<BusinessDomain>[]>(
     () => [
@@ -35,31 +123,11 @@ export default function BusinessDomainsModule() {
         accessorKey: "name",
         header: "Name",
         size: 300,
-        Edit: ({ row, column }) => (
-          <MR_Input
-            row={row}
-            column={column}
-            value={row.original.name}
-            required
-            minLength={5}
-            maxLength={255}
-          />
-        ),
       },
       {
         accessorKey: "short_name",
         header: "Short name",
         size: 300,
-        Edit: ({ row, column }) => (
-          <MR_Input
-            row={row}
-            column={column}
-            value={row.original.short_name}
-            required
-            minLength={5}
-            maxLength={255}
-          />
-        ),
       },
       {
         accessorKey: "active",
@@ -78,22 +146,54 @@ export default function BusinessDomainsModule() {
     []
   );
 
+  const table = useMaterialReactTable({
+    columns,
+    data: memoizedData,
+    enableKeyboardShortcuts: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: false,
+    enableSorting: false,
+    enableRowActions: true,
+    enableTopToolbar: true,
+    renderRowActionMenuItems,
+    renderTopToolbarCustomActions,
+    positionActionsColumn: "last",
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper,
+    }),
+    localization: MRT_Localization_RO,
+    state: {
+      isLoading,
+      showLoadingOverlay: isPendingDelete,
+    },
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: 2.5,
+        border: "1px solid",
+        borderColor: "divider",
+      },
+    },
+    renderDetailPanel: ({ row }) => {
+      return (
+        <BusinessDomainsServiceDomains data={row.original.service_domains} />
+      );
+    },
+  });
+
   return (
     <MainLayout title="Domeniu Business" hideAction>
-      <Table<BusinessDomain>
-        data={data?.results}
-        rowCount={data?.count}
-        columns={columns}
-        onCreatingRowSave={onCreatingRowSave}
-        onEditingRowSave={onEditingRowSave}
-        onDeletingRowSave={onDeletingRowSave}
-        manualPagination={true}
-        onPaginationChange={setPagination}
-        state={{ pagination, isLoading }}
-        renderDetailPanel={({ row }) => (
-          <BusinessDomainsServiceDomains data={row.original.service_domains} />
-        )}
+      <BusinessDomainModal
+        open={openModal.open}
+        data={openModal.data}
+        onClose={() => setOpenModal({ open: false, data: null })}
+        onSuccess={() => {
+          refetch();
+          setOpenModal({ open: false, data: null });
+        }}
       />
+      <MaterialReactTable table={table} />
     </MainLayout>
   );
 }

@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, post, put, deleteRequest } from "@/utils/requests";
-import { omit } from "lodash";
-import { PaginatedData } from "@/components/core/Table/Table";
+import { deleteRequest, get, post } from "@/utils/requests";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
-export const GET = async (_req: NextRequest) => {
+export const GET = async (req: NextRequest) => {
+  const all = req.nextUrl.searchParams.get("all");
+
   const response = (
-    await get<PaginatedData<BusinessDomain>>({
-      url: `/business-domains`,
+    await get<BusinessDomain[]>({
+      url: `/business-domains?all=${all ? all : false}`,
     })
   ).data;
 
@@ -27,25 +27,12 @@ export const POST = async (req: NextRequest) => {
   return NextResponse.json(response);
 };
 
-export const PUT = async (req: NextRequest) => {
-  const data = await req.json();
-
-  const response = (
-    await put({
-      url: `/business-domains/${data.id}`,
-      data: omit(data, "id"),
-    })
-  ).data;
-
-  return NextResponse.json(response);
-};
-
 export const DELETE = async (req: NextRequest) => {
-  const { id } = await req.json();
+  const { businessDomainId } = await req.json();
 
   const response = (
     await deleteRequest({
-      url: `/business-domains/${id}`,
+      url: `/business-domains/${businessDomainId}`,
     })
   ).data;
 

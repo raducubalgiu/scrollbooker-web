@@ -15,3 +15,9 @@ export interface BusinessDomainServiceDomainType {
   url: string;
   thumbnail_url: string;
 }
+
+export interface BusinessDomainCreateOrUpdate {
+  name: string;
+  short_name: string;
+  active: boolean | null;
+}

@@ -1,17 +1,21 @@
-import Table from "@/components/core/Table/Table";
-import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Typography,
 } from "@mui/material";
-import { MRT_ColumnDef } from "material-react-table";
+import {
+  MaterialReactTable,
+  MRT_ColumnDef,
+  useMaterialReactTable,
+} from "material-react-table";
 import React, { memo, useMemo, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { BusinessDomainServiceDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
 
 type BusinessDomainsServiceDomainsModuleType = {
-  data: ServiceDomainsResponse[];
+  data: BusinessDomainServiceDomainType[];
 };
 
 const BusinessDomainsServiceDomains = ({
@@ -19,7 +23,11 @@ const BusinessDomainsServiceDomains = ({
 }: BusinessDomainsServiceDomainsModuleType) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
-  const columns = useMemo<MRT_ColumnDef<ServiceDomainsResponse>[]>(
+  const memoizedData = useMemo(() => {
+    return data || [];
+  }, [data]);
+
+  const columns = useMemo<MRT_ColumnDef<BusinessDomainServiceDomainType>[]>(
     () => [
       {
         accessorKey: "id",
@@ -37,11 +45,41 @@ const BusinessDomainsServiceDomains = ({
     []
   );
 
+  const table = useMaterialReactTable({
+    columns,
+    data: memoizedData,
+    enableKeyboardShortcuts: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: false,
+    enableSorting: false,
+    enableRowActions: false,
+    enableTopToolbar: false,
+    enableEditing: false,
+    positionActionsColumn: "last",
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper,
+    }),
+    localization: MRT_Localization_RO,
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: 2.5,
+        border: "1px solid",
+        borderColor: "divider",
+      },
+    },
+  });
+
   return (
     <Accordion
       expanded={isExpanded}
       onChange={() => setIsExpanded((expanded) => !expanded)}
-      sx={{ mb: 1.5 }}
+      sx={{
+        mb: 1.5,
+        bgcolor: "background.default",
+        boxShadow: 0,
+      }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -53,19 +91,7 @@ const BusinessDomainsServiceDomains = ({
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Table
-          data={data}
-          columns={columns}
-          manualPagination={false}
-          enablePagination={false}
-          enableColumnFilters={false}
-          enableSorting={false}
-          topToolbarIconButton
-          enableFilters={false}
-          enableColumnActions={false}
-          enableEditing={false}
-          enableTopToolbar={false}
-        />
+        <MaterialReactTable table={table} />
       </AccordionDetails>
     </Accordion>
   );
