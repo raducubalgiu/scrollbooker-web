@@ -12,18 +12,20 @@ interface PostPageProps {
 export default async function PostPage({ params }: PostPageProps) {
   const { postId } = await Promise.resolve(params);
 
-  const post = (
-    await get<Post | null>({
-      url: `/posts/${postId}`,
-    })
-  ).data;
+  const response = await get<Post | null>({
+    url: `/posts/${postId}`,
+  });
 
-  if (!post) return null;
+  const postData = response.data;
+
+  if (!postData) {
+    throw new Error("An error occured when fetching post");
+  }
 
   return (
     <VideoDetailModule
-      initialPost={post}
-      username={post.user.username}
+      initialPost={postData}
+      username={postData.user.username}
       tab={null}
     />
   );

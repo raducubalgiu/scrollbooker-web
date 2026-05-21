@@ -16,14 +16,18 @@ export default async function UserProfilePage({
   const { tab } = await Promise.resolve(searchParams);
 
   if (!username) {
-    return <ProfileModule profile={null} tab={null} />;
+    throw new Error("Username param was not provided");
   }
 
-  const profile = (
-    await get<UserProfile | null>({
-      url: `/users/${username}/user-profile`,
-    })
-  ).data;
+  const response = await get<UserProfile | null>({
+    url: `/users/${username}/user-profile`,
+  });
 
-  return <ProfileModule profile={profile} tab={tab} />;
+  const profileData = response.data;
+
+  if (!profileData) {
+    throw new Error("An error occured when fetching profile data");
+  }
+
+  return <ProfileModule profile={profileData} tab={tab} />;
 }

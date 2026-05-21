@@ -18,23 +18,21 @@ export async function generateMetadata({
 }: BusinessProfilePageProps): Promise<Metadata> {
   const { ownerUsername } = await Promise.resolve(params);
 
-  const profile = (
-    await get<BusinessProfile | null>({
-      url: `/businesses/${ownerUsername}/profile`,
-    })
-  ).data;
+  const response = await get<BusinessProfile | null>({
+    url: `/businesses/${ownerUsername}/profile`,
+  });
 
-  if (!profile) {
-    return {
-      title: "Business not found | ScrollBooker",
-    };
+  const profileData = response.data;
+
+  if (!profileData) {
+    throw new Error("An occured when feching profile data");
   }
 
-  const title = `${profile.owner.fullname} - ${profile.owner.profession} | ScrollBooker`;
+  const title = `${profileData.owner.fullname} - ${profileData.owner.profession} | ScrollBooker`;
 
   const description =
-    profile.description ??
-    `Book appointments at ${profile.owner.fullname} on ScrollBooker.`;
+    profileData.description ??
+    `Book appointments at ${profileData.owner.fullname} on ScrollBooker.`;
 
   return {
     title,
@@ -57,20 +55,20 @@ export default async function BusinessProfilePage({
 }: BusinessProfilePageProps) {
   const { ownerUsername } = await Promise.resolve(params);
 
-  const profile = (
-    await get<BusinessProfile | null>({
-      url: `/businesses/${ownerUsername}/profile`,
-    })
-  ).data;
+  const response = await get<BusinessProfile | null>({
+    url: `/businesses/${ownerUsername}/profile`,
+  });
 
-  if (!profile) {
-    return <>Profile not found</>;
+  const profileData = response.data;
+
+  if (!profileData) {
+    throw new Error("An occured when feching profile data");
   }
 
-  const expectedSlug = makeProfessionSlug(profile.owner.profession);
+  const expectedSlug = makeProfessionSlug(profileData.owner.profession);
 
   if (params.profession !== expectedSlug) {
-    redirect(`/business/${expectedSlug}/${profile.owner.username}`);
+    redirect(`/business/${expectedSlug}/${profileData.owner.username}`);
   }
 
   return (
@@ -81,17 +79,17 @@ export default async function BusinessProfilePage({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
-            name: profile.owner.fullname,
+            name: profileData.owner.fullname,
             aggregateRating: {
               "@type": "AggregateRating",
-              ratingValue: profile.owner.counters.ratings_average,
-              reviewCount: profile.owner.counters.ratings_count,
+              ratingValue: profileData.owner.counters.ratings_average,
+              reviewCount: profileData.owner.counters.ratings_count,
             },
           }),
         }}
       />
 
-      <BusinessProfileModule initialProfile={profile} />
+      <BusinessProfileModule initialProfile={profileData} />
     </>
   );
 }

@@ -10,15 +10,23 @@ import { authOptions } from "@/lib/auth/authOptions";
 async function Products() {
   const session = await getServerSession(authOptions);
 
-  try {
-    const response = await get<BusinessEmployee[]>({
-      url: `/businesses/owner/${session?.business_owner_id}/employees`,
-    });
-
-    return <MyProductsModule session={session} employees={response.data} />;
-  } catch (error) {
-    throw new Error("Eroare la comunicarea cu serverul.");
+  if (!session?.business_owner_id) {
+    throw new Error(
+      "Sesiune invalidă sau expirată: Identificatorul utilizatorului (business_id) lipsește."
+    );
   }
+
+  const response = await get<BusinessEmployee[]>({
+    url: `/businesses/owner/${session?.business_owner_id}/employees`,
+  });
+
+  const employeesData = response.data;
+
+  if (!employeesData) {
+    throw new Error("An error occured when fetching business employees");
+  }
+
+  return <MyProductsModule session={session} employees={employeesData} />;
 }
 
 export default ProtectedPage(Products, PermissionEnum.MY_PRODUCTS_VIEW);
