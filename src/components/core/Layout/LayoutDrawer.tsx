@@ -195,7 +195,7 @@ const LayoutDrawer = ({
 
               {isAuthenticated && (
                 <AdminRoutes
-                  hasEmployees={session?.has_employees ?? false}
+                  session={session}
                   isSelected={isSelected}
                   onNavigate={navigate}
                   isCollapsed={isCollapsed}

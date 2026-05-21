@@ -30,9 +30,10 @@ import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { Session } from "next-auth";
 
 type AdminRoutesProps = {
-  hasEmployees: boolean;
+  session: Session | null;
   isSelected: (route: string) => boolean;
   isCollapsed: boolean;
   onNavigate: (
@@ -57,13 +58,16 @@ const ADMIN_FONT_SIZE = 16;
 const ADMIN_GAP = 8;
 
 const AdminRoutes = ({
-  hasEmployees,
+  session,
   isSelected,
   isCollapsed,
   onNavigate,
 }: AdminRoutesProps) => {
   const [openMyBusiness, setOpenMyBusiness] = React.useState(true);
   const [openNomenclatures, setOpenNomenclatures] = React.useState(false);
+
+  const isEmployee = session?.user_id !== session?.business_owner_id;
+  const hasEmployees = session?.has_employees ?? false;
 
   const adminRoutes: NavigationItem[] = React.useMemo(
     () => [
@@ -267,6 +271,10 @@ const AdminRoutes = ({
     <List component="div" disablePadding>
       {routes.map((route) => {
         if (route.route === "/admin/my-business/employees" && !hasEmployees) {
+          return null;
+        }
+
+        if (route.route === "/admin/my-business/schedules" && !isEmployee) {
           return null;
         }
 
