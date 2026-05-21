@@ -16,7 +16,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT;
 const random16Hex = () => crypto.randomBytes(8).toString("hex");
 
 export async function Instance() {
-  const session = await getServerSession(authOptions);
   const spanId = random16Hex();
   const traceId = random16Hex();
 
@@ -27,6 +26,8 @@ export async function Instance() {
     });
     throw new Error("BE_BASE_ENDPOINT is not defined in environment variables");
   }
+
+  const session = await getServerSession(authOptions);
 
   if (!session) redirect("/api/auth/signin");
 

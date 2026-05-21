@@ -1,7 +1,7 @@
 "use client";
 
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { useMutate } from "@/hooks/useHttp";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import React, { useCallback, useEffect, useState, useMemo } from "react";
 import SelectedServiceItem from "./SelectedServiceItem";
@@ -11,26 +11,26 @@ import ActionButton, {
   ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
 import { Stack } from "@mui/material";
-import MyServicesSkeleton from "./MyServicesSkeleton";
+import { useSession } from "next-auth/react";
 
-export const MyServicesModule = () => {
-  const {
-    data,
-    isLoading,
-    refetch: refetchServiceDomains,
-  } = useCustomQuery<SelectedServiceDomainWithServices[]>({
-    key: "my-services",
-    url: "/api/my-services",
-  });
+type MyServicesModuleProps = {
+  initialServices: SelectedServiceDomainWithServices[];
+};
+
+export const MyServicesModule = ({
+  initialServices,
+}: MyServicesModuleProps) => {
+  const { data: session } = useSession();
+  const [services, setServices] = useState(initialServices);
 
   const defaultServicesIds = useMemo(
     () =>
-      data?.flatMap((serviceDomain) =>
+      services?.flatMap((serviceDomain) =>
         serviceDomain.services
           .filter((service) => service.is_selected)
           .map((service) => service.id)
       ) || [],
-    [data]
+    [services]
   );
 
   const [selectedServices, setSelectedServices] = useState<Set<number>>(
@@ -66,18 +66,20 @@ export const MyServicesModule = () => {
     });
   }, []);
 
-  const { mutate, isPending: isLoadingUpdate } = useMutate({
+  const { mutate, isPending: isLoadingUpdate } = useMutate<
+    number[],
+    SelectedServiceDomainWithServices[]
+  >({
     key: "update-my-services",
-    url: "/api/my-services",
+    url: `/api/businesses/${session?.business_id}/services`,
     method: "PUT",
     options: {
-      onSuccess: () => {
-        refetchServiceDomains();
+      onSuccess: (updatedServices) => {
+        setServices(updatedServices);
         toast.success("Serviciile au fost actualizate cu succes.");
       },
       onError: () => {
         setSelectedServices(new Set(defaultServicesIds));
-        refetchServiceDomains();
         toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu");
       },
     },
@@ -103,15 +105,14 @@ export const MyServicesModule = () => {
       props: {
         onClick: () => mutate(Array.from(selectedServices)),
         loading: isLoadingUpdate,
-        //disabled: isDisabled,
+        disabled: isDisabled,
       },
     },
   ];
 
   return (
     <MainLayout title="Categorii de servicii" hideAction>
-      {isLoading && <MyServicesSkeleton />}
-      {data?.map((serviceDomain) => (
+      {services?.map((serviceDomain) => (
         <Accordion
           title={serviceDomain.name}
           key={serviceDomain.id}

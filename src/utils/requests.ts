@@ -23,8 +23,10 @@ export type DeleteRequestParams = BaseRequestParams;
 
 export const get = async <T>({
   url,
-}: GetRequestParams): Promise<AxiosResponse<T>> =>
-  Instance().then((instance) => instance.get(url));
+}: GetRequestParams): Promise<AxiosResponse<T>> => {
+  const instance = await Instance();
+  return instance.get<T>(url);
+};
 
 export const post = async <T, K>({
   url,
