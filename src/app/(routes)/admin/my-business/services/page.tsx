@@ -9,7 +9,9 @@ async function Services() {
   const session = await getServerSession(authOptions);
 
   if (!session?.business_id) {
-    throw new Error("Business Id not provided");
+    throw new Error(
+      "Sesiune invalidă sau expirată: Identificatorul utilizatorului (business_id) lipsește."
+    );
   }
 
   const response = await get<SelectedServiceDomainWithServices[]>({

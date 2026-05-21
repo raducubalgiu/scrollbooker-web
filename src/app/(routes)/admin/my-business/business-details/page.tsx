@@ -12,7 +12,9 @@ async function MyBusiness() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user_id) {
-    throw new Error("User Id not provided");
+    throw new Error(
+      "Sesiune invalidă sau expirată: Identificatorul utilizatorului (user_id) lipsește."
+    );
   }
 
   const response = await get<Business>({
