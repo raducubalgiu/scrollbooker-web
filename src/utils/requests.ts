@@ -1,5 +1,6 @@
-import { AxiosResponse } from "axios";
 import { Instance } from "../lib/instance";
+
+import { AxiosResponse } from "axios";
 
 type BaseRequestParams = {
   url: string;
@@ -31,22 +32,30 @@ export const get = async <T>({
 export const post = async <T, K>({
   url,
   data,
-}: PostRequestParams<T>): Promise<AxiosResponse<K>> =>
-  Instance().then((instance) => instance.post(url, data));
+}: PostRequestParams<T>): Promise<AxiosResponse<K>> => {
+  const instance = await Instance();
+  return instance.post<K>(url, data);
+};
 
 export const put = async <T, K>({
   url,
   data,
-}: PutRequestParams<T>): Promise<AxiosResponse<K>> =>
-  Instance().then((instance) => instance.put(url, data));
+}: PutRequestParams<T>): Promise<AxiosResponse<K>> => {
+  const instance = await Instance();
+  return instance.put<K>(url, data);
+};
 
 export const patch = async <T, K>({
   url,
   data,
-}: PatchRequestParams<T>): Promise<AxiosResponse<K>> =>
-  Instance().then((instance) => instance.patch(url, data));
+}: PatchRequestParams<T>): Promise<AxiosResponse<K>> => {
+  const instance = await Instance();
+  return instance.patch<K>(url, data);
+};
 
 export const deleteRequest = async <T>({
   url,
-}: DeleteRequestParams): Promise<AxiosResponse<T>> =>
-  Instance().then((instance) => instance.delete(url));
+}: DeleteRequestParams): Promise<AxiosResponse<T>> => {
+  const instance = await Instance();
+  return instance.delete<T>(url);
+};

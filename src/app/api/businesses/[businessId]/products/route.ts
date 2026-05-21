@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { get } from "@/utils/requests";
 
-// 1. Actualizăm interfața pentru a reflecta cheia așteptată de backend
 interface ProductSearchParams {
   employee_id?: string;
   only_services_with_products?: string;
@@ -17,12 +16,10 @@ type RouteContext = {
 export async function GET(req: NextRequest, context: RouteContext) {
   try {
     const { businessId } = await context.params;
-
     const { searchParams } = req.nextUrl;
-    // Păstrăm camelCase aici pentru ce vine din client (Next.js route)
+
     const employeeId = searchParams.get("employeeId");
 
-    // 2. Mapăm către snake_case pentru cererea externă (Backend)
     const queryParams: ProductSearchParams = {
       only_services_with_products: "true",
       ...(employeeId && { employee_id: employeeId }),
