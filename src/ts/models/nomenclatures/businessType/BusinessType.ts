@@ -11,3 +11,10 @@ export interface BusinessType {
   service_domains: ServiceDomain[];
   filters: Filter[];
 }
+
+export interface BusinessTypeCreateOrUpdate {
+  name: string;
+  plural: string;
+  business_domain_id: number;
+  active: boolean | null;
+}

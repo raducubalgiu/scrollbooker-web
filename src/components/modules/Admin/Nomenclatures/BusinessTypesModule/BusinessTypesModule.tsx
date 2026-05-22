@@ -18,7 +18,7 @@ import { BusinessType } from "@/ts/models/nomenclatures/businessType/BusinessTyp
 import { Delete, Edit } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
-import { useCustomQuery } from "@/hooks/useHttp";
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import BusinessTypeModal from "./BusinessTypeModal";
 
@@ -54,7 +54,7 @@ export default function BusinessTypesModule({
     data: null,
   });
 
-  const { data, isLoading, isError } = useCustomQuery<
+  const { data, isLoading, isError, refetch } = useCustomQuery<
     PaginatedData<BusinessType>
   >({
     key: ["business-types", pagination.pageIndex, pagination.pageSize],
@@ -63,6 +63,15 @@ export default function BusinessTypesModule({
       ...(pagination.pageIndex === 0 && pagination.pageSize === 5
         ? { initialData }
         : {}),
+    },
+  });
+
+  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
+    key: ["delete-business-type"],
+    url: "/api/nomenclatures/business-types",
+    method: "DELETE",
+    options: {
+      onSuccess: () => refetch(),
     },
   });
 
@@ -154,6 +163,8 @@ export default function BusinessTypesModule({
         label="Șterge"
         icon={<Delete />}
         onClick={() => {
+          handleDelete({ businessDomainId: row.original.id });
+
           closeMenu();
         }}
         table={table}
@@ -203,7 +214,7 @@ export default function BusinessTypesModule({
     localization: MRT_Localization_RO,
     state: {
       pagination,
-      isLoading: !tableData.length && isLoading,
+      isLoading: !tableData.length || isLoading || isPendingDelete,
       showAlertBanner: isError,
     },
 
@@ -223,7 +234,12 @@ export default function BusinessTypesModule({
       <BusinessTypeModal
         open={openModal.open}
         data={openModal.data}
-        onClose={() => {}}
+        businessDomains={businessDomains}
+        onClose={() => setOpenModal({ open: false, data: null })}
+        onSuccess={() => {
+          refetch();
+          setOpenModal({ open: false, data: null });
+        }}
       />
       <MaterialReactTable table={table} />
     </MainLayout>

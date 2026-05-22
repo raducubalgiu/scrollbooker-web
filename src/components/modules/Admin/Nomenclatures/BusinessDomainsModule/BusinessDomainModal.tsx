@@ -104,8 +104,8 @@ const BusinessDomainModal = ({
     <Modal
       title={
         isEditMode
-          ? `Editeaza Business Domain ID: ${data.id}`
-          : "Adauga un Business Domain"
+          ? `Editează Business Domain ID: ${data.id}`
+          : "Adaugă un Business Domain"
       }
       open={open}
       handleClose={onClose}
