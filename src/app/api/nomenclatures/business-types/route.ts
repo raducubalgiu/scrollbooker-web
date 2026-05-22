@@ -7,11 +7,12 @@ import {
 } from "@/ts/models/nomenclatures/businessType/BusinessType";
 
 export const GET = async (req: NextRequest) => {
-  const pagination = req.nextUrl.searchParams;
+  const page = req.nextUrl.searchParams.get("page");
+  const limit = req.nextUrl.searchParams.get("limit");
 
   const response = (
     await get<PaginatedData<BusinessType>>({
-      url: `/business-types?${pagination}`,
+      url: `/business-types?all=true&page=${page}&limit=${limit}`,
     })
   ).data;
 
@@ -32,11 +33,11 @@ export const POST = async (req: NextRequest) => {
 };
 
 export const DELETE = async (req: NextRequest) => {
-  const { id } = await req.json();
+  const { businessTypeId } = await req.json();
 
   const response = (
     await deleteRequest({
-      url: `/business-types/${id}`,
+      url: `/business-types/${businessTypeId}`,
     })
   ).data;
 

@@ -12,11 +12,9 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import { useCallback, useMemo, useState } from "react";
-import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
-import MR_Select from "@/components/core/Table/MR_Inputs/MR_Select";
 import { BusinessType } from "@/ts/models/nomenclatures/businessType/BusinessType";
 import { Delete, Edit } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Button, Switch } from "@mui/material";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
@@ -89,49 +87,24 @@ export default function BusinessTypesModule({
       {
         accessorKey: "name",
         header: "Name",
-        Edit: ({ row, column }) => (
-          <MR_Input
-            row={row}
-            column={column}
-            value={row.getValue(column.id)}
-            required
-            minLength={3}
-            maxLength={100}
-          />
-        ),
       },
       {
         accessorKey: "plural",
         header: "Plural",
-        Edit: ({ row, column }) => (
-          <MR_Input
-            row={row}
-            column={column}
-            value={row.getValue(column.id)}
-            required
-            minLength={3}
-            maxLength={50}
-          />
-        ),
       },
       {
         accessorKey: "business_domain_id",
         header: "Business Domain Id",
-        Edit: ({ row, column, cell }) => (
-          <MR_Select
-            row={row}
-            column={column}
-            value={Number(cell.getValue()) ?? ""}
-            options={businessDomains.map((bd) => {
-              return {
-                value: bd.id,
-                name: bd.name,
-              };
-            })}
-          />
-        ),
         Cell: ({ cell }) =>
           businessDomains?.find((bd) => bd.id === cell.getValue())?.name,
+      },
+      {
+        accessorKey: "active",
+        header: "Active",
+        size: 300,
+        Cell: ({ row }) => (
+          <Switch checked={row.original.active} disabled={true} />
+        ),
       },
       {
         accessorKey: "created_at",
@@ -163,7 +136,7 @@ export default function BusinessTypesModule({
         label="Șterge"
         icon={<Delete />}
         onClick={() => {
-          handleDelete({ businessDomainId: row.original.id });
+          handleDelete({ businessTypeId: row.original.id });
 
           closeMenu();
         }}
