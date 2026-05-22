@@ -81,7 +81,7 @@ const BusinessTypeModal = ({
     BusinessTypeCreateOrUpdate,
     BusinessType
   >({
-    key: ["create-business-type", data?.id],
+    key: ["update-business-type", data?.id],
     url: `/api/nomenclatures/business-types/${data?.id}`,
     method: "PUT",
     options: {

@@ -1,49 +1,46 @@
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Input from "@/components/core/Input/Input";
-import InputCheckbox from "@/components/core/Input/InputCheckbox";
 import Modal from "@/components/core/Modal/Modal";
 import { useMutate } from "@/hooks/useHttp";
 import {
-  BusinessDomain,
-  BusinessDomainCreateOrUpdate,
-} from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+  Consent,
+  ConsentCreateOrUpdate,
+} from "@/ts/models/nomenclatures/consent/Consent";
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Stack } from "@mui/material";
 import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-type BusinessDomainModalProps = {
-  data: BusinessDomain | null;
+type ConsentModalProps = {
   open: boolean;
+  data: Consent | null;
   onClose: () => void;
   onSuccess: () => void;
 };
 
-type BusinessDomainFormData = {
-  name: string;
-  short_name: string;
-  active: boolean;
-};
-
-const BusinessDomainModal = ({
+const ConsentModal = ({
   open,
   data,
   onClose,
   onSuccess,
-}: BusinessDomainModalProps) => {
+}: ConsentModalProps) => {
   const isEditMode = !!data;
 
-  const methods = useForm<BusinessDomainFormData>({
+  const methods = useForm<ConsentCreateOrUpdate>({
     defaultValues: {
       name: "",
-      short_name: "",
-      active: false,
+      title: "",
+      text: "",
+      version: "",
     },
   });
 
   const isRequired = required();
-  const minLengthName = minField(3);
-  const maxLengthName = maxField(255);
+  const minLength = minField(3);
+  const maxLengthName = maxField(50);
+  const maxLengthTitle = maxField(100);
+  const minLengthVersion = minField(2);
+  const maxLengthVersion = maxField(50);
 
   const {
     reset,
@@ -53,16 +50,16 @@ const BusinessDomainModal = ({
 
   useEffect(() => {
     if (open) {
-      reset(data || { name: "", short_name: "", active: true });
+      reset(data || { name: "", title: "", text: "", version: "" });
     }
   }, [open, data, reset]);
 
   const { mutate: handleCreate, isPending: isPendingCreate } = useMutate<
-    BusinessDomainCreateOrUpdate,
-    BusinessDomain
+    ConsentCreateOrUpdate,
+    Consent
   >({
-    key: ["create-business-domain"],
-    url: `/api/nomenclatures/business-domains`,
+    key: ["create-consent"],
+    url: `/api/nomenclatures/consents`,
     method: "POST",
     options: {
       onSuccess,
@@ -70,18 +67,18 @@ const BusinessDomainModal = ({
   });
 
   const { mutate: handleUpdate, isPending: isPendingUpdate } = useMutate<
-    BusinessDomainCreateOrUpdate,
-    BusinessDomain
+    ConsentCreateOrUpdate,
+    Consent
   >({
-    key: ["update-business-domain", data?.id],
-    url: `/api/nomenclatures/business-domains/${data?.id}`,
+    key: ["update-consent", data?.id],
+    url: `/api/nomenclatures/consents/${data?.id}`,
     method: "PUT",
     options: {
       onSuccess,
     },
   });
 
-  const onSubmit = (data: BusinessDomainFormData) => {
+  const onSubmit = (data: ConsentCreateOrUpdate) => {
     if (isEditMode) {
       handleUpdate(data);
     } else {
@@ -103,36 +100,47 @@ const BusinessDomainModal = ({
   return (
     <Modal
       title={
-        isEditMode
-          ? `Editează Business Domain ID: ${data.id}`
-          : "Adaugă un Business Domain"
+        isEditMode ? `Editează Consent ID: ${data.id}` : "Adaugă un Consent"
       }
       open={open}
       handleClose={onClose}
-      actions={actions}
       maxWidth="md"
       fullWidth
+      actions={actions}
     >
       <FormProvider {...methods}>
         <Stack spacing={2.5}>
           <Input
             name="name"
-            placeholder="Adauga nume"
+            placeholder="Adauga numele"
             label="Nume"
-            rules={{ ...isRequired, ...minLengthName, ...maxLengthName }}
+            rules={{ ...isRequired, ...minLength, ...maxLengthName }}
           />
           <Input
-            name="short_name"
-            placeholder="Adauga nume scurt"
-            label="Nume scurt"
-            rules={{ ...isRequired, ...minLengthName, ...maxLengthName }}
+            name="title"
+            placeholder="Adauga titlu"
+            label="Titlu"
+            rules={{ ...isRequired, ...minLength, ...maxLengthTitle }}
           />
-
-          <InputCheckbox name="active" label="Activ" sx={{ fontSize: 30 }} />
+          <Input
+            name="text"
+            placeholder="Adauga continut formular"
+            label="Formular"
+            multiline
+            minRows={4}
+            maxRows={7}
+            rules={{ ...isRequired, ...minLength }}
+          />
+          <Input
+            name="version"
+            placeholder="Adauga versiunea formularului"
+            label="Versiune"
+            rules={{ ...isRequired, ...minLengthVersion, ...maxLengthVersion }}
+          />
         </Stack>
       </FormProvider>
     </Modal>
   );
 };
 
-export default BusinessDomainModal;
+export default ConsentModal;

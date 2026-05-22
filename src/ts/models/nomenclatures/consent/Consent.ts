@@ -7,3 +7,10 @@ export interface Consent {
   version: string;
   created_at: string;
 }
+
+export interface ConsentCreateOrUpdate {
+  name: string;
+  title: string;
+  text: string;
+  version: string;
+}
