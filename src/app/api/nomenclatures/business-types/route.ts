@@ -5,11 +5,12 @@ import { PaginatedData } from "@/components/core/Table/Table";
 import { BusinessType } from "@/ts/models/nomenclatures/businessType/BusinessType";
 
 export const GET = async (req: NextRequest) => {
-  const pagination = req.nextUrl.searchParams;
+  const page = req.nextUrl.searchParams.get("page");
+  const limit = req.nextUrl.searchParams.get("limit");
 
   const response = (
     await get<PaginatedData<BusinessType>>({
-      url: `/business-types?${pagination}`,
+      url: `/business-types?page=${page}&limit=${limit}`,
     })
   ).data;
 
