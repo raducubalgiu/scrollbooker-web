@@ -15,6 +15,7 @@ import ProductsInfoSection from "./ProductsInfoSection";
 import EmptyProductsSection from "./EmptyProductsSection";
 import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
 import { isEmpty } from "lodash";
+import { formatPrice } from "@/utils/formatPrice";
 
 type UploadVideoProductsProps = {
   selectedProducts: Product[];
@@ -65,10 +66,7 @@ const UploadVideoProducts = ({
           <List disablePadding>
             {selectedProducts.map((product) => {
               const filtersText = ProductUtils.getFiltersSummary(product);
-              const displayedPrice = ProductUtils.getPrice(product);
-              const displayed_price_with_discount =
-                ProductUtils.getPriceWithDiscount(product);
-              const displayedDiscount = ProductUtils.getDiscount(product);
+              const { starting_offering, has_different_prices } = product;
 
               return (
                 <ListItem
@@ -105,26 +103,27 @@ const UploadVideoProducts = ({
                           </Typography>
                         )}
 
-                        <Stack sx={styles.priceRow}>
-                          <Typography fontSize={15} fontWeight={600}>
-                            {product.has_different_prices && "de la"}{" "}
-                            {displayed_price_with_discount} RON
+                        <Stack
+                          flexDirection="row"
+                          alignItems="center"
+                          gap={1}
+                          mt={1.5}
+                        >
+                          <Typography fontSize={18} fontWeight={600}>
+                            {has_different_prices && "de la"}{" "}
+                            {`${formatPrice(starting_offering.price_with_discount)} RON`}
                           </Typography>
-                          {displayedDiscount > 0 && (
+                          {starting_offering.discount > 0 && (
                             <>
                               <Typography
-                                variant="body2"
+                                variant="body1"
                                 color="text.secondary"
-                                sx={styles.originalPrice}
+                                sx={{ textDecoration: "line-through" }}
                               >
-                                {displayedPrice}
+                                {formatPrice(starting_offering.price)}
                               </Typography>
-                              <Typography
-                                variant="body2"
-                                fontWeight={600}
-                                color="error.main"
-                              >
-                                (-{displayedDiscount}%)
+                              <Typography fontWeight={600} color="error.main">
+                                (-{starting_offering.discount}%)
                               </Typography>
                             </>
                           )}

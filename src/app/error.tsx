@@ -74,12 +74,12 @@ export default function Error({
 
             <Button
               component={Link}
-              href="/admin/dashboard"
+              href="/"
               variant="outlined"
               startIcon={<Home />}
               sx={{ borderRadius: 2, px: 3 }}
             >
-              Dashboard
+              Acasă
             </Button>
           </Box>
 

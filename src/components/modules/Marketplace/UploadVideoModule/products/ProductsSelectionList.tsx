@@ -15,6 +15,7 @@ import {
   Product,
   ProductUtils,
 } from "@/ts/models/booking/product/Product";
+import { formatPrice } from "@/utils/formatPrice";
 
 type ProductsSelectionListProps = {
   activeGroup: BusinessProductsResponse | undefined;
@@ -35,10 +36,7 @@ const ProductsSelectionList = ({
         {activeGroup.products.map((prod) => {
           const isSelected = !!find(localSelectedProducts, { id: prod.id });
           const filtersText = ProductUtils.getFiltersSummary(prod);
-          const displayedPrice = ProductUtils.getPrice(prod);
-          const displayed_price_with_discount =
-            ProductUtils.getPriceWithDiscount(prod);
-          const displayedDiscount = ProductUtils.getDiscount(prod);
+          const { has_different_prices, starting_offering } = prod;
 
           return (
             <Box
@@ -62,22 +60,27 @@ const ProductsSelectionList = ({
                     </Typography>
                   )}
 
-                  <Stack sx={styles.priceRow}>
+                  <Stack
+                    flexDirection="row"
+                    alignItems="center"
+                    gap={1}
+                    mt={1.5}
+                  >
                     <Typography fontSize={18} fontWeight={600}>
-                      {prod.has_different_prices && "de la"}{" "}
-                      {displayed_price_with_discount} RON
+                      {has_different_prices && "de la"}{" "}
+                      {`${formatPrice(starting_offering.price_with_discount)} RON`}
                     </Typography>
-                    {displayedDiscount > 0 && (
+                    {starting_offering.discount > 0 && (
                       <>
                         <Typography
                           variant="body1"
                           color="text.secondary"
-                          sx={styles.originalPrice}
+                          sx={{ textDecoration: "line-through" }}
                         >
-                          {displayedPrice}
+                          {formatPrice(starting_offering.price)}
                         </Typography>
                         <Typography fontWeight={600} color="error.main">
-                          (-{displayedDiscount}%)
+                          (-{starting_offering.discount}%)
                         </Typography>
                       </>
                     )}
