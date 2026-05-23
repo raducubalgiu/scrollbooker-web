@@ -3,11 +3,11 @@
 import React from "react";
 import AppointmentsModule from "./AppointmentsModule";
 import { Box } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 const AppointmentsWrapper = () => {
-  const router = useRouter();
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const { navigateTo } = useAppNavigation();
 
   return (
     <Box
@@ -16,7 +16,9 @@ const AppointmentsWrapper = () => {
     >
       <AppointmentsModule
         scrollRootRef={scrollRef}
-        onNavigateToAppointment={(id) => router.push(`/appointments/${id}`)}
+        onNavigateToAppointment={(id) =>
+          navigateTo(AppRoutes.appointmentDetails(id))
+        }
       />
     </Box>
   );

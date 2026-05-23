@@ -1,10 +1,10 @@
 "use client";
 
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 import { Box, Button, Container, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
 
 export default function NotFound() {
-  const router = useRouter();
+  const { navigateTo } = useAppNavigation();
 
   return (
     <Container maxWidth="md">
@@ -29,7 +29,7 @@ export default function NotFound() {
         </Typography>
         <Button
           variant="contained"
-          onClick={() => router.push("/")}
+          onClick={() => navigateTo(AppRoutes.home())}
           disableElevation
         >
           Înapoi la pagina principală

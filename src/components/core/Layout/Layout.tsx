@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useTheme, Theme } from "@mui/material/styles";
 import { Backdrop, Box, CssBaseline, Drawer, Slide } from "@mui/material";
 
@@ -11,7 +11,7 @@ import SearchUsersModule from "@/components/modules/Marketplace/SearchUsersModul
 import LayoutDrawer from "./LayoutDrawer";
 import BottomBar from "./BottomBar";
 import { useSession } from "next-auth/react";
-import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 const DRAWER_WIDTH = 340;
 const COLLAPSED_WIDTH = 110;
@@ -24,8 +24,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isSessionLoading = status === "loading";
   const isAuthenticated = status === "authenticated";
 
-  const router = useRouter();
   const pathname = usePathname() || "";
+  const { navigateTo } = useAppNavigation();
   const theme = useTheme();
   const overlayScrollRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -95,7 +95,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             scrollRootRef={overlayScrollRef}
             onNavigateToAppointment={(appointmentId) => {
               handleCloseAll();
-              router.push(`/appointments/${appointmentId}`);
+              navigateTo(AppRoutes.appointmentDetails(appointmentId));
             }}
           />
         );
@@ -103,25 +103,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         return (
           <NotificationsModule
             scrollRootRef={overlayScrollRef}
-            onNavigateToUserProfile={(username) => {
+            onNavigateToUserProfile={(username, profession) => {
               handleCloseAll();
-              router.push(getProfileUrl(username));
+              navigateTo(AppRoutes.profile(username, profession));
             }}
           />
         );
       case "search":
         return (
           <SearchUsersModule
-            onNavigateToUserProfile={(username) => {
+            onNavigateToUserProfile={(username, profession) => {
               handleCloseAll();
-              router.push(getProfileUrl(username));
+              navigateTo(AppRoutes.profile(username, profession));
             }}
           />
         );
       default:
         return null;
     }
-  }, [activeView, handleCloseAll, router]);
+  }, [activeView, handleCloseAll, navigateTo]);
 
   const handleOpenSearch = React.useCallback(
     () =>

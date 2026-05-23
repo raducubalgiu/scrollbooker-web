@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 
 import Input from "@/components/core/Input/Input";
 import { required } from "@/utils/validation-rules";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 type SignInForm = {
   username: string;
@@ -17,6 +18,7 @@ type SignInForm = {
 
 export default function SignInPage() {
   const router = useRouter();
+  const { navigateTo } = useAppNavigation();
   const searchParams = useSearchParams();
 
   const methods = useForm<SignInForm>({
@@ -105,7 +107,7 @@ export default function SignInPage() {
               </Typography>
               <Button
                 sx={{ textTransform: "none" }}
-                onClick={() => router.push("/auth/register")}
+                onClick={() => navigateTo(AppRoutes.register())}
               >
                 Înregistrare
               </Button>

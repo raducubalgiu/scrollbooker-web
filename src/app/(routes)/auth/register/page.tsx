@@ -11,6 +11,7 @@ import { UserRegister } from "@/ts/models/auth/auth";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { signIn, SignInResponse, useSession } from "next-auth/react";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 type RegisterForm = {
   email: string;
@@ -24,6 +25,7 @@ interface BackendError {
 export default function RegisterPage() {
   const { update } = useSession();
   const [loading, setLoading] = useState(false);
+  const { navigateTo } = useAppNavigation();
   const router = useRouter();
 
   const methods = useForm<RegisterForm>({
@@ -58,7 +60,7 @@ export default function RegisterPage() {
 
       if (result?.error) {
         toast.error("Cont creat, dar autentificarea automată a eșuat.");
-        router.push("/auth/signin");
+        navigateTo(AppRoutes.login());
         return;
       }
 
@@ -141,7 +143,7 @@ export default function RegisterPage() {
               <Typography color="text.secondary">Ai deja un cont?</Typography>
               <Button
                 sx={{ textTransform: "none" }}
-                onClick={() => router.push("/auth/signin")}
+                onClick={() => navigateTo(AppRoutes.login())}
               >
                 Login
               </Button>

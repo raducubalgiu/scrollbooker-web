@@ -3,11 +3,10 @@
 import React from "react";
 import NotificationsModule from "./NotificationsModule";
 import { Box } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { getProfileUrl } from "../ProfileModule/tabs/profileTabsHelper";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 const NotificationsWrapper = () => {
-  const router = useRouter();
+  const { navigateTo } = useAppNavigation();
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
 
   return (
@@ -17,8 +16,8 @@ const NotificationsWrapper = () => {
     >
       <NotificationsModule
         scrollRootRef={scrollRef}
-        onNavigateToUserProfile={(username) =>
-          router.push(`/profile/${getProfileUrl(username)}`)
+        onNavigateToUserProfile={(username, profession) =>
+          navigateTo(AppRoutes.profile(username, profession))
         }
       />
     </Box>

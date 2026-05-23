@@ -16,7 +16,7 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { SearchUserItem } from "./SearchUserItem";
 
 type SearchUsersModuleProps = {
-  onNavigateToUserProfile: (username: string) => void;
+  onNavigateToUserProfile: (username: string, profession: string) => void;
 };
 
 const SearchUsersModule = ({

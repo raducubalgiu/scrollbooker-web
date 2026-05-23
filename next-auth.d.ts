@@ -16,6 +16,7 @@ declare module "next-auth" {
     accessToken: string;
     user_id: number;
     username: string;
+    profession: string;
     is_validated: boolean | null;
     registration_step: string | null;
     avatar: string | null;
@@ -37,6 +38,7 @@ declare module "next-auth/jwt" {
     // extra
     user_id: number;
     username: string;
+    profession: string;
     is_validated: boolean | null;
     registration_step: string | null;
     avatar: string | null;

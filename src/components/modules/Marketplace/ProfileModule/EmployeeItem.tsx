@@ -8,11 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import { formatRating } from "@/utils/formatters";
-import { useRouter } from "next/navigation";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 const EmployeeItem = ({ employee }: { employee: BusinessEmployee }) => {
-  const router = useRouter();
+  const { navigateTo } = useAppNavigation();
 
   const styles = {
     badge: {
@@ -44,7 +44,11 @@ const EmployeeItem = ({ employee }: { employee: BusinessEmployee }) => {
       justifyContent="space-between"
       sx={{ py: 2.5 }}
     >
-      <ButtonBase onClick={() => router.push(`/profile/${employee.username}`)}>
+      <ButtonBase
+        onClick={() =>
+          navigateTo(AppRoutes.profile(employee.username, employee.job))
+        }
+      >
         <Stack flexDirection="row" alignItems="center">
           <Badge
             overlap="circular"

@@ -7,6 +7,7 @@ export interface UserRegister {
 export interface UserInfo {
   id: number;
   username: string;
+  profession: string;
   fullname: string;
   avatar: string | null;
   business_id: number | null;

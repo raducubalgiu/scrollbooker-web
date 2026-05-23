@@ -36,12 +36,12 @@ import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import WorkIcon from "@mui/icons-material/Work";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import { useRouter } from "next/navigation";
 import dayjs from "@/lib/dayjs";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 type NotificationItemProps = {
   notification: Notification;
-  onNavigateToUserProfile: (username: string) => void;
+  onNavigateToUserProfile: (username: string, profession: string) => void;
 } & ListItemProps;
 
 interface NotificationsQueryPage {
@@ -56,7 +56,7 @@ export default function NotificationItem({
 }: NotificationItemProps) {
   const { type, sender, data, is_read } = notification || {};
   const queryClient = useQueryClient();
-  const router = useRouter();
+  const { navigateTo } = useAppNavigation();
 
   const { mutate: toggleFollow } = useMutation({
     mutationFn: async ({
@@ -192,7 +192,9 @@ export default function NotificationItem({
             <Button
               onClick={(e) => {
                 e.stopPropagation();
-                router.push(`/appointments/${appointmentData.appointment_id}`);
+                navigateTo(
+                  AppRoutes.appointmentDetails(appointmentData.appointment_id)
+                );
               }}
               variant="contained"
               sx={styles.actionButton}
@@ -367,7 +369,9 @@ export default function NotificationItem({
       case NotificationTypeEnum.APPOINTMENT_REVIEWED: {
         const appointmentReviewData =
           data as AppointmentReviewedNotificationData;
-        router.push(`/appointments/${appointmentReviewData.appointment_id}`);
+        navigateTo(
+          AppRoutes.appointmentDetails(appointmentReviewData.appointment_id)
+        );
         break;
       }
       case NotificationTypeEnum.APPOINTMENT_BOOKED:
@@ -375,7 +379,9 @@ export default function NotificationItem({
       case NotificationTypeEnum.APPOINTMENT_RESCHEDULED:
       case NotificationTypeEnum.APPOINTMENT_REMINDER: {
         const appointmentData = data as any;
-        router.push(`/appointments/${appointmentData.appointment_id}`);
+        navigateTo(
+          AppRoutes.appointmentDetails(appointmentData.appointment_id)
+        );
         break;
       }
 
@@ -383,14 +389,12 @@ export default function NotificationItem({
       case NotificationTypeEnum.COMMENT_POST:
       case NotificationTypeEnum.REPOST:
       case NotificationTypeEnum.MENTION_POST: {
-        const postData = data as any;
-        router.push(`/posts/${postData.post_id}`);
         break;
       }
 
       default:
         if (sender?.username) {
-          onNavigateToUserProfile(sender.username);
+          onNavigateToUserProfile(sender.username, sender.profession);
         }
         break;
     }

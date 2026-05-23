@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { BookingStepEnum, SelectedBookingItem } from "./BookingModule";
 import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
 import {
@@ -15,6 +14,7 @@ import {
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
 import { SelectedProductType } from "@/components/cutomized/PostVideo/sidebar/ExploreServicesTab";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 type BookingModuleProps = {
   businessId: number;
@@ -32,7 +32,7 @@ export const useBookingState = ({
   businessEmployees,
   businessSummary,
 }: BookingModuleProps) => {
-  const router = useRouter();
+  const { navigateTo } = useAppNavigation();
   const [currentStep, setCurrentStep] = useState<BookingStepEnum>(
     BookingStepEnum.SERVICES
   );
@@ -44,7 +44,6 @@ export const useBookingState = ({
     open: false,
   });
 
-  // Fix logică: inițializăm ținta corect în funcție de prezența angajaților
   const [targetUserId, setTargetUserId] = useState<number | null>(() => {
     if (employeeId) return employeeId;
     if (!businessSummary.has_employees && businessOwnerId)
@@ -52,7 +51,6 @@ export const useBookingState = ({
     return null;
   });
 
-  // Mutat direct din corpul componentei, fiind un calcul pur derivat
   const employeeData = useMemo(() => {
     const activeEmp = businessEmployees?.find((e) => e.id === targetUserId);
     return {
@@ -72,7 +70,7 @@ export const useBookingState = ({
     options: {
       onSuccess: (appointment: Appointment) => {
         toast.success("Rezervarea ta este confirmată");
-        router.push(`/appointments/${appointment.id}`);
+        navigateTo(AppRoutes.appointmentDetails(appointment.id));
       },
     },
   });

@@ -9,7 +9,7 @@ import React from "react";
 
 type NotificationsModuleProps = {
   scrollRootRef: React.RefObject<HTMLDivElement | null>;
-  onNavigateToUserProfile: (username: string) => void;
+  onNavigateToUserProfile: (username: string, profession: string) => void;
 };
 
 const NotificationsModule = ({

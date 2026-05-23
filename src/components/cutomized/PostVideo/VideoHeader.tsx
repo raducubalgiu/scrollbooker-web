@@ -3,11 +3,10 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CustomAvatar from "@/components/cutomized/Avatar/CustomAvatar";
 import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
-import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 type VideoHeaderProps = {
   displayDescription: boolean;
@@ -24,9 +23,10 @@ const VideoHeader = ({
   businessLocation,
   displayDescription = false,
 }: VideoHeaderProps) => {
-  const router = useRouter();
-  const { avatar, fullname, username, ratings_average, is_follow } = user || {};
+  const { avatar, fullname, username, profession, ratings_average, is_follow } =
+    user || {};
   const mapsUrl = getGoogleMapsDirectionsUrl(businessLocation?.coordinates);
+  const { navigateTo } = useAppNavigation();
 
   return (
     <Box>
@@ -34,7 +34,11 @@ const VideoHeader = ({
         direction="row"
         spacing={1.5}
         alignItems="center"
-        onClick={() => router.push(username ? getProfileUrl(username) : "#")}
+        onClick={() =>
+          username && profession
+            ? navigateTo(AppRoutes.profile(username, profession))
+            : undefined
+        }
         sx={{ cursor: "pointer", minWidth: 0 }}
         gap={0.5}
       >

@@ -20,6 +20,7 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Session } from "next-auth";
 import Protected from "@/components/cutomized/Protected/Protected";
+import { AppRoutes, AppRouteValues } from "@/utils/routes";
 
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
@@ -37,11 +38,11 @@ type PublicRoutesProps = {
   onOpenAppointmentsView: () => void;
 };
 
-type NavigationItem = {
+export type NavigationItem = {
   label: string;
   icon: React.ReactNode;
   permission: PermissionEnum;
-  route?: string;
+  route?: AppRouteValues | undefined;
   overlayView?: Exclude<ActiveView, null>;
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
@@ -52,11 +53,13 @@ const ITEM_GAP = 10;
 
 const getPublicRoutes = ({
   username,
+  profession,
   avatar,
   onOpenNotificationsView,
   onOpenAppointmentsView,
 }: {
   username: string | undefined;
+  profession: string | undefined;
   avatar: string | null | undefined;
   onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
@@ -64,13 +67,13 @@ const getPublicRoutes = ({
 }): NavigationItem[] => [
   {
     label: "Explorează",
-    route: "/",
+    route: AppRoutes.home(),
     icon: <VideoLibraryOutlinedIcon />,
     permission: PermissionEnum.NO_PROTECTION,
   },
   {
     label: "Servicii",
-    route: "/search",
+    route: AppRoutes.search(),
     icon: <SearchOutlinedIcon />,
     permission: PermissionEnum.NO_PROTECTION,
   },
@@ -98,7 +101,10 @@ const getPublicRoutes = ({
   },
   {
     label: "Profil",
-    route: `/profile/${username}?tab=posts`,
+    route:
+      username && profession
+        ? AppRoutes.profile(username, profession)
+        : undefined,
     icon: username ? (
       <Avatar
         src={avatar ?? ""}
@@ -120,13 +126,13 @@ const getPublicRoutes = ({
   },
   {
     label: "Upload",
-    route: "/upload-video",
+    route: AppRoutes.uploadVideo(),
     icon: <AddBoxOutlinedIcon />,
     permission: PermissionEnum.CREATE_POST,
   },
   {
     label: "Mai mult",
-    route: "/more",
+    route: AppRoutes.more(),
     icon: <MoreHorizOutlinedIcon />,
     permission: PermissionEnum.NO_PROTECTION,
   },
@@ -146,6 +152,7 @@ const PublicRoutes = ({
     () =>
       getPublicRoutes({
         username: session?.username,
+        profession: session?.profession,
         avatar: session?.avatar,
         onOpenSearchView,
         onOpenNotificationsView,
@@ -153,6 +160,7 @@ const PublicRoutes = ({
       }),
     [
       session?.username,
+      session?.profession,
       session?.avatar,
       onOpenSearchView,
       onOpenNotificationsView,

@@ -2,25 +2,27 @@
 
 import { useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 export default function AuthListener() {
+  const { navigateTo } = useAppNavigation();
   const { status } = useSession();
   const prev = useRef<typeof status | null>(null);
-  const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     if (prev.current === "authenticated" && status === "unauthenticated") {
-      if (
-        !pathname.startsWith("/api/auth") &&
-        pathname !== "/api/auth/signin"
-      ) {
-        router.push("/api/auth/signin");
+      const isAuthRoute =
+        pathname.startsWith("/api/auth") || pathname.startsWith("/auth");
+
+      if (!isAuthRoute) {
+        navigateTo(AppRoutes.login(), { replace: true });
       }
     }
+
     prev.current = status;
-  }, [status, router, pathname]);
+  }, [status, navigateTo, pathname]);
 
   return null;
 }

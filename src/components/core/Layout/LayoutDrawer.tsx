@@ -15,11 +15,12 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Session } from "next-auth";
 import DrawerPopper from "./DrawerPopper";
 import PublicRoutes from "./PublicRoutes";
 import AdminRoutes from "./AdminRoutes";
+import { AppRoutes, AppRouteValues, useAppNavigation } from "@/utils/routes";
 
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
@@ -53,7 +54,8 @@ const LayoutDrawer = ({
   onToggleDrawer,
 }: LayoutDrawerProps) => {
   const pathname = usePathname() || "/";
-  const router = useRouter();
+  const { navigateTo } = useAppNavigation();
+  //const router = useRouter();
 
   const [moreOpen, setMoreOpen] = React.useState(false);
   const [moreAnchorEl, setMoreAnchorEl] = React.useState<HTMLElement | null>(
@@ -61,8 +63,8 @@ const LayoutDrawer = ({
   );
 
   const navigate = React.useCallback(
-    (route: string, e?: React.MouseEvent<HTMLElement>) => {
-      if (route === "/more") {
+    (route: AppRouteValues, e?: React.MouseEvent<HTMLElement>) => {
+      if (route === AppRoutes.more()) {
         const el = (e?.currentTarget as HTMLElement) ?? moreAnchorEl;
         setMoreAnchorEl(el ?? null);
         setMoreOpen((v) => !v);
@@ -74,10 +76,10 @@ const LayoutDrawer = ({
       }
 
       if (pathname !== route) {
-        router.push(route);
+        navigateTo(route);
       }
     },
-    [moreAnchorEl, moreOpen, pathname, router]
+    [moreAnchorEl, moreOpen, pathname, navigateTo]
   );
 
   const handleCloseMorePopper = useCallback(() => {
@@ -85,7 +87,12 @@ const LayoutDrawer = ({
   }, []);
 
   const isSelected = useCallback(
-    (route: string) => pathname === route || pathname.startsWith(route + "/"),
+    (route: AppRouteValues) => {
+      if (route === "/") {
+        return pathname === "/";
+      }
+      return pathname === route || pathname.startsWith(route + "/");
+    },
     [pathname]
   );
 
@@ -211,7 +218,7 @@ const LayoutDrawer = ({
                     ml: `${CONTENT_START}px`,
                     mr: `${DRAWER_PADDING_X}px`,
                   }}
-                  onClick={() => router.push("/api/auth/signin")}
+                  onClick={() => navigateTo(AppRoutes.login())}
                 >
                   Conectare
                 </Button>

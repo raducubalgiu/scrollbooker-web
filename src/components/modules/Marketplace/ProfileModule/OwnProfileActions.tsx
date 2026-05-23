@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 type OwnProfileActionsProps = {
   is_business_or_employee: boolean;
@@ -13,7 +13,7 @@ const OwnProfileActions = ({
   is_business_or_employee,
   onOpenEditModal,
 }: OwnProfileActionsProps) => {
-  const router = useRouter();
+  const { navigateTo } = useAppNavigation();
 
   const buttonSx = {
     textTransform: "none",
@@ -42,7 +42,7 @@ const OwnProfileActions = ({
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => router.push("/admin/calendar")}
+          onClick={() => navigateTo(AppRoutes.calendar())}
           size="large"
           startIcon={<DateRangeOutlinedIcon />}
           sx={buttonSx}

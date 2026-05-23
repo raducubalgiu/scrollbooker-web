@@ -82,6 +82,7 @@ export const authOptions: AuthOptions = {
             ...token,
             user_id: userInfo.id,
             username: userInfo.username,
+            profession: userInfo.profession,
             is_validated: userInfo.is_validated,
             registration_step: userInfo.registration_step,
             avatar: userInfo.avatar,
@@ -116,6 +117,7 @@ export const authOptions: AuthOptions = {
           is_validated: userInfo.is_validated,
           registration_step: userInfo.registration_step,
           username: userInfo.username,
+          profession: userInfo.profession,
           business_id: userInfo.business_id,
           business_owner_id: userInfo.business_owner_id,
           business_type_id: userInfo.business_type_id,
@@ -154,6 +156,7 @@ export const authOptions: AuthOptions = {
         session.accessToken = token.accessToken;
         session.user_id = token.user_id;
         session.username = token.username;
+        session.profession = token.profession;
         session.is_validated = token.is_validated;
         session.registration_step = token.registration_step;
         session.avatar = token.avatar;
@@ -273,6 +276,7 @@ async function refreshToken(refreshToken: string): Promise<JWT> {
       accessTokenExpires: decoded.exp * 1000,
       user_id: userInfo.id,
       username: userInfo.username,
+      profession: userInfo.profession,
       is_validated: userInfo.is_validated,
       registration_step: userInfo.registration_step,
       permissions: permissions,

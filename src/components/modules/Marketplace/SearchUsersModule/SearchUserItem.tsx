@@ -10,7 +10,7 @@ import {
 
 type SearchUserItemProps = {
   user: SearchUser;
-  onNavigateToUserProfile: (username: string) => void;
+  onNavigateToUserProfile: (username: string, profession: string) => void;
 };
 
 export const SearchUserItem = ({
@@ -20,7 +20,7 @@ export const SearchUserItem = ({
   return (
     <ListItem disablePadding sx={{ px: 1.5 }}>
       <ListItemButton
-        onClick={() => onNavigateToUserProfile(user.username)}
+        onClick={() => onNavigateToUserProfile(user.username, user.profession)}
         sx={{ py: 2.5 }}
       >
         <Stack flexDirection="row" alignItems="center">
