@@ -4,6 +4,7 @@ import React from "react";
 import NotificationsModule from "./NotificationsModule";
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { getProfileUrl } from "../ProfileModule/tabs/profileTabsHelper";
 
 const NotificationsWrapper = () => {
   const router = useRouter();
@@ -17,7 +18,7 @@ const NotificationsWrapper = () => {
       <NotificationsModule
         scrollRootRef={scrollRef}
         onNavigateToUserProfile={(username) =>
-          router.push(`/profile/${username}`)
+          router.push(`/profile/${getProfileUrl(username)}`)
         }
       />
     </Box>

@@ -14,6 +14,7 @@ import { formatRating } from "@/utils/formatters";
 import { UserMini } from "@/ts/models/user/UserMini";
 import { useFollowMutation } from "@/hooks/mutations/useFollowMutation";
 import Link from "next/link";
+import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
 
 type UserItemProps = {
   user: UserMini;
@@ -102,7 +103,7 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
     <ListItem disablePadding>
       <ListItemButton
         LinkComponent={Link}
-        href={`/profile/${user.username}`}
+        href={getProfileUrl(user.username)}
         sx={{ py: 2.5 }}
       >
         <Stack

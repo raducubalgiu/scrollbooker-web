@@ -16,6 +16,7 @@ import {
 import React from "react";
 import Link from "next/link";
 import CustomAvatar from "@/components/cutomized/Avatar/CustomAvatar";
+import { getProfileUrl } from "../../ProfileModule/tabs/profileTabsHelper";
 
 type AppointmentDetailsHeaderProps = {
   status: AppointmentStatusEnum;
@@ -39,7 +40,7 @@ const AppointmentDetailsHeader = ({
   const statusLabel = AppointmentUtils.getStatusLabel(status);
   const totalDurationText = AppointmentUtils.getDurationText(totalDuration);
 
-  const navigateToUsername = isCustomer ? user.username : customer.username;
+  const navigateUsername = isCustomer ? user.username : customer.username;
 
   return (
     <Box>
@@ -92,7 +93,7 @@ const AppointmentDetailsHeader = ({
       </Typography>
 
       <Link
-        href={`/profile/${navigateToUsername}`}
+        href={navigateUsername ? getProfileUrl(navigateUsername) : "#"}
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <Stack flexDirection="row" alignItems="center" gap={2} my={5}>

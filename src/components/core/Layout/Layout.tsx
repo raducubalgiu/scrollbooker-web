@@ -11,6 +11,7 @@ import SearchUsersModule from "@/components/modules/Marketplace/SearchUsersModul
 import LayoutDrawer from "./LayoutDrawer";
 import BottomBar from "./BottomBar";
 import { useSession } from "next-auth/react";
+import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
 
 const DRAWER_WIDTH = 340;
 const COLLAPSED_WIDTH = 110;
@@ -104,7 +105,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             scrollRootRef={overlayScrollRef}
             onNavigateToUserProfile={(username) => {
               handleCloseAll();
-              router.push(`/profile/${username}`);
+              router.push(getProfileUrl(username));
             }}
           />
         );
@@ -113,7 +114,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <SearchUsersModule
             onNavigateToUserProfile={(username) => {
               handleCloseAll();
-              router.push(`/profile/${username}`);
+              router.push(getProfileUrl(username));
             }}
           />
         );

@@ -1,5 +1,5 @@
 import { Box, Tab, Tabs, Typography, Theme } from "@mui/material";
-import React, { useMemo, ReactElement, useCallback, useEffect } from "react";
+import React, { useMemo, ReactElement, useCallback } from "react";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
@@ -10,20 +10,32 @@ import ProfileProductsTab from "./ProfileProductsTab";
 import ProfileEmployeesTab from "./ProfileEmployeesTab";
 import ProfileBookmarksTab from "./ProfileBookmarksTab";
 import ProfileInfoTab from "./info/ProfileInfoTab";
-
-enum ProfileTabEnum {
-  POSTS,
-  PRODUCTS,
-  EMPLOYEES,
-  BOOKMARKS,
-  INFO,
-}
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ProfileTabEnum, tabEnumToParamMap } from "./profileTabsHelper";
 
 type ProfileTabType = {
   route: ProfileTabEnum;
   label: string;
   icon: ReactElement;
 };
+
+type ProfileTabsProps = {
+  isBusinessOrEmployee?: boolean;
+  isMyProfile?: boolean;
+  userId: number;
+  businessId: number | null;
+  username: string;
+  businessOwnerId: number | undefined;
+  tab?: string | null | undefined;
+};
+
+const paramToTabEnumMap = Object.entries(tabEnumToParamMap).reduce(
+  (acc, [enumValue, stringValue]) => {
+    acc[stringValue] = Number(enumValue) as ProfileTabEnum;
+    return acc;
+  },
+  {} as Record<string, ProfileTabEnum>
+);
 
 const getTabs = (
   isBusinessOrEmployee: boolean,
@@ -67,16 +79,6 @@ const getTabs = (
   ];
 };
 
-type ProfileTabsProps = {
-  isBusinessOrEmployee?: boolean;
-  isMyProfile?: boolean;
-  userId: number;
-  businessId: number | null;
-  username: string;
-  businessOwnerId: number | undefined;
-  tab?: string | null | undefined;
-};
-
 const ProfileTabs = ({
   isBusinessOrEmployee = false,
   isMyProfile = false,
@@ -86,43 +88,35 @@ const ProfileTabs = ({
   businessOwnerId,
   tab,
 }: ProfileTabsProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const tabs = useMemo<ProfileTabType[]>(
     () => getTabs(isBusinessOrEmployee, isMyProfile),
     [isBusinessOrEmployee, isMyProfile]
   );
 
-  const searchParamTab = useMemo(() => {
-    const map: Record<string, ProfileTabEnum> = {
-      posts: ProfileTabEnum.POSTS,
-      products: ProfileTabEnum.PRODUCTS,
-      employees: ProfileTabEnum.EMPLOYEES,
-      bookmarks: ProfileTabEnum.BOOKMARKS,
-      info: ProfileTabEnum.INFO,
-    };
-    return tab ? map[tab] : null;
-  }, [tab]);
-
-  const [currentTab, setCurrentTab] = React.useState<ProfileTabEnum>(
-    searchParamTab ?? ProfileTabEnum.POSTS
-  );
-
-  useEffect(() => {
-    if (searchParamTab !== null && searchParamTab !== undefined) {
-      setCurrentTab(searchParamTab);
-    }
-  }, [searchParamTab]);
-
   const safeValue = useMemo(() => {
-    return tabs.some((t) => t.route === currentTab)
-      ? currentTab
+    const urlTabEnum = tab ? paramToTabEnumMap[tab] : undefined;
+    const activeTab = urlTabEnum ?? ProfileTabEnum.POSTS;
+
+    return tabs.some((t) => t.route === activeTab)
+      ? activeTab
       : (tabs[0]?.route ?? ProfileTabEnum.POSTS);
-  }, [currentTab, tabs]);
+  }, [tab, tabs]);
 
   const handleChange = useCallback(
     (_: React.SyntheticEvent, newValue: ProfileTabEnum) => {
-      setCurrentTab(newValue);
+      const paramValue = tabEnumToParamMap[newValue];
+
+      if (paramValue) {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("tab", paramValue);
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      }
     },
-    []
+    [router, pathname, searchParams]
   );
 
   const renderTabContent = () => {

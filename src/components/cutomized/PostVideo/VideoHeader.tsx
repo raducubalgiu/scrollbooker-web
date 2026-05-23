@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CustomAvatar from "@/components/cutomized/Avatar/CustomAvatar";
 import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
+import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
 
 type VideoHeaderProps = {
   displayDescription: boolean;
@@ -33,7 +34,7 @@ const VideoHeader = ({
         direction="row"
         spacing={1.5}
         alignItems="center"
-        onClick={() => router.push(`/profile/${username}`)}
+        onClick={() => router.push(username ? getProfileUrl(username) : "#")}
         sx={{ cursor: "pointer", minWidth: 0 }}
         gap={0.5}
       >

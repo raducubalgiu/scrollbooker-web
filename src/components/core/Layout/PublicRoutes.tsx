@@ -98,7 +98,7 @@ const getPublicRoutes = ({
   },
   {
     label: "Profil",
-    route: username ? `/profile/${username}` : "/api/auth/signin",
+    route: `/profile/${username}?tab=posts`,
     icon: username ? (
       <Avatar
         src={avatar ?? ""}

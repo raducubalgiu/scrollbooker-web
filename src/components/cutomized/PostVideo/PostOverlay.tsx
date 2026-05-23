@@ -6,6 +6,7 @@ import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { PostUser } from "@/ts/models/social/Post";
 import { Box, Button, Collapse, Stack, Typography } from "@mui/material";
 import Link from "next/link";
+import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
 
 type PostOverlayProps = {
   user: PostUser | undefined;
@@ -81,7 +82,7 @@ const PostOverlay = ({
 
             <Box onClick={(e) => e.stopPropagation()}>
               <Link
-                href={`/profile/${user?.username}`}
+                href={user?.username ? getProfileUrl(user?.username) : "#"}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Typography
