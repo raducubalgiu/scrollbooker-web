@@ -1,53 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, post, put, deleteRequest } from "@/utils/requests";
-import { omit } from "lodash";
+import { get, post, deleteRequest } from "@/utils/requests";
+import { ProfessionCreateOrUpdate } from "@/ts/models/nomenclatures/profession/ProfessionType";
 
 export const GET = async (req: NextRequest) => {
-	const pagination = req.nextUrl.searchParams;
+  const page = req.nextUrl.searchParams.get("page");
+  const limit = req.nextUrl.searchParams.get("limit");
 
-	const response = (
-		await get({
-			url: `/professions?${pagination}`,
-		})
-	).data;
+  const response = (
+    await get({
+      url: `/professions?page=${page}&limit=${limit}&all=true`,
+    })
+  ).data;
 
-	return NextResponse.json(response);
+  return NextResponse.json(response);
 };
 
 export const POST = async (req: NextRequest) => {
-	const data = await req.json();
+  const data: ProfessionCreateOrUpdate = await req.json();
 
-	const response = (
-		await post({
-			url: `/professions`,
-			data,
-		})
-	).data;
+  const response = (
+    await post({
+      url: `/professions`,
+      data,
+    })
+  ).data;
 
-	return NextResponse.json(response);
-};
-
-export const PUT = async (req: NextRequest) => {
-	const data = await req.json();
-
-	const response = (
-		await put({
-			url: `/professions/${data.id}`,
-			data: omit(data, "id"),
-		})
-	).data;
-
-	return NextResponse.json(response);
+  return NextResponse.json(response);
 };
 
 export const DELETE = async (req: NextRequest) => {
-	const { id } = await req.json();
+  const { professionId } = await req.json();
 
-	const response = (
-		await deleteRequest({
-			url: `/professions/${id}`,
-		})
-	).data;
+  const response = (
+    await deleteRequest({
+      url: `/professions/${professionId}`,
+    })
+  ).data;
 
-	return NextResponse.json(response);
+  return NextResponse.json(response);
 };

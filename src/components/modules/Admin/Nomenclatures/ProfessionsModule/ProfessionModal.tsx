@@ -6,42 +6,40 @@ import Modal from "@/components/core/Modal/Modal";
 import { useMutate } from "@/hooks/useHttp";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import {
-  BusinessType,
-  BusinessTypeCreateOrUpdate,
-} from "@/ts/models/nomenclatures/businessType/BusinessType";
+  Profession,
+  ProfessionCreateOrUpdate,
+} from "@/ts/models/nomenclatures/profession/ProfessionType";
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Stack } from "@mui/material";
 import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-type BusinessTypeModalProps = {
+type ProfessionModalProps = {
   open: boolean;
   onClose: () => void;
-  data: BusinessType | null;
+  data: Profession | null;
   onSuccess: () => void;
   businessDomains: BusinessDomain[];
 };
 
-type BusinessTypeFormData = {
+type ProfessionFormData = {
   name: string;
-  plural: string;
   business_domain_id: string;
   active: boolean;
 };
 
-const BusinessTypeModal = ({
+const ProfessionModal = ({
   open,
   onClose,
   data,
   onSuccess,
   businessDomains,
-}: BusinessTypeModalProps) => {
+}: ProfessionModalProps) => {
   const isEditMode = !!data;
 
-  const methods = useForm<BusinessTypeFormData>({
+  const methods = useForm<ProfessionFormData>({
     defaultValues: {
       name: "",
-      plural: "",
       business_domain_id: "",
       active: true,
     },
@@ -59,18 +57,16 @@ const BusinessTypeModal = ({
 
   useEffect(() => {
     if (open) {
-      reset(
-        data || { name: "", plural: "", business_domain_id: "", active: true }
-      );
+      reset(data || { name: "", business_domain_id: "", active: true });
     }
   }, [open, data, reset]);
 
   const { mutate: handleCreate, isPending: isPendingCreate } = useMutate<
-    BusinessTypeCreateOrUpdate,
-    BusinessType
+    ProfessionCreateOrUpdate,
+    Profession
   >({
-    key: ["create-business-type"],
-    url: `/api/nomenclatures/business-types`,
+    key: ["create-profession"],
+    url: `/api/nomenclatures/professions`,
     method: "POST",
     options: {
       onSuccess,
@@ -78,21 +74,20 @@ const BusinessTypeModal = ({
   });
 
   const { mutate: handleUpdate, isPending: isPendingUpdate } = useMutate<
-    BusinessTypeCreateOrUpdate,
-    BusinessType
+    ProfessionCreateOrUpdate,
+    Profession
   >({
-    key: ["update-business-type", data?.id],
-    url: `/api/nomenclatures/business-types/${data?.id}`,
+    key: ["update-profession", data?.id],
+    url: `/api/nomenclatures/professions/${data?.id}`,
     method: "PUT",
     options: {
       onSuccess,
     },
   });
 
-  const onSubmit = (data: BusinessTypeFormData) => {
-    const payload: BusinessTypeCreateOrUpdate = {
+  const onSubmit = (data: ProfessionFormData) => {
+    const payload: ProfessionCreateOrUpdate = {
       name: data.name,
-      plural: data.name,
       business_domain_id: Number(data.business_domain_id),
       active: data.active,
     };
@@ -118,9 +113,7 @@ const BusinessTypeModal = ({
   return (
     <Modal
       title={
-        isEditMode
-          ? `Editează Business Type ID: ${data.id}`
-          : "Adaugă un Business Type"
+        isEditMode ? `Editează Profesia ID: ${data.id}` : "Adaugă o Profesie"
       }
       open={open}
       handleClose={onClose}
@@ -134,12 +127,6 @@ const BusinessTypeModal = ({
             name="name"
             placeholder="Adauga nume.."
             label="Nume"
-            rules={{ ...isRequired, ...minLength, ...maxLength }}
-          />
-          <Input
-            name="plural"
-            placeholder="Adauga plural.."
-            label="Plural"
             rules={{ ...isRequired, ...minLength, ...maxLength }}
           />
 
@@ -162,4 +149,4 @@ const BusinessTypeModal = ({
   );
 };
 
-export default BusinessTypeModal;
+export default ProfessionModal;
