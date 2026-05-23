@@ -1,20 +1,20 @@
 import React, { memo, useMemo } from "react";
 import PostGridContainer from "@/components/cutomized/PostGrid/PostGridContainer";
 import PostGrid from "@/components/cutomized/PostGrid/PostGrid";
-import { useRouter } from "next/navigation";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import { useInfiniteUserBookmarkedPosts } from "@/hooks/infiniteQuery/useInfiniteUserBookmarkedPosts";
 import { isEmpty } from "lodash";
 import { CircularProgress, Stack } from "@mui/material";
 import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
+import { useAppNavigation } from "@/utils/routes";
 
 type ProfileBookmarksTabProps = {
   username: string;
 };
 
 const ProfileBookmarksTab = ({ username }: ProfileBookmarksTabProps) => {
-  const router = useRouter();
+  const { navigateTo } = useAppNavigation();
 
   const { data, isLoading, isError } = useInfiniteUserBookmarkedPosts();
 
@@ -37,11 +37,7 @@ const ProfileBookmarksTab = ({ username }: ProfileBookmarksTabProps) => {
               key={post.id}
               viewsCount={post.counters.views_count}
               thumbnailUrl={post.media_files[0]?.thumbnail_url ?? null}
-              onNavigateToVideo={() =>
-                router.push(
-                  `/profile/${username}/video/${post.id}?tab=bookmarks`
-                )
-              }
+              onNavigateToVideo={() => {}}
             />
           ))}
       </PostGridContainer>

@@ -53,15 +53,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [isOverlayOpen]);
 
   const isSpecialPage = React.useMemo(() => {
-    const specialPaths = ["/business/", "/post/", "/booking/"];
+    const specialPaths = ["/business/", "/booking/"];
     return specialPaths.some((path) => pathname.startsWith(path));
   }, [pathname]);
 
-  const isProfileVideo =
-    pathname.startsWith("/profile/") && pathname.includes("/video/");
+  const isVideo = pathname.startsWith("/user/") && pathname.includes("/post/");
 
   const isAdminPage = pathname.startsWith("/admin/");
-  const shouldShowDrawer = !isSpecialPage && !isProfileVideo;
+  const shouldShowDrawer = !isSpecialPage && !isVideo;
   const bgColor =
     theme.palette.mode === "dark" ? "background.default" : "background.paper";
 

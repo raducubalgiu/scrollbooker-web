@@ -122,7 +122,7 @@ const ProfileTabs = ({
   const renderTabContent = () => {
     switch (safeValue) {
       case ProfileTabEnum.POSTS:
-        return <ProfilePostsTab userId={userId} username={username} />;
+        return <ProfilePostsTab userId={userId} />;
       case ProfileTabEnum.PRODUCTS:
         return <ProfileProductsTab businessId={businessId} userId={userId} />;
       case ProfileTabEnum.EMPLOYEES:

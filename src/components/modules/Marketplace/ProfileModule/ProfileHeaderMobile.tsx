@@ -2,7 +2,7 @@ import { IconButton, Stack, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useAppNavigation } from "@/utils/routes";
 
 type ProfileHeaderMobileProps = {
   username: string;
@@ -15,7 +15,7 @@ const ProfileHeaderMobile = ({
   isOwnProfile,
   onSetIsMenuOpen,
 }: ProfileHeaderMobileProps) => {
-  const router = useRouter();
+  const { goBack } = useAppNavigation();
 
   return (
     <Stack
@@ -24,7 +24,7 @@ const ProfileHeaderMobile = ({
       justifyContent="space-between"
       sx={styles.container}
     >
-      <IconButton onClick={() => router.back()} disabled={isOwnProfile}>
+      <IconButton onClick={goBack} disabled={isOwnProfile}>
         <ArrowBackIcon
           sx={{
             fontSize: 27.5,

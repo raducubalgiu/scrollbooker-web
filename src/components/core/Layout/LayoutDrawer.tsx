@@ -55,7 +55,6 @@ const LayoutDrawer = ({
 }: LayoutDrawerProps) => {
   const pathname = usePathname() || "/";
   const { navigateTo } = useAppNavigation();
-  //const router = useRouter();
 
   const [moreOpen, setMoreOpen] = React.useState(false);
   const [moreAnchorEl, setMoreAnchorEl] = React.useState<HTMLElement | null>(

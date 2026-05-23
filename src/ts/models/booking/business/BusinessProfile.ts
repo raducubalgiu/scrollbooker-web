@@ -40,9 +40,18 @@ export interface NearbyBusiness {
   distance_km: number | null;
 }
 
+export interface BusinessProfilePostUser {
+  id: number;
+  fullname: string;
+  username: string;
+  profession: string;
+  avatar: string | null;
+}
+
 export interface BusinessProfilePost {
   id: number;
   business_id: number;
+  user: BusinessProfilePostUser;
   views_count: number;
   media_files: PostMediaFile[];
 }

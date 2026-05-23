@@ -1,20 +1,20 @@
 import React, { memo, useMemo } from "react";
 import PostGrid from "@/components/cutomized/PostGrid/PostGrid";
 import PostGridContainer from "@/components/cutomized/PostGrid/PostGridContainer";
-import { useRouter } from "next/navigation";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import { useInfiniteUserPosts } from "@/hooks/infiniteQuery/userInfiniteUserPosts";
 import { isEmpty } from "lodash";
 import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
+import { ProfileTabEnum } from "./profileTabsHelper";
 
 type ProfilePostsTabProps = {
   userId: number;
-  username: string;
 };
 
-const ProfilePostsTab = ({ userId, username }: ProfilePostsTabProps) => {
-  const router = useRouter();
+const ProfilePostsTab = ({ userId }: ProfilePostsTabProps) => {
+  const { navigateTo } = useAppNavigation();
 
   const { data, isLoading, isError } = useInfiniteUserPosts(userId);
 
@@ -32,7 +32,15 @@ const ProfilePostsTab = ({ userId, username }: ProfilePostsTabProps) => {
               viewsCount={post.counters.views_count}
               thumbnailUrl={post.media_files[0]?.thumbnail_url ?? null}
               onNavigateToVideo={() => {
-                router.push(`/profile/${username}/video/${post.id}?tab=posts`);
+                const { username, profession } = post.user;
+                navigateTo(
+                  AppRoutes.postDetail(
+                    username,
+                    profession,
+                    post.id,
+                    ProfileTabEnum.POSTS
+                  )
+                );
               }}
             />
           ))}

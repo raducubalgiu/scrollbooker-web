@@ -6,6 +6,7 @@ import { formatViews } from "@/components/cutomized/PostGrid/PostGrid";
 import Link from "next/link";
 import { isEmpty } from "lodash";
 import { BusinessProfilePost } from "@/ts/models/booking/business/BusinessProfile";
+import { AppRoutes } from "@/utils/routes";
 
 type BusinessPostsTabProps = {
   id: string;
@@ -14,33 +15,6 @@ type BusinessPostsTabProps = {
 };
 
 const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
-  const styles = {
-    container: {
-      display: "flex",
-      flexDirection: "column",
-      gap: {
-        xs: 0,
-        md: 2,
-      },
-      pt: {
-        xs: 0,
-        md: 2,
-      },
-    },
-    grid: {
-      display: "grid",
-      gridTemplateColumns: {
-        xs: "repeat(4, 1fr)",
-      },
-      gap: {
-        xs: "2px",
-        sm: "4px",
-        md: 2,
-        lg: 2.5,
-      },
-    },
-  };
-
   return (
     <Box
       id={id}
@@ -65,7 +39,11 @@ const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
             <Box
               component={Link}
               key={post.id}
-              href={`/post/${post.id}`}
+              href={AppRoutes.postDetail(
+                post.user.username,
+                post.user.profession,
+                post.id
+              )}
               sx={{ width: "100%", display: "block" }}
             >
               <Box
@@ -135,3 +113,30 @@ const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
 };
 
 export default memo(BusinessPostsTab);
+
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: {
+      xs: 0,
+      md: 2,
+    },
+    pt: {
+      xs: 0,
+      md: 2,
+    },
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: {
+      xs: "repeat(4, 1fr)",
+    },
+    gap: {
+      xs: "2px",
+      sm: "4px",
+      md: 2,
+      lg: 2.5,
+    },
+  },
+};
