@@ -208,7 +208,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </Box>
 
-      <BottomBar username={session?.username} />
+      <BottomBar
+        username={session?.username}
+        profession={session?.profession}
+      />
     </Box>
   );
 }

@@ -10,10 +10,7 @@ const NotificationsWrapper = () => {
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
 
   return (
-    <Box
-      ref={scrollRef}
-      sx={{ height: "100vh", overflowY: "auto", width: "100%" }}
-    >
+    <Box ref={scrollRef} sx={{ height: "100vh", width: "100%" }}>
       <NotificationsModule
         scrollRootRef={scrollRef}
         onNavigateToUserProfile={(username, profession) =>

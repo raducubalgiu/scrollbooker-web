@@ -19,12 +19,14 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import { AppRoutes } from "@/utils/routes";
 
 type BottomBarProps = {
   username: string | undefined;
+  profession: string | undefined;
 };
 
-export default function BottomBar({ username }: BottomBarProps) {
+export default function BottomBar({ username, profession }: BottomBarProps) {
   const theme = useTheme();
   const pathname = usePathname() || "/";
   const router = useRouter();
@@ -34,7 +36,8 @@ export default function BottomBar({ username }: BottomBarProps) {
 
   const isDarkPage = pathname === "/";
   const isDarkMode = theme.palette.mode === "dark";
-  const isAnyVideoPage = pathname.includes("/video/");
+  const isAnyVideoPage =
+    pathname.startsWith("/user") && pathname.includes("/post/");
 
   const getActiveColor = () => {
     if (isDarkPage || isDarkMode || isAnyVideoPage) return "#ffffff";
@@ -55,20 +58,20 @@ export default function BottomBar({ username }: BottomBarProps) {
   const actions = [
     {
       label: "Acasă",
-      route: "/",
+      route: AppRoutes.home(),
       activeIcon: <HomeIcon />,
       inactiveIcon: <HomeOutlinedIcon />,
     },
     {
       label: "Notificări",
-      route: "/notifications",
+      route: AppRoutes.notifications(),
       activeIcon: <NotificationsIcon />,
       inactiveIcon: <NotificationsNoneOutlinedIcon />,
       badge: notificationsCount,
     },
     {
       label: "Caută",
-      route: "/search",
+      route: AppRoutes.search(),
       activeIcon: <SearchIcon />,
       inactiveIcon: <SearchIcon />,
     },
@@ -81,7 +84,10 @@ export default function BottomBar({ username }: BottomBarProps) {
     },
     {
       label: "Profil",
-      route: username ? `/profile/${username}` : "/api/auth/signin",
+      route:
+        username && profession
+          ? AppRoutes.profile(username, profession)
+          : undefined,
       activeIcon: <PersonIcon />,
       inactiveIcon: <PersonOutlineOutlinedIcon />,
     },
@@ -138,7 +144,7 @@ export default function BottomBar({ username }: BottomBarProps) {
 
           return (
             <BottomNavigationAction
-              key={a.route}
+              key={a.label}
               label={a.label}
               icon={
                 <Badge

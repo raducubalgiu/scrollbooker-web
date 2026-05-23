@@ -10,10 +10,7 @@ const AppointmentsWrapper = () => {
   const { navigateTo } = useAppNavigation();
 
   return (
-    <Box
-      ref={scrollRef}
-      sx={{ height: "100vh", overflowY: "auto", width: "100%" }}
-    >
+    <Box ref={scrollRef} sx={{ height: "100vh", width: "100%" }}>
       <AppointmentsModule
         scrollRootRef={scrollRef}
         onNavigateToAppointment={(id) =>
