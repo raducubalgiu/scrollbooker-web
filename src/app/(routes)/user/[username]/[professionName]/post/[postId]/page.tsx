@@ -5,6 +5,8 @@ import React from "react";
 
 interface PostPageProps {
   params: Promise<{
+    username: string;
+    profession: string;
     postId: number;
   }>;
   searchParams: Promise<{ tab?: string | null | undefined }>;
@@ -14,7 +16,7 @@ export default async function PostPage({
   params,
   searchParams,
 }: PostPageProps) {
-  const { postId } = await params;
+  const { username, profession, postId } = await params;
   const { tab } = await searchParams;
 
   const response = await get<Post | null>({
@@ -31,7 +33,8 @@ export default async function PostPage({
     <VideoDetailModule
       initialPost={postData}
       username={postData.user.username}
-      tab={tab}
+      profession={postData.user.profession}
+      tab={tab ?? null}
     />
   );
 }

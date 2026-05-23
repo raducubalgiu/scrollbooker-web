@@ -14,6 +14,24 @@ export const tabEnumToParamMap: Record<ProfileTabEnum, string> = {
   [ProfileTabEnum.INFO]: "info",
 };
 
+const paramToTabEnumMap = Object.entries(tabEnumToParamMap).reduce(
+  (acc, [enumValue, stringValue]) => {
+    acc[stringValue] = Number(enumValue) as ProfileTabEnum;
+    return acc;
+  },
+  {} as Record<string, ProfileTabEnum>
+);
+
+export const getProfileRoute = (
+  tabStr: string | null | undefined
+): ProfileTabEnum => {
+  if (!tabStr) return ProfileTabEnum.POSTS;
+
+  const foundEnum = paramToTabEnumMap[tabStr];
+
+  return foundEnum !== undefined ? foundEnum : ProfileTabEnum.POSTS;
+};
+
 export const getProfileUrl = (
   username: string,
   tab: ProfileTabEnum = ProfileTabEnum.POSTS
