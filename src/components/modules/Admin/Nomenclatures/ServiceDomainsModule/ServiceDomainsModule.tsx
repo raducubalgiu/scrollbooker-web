@@ -1,39 +1,96 @@
 "use client";
 
-import Table from "@/components/core/Table/Table";
-import { ServiceDomainsType } from "../../../../../ts/models/nomenclatures/serviceDomain/ServiceDomainType";
+import { PaginatedData } from "@/components/core/Table/Table";
 import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
-import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { MRT_ColumnDef } from "material-react-table";
-import { useMemo, useRef, useState } from "react";
-import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
+import {
+  MaterialReactTable,
+  MRT_ActionMenuItem,
+  MRT_ColumnDef,
+  MRT_PaginationState,
+  MRT_Row,
+  MRT_TableInstance,
+  useMaterialReactTable,
+} from "material-react-table";
+import { useCallback, useMemo, useState } from "react";
 import ServicesByServiceDomainModule from "./ServicesByServiceDomainModule";
-import { BusinessDomainType } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
-import Modal from "@/components/core/Modal/Modal";
-import { IconButton } from "@mui/material";
-import Image from "next/image";
-import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import { Avatar, Button, Checkbox } from "@mui/material";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { ServiceDomain } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { Delete, Edit } from "@mui/icons-material";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
+import ServiceDomainsModal from "./ServiceDomainModal";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
+import ServiceDomainUploadImageModal from "./ServiceDomainUploadImageModal";
 
-type ServiceDomainsModuleProps = { businessDomains: BusinessDomainType[] };
+type ServiceDomainsModuleProps = {
+  initialData: PaginatedData<ServiceDomain>;
+  businessDomains: BusinessDomain[];
+  pageSize: number;
+};
+
+type RenderRowActionMenuItemsProps = {
+  row: MRT_Row<ServiceDomain>;
+  table: MRT_TableInstance<ServiceDomain>;
+  closeMenu: () => void;
+};
+
+type ServiceDomainModalState = {
+  open: boolean;
+  data: ServiceDomain | null;
+};
+
+type ServiceDomainUploadModalState = {
+  open: boolean;
+  url: string | null | undefined;
+};
 
 export default function ServiceDomainsModule({
+  initialData,
   businessDomains,
+  pageSize,
 }: ServiceDomainsModuleProps) {
-  const [open, setOpen] = useState(false);
-
-  const {
-    data,
-    isLoading,
-    onCreatingRowSave,
-    pagination,
-    setPagination,
-    onEditingRowSave,
-    onDeletingRowSave,
-  } = useTableHandlers<ServiceDomainsType>({
-    route: "nomenclatures/service-domains",
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize,
   });
 
-  const serviceDomainsColumns = useMemo<MRT_ColumnDef<ServiceDomainsType>[]>(
+  const [openModal, setOpenModal] = useState<ServiceDomainModalState>({
+    open: false,
+    data: null,
+  });
+
+  const [openUploadModal, setOpenUploadModal] =
+    useState<ServiceDomainUploadModalState>({
+      open: false,
+      url: null,
+    });
+
+  const { data, isLoading, isError, refetch } = useCustomQuery<
+    PaginatedData<ServiceDomain>
+  >({
+    key: ["filters", pagination.pageIndex, pagination.pageSize],
+    url: `/api/nomenclatures/service-domains?page=${pagination.pageIndex + 1}&limit=${pagination.pageSize}`,
+    options: {
+      ...(pagination.pageIndex === 0 && pagination.pageSize === pageSize
+        ? { initialData }
+        : {}),
+    },
+  });
+
+  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
+    key: ["delete-service-domain"],
+    url: "/api/nomenclatures/service-domains",
+    method: "DELETE",
+    options: {
+      onSuccess: () => refetch(),
+    },
+  });
+
+  const tableData = useMemo(() => data?.results || [], [data]);
+  const totalCount = useMemo(() => data?.count ?? 0, [data]);
+
+  const columns = useMemo<MRT_ColumnDef<ServiceDomain>[]>(
     () => [
       {
         accessorKey: "id",
@@ -42,18 +99,24 @@ export default function ServiceDomainsModule({
         enableEditing: false,
       },
       {
-        accessorKey: "name",
-        header: "Name",
-        Edit: ({ row, column }) => (
-          <MR_Input
-            row={row}
-            column={column}
-            value={row.original.name}
-            required
-            minLength={3}
-            maxLength={100}
+        accessorKey: "url",
+        header: "Imagine",
+        size: 50,
+        Cell: ({ row }) => (
+          <Avatar
+            variant="rounded"
+            src={row.original.url ?? ""}
+            sx={{ width: 50, height: 50 }}
           />
         ),
+      },
+      {
+        accessorKey: "name",
+        header: "Name",
+      },
+      {
+        accessorKey: "description",
+        header: "Descriere",
       },
       {
         accessorKey: "created_at",
@@ -61,111 +124,142 @@ export default function ServiceDomainsModule({
         enableEditing: false,
       },
       {
-        accessorKey: "updated_at",
-        header: "updated_at",
-        enableEditing: false,
+        accessorKey: "active",
+        header: "Activ",
+        size: 50,
+        Cell: ({ row }) => <Checkbox checked={row.original.active} disabled />,
       },
     ],
     [businessDomains]
   );
 
-  const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const renderRowActionMenuItems = useCallback(
+    ({ row, table, closeMenu }: RenderRowActionMenuItemsProps) => [
+      <MRT_ActionMenuItem
+        key={0}
+        label="Editeaza imaginea"
+        icon={<ImageOutlinedIcon />}
+        onClick={() => {
+          setOpenUploadModal({
+            open: true,
+            url: row.original.url,
+          });
+          closeMenu();
+        }}
+        table={table}
+      />,
+      <MRT_ActionMenuItem
+        key={1}
+        label="Editeaza"
+        icon={<Edit />}
+        onClick={() => {
+          setOpenModal({
+            open: true,
+            data: row.original,
+          });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+          closeMenu();
+        }}
+        table={table}
+      />,
+      <MRT_ActionMenuItem
+        key={2}
+        label="Șterge"
+        icon={<Delete />}
+        onClick={() => {
+          handleDelete({ serviceDomainId: row.original.id });
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+          closeMenu();
+        }}
+        table={table}
+      />,
+    ],
+    []
+  );
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const renderTopToolbarCustomActions = useCallback(
+    () => (
+      <Button
+        onClick={() => {
+          setOpenModal({
+            open: true,
+            data: null,
+          });
+        }}
+        variant="contained"
+        disableElevation
+      >
+        Adaugă
+      </Button>
+    ),
+    []
+  );
 
-    setSelectedFile(file); // ✅ asta trimiți la upload
+  const table = useMaterialReactTable({
+    columns,
+    data: tableData,
+    rowCount: totalCount,
 
-    const reader = new FileReader();
-    reader.onloadend = () => setPreviewUrl(reader.result as string); // ✅ doar pentru preview
-    reader.readAsDataURL(file);
-  };
+    enablePagination: true,
+    manualPagination: true,
 
-  const onUpload = async () => {
-    if (!selectedFile) return;
+    enableKeyboardShortcuts: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enableSorting: false,
+    enableRowActions: true,
+    enableTopToolbar: true,
+    renderRowActionMenuItems,
+    renderTopToolbarCustomActions,
+    positionActionsColumn: "last",
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper,
+    }),
+    localization: MRT_Localization_RO,
+    state: {
+      pagination,
+      isLoading: !tableData.length || isLoading || isPendingDelete,
+      showAlertBanner: isError,
+    },
 
-    setLoading(true);
-    setError(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("photo", selectedFile); // ✅ File, nu string
-
-      const res = await fetch(`/api/nomenclatures/service-domains/30`, {
-        method: "PATCH",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(text || `Upload failed (${res.status})`);
-      }
-    } catch (e: any) {
-      setError(e?.message ?? "Upload failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const modalActions: ActionButtonType[] = [
-    {
-      title: "Salveaza",
-      props: {
-        onClick: onUpload,
+    onPaginationChange: setPagination,
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: 2.5,
+        border: "1px solid",
+        borderColor: "divider",
       },
     },
-  ];
+    renderDetailPanel: ({ row }) => {
+      return <ServicesByServiceDomainModule services={row.original.services} />;
+    },
+  });
 
   return (
-    <MainLayout title="Service Domains" onOpenModal={() => setOpen(true)}>
-      <Modal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-          setPreviewUrl("");
-          setSelectedFile(null);
+    <MainLayout title="Service Domains" hideAction>
+      <ServiceDomainsModal
+        open={openModal.open}
+        data={openModal.data}
+        onClose={() => setOpenModal({ open: false, data: null })}
+        onSuccess={() => {
+          refetch();
+          setOpenModal({ open: false, data: null });
         }}
-        actions={modalActions}
-      >
-        <IconButton onClick={() => fileInputRef.current?.click()}>
-          <Image
-            src={previewUrl}
-            width={700}
-            height={400}
-            style={{ borderRadius: 20 }}
-            alt="Picture of the author"
-          />
-        </IconButton>
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleImageChange}
-        />
-      </Modal>
-
-      <Table<ServiceDomainsType>
-        data={data?.results}
-        rowCount={data?.count}
-        columns={serviceDomainsColumns}
-        manualPagination
-        onCreatingRowSave={onCreatingRowSave}
-        onEditingRowSave={onEditingRowSave}
-        onDeletingRowSave={onDeletingRowSave}
-        state={{ pagination, isLoading }}
-        onPaginationChange={setPagination}
-        renderDetailPanel={({ row }) => (
-          <ServicesByServiceDomainModule services={row.original.services} />
-        )}
       />
+
+      <ServiceDomainUploadImageModal
+        open={openUploadModal.open}
+        url={openUploadModal.url}
+        onClose={() =>
+          setOpenUploadModal({
+            open: false,
+            url: null,
+          })
+        }
+      />
+
+      <MaterialReactTable table={table} />
     </MainLayout>
   );
 }

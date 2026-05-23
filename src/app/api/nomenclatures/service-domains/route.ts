@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, post, put, deleteRequest } from "@/utils/requests";
-import { omit } from "lodash";
+import { get, post, deleteRequest } from "@/utils/requests";
 import { PaginatedData } from "@/components/core/Table/Table";
-import { ServiceDomain } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
+import {
+  ServiceDomain,
+  ServiceDomainCreateOrUpdate,
+} from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 
 export const GET = async (req: NextRequest) => {
-  const pagination = req.nextUrl.searchParams;
+  const page = req.nextUrl.searchParams.get("page");
+  const limit = req.nextUrl.searchParams.get("limit");
 
   const response = (
     await get<PaginatedData<ServiceDomain>>({
-      url: `/service-domains?${pagination}`,
+      url: `/service-domains?page=${page}&limit=${limit}&all=true`,
     })
   ).data;
 
@@ -17,7 +20,7 @@ export const GET = async (req: NextRequest) => {
 };
 
 export const POST = async (req: NextRequest) => {
-  const data = await req.json();
+  const data: ServiceDomainCreateOrUpdate = await req.json();
 
   const response = (
     await post({
@@ -29,25 +32,12 @@ export const POST = async (req: NextRequest) => {
   return NextResponse.json(response);
 };
 
-export const PUT = async (req: NextRequest) => {
-  const data = await req.json();
-
-  const response = (
-    await put({
-      url: `/service-domains/${data.id}`,
-      data: omit(data, "id"),
-    })
-  ).data;
-
-  return NextResponse.json(response);
-};
-
 export const DELETE = async (req: NextRequest) => {
-  const { id } = await req.json();
+  const { serviceDomainId } = await req.json();
 
   const response = (
     await deleteRequest({
-      url: `/service-domains/${id}`,
+      url: `/service-domains/${serviceDomainId}`,
     })
   ).data;
 

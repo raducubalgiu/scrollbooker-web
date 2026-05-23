@@ -1,56 +1,24 @@
-import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { ServiceDomainCreateOrUpdate } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
+import { put } from "@/utils/requests";
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+type RouteContext = {
+  params: Promise<{
+    serviceDomainId: string;
+  }>;
+};
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-  const user = await getUserServerSession();
-  const serviceDomainId = Number(id);
+export const PUT = async (req: NextRequest, context: RouteContext) => {
+  const { serviceDomainId } = await context.params;
 
-  if (!Number.isFinite(serviceDomainId)) {
-    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
-  }
+  const data: ServiceDomainCreateOrUpdate = await req.json();
 
-  const incoming = await req.formData();
-  const photo = incoming.get("photo");
+  const response = (
+    await put({
+      url: `/service-domains/${serviceDomainId}`,
+      data,
+    })
+  ).data;
 
-  if (!photo || !(photo instanceof File)) {
-    return NextResponse.json({ error: "Missing photo" }, { status: 400 });
-  }
-
-  // Creezi un FormData NOU pentru backend (nu reutiliza direct incoming)
-  const outgoing = new FormData();
-  outgoing.set("photo", photo, photo.name);
-
-  const backendBase = process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT;
-  if (!backendBase) {
-    return NextResponse.json({ error: "Missing BACKEND_URL" }, { status: 500 });
-  }
-
-  const res = await fetch(
-    `${backendBase}/business-types/${serviceDomainId}/photo`,
-    {
-      method: "PATCH",
-      body: outgoing,
-      headers: { Authorization: `Bearer ${user?.session?.accessToken}` },
-    }
-  );
-
-  if (res.status === 204) {
-    return new NextResponse(null, { status: 204 });
-  }
-
-  // Propagăm eroarea (body poate fi JSON de la FastAPI)
-  const text = await res.text().catch(() => "");
-  return new NextResponse(text || null, {
-    status: res.status,
-    headers: {
-      "content-type": res.headers.get("content-type") ?? "text/plain",
-    },
-  });
-}
+  return NextResponse.json(response);
+};
