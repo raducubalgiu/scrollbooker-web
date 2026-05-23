@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, post, put, deleteRequest } from "@/utils/requests";
-import { omit } from "lodash";
+import { get, post, deleteRequest } from "@/utils/requests";
 import { PaginatedData } from "@/components/core/Table/Table";
-import { Filter } from "@/ts/models/nomenclatures/filter/FilterType";
+import {
+  Filter,
+  FilterCreateOrUpdate,
+} from "@/ts/models/nomenclatures/filter/FilterType";
 
 export const GET = async (req: NextRequest) => {
   const pagination = req.nextUrl.searchParams;
@@ -17,7 +19,7 @@ export const GET = async (req: NextRequest) => {
 };
 
 export const POST = async (req: NextRequest) => {
-  const data = await req.json();
+  const data: FilterCreateOrUpdate = await req.json();
 
   const response = (
     await post({
@@ -29,25 +31,12 @@ export const POST = async (req: NextRequest) => {
   return NextResponse.json(response);
 };
 
-export const PUT = async (req: NextRequest) => {
-  const data = await req.json();
-
-  const response = (
-    await put({
-      url: `/filters/${data.id}`,
-      data: omit(data, "id"),
-    })
-  ).data;
-
-  return NextResponse.json(response);
-};
-
 export const DELETE = async (req: NextRequest) => {
-  const { id } = await req.json();
+  const { filterId } = await req.json();
 
   const response = (
     await deleteRequest({
-      url: `/filters/${id}`,
+      url: `/filters/${filterId}`,
     })
   ).data;
 

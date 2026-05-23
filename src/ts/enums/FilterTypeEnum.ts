@@ -17,3 +17,12 @@ export function filterTypefromKeys(keys: string[]): FilterTypeEnum[] {
     .map(filterTypefromKey)
     .filter((key): key is FilterTypeEnum => key != null);
 }
+
+export const filterLabels: Record<FilterType, string> = {
+  [FilterTypeEnum.OPTIONS]: "OPTIONS",
+  [FilterTypeEnum.NUMERIC]: "NUMERIC",
+  [FilterTypeEnum.RANGE]: "RANGE",
+};
+
+export type FilterType = (typeof FilterTypeEnum)[keyof typeof FilterTypeEnum];
+export const allFilterEnums: FilterType[] = Object.values(FilterTypeEnum);
