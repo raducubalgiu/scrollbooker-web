@@ -5,3 +5,8 @@ export interface Currency {
   created_at: string;
   updated_at: string;
 }
+
+export interface CurrencyCreateOrUpdate {
+  name: string;
+  active: boolean;
+}

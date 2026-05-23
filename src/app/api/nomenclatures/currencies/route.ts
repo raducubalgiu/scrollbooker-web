@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, post, put, deleteRequest } from "@/utils/requests";
-import { omit } from "lodash";
+import { get, post, deleteRequest } from "@/utils/requests";
 import { PaginatedData } from "@/components/core/Table/Table";
-import { Currency } from "@/ts/models/nomenclatures/currency/Currency";
+import {
+  Currency,
+  CurrencyCreateOrUpdate,
+} from "@/ts/models/nomenclatures/currency/Currency";
 
-export const GET = async (req: NextRequest) => {
-  const pagination = req.nextUrl.searchParams;
-
+export const GET = async (_req: NextRequest) => {
   const response = (
     await get<PaginatedData<Currency>>({
-      url: `/currencies?${pagination}`,
+      url: `/currencies`,
     })
   ).data;
 
@@ -17,7 +17,7 @@ export const GET = async (req: NextRequest) => {
 };
 
 export const POST = async (req: NextRequest) => {
-  const data = await req.json();
+  const data: CurrencyCreateOrUpdate = await req.json();
 
   const response = (
     await post({
@@ -29,25 +29,12 @@ export const POST = async (req: NextRequest) => {
   return NextResponse.json(response);
 };
 
-export const PUT = async (req: NextRequest) => {
-  const data = await req.json();
-
-  const response = (
-    await put({
-      url: `/currencies/${data.id}`,
-      data: omit(data, "id"),
-    })
-  ).data;
-
-  return NextResponse.json(response);
-};
-
 export const DELETE = async (req: NextRequest) => {
-  const { id } = await req.json();
+  const { currencyId } = await req.json();
 
   const response = (
     await deleteRequest({
-      url: `/currencies/${id}`,
+      url: `/currencies/${currencyId}`,
     })
   ).data;
 
