@@ -50,10 +50,22 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
   const [searchState, setSearchState] = React.useState<SearchState>(() => ({
     bbox: {
-      min_lng: 25.961395,
-      min_lat: 44.202274,
-      max_lng: 26.243607,
-      max_lat: 44.650467,
+      min_lng:
+        typeof searchParams.min_lng === "string"
+          ? Number(searchParams.min_lng)
+          : 25.961395,
+      min_lat:
+        typeof searchParams.min_lat === "string"
+          ? Number(searchParams.min_lat)
+          : 44.202274,
+      max_lng:
+        typeof searchParams.max_lng === "string"
+          ? Number(searchParams.max_lng)
+          : 26.243607,
+      max_lat:
+        typeof searchParams.max_lat === "string"
+          ? Number(searchParams.max_lat)
+          : 44.650467,
     },
     zoom:
       typeof searchParams.zoom === "string"
@@ -197,7 +209,10 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     [isMapExpanded, mainPagePadding, isMapVisible]
   );
 
+  const hasUserInteracted = React.useRef(false);
+
   const handleSearch = React.useCallback((state: SearchHeaderStateType) => {
+    hasUserInteracted.current = true;
     setSearchState((prev) => ({
       ...prev,
       businessDomainId: state.selectedBusinessDomainId,
@@ -212,6 +227,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       maxPrice: number | null;
       sort: SearchSortEnum | null;
     }) => {
+      hasUserInteracted.current = true;
       setSearchState((prev) => ({
         ...prev,
         hasDiscount: filters.hasDiscount ?? prev.hasDiscount,
@@ -225,6 +241,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
   const handleSearchFromMap = React.useCallback(
     (bounds: LngLatBounds, zoom: number) => {
+      hasUserInteracted.current = true;
       setSearchState((prev) => ({
         ...prev,
         zoom: Math.round(zoom),
@@ -240,6 +257,10 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   );
 
   React.useEffect(() => {
+    if (!hasUserInteracted.current) {
+      return;
+    }
+
     const params = buildUrlParams(searchState);
     const currentQuery = window.location.search;
     const newQuery = `?${params.toString()}`;

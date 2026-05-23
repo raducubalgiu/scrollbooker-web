@@ -42,6 +42,7 @@ const SearchMap = ({
   isRefetchingMarkers,
   refetchData,
 }: SearchMapProps) => {
+  const isFirstMapLoad = React.useRef(true);
   const theme = useTheme();
   const mapTopGap = theme.spacing(0.5);
   const mapBottomGap = theme.spacing(2.5);
@@ -100,6 +101,18 @@ const SearchMap = ({
     });
 
     map.on("moveend", () => {
+      if (isFirstMapLoad.current) {
+        isFirstMapLoad.current = false;
+
+        // Salvăm totuși camera curentă ca punct de reper pentru viitoarele mișcări
+        lastCameraRef.current = {
+          lat: map.getCenter().lat,
+          lng: map.getCenter().lng,
+          zoom: map.getZoom(),
+        };
+        return; // Oprim execuția, nu chemăm refetchRef.current()
+      }
+
       const center = map.getCenter();
       const zoom = map.getZoom();
       const currentCamera = { lat: center.lat, lng: center.lng, zoom };
