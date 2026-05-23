@@ -1,8 +1,9 @@
 import React, { memo, useMemo, useState } from "react";
-import Table from "@/components/core/Table/Table";
-import { SubFilterType } from "@/ts/models/nomenclatures/subFilter/SubFilter";
-import { MRT_ColumnDef } from "material-react-table";
-import MR_Input from "@/components/core/Table/MR_Inputs/MR_Input";
+import {
+  MaterialReactTable,
+  MRT_ColumnDef,
+  useMaterialReactTable,
+} from "material-react-table";
 import {
   Accordion,
   AccordionDetails,
@@ -10,13 +11,19 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { SubFilter } from "@/ts/models/nomenclatures/subFilter/SubFilter";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
 
-type SubFiltersModuleType = { subFilters: SubFilterType[] | undefined };
+type SubFiltersModuleType = { subFilters: SubFilter[] | undefined };
 
 const SubFiltersModule = ({ subFilters }: SubFiltersModuleType) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
-  const columns = useMemo<MRT_ColumnDef<SubFilterType>[]>(
+  const memoizedData = useMemo(() => {
+    return subFilters || [];
+  }, [subFilters]);
+
+  const columns = useMemo<MRT_ColumnDef<SubFilter>[]>(
     () => [
       {
         accessorKey: "id",
@@ -28,20 +35,38 @@ const SubFiltersModule = ({ subFilters }: SubFiltersModuleType) => {
         accessorKey: "name",
         header: "Name",
         size: 300,
-        Edit: ({ row, column }) => (
-          <MR_Input
-            row={row}
-            column={column}
-            value={row.original.name}
-            required
-            minLength={3}
-            maxLength={50}
-          />
-        ),
       },
     ],
     []
   );
+
+  const table = useMaterialReactTable({
+    columns,
+    data: memoizedData,
+
+    enablePagination: true,
+    manualPagination: true,
+
+    enableKeyboardShortcuts: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enableSorting: false,
+    enableRowActions: true,
+    enableTopToolbar: true,
+    positionActionsColumn: "last",
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper,
+    }),
+    localization: MRT_Localization_RO,
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: 2.5,
+        border: "1px solid",
+        borderColor: "divider",
+      },
+    },
+  });
 
   return (
     <Accordion
@@ -59,19 +84,7 @@ const SubFiltersModule = ({ subFilters }: SubFiltersModuleType) => {
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Table
-          data={subFilters}
-          columns={columns}
-          manualPagination={false}
-          enablePagination={false}
-          enableColumnFilters={false}
-          enableSorting={false}
-          topToolbarIconButton
-          enableFilters={false}
-          enableColumnActions={false}
-          enableEditing={false}
-          enableTopToolbar={false}
-        />
+        <MaterialReactTable table={table} />
       </AccordionDetails>
     </Accordion>
   );

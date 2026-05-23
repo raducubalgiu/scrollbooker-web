@@ -6,7 +6,7 @@ import { PaginatedData } from "@/components/core/Table/Table";
 import { BusinessType } from "@/ts/models/nomenclatures/businessType/BusinessType";
 import dynamic from "next/dynamic";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 const BusinessTypesModule = dynamic(
   () =>

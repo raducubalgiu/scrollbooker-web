@@ -58,7 +58,7 @@ export default function ProfessionsModule({
     key: ["professions", pagination.pageIndex, pagination.pageSize],
     url: `/api/nomenclatures/professions?page=${pagination.pageIndex + 1}&limit=${pagination.pageSize}`,
     options: {
-      ...(pagination.pageIndex === 0 && pagination.pageSize === 5
+      ...(pagination.pageIndex === 0 && pagination.pageSize === pageSize
         ? { initialData }
         : {}),
     },

@@ -6,7 +6,7 @@ import { get } from "@/utils/requests";
 import dynamic from "next/dynamic";
 import React from "react";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 const ProfessionsModule = dynamic(
   () =>

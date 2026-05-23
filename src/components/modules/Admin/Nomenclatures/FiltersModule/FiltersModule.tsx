@@ -20,6 +20,7 @@ import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { Delete, Edit } from "@mui/icons-material";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import FiltersModal from "./FiltersModal";
+import SubFiltersModule from "./SubFiltersModule";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<Filter>;
@@ -57,7 +58,7 @@ export default function FiltersModule({
     key: ["filters", pagination.pageIndex, pagination.pageSize],
     url: `/api/nomenclatures/filters?page=${pagination.pageIndex + 1}&limit=${pagination.pageSize}`,
     options: {
-      ...(pagination.pageIndex === 0 && pagination.pageSize === 5
+      ...(pagination.pageIndex === 0 && pagination.pageSize === pageSize
         ? { initialData }
         : {}),
     },
@@ -204,6 +205,9 @@ export default function FiltersModule({
         border: "1px solid",
         borderColor: "divider",
       },
+    },
+    renderDetailPanel: ({ row }) => {
+      return <SubFiltersModule subFilters={row.original.sub_filters} />;
     },
   });
 
