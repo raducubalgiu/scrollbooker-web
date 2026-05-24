@@ -1,14 +1,22 @@
 import React, { memo, useMemo } from "react";
-import { MRT_ColumnDef } from "material-react-table";
-import Table from "@/components/core/Table/Table";
-import { FilterSubfilterType } from "@/ts/models/nomenclatures/service/Service";
+import {
+  MaterialReactTable,
+  MRT_ColumnDef,
+  useMaterialReactTable,
+} from "material-react-table";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
+import { SubFilter } from "@/ts/models/nomenclatures/subFilter/SubFilter";
 
-type FilterSubFiltersType = {
-  sub_filters: FilterSubfilterType[] | undefined;
+type FilterSubFiltersProps = {
+  sub_filters: SubFilter[] | undefined;
 };
 
-const FilterSubFilters = ({ sub_filters }: FilterSubFiltersType) => {
-  const columns = useMemo<MRT_ColumnDef<FilterSubfilterType>[]>(
+const FilterSubFilters = ({ sub_filters }: FilterSubFiltersProps) => {
+  const memoizedData = useMemo(() => {
+    return sub_filters || [];
+  }, [sub_filters]);
+
+  const columns = useMemo<MRT_ColumnDef<SubFilter>[]>(
     () => [
       {
         accessorKey: "id",
@@ -24,22 +32,35 @@ const FilterSubFilters = ({ sub_filters }: FilterSubFiltersType) => {
     []
   );
 
-  return (
-    <Table<FilterSubfilterType>
-      data={sub_filters}
-      columns={columns}
-      manualPagination={false}
-      enablePagination={false}
-      enableColumnFilters={false}
-      enableSorting={false}
-      topToolbarIconButton
-      enableFilters={false}
-      enableColumnActions={false}
-      enableEditing={false}
-      enableTopToolbar={false}
-      muiTableHeadCellProps={{ sx: { bgcolor: "background.default" } }}
-    />
-  );
+  const table = useMaterialReactTable({
+    columns,
+    data: memoizedData,
+
+    enablePagination: true,
+    manualPagination: true,
+
+    enableKeyboardShortcuts: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enableSorting: false,
+    enableRowActions: true,
+    enableTopToolbar: true,
+    positionActionsColumn: "last",
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper,
+    }),
+    localization: MRT_Localization_RO,
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: 2.5,
+        border: "1px solid",
+        borderColor: "divider",
+      },
+    },
+  });
+
+  return <MaterialReactTable table={table} />;
 };
 
 export default memo(FilterSubFilters);

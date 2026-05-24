@@ -16,29 +16,29 @@ const ProfessionsModule = dynamic(
 );
 
 async function Professions() {
-  const businessDomains = (
-    await get<BusinessDomain[]>({
-      url: `/business-domains`,
-    })
-  ).data;
+  const businessDomainsResponse = await get<BusinessDomain[]>({
+    url: `/business-domains`,
+  });
+
+  const businessDomains = businessDomainsResponse.data;
 
   if (!businessDomains) {
     throw new Error("An error occured when fetching business domains");
   }
 
-  const response = (
-    await get<PaginatedData<Profession> | undefined>({
-      url: `/professions?page=1&limit=${PAGE_SIZE}`,
-    })
-  ).data;
+  const professionsResponse = await get<PaginatedData<Profession> | undefined>({
+    url: `/professions?page=1&limit=${PAGE_SIZE}`,
+  });
 
-  if (!response) {
+  const professions = professionsResponse.data;
+
+  if (!professions) {
     throw new Error("An error occured when fetching business types");
   }
 
   return (
     <ProfessionsModule
-      initialData={response}
+      initialData={professions}
       businessDomains={businessDomains}
       pageSize={PAGE_SIZE}
     />

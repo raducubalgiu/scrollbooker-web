@@ -1,6 +1,9 @@
 import React, { memo, useMemo, useState } from "react";
-import { MRT_ColumnDef } from "material-react-table";
-import Table from "@/components/core/Table/Table";
+import {
+  MaterialReactTable,
+  MRT_ColumnDef,
+  useMaterialReactTable,
+} from "material-react-table";
 import {
   Accordion,
   AccordionDetails,
@@ -8,17 +11,22 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ServiceFilterType } from "@/ts/models/nomenclatures/service/Service";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
+import { ServiceFilter } from "@/ts/models/nomenclatures/service/Service";
 import FilterSubFilters from "./FilterSubFilters";
 
 type ServicesFiltersType = {
-  filters: ServiceFilterType[] | undefined;
+  filters: ServiceFilter[] | undefined;
 };
 
 const ServiceFilters = ({ filters }: ServicesFiltersType) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
-  const columns = useMemo<MRT_ColumnDef<ServiceFilterType>[]>(
+  const memoizedData = useMemo(() => {
+    return filters || [];
+  }, [filters]);
+
+  const columns = useMemo<MRT_ColumnDef<ServiceFilter>[]>(
     () => [
       {
         accessorKey: "id",
@@ -33,6 +41,37 @@ const ServiceFilters = ({ filters }: ServicesFiltersType) => {
     ],
     []
   );
+
+  const table = useMaterialReactTable({
+    columns,
+    data: memoizedData,
+
+    enablePagination: true,
+    manualPagination: true,
+
+    enableKeyboardShortcuts: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enableSorting: false,
+    enableRowActions: true,
+    enableTopToolbar: true,
+    positionActionsColumn: "last",
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper,
+    }),
+    localization: MRT_Localization_RO,
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: 2.5,
+        border: "1px solid",
+        borderColor: "divider",
+      },
+    },
+    renderDetailPanel: ({ row }) => {
+      return <FilterSubFilters sub_filters={row.original.sub_filters} />;
+    },
+  });
 
   return (
     <Accordion
@@ -50,22 +89,7 @@ const ServiceFilters = ({ filters }: ServicesFiltersType) => {
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Table<ServiceFilterType>
-          data={filters}
-          columns={columns}
-          manualPagination={false}
-          enablePagination={false}
-          enableColumnFilters={false}
-          enableSorting={false}
-          topToolbarIconButton
-          enableFilters={false}
-          enableColumnActions={false}
-          enableEditing={false}
-          enableTopToolbar={false}
-          renderDetailPanel={({ row }) => (
-            <FilterSubFilters sub_filters={row.original.sub_filters} />
-          )}
-        />
+        <MaterialReactTable table={table} />
       </AccordionDetails>
     </Accordion>
   );
