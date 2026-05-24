@@ -27,19 +27,30 @@ export default function MyProductsModule({
 
   const [openDeleteConfirm, setOpenDeleteConfirm] = React.useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [productType, setProductType] = useState<ProductTypeEnum | null>(null);
+
+  const isEmployee = session?.is_employee;
+  const authUserId = session?.user_id;
+
   const [employeeId, setEmployeeId] = useState<number | null>(null);
+  const [productType, setProductType] = useState<ProductTypeEnum | null>(null);
   const [serviceId, setServiceId] = useState<number | null>(null);
 
-  const extraParams = React.useMemo(
-    () => ({
-      only_services_with_products: false,
-      employeeId: employeeId ?? undefined,
+  const extraParams = React.useMemo(() => {
+    let resolvedEmployeeId: number | undefined = undefined;
+
+    if (isEmployee) {
+      resolvedEmployeeId = authUserId ?? undefined;
+    } else if (employeeId != null) {
+      resolvedEmployeeId = employeeId;
+    }
+
+    return {
+      only_services_with_products: "false",
+      employeeId: resolvedEmployeeId,
       product_type: productType ?? undefined,
       service_id: serviceId ?? undefined,
-    }),
-    [employeeId, productType, serviceId]
-  );
+    };
+  }, [isEmployee, authUserId, employeeId, productType, serviceId]);
 
   const { data, isLoading } = useCustomQuery<BusinessProductsResponse[]>({
     key: [

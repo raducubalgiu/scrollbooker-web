@@ -110,7 +110,7 @@ const MyProductsDisplayTable = ({
       {
         accessorKey: "starting_price",
         header: "Preț",
-        size: 100,
+        size: 150,
         Cell: ({ row }) => {
           const hasDifferentPrice = row.original.has_different_prices;
           const startingOffering = row.original.starting_offering;
