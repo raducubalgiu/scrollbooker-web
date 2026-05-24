@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get, post, deleteRequest, put } from "@/utils/requests";
 import { omit } from "lodash";
-import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
 
 export const GET = async (req: NextRequest) => {
-  const { userId } = await getUserServerSession();
+  const session = await getServerSession(authOptions);
   const pagination = req.nextUrl.searchParams;
 
   const response = (
     await get({
-      url: `/users/${userId}/products?${pagination}`,
+      url: `/users/${session?.user_id}/products?${pagination}`,
     })
   ).data;
 

@@ -4,6 +4,8 @@ import { get } from "@/utils/requests";
 
 interface ProductSearchParams {
   employee_id?: string;
+  product_type?: string;
+  service_id?: string;
   only_services_with_products?: string;
 }
 
@@ -19,10 +21,21 @@ export async function GET(req: NextRequest, context: RouteContext) {
     const { searchParams } = req.nextUrl;
 
     const employeeId = searchParams.get("employeeId");
+    const productType = searchParams.get("product_type");
+    const serviceId = searchParams.get("service_id");
+    const onlyServicesWithProductsParam = searchParams.get(
+      "only_services_with_products"
+    );
+    const onlyServicesWithProducts =
+      onlyServicesWithProductsParam !== null
+        ? onlyServicesWithProductsParam
+        : "true";
 
     const queryParams: ProductSearchParams = {
-      only_services_with_products: "true",
+      only_services_with_products: onlyServicesWithProducts,
       ...(employeeId && { employee_id: employeeId }),
+      ...(productType && { product_type: productType }),
+      ...(serviceId && { service_id: serviceId }),
     };
 
     const queryString = new URLSearchParams(

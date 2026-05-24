@@ -39,7 +39,7 @@ const ProductTypeButton: React.FC<ProductTypeButtonProps> = ({
         onClick={handleTypeClick}
         endIcon={<KeyboardArrowDownIcon />}
       >
-        {type ? getProductTypeLabel(type) : "Tip produs"}
+        {type ? getProductTypeLabel(type) : "Tip serviciu"}
       </Button>
       <Menu
         id="type-filter-menu"

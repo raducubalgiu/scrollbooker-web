@@ -1,27 +1,18 @@
 "use client";
 
-import Table, { TableRowAndTable } from "@/components/core/Table/Table";
-import useTableHandlers from "@/components/core/Table/useTableHandlers";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import {
-  getProductTypeLabel,
-  ProductTypeEnum,
-} from "@/ts/enums/ProductTypeEnum";
-import { Button, Checkbox, Stack } from "@mui/material";
-import dayjs from "dayjs";
-import { MRT_ActionMenuItem, MRT_ColumnDef } from "material-react-table";
+import { ProductTypeEnum } from "@/ts/enums/ProductTypeEnum";
 import * as React from "react";
-import EmployeeButton from "../../AppointmentsModule/EmployeeButton";
 import { Session } from "next-auth/core/types";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import ProductTypeButton from "./ProductTypeButton";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 import AddProductModal from "./AddProductModal/AddProductModal";
-import ServiceDomainButton from "./ServiceDomainButton";
-import ServiceButton from "./ServiceButton";
-import { Product } from "@/ts/models/booking/product/Product";
+import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
+import { useCustomQuery } from "@/hooks/useHttp";
+import MyProductsDisplayTable from "./tabs/MyProductsDisplayTable";
+import MyProductsDisplayTabs from "./tabs/MyProductsDisplayTabs";
+import { useCallback, useMemo, useState } from "react";
+import MyProductsTabs from "./tabs/MyProductsTabs";
 
 type MyProductsModuleProps = {
   session: Session | null;
@@ -32,162 +23,72 @@ export default function MyProductsModule({
   session,
   employees,
 }: MyProductsModuleProps) {
-  const [openDeleteConfirm, setOpenDeleteConfirm] = React.useState(false);
-  const [openAddModal, setOpenAddModal] = React.useState(false);
+  const [currentTab, setCurrentTab] = React.useState<number>(0);
 
-  const [productType, setProductType] = React.useState<ProductTypeEnum | null>(
-    null
-  );
-  const [employeeId, setEmployeeId] = React.useState<number | null>(null);
-  const [serviceDomainId, setServiceDomainId] = React.useState<number | null>(
-    null
-  );
-  const [serviceId, setServiceId] = React.useState<number | null>(null);
+  const [openDeleteConfirm, setOpenDeleteConfirm] = React.useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [productType, setProductType] = useState<ProductTypeEnum | null>(null);
+  const [employeeId, setEmployeeId] = useState<number | null>(null);
+  const [serviceId, setServiceId] = useState<number | null>(null);
 
   const extraParams = React.useMemo(
     () => ({
-      employee_id: employeeId ?? undefined,
+      only_services_with_products: false,
+      employeeId: employeeId ?? undefined,
       product_type: productType ?? undefined,
-      service_domain_id: serviceDomainId ?? undefined,
       service_id: serviceId ?? undefined,
     }),
-    [employeeId, productType, serviceDomainId, serviceId]
+    [employeeId, productType, serviceId]
   );
 
-  const { data, isLoading, pagination, setPagination } =
-    useTableHandlers<Product>({
-      route: "/my-business/products",
-      extraParams,
-      queryOptions: {
-        keepPreviousData: true,
-        staleTime: 30000,
-        refetchOnWindowFocus: false,
-      },
-    });
-
-  const columns = React.useMemo<MRT_ColumnDef<Product>[]>(
-    () => [
-      {
-        accessorKey: "id",
-        header: "ID",
-        size: 50,
-        enableEditing: false,
-        Cell: ({ row }) => <span>#{row.original.id}</span>,
-      },
-      {
-        accessorKey: "name",
-        header: "Name",
-      },
-      {
-        accessorKey: "description",
-        header: "Description",
-        size: 200,
-        Cell: ({ row }) => (
-          <span>
-            {row.original.description
-              ? row.original.description.length > 50
-                ? row.original.description.substring(0, 50) + "..."
-                : row.original.description
-              : "-"}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "type",
-        header: "Tip serviciu",
-        size: 100,
-        Cell: ({ row }) => (
-          <span>{getProductTypeLabel(row.original.type)}</span>
-        ),
-      },
-      {
-        accessorKey: "sessions_count",
-        header: "Sedințe",
-        size: 100,
-        Cell: ({ row }) => <span>{row.original.sessions_count ?? 1}</span>,
-      },
-      {
-        accessorKey: "validity_days",
-        header: "Valabilitate (Nr zile)",
-        size: 200,
-        Cell: ({ row }) => (
-          <span>{row.original.validity_days ?? "Nelimitat"}</span>
-        ),
-      },
-      {
-        accessorKey: "can_be_booked",
-        header: "Poate fi rezervat?",
-        size: 50,
-        Cell: ({ row }) => (
-          <Checkbox checked={row.original.can_be_booked} disabled={true} />
-        ),
-      },
-      {
-        accessorKey: "created_at",
-        header: "Dată creare",
-        enableEditing: false,
-        Cell: ({ row }) => {
-          const date = new Date(row.original.created_at);
-          return (
-            <span>
-              {dayjs(date).locale("ro").format("DD MMM YYYY, HH:mm:ss")}
-            </span>
-          );
-        },
-      },
+  const { data, isLoading } = useCustomQuery<BusinessProductsResponse[]>({
+    key: [
+      "business-products",
+      session?.business_id ?? undefined,
+      productType ?? undefined,
+      serviceId ?? undefined,
+      employeeId ?? undefined,
     ],
-    []
-  );
+    url: `/api/businesses/${session?.business_id}/products`,
+    params: extraParams,
+  });
 
-  const getToolbarCustomActions = React.useCallback(() => {
-    return (
-      <Stack direction="row" alignItems="center" spacing={1}>
-        <Button
-          variant="contained"
-          disableElevation
-          size="large"
-          onClick={() => setOpenAddModal(true)}
-        >
-          Adaugă un serviciu
-        </Button>
-        {!session?.is_employee && (
-          <EmployeeButton
-            employees={employees}
-            employee={employeeId}
-            onSetEmployee={(id) => setEmployeeId(id)}
-          />
-        )}
-        <ProductTypeButton type={productType} onSetType={setProductType} />
-        <ServiceDomainButton
-          serviceDomainId={serviceDomainId}
-          onSetServiceDomain={setServiceDomainId}
-        />
-        <ServiceButton serviceId={serviceId} onSetService={setServiceId} />
-      </Stack>
-    );
-  }, [session, productType, employeeId, serviceDomainId, serviceId]);
+  const memoizedData = useMemo(() => {
+    return data || [];
+  }, [data]);
 
-  const renderRowActionMenuItems = React.useCallback(
-    ({ row, table }: TableRowAndTable<Product>) => {
-      return [
-        <MRT_ActionMenuItem
-          key="edit"
-          label="Editează serviciul"
-          icon={<ModeEditOutlineOutlinedIcon />}
-          onClick={() => {}}
-          table={table}
-        />,
-        <MRT_ActionMenuItem
-          key="delete"
-          label="Șterge serviciul"
-          icon={<DeleteOutlineOutlinedIcon />}
-          onClick={() => setOpenDeleteConfirm(true)}
-          table={table}
-        />,
-      ];
+  const allProducts = memoizedData?.flatMap((item) => item.products);
+
+  const handleTabChange = useCallback(
+    (_event: React.MouseEvent<HTMLElement>, newTab: number) => {
+      setCurrentTab(newTab);
     },
     []
   );
+
+  const renderTab = () => {
+    switch (currentTab) {
+      case 0:
+        return (
+          <MyProductsDisplayTable
+            allProducts={allProducts}
+            productType={productType}
+            setProductType={setProductType}
+            isEmployee={session?.is_employee}
+            employeeId={employeeId}
+            setEmployeeId={setEmployeeId}
+            employees={employees}
+            serviceId={serviceId}
+            setServiceId={setServiceId}
+            isLoading={isLoading}
+          />
+        );
+      case 1:
+        return <MyProductsDisplayTabs />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <MainLayout title="Serviciile mele" hideAction>
@@ -205,21 +106,9 @@ export default function MyProductsModule({
         employees={employees}
       />
 
-      <Table<Product>
-        data={data?.results}
-        rowCount={data?.count}
-        columns={columns}
-        manualPagination={true}
-        onPaginationChange={setPagination}
-        state={{ pagination, isLoading }}
-        enableRowActions={true}
-        enableEditing={false}
-        enableFilters={false}
-        enableColumnFilters={false}
-        enableSorting={false}
-        renderTopToolbarCustomActions={getToolbarCustomActions}
-        renderRowActionMenuItems={renderRowActionMenuItems}
-      />
+      <MyProductsTabs currentTab={currentTab} onTabChange={handleTabChange} />
+
+      {renderTab()}
     </MainLayout>
   );
 }
