@@ -13,6 +13,7 @@ import MyProductsDisplayTable from "./tabs/MyProductsDisplayTable";
 import MyProductsDisplayTabs from "./tabs/MyProductsDisplayTabs";
 import { useCallback, useMemo, useState } from "react";
 import MyProductsTabs from "./tabs/MyProductsTabs";
+import { Button, Stack } from "@mui/material";
 
 type MyProductsModuleProps = {
   session: Session | null;
@@ -117,7 +118,23 @@ export default function MyProductsModule({
         employees={employees}
       />
 
-      <MyProductsTabs currentTab={currentTab} onTabChange={handleTabChange} />
+      <Stack
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={2.5}
+      >
+        <MyProductsTabs currentTab={currentTab} onTabChange={handleTabChange} />
+
+        <Button
+          variant="contained"
+          size="large"
+          disableElevation
+          onClick={() => setOpenAddModal(true)}
+        >
+          Adauga un serviciu nou
+        </Button>
+      </Stack>
 
       {renderTab()}
     </MainLayout>

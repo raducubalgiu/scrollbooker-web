@@ -1,7 +1,4 @@
-import {
-  ProductUtils,
-  ProductVariant,
-} from "@/ts/models/booking/product/Product";
+import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
 import {
   Accordion,
   AccordionDetails,
@@ -17,87 +14,197 @@ import {
 import React from "react";
 
 type MyProductVariantsProps = {
-  variants: ProductVariant[];
+  product: Product;
 };
 
-const MyProductVariants = ({ variants }: MyProductVariantsProps) => {
+const MyProductVariants = ({ product }: MyProductVariantsProps) => {
+  const { variants, has_different_prices, starting_offering } = product;
+  const filtersText = ProductUtils.getFiltersSummary(product);
+  const hasFilters = !!filtersText;
+
+  //   if (variants.length === 1 && !has_different_prices) {
+  //     const variant = variants[0];
+  //     const hasDiscount = starting_offering.discount > 0;
+
+  //     return (
+  //       <Box
+  //         sx={{
+  //           border: "1px solid",
+  //           borderColor: "divider",
+  //           borderRadius: "12px",
+  //           p: 2.5,
+  //           backgroundColor: "background.paper",
+  //         }}
+  //       >
+  //         <Box>
+  //           <Typography variant="h5" fontWeight={600} color="text.primary">
+  //             {variant?.name}
+  //           </Typography>
+  //           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+  //             Durată: {ProductUtils.getDurationText(variant?.duration ?? 30)}
+  //           </Typography>
+  //           <Typography variant="body1" color="text.secondary">
+  //             {filtersText}
+  //           </Typography>
+  //         </Box>
+
+  //         <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
+  //           <Typography fontSize={18} fontWeight={600}>
+  //             {`${formatPrice(starting_offering.price_with_discount)} RON`}
+  //           </Typography>
+  //           {hasDiscount && (
+  //             <>
+  //               <Typography
+  //                 variant="body1"
+  //                 color="text.secondary"
+  //                 sx={{ textDecoration: "line-through" }}
+  //               >
+  //                 {formatPrice(starting_offering.price)}
+  //               </Typography>
+  //               <Typography fontWeight={600} color="error.main">
+  //                 (-{starting_offering.discount}%)
+  //               </Typography>
+  //             </>
+  //           )}
+  //         </Stack>
+  //       </Box>
+  //     );
+  //   }
+
+  // 2. Fallback pe varianta ta cu liste de Acordeoane dacă sunt mai mulți angajați sau variante
   return (
     <Box sx={styles.container}>
-      {variants.map((v) => (
-        <Accordion
-          key={v.id}
-          disableGutters
-          elevation={0}
-          sx={styles.accordion}
-        >
-          <AccordionSummary sx={styles.accordionSummary}>
-            <Typography
-              variant="subtitle1"
-              fontWeight={600}
-              color="text.primary"
-            >
-              {v.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              • {ProductUtils.getDurationText(v.duration)}
-            </Typography>
-          </AccordionSummary>
+      {variants.map((v) => {
+        // if (v.offerings.length === 1) {
+        //   const offering = v.offerings[0];
 
-          <AccordionDetails sx={styles.accordionDetails}>
-            <Typography variant="body2" sx={styles.employeeTitle}>
-              Prețuri per angajat
-            </Typography>
+        //   return (
+        //     <Box
+        //       key={v.id}
+        //       sx={{
+        //         border: "1px solid",
+        //         borderColor: "divider",
+        //         borderRadius: "12px",
+        //         p: 2.5,
+        //         backgroundColor: "background.paper",
+        //       }}
+        //     >
+        //       <Box>
+        //         <Typography variant="h5" fontWeight={600} color="text.primary">
+        //           {v?.name}
+        //         </Typography>
+        //         <Typography
+        //           variant="body2"
+        //           color="text.secondary"
+        //           sx={{ mt: 0.5 }}
+        //         >
+        //           Durată: {ProductUtils.getDurationText(v?.duration)}
+        //         </Typography>
+        //         <Typography variant="body1" color="text.secondary">
+        //           {filtersText}
+        //         </Typography>
+        //       </Box>
 
-            <Box sx={styles.tableContainer}>
-              <Table size="small">
-                <TableHead sx={{ bgcolor: "neutral.50" }}>
-                  <TableRow>
-                    <TableCell sx={styles.headerCell}>Angajat</TableCell>
-                    <TableCell align="right" sx={styles.headerCell}>
-                      Preț
-                    </TableCell>
-                    <TableCell align="right" sx={styles.headerCell}>
-                      Discount
-                    </TableCell>
-                    <TableCell align="right" sx={styles.headerCell}>
-                      Preț final
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {v.offerings.map((of) => (
-                    <TableRow key={of.user_id} sx={styles.tableRowBody}>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sx={{ fontWeight: 500 }}
-                      >
-                        {of.user_id}
+        //       <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
+        //         <Typography fontSize={18} fontWeight={600}>
+        //           {`${formatPrice(offering.price_with_discount)} RON`}
+        //         </Typography>
+        //         {offering?.discount > 0 && (
+        //           <>
+        //             <Typography
+        //               variant="body1"
+        //               color="text.secondary"
+        //               sx={{ textDecoration: "line-through" }}
+        //             >
+        //               {formatPrice(offering.price)}
+        //             </Typography>
+        //             <Typography fontWeight={600} color="error.main">
+        //               (-{offering.discount}%)
+        //             </Typography>
+        //           </>
+        //         )}
+        //       </Stack>
+        //     </Box>
+        //   );
+        // }
+
+        return (
+          <Accordion
+            key={v.id}
+            disableGutters
+            elevation={0}
+            sx={styles.accordion}
+          >
+            <AccordionSummary sx={styles.accordionSummary}>
+              <Typography
+                variant="subtitle1"
+                fontWeight={600}
+                color="text.primary"
+              >
+                {v.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                • {ProductUtils.getDurationText(v.duration)} {hasFilters && "•"}{" "}
+                {filtersText}
+              </Typography>
+            </AccordionSummary>
+
+            <AccordionDetails sx={styles.accordionDetails}>
+              <Typography variant="body2" sx={styles.employeeTitle}>
+                Prețuri per angajat
+              </Typography>
+
+              <Box sx={styles.tableContainer}>
+                <Table size="small">
+                  <TableHead sx={{ bgcolor: "neutral.50" }}>
+                    <TableRow>
+                      <TableCell sx={styles.headerCell}>Angajat</TableCell>
+                      <TableCell align="right" sx={styles.headerCell}>
+                        Preț
                       </TableCell>
-                      <TableCell align="right" color="text.secondary">
-                        {of.price} lei
+                      <TableCell align="right" sx={styles.headerCell}>
+                        Discount
                       </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{
-                          color:
-                            of.discount > 0 ? "error.main" : "text.secondary",
-                          fontWeight: of.discount > 0 ? 600 : 400,
-                        }}
-                      >
-                        {of.discount > 0 ? `-${of.discount}%` : "-"}
-                      </TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 600 }}>
-                        {of.price_with_discount} lei
+                      <TableCell align="right" sx={styles.headerCell}>
+                        Preț final
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+                  </TableHead>
+                  <TableBody>
+                    {v.offerings.map((of) => (
+                      <TableRow key={of.user_id} sx={styles.tableRowBody}>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          sx={{ fontWeight: 500 }}
+                        >
+                          {of.user_id}
+                        </TableCell>
+                        <TableCell align="right" color="text.secondary">
+                          {of.price} lei
+                        </TableCell>
+                        <TableCell
+                          align="right"
+                          sx={{
+                            color:
+                              of.discount > 0 ? "error.main" : "text.secondary",
+                            fontWeight: of.discount > 0 ? 600 : 400,
+                          }}
+                        >
+                          {of.discount > 0 ? `-${of.discount}%` : "-"}
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontWeight: 600 }}>
+                          {of.price_with_discount} lei
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
     </Box>
   );
 };

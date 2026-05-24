@@ -15,7 +15,6 @@ const MyProductsTabs = ({ currentTab, onTabChange }: MyProductsTabsProps) => {
       exclusive
       onChange={onTabChange}
       aria-label="current tab"
-      sx={{ mb: 2.5 }}
     >
       <ToggleButton value={0} aria-label="table">
         <ViewModuleIcon />

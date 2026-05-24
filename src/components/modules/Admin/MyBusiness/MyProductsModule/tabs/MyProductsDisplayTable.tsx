@@ -210,7 +210,7 @@ const MyProductsDisplayTable = ({
       },
     },
     renderDetailPanel: ({ row }) => {
-      return <MyProductVariants variants={row.original.variants} />;
+      return <MyProductVariants product={row.original} />;
     },
   });
 

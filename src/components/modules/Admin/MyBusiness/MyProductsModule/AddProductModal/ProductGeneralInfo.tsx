@@ -27,6 +27,8 @@ const ProductGeneralInfo = ({ selectedDomainId }: ProductGeneralInfoProps) => {
     url: "/api/my-services",
   });
 
+  console.log("serviceDomainServices", serviceDomainServices);
+
   const validDomains = useMemo(() => {
     if (!serviceDomainServices) return [];
 
