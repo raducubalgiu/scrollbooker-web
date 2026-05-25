@@ -10,15 +10,16 @@ import {
   Theme,
   Toolbar,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { AppRoutes, useAppNavigation } from "@/utils/routes";
 import EmploymentRespondParagraphs from "./EmploymentRequestParagraphs";
 import EmploymentDetails from "./EmploymentDetails";
 import EmploymentRespondBottomBar from "./EmploymentRespondBottomBar";
 import { useMutate } from "@/hooks/useHttp";
-import { EmploymentRequestStatusEnum } from "@/ts/enums/EmploymentRequestStatusEnum";
 import { toast } from "react-toastify";
+import EmploymentRespondConsentModal from "./EmploymentRespondConsentModal";
+import { useSession } from "next-auth/react";
 
 type EmploymentRequestModuleProps = {
   employmentRequest: EmploymentRequest;
@@ -27,14 +28,29 @@ type EmploymentRequestModuleProps = {
 const EmploymentRequestModule = ({
   employmentRequest,
 }: EmploymentRequestModuleProps) => {
+  const [openConsent, setOpenConsent] = useState(false);
   const employee = employmentRequest.employee;
   const employer = employmentRequest.employer;
-  const { navigateTo } = useAppNavigation();
-  const { goBack } = useAppNavigation();
+  const { goBack, navigateTo } = useAppNavigation();
+  const { update } = useSession();
 
-  const { mutate: handleRespond, isPending } = useMutate({
+  const { mutate: handleAccept, isPending: isPendingAccept } = useMutate({
     key: ["update-employment-request"],
-    url: `/api/booking/employment-requests/${employmentRequest.id}`,
+    url: `/api/booking/employment-requests/${employmentRequest.id}/accept`,
+    method: "PUT",
+    options: {
+      onSuccess: async () => {
+        await update({ triggerRecalculation: true });
+
+        navigateTo(AppRoutes.profile(employee.username, employee.profession));
+        toast.success("Cererea a fost acceptată! Sesiunea a fost actualizată.");
+      },
+    },
+  });
+
+  const { mutate: handleDeny, isPending: isPendingDeny } = useMutate({
+    key: ["update-employment-request"],
+    url: `/api/booking/employment-requests/${employmentRequest.id}/deny`,
     method: "PUT",
     options: {
       onSuccess: () => {
@@ -46,11 +62,15 @@ const EmploymentRequestModule = ({
     },
   });
 
-  const handleDenied = () =>
-    handleRespond({ status: EmploymentRequestStatusEnum.DENIED });
-
   return (
     <Box sx={styles.container}>
+      <EmploymentRespondConsentModal
+        open={openConsent}
+        onClose={() => setOpenConsent(false)}
+        isLoadingAccept={isPendingAccept}
+        onAccept={() => handleAccept({})}
+      />
+
       <AppBar position="sticky" color="inherit" elevation={0}>
         <Toolbar disableGutters sx={{ height: 90, px: 5 }}>
           <IconButton
@@ -70,9 +90,10 @@ const EmploymentRequestModule = ({
         <EmploymentRespondParagraphs employerFullName={employer.fullname} />
         <Box sx={{ width: "100%", pb: 3, pt: 2 }}>
           <EmploymentRespondBottomBar
-            isSaving={isPending}
-            onDeny={handleDenied}
-            onAccept={() => {}}
+            isPendingAccept={isPendingAccept}
+            isPendingDeny={isPendingDeny}
+            onDeny={() => handleDeny({})}
+            onAccept={() => setOpenConsent(true)}
           />
         </Box>
       </Container>

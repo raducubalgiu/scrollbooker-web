@@ -1,5 +1,4 @@
-import { EmploymentRequestRespond } from "@/ts/models/booking/employmentRequest/EmploymentRequest";
-import { put } from "@/utils/requests";
+import { deleteRequest } from "@/utils/requests";
 import { NextRequest, NextResponse } from "next/server";
 
 type RouteContext = {
@@ -8,15 +7,12 @@ type RouteContext = {
   }>;
 };
 
-export const PUT = async (req: NextRequest, context: RouteContext) => {
+export const DELETE = async (_req: NextRequest, context: RouteContext) => {
   const { employmentRequestId } = await context.params;
 
-  const data: EmploymentRequestRespond = await req.json();
-
   const response = (
-    await put({
-      url: `/employment-requests/${employmentRequestId}`,
-      data,
+    await deleteRequest({
+      url: `/employment-requests/${employmentRequestId}/cancel`,
     })
   ).data;
 

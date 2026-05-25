@@ -9,7 +9,7 @@ import {
   Checkbox,
 } from "@mui/material";
 
-type ConsentProps = {
+type ConsentLayoutProps = {
   acknowledged: boolean;
   setAcknowledged: (e: boolean) => void;
   mainTitle: string;
@@ -17,19 +17,19 @@ type ConsentProps = {
   sections: string[];
 };
 
-export default function Consent({
+export default function ConsentLayout({
   isLoading,
   mainTitle,
   acknowledged,
   setAcknowledged,
   sections,
-}: ConsentProps) {
+}: ConsentLayoutProps) {
   return (
     <>
       <Box
         sx={{
           p: 2,
-          height: 300,
+          height: 500,
           overflow: "auto",
           my: 2.5,
           bgcolor: "secondary.main",

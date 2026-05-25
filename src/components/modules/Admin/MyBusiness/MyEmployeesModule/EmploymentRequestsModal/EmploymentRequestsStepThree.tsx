@@ -1,10 +1,10 @@
 "use client";
 
-import Consent from "@/components/cutomized/Consent/Consent";
-import { ConsentType } from "@/ts/models/nomenclatures/consent/Consent";
+import ConsentLayout from "@/components/cutomized/MainLayout/ConsentLayout";
+import { Consent } from "@/ts/models/nomenclatures/consent/Consent";
 
 type EmploymentRequestsStepThreeProps = {
-  consent: ConsentType | undefined;
+  consent: Consent | undefined;
   isLoading: boolean;
   acknowledged: boolean;
   setAcknowledged: (e: boolean) => void;
@@ -19,7 +19,7 @@ export default function EmploymentRequestsStepThree({
   const sections = consent?.text?.split(/\n(?=\d+\. )/);
 
   return (
-    <Consent
+    <ConsentLayout
       mainTitle="Confirmare cerere angajare"
       sections={sections ?? []}
       acknowledged={acknowledged}

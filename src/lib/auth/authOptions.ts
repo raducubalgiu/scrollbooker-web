@@ -75,11 +75,15 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user, trigger, session }): Promise<JWT> {
       if (trigger === "update" && session) {
         try {
-          const userInfo = await getUserInfo(token.accessToken);
-          const permissions = await getPermissions(token.accessToken);
+          const refreshed = await refreshToken(token.refreshToken);
+          const newestToken = refreshed.accessToken;
+
+          const userInfo = await getUserInfo(newestToken);
+          const permissions = await getPermissions(newestToken);
 
           return {
             ...token,
+            ...refreshed,
             user_id: userInfo.id,
             username: userInfo.username,
             profession: userInfo.profession,

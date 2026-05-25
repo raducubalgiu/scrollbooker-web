@@ -10,8 +10,8 @@ type ConfirmationModalProps = {
   isLoading?: boolean;
   message: string;
   open: boolean;
-  handleClose: () => void;
-  handleSubmit: () => void;
+  onClose: () => void;
+  onConfirm: () => void;
 };
 
 export default function ConfirmationModal({
@@ -19,31 +19,26 @@ export default function ConfirmationModal({
   isLoading = false,
   message,
   open,
-  handleClose,
-  handleSubmit,
+  onClose,
+  onConfirm,
 }: ConfirmationModalProps) {
   const actions: ActionButtonType[] = [
     {
-      title: "NU",
+      title: "Renunță",
       props: {
-        onClick: handleClose,
+        onClick: onClose,
         color: "secondary",
         variant: "outlined",
       },
     },
     {
-      title: "DA",
-      props: { onClick: handleSubmit, loading: isLoading },
+      title: "Anulează",
+      props: { onClick: onConfirm, loading: isLoading },
     },
   ];
 
   return (
-    <Modal
-      title={title}
-      open={open}
-      handleClose={handleClose}
-      actions={actions}
-    >
+    <Modal title={title} open={open} handleClose={onClose} actions={actions}>
       <Typography>{message}</Typography>
     </Modal>
   );

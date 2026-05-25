@@ -1,5 +1,5 @@
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
-import { useCustomQuery } from "@/hooks/useHttp";
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { Close } from "@mui/icons-material";
 import { Avatar, Button, IconButton, Stack, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
@@ -9,6 +9,7 @@ import EmploymentRequestsModal from "./EmploymentRequestsModal/EmploymentRequest
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import Table from "@/components/core/Table/Table";
 import { EmploymentRequest } from "@/ts/models/booking/employmentRequest/EmploymentRequest";
+import { toast } from "react-toastify";
 
 type OpenConfirmationState = {
   openModal: boolean;
@@ -31,6 +32,19 @@ const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
     url: "/api/booking/employment-requests",
     options: {
       enabled: isEnabled,
+    },
+  });
+
+  const { mutate: handleCancel, isPending: isPendingCancel } = useMutate({
+    key: ["cancel-employment-request", confirmation.employment_request_id],
+    url: `/api/booking/employment-requests/${confirmation.employment_request_id}`,
+    method: "DELETE",
+    options: {
+      onSuccess: () => {
+        setConfirmation({ openModal: false, employment_request_id: null });
+        refetch();
+        toast.success("Cererea de angajare a fost ștearsă");
+      },
     },
   });
 
@@ -101,10 +115,11 @@ const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
     <>
       <ConfirmationModal
         open={confirmation.openModal}
-        handleClose={() =>
+        onClose={() =>
           setConfirmation({ openModal: false, employment_request_id: null })
         }
-        handleSubmit={() => {}}
+        onConfirm={() => handleCancel({})}
+        isLoading={isPendingCancel}
         title="Ești sigur?"
         message="Ești sigur că dorești să anulezi această cerere?"
       />

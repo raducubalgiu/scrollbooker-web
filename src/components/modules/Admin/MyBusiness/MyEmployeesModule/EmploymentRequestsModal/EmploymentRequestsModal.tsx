@@ -75,8 +75,7 @@ export default function EmploymentRequestsModal({
   const { data: consent, isLoading: isLoadingConsent } =
     useCustomQuery<Consent>({
       key: ["get-consent"],
-      url: "/api/booking/employment-requests/consent",
-      params: { consentName: ConsentEnum.EMPLOYMENT_REQUESTS_INITIATION },
+      url: `/api/nomenclatures/consents/name/${ConsentEnum.EMPLOYMENT_REQUESTS_INITIATION}`,
       options: { enabled: isThirdStep && open },
     });
 
