@@ -3,6 +3,7 @@ import { get } from "@/utils/requests";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { authOptions } from "@/lib/auth/authOptions";
 import { getServerSession } from "next-auth";
+import { PaginatedData } from "@/components/core/Table/Table";
 
 export const GET = async (req: NextRequest) => {
   const session = await getServerSession(authOptions);
@@ -19,7 +20,7 @@ export const GET = async (req: NextRequest) => {
   const limit = req.nextUrl.searchParams.get("limit");
 
   const response = (
-    await get<BusinessEmployee[]>({
+    await get<PaginatedData<BusinessEmployee>>({
       url: `/businesses/owner/${businessOwnerId}/employees?page=${page}&limit=${limit}`,
     })
   ).data;

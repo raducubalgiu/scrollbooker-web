@@ -3,11 +3,15 @@ import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { Close } from "@mui/icons-material";
 import { Avatar, Button, IconButton, Stack, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
-import { MRT_ColumnDef, MRT_Row } from "material-react-table";
+import {
+  MaterialReactTable,
+  MRT_ColumnDef,
+  MRT_Row,
+  useMaterialReactTable,
+} from "material-react-table";
 import React, { useMemo, useState } from "react";
 import EmploymentRequestsModal from "./EmploymentRequestsModal/EmploymentRequestsModal";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
-import Table from "@/components/core/Table/Table";
 import { EmploymentRequest } from "@/ts/models/booking/employmentRequest/EmploymentRequest";
 import { toast } from "react-toastify";
 
@@ -35,13 +39,20 @@ const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
     },
   });
 
+  const memoizedData = useMemo(() => {
+    return employmentRequests || [];
+  }, [employmentRequests]);
+
+  const handleCloseConfirmation = () =>
+    setConfirmation({ openModal: false, employment_request_id: null });
+
   const { mutate: handleCancel, isPending: isPendingCancel } = useMutate({
     key: ["cancel-employment-request", confirmation.employment_request_id],
     url: `/api/booking/employment-requests/${confirmation.employment_request_id}`,
     method: "DELETE",
     options: {
       onSuccess: () => {
-        setConfirmation({ openModal: false, employment_request_id: null });
+        handleCloseConfirmation();
         refetch();
         toast.success("Cererea de angajare a fost ștearsă");
       },
@@ -111,13 +122,41 @@ const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
     );
   }, []);
 
+  const table = useMaterialReactTable({
+    columns,
+    data: memoizedData,
+    enableKeyboardShortcuts: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: false,
+    enableSorting: false,
+    enableRowActions: true,
+    enableTopToolbar: true,
+    renderRowActions,
+    renderTopToolbarCustomActions: getToolbarCustomActions,
+    positionActionsColumn: "last",
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper,
+    }),
+    localization: MRT_Localization_RO,
+    state: {
+      isLoading: isLoading || isPendingCancel,
+    },
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: 2.5,
+        border: "1px solid",
+        borderColor: "divider",
+      },
+    },
+  });
+
   return (
     <>
       <ConfirmationModal
         open={confirmation.openModal}
-        onClose={() =>
-          setConfirmation({ openModal: false, employment_request_id: null })
-        }
+        onClose={handleCloseConfirmation}
         onConfirm={() => handleCancel({})}
         isLoading={isPendingCancel}
         title="Ești sigur?"
@@ -130,21 +169,8 @@ const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
           refetch();
         }}
       />
-      <Table
-        data={employmentRequests ?? []}
-        columns={columns}
-        enableFilters={false}
-        enableSorting={false}
-        enableColumnActions={false}
-        enablePagination={false}
-        enableHiding={false}
-        localization={MRT_Localization_RO}
-        state={{ isLoading }}
-        enableRowActions={true}
-        positionActionsColumn="last"
-        renderRowActions={renderRowActions}
-        renderTopToolbarCustomActions={getToolbarCustomActions}
-      />
+
+      <MaterialReactTable table={table} />
     </>
   );
 };

@@ -29,11 +29,16 @@ export default function ConfirmationModal({
         onClick: onClose,
         color: "secondary",
         variant: "outlined",
+        disabled: isLoading,
       },
     },
     {
       title: "Anulează",
-      props: { onClick: onConfirm, loading: isLoading },
+      props: {
+        onClick: onConfirm,
+        loading: isLoading,
+        disabled: isLoading,
+      },
     },
   ];
 
