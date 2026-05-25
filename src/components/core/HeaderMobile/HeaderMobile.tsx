@@ -15,20 +15,7 @@ const HeaderMobile = ({ title }: HeaderMobileProps) => {
       flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
-      sx={{
-        display: {
-          xs: "flex",
-          lg: "none",
-        },
-        width: "100%",
-        position: "sticky",
-        borderBottom: 1,
-        borderColor: "divider",
-        top: 0,
-        zIndex: 10,
-        backgroundColor: "background.paper",
-        p: 1,
-      }}
+      sx={styles.container}
     >
       <IconButton onClick={() => router.back()}>
         <ArrowBackIcon />
@@ -42,3 +29,20 @@ const HeaderMobile = ({ title }: HeaderMobileProps) => {
 };
 
 export default HeaderMobile;
+
+const styles = {
+  container: {
+    display: {
+      xs: "flex",
+      lg: "none",
+    },
+    width: "100%",
+    position: "sticky",
+    borderBottom: 1,
+    borderColor: "divider",
+    top: 0,
+    zIndex: 10,
+    backgroundColor: "background.paper",
+    p: 1,
+  },
+};
