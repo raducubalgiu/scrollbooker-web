@@ -1,9 +1,9 @@
-import { getUserServerSession } from "@/lib/auth/get-user-server";
-import { BusinessMapResponse } from "@/ts/models/booking/business/search/BusinessMapCombined";
+import { authOptions } from "@/lib/auth/authOptions";
+import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const { session } = await getUserServerSession();
+  const session = await getServerSession(authOptions);
   const business_domain_id = req.nextUrl.searchParams.get("businessDomainId");
 
   try {
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
       list = await listResult.value.json();
     }
 
-    const mainResults: BusinessMapResponse = { markers, list };
+    const mainResults = { markers, list };
 
     return Response.json(mainResults);
   } catch (error) {

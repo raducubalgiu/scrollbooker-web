@@ -1,11 +1,12 @@
 import ExploreModule from "@/components/modules/Marketplace/ExploreModule/ExploreModule";
-import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { authOptions } from "@/lib/auth/authOptions";
 import { Typography } from "@mui/material";
+import { getServerSession } from "next-auth";
 
 export default async function HomePage() {
-  const { userId } = await getUserServerSession();
+  const session = await getServerSession(authOptions);
 
-  if (!userId) {
+  if (!session) {
     return (
       <div style={{ padding: "2rem", textAlign: "center" }}>
         <Typography variant="h6">Please log in to continue</Typography>

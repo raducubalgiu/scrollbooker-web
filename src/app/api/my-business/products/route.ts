@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
-import { getUserServerSession } from "@/lib/auth/get-user-server";
 import { PaginatedData } from "@/components/core/Table/Table";
 import { Product } from "@/ts/models/booking/product/Product";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
 
 export const GET = async (req: NextRequest) => {
-  const session = await getUserServerSession();
+  const session = await getServerSession(authOptions);
   const page = req.nextUrl.searchParams.get("page");
 
   const limit = req.nextUrl.searchParams.get("limit");
@@ -36,7 +37,7 @@ export const GET = async (req: NextRequest) => {
         if (page !== null) params.push(`page=${encodeURIComponent(page)}`);
         if (limit !== null) params.push(`limit=${encodeURIComponent(limit)}`);
 
-        return `/businesses/${session.businessId}/products${params.length ? `?${params.join("&")}` : ""}`;
+        return `/businesses/${session?.business_id}/products${params.length ? `?${params.join("&")}` : ""}`;
       })(),
     })
   ).data;

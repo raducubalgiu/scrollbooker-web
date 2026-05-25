@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import { get } from "@/utils/requests";
-import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
-import { getUserServerSession } from "@/lib/auth/get-user-server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import { Service } from "@/ts/models/nomenclatures/service/Service";
 
 export const GET = async () => {
-	const { userId } = await getUserServerSession();
+  const session = await getServerSession(authOptions);
 
-	const response = (
-		await get<ServiceType[]>({
-			url: `/users/${userId}/services`,
-		})
-	).data;
+  const response = (
+    await get<Service[]>({
+      url: `/users/${session?.user_id}/services`,
+    })
+  ).data;
 
-	return NextResponse.json(response);
+  return NextResponse.json(response);
 };

@@ -19,7 +19,6 @@ import { shortPrettyDate, shortTimeFormat } from "@/utils/date-utils-dayjs";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { ChangeEvent, useState } from "react";
 import EditChangeIconButton from "../../IconButtons/EditChangeIconButton";
-import { useUserClientSession } from "@/lib/auth/get-user-client";
 import { find, get } from "lodash";
 import { toast } from "react-toastify";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
@@ -27,6 +26,7 @@ import { CalendarEventsSlotType } from "@/ts/models/Calendar/CalendarEventsType"
 import { ServiceType } from "@/ts/models/nomenclatures/ServiceType";
 import { ProductType } from "@/ts/models/Product/ProductResponse";
 import { CurrencyType } from "@/ts/models/nomenclatures/currency/Currency";
+import { useSession } from "next-auth/react";
 
 type CreateEventModalProps = {
   openCreate: boolean;
@@ -88,7 +88,7 @@ export default function CalendarEventsCreateModal({
   slot,
 }: CreateEventModalProps) {
   const { updateSlot } = useCalendarEventsContext();
-  const { businessId, userId } = useUserClientSession();
+  const { data: session } = useSession();
   const [editProduct, setEditProduct] = useState(false);
   const isRequired = required();
 
@@ -210,8 +210,8 @@ export default function CalendarEventsCreateModal({
       product_price_with_discount: getPriceWithDiscount(productDiscount),
       start_date: slot.start_date_utc,
       end_date: slot.end_date_utc,
-      user_id: userId,
-      business_id: businessId,
+      user_id: session?.user_id,
+      business_id: session?.business_id,
       product_name,
       service_name,
     });

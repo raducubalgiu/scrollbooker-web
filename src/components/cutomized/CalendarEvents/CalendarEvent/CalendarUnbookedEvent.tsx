@@ -13,13 +13,13 @@ import { timeIntervalFormat } from "@/utils/date-utils-dayjs";
 import CalendarEventsBlockModal, {
   BlockUpdater,
 } from "../CalendarEventsModals/CalendarEventsBlockModal";
-import { useUserClientSession } from "@/lib/auth/get-user-client";
 import { useCalendarEventsContext } from "@/providers/CalendarEventsProvider";
 import { toast } from "react-toastify";
 import ConfirmationModal from "../../ConfirmationModal/ConfirmationModal";
 import CalendarEventsCreateModal from "../CalendarEventsModals/CreateEventsCreateModal";
 import { useMutate } from "@/hooks/useHttp";
 import { CalendarEventsSlotType } from "@/ts/models/Calendar/CalendarEventsType";
+import { useSession } from "next-auth/react";
 
 const messages = [
   { value: "Am o programare la medic", name: "Am o programare la medic" },
@@ -36,7 +36,8 @@ function CalendarUnbookedEvent({ slot, height }: CalendarUnbookedEventProps) {
   const { start_date_locale, end_date_locale, start_date_utc, end_date_utc } =
     slot;
   const { updateSlot } = useCalendarEventsContext();
-  const { userId } = useUserClientSession();
+  const { data: session } = useSession();
+
   const [open, setOpen] = useState(false);
   const [openBlockSlot, setOpenBlockSlot] = useState(false);
   const [openUnblockSlot, setOpenUnblockSlot] = useState(false);
@@ -66,7 +67,11 @@ function CalendarUnbookedEvent({ slot, height }: CalendarUnbookedEventProps) {
 
   const title = `Data: ${dayjs(start_date_locale).format("DD MMM YYYY")}, Slot: ${timeIntervalFormat(start_date_locale, end_date_locale)}`;
   const updater: BlockUpdater = [
-    { startDate: start_date_utc, endDate: end_date_utc, userId },
+    {
+      startDate: start_date_utc,
+      endDate: end_date_utc,
+      user: session?.user_id,
+    },
   ];
 
   const { mutate: handleUnblock, isPending } = useMutate({
