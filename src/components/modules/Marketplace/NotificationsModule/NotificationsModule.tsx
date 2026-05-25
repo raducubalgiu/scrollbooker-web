@@ -1,7 +1,7 @@
 "use client";
 
 import NotificationSkeleton from "@/components/cutomized/Skeletons/NotificationSkeletons";
-import NotificationItem from "@/components/cutomized/NotificationItem/NotificationItem";
+import NotificationItem from "@/components/modules/Marketplace/NotificationsModule/NotificationItem";
 import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useInfiniteNotifications } from "@/hooks/infiniteQuery/useInfiniteNotifications";
