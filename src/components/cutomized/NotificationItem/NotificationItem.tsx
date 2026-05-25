@@ -17,6 +17,7 @@ import {
   AppointmentRescheduledNotificationData,
   AppointmentReviewedNotificationData,
   CommentPostNotificationData,
+  EmploymentRequestNotificationData,
   LikePostNotificationData,
   Notification,
   RepostNotificationData,
@@ -42,6 +43,7 @@ import { AppRoutes, useAppNavigation } from "@/utils/routes";
 type NotificationItemProps = {
   notification: Notification;
   onNavigateToUserProfile: (username: string, profession: string) => void;
+  onNavigateToEmploymentRequest: (e: number) => void;
 } & ListItemProps;
 
 interface NotificationsQueryPage {
@@ -52,6 +54,7 @@ interface NotificationsQueryPage {
 export default function NotificationItem({
   notification,
   onNavigateToUserProfile,
+  onNavigateToEmploymentRequest,
   ...listItemProps
 }: NotificationItemProps) {
   const { type, sender, data, is_read } = notification || {};
@@ -261,12 +264,19 @@ export default function NotificationItem({
 
       // Implemented
       case NotificationTypeEnum.EMPLOYMENT_REQUEST: {
-        const empRequest = data as any;
+        const empRequest = data as EmploymentRequestNotificationData;
+
         return {
           text: `Ai primit o cerere de angajare pentru rolul de ${empRequest.profession_name || "Angajat"}.`,
           action: (
             <Stack direction="row" gap={1}>
               <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNavigateToEmploymentRequest(
+                    empRequest.employment_request_id
+                  );
+                }}
                 color="error"
                 variant="contained"
                 size="small"

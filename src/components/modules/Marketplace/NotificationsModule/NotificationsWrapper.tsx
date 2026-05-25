@@ -16,6 +16,9 @@ const NotificationsWrapper = () => {
         onNavigateToUserProfile={(username, profession) =>
           navigateTo(AppRoutes.profile(username, profession))
         }
+        onNavigateToEmploymentRequest={(employmentRequestId) =>
+          navigateTo(AppRoutes.employmentRequest(employmentRequestId))
+        }
       />
     </Box>
   );

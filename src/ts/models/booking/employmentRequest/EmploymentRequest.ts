@@ -1,4 +1,4 @@
-import { ProfessionType } from "../../nomenclatures/profession/ProfessionType";
+import { Profession } from "../../nomenclatures/profession/ProfessionType";
 import { UserMini } from "../../user/UserMini";
 
 export interface EmploymentRequest {
@@ -7,6 +7,6 @@ export interface EmploymentRequest {
   status: string;
   employee: UserMini;
   employer: UserMini;
-  profession: ProfessionType;
+  profession: Profession;
   created_at: string;
 }

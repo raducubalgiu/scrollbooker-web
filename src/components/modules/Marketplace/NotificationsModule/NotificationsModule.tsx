@@ -10,11 +10,13 @@ import React from "react";
 type NotificationsModuleProps = {
   scrollRootRef: React.RefObject<HTMLDivElement | null>;
   onNavigateToUserProfile: (username: string, profession: string) => void;
+  onNavigateToEmploymentRequest: (e: number) => void;
 };
 
 const NotificationsModule = ({
   scrollRootRef,
   onNavigateToUserProfile,
+  onNavigateToEmploymentRequest,
 }: NotificationsModuleProps) => {
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -85,6 +87,7 @@ const NotificationsModule = ({
             key={`${notification.id}-${index}`}
             notification={notification}
             onNavigateToUserProfile={onNavigateToUserProfile}
+            onNavigateToEmploymentRequest={onNavigateToEmploymentRequest}
           />
         ))}
 

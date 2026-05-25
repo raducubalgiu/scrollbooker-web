@@ -53,7 +53,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [isOverlayOpen]);
 
   const isSpecialPage = React.useMemo(() => {
-    const specialPaths = ["/business/", "/booking/"];
+    const specialPaths = ["/business/", "/booking/", "/employment-request"];
     return specialPaths.some((path) => pathname.startsWith(path));
   }, [pathname]);
 
@@ -105,6 +105,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             onNavigateToUserProfile={(username, profession) => {
               handleCloseAll();
               navigateTo(AppRoutes.profile(username, profession));
+            }}
+            onNavigateToEmploymentRequest={(employmentRequestId) => {
+              handleCloseAll();
+              navigateTo(AppRoutes.employmentRequest(employmentRequestId));
             }}
           />
         );

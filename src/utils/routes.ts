@@ -18,6 +18,10 @@ export const AppRoutes = {
   appointmentDetails: (appointmentId: number) =>
     `/appointments/${appointmentId}`,
 
+  employmentRequest: (employmentRequestId: number) => {
+    return `/employment-request/${employmentRequestId}`;
+  },
+
   uploadVideo: () => "/upload-video",
   more: () => "/more",
 
@@ -33,23 +37,6 @@ export const AppRoutes = {
 
     return `${baseUrl}?tab=${tabParam}`;
   },
-
-  // profile: (
-  //   username: string,
-  //   profession: string,
-  //   tab?: ProfileTabEnum | string
-  // ) => {
-  //   const professionSlug = makeProfessionSlug(profession);
-  //   const baseUrl = `/user/${username}/profession/${professionSlug}`;
-
-  //   if (!tab) {
-  //     return `${baseUrl}?tab=posts`;
-  //   }
-
-  //   const tabParam = typeof tab === "number" ? tabEnumToParamMap[tab] : tab;
-
-  //   return `${baseUrl}?tab=${tabParam}`;
-  // },
 
   postDetail: (
     username: string,

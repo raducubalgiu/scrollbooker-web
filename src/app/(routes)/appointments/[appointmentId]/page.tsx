@@ -4,18 +4,18 @@ import { get } from "@/utils/requests";
 import React from "react";
 
 interface AppointmentPageProps {
-  params: {
+  params: Promise<{
     appointmentId: string;
-  };
+  }>;
 }
 
 export default async function AppointmentPage({
   params,
 }: AppointmentPageProps) {
-  const appointmentId = Number(params.appointmentId);
+  const { appointmentId } = await params;
 
-  if (Number.isNaN(appointmentId)) {
-    return <div>Invalid params</div>;
+  if (!appointmentId) {
+    throw new Error("Appointment Id is invalid");
   }
 
   const appointment = (
@@ -25,7 +25,7 @@ export default async function AppointmentPage({
   ).data;
 
   if (!appointment) {
-    return <>Not Found</>;
+    throw new Error("An error occured when fetching appointment");
   }
 
   return <AppointmentDetailsModule appointment={appointment} />;
