@@ -12,10 +12,13 @@ import {
 } from "@mui/material";
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { useAppNavigation } from "@/utils/routes";
+import { AppRoutes, useAppNavigation } from "@/utils/routes";
 import EmploymentRespondParagraphs from "./EmploymentRequestParagraphs";
 import EmploymentDetails from "./EmploymentDetails";
 import EmploymentRespondBottomBar from "./EmploymentRespondBottomBar";
+import { useMutate } from "@/hooks/useHttp";
+import { EmploymentRequestStatusEnum } from "@/ts/enums/EmploymentRequestStatusEnum";
+import { toast } from "react-toastify";
 
 type EmploymentRequestModuleProps = {
   employmentRequest: EmploymentRequest;
@@ -24,8 +27,27 @@ type EmploymentRequestModuleProps = {
 const EmploymentRequestModule = ({
   employmentRequest,
 }: EmploymentRequestModuleProps) => {
+  const employee = employmentRequest.employee;
   const employer = employmentRequest.employer;
+  const { navigateTo } = useAppNavigation();
   const { goBack } = useAppNavigation();
+
+  const { mutate: handleRespond, isPending } = useMutate({
+    key: ["update-employment-request"],
+    url: `/api/booking/employment-requests/${employmentRequest.id}`,
+    method: "PUT",
+    options: {
+      onSuccess: () => {
+        navigateTo(AppRoutes.profile(employee.username, employee.profession));
+        toast.success(
+          `Raspunsul tău a fost trimis către ${employmentRequest.employer.fullname}`
+        );
+      },
+    },
+  });
+
+  const handleDenied = () =>
+    handleRespond({ status: EmploymentRequestStatusEnum.DENIED });
 
   return (
     <Box sx={styles.container}>
@@ -48,8 +70,8 @@ const EmploymentRequestModule = ({
         <EmploymentRespondParagraphs employerFullName={employer.fullname} />
         <Box sx={{ width: "100%", pb: 3, pt: 2 }}>
           <EmploymentRespondBottomBar
-            isSaving={false}
-            onDeny={() => {}}
+            isSaving={isPending}
+            onDeny={handleDenied}
             onAccept={() => {}}
           />
         </Box>

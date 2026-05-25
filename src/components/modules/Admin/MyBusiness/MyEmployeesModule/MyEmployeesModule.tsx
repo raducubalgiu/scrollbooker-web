@@ -4,12 +4,12 @@ import React, { useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import EmployeesTab from "./EmployeesTab";
-import EmploymentRequestsTab from "./EmploymentRequestsTab";
 import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
+import MyEmploymentRequestsTab from "./MyEmploymentRequestsTab";
 
 const TABS: CustomTabType[] = [
   {
@@ -32,7 +32,7 @@ export default function MyEmployeesModule() {
       case 0:
         return <EmployeesTab isEnabled={currentTab === 0} />;
       case 1:
-        return <EmploymentRequestsTab isEnabled={currentTab === 1} />;
+        return <MyEmploymentRequestsTab isEnabled={currentTab === 1} />;
       default:
         return null;
     }

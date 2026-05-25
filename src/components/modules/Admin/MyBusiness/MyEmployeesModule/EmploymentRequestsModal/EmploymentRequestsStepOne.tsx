@@ -30,8 +30,7 @@ export default function EmploymentRequestsStepOne({
 
   const { data: users, isLoading } = useCustomQuery<UserMini[]>({
     key: ["search-users", debouncedSearch],
-    url: "/api/employment-requests/search-users",
-    params: { search },
+    url: `/api/search/users?query=${search}&role_client=true`,
     options: {
       enabled: !!debouncedSearch,
       staleTime: 1000 * 60,

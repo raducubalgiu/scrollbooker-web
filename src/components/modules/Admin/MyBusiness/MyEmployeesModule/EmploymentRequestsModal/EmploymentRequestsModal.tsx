@@ -15,6 +15,7 @@ import EmploymentRequestsStepThree from "./EmploymentRequestsStepThree";
 import { ConsentEnum } from "@/ts/models/nomenclatures/consent/ConsentEnum";
 import { Profession } from "@/ts/models/nomenclatures/profession/ProfessionType";
 import { Consent } from "@/ts/models/nomenclatures/consent/Consent";
+import { useSession } from "next-auth/react";
 
 const steps = ["Angajat", "Profesia", "Trimite"];
 
@@ -27,6 +28,7 @@ export default function EmploymentRequestsModal({
   open,
   handleClose,
 }: EmploymentRequestsModalProps) {
+  const { data: session } = useSession();
   const [acknowledged, setAcknowledged] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedProfessionId, setSelectedProfessionId] = useState<
@@ -54,7 +56,7 @@ export default function EmploymentRequestsModal({
 
   const { mutate: createEmploymentRequest, isPending } = useMutate({
     key: ["create-employment-request"],
-    url: "/api/employment-requests",
+    url: "/api/booking/employment-requests",
     options: {
       onSuccess: () => {
         handleResetAndClose();
@@ -65,15 +67,15 @@ export default function EmploymentRequestsModal({
   const { data: professions, isLoading: isLoadingProfessions } = useCustomQuery<
     Profession[]
   >({
-    key: ["get-professions"],
-    url: "/api/employment-requests/professions",
+    key: ["get-professions-by-business-type"],
+    url: `/api/nomenclatures/business-types/${session?.business_type_id}/professions`,
     options: { enabled: isSecondStep && open },
   });
 
   const { data: consent, isLoading: isLoadingConsent } =
     useCustomQuery<Consent>({
       key: ["get-consent"],
-      url: "/api/employment-requests/consent",
+      url: "/api/booking/employment-requests/consent",
       params: { consentName: ConsentEnum.EMPLOYMENT_REQUESTS_INITIATION },
       options: { enabled: isThirdStep && open },
     });

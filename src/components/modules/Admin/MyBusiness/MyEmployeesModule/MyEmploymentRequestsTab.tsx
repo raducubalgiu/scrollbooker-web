@@ -1,5 +1,5 @@
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { useCustomQuery } from "@/hooks/useHttp";
 import { Close } from "@mui/icons-material";
 import { Avatar, Button, IconButton, Stack, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
@@ -15,7 +15,7 @@ type OpenConfirmationState = {
   employment_request_id: null | number;
 };
 
-const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
+const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState<OpenConfirmationState>({
     openModal: false,
@@ -28,21 +28,9 @@ const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
     refetch,
   } = useCustomQuery<EmploymentRequest[]>({
     key: ["get-employment-requests"],
-    url: "/api/employment-requests",
+    url: "/api/booking/employment-requests",
     options: {
       enabled: isEnabled,
-    },
-  });
-
-  const { mutate: handleDelete, isPending: isLoadingDelete } = useMutate({
-    key: ["delete-employment-request"],
-    url: "/api/employment-requests",
-    method: "DELETE",
-    options: {
-      onSuccess: () => {
-        setConfirmation({ openModal: false, employment_request_id: null });
-        refetch();
-      },
     },
   });
 
@@ -116,12 +104,9 @@ const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
         handleClose={() =>
           setConfirmation({ openModal: false, employment_request_id: null })
         }
-        handleSubmit={() =>
-          handleDelete({ id: confirmation.employment_request_id })
-        }
+        handleSubmit={() => {}}
         title="Ești sigur?"
         message="Ești sigur că dorești să anulezi această cerere?"
-        isLoading={isLoadingDelete}
       />
       <EmploymentRequestsModal
         open={open}
@@ -149,4 +134,4 @@ const EmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
   );
 };
 
-export default EmploymentRequestsTab;
+export default MyEmploymentRequestsTab;
