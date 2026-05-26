@@ -20,6 +20,7 @@ import ProductTypeButton from "../ProductTypeButton";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import ServiceButton from "../ServiceButton";
 import MyProductVariants from "./MyProductVariants";
+import { formatPrice } from "@/utils/formatPrice";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<Product>;
@@ -28,29 +29,31 @@ type RenderRowActionMenuItemsProps = {
 };
 
 type MyProductsDisplayTableProps = {
+  employees: BusinessEmployee[];
   allProducts: Product[] | undefined;
+  isLoading: boolean;
+  onDelete: (productId: number) => void;
   productType: ProductTypeEnum | null;
   setProductType: (type: ProductTypeEnum | null) => void;
   isEmployee: boolean | null | undefined;
   employeeId: number | null;
   setEmployeeId: (e: number | null) => void;
-  employees: BusinessEmployee[];
   serviceId: number | null;
   setServiceId: (s: number | null) => void;
-  isLoading: boolean;
 };
 
 const MyProductsDisplayTable = ({
+  employees,
   allProducts,
+  isLoading,
+  onDelete,
   productType,
   setProductType,
   isEmployee,
   employeeId,
   setEmployeeId,
-  employees,
   serviceId,
   setServiceId,
-  isLoading,
 }: MyProductsDisplayTableProps) => {
   const columns = React.useMemo<MRT_ColumnDef<Product>[]>(
     () => [
@@ -119,7 +122,7 @@ const MyProductsDisplayTable = ({
             <Typography>
               {hasDifferentPrice && "de la"}{" "}
               <span style={{ fontWeight: 600 }}>
-                {startingOffering.price_with_discount} lei
+                {formatPrice(startingOffering.price_with_discount)} lei
               </span>
             </Typography>
           );
@@ -166,6 +169,7 @@ const MyProductsDisplayTable = ({
         icon={<Delete />}
         onClick={() => {
           closeMenu();
+          onDelete(row.original.id);
         }}
         table={table}
       />,
@@ -177,8 +181,7 @@ const MyProductsDisplayTable = ({
     columns,
     data: allProducts ?? [],
 
-    enablePagination: true,
-    manualPagination: true,
+    enablePagination: false,
 
     enableFilters: false,
     enableDensityToggle: false,

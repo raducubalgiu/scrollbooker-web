@@ -25,9 +25,6 @@ export interface ProductFormValues {
   variants: {
     name: string;
     duration: number;
-    has_different_prices: boolean;
-    starting_price?: number;
-    starting_price_with_discount?: number;
     offerings: {
       user_id: number;
       fullname: string;

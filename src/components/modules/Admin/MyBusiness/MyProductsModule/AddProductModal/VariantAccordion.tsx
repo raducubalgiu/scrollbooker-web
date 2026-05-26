@@ -15,7 +15,6 @@ import Grid from "@mui/material/Grid2";
 import React from "react";
 import { Control, useFieldArray, UseFormWatch } from "react-hook-form";
 import { ProductFormValues } from "./AddProductModal";
-import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 
 type VariantAccordionProps = {
   index: number;
@@ -41,16 +40,7 @@ const VariantAccordion = ({
   });
 
   return (
-    <Accordion
-      sx={{
-        borderRadius: "12px !important",
-        overflow: "hidden",
-        border: "1px solid",
-        borderColor: "divider",
-        "&:before": { display: "none" },
-        boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-      }}
-    >
+    <Accordion sx={styles.container}>
       <AccordionSummary expandIcon={<ExpandMore />}>
         <Stack
           flexDirection="row"
@@ -81,7 +71,7 @@ const VariantAccordion = ({
         }}
       >
         <Grid container spacing={3} sx={{ mb: hasEmployees ? 4 : 0 }}>
-          <Grid size={{ xs: 12, sm: hasEmployees ? 8 : 6 }}>
+          <Grid size={{ xs: 12, sm: hasEmployees ? 8 : 4 }}>
             <Input
               name={`variants.${index}.name`}
               label="Nume Variantă"
@@ -100,15 +90,22 @@ const VariantAccordion = ({
             <>
               <Grid size={{ xs: 12, sm: 2 }}>
                 <Input
-                  name={`variants.${index}.starting_price`}
+                  name={`variants.${index}.offerings.0.price`}
                   label="Preț"
                   type="number"
                 />
               </Grid>
               <Grid size={{ xs: 12, sm: 2 }}>
                 <Input
-                  name={`variants.${index}.starting_price_with_discount`}
-                  label="Preț Discount"
+                  name={`variants.${index}.offerings.0.discount`}
+                  label="Discount"
+                  type="number"
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 2 }}>
+                <Input
+                  name={`variants.${index}.offerings.0.price_with_discount`}
+                  label="Preț final"
                   type="number"
                 />
               </Grid>
@@ -231,3 +228,14 @@ const VariantAccordion = ({
 };
 
 export default VariantAccordion;
+
+const styles = {
+  container: {
+    borderRadius: "12px !important",
+    overflow: "hidden",
+    border: "1px solid",
+    borderColor: "divider",
+    "&:before": { display: "none" },
+    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+  },
+};

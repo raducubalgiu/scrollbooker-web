@@ -8,16 +8,22 @@ import ConfirmationModal from "@/components/cutomized/ConfirmationModal/Confirma
 import AddProductModal from "./AddProductModal/AddProductModal";
 import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
-import { useCustomQuery } from "@/hooks/useHttp";
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import MyProductsDisplayTable from "./tabs/MyProductsDisplayTable";
 import MyProductsDisplayTabs from "./tabs/MyProductsDisplayTabs";
 import { useCallback, useMemo, useState } from "react";
 import MyProductsTabs from "./tabs/MyProductsTabs";
 import { Button, Stack } from "@mui/material";
+import { toast } from "react-toastify";
 
 type MyProductsModuleProps = {
   session: Session | null;
   employees: BusinessEmployee[];
+};
+
+type DeleteConfirmType = {
+  open: boolean;
+  productId: number | null;
 };
 
 export default function MyProductsModule({
@@ -26,7 +32,8 @@ export default function MyProductsModule({
 }: MyProductsModuleProps) {
   const [currentTab, setCurrentTab] = React.useState<number>(0);
 
-  const [openDeleteConfirm, setOpenDeleteConfirm] = React.useState(false);
+  const [deleteConfirmModal, setDeleteConfirmModal] =
+    React.useState<DeleteConfirmType>({ open: false, productId: null });
   const [openAddModal, setOpenAddModal] = useState(false);
 
   const isEmployee = session?.is_employee;
@@ -55,7 +62,9 @@ export default function MyProductsModule({
     };
   }, [isEmployee, authUserId, employeeId, productType, serviceId]);
 
-  const { data, isLoading } = useCustomQuery<BusinessProductsResponse[]>({
+  const { data, isLoading, refetch } = useCustomQuery<
+    BusinessProductsResponse[]
+  >({
     key: [
       "business-products",
       session?.business_id ?? undefined,
@@ -65,6 +74,19 @@ export default function MyProductsModule({
     ],
     url: `/api/businesses/${session?.business_id}/products`,
     params: extraParams,
+  });
+
+  const { mutate: handleDelete, isPending: isLoadingDelete } = useMutate({
+    key: ["delete-product"],
+    url: `/api/booking/products`,
+    method: "DELETE",
+    options: {
+      onSuccess: async () => {
+        refetch();
+        setDeleteConfirmModal({ open: false, productId: null });
+        toast.success("Serviciul a fost șters cu succes");
+      },
+    },
   });
 
   const memoizedData = useMemo(() => {
@@ -85,16 +107,19 @@ export default function MyProductsModule({
       case 0:
         return (
           <MyProductsDisplayTable
+            employees={employees}
             allProducts={allProducts}
+            isLoading={isLoading}
+            onDelete={(id) =>
+              setDeleteConfirmModal({ open: true, productId: id })
+            }
             productType={productType}
             setProductType={setProductType}
             isEmployee={session?.is_employee}
             employeeId={employeeId}
             setEmployeeId={setEmployeeId}
-            employees={employees}
             serviceId={serviceId}
             setServiceId={setServiceId}
-            isLoading={isLoading}
           />
         );
       case 1:
@@ -107,11 +132,15 @@ export default function MyProductsModule({
   return (
     <MainLayout title="Serviciile mele" hideAction>
       <ConfirmationModal
-        open={openDeleteConfirm}
+        open={deleteConfirmModal.open}
+        primaryActionTitle="Șterge"
         title="Confirmare ștergere"
+        isLoading={isLoadingDelete}
         message="Ești sigur că vrei să ștergi acest serviciu? Această acțiune nu poate fi anulată."
-        onClose={() => setOpenDeleteConfirm(false)}
-        onConfirm={() => {}}
+        onClose={() => setDeleteConfirmModal({ open: false, productId: null })}
+        onConfirm={() => {
+          handleDelete({ productId: deleteConfirmModal.productId });
+        }}
       />
       <AddProductModal
         open={openAddModal}

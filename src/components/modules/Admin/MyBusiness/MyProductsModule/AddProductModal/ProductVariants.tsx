@@ -1,18 +1,11 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
-import {
-  alpha,
-  Box,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Stack } from "@mui/material";
 import { Control, useFieldArray, UseFormWatch } from "react-hook-form";
 import VariantAccordion from "./VariantAccordion";
 import { ProductFormValues } from "./AddProductModal";
-import { Add } from "@mui/icons-material";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
+import ProductVariantsHeader from "./ProductVariantsHeader";
 
 type ProductVariantsProps = {
   hasEmployees: boolean;
@@ -39,8 +32,7 @@ const ProductVariants = ({
   const onAddVariant = () => {
     append({
       name: "",
-      duration: 30,
-      has_different_prices: false,
+      duration: 0,
       offerings: employees.map((emp) => ({
         user_id: emp.id,
         fullname: emp.fullname,
@@ -57,36 +49,7 @@ const ProductVariants = ({
 
   return (
     <Grid size={{ xs: 12, md: 8 }} sx={styles.container}>
-      <Stack
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={3}
-      >
-        <Box>
-          <Typography variant="h6" fontWeight="700">
-            Variante și Prețuri
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Gestionează duratele și prețurile angajaților.
-          </Typography>
-        </Box>
-        <Tooltip title="Adauga o varianta">
-          <IconButton
-            onClick={onAddVariant}
-            size="large"
-            sx={{
-              bgcolor: "primary.main",
-              transition: "all 0.2s ease",
-              "&:hover": {
-                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.9),
-              },
-            }}
-          >
-            <Add fontSize="medium" sx={{ color: "white" }} />
-          </IconButton>
-        </Tooltip>
-      </Stack>
+      <ProductVariantsHeader onAdd={onAddVariant} />
 
       <Stack spacing={2}>
         {variantFields.map((field, index) => (

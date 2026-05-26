@@ -7,6 +7,7 @@ import React from "react";
 
 type ConfirmationModalProps = {
   title?: string;
+  primaryActionTitle?: string;
   isLoading?: boolean;
   message: string;
   open: boolean;
@@ -16,6 +17,7 @@ type ConfirmationModalProps = {
 
 export default function ConfirmationModal({
   title,
+  primaryActionTitle = "Anulează",
   isLoading = false,
   message,
   open,
@@ -33,7 +35,7 @@ export default function ConfirmationModal({
       },
     },
     {
-      title: "Anulează",
+      title: primaryActionTitle,
       props: {
         onClick: onConfirm,
         loading: isLoading,
