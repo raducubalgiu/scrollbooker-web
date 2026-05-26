@@ -131,7 +131,6 @@ const MyProductsDisplayTable = ({
 
   const renderTopToolbarCustomActions = React.useCallback(
     ({ table }: { table: MRT_TableInstance<Product> }) => {
-      console.log("TABLE!!!", table);
       return (
         <Stack direction="row" alignItems="center" spacing={1}>
           {!isEmployee && (

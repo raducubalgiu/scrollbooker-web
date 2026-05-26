@@ -6,6 +6,8 @@ import BookingCartHeader from "./BookingCartHeader";
 import BookingCartActions from "./BookingCartActions";
 import BookingCartTotals from "./BookingCartTotals";
 import BookingCartContent from "./BookingCartContent";
+import Protected from "@/components/cutomized/Protected/Protected";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 export type EmployeeDataType = {
   selectedEmployeeId: number | null;
@@ -93,14 +95,16 @@ const BookingCart = ({
           totalDuration={totals.totalDuration}
         />
 
-        <BookingCartActions
-          isFirstStep={isFirstStep}
-          isLastStep={isLastStep}
-          isLoadingNext={isLoadingNext}
-          isNextDisabled={isNextDisabled}
-          onBack={onBack}
-          onNext={onNext}
-        />
+        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+          <BookingCartActions
+            isFirstStep={isFirstStep}
+            isLastStep={isLastStep}
+            isLoadingNext={isLoadingNext}
+            isNextDisabled={isNextDisabled}
+            onBack={onBack}
+            onNext={onNext}
+          />
+        </Protected>
       </Box>
     </Box>
   );

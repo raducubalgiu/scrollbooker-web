@@ -32,7 +32,9 @@ export default function MyProductsModule({
   const isEmployee = session?.is_employee;
   const authUserId = session?.user_id;
 
-  const [employeeId, setEmployeeId] = useState<number | null>(null);
+  const [employeeId, setEmployeeId] = useState<number | null>(
+    session?.is_employee ? session.user_id : null
+  );
   const [productType, setProductType] = useState<ProductTypeEnum | null>(null);
   const [serviceId, setServiceId] = useState<number | null>(null);
 
@@ -108,8 +110,8 @@ export default function MyProductsModule({
         open={openDeleteConfirm}
         title="Confirmare ștergere"
         message="Ești sigur că vrei să ștergi acest serviciu? Această acțiune nu poate fi anulată."
-        handleClose={() => setOpenDeleteConfirm(false)}
-        handleSubmit={() => {}}
+        onClose={() => setOpenDeleteConfirm(false)}
+        onConfirm={() => {}}
       />
       <AddProductModal
         open={openAddModal}

@@ -89,7 +89,7 @@ const AddProductModal = ({
 
       <FormProvider {...methods}>
         <Grid container sx={{ height: "100vh", overflow: "hidden" }}>
-          <ProductGeneralInfo selectedDomainId={selectedDomainId} />
+          <ProductGeneralInfo open={open} selectedDomainId={selectedDomainId} />
           <ProductVariants
             hasEmployees={hasEmployees}
             employees={employees}

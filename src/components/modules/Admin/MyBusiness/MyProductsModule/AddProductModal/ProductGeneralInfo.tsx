@@ -9,13 +9,19 @@ import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/ser
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Box, Checkbox, Divider, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import React, { useMemo } from "react";
+import { useSession } from "next-auth/react";
+import { useMemo } from "react";
 
 type ProductGeneralInfoProps = {
+  open: boolean;
   selectedDomainId: string;
 };
 
-const ProductGeneralInfo = ({ selectedDomainId }: ProductGeneralInfoProps) => {
+const ProductGeneralInfo = ({
+  open,
+  selectedDomainId,
+}: ProductGeneralInfoProps) => {
+  const { data: session } = useSession();
   const isRequired = required();
   const nameMinLength = minField(3);
   const nameMaxLength = maxField(100);
@@ -23,11 +29,13 @@ const ProductGeneralInfo = ({ selectedDomainId }: ProductGeneralInfoProps) => {
   const { data: serviceDomainServices } = useCustomQuery<
     SelectedServiceDomainWithServices[]
   >({
-    key: "my-services",
-    url: "/api/my-services",
+    key: ["business-services", !!session?.business_id],
+    url: `/api/businesses/${session?.business_id}/services`,
+    options: {
+      enabled: open && !!session?.business_id,
+      staleTime: 5 * 60 * 1000,
+    },
   });
-
-  console.log("serviceDomainServices", serviceDomainServices);
 
   const validDomains = useMemo(() => {
     if (!serviceDomainServices) return [];
