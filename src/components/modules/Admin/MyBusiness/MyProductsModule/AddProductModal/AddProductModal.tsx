@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Dialog } from "@mui/material";
 import Grid from "@mui/material/Grid2";
@@ -8,12 +8,15 @@ import ProductVariants from "./ProductVariants";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { ProductTypeEnum } from "@/ts/enums/ProductTypeEnum";
 import { ProductWithFiltersCreate } from "@/ts/models/booking/product/Product";
+import { useSession } from "next-auth/react";
 
 type AddProductModalProps = {
   open: boolean;
   handleClose: () => void;
   hasEmployees: boolean;
   employees: BusinessEmployee[];
+  isSavingProduct: boolean;
+  onCreateProduct: (productCreate: ProductWithFiltersCreate) => void;
 };
 
 export interface FormProductOffering {
@@ -40,42 +43,64 @@ export interface ProductFormValues {
   variants: FormProductVariant[];
 }
 
+const getCleanDefaultValues = (
+  employees: BusinessEmployee[]
+): ProductFormValues => ({
+  type: ProductTypeEnum.SINGLE,
+  serviceDomainId: "",
+  serviceId: "",
+  name: "",
+  description: "",
+  can_be_booked: true,
+  variants: [
+    {
+      name: "",
+      duration: 0,
+      offerings: employees.map((emp) => ({
+        user_id: emp.id,
+        price: 0,
+        price_with_discount: 0,
+        discount: 0,
+        is_offering: true,
+      })),
+    },
+  ],
+});
+
 const AddProductModal = ({
   open,
   handleClose,
   hasEmployees,
   employees,
+  isSavingProduct,
+  onCreateProduct,
 }: AddProductModalProps) => {
+  const { data: session } = useSession();
+
   const methods = useForm<ProductFormValues>({
-    defaultValues: {
-      type: ProductTypeEnum.SINGLE,
-      serviceDomainId: "",
-      serviceId: "",
-      name: "",
-      description: "",
-      can_be_booked: true,
-      variants: [
-        {
-          name: "",
-          duration: 0,
-          offerings: employees.map((emp) => ({
-            user_id: emp.id,
-            price: 0,
-            price_with_discount: 0,
-            discount: 0,
-            is_offering: true,
-          })),
-        },
-      ],
-    },
+    defaultValues: getCleanDefaultValues(employees),
   });
 
   const { control, handleSubmit, reset, watch } = methods;
   const selectedDomainId = watch("serviceDomainId");
 
+  useEffect(() => {
+    if (open) {
+      reset(getCleanDefaultValues(employees));
+    }
+  }, [open, employees, reset]);
+
   const onSubmit = (data: ProductFormValues) => {
     const productCreate: ProductWithFiltersCreate = {
       product: {
+        name: data.name.trim(),
+        description: data.description ? data.description.trim() : null,
+        service_id: Number(data.serviceId),
+        business_id: Number(session?.business_id),
+        currency_id: 1,
+        can_be_booked: data.can_be_booked,
+        type: data.type,
+
         variants: data.variants.map((v) => ({
           name: v.name.trim(),
           duration: Number(v.duration),
@@ -93,8 +118,7 @@ const AddProductModal = ({
       filters: [],
     };
 
-    console.log("Payload mapat curat:", productCreate);
-    // handleSave(productCreate);
+    onCreateProduct(productCreate);
   };
 
   return (
@@ -102,6 +126,7 @@ const AddProductModal = ({
       <AddProductHeader
         onHandleClose={handleClose}
         onReset={() => reset()}
+        isSavingProduct={isSavingProduct}
         onSaveProduct={handleSubmit(onSubmit)}
       />
 

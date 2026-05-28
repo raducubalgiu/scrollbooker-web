@@ -10,12 +10,14 @@ import {
 import React from "react";
 
 type AddProductHeaderProps = {
+  isSavingProduct: boolean;
   onHandleClose: () => void;
   onReset: () => void;
   onSaveProduct: () => void;
 };
 
 const AddProductHeader = ({
+  isSavingProduct,
   onHandleClose,
   onReset,
   onSaveProduct,
@@ -48,10 +50,17 @@ const AddProductHeader = ({
           color="secondary"
           sx={{ mr: 2 }}
           onClick={onReset}
+          disabled={isSavingProduct}
         >
           Reset
         </Button>
-        <Button variant="contained" disableElevation onClick={onSaveProduct}>
+        <Button
+          variant="contained"
+          disableElevation
+          onClick={onSaveProduct}
+          disabled={isSavingProduct}
+          loading={isSavingProduct}
+        >
           Salvează Serviciul
         </Button>
       </Toolbar>

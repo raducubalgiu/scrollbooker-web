@@ -58,15 +58,8 @@ const MyProductsDisplayTable = ({
   const columns = React.useMemo<MRT_ColumnDef<Product>[]>(
     () => [
       {
-        accessorKey: "id",
-        header: "ID",
-        size: 50,
-        enableEditing: false,
-        Cell: ({ row }) => <span>#{row.original.id}</span>,
-      },
-      {
         accessorKey: "name",
-        header: "Name",
+        header: "Nume",
       },
       {
         accessorKey: "description",

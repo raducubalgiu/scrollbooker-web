@@ -76,18 +76,34 @@ export default function MyProductsModule({
     params: extraParams,
   });
 
-  const { mutate: handleDelete, isPending: isLoadingDelete } = useMutate({
-    key: ["delete-product"],
-    url: `/api/booking/products`,
-    method: "DELETE",
-    options: {
-      onSuccess: async () => {
-        refetch();
-        setDeleteConfirmModal({ open: false, productId: null });
-        toast.success("Serviciul a fost șters cu succes");
+  const { mutate: handleCreateProduct, isPending: isSavingProduct } = useMutate(
+    {
+      key: ["create-product"],
+      url: "/api/booking/products",
+      options: {
+        onSuccess: async () => {
+          refetch();
+          setOpenAddModal(false);
+          toast.success("Serviciul a fost adăugat");
+        },
       },
-    },
-  });
+    }
+  );
+
+  const { mutate: handleDeleteProduct, isPending: isLoadingDelete } = useMutate(
+    {
+      key: ["delete-product"],
+      url: `/api/booking/products`,
+      method: "DELETE",
+      options: {
+        onSuccess: async () => {
+          refetch();
+          setDeleteConfirmModal({ open: false, productId: null });
+          toast.success("Serviciul a fost șters cu succes");
+        },
+      },
+    }
+  );
 
   const memoizedData = useMemo(() => {
     return data || [];
@@ -139,7 +155,7 @@ export default function MyProductsModule({
         message="Ești sigur că vrei să ștergi acest serviciu? Această acțiune nu poate fi anulată."
         onClose={() => setDeleteConfirmModal({ open: false, productId: null })}
         onConfirm={() => {
-          handleDelete({ productId: deleteConfirmModal.productId });
+          handleDeleteProduct({ productId: deleteConfirmModal.productId });
         }}
       />
       <AddProductModal
@@ -147,6 +163,8 @@ export default function MyProductsModule({
         handleClose={() => setOpenAddModal(false)}
         hasEmployees={session?.has_employees ?? false}
         employees={employees}
+        isSavingProduct={isSavingProduct}
+        onCreateProduct={(prodCreate) => handleCreateProduct(prodCreate)}
       />
 
       <Stack

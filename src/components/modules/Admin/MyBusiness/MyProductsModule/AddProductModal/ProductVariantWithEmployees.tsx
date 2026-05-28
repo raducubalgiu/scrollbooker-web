@@ -17,7 +17,7 @@ type ProductVariantWithEmployeesProps = {
   >[];
 };
 
-const ProductVariantsWithEmployees = ({
+const ProductVariantWithEmployees = ({
   employees,
   index,
   watch,
@@ -78,4 +78,4 @@ const ProductVariantsWithEmployees = ({
   );
 };
 
-export default ProductVariantsWithEmployees;
+export default ProductVariantWithEmployees;

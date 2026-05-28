@@ -122,6 +122,13 @@ export interface ProductVariantCreate {
 }
 
 export interface ProductCreate {
+  name: string;
+  description: string | null;
+  service_id: number;
+  business_id: number;
+  currency_id: number;
+  can_be_booked: boolean;
+  type: string;
   variants: ProductVariantCreate[];
 }
 
