@@ -1,5 +1,6 @@
 import { SubFilter } from "../../nomenclatures/subFilter/SubFilter";
 import { Service } from "../../nomenclatures/service/Service";
+import { FilterTypeEnum } from "@/ts/enums/FilterTypeEnum";
 
 export interface ProductFilter {
   id: number;
@@ -97,3 +98,35 @@ export interface BusinessProductsResponse {
   products: Product[];
 }
 [];
+
+export interface ProductFilterCreate {
+  filter_id: number;
+  sub_filter_ids: number[];
+  type: FilterTypeEnum;
+  minim: number | null;
+  maxim: number | null;
+  is_not_applicable: boolean;
+}
+
+export interface ProductOfferingCreate {
+  user_id: number;
+  price: number;
+  discount: number;
+  price_with_discount: number;
+}
+
+export interface ProductVariantCreate {
+  name: string;
+  duration: number;
+  offerings: ProductOfferingCreate[];
+}
+
+export interface ProductCreate {
+  variants: ProductVariantCreate[];
+}
+
+export interface ProductWithFiltersCreate {
+  product: ProductCreate;
+  service_domain_id: number;
+  filters: ProductFilterCreate[];
+}
