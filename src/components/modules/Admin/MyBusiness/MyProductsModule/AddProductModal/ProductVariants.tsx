@@ -35,10 +35,6 @@ const ProductVariants = ({
       duration: 0,
       offerings: employees.map((emp) => ({
         user_id: emp.id,
-        fullname: emp.fullname,
-        username: emp.username,
-        profession: emp.job,
-        avatar: emp.avatar,
         price: 0,
         price_with_discount: 0,
         discount: 0,
@@ -58,6 +54,7 @@ const ProductVariants = ({
             index={index}
             control={control}
             watch={watch}
+            employees={employees}
             hasEmployees={hasEmployees}
             remove={() => remove(index)}
           />

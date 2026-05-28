@@ -1,4 +1,4 @@
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, get } from "react-hook-form";
 import { TextField, TextFieldProps } from "@mui/material";
 import { has } from "lodash";
 
@@ -15,25 +15,30 @@ export default function Input({
   const {
     control,
     formState: { errors },
-    register,
   } = useFormContext<{ [x: string]: string }>();
+
+  const fieldError = get(errors, name as string);
 
   return (
     <Controller
       control={control}
       name={name as string}
       rules={rules}
-      render={({ field: { value, ...field } }) => (
+      render={({
+        field: { value, onChange, onBlur, ref, name: fieldName },
+      }) => (
         <TextField
-          {...field}
-          {...props}
-          {...register(name as string, { ...rules })}
           fullWidth
-          value={value ?? ""}
           label={label}
-          error={has(errors, name as string)}
-          helperText={errors[name as string]?.message}
-          required={has(rules, "required")}
+          name={fieldName || (name as string) || ""}
+          value={value ?? ""}
+          onChange={onChange}
+          onBlur={onBlur}
+          inputRef={ref}
+          {...props}
+          error={!!fieldError}
+          helperText={fieldError?.message}
+          required={has(rules, "required") || has(rules, "validate")}
         />
       )}
     />

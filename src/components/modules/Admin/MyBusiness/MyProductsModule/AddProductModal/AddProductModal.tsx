@@ -27,14 +27,10 @@ export interface ProductFormValues {
     duration: number;
     offerings: {
       user_id: number;
-      fullname: string;
-      username: string;
-      profession: string;
-      avatar: string | null;
       price: number;
       price_with_discount: number;
       discount: number;
-      is_offering?: boolean;
+      is_offering: boolean;
     }[];
   }[];
 }
@@ -59,10 +55,6 @@ const AddProductModal = ({
           duration: 0,
           offerings: employees.map((emp) => ({
             user_id: emp.id,
-            fullname: emp.fullname,
-            username: emp.username,
-            profession: emp.job,
-            avatar: emp.avatar,
             price: 0,
             price_with_discount: 0,
             discount: 0,
