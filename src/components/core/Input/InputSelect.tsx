@@ -9,6 +9,7 @@ export type SelectProps = {
   multiple?: boolean;
   options: SelectOptionType[];
   rules?: object;
+  isLoading?: boolean;
 } & TextFieldProps;
 
 export default function InputSelect({
@@ -16,12 +17,15 @@ export default function InputSelect({
   disabled = false,
   rules = {},
   options,
+  isLoading = false,
   ...others
 }: SelectProps) {
   const {
     control,
     formState: { errors },
   } = useFormContext();
+
+  const fieldError = get(errors, String(name));
 
   return (
     <Controller
@@ -39,9 +43,10 @@ export default function InputSelect({
             value={value ?? ""}
             options={options ?? []}
             error={has(errors, name as string)}
-            helperText={get(errors, String(name))?.message}
+            helperText={fieldError?.message || ""}
             inputRef={ref}
             disabled={disabled}
+            loading={isLoading}
           />
         );
       }}

@@ -26,16 +26,15 @@ const ProductGeneralInfo = ({
   const nameMinLength = minField(3);
   const nameMaxLength = maxField(100);
 
-  const { data: serviceDomainServices } = useCustomQuery<
-    SelectedServiceDomainWithServices[]
-  >({
-    key: ["business-services", !!session?.business_id],
-    url: `/api/businesses/${session?.business_id}/services`,
-    options: {
-      enabled: open && !!session?.business_id,
-      staleTime: 5 * 60 * 1000,
-    },
-  });
+  const { data: serviceDomainServices, isLoading: isLoadingServices } =
+    useCustomQuery<SelectedServiceDomainWithServices[]>({
+      key: ["business-services", !!session?.business_id],
+      url: `/api/businesses/${session?.business_id}/services`,
+      options: {
+        enabled: open && !!session?.business_id,
+        staleTime: 5 * 60 * 1000,
+      },
+    });
 
   const validDomains = useMemo(() => {
     if (!serviceDomainServices) return [];
@@ -90,12 +89,14 @@ const ProductGeneralInfo = ({
           label="Categoria"
           options={domainOptions}
           rules={isRequired}
+          isLoading={isLoadingServices}
         />
         <InputSelect
           name="serviceId"
           label="Serviciu"
           options={serviceOptions}
           rules={isRequired}
+          isLoading={isLoadingServices}
         />
 
         <Input
@@ -111,7 +112,6 @@ const ProductGeneralInfo = ({
           <Typography variant="subtitle2" mb={1} fontWeight="700">
             Filtre Rapide
           </Typography>
-          <Input name="genre" label="Gen" />
         </Box>
 
         <Divider sx={{ my: 1 }} />
