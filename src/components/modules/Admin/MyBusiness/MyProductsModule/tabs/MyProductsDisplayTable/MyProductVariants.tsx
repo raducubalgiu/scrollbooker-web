@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import MyProductVariantOffering from "./MyProductVariantOffering";
 
 type MyProductVariantsProps = {
   product: Product;
@@ -172,31 +173,10 @@ const MyProductVariants = ({ product }: MyProductVariantsProps) => {
                   </TableHead>
                   <TableBody>
                     {v.offerings.map((of) => (
-                      <TableRow key={of.user_id} sx={styles.tableRowBody}>
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          sx={{ fontWeight: 500 }}
-                        >
-                          {of.user_id}
-                        </TableCell>
-                        <TableCell align="right" color="text.secondary">
-                          {of.price} lei
-                        </TableCell>
-                        <TableCell
-                          align="right"
-                          sx={{
-                            color:
-                              of.discount > 0 ? "error.main" : "text.secondary",
-                            fontWeight: of.discount > 0 ? 600 : 400,
-                          }}
-                        >
-                          {of.discount > 0 ? `-${of.discount}%` : "-"}
-                        </TableCell>
-                        <TableCell align="right" sx={{ fontWeight: 600 }}>
-                          {of.price_with_discount} lei
-                        </TableCell>
-                      </TableRow>
+                      <MyProductVariantOffering
+                        key={of.user.id}
+                        offering={of}
+                      />
                     ))}
                   </TableBody>
                 </Table>
@@ -265,9 +245,5 @@ const styles = {
   headerCell: {
     fontWeight: 600,
     color: "text.secondary",
-  },
-  tableRowBody: {
-    "&:last-child td, &:last-child th": { border: 0 },
-    "&:hover": { bgcolor: "action.hover" },
   },
 };

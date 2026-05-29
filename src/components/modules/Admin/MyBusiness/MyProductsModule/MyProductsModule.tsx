@@ -9,12 +9,11 @@ import AddProductModal from "./AddProductModal/AddProductModal";
 import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import MyProductsDisplayTable from "./tabs/MyProductsDisplayTable";
-import MyProductsDisplayTabs from "./tabs/MyProductsDisplayTabs";
+import MyProductsDisplayTabs from "./tabs/MyProductsDisplayTabs/MyProductsDisplayTabs";
 import { useCallback, useMemo, useState } from "react";
-import MyProductsTabs from "./tabs/MyProductsTabs";
-import { Button, Stack } from "@mui/material";
 import { toast } from "react-toastify";
+import MyProductsDisplayTable from "./tabs/MyProductsDisplayTable/MyProductsDisplayTable";
+import MyProductsHeader from "./tabs/MyProductsHeader";
 
 type MyProductsModuleProps = {
   session: Session | null;
@@ -167,23 +166,11 @@ export default function MyProductsModule({
         onCreateProduct={(prodCreate) => handleCreateProduct(prodCreate)}
       />
 
-      <Stack
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={2.5}
-      >
-        <MyProductsTabs currentTab={currentTab} onTabChange={handleTabChange} />
-
-        <Button
-          variant="contained"
-          size="large"
-          disableElevation
-          onClick={() => setOpenAddModal(true)}
-        >
-          Adauga un serviciu nou
-        </Button>
-      </Stack>
+      <MyProductsHeader
+        currentTab={currentTab}
+        onTabChange={handleTabChange}
+        onOpenAddModal={() => setOpenAddModal(true)}
+      />
 
       {renderTab()}
     </MainLayout>

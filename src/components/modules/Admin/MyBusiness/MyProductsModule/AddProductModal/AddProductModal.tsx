@@ -9,6 +9,7 @@ import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee"
 import { ProductTypeEnum } from "@/ts/enums/ProductTypeEnum";
 import { ProductWithFiltersCreate } from "@/ts/models/booking/product/Product";
 import { useSession } from "next-auth/react";
+import { FilterTypeEnum } from "@/ts/enums/FilterTypeEnum";
 
 type AddProductModalProps = {
   open: boolean;
@@ -18,6 +19,14 @@ type AddProductModalProps = {
   isSavingProduct: boolean;
   onCreateProduct: (productCreate: ProductWithFiltersCreate) => void;
 };
+
+export interface FormProductFilter {
+  filter_id: number;
+  type: FilterTypeEnum;
+  value: string | string[] | number | null;
+  minim?: number | null;
+  maxim?: number | null;
+}
 
 export interface FormProductOffering {
   user_id: number;
@@ -41,6 +50,7 @@ export interface ProductFormValues {
   description: string | null;
   can_be_booked: boolean;
   variants: FormProductVariant[];
+  filters: FormProductFilter[];
 }
 
 const getCleanDefaultValues = (
@@ -65,6 +75,7 @@ const getCleanDefaultValues = (
       })),
     },
   ],
+  filters: [],
 });
 
 const AddProductModal = ({

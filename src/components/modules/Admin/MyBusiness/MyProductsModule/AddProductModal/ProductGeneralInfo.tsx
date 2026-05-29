@@ -5,12 +5,17 @@ import {
   getProductTypeLabel,
   ProductTypeEnum,
 } from "@/ts/enums/ProductTypeEnum";
+import { Filter } from "@/ts/models/nomenclatures/filter/FilterType";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Box, Checkbox, Divider, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useSession } from "next-auth/react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { FormProductFilter } from "./AddProductModal";
+import { useFormContext } from "react-hook-form";
+import { FilterTypeEnum, filterTypefromKey } from "@/ts/enums/FilterTypeEnum";
+import { isEmpty } from "lodash";
 
 type ProductGeneralInfoProps = {
   open: boolean;
@@ -21,6 +26,9 @@ const ProductGeneralInfo = ({
   open,
   selectedDomainId,
 }: ProductGeneralInfoProps) => {
+  const { setValue, watch } = useFormContext();
+  const selectedServiceId = watch("serviceId");
+
   const { data: session } = useSession();
   const isRequired = required();
   const nameMinLength = minField(3);
@@ -35,6 +43,31 @@ const ProductGeneralInfo = ({
         staleTime: 5 * 60 * 1000,
       },
     });
+
+  const { data: filters } = useCustomQuery<Filter[]>({
+    key: ["filters-by-service-id", selectedServiceId],
+    url: `/api/nomenclatures/services/${selectedServiceId}/filters`,
+    options: {
+      enabled: open && !!selectedServiceId,
+      staleTime: 5 * 60 * 1000,
+    },
+  });
+
+  useEffect(() => {
+    if (filters) {
+      const initialFormFilters: FormProductFilter[] = filters.map((f) => ({
+        filter_id: f.id,
+        type: filterTypefromKey(f.type) || FilterTypeEnum.OPTIONS,
+        value: f.single_select ? "" : [],
+        minim: null,
+        maxim: null,
+      }));
+
+      setValue("filters", initialFormFilters);
+    } else {
+      setValue("filters", []);
+    }
+  }, [filters, setValue]);
 
   const validDomains = useMemo(() => {
     if (!serviceDomainServices) return [];
@@ -108,11 +141,78 @@ const ProductGeneralInfo = ({
 
         <Input name="description" label="Descriere" multiline rows={3} />
 
-        <Box sx={{ p: 2, borderRadius: 3, bgcolor: "action.hover" }}>
-          <Typography variant="subtitle2" mb={1} fontWeight="700">
-            Filtre Rapide
-          </Typography>
-        </Box>
+        {!isEmpty(filters) && (
+          <Box sx={{ py: 2 }}>
+            <Typography variant="h6" mb={3} fontWeight="600">
+              Filtre pentru acest serviciu
+            </Typography>
+
+            <Stack spacing={2.5}>
+              {filters?.map((filter, fIndex) => {
+                const currentType = filterTypefromKey(filter.type);
+                const subFilterOptions = filter.sub_filters.map((sf) => ({
+                  value: sf.id.toString(),
+                  name: sf.name,
+                }));
+
+                if (currentType === FilterTypeEnum.OPTIONS) {
+                  return (
+                    <InputSelect
+                      key={filter.id}
+                      name={`filters.${fIndex}.value`}
+                      label={filter.name}
+                      options={subFilterOptions}
+                      multiple={!filter.single_select}
+                    />
+                  );
+                }
+
+                if (currentType === FilterTypeEnum.NUMERIC) {
+                  return (
+                    <Input
+                      key={filter.id}
+                      type="number"
+                      name={`filters.${fIndex}.minim`}
+                      label={`${filter.name} (Valoare)`}
+                    />
+                  );
+                }
+
+                if (currentType === FilterTypeEnum.RANGE) {
+                  return (
+                    <Stack
+                      key={filter.id}
+                      direction="row"
+                      spacing={2}
+                      alignItems="center"
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{ minWidth: 80, fontWeight: "600" }}
+                      >
+                        {filter.name}:
+                      </Typography>
+                      <Input
+                        type="number"
+                        size="small"
+                        name={`filters.${fIndex}.minim`}
+                        label="Minim"
+                      />
+                      <Input
+                        type="number"
+                        size="small"
+                        name={`filters.${fIndex}.maxim`}
+                        label="Maxim"
+                      />
+                    </Stack>
+                  );
+                }
+
+                return null;
+              })}
+            </Stack>
+          </Box>
+        )}
 
         <Divider sx={{ my: 1 }} />
 

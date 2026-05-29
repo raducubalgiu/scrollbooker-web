@@ -23,8 +23,16 @@ export interface StartingOffering {
   discount: number;
 }
 
+export interface ProductOfferingUser {
+  id: number;
+  username: string;
+  fullname: string;
+  profession: string;
+  avatar: string | null;
+}
+
 export interface ProductOffering {
-  user_id: number;
+  user: ProductOfferingUser;
   price: number;
   price_with_discount: number;
   discount: number;
@@ -99,6 +107,7 @@ export interface BusinessProductsResponse {
 }
 [];
 
+// Create Products DTOs
 export interface ProductFilterCreate {
   filter_id: number;
   sub_filter_ids: number[];

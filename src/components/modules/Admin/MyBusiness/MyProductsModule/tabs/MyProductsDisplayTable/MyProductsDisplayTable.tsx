@@ -15,12 +15,12 @@ import {
 } from "material-react-table";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import React, { memo, useCallback } from "react";
-import EmployeeButton from "../../../AppointmentsModule/EmployeeButton";
-import ProductTypeButton from "../ProductTypeButton";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
-import ServiceButton from "../ServiceButton";
-import MyProductVariants from "./MyProductVariants";
 import { formatPrice } from "@/utils/formatPrice";
+import EmployeeButton from "@/components/modules/Admin/AppointmentsModule/EmployeeButton";
+import ProductTypeButton from "../../ProductTypeButton";
+import ServiceButton from "../../ServiceButton";
+import MyProductVariants from "./MyProductVariants";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<Product>;
@@ -125,24 +125,21 @@ const MyProductsDisplayTable = ({
     []
   );
 
-  const renderTopToolbarCustomActions = React.useCallback(
-    ({ table }: { table: MRT_TableInstance<Product> }) => {
-      return (
-        <Stack direction="row" alignItems="center" spacing={1}>
-          {!isEmployee && (
-            <EmployeeButton
-              employees={employees}
-              employee={employeeId}
-              onSetEmployee={(id) => setEmployeeId(id)}
-            />
-          )}
-          <ProductTypeButton type={productType} onSetType={setProductType} />
-          <ServiceButton serviceId={serviceId} onSetService={setServiceId} />
-        </Stack>
-      );
-    },
-    [isEmployee, employees, employeeId, productType]
-  );
+  const renderTopToolbarCustomActions = React.useCallback(() => {
+    return (
+      <Stack direction="row" alignItems="center" spacing={1}>
+        {!isEmployee && (
+          <EmployeeButton
+            employees={employees}
+            employee={employeeId}
+            onSetEmployee={(id) => setEmployeeId(id)}
+          />
+        )}
+        <ProductTypeButton type={productType} onSetType={setProductType} />
+        <ServiceButton serviceId={serviceId} onSetService={setServiceId} />
+      </Stack>
+    );
+  }, [isEmployee, employees, employeeId, productType]);
 
   const renderRowActionMenuItems = useCallback(
     ({ row, table, closeMenu }: RenderRowActionMenuItemsProps) => [
