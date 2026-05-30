@@ -5,13 +5,10 @@ import { usePathname } from "next/navigation";
 import { useTheme, Theme } from "@mui/material/styles";
 import { Backdrop, Box, CssBaseline, Drawer, Slide } from "@mui/material";
 
-import NotificationsModule from "@/components/modules/Marketplace/NotificationsModule/NotificationsModule";
-import AppointmentsModule from "@/components/modules/Marketplace/AppointmentsModule/AppointmentsModule";
-import SearchUsersModule from "@/components/modules/Marketplace/SearchUsersModule/SearchUsersModule";
 import LayoutDrawer from "./LayoutDrawer";
 import BottomBar from "./BottomBar";
 import { useSession } from "next-auth/react";
-import { AppRoutes, useAppNavigation } from "@/utils/routes";
+import LayoutOverlayContent from "./LayoutOverlayContent";
 
 const DRAWER_WIDTH = 340;
 const COLLAPSED_WIDTH = 110;
@@ -23,7 +20,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || "";
   const theme = useTheme();
   const { data: session, status } = useSession();
-  const { navigateTo } = useAppNavigation();
 
   const [activeView, setActiveView] = React.useState<ActiveView>(null);
   const [isDrawerCollapsed, setIsDrawerCollapsed] = React.useState(false);
@@ -36,21 +32,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }, [activeView]);
 
-  const isNoLayoutPage = React.useMemo(() => {
-    if (!pathname) return true;
+  const { isNoLayoutPage, isVideoPage, isAdminPage } = React.useMemo(() => {
+    if (!pathname)
+      return { isNoLayoutPage: true, isVideoPage: false, isAdminPage: false };
 
     const staticPaths = ["/unauthorized", "/_not-found"];
-    if (staticPaths.includes(pathname)) return true;
+    const isNoLayout =
+      staticPaths.includes(pathname) ||
+      [
+        "/auth",
+        "/onboarding",
+        "/business/",
+        "/booking/",
+        "/employment-request",
+      ].some((p) => pathname.startsWith(p));
 
-    const cleanPrefixes = [
-      "/auth",
-      "/onboarding",
-      "/business/",
-      "/booking/",
-      "/employment-request",
-    ];
-
-    return cleanPrefixes.some((prefix) => pathname.startsWith(prefix));
+    return {
+      isNoLayoutPage: isNoLayout,
+      isVideoPage: pathname.startsWith("/user/") && pathname.includes("/post/"),
+      isAdminPage: pathname.startsWith("/admin/"),
+    };
   }, [pathname]);
 
   const isSessionLoading = status === "loading";
@@ -63,10 +64,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     : isDrawerCollapsed
       ? COLLAPSED_WIDTH
       : DRAWER_WIDTH;
-
-  const isVideoPage =
-    pathname.startsWith("/user/") && pathname.includes("/post/");
-  const isAdminPage = pathname.startsWith("/admin/");
 
   const bgColor =
     theme.palette.mode === "dark" ? "background.default" : "background.paper";
@@ -112,46 +109,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         : setActiveView("appointments"),
     [activeView, handleCloseAll]
   );
-
-  const expandedDrawer = React.useMemo(() => {
-    switch (activeView) {
-      case "appointments":
-        return (
-          <AppointmentsModule
-            scrollRootRef={overlayScrollRef}
-            onNavigateToAppointment={(appointmentId) => {
-              handleCloseAll();
-              navigateTo(AppRoutes.appointmentDetails(appointmentId));
-            }}
-          />
-        );
-      case "notifications":
-        return (
-          <NotificationsModule
-            scrollRootRef={overlayScrollRef}
-            onNavigateToUserProfile={(username, profession) => {
-              handleCloseAll();
-              navigateTo(AppRoutes.profile(username, profession));
-            }}
-            onNavigateToEmploymentRequest={(employmentRequestId) => {
-              handleCloseAll();
-              navigateTo(AppRoutes.employmentRequest(employmentRequestId));
-            }}
-          />
-        );
-      case "search":
-        return (
-          <SearchUsersModule
-            onNavigateToUserProfile={(username, profession) => {
-              handleCloseAll();
-              navigateTo(AppRoutes.profile(username, profession));
-            }}
-          />
-        );
-      default:
-        return null;
-    }
-  }, [activeView, handleCloseAll, navigateTo]);
 
   if (isNoLayoutPage) {
     return <>{children}</>;
@@ -199,7 +156,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       >
         <Box ref={overlayScrollRef} sx={styles.overlayContainer}>
           <Box key={activeView} sx={styles.overlayContent}>
-            {expandedDrawer}
+            <LayoutOverlayContent
+              activeView={activeView}
+              overlayScrollRef={overlayScrollRef}
+              onClose={handleCloseAll}
+            />
           </Box>
         </Box>
       </Slide>
