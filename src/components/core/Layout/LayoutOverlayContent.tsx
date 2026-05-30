@@ -40,6 +40,10 @@ export default function LayoutOverlayContent({
             onClose();
             navigateTo(AppRoutes.employmentRequest(employmentRequestId));
           }}
+          onNavigateToAppointmentDetails={(appointmentId) => {
+            onClose();
+            navigateTo(AppRoutes.appointmentDetails(appointmentId));
+          }}
         />
       );
     case "search":

@@ -19,6 +19,9 @@ const NotificationsWrapper = () => {
         onNavigateToEmploymentRequest={(employmentRequestId) =>
           navigateTo(AppRoutes.employmentRequest(employmentRequestId))
         }
+        onNavigateToAppointmentDetails={(appointmentId) => {
+          navigateTo(AppRoutes.appointmentDetails(appointmentId));
+        }}
       />
     </Box>
   );

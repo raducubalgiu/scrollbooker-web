@@ -11,12 +11,14 @@ type NotificationsModuleProps = {
   scrollRootRef: React.RefObject<HTMLDivElement | null>;
   onNavigateToUserProfile: (username: string, profession: string) => void;
   onNavigateToEmploymentRequest: (e: number) => void;
+  onNavigateToAppointmentDetails: (appointmentId: number) => void;
 };
 
 const NotificationsModule = ({
   scrollRootRef,
   onNavigateToUserProfile,
   onNavigateToEmploymentRequest,
+  onNavigateToAppointmentDetails,
 }: NotificationsModuleProps) => {
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -88,6 +90,7 @@ const NotificationsModule = ({
             notification={notification}
             onNavigateToUserProfile={onNavigateToUserProfile}
             onNavigateToEmploymentRequest={onNavigateToEmploymentRequest}
+            onNavigateToAppointmentDetails={onNavigateToAppointmentDetails}
           />
         ))}
 

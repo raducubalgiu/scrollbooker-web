@@ -14,8 +14,10 @@ import React from "react";
 import {
   AppointmentBookedNotificationData,
   AppointmentCanceledNotificationData,
+  AppointmentReminderNotificationData,
   AppointmentRescheduledNotificationData,
   AppointmentReviewedNotificationData,
+  BusinessValidationNotificationData,
   CommentPostNotificationData,
   EmploymentRequestNotificationData,
   LikePostNotificationData,
@@ -38,12 +40,12 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import WorkIcon from "@mui/icons-material/Work";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import dayjs from "@/lib/dayjs";
-import { AppRoutes, useAppNavigation } from "@/utils/routes";
 
 type NotificationItemProps = {
   notification: Notification;
   onNavigateToUserProfile: (username: string, profession: string) => void;
   onNavigateToEmploymentRequest: (e: number) => void;
+  onNavigateToAppointmentDetails: (appointmentId: number) => void;
 } & ListItemProps;
 
 interface NotificationsQueryPage {
@@ -55,11 +57,11 @@ export default function NotificationItem({
   notification,
   onNavigateToUserProfile,
   onNavigateToEmploymentRequest,
+  onNavigateToAppointmentDetails,
   ...listItemProps
 }: NotificationItemProps) {
   const { type, sender, data, is_read } = notification || {};
   const queryClient = useQueryClient();
-  const { navigateTo } = useAppNavigation();
 
   const { mutate: toggleFollow } = useMutation({
     mutationFn: async ({
@@ -195,9 +197,7 @@ export default function NotificationItem({
             <Button
               onClick={(e) => {
                 e.stopPropagation();
-                navigateTo(
-                  AppRoutes.appointmentDetails(appointmentData.appointment_id)
-                );
+                onNavigateToAppointmentDetails(appointmentData.appointment_id);
               }}
               variant="contained"
               sx={styles.actionButton}
@@ -216,6 +216,10 @@ export default function NotificationItem({
           text: `a anulat programarea. ${cancelData.canceled_reason ? `Motiv: ${cancelData.canceled_reason}` : ""}`,
           action: (
             <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigateToAppointmentDetails(cancelData.appointment_id);
+              }}
               variant="contained"
               disableElevation
               sx={styles.actionButton}
@@ -226,12 +230,17 @@ export default function NotificationItem({
         };
       }
 
+      // Implemented
       case NotificationTypeEnum.APPOINTMENT_RESCHEDULED: {
         const rescheduleData = data as AppointmentRescheduledNotificationData;
         return {
           text: `Programarea a fost replanificată pe ${new Date(rescheduleData.new_start_date).toLocaleDateString("ro-RO")}`,
           action: (
             <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigateToAppointmentDetails(rescheduleData.appointment_id);
+              }}
               variant="outlined"
               sx={styles.actionButton}
               disableElevation
@@ -242,6 +251,7 @@ export default function NotificationItem({
         };
       }
 
+      // Implemented
       case NotificationTypeEnum.APPOINTMENT_REMINDER:
         return { text: "Memento: Ai o programare stabilită în curând." };
 
@@ -252,6 +262,10 @@ export default function NotificationItem({
           text: `A lăsat o recenzie de ${reviewData.rating} stele pentru programarea finalizată.`,
           action: (
             <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigateToAppointmentDetails(reviewData.appointment_id);
+              }}
               variant="outlined"
               sx={styles.actionButton}
               disableElevation
@@ -300,8 +314,9 @@ export default function NotificationItem({
       case NotificationTypeEnum.EMPLOYMENT_REQUEST_DENIED:
         return { text: "a respins cererea ta de angajare." };
 
+      // Implemented
       case NotificationTypeEnum.BUSINESS_VALIDATION: {
-        const validation = data as any;
+        const validation = data as BusinessValidationNotificationData;
         return {
           text: validation.is_approved
             ? "Afacerea ta a fost validată cu succes de administratori!"
@@ -379,19 +394,15 @@ export default function NotificationItem({
       case NotificationTypeEnum.APPOINTMENT_REVIEWED: {
         const appointmentReviewData =
           data as AppointmentReviewedNotificationData;
-        navigateTo(
-          AppRoutes.appointmentDetails(appointmentReviewData.appointment_id)
-        );
+        onNavigateToAppointmentDetails(appointmentReviewData.appointment_id);
         break;
       }
       case NotificationTypeEnum.APPOINTMENT_BOOKED:
       case NotificationTypeEnum.APPOINTMENT_CANCELED:
       case NotificationTypeEnum.APPOINTMENT_RESCHEDULED:
       case NotificationTypeEnum.APPOINTMENT_REMINDER: {
-        const appointmentData = data as any;
-        navigateTo(
-          AppRoutes.appointmentDetails(appointmentData.appointment_id)
-        );
+        const appointmentData = data as AppointmentReminderNotificationData;
+        onNavigateToAppointmentDetails(appointmentData.appointment_id);
         break;
       }
 
