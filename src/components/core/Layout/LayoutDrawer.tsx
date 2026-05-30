@@ -38,8 +38,6 @@ type LayoutDrawerProps = {
 
 const DRAWER_PADDING_X = 20;
 const ICON_SLOT_SIZE = 72;
-const ITEM_GAP = 10;
-const CONTENT_START = DRAWER_PADDING_X + ICON_SLOT_SIZE + ITEM_GAP;
 const BOTTOM_BAR_HEIGHT = 72;
 
 const LayoutDrawer = ({
@@ -209,18 +207,17 @@ const LayoutDrawer = ({
               )}
 
               {!isAuthenticated && !isCollapsed && (
-                <Button
-                  variant="outlined"
-                  disableElevation
-                  sx={{
-                    mt: 2.5,
-                    ml: `${CONTENT_START}px`,
-                    mr: `${DRAWER_PADDING_X}px`,
-                  }}
-                  onClick={() => navigateTo(AppRoutes.login())}
-                >
-                  Conectare
-                </Button>
+                <Box m={2.5}>
+                  <Button
+                    variant="contained"
+                    disableElevation
+                    fullWidth
+                    sx={{ p: 1.5 }}
+                    onClick={() => navigateTo(AppRoutes.login())}
+                  >
+                    Conectare
+                  </Button>
+                </Box>
               )}
             </Box>
           </>
