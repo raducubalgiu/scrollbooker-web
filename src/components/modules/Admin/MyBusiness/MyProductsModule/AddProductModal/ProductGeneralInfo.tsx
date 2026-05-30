@@ -101,6 +101,8 @@ const ProductGeneralInfo = ({
       }));
   }, [selectedDomainId, validDomains]);
 
+  console.log("FILTERS!!!", filters);
+
   return (
     <Grid size={{ xs: 12, md: 4 }} sx={styles.container}>
       <Typography variant="h6" mb={3} fontWeight="600">

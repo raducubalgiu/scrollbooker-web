@@ -21,6 +21,8 @@ import EmployeeButton from "@/components/modules/Admin/AppointmentsModule/Employ
 import ProductTypeButton from "../../ProductTypeButton";
 import ServiceButton from "../../ServiceButton";
 import MyProductVariants from "./MyProductVariants";
+import { useSession } from "next-auth/react";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<Product>;
@@ -55,6 +57,11 @@ const MyProductsDisplayTable = ({
   serviceId,
   setServiceId,
 }: MyProductsDisplayTableProps) => {
+  const { data: session } = useSession();
+  const canEditOrDelete = Boolean(
+    session?.permissions?.includes(PermissionEnum.PRODUCT_EDIT)
+  );
+
   const columns = React.useMemo<MRT_ColumnDef<Product>[]>(
     () => [
       {
@@ -144,8 +151,8 @@ const MyProductsDisplayTable = ({
   const renderRowActionMenuItems = useCallback(
     ({ row, table, closeMenu }: RenderRowActionMenuItemsProps) => [
       <MRT_ActionMenuItem
-        key={0}
-        label="Editeaza"
+        key="edit"
+        label="Editează"
         icon={<Edit />}
         onClick={() => {
           console.log("ROW ID", row.original.id);
@@ -154,7 +161,7 @@ const MyProductsDisplayTable = ({
         table={table}
       />,
       <MRT_ActionMenuItem
-        key={1}
+        key="delete"
         label="Șterge"
         icon={<Delete />}
         onClick={() => {
@@ -164,7 +171,7 @@ const MyProductsDisplayTable = ({
         table={table}
       />,
     ],
-    []
+    [onDelete]
   );
 
   const table = useMaterialReactTable({
@@ -180,7 +187,7 @@ const MyProductsDisplayTable = ({
     enableColumnActions: false,
     enableColumnFilters: false,
     enableSorting: false,
-    enableRowActions: true,
+    enableRowActions: canEditOrDelete,
     enableTopToolbar: true,
     renderRowActionMenuItems,
     renderTopToolbarCustomActions,

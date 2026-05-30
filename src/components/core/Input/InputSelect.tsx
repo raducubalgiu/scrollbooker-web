@@ -40,7 +40,7 @@ export default function InputSelect({
             {...others}
             required={Object.prototype.hasOwnProperty.call(rules, "required")}
             fullWidth
-            value={value ?? ""}
+            value={value ?? (others.multiple ? [] : "")}
             options={options ?? []}
             error={has(errors, name as string)}
             helperText={fieldError?.message || ""}
