@@ -179,16 +179,18 @@ const MyProductsDisplayTable = ({
     data: allProducts ?? [],
 
     enablePagination: false,
+    enableTopToolbar: true,
 
-    enableFilters: false,
+    enableFilters: true,
+    enableGlobalFilter: true,
+    enableColumnFilters: false,
+
     enableDensityToggle: false,
     enableHiding: false,
     enableKeyboardShortcuts: false,
     enableColumnActions: false,
-    enableColumnFilters: false,
     enableSorting: false,
     enableRowActions: canEditOrDelete,
-    enableTopToolbar: true,
     renderRowActionMenuItems,
     renderTopToolbarCustomActions,
     positionActionsColumn: "last",
