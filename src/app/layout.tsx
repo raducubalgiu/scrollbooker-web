@@ -3,7 +3,6 @@ import MUIProvider from "../providers/MUIProvider";
 import QueryClientProvider from "../providers/QueryClientProvider";
 import SessionProvider from "../providers/SessionProvider";
 import ToastProvider from "@/providers/ToastProvider";
-import LayoutWrapper from "@/components/core/Layout/LayoutWrapper";
 import AuthListener from "@/components/core/AuthListener/AuthListener";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
@@ -11,6 +10,7 @@ import { Inter } from "next/font/google";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/ro";
+import Layout from "@/components/core/Layout/Layout";
 
 dayjs.extend(utc);
 dayjs.locale("ro");
@@ -35,7 +35,7 @@ export default async function RootLayout({ children }: ChildrenType) {
           <MUIProvider>
             <ToastProvider />
             <QueryClientProvider>
-              <LayoutWrapper>{children}</LayoutWrapper>
+              <Layout>{children}</Layout>
             </QueryClientProvider>
           </MUIProvider>
         </SessionProvider>

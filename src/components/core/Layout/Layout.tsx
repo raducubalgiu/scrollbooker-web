@@ -20,26 +20,66 @@ const OVERLAY_WIDTH = 500;
 export type ActiveView = "search" | "notifications" | "appointments" | null;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession();
-  const isSessionLoading = status === "loading";
-  const isAuthenticated = status === "authenticated";
-
   const pathname = usePathname() || "";
-  const { navigateTo } = useAppNavigation();
   const theme = useTheme();
-  const overlayScrollRef = React.useRef<HTMLDivElement | null>(null);
+  const { data: session, status } = useSession();
+  const { navigateTo } = useAppNavigation();
 
   const [activeView, setActiveView] = React.useState<ActiveView>(null);
   const [isDrawerCollapsed, setIsDrawerCollapsed] = React.useState(false);
 
-  const isOverlayOpen = activeView !== null;
+  const overlayScrollRef = React.useRef<HTMLDivElement | null>(null);
 
+  React.useEffect(() => {
+    if (overlayScrollRef.current) {
+      overlayScrollRef.current.scrollTop = 0;
+    }
+  }, [activeView]);
+
+  const isNoLayoutPage = React.useMemo(() => {
+    if (!pathname) return true;
+
+    const staticPaths = ["/unauthorized", "/_not-found"];
+    if (staticPaths.includes(pathname)) return true;
+
+    const cleanPrefixes = [
+      "/auth",
+      "/onboarding",
+      "/business/",
+      "/booking/",
+      "/employment-request",
+    ];
+
+    return cleanPrefixes.some((prefix) => pathname.startsWith(prefix));
+  }, [pathname]);
+
+  const isSessionLoading = status === "loading";
+  const isAuthenticated = status === "authenticated";
+  const isOverlayOpen = activeView !== null;
   const visualDrawerCollapsed = isOverlayOpen || isDrawerCollapsed;
+
   const navWidth = isOverlayOpen
     ? DRAWER_WIDTH
     : isDrawerCollapsed
       ? COLLAPSED_WIDTH
       : DRAWER_WIDTH;
+
+  const isVideoPage =
+    pathname.startsWith("/user/") && pathname.includes("/post/");
+  const isAdminPage = pathname.startsWith("/admin/");
+
+  const bgColor =
+    theme.palette.mode === "dark" ? "background.default" : "background.paper";
+
+  const styles = React.useMemo(
+    () =>
+      getStyles(
+        theme,
+        { isOverlayOpen, visualDrawerCollapsed, navWidth },
+        bgColor
+      ),
+    [theme, isOverlayOpen, visualDrawerCollapsed, navWidth, bgColor]
+  );
 
   const handleCloseAll = React.useCallback(() => setActiveView(null), []);
 
@@ -48,42 +88,29 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       setActiveView(null);
       return;
     }
-
     setIsDrawerCollapsed((prev) => !prev);
   }, [isOverlayOpen]);
 
-  const isSpecialPage = React.useMemo(() => {
-    const specialPaths = ["/business/", "/booking/", "/employment-request"];
-    return specialPaths.some((path) => pathname.startsWith(path));
-  }, [pathname]);
-
-  const isVideo = pathname.startsWith("/user/") && pathname.includes("/post/");
-
-  const isAdminPage = pathname.startsWith("/admin/");
-  const shouldShowDrawer = !isSpecialPage && !isVideo;
-  const bgColor =
-    theme.palette.mode === "dark" ? "background.default" : "background.paper";
-
-  const styles = React.useMemo(
+  const handleOpenSearch = React.useCallback(
     () =>
-      getStyles(
-        theme,
-        {
-          isOverlayOpen,
-          visualDrawerCollapsed,
-          navWidth,
-        },
-        isAdminPage,
-        bgColor
-      ),
-    [
-      theme,
-      isOverlayOpen,
-      visualDrawerCollapsed,
-      navWidth,
-      isAdminPage,
-      bgColor,
-    ]
+      activeView === "search" ? handleCloseAll() : setActiveView("search"),
+    [activeView, handleCloseAll]
+  );
+
+  const handleOpenNotifications = React.useCallback(
+    () =>
+      activeView === "notifications"
+        ? handleCloseAll()
+        : setActiveView("notifications"),
+    [activeView, handleCloseAll]
+  );
+
+  const handleOpenAppointments = React.useCallback(
+    () =>
+      activeView === "appointments"
+        ? handleCloseAll()
+        : setActiveView("appointments"),
+    [activeView, handleCloseAll]
   );
 
   const expandedDrawer = React.useMemo(() => {
@@ -126,33 +153,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }, [activeView, handleCloseAll, navigateTo]);
 
-  const handleOpenSearch = React.useCallback(
-    () =>
-      activeView === "search" ? handleCloseAll() : setActiveView("search"),
-    [activeView]
-  );
-
-  const handleOpenNotifications = React.useCallback(
-    () =>
-      activeView === "notifications"
-        ? handleCloseAll()
-        : setActiveView("notifications"),
-    [activeView]
-  );
-
-  const handleOpenAppointments = React.useCallback(
-    () =>
-      activeView === "appointments"
-        ? handleCloseAll()
-        : setActiveView("appointments"),
-    [activeView]
-  );
-
-  React.useEffect(() => {
-    if (overlayScrollRef.current) {
-      overlayScrollRef.current.scrollTop = 0;
-    }
-  }, [activeView]);
+  if (isNoLayoutPage) {
+    return <>{children}</>;
+  }
 
   return (
     <Box sx={styles.layoutContainer}>
@@ -164,7 +167,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         sx={styles.backdrop}
       />
 
-      {shouldShowDrawer && (
+      {!isVideoPage && (
         <Box component="nav" sx={styles.navWrapper}>
           <Drawer
             variant="permanent"
@@ -205,7 +208,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         component="main"
         sx={{
           ...styles.mainContent,
-          p: { xs: isAdminPage ? 2.5 : 0, md: isSpecialPage ? 0 : 2.5 },
+          bgcolor: isAdminPage ? "background.default" : bgColor,
+          p: { xs: isAdminPage ? 2.5 : 0, md: isNoLayoutPage ? 0 : 2.5 },
           pb: { xs: "65px", lg: 0 },
         }}
       >
@@ -227,7 +231,6 @@ const getStyles = (
     visualDrawerCollapsed: boolean;
     navWidth: number;
   },
-  isAdminPage: boolean,
   bgColor: string
 ) => {
   const { isOverlayOpen, visualDrawerCollapsed, navWidth } = layoutState;
@@ -298,7 +301,6 @@ const getStyles = (
       width: { lg: `calc(100% - ${navWidth}px)` },
       minWidth: 0,
       transition: "width 220ms ease",
-      bgcolor: isAdminPage ? "background.default" : bgColor,
     },
   };
 };

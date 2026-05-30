@@ -43,7 +43,7 @@ export default function RegisterPage() {
     const registerPayload: UserRegister = {
       email: data.email,
       password: data.password,
-      role_name: "business",
+      role_name: "client",
     };
 
     try {
