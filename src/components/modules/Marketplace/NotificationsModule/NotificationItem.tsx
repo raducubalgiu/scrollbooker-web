@@ -266,11 +266,11 @@ export default function NotificationItem({
                 e.stopPropagation();
                 onNavigateToAppointmentDetails(reviewData.appointment_id);
               }}
-              variant="outlined"
-              sx={styles.actionButton}
+              variant="contained"
               disableElevation
+              sx={styles.actionButton}
             >
-              Răspunde
+              Detalii
             </Button>
           ),
         };
