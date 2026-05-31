@@ -1,7 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import CalendarModule from "@/components/modules/Admin/CalendarModule/CalendarModule";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { CalendarEventsProvider } from "@/providers/CalendarEventsProvider";
 
 async function Calendar() {
   // const timeSlots = useCallback(() => {
@@ -37,11 +35,7 @@ async function Calendar() {
   //   return slots;
   // }, []);
 
-  return (
-    <CalendarEventsProvider>
-      <CalendarModule />
-    </CalendarEventsProvider>
-  );
+  return <></>;
 }
 
 export default ProtectedPage(Calendar, PermissionEnum.MY_CALENDAR_VIEW);
