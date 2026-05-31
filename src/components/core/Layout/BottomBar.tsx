@@ -100,7 +100,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
         (a.route !== "/" && pathname.startsWith(a.route + "/"))
     );
     return idx >= 0 ? idx : 0;
-  }, [pathname]);
+  }, [pathname, actions]);
 
   return (
     <Box

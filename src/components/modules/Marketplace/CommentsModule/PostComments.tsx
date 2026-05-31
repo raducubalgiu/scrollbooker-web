@@ -25,16 +25,6 @@ type CreateCommentPayload = {
 };
 
 const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
-  if (!postId) {
-    return (
-      <Stack alignItems="center" justifyContent="center" py={4}>
-        <Typography color="text.secondary">
-          Nu s-a putut încărca comentariile.
-        </Typography>
-      </Stack>
-    );
-  }
-
   const [newCommentText, setNewCommentText] = useState("");
   const [replyText, setReplyText] = useState("");
   const [activeReplyTarget, setActiveReplyTarget] =
@@ -49,7 +39,7 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
     isFetchingNextPage,
   } = useInfiniteComments({
     enabled: true,
-    postId,
+    postId: postId ?? 0,
   });
 
   const rootComments = useMemo(
@@ -82,6 +72,16 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
     method: "DELETE",
     url: "/api/comments/like",
   });
+
+  if (!postId) {
+    return (
+      <Stack alignItems="center" justifyContent="center" py={4}>
+        <Typography color="text.secondary">
+          Nu s-a putut încărca comentariile.
+        </Typography>
+      </Stack>
+    );
+  }
 
   const handleCreateRootComment = () => {
     const text = newCommentText.trim();

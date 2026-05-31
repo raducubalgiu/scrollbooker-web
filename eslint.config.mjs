@@ -10,31 +10,31 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // 1. OBLIGATORIU: Ignoră folderele mari de build pentru a preveni blocarea terminalului
+  {
+    ignores: [".next/**", "node_modules/**", "dist/**", "build/**", "out/**"],
+  },
+
+  // 2. Extinde configurările Next.js
   ...compat.extends(
     "next/core-web-vitals",
     "next/typescript",
     "plugin:@typescript-eslint/recommended"
   ),
-  // add custom rules to enforce no explicit any and stricter TS linting
+
+  // 3. Regulile tale customizate
   {
+    files: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/ban-types": [
+      "@typescript-eslint/no-restricted-types": [
         "error",
         {
           types: {
-            Object: {
-              message: "Use Record<string, unknown> instead",
-            },
-            String: {
-              message: "Use string instead",
-            },
-            Number: {
-              message: "Use number instead",
-            },
-            Boolean: {
-              message: "Use boolean instead",
-            },
+            Object: { message: "Use Record<string, unknown> instead" },
+            String: { message: "Use string instead" },
+            Number: { message: "Use number instead" },
+            Boolean: { message: "Use boolean instead" },
           },
         },
       ],

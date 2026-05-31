@@ -1,10 +1,6 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
-  Checkbox,
   createTheme,
   IconButton,
   Stack,
@@ -13,7 +9,6 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 type ExploreDrawerProps = {
   defaultBusinessTypes: Set<number>;
@@ -39,13 +34,13 @@ const ExploreDrawer = ({
     },
   });
 
-  const handleToggle = (id: number) => {
-    setSelectedBusinessTypes((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  };
+  // const handleToggle = (id: number) => {
+  //   setSelectedBusinessTypes((prev) => {
+  //     const next = new Set(prev);
+  //     next.has(id) ? next.delete(id) : next.add(id);
+  //     return next;
+  //   });
+  // };
 
   return (
     <ThemeProvider theme={darkTheme}>

@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import { formatRating } from "@/utils/formatters";
 import { UserMini } from "@/ts/models/user/UserMini";
@@ -61,23 +61,16 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
         <Avatar sx={styles.avatar} src={avatar ?? ""} />
       </Badge>
     );
-  }, [
-    is_business_or_employee,
-    formattedRating,
-    avatar,
-    styles.avatar,
-    styles.badge,
-    styles.badgeContent,
-  ]);
+  }, [is_business_or_employee, formattedRating, avatar]);
 
   const { mutate: toggleFollow } = useFollowMutation(ownerId, type);
 
-  const handleFollowClick = (e: React.MouseEvent) => {
+  const handleFollowClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     toggleFollow({ targetUserId: id, isFollow: !!is_follow });
-  };
+  }, []);
 
   const followButton = useMemo(
     () => (
