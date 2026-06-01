@@ -171,7 +171,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           ...styles.mainContent,
           bgcolor: isAdminPage ? "background.default" : bgColor,
           p: { xs: isAdminPage ? 2.5 : 0, md: isNoLayoutPage ? 0 : 2.5 },
-          pb: { xs: "65px", lg: 0 },
         }}
       >
         {children}
