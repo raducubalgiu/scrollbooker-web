@@ -10,7 +10,6 @@ import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/ser
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Box, Checkbox, Divider, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { useSession } from "next-auth/react";
 import { useEffect, useMemo } from "react";
 import { FormProductFilter } from "./AddProductModal";
 import { useFormContext } from "react-hook-form";
@@ -20,29 +19,22 @@ import { isEmpty } from "lodash";
 type ProductGeneralInfoProps = {
   open: boolean;
   selectedDomainId: string;
+  serviceDomainServices: SelectedServiceDomainWithServices[];
+  isLoadingServices: boolean;
 };
 
 const ProductGeneralInfo = ({
   open,
   selectedDomainId,
+  serviceDomainServices,
+  isLoadingServices,
 }: ProductGeneralInfoProps) => {
   const { setValue, watch } = useFormContext();
   const selectedServiceId = watch("serviceId");
 
-  const { data: session } = useSession();
   const isRequired = required();
   const nameMinLength = minField(3);
   const nameMaxLength = maxField(100);
-
-  const { data: serviceDomainServices, isLoading: isLoadingServices } =
-    useCustomQuery<SelectedServiceDomainWithServices[]>({
-      key: ["business-services", !!session?.business_id],
-      url: `/api/businesses/${session?.business_id}/services`,
-      options: {
-        enabled: open && !!session?.business_id,
-        staleTime: 5 * 60 * 1000,
-      },
-    });
 
   const { data: filters } = useCustomQuery<Filter[]>({
     key: ["filters-by-service-id", selectedServiceId],
@@ -100,8 +92,6 @@ const ProductGeneralInfo = ({
         name: s.name,
       }));
   }, [selectedDomainId, validDomains]);
-
-  console.log("FILTERS!!!", filters);
 
   return (
     <Grid size={{ xs: 12, md: 4 }} sx={styles.container}>

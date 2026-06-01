@@ -7,15 +7,21 @@ import ProductGeneralInfo from "./ProductGeneralInfo";
 import ProductVariants from "./ProductVariants";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { ProductTypeEnum } from "@/ts/enums/ProductTypeEnum";
-import { ProductWithFiltersCreate } from "@/ts/models/booking/product/Product";
+import {
+  ProductFilterCreate,
+  ProductWithFiltersCreate,
+} from "@/ts/models/booking/product/Product";
 import { useSession } from "next-auth/react";
 import { FilterTypeEnum } from "@/ts/enums/FilterTypeEnum";
+import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 
 type AddProductModalProps = {
   open: boolean;
   handleClose: () => void;
   hasEmployees: boolean;
   employees: BusinessEmployee[];
+  serviceDomainServices: SelectedServiceDomainWithServices[];
+  isLoadingServices: boolean;
   isSavingProduct: boolean;
   onCreateProduct: (productCreate: ProductWithFiltersCreate) => void;
 };
@@ -23,7 +29,7 @@ type AddProductModalProps = {
 export interface FormProductFilter {
   filter_id: number;
   type: FilterTypeEnum;
-  value: string | string[] | number | null;
+  value: string | string[] | null;
   minim?: number | null;
   maxim?: number | null;
 }
@@ -83,6 +89,8 @@ const AddProductModal = ({
   handleClose,
   hasEmployees,
   employees,
+  serviceDomainServices,
+  isLoadingServices,
   isSavingProduct,
   onCreateProduct,
 }: AddProductModalProps) => {
@@ -94,6 +102,7 @@ const AddProductModal = ({
 
   const { control, handleSubmit, reset, watch } = methods;
   const selectedDomainId = watch("serviceDomainId");
+  const watchFilters = watch("filters");
 
   useEffect(() => {
     if (open) {
@@ -102,10 +111,35 @@ const AddProductModal = ({
   }, [open, employees, reset]);
 
   const onSubmit = (data: ProductFormValues) => {
+    const filters: ProductFilterCreate[] =
+      watchFilters?.flatMap((f) => {
+        const value = f.value;
+
+        if (!value) return [];
+
+        const subFilterIds: number[] = (Array.isArray(value) ? value : [value])
+          .map((val) => parseInt(val, 10))
+          .filter((num) => !isNaN(num));
+
+        if (subFilterIds.length === 0) return [];
+
+        return [
+          {
+            filter_id: f.filter_id,
+            sub_filter_ids: subFilterIds,
+            type: f.type,
+            minim: f.minim ?? null,
+            maxim: f.maxim ?? null,
+            is_not_applicable: false,
+          },
+        ];
+      }) ?? [];
+
     const productCreate: ProductWithFiltersCreate = {
       product: {
         name: data.name.trim(),
         description: data.description ? data.description.trim() : null,
+        service_domain_id: Number(data.serviceDomainId),
         service_id: Number(data.serviceId),
         business_id: Number(session?.business_id),
         currency_id: 1,
@@ -125,8 +159,7 @@ const AddProductModal = ({
             })),
         })),
       },
-      service_domain_id: Number(data.serviceDomainId),
-      filters: [],
+      filters,
     };
 
     onCreateProduct(productCreate);
@@ -143,7 +176,12 @@ const AddProductModal = ({
 
       <FormProvider {...methods}>
         <Grid container sx={{ height: "100vh", overflow: "hidden" }}>
-          <ProductGeneralInfo open={open} selectedDomainId={selectedDomainId} />
+          <ProductGeneralInfo
+            open={open}
+            serviceDomainServices={serviceDomainServices}
+            isLoadingServices={isLoadingServices}
+            selectedDomainId={selectedDomainId}
+          />
           <ProductVariants
             hasEmployees={hasEmployees}
             employees={employees}

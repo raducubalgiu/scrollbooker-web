@@ -14,6 +14,7 @@ export interface ProductFilter {
 }
 
 export interface StartingOffering {
+  id: number;
   variant_id: number;
   variant_name: string;
   duration: number;
@@ -32,6 +33,7 @@ export interface ProductOfferingUser {
 }
 
 export interface ProductOffering {
+  id: number;
   user: ProductOfferingUser;
   price: number;
   price_with_discount: number;
@@ -133,6 +135,7 @@ export interface ProductVariantCreate {
 export interface ProductCreate {
   name: string;
   description: string | null;
+  service_domain_id: number;
   service_id: number;
   business_id: number;
   currency_id: number;
@@ -143,6 +146,5 @@ export interface ProductCreate {
 
 export interface ProductWithFiltersCreate {
   product: ProductCreate;
-  service_domain_id: number;
   filters: ProductFilterCreate[];
 }

@@ -1,3 +1,7 @@
+import {
+  SelectedService,
+  SelectedServiceDomainWithServices,
+} from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
@@ -5,18 +9,15 @@ import React from "react";
 type ServiceButtonProps = {
   serviceId: number | null;
   onSetService: (s: number | null) => void;
+  serviceDomainServices: SelectedServiceDomainWithServices[];
+  isLoadingServices: boolean;
 };
-
-const SERVICES = [
-  {
-    id: 95,
-    name: "Tuns",
-  },
-];
 
 const ServiceButton: React.FC<ServiceButtonProps> = ({
   serviceId,
   onSetService,
+  serviceDomainServices,
+  isLoadingServices,
 }) => {
   const [anchorServiceEl, setAnchorServiceEl] =
     React.useState<null | HTMLElement>(null);
@@ -27,7 +28,13 @@ const ServiceButton: React.FC<ServiceButtonProps> = ({
   };
   const handleServiceClose = () => setAnchorServiceEl(null);
 
-  const selectedService = SERVICES.find((s) => s.id === serviceId) ?? null;
+  const allSelectedServices: SelectedService[] = serviceDomainServices.flatMap(
+    (domain) =>
+      domain.services.filter((service) => service.is_selected === true)
+  );
+
+  const selectedService =
+    allSelectedServices.find((s) => s.id === serviceId) ?? null;
 
   return (
     <div>
@@ -42,6 +49,7 @@ const ServiceButton: React.FC<ServiceButtonProps> = ({
         disableElevation
         onClick={handleServiceClick}
         endIcon={<KeyboardArrowDownIcon />}
+        disabled={isLoadingServices}
       >
         {selectedService ? selectedService.name : "Serviciu"}
       </Button>
@@ -65,7 +73,7 @@ const ServiceButton: React.FC<ServiceButtonProps> = ({
           Toate tipurile
         </MenuItem>
 
-        {SERVICES.map((s) => (
+        {allSelectedServices.map((s) => (
           <MenuItem
             key={s.id}
             onClick={() => {

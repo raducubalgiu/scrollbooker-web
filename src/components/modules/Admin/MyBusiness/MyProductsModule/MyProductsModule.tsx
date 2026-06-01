@@ -14,6 +14,7 @@ import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import MyProductsDisplayTable from "./tabs/MyProductsDisplayTable/MyProductsDisplayTable";
 import MyProductsHeader from "./tabs/MyProductsHeader";
+import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 
 type MyProductsModuleProps = {
   session: Session | null;
@@ -75,6 +76,16 @@ export default function MyProductsModule({
     params: extraParams,
   });
 
+  const { data: serviceDomainServices, isLoading: isLoadingServices } =
+    useCustomQuery<SelectedServiceDomainWithServices[]>({
+      key: ["business-services", !!session?.business_id],
+      url: `/api/businesses/${session?.business_id}/services`,
+      options: {
+        enabled: !!session?.business_id,
+        staleTime: 5 * 60 * 1000,
+      },
+    });
+
   const { mutate: handleCreateProduct, isPending: isSavingProduct } = useMutate(
     {
       key: ["create-product"],
@@ -124,6 +135,8 @@ export default function MyProductsModule({
           <MyProductsDisplayTable
             employees={employees}
             allProducts={allProducts}
+            serviceDomainServices={serviceDomainServices || []}
+            isLoadingServices={isLoadingServices}
             isLoading={isLoading}
             onDelete={(id) =>
               setDeleteConfirmModal({ open: true, productId: id })
@@ -162,6 +175,8 @@ export default function MyProductsModule({
         handleClose={() => setOpenAddModal(false)}
         hasEmployees={session?.has_employees ?? false}
         employees={employees}
+        serviceDomainServices={serviceDomainServices || []}
+        isLoadingServices={isLoadingServices}
         isSavingProduct={isSavingProduct}
         onCreateProduct={(prodCreate) => handleCreateProduct(prodCreate)}
       />

@@ -23,6 +23,7 @@ import ServiceButton from "../../ServiceButton";
 import MyProductVariants from "./MyProductVariants";
 import { useSession } from "next-auth/react";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<Product>;
@@ -42,6 +43,8 @@ type MyProductsDisplayTableProps = {
   setEmployeeId: (e: number | null) => void;
   serviceId: number | null;
   setServiceId: (s: number | null) => void;
+  serviceDomainServices: SelectedServiceDomainWithServices[];
+  isLoadingServices: boolean;
 };
 
 const MyProductsDisplayTable = ({
@@ -56,6 +59,8 @@ const MyProductsDisplayTable = ({
   setEmployeeId,
   serviceId,
   setServiceId,
+  serviceDomainServices,
+  isLoadingServices,
 }: MyProductsDisplayTableProps) => {
   const { data: session } = useSession();
   const canEditOrDelete = Boolean(
@@ -143,10 +148,22 @@ const MyProductsDisplayTable = ({
           />
         )}
         <ProductTypeButton type={productType} onSetType={setProductType} />
-        <ServiceButton serviceId={serviceId} onSetService={setServiceId} />
+        <ServiceButton
+          serviceDomainServices={serviceDomainServices}
+          isLoadingServices={isLoadingServices}
+          serviceId={serviceId}
+          onSetService={setServiceId}
+        />
       </Stack>
     );
-  }, [isEmployee, employees, employeeId, productType]);
+  }, [
+    isEmployee,
+    employees,
+    employeeId,
+    productType,
+    serviceId,
+    serviceDomainServices,
+  ]);
 
   const renderRowActionMenuItems = useCallback(
     ({ row, table, closeMenu }: RenderRowActionMenuItemsProps) => [
