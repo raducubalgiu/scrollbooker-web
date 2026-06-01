@@ -21,7 +21,6 @@ type AddProductModalProps = {
   hasEmployees: boolean;
   employees: BusinessEmployee[];
   serviceDomainServices: SelectedServiceDomainWithServices[];
-  isLoadingServices: boolean;
   isSavingProduct: boolean;
   onCreateProduct: (productCreate: ProductWithFiltersCreate) => void;
 };
@@ -90,7 +89,6 @@ const AddProductModal = ({
   hasEmployees,
   employees,
   serviceDomainServices,
-  isLoadingServices,
   isSavingProduct,
   onCreateProduct,
 }: AddProductModalProps) => {
@@ -179,7 +177,6 @@ const AddProductModal = ({
           <ProductGeneralInfo
             open={open}
             serviceDomainServices={serviceDomainServices}
-            isLoadingServices={isLoadingServices}
             selectedDomainId={selectedDomainId}
           />
           <ProductVariants

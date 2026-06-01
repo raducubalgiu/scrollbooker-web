@@ -12,13 +12,20 @@ import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import MyProductsDisplayTabs from "./tabs/MyProductsDisplayTabs/MyProductsDisplayTabs";
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
-import MyProductsDisplayTable from "./tabs/MyProductsDisplayTable/MyProductsDisplayTable";
 import MyProductsHeader from "./tabs/MyProductsHeader";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
+import dynamic from "next/dynamic";
+
+const MyProductsDisplayTable = dynamic(
+  () => import("./tabs/MyProductsDisplayTable/MyProductsDisplayTable"),
+  { ssr: false }
+);
 
 type MyProductsModuleProps = {
   session: Session | null;
   employees: BusinessEmployee[];
+  serviceDomainServices: SelectedServiceDomainWithServices[];
+  defaultEmployeeId: number | null;
 };
 
 type DeleteConfirmType = {
@@ -29,6 +36,8 @@ type DeleteConfirmType = {
 export default function MyProductsModule({
   session,
   employees,
+  serviceDomainServices,
+  defaultEmployeeId,
 }: MyProductsModuleProps) {
   const [currentTab, setCurrentTab] = React.useState<number>(0);
 
@@ -40,7 +49,7 @@ export default function MyProductsModule({
   const authUserId = session?.user_id;
 
   const [employeeId, setEmployeeId] = useState<number | null>(
-    session?.is_employee ? session.user_id : null
+    defaultEmployeeId
   );
   const [productType, setProductType] = useState<ProductTypeEnum | null>(null);
   const [serviceId, setServiceId] = useState<number | null>(null);
@@ -75,16 +84,6 @@ export default function MyProductsModule({
     url: `/api/businesses/${session?.business_id}/products`,
     params: extraParams,
   });
-
-  const { data: serviceDomainServices, isLoading: isLoadingServices } =
-    useCustomQuery<SelectedServiceDomainWithServices[]>({
-      key: ["business-services", !!session?.business_id],
-      url: `/api/businesses/${session?.business_id}/services`,
-      options: {
-        enabled: !!session?.business_id,
-        staleTime: 5 * 60 * 1000,
-      },
-    });
 
   const { mutate: handleCreateProduct, isPending: isSavingProduct } = useMutate(
     {
@@ -133,10 +132,10 @@ export default function MyProductsModule({
       case 0:
         return (
           <MyProductsDisplayTable
+            session={session}
             employees={employees}
             allProducts={allProducts}
             serviceDomainServices={serviceDomainServices || []}
-            isLoadingServices={isLoadingServices}
             isLoading={isLoading}
             onDelete={(id) =>
               setDeleteConfirmModal({ open: true, productId: id })
@@ -176,7 +175,6 @@ export default function MyProductsModule({
         hasEmployees={session?.has_employees ?? false}
         employees={employees}
         serviceDomainServices={serviceDomainServices || []}
-        isLoadingServices={isLoadingServices}
         isSavingProduct={isSavingProduct}
         onCreateProduct={(prodCreate) => handleCreateProduct(prodCreate)}
       />

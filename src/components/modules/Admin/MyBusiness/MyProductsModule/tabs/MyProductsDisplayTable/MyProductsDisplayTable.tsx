@@ -21,9 +21,9 @@ import EmployeeButton from "@/components/modules/Admin/AppointmentsModule/Employ
 import ProductTypeButton from "../../ProductTypeButton";
 import ServiceButton from "../../ServiceButton";
 import MyProductVariants from "./MyProductVariants";
-import { useSession } from "next-auth/react";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
+import { Session } from "next-auth";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<Product>;
@@ -32,6 +32,7 @@ type RenderRowActionMenuItemsProps = {
 };
 
 type MyProductsDisplayTableProps = {
+  session: Session | null;
   employees: BusinessEmployee[];
   allProducts: Product[] | undefined;
   isLoading: boolean;
@@ -44,10 +45,10 @@ type MyProductsDisplayTableProps = {
   serviceId: number | null;
   setServiceId: (s: number | null) => void;
   serviceDomainServices: SelectedServiceDomainWithServices[];
-  isLoadingServices: boolean;
 };
 
 const MyProductsDisplayTable = ({
+  session,
   employees,
   allProducts,
   isLoading,
@@ -60,9 +61,8 @@ const MyProductsDisplayTable = ({
   serviceId,
   setServiceId,
   serviceDomainServices,
-  isLoadingServices,
 }: MyProductsDisplayTableProps) => {
-  const { data: session } = useSession();
+  const authUserId = session?.user_id;
   const canEditOrDelete = Boolean(
     session?.permissions?.includes(PermissionEnum.PRODUCT_EDIT)
   );
@@ -150,7 +150,6 @@ const MyProductsDisplayTable = ({
         <ProductTypeButton type={productType} onSetType={setProductType} />
         <ServiceButton
           serviceDomainServices={serviceDomainServices}
-          isLoadingServices={isLoadingServices}
           serviceId={serviceId}
           onSetService={setServiceId}
         />
@@ -195,7 +194,8 @@ const MyProductsDisplayTable = ({
     columns,
     data: allProducts ?? [],
 
-    enablePagination: false,
+    enablePagination: true,
+    manualPagination: false,
     enableTopToolbar: true,
 
     enableFilters: true,
@@ -228,7 +228,12 @@ const MyProductsDisplayTable = ({
       },
     },
     renderDetailPanel: ({ row }) => {
-      return <MyProductVariants product={row.original} />;
+      return (
+        <MyProductVariants
+          product={row.original}
+          authUserId={authUserId ?? null}
+        />
+      );
     },
   });
 

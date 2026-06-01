@@ -20,14 +20,12 @@ type ProductGeneralInfoProps = {
   open: boolean;
   selectedDomainId: string;
   serviceDomainServices: SelectedServiceDomainWithServices[];
-  isLoadingServices: boolean;
 };
 
 const ProductGeneralInfo = ({
   open,
   selectedDomainId,
   serviceDomainServices,
-  isLoadingServices,
 }: ProductGeneralInfoProps) => {
   const { setValue, watch } = useFormContext();
   const selectedServiceId = watch("serviceId");
@@ -114,14 +112,12 @@ const ProductGeneralInfo = ({
           label="Categoria"
           options={domainOptions}
           rules={isRequired}
-          isLoading={isLoadingServices}
         />
         <InputSelect
           name="serviceId"
           label="Serviciu"
           options={serviceOptions}
           rules={isRequired}
-          isLoading={isLoadingServices}
         />
 
         <Input

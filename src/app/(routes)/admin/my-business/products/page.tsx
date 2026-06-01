@@ -6,27 +6,38 @@ import { getServerSession } from "next-auth";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { get } from "@/utils/requests";
 import { authOptions } from "@/lib/auth/authOptions";
+import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 
 async function Products() {
   const session = await getServerSession(authOptions);
 
-  if (!session?.business_owner_id) {
+  if (!session?.business_id || !session?.business_owner_id) {
     throw new Error(
-      "Sesiune invalidă sau expirată: Identificatorul utilizatorului (business_id) lipsește."
+      "Invalid or expired session: (business_id or business_owner_id) is missing."
     );
   }
 
-  const response = await get<BusinessEmployee[]>({
-    url: `/businesses/owner/${session?.business_owner_id}/employees`,
-  });
+  const [{ data: employees }, { data: serviceDomainServices }] =
+    await Promise.all([
+      get<BusinessEmployee[]>({
+        url: `/businesses/owner/${session?.business_owner_id}/employees`,
+      }),
 
-  const employeesData = response.data;
+      get<SelectedServiceDomainWithServices[]>({
+        url: `/businesses/${session?.business_id}/service-domains`,
+      }),
+    ]);
 
-  if (!employeesData) {
-    throw new Error("An error occured when fetching business employees");
-  }
+  const defaultEmployeeId = session.is_employee ? session.user_id : null;
 
-  return <MyProductsModule session={session} employees={employeesData} />;
+  return (
+    <MyProductsModule
+      session={session}
+      employees={employees}
+      serviceDomainServices={serviceDomainServices}
+      defaultEmployeeId={defaultEmployeeId}
+    />
+  );
 }
 
 export default ProtectedPage(Products, PermissionEnum.MY_PRODUCTS_VIEW);

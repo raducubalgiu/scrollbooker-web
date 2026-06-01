@@ -10,14 +10,12 @@ type ServiceButtonProps = {
   serviceId: number | null;
   onSetService: (s: number | null) => void;
   serviceDomainServices: SelectedServiceDomainWithServices[];
-  isLoadingServices: boolean;
 };
 
 const ServiceButton: React.FC<ServiceButtonProps> = ({
   serviceId,
   onSetService,
   serviceDomainServices,
-  isLoadingServices,
 }) => {
   const [anchorServiceEl, setAnchorServiceEl] =
     React.useState<null | HTMLElement>(null);
@@ -49,7 +47,6 @@ const ServiceButton: React.FC<ServiceButtonProps> = ({
         disableElevation
         onClick={handleServiceClick}
         endIcon={<KeyboardArrowDownIcon />}
-        disabled={isLoadingServices}
       >
         {selectedService ? selectedService.name : "Serviciu"}
       </Button>
