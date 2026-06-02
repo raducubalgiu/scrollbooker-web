@@ -3,14 +3,14 @@
 import { useCustomQuery } from "@/hooks/useHttp";
 import dayjs from "@/lib/dayjs";
 import { CalendarEventsResponse } from "@/ts/models/booking/availability/CalendarEvents";
-import { Box, ButtonBase, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Session } from "next-auth";
 import { useMemo, useState } from "react";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { getScheduleBounds } from "./getScheduleBounds";
 import { WeeklyCalendarHeader } from "./WeeklyCalendarHeader";
-import CalendarEvent from "./CalendarEvent";
 import { getFrontendDays } from "./getFrontendDays";
+import CalendarEvent from "./CalendarEvent";
 
 type WeeklyCalendarProps = {
   session: Session;
@@ -55,8 +55,6 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
       slot_duration: slotDuration,
     },
   });
-
-  const { days } = data || {};
 
   const bounds = useMemo(() => getScheduleBounds(schedules), [schedules]);
 
@@ -257,7 +255,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                     : "transparent",
                 }}
               >
-                {isOutsideSchedule ? (
+                {isOutsideSchedule && (
                   <Box
                     sx={(theme) => {
                       const strokeColor = theme.palette.text.secondary;
@@ -279,18 +277,6 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                       };
                     }}
                   />
-                ) : (
-                  <ButtonBase
-                    onClick={() => {}}
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      transition: "background-color 0.15s ease",
-                      "&:hover": {
-                        backgroundColor: "action.hover",
-                      },
-                    }}
-                  />
                 )}
               </Box>
             );
@@ -304,20 +290,44 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
           const targetFrontendIndex = frontendDays.findIndex(
             (d) => d.dateStr === dayBackend.day
           );
-          if (targetFrontendIndex === -1) return null;
+
+          // CORECȚIE TS: Adăugăm verificarea explicită pentru bounds.minTime
+          if (targetFrontendIndex === -1 || !bounds || !bounds.minTime)
+            return null;
 
           const colIndex = targetFrontendIndex + 2;
+          const totalContentHeight = timeStrings.length * 100;
 
-          return dayBackend.slots.map((slot, slotIndex) => (
-            <CalendarEvent
-              key={`event-${dayBackend.day}-${slotIndex}`}
-              slot={slot}
-              dayColumnIndex={colIndex}
-              rowMap={rowMap}
-              minTimeStr={bounds?.minTime || "09:00:00"} // <-- PARAMETRU NOU (din bounds-ul static)
-              slotDuration={slotDuration} // <-- PARAMETRU NOU (din starea dropdown-ului)
-            />
-          ));
+          return (
+            <Box
+              key={`events-col-${dayBackend.day}`}
+              sx={{
+                gridColumn: colIndex,
+                gridRowStart: 2,
+                gridRowEnd: timeStrings.length + 2,
+                position: "relative",
+                height: `${totalContentHeight}px`,
+                width: "100%",
+              }}
+            >
+              {dayBackend.slots.map((slot, slotIndex) => (
+                <CalendarEvent
+                  key={`slot-${dayBackend.day}-${slotIndex}`}
+                  slot={slot}
+                  minTimeStr={bounds.minTime} // <-- Acum TS este 100% sigur că este string
+                  slotDuration={slotDuration}
+                  rowHeight={100}
+                  onSelectFreeSlot={(startUtc, endUtc) => {
+                    // eslint-disable-next-line no-console
+                    console.log("Deschide formular programare!", {
+                      startUtc,
+                      endUtc,
+                    });
+                  }}
+                />
+              ))}
+            </Box>
+          );
         })}
       </Box>
     </Box>

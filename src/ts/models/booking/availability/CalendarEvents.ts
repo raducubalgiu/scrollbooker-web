@@ -51,6 +51,7 @@ export interface CalendarEventsSlot {
   end_date_utc: string;
   is_booked: boolean;
   is_blocked: boolean;
+  is_last_minute: boolean;
   last_minute_discount: number | null;
   info: CalendarEventsInfo | null;
 }
