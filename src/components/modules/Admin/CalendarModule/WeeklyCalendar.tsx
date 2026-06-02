@@ -11,6 +11,14 @@ import { getScheduleBounds } from "./getScheduleBounds";
 import { WeeklyCalendarHeader } from "./WeeklyCalendarHeader";
 import { getFrontendDays } from "./getFrontendDays";
 import CalendarEvent from "./CalendarEvent";
+import CreateAppointmentModal from "./CreateAppointmentModal/CreateAppointmentModal";
+
+const rowHeightMap: Record<number, number> = {
+  15: 100,
+  30: 120,
+  45: 140,
+  60: 160,
+};
 
 type WeeklyCalendarProps = {
   session: Session;
@@ -18,10 +26,15 @@ type WeeklyCalendarProps = {
 };
 
 export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
+  const [openCreate, setOpenCreate] = useState(false);
   const [slotDuration, setSlotDuration] = useState(60);
   const [currentWeekDate, setCurrentWeekDate] = useState<dayjs.Dayjs>(() =>
     dayjs()
   );
+
+  const currentRowHeight = useMemo(() => {
+    return rowHeightMap[slotDuration] || 100;
+  }, [slotDuration]);
 
   const frontendDays = useMemo(() => {
     return getFrontendDays(currentWeekDate, schedules);
@@ -110,16 +123,12 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
   const handleToday = () => setCurrentWeekDate(dayjs());
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        boxSizing: "border-box",
-        bgcolor: "background.paper",
-        border: "1px solid",
-        borderColor: "divider",
-        borderRadius: 2,
-      }}
-    >
+    <Box sx={{ width: "100%", boxSizing: "border-box" }}>
+      <CreateAppointmentModal
+        open={openCreate}
+        onClose={() => setOpenCreate(false)}
+      />
+
       <WeeklyCalendarHeader
         currentWeekDate={currentWeekDate}
         onPrevWeek={handlePrevWeek}
@@ -135,9 +144,10 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
         sx={{
           display: "grid",
           gridTemplateColumns: `90px repeat(7, minmax(130px, 1fr))`,
-          gridTemplateRows: `70px repeat(${totalRows - 1}, 100px)`,
+          gridTemplateRows: `100px repeat(${totalRows - 1}, ${currentRowHeight}px)`,
           overflow: "hidden",
           backgroundColor: "background.paper",
+          borderRadius: 5,
         }}
       >
         {/* ==========================================
@@ -153,6 +163,8 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
           }}
         />
         {frontendDays?.map((dayData, index) => {
+          const isToday = dayjs().format("YYYY-MM-DD") === dayData.dateStr;
+
           return (
             <Box
               key={dayData.dateStr}
@@ -162,19 +174,45 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                 p: 1,
                 textAlign: "center",
                 backgroundColor: "background.paper",
-                borderTop: "1px solid",
                 borderBottom: "1px solid",
                 borderLeft: "1px solid",
                 borderColor: "divider",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <Typography
                 variant="subtitle2"
-                sx={{ fontWeight: "bold", textTransform: "capitalize" }}
+                sx={{ textTransform: "uppercase", color: "text.secondary" }}
               >
                 {dayData.dayName}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+
+              <Typography
+                variant="h3"
+                noWrap
+                sx={{
+                  color: "text.primary",
+                  fontWeight: 600,
+                  mt: 1.5,
+                  ...(isToday && {
+                    backgroundColor: "primary.main",
+                    color: "#fff",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: "50%",
+                    width: "48px",
+                    height: "48px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: (theme) =>
+                      `0 4px 12px ${theme.palette.primary.main}33`,
+                  }),
+                }}
+              >
                 {dayData.dayFormatted}
               </Typography>
             </Box>
@@ -199,7 +237,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                 borderColor: "divider",
                 backgroundColor: "background.paper",
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
                 justifyContent: "flex-end",
               }}
             >
@@ -296,7 +334,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
             return null;
 
           const colIndex = targetFrontendIndex + 2;
-          const totalContentHeight = timeStrings.length * 100;
+          const totalContentHeight = timeStrings.length * currentRowHeight;
 
           return (
             <Box
@@ -314,11 +352,11 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                 <CalendarEvent
                   key={`slot-${dayBackend.day}-${slotIndex}`}
                   slot={slot}
-                  minTimeStr={bounds.minTime} // <-- Acum TS este 100% sigur că este string
+                  minTimeStr={bounds.minTime}
                   slotDuration={slotDuration}
-                  rowHeight={100}
+                  rowHeight={currentRowHeight}
                   onSelectFreeSlot={(startUtc, endUtc) => {
-                    // eslint-disable-next-line no-console
+                    setOpenCreate(true);
                     console.log("Deschide formular programare!", {
                       startUtc,
                       endUtc,

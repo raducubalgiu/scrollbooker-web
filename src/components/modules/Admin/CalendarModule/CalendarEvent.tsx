@@ -1,15 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Box,
-  Paper,
-  Stack,
-  Avatar,
-  Typography,
-  ButtonBase,
-  alpha,
-} from "@mui/material";
+import { Box, Stack, Typography, ButtonBase } from "@mui/material";
 import dayjs from "dayjs";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { formatPrice } from "@/utils/formatPrice";
@@ -46,12 +38,14 @@ export default function CalendarEvent({
   const eventDurationMinutes = eventEnd.diff(eventStart, "minute");
   const heightPixels = eventDurationMinutes * pixelsPerMinute;
 
+  const hasSpacing = slot.is_booked || slot.is_blocked || slot.is_last_minute;
+
   const absolutePlacementStyles = {
     position: "absolute",
     top: `${topPositionPixels}px`,
     height: `${heightPixels}px`,
-    left: 2,
-    right: 2,
+    left: hasSpacing ? 2 : 0,
+    right: hasSpacing ? 2 : 0,
     zIndex: 5,
     boxSizing: "border-box",
     overflow: "hidden",
@@ -62,7 +56,14 @@ export default function CalendarEvent({
       <Box
         sx={(theme) => ({
           ...absolutePlacementStyles,
-          backgroundColor: alpha(theme.palette.error.main, 0.08),
+          backgroundColor: (theme) => {
+            const primaryColor = theme.palette.error.main;
+            const isLight = theme.palette.mode === "light";
+
+            return isLight
+              ? `color-mix(in srgb, ${primaryColor} 12%, #ffffff)`
+              : `color-mix(in srgb, ${primaryColor} 5%, #1e1e1e)`;
+          },
           color: theme.palette.error.dark,
           p: 1,
           borderRadius: 1,
@@ -89,35 +90,29 @@ export default function CalendarEvent({
 
   if (slot.is_booked) {
     return (
-      <Paper
-        elevation={1}
+      <Box
         sx={(theme) => ({
           ...absolutePlacementStyles,
-          backgroundColor: alpha(theme.palette.primary.main, 0.12),
+          backgroundColor: (theme) => {
+            const primaryColor = theme.palette.primary.main;
+            const isLight = theme.palette.mode === "light";
+
+            return isLight
+              ? `color-mix(in srgb, ${primaryColor} 12%, #ffffff)`
+              : `color-mix(in srgb, ${primaryColor} 5%, #1e1e1e)`;
+          },
           color: theme.palette.text.primary,
           p: 1,
           borderRadius: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
           borderLeft: 4,
           borderColor: "primary.main",
         })}
       >
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Avatar
-            src={slot.info?.customer?.avatar || ""}
-            alt={slot.info?.customer?.fullname ?? ""}
-            sx={{
-              width: 24,
-              height: 24,
-              bgcolor: "primary.main",
-              color: "primary.contrastText",
-              fontSize: "10px",
-            }}
-          >
-            {slot.info?.customer?.fullname?.substring(0, 2).toUpperCase()}
-          </Avatar>
+        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+          {dayjs(slot.start_date_locale).format("HH:mm")} -{" "}
+          {dayjs(slot.end_date_locale).format("HH:mm")}
+        </Typography>
+        <Stack direction="row" gap={1} alignItems="center" mt={0.5}>
           <Box sx={{ overflow: "hidden" }}>
             <Typography
               variant="caption"
@@ -146,44 +141,119 @@ export default function CalendarEvent({
             </Typography>
           </Box>
         </Stack>
-      </Paper>
+      </Box>
     );
   }
 
-  return (
-    <Box
-      sx={{
-        ...absolutePlacementStyles,
-        backgroundColor: slot.is_last_minute
-          ? "rgba(76, 175, 80, 0.04)"
-          : "transparent",
-        borderRadius: 1,
-      }}
-    >
-      <ButtonBase
-        onClick={() => onSelectFreeSlot(slot.start_date_utc, slot.end_date_utc)}
-        sx={{
-          width: "100%",
-          height: "100%",
-          transition: "background-color 0.15s ease",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          "&:hover": {
-            backgroundColor: slot.is_last_minute
-              ? "rgba(76, 175, 80, 0.12)"
-              : "action.hover",
+  if (slot.is_last_minute) {
+    return (
+      <Box
+        sx={(theme) => ({
+          ...absolutePlacementStyles,
+          backgroundColor: (theme) => {
+            const primaryColor = "#40E0D0";
+            const isLight = theme.palette.mode === "light";
+            return isLight
+              ? `color-mix(in srgb, ${primaryColor} 12%, #ffffff)`
+              : `color-mix(in srgb, ${primaryColor} 5%, #1e1e1e)`;
           },
-        }}
+          color: theme.palette.text.primary,
+          p: 1,
+          borderRadius: 1,
+          borderLeft: 4,
+          borderColor: "#40E0D0",
+        })}
       >
-        {slot.is_last_minute && slot.last_minute_discount && (
+        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+          {dayjs(slot.start_date_locale).format("HH:mm")} -{" "}
+          {dayjs(slot.end_date_locale).format("HH:mm")}
+        </Typography>
+        <Box sx={{ overflow: "hidden", mt: 0.5 }}>
           <Typography
             variant="caption"
             sx={{ color: "success.main", fontWeight: "bold", fontSize: "10px" }}
           >
             -{slot.last_minute_discount}% OFF
           </Typography>
-        )}
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={absolutePlacementStyles}>
+      <ButtonBase
+        onClick={() => onSelectFreeSlot(slot.start_date_utc, slot.end_date_utc)}
+        sx={(theme) => ({
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxSizing: "border-box",
+          backgroundColor: "background.paper",
+
+          border: "1px dashed",
+          borderColor: "divider",
+
+          transition: "all 0.15s ease-in-out",
+
+          // Starea de Hover controlată direct de buton
+          "&:hover": {
+            borderWidth: 1.5,
+            borderStyle: "dashed", // Forțăm să rămână dashed și la hover dacă așa dorești, sau "solid" pentru evidențiere
+            borderColor: "primary.main",
+            backgroundColor: (theme) => {
+              const primaryColor = theme.palette.action.hover;
+              const isLight = theme.palette.mode === "light";
+              return isLight
+                ? `color-mix(in srgb, ${primaryColor} 12%, #ffffff)`
+                : `color-mix(in srgb, ${primaryColor} 5%, #1e1e1e)`;
+            },
+
+            // Aprinde textul din interior la hover
+            "& .hover-content": {
+              opacity: 1,
+              transform: "translateY(0)",
+            },
+          },
+        })}
+      >
+        <Stack
+          className="hover-content"
+          spacing={0.5}
+          alignItems="center"
+          sx={{
+            opacity: 0, // Ascuns implicit
+            transform: "translateY(6px)", // Efect de alunecare
+            transition: "all 0.2s ease-in-out",
+            userSelect: "none",
+          }}
+        >
+          <Typography
+            variant="caption"
+            sx={{
+              fontWeight: 700,
+              fontSize: "13px",
+              color: "text.primary",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {eventStart.format("HH:mm")} - {eventEnd.format("HH:mm")}
+          </Typography>
+
+          <Typography
+            variant="caption"
+            sx={{
+              fontWeight: 600,
+              fontSize: "11px",
+              color: "primary.main",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Adaugă o programare
+          </Typography>
+        </Stack>
       </ButtonBase>
     </Box>
   );

@@ -35,8 +35,8 @@ export const getFrontendDays = (
 
     return {
       dateStr: currentDay.format("YYYY-MM-DD"),
-      dayName: currentDay.format("dddd"),
-      dayFormatted: currentDay.format("DD MMM"),
+      dayName: currentDay.format("ddd"),
+      dayFormatted: currentDay.format("D"),
       schedule: daySchedule || null,
     };
   });

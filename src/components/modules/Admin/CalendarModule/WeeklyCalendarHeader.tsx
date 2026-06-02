@@ -1,23 +1,23 @@
+import React from "react";
 import {
-  Box,
-  Button,
-  FormControl,
+  Typography,
   IconButton,
+  Stack,
+  Button,
   MenuItem,
   Select,
+  FormControl,
   SelectChangeEvent,
-  Stack,
-  Typography,
+  alpha,
 } from "@mui/material";
-import { Dayjs } from "dayjs";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import BlockIcon from "@mui/icons-material/Block";
 import AddIcon from "@mui/icons-material/Add";
+import dayjs from "dayjs";
 
 interface WeeklyCalendarHeaderProps {
-  currentWeekDate: Dayjs;
+  currentWeekDate: dayjs.Dayjs;
   slotDuration: number;
   onSlotDurationChange: (duration: number) => void;
   onPrevWeek: () => void;
@@ -40,7 +40,7 @@ export const WeeklyCalendarHeader = ({
   const startOfWeek = currentWeekDate.startOf("week");
   const endOfWeek = currentWeekDate.endOf("week");
 
-  const formattedRange = `${startOfWeek.format("DD MMM")} — ${endOfWeek.format("DD MMM YYYY")}`;
+  const formattedRange = `${startOfWeek.format("DD")} - ${endOfWeek.format("DD")} ${endOfWeek.format("MMMM YYYY")}`;
 
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
     onSlotDurationChange(Number(event.target.value));
@@ -48,131 +48,161 @@ export const WeeklyCalendarHeader = ({
 
   return (
     <Stack
-      direction={{ xs: "column", md: "row" }}
-      alignItems={{ xs: "flex-start", md: "center" }}
+      direction={{ xs: "column", lg: "row" }}
+      alignItems={{ xs: "flex-start", lg: "center" }}
       justifyContent="space-between"
-      spacing={2}
+      spacing={1.5}
       sx={{
         width: "100%",
         userSelect: "none",
-        p: 5,
+        py: 2.5,
       }}
     >
-      <Box>
-        <Typography
-          variant="h4"
-          sx={{ fontWeight: 700, textTransform: "capitalize", lineHeight: 1.2 }}
-        >
-          {currentWeekDate.format("MMMM YYYY")}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ fontWeight: 500, mt: 0.5 }}
-        >
-          {formattedRange}
-        </Typography>
-      </Box>
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <FormControl size="medium" sx={{ minWidth: 125 }}>
+          <Select
+            value={slotDuration}
+            onChange={handleSelectChange}
+            sx={{
+              borderRadius: 10,
+              height: 50,
+              fontSize: "15px",
+              fontWeight: 700,
+              borderWidth: "1px",
+              backgroundColor: "background.paper",
+              border: 1,
+              borderColor: "divider",
+              "& .MuiSelect-select": { display: "flex", alignItems: "center" },
+            }}
+          >
+            <MenuItem value={15} sx={{ fontSize: "15px", fontWeight: 600 }}>
+              15 min
+            </MenuItem>
+            <MenuItem value={30} sx={{ fontSize: "15px", fontWeight: 600 }}>
+              30 min
+            </MenuItem>
+            <MenuItem value={45} sx={{ fontSize: "15px", fontWeight: 600 }}>
+              45 min
+            </MenuItem>
+            <MenuItem value={60} sx={{ fontSize: "15px", fontWeight: 600 }}>
+              60 min
+            </MenuItem>
+          </Select>
+        </FormControl>
 
-      {/* SECTIUNEA 2: Controalele și Butoanele de Acțiune */}
+        <Button
+          variant="contained"
+          color="inherit"
+          size="large"
+          onClick={onToday}
+          sx={{
+            backgroundColor: "background.paper",
+            border: 1,
+            borderColor: "divider",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: (theme) =>
+                alpha(theme.palette.action.hover, 0.04),
+            },
+          }}
+          disableElevation
+        >
+          Astazi
+        </Button>
+
+        <Stack
+          direction="row"
+          alignItems="center"
+          sx={{
+            height: 48,
+            boxSizing: "border-box",
+          }}
+          gap={1}
+        >
+          <IconButton
+            onClick={onPrevWeek}
+            size="large"
+            sx={{
+              color: "text.primary",
+              backgroundColor: "background.paper",
+              border: 1,
+              borderColor: "divider",
+            }}
+          >
+            <ChevronLeftIcon sx={{ fontSize: 25 }} />
+          </IconButton>
+
+          <IconButton
+            onClick={onNextWeek}
+            size="large"
+            sx={{
+              color: "text.primary",
+              backgroundColor: "background.paper",
+              border: 1,
+              borderColor: "divider",
+            }}
+          >
+            <ChevronRightIcon sx={{ fontSize: 25 }} />
+          </IconButton>
+
+          <Typography sx={{ fontWeight: 500, fontSize: 25, ml: 1 }}>
+            {formattedRange}
+          </Typography>
+        </Stack>
+      </Stack>
+
       <Stack
         direction={{ xs: "column", sm: "row" }}
         alignItems="center"
         spacing={2}
-        sx={{ width: { xs: "100%", md: "auto" } }}
+        sx={{ width: { xs: "100%", lg: "auto" }, mt: { xs: 2, lg: 0 } }}
       >
-        {/* Sub-Grup 2.1: Navigare + Dropdown Durată */}
-        <Stack direction="row" alignItems="center" spacing={1.5}>
-          {/* Navigare Dată */}
-          {/* <IconButton
-              onClick={onToday}
-              size="small"
-              title="Săptămâna curentă"
-              sx={{
-                border: "1px solid",
-                borderColor: "divider",
-                borderRadius: 1.5,
-                p: 0.75,
-              }}
-            >
-              <CalendarTodayIcon fontSize="small" />
-            </IconButton> */}
-
-          <Stack
-            direction="row"
-            sx={{
-              border: "1px solid",
-              borderColor: "divider",
-              borderRadius: 1.5,
-              overflow: "hidden",
-            }}
-          >
-            <IconButton
-              onClick={onPrevWeek}
-              size="medium"
-              title="Săptămâna trecută"
-              sx={{ borderRadius: 0, p: 0.75 }}
-            >
-              <ChevronLeftIcon fontSize="medium" />
-            </IconButton>
-            <Box sx={{ width: "1px", bgcolor: "divider" }} />
-            <IconButton
-              onClick={onNextWeek}
-              size="medium"
-              title="Săptămâna viitoare"
-              sx={{ borderRadius: 0, p: 0.75 }}
-            >
-              <ChevronRightIcon fontSize="medium" />
-            </IconButton>
-          </Stack>
-
-          {/* Dropdown pentru selectarea duratei slotului */}
-          <FormControl size="small" sx={{ minWidth: 110 }}>
-            <Select
-              value={slotDuration}
-              onChange={handleSelectChange}
-              sx={{ borderRadius: 1.5 }}
-              displayEmpty
-            >
-              <MenuItem value={15}>15 min</MenuItem>
-              <MenuItem value={30}>30 min</MenuItem>
-              <MenuItem value={45}>45 min</MenuItem>
-              <MenuItem value={60}>60 min</MenuItem>
-              <MenuItem value={120}>2 ore</MenuItem>
-            </Select>
-          </FormControl>
-        </Stack>
-
-        {/* Sub-Grup 2.2: Butoanele administrative operationale */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={1}
-          sx={{ width: { xs: "100%", sm: "auto" } }}
+        <Button
+          variant="contained"
+          color="inherit"
+          size="large"
+          startIcon={<BlockIcon sx={{ fontSize: 20 }} />}
+          onClick={onBlockSlots}
+          disableElevation
+          sx={{
+            textTransform: "none",
+            fontWeight: 700,
+            fontSize: "15px",
+            px: 3,
+            height: 48,
+            width: { xs: "100%", sm: "auto" },
+            border: "1px solid",
+            borderColor: "divider",
+            backgroundColor: (theme) =>
+              theme.palette.mode === "light" ? "#f8fafc" : "action.selected",
+            color: "error.main",
+            "&:hover": {
+              backgroundColor: (theme) => alpha(theme.palette.error.main, 0.04),
+            },
+          }}
         >
-          <Button
-            variant="contained"
-            color="secondary"
-            size="medium"
-            startIcon={<BlockIcon />}
-            onClick={onBlockSlots}
-            disableElevation
-            sx={{ borderRadius: 1.5, textTransform: "none", fontWeight: 600 }}
-          >
-            Blochează sloturi
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            size="medium"
-            startIcon={<AddIcon />}
-            onClick={onAddAppointment}
-            sx={{ borderRadius: 1.5, textTransform: "none", fontWeight: 600 }}
-            disableElevation
-          >
-            Adaugă o programare
-          </Button>
-        </Stack>
+          Blochează sloturi
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          startIcon={<AddIcon sx={{ fontSize: 22 }} />}
+          onClick={onAddAppointment}
+          disableElevation
+          sx={{
+            textTransform: "none",
+            fontWeight: 700,
+            fontSize: "15px",
+            px: 3.5,
+            height: 48,
+            width: { xs: "100%", sm: "auto" },
+            boxShadow: "none",
+          }}
+        >
+          Adaugă o programare
+        </Button>
       </Stack>
     </Stack>
   );
