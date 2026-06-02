@@ -2,8 +2,19 @@
 
 import { useCustomQuery } from "@/hooks/useHttp";
 import dayjs from "@/lib/dayjs";
-import { CalendarEventsResponse } from "@/ts/models/booking/availability/CalendarEvents";
-import { Box, Typography } from "@mui/material";
+import {
+  CalendarEventsResponse,
+  CalendarEventsSlot,
+} from "@/ts/models/booking/availability/CalendarEvents";
+import {
+  AppBar,
+  Box,
+  Button,
+  Slide,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { Session } from "next-auth";
 import { useMemo, useState } from "react";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
@@ -12,6 +23,7 @@ import { WeeklyCalendarHeader } from "./WeeklyCalendarHeader";
 import { getFrontendDays } from "./getFrontendDays";
 import CalendarEvent from "./CalendarEvent";
 import CreateAppointmentModal from "./CreateAppointmentModal/CreateAppointmentModal";
+import BlockIcon from "@mui/icons-material/Block";
 
 const rowHeightMap: Record<number, number> = {
   15: 100,
@@ -25,7 +37,17 @@ type WeeklyCalendarProps = {
   schedules: Schedule[];
 };
 
+export interface BlockSlotPayload {
+  start_date_utc: string; // Ex: "2026-06-01T12:00:00+00:00"
+  end_date_utc: string; // Ex: "2026-06-01T13:00:00+00:00"
+  user_id: number; // ID-ul angajatului pentru care se face blocarea
+}
+
 export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
+  const [isBlocking, setIsBlocking] = useState(false);
+  const [selectedSlotsToBlock, setSelectedSlotsToBlock] = useState<
+    BlockSlotPayload[]
+  >([]);
   const [openCreate, setOpenCreate] = useState(false);
   const [slotDuration, setSlotDuration] = useState(60);
   const [currentWeekDate, setCurrentWeekDate] = useState<dayjs.Dayjs>(() =>
@@ -122,8 +144,40 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     setCurrentWeekDate((prev) => prev.add(1, "week"));
   const handleToday = () => setCurrentWeekDate(dayjs());
 
+  const handleToggleSelectSlot = (slot: CalendarEventsSlot) => {
+    setSelectedSlotsToBlock((prev) => {
+      // Verificăm dacă slotul este deja bifat în lista noastră
+      const isAlreadySelected = prev.some(
+        (item) => item.start_date_utc === slot.start_date_utc
+      );
+
+      if (isAlreadySelected) {
+        // Dacă este deja selectat, îl scoatem din array (debifare)
+        return prev.filter(
+          (item) => item.start_date_utc !== slot.start_date_utc
+        );
+      }
+
+      // Dacă nu este selectat, creăm obiectul curat cu datele cerute de BE și îl adăugăm în listă
+      const newBlockItem: BlockSlotPayload = {
+        start_date_utc: slot.start_date_utc,
+        end_date_utc: slot.end_date_utc,
+        user_id: session.user_id, // Preluat direct din sesiunea utilizatorului curent
+      };
+
+      return [...prev, newBlockItem];
+    });
+  };
+
   return (
-    <Box sx={{ width: "100%", boxSizing: "border-box" }}>
+    <Box
+      sx={{
+        width: "100%",
+        boxSizing: "border-box",
+        pb: isBlocking ? "100px" : 0,
+        transition: "padding-bottom 0.2s ease",
+      }}
+    >
       <CreateAppointmentModal
         open={openCreate}
         onClose={() => setOpenCreate(false)}
@@ -131,12 +185,13 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
 
       <WeeklyCalendarHeader
         currentWeekDate={currentWeekDate}
+        isBlocking={isBlocking}
         onPrevWeek={handlePrevWeek}
         onNextWeek={handleNextWeek}
         onToday={handleToday}
         slotDuration={slotDuration}
         onSlotDurationChange={(duration) => setSlotDuration(duration)}
-        onBlockSlots={() => {}}
+        onBlockSlots={() => setIsBlocking(true)}
         onAddAppointment={() => {}}
       />
 
@@ -148,6 +203,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
           overflow: "hidden",
           backgroundColor: "background.paper",
           borderRadius: 5,
+          pb: 0,
         }}
       >
         {/* ==========================================
@@ -243,7 +299,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
             >
               <Typography
                 variant="caption"
-                sx={{ fontWeight: 600, color: "text.secondary" }}
+                sx={{ fontWeight: 700, color: "text.secondary" }}
               >
                 {time.substring(0, 5)}
               </Typography>
@@ -289,7 +345,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                   position: "relative",
                   boxSizing: "border-box",
                   backgroundColor: isOutsideSchedule
-                    ? "action.disabledBackground"
+                    ? "background.default"
                     : "transparent",
                 }}
               >
@@ -329,7 +385,6 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
             (d) => d.dateStr === dayBackend.day
           );
 
-          // CORECȚIE TS: Adăugăm verificarea explicită pentru bounds.minTime
           if (targetFrontendIndex === -1 || !bounds || !bounds.minTime)
             return null;
 
@@ -348,26 +403,155 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                 width: "100%",
               }}
             >
-              {dayBackend.slots.map((slot, slotIndex) => (
-                <CalendarEvent
-                  key={`slot-${dayBackend.day}-${slotIndex}`}
-                  slot={slot}
-                  minTimeStr={bounds.minTime}
-                  slotDuration={slotDuration}
-                  rowHeight={currentRowHeight}
-                  onSelectFreeSlot={(startUtc, endUtc) => {
-                    setOpenCreate(true);
-                    console.log("Deschide formular programare!", {
-                      startUtc,
-                      endUtc,
-                    });
-                  }}
-                />
-              ))}
+              {dayBackend.slots.map((slot, slotIndex) => {
+                const isSlotChecked = selectedSlotsToBlock.some(
+                  (item) => item.start_date_utc === slot.start_date_utc
+                );
+
+                return (
+                  <CalendarEvent
+                    key={`slot-${dayBackend.day}-${slotIndex}`}
+                    slot={slot}
+                    isBlocking={isBlocking}
+                    minTimeStr={bounds.minTime}
+                    slotDuration={slotDuration}
+                    rowHeight={currentRowHeight}
+                    onSelectFreeSlot={(startUtc, endUtc) => {
+                      setOpenCreate(true);
+                      console.log("Deschide formular programare!", {
+                        startUtc,
+                        endUtc,
+                      });
+                    }}
+                    onToggleSelectSlot={handleToggleSelectSlot}
+                    isSelected={isSlotChecked}
+                  />
+                );
+              })}
             </Box>
           );
         })}
       </Box>
+
+      <Slide direction="up" in={isBlocking} mountOnEnter unmountOnExit>
+        <AppBar
+          position="fixed"
+          color="inherit"
+          elevation={0}
+          sx={(theme) => ({
+            top: "auto",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: theme.zIndex.modal - 1, // Stă deasupra calendarului, dar sub eventualele modale/dialoguri
+            borderTop: "1px solid",
+            borderColor: "divider",
+            // Folosim color-mix pentru un fundal opac premium care blochează textul din spate la scroll
+            backgroundColor: "background.paper",
+            boxShadow:
+              theme.palette.mode === "light"
+                ? "0px -8px 24px rgba(0, 0, 0, 0.06)"
+                : "0px -8px 24px rgba(0, 0, 0, 0.4)",
+          })}
+        >
+          <Toolbar
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: "center",
+              justifyContent: "space-between",
+              p: "20px 40px !important", // Padding generos și înalt (SaaS XL vibe)
+              gap: 2,
+            }}
+          >
+            {/* Partea Stângă: Mesajul cu numărul de sloturi selectate */}
+            <Box>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: 700, color: "text.primary" }}
+              >
+                Modul de blocare intervale este activ
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, mt: 0.25 }}
+              >
+                {selectedSlotsToBlock.length === 0
+                  ? "Selectează unul sau mai multe sloturi libere din calendar pentru a le bloca."
+                  : `Ai selectat ${selectedSlotsToBlock.length} ${
+                      selectedSlotsToBlock.length === 1 ? "slot" : "sloturi"
+                    } pentru blocare.`}
+              </Typography>
+            </Box>
+
+            {/* Partea Dreaptă: Cele două butoane mari de acțiune */}
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={2}
+              sx={{ width: { xs: "100%", sm: "auto" } }}
+            >
+              <Button
+                variant="text"
+                color="inherit"
+                size="large"
+                onClick={() => {
+                  setIsBlocking(false);
+                  setSelectedSlotsToBlock([]); // Curățăm selecția la renunțare
+                }}
+                sx={{
+                  borderRadius: 2.5,
+                  textTransform: "none",
+                  fontWeight: 700,
+                  fontSize: "15px",
+                  px: 3,
+                  height: 46,
+                  color: "text.secondary",
+                  "&:hover": { backgroundColor: "action.hover" },
+                }}
+              >
+                Renunță
+              </Button>
+
+              <Button
+                variant="contained"
+                color="error"
+                size="large"
+                disableElevation
+                startIcon={<BlockIcon />}
+                // Butonul este dezactivat dacă utilizatorul nu a bifat nimic încă
+                disabled={selectedSlotsToBlock.length === 0}
+                onClick={() => {
+                  // eslint-disable-next-line no-console
+                  console.log(
+                    "Trimite cererea de blocare către BE pentru:",
+                    selectedSlotsToBlock
+                  );
+
+                  // Aici vei apela mutația ta de salvare (ex: createBlockSlots)
+                  // După succes, oprești modul: setIsBlocking(false)
+                }}
+                sx={{
+                  borderRadius: 2.5,
+                  textTransform: "none",
+                  fontWeight: 700,
+                  fontSize: "15px",
+                  px: 4,
+                  height: 46,
+                  boxShadow: "none",
+                  "&:disabled": {
+                    backgroundColor: "action.disabledBackground",
+                    color: "text.disabled",
+                  },
+                }}
+              >
+                Blochează ({selectedSlotsToBlock.length})
+              </Button>
+            </Stack>
+          </Toolbar>
+        </AppBar>
+      </Slide>
     </Box>
   );
 };

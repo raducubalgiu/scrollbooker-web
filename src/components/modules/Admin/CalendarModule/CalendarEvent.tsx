@@ -1,25 +1,31 @@
 "use client";
 
 import React from "react";
-import { Box, Stack, Typography, ButtonBase } from "@mui/material";
+import { Box, Stack, Typography, ButtonBase, Checkbox } from "@mui/material";
 import dayjs from "dayjs";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { formatPrice } from "@/utils/formatPrice";
 
 interface CalendarEventProps {
   slot: CalendarEventsSlot;
+  isBlocking: boolean;
   minTimeStr: string | undefined;
   slotDuration: number;
   rowHeight: number;
+  isSelected: boolean;
   onSelectFreeSlot: (startDateUtc: string, endDateUtc: string) => void;
+  onToggleSelectSlot: (slot: CalendarEventsSlot) => void;
 }
 
 export default function CalendarEvent({
   slot,
+  isBlocking,
   minTimeStr,
   slotDuration,
   rowHeight,
+  isSelected,
   onSelectFreeSlot,
+  onToggleSelectSlot,
 }: CalendarEventProps) {
   const startOnlyStr = slot.start_date_locale.split("T")[1];
   const endOnlyStr = slot.end_date_locale.split("T")[1];
@@ -27,6 +33,8 @@ export default function CalendarEvent({
   const globalStart = dayjs(`2026-01-01T${minTimeStr}`);
   const eventStart = dayjs(`2026-01-01T${startOnlyStr}`);
   const eventEnd = dayjs(`2026-01-01T${endOnlyStr}`);
+
+  const isPast = dayjs().isAfter(dayjs(slot.start_date_locale));
 
   if (!eventStart.isValid() || !eventEnd.isValid() || !globalStart.isValid())
     return null;
@@ -40,15 +48,32 @@ export default function CalendarEvent({
 
   const hasSpacing = slot.is_booked || slot.is_blocked || slot.is_last_minute;
 
+  const GAP_PIXELS = 3; // Dimensiunea spațiului liber dintre sloturi (pe toate direcțiile)
+
   const absolutePlacementStyles = {
     position: "absolute",
-    top: `${topPositionPixels}px`,
-    height: `${heightPixels}px`,
-    left: hasSpacing ? 2 : 0,
-    right: hasSpacing ? 2 : 0,
+
+    // 2. DINAMIC PE VERTICALĂ: Dacă are spacing aplicăm GAP, altfel ocupă pixelii integrali
+    top: hasSpacing
+      ? `${topPositionPixels + GAP_PIXELS}px`
+      : `${topPositionPixels}px`,
+
+    height: hasSpacing
+      ? `${heightPixels - GAP_PIXELS * 2}px`
+      : `${heightPixels}px`,
+
+    // 3. DINAMIC PE ORIZONTALĂ: Dacă are spacing lăsăm aer (6px), altfel se lipește perfect (0)
+    left: hasSpacing ? "6px" : 0,
+    right: hasSpacing ? "6px" : 0,
+
     zIndex: 5,
     boxSizing: "border-box",
     overflow: "hidden",
+
+    // 4. Umbră fină doar pentru programările confirmate ale clienților
+    ...(slot.is_booked && {
+      boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)",
+    }),
   };
 
   if (slot.is_blocked) {
@@ -56,30 +81,34 @@ export default function CalendarEvent({
       <Box
         sx={(theme) => ({
           ...absolutePlacementStyles,
-          backgroundColor: (theme) => {
-            const primaryColor = theme.palette.error.main;
-            const isLight = theme.palette.mode === "light";
-
-            return isLight
-              ? `color-mix(in srgb, ${primaryColor} 12%, #ffffff)`
-              : `color-mix(in srgb, ${primaryColor} 5%, #1e1e1e)`;
-          },
+          backgroundColor:
+            theme.palette.mode === "light"
+              ? `color-mix(in srgb, ${theme.palette.error.main} 12%, #ffffff)`
+              : `color-mix(in srgb, ${theme.palette.error.main} 5%, #1e1e1e)`,
           color: theme.palette.error.dark,
           p: 1,
           borderRadius: 1,
-          display: "flex",
-          alignItems: "center",
-          borderLeft: "4px solid",
+          borderLeft: 3,
           borderColor: "error.main",
+          display: "flex",
+          flexDirection: "column",
         })}
       >
+        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+          {dayjs(slot.start_date_locale).format("HH:mm")} -{" "}
+          {dayjs(slot.end_date_locale).format("HH:mm")}
+        </Typography>
+
         <Typography
           variant="caption"
           sx={{
-            fontWeight: 600,
+            display: "block",
+            fontWeight: 700,
+            color: "error.dark",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            mt: 0.5,
           }}
         >
           {slot.info?.message || "Slot Blocat"}
@@ -104,7 +133,7 @@ export default function CalendarEvent({
           color: theme.palette.text.primary,
           p: 1,
           borderRadius: 1,
-          borderLeft: 4,
+          borderLeft: 3,
           borderColor: "primary.main",
         })}
       >
@@ -160,7 +189,7 @@ export default function CalendarEvent({
           color: theme.palette.text.primary,
           p: 1,
           borderRadius: 1,
-          borderLeft: 4,
+          borderLeft: 3,
           borderColor: "#40E0D0",
         })}
       >
@@ -180,10 +209,41 @@ export default function CalendarEvent({
     );
   }
 
+  if (isPast) {
+    return (
+      <Box
+        sx={(theme) => {
+          const strokeColor = theme.palette.text.secondary;
+          return {
+            ...absolutePlacementStyles, // Folosește coordonatele cu gap pentru a nu se lipi de margini
+            borderRadius: 2, // Rotunjim colțurile hașurii conform noului design premium
+            backgroundImage: `repeating-linear-gradient(
+                  45deg, 
+                  transparent, 
+                  transparent 5px, 
+                  ${strokeColor} 5px, 
+                  ${strokeColor} 6px
+                )`,
+            mixBlendMode:
+              theme.palette.mode === "light" ? "multiply" : "screen",
+            opacity: 0.15,
+          };
+        }}
+      />
+    );
+  }
+
   return (
     <Box sx={absolutePlacementStyles}>
       <ButtonBase
-        onClick={() => onSelectFreeSlot(slot.start_date_utc, slot.end_date_utc)}
+        // Dacă suntem în modul isBlocking, click-ul selectează slotul, altfel deschide programarea normală
+        onClick={() => {
+          if (isBlocking) {
+            onToggleSelectSlot(slot);
+          } else {
+            onSelectFreeSlot(slot.start_date_utc, slot.end_date_utc);
+          }
+        }}
         sx={(theme) => ({
           width: "100%",
           height: "100%",
@@ -191,69 +251,95 @@ export default function CalendarEvent({
           alignItems: "center",
           justifyContent: "center",
           boxSizing: "border-box",
-          backgroundColor: "background.paper",
-
-          border: "1px dashed",
-          borderColor: "divider",
-
+          borderRadius: 2,
           transition: "all 0.15s ease-in-out",
 
-          // Starea de Hover controlată direct de buton
-          "&:hover": {
-            borderWidth: 1.5,
-            borderStyle: "dashed", // Forțăm să rămână dashed și la hover dacă așa dorești, sau "solid" pentru evidențiere
-            borderColor: "primary.main",
-            backgroundColor: (theme) => {
-              const primaryColor = theme.palette.action.hover;
-              const isLight = theme.palette.mode === "light";
-              return isLight
-                ? `color-mix(in srgb, ${primaryColor} 12%, #ffffff)`
-                : `color-mix(in srgb, ${primaryColor} 5%, #1e1e1e)`;
-            },
+          // Fundal dinamic
+          backgroundColor: isBlocking
+            ? isSelected
+              ? "rgba(211, 47, 47, 0.04)"
+              : "background.paper"
+            : "transparent",
 
-            // Aprinde textul din interior la hover
+          // Chenar dinamic
+          border: "1px dashed",
+          borderColor: isBlocking && isSelected ? "error.main" : "divider",
+          borderStyle: isBlocking && isSelected ? "solid" : "dashed",
+
+          // REZOLVARE EROARE TS: Un singur bloc de hover, controlat dinamic prin starea isBlocking
+          "&:hover": {
+            borderStyle: "dashed",
+            borderColor: isBlocking
+              ? isSelected
+                ? "error.dark"
+                : "text.secondary"
+              : "primary.main",
+
+            backgroundColor: isBlocking
+              ? "action.hover"
+              : theme.palette.mode === "light"
+                ? `color-mix(in srgb, ${theme.palette.action.hover} 12%, #ffffff)`
+                : `color-mix(in srgb, ${theme.palette.action.hover} 5%, #1e1e1e)`,
+
+            // Declanșăm animația textului doar dacă NU suntem în modul de blocare
             "& .hover-content": {
-              opacity: 1,
-              transform: "translateY(0)",
+              opacity: isBlocking ? 0 : 1,
+              transform: isBlocking ? "translateY(6px)" : "translateY(0)",
             },
           },
         })}
       >
-        <Stack
-          className="hover-content"
-          spacing={0.5}
-          alignItems="center"
-          sx={{
-            opacity: 0, // Ascuns implicit
-            transform: "translateY(6px)", // Efect de alunecare
-            transition: "all 0.2s ease-in-out",
-            userSelect: "none",
-          }}
-        >
-          <Typography
-            variant="caption"
+        {isBlocking ? (
+          // MODUL BLOCARE ACTIVE: Randăm DOAR checkbox-ul mare, centrat, vizibil mereu
+          <Checkbox
+            checked={isSelected}
+            color="error" // Culoarea roșie indică acțiunea administrativă de blocare
+            size="medium"
             sx={{
-              fontWeight: 700,
-              fontSize: "13px",
-              color: "text.primary",
-              whiteSpace: "nowrap",
+              p: 0,
+              "& .MuiSvgIcon-root": { fontSize: 24 },
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onChange={() => onToggleSelectSlot(slot)}
+          />
+        ) : (
+          // MODUL NORMAL ACTIVE: Randăm textul cu efectul vechi de mișcare la hover
+          <Stack
+            className="hover-content"
+            spacing={0.5}
+            alignItems="center"
+            sx={{
+              opacity: 0,
+              transform: "translateY(6px)",
+              transition: "all 0.2s ease-in-out",
+              userSelect: "none",
             }}
           >
-            {eventStart.format("HH:mm")} - {eventEnd.format("HH:mm")}
-          </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                fontWeight: 700,
+                fontSize: "13px",
+                color: "text.primary",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {eventStart.format("HH:mm")} - {eventEnd.format("HH:mm")}
+            </Typography>
 
-          <Typography
-            variant="caption"
-            sx={{
-              fontWeight: 600,
-              fontSize: "11px",
-              color: "primary.main",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Adaugă o programare
-          </Typography>
-        </Stack>
+            <Typography
+              variant="caption"
+              sx={{
+                fontWeight: 600,
+                fontSize: "11px",
+                color: "primary.main",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Adaugă o programare
+            </Typography>
+          </Stack>
+        )}
       </ButtonBase>
     </Box>
   );

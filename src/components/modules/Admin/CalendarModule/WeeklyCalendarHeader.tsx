@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 
 interface WeeklyCalendarHeaderProps {
   currentWeekDate: dayjs.Dayjs;
+  isBlocking: boolean;
   slotDuration: number;
   onSlotDurationChange: (duration: number) => void;
   onPrevWeek: () => void;
@@ -29,6 +30,7 @@ interface WeeklyCalendarHeaderProps {
 
 export const WeeklyCalendarHeader = ({
   currentWeekDate,
+  isBlocking,
   slotDuration,
   onSlotDurationChange,
   onPrevWeek,
@@ -63,6 +65,7 @@ export const WeeklyCalendarHeader = ({
           <Select
             value={slotDuration}
             onChange={handleSelectChange}
+            disabled={isBlocking}
             sx={{
               borderRadius: 10,
               height: 50,
@@ -95,6 +98,7 @@ export const WeeklyCalendarHeader = ({
           color="inherit"
           size="large"
           onClick={onToday}
+          disabled={isBlocking}
           sx={{
             backgroundColor: "background.paper",
             border: 1,
@@ -121,6 +125,7 @@ export const WeeklyCalendarHeader = ({
         >
           <IconButton
             onClick={onPrevWeek}
+            disabled={isBlocking}
             size="large"
             sx={{
               color: "text.primary",
@@ -134,6 +139,7 @@ export const WeeklyCalendarHeader = ({
 
           <IconButton
             onClick={onNextWeek}
+            disabled={isBlocking}
             size="large"
             sx={{
               color: "text.primary",
@@ -191,6 +197,7 @@ export const WeeklyCalendarHeader = ({
           startIcon={<AddIcon sx={{ fontSize: 22 }} />}
           onClick={onAddAppointment}
           disableElevation
+          disabled={isBlocking}
           sx={{
             textTransform: "none",
             fontWeight: 700,
