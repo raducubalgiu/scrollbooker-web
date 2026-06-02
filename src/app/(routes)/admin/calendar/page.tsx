@@ -2,6 +2,8 @@ import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { WeeklyCalendar } from "@/components/modules/Admin/CalendarModule/WeeklyCalendar";
 import { authOptions } from "@/lib/auth/authOptions";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { Schedule } from "@/ts/models/booking/schedule/Schedule";
+import { get } from "@/utils/requests";
 import { getServerSession } from "next-auth";
 
 async function Calendar() {
@@ -14,7 +16,16 @@ async function Calendar() {
   const { is_employee, has_employees } = session;
 
   if (is_employee || !has_employees) {
-    return <WeeklyCalendar session={session} />;
+    const response = await get<Schedule[]>({
+      url: `/users/${session?.user_id}/schedules`,
+    });
+    const schedules = response.data;
+
+    if (!schedules) {
+      throw new Error("Schedules are not defined");
+    }
+
+    return <WeeklyCalendar session={session} schedules={schedules} />;
   }
 
   return <></>;

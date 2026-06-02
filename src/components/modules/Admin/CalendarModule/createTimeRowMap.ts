@@ -1,15 +1,12 @@
 import dayjs from "@/lib/dayjs";
 
 export const createTimeRowMap = (
-  minTimeIso: string,
-  maxTimeIso: string,
+  minTimeStr: string,
+  maxTimeStr: string,
   slotDuration: number
 ) => {
-  const startStr = minTimeIso.split("T")[1];
-  const endStr = maxTimeIso.split("T")[1];
-
-  let current = dayjs(`2026-01-01T${startStr}`);
-  const end = dayjs(`2026-01-01T${endStr}`);
+  let current = dayjs(`2026-01-01T${minTimeStr}`);
+  const end = dayjs(`2026-01-01T${maxTimeStr}`);
 
   const timeStrings: string[] = [];
   const rowMap: Record<string, number> = {};
