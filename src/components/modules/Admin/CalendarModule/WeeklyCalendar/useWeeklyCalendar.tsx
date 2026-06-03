@@ -191,7 +191,7 @@ export const useWeeklyCalendar = ({
     if (selectedSlotsToBlock.length === 0) return;
 
     const payload: AppointmentBlock = {
-      blocked_message: "Slot Blocat",
+      blocked_message: null,
       slots: selectedSlotsToBlock.map((slot) => ({
         start_date: slot.start_date,
         end_date: slot.end_date,
