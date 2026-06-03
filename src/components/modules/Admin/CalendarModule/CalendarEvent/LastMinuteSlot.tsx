@@ -1,7 +1,7 @@
-import dayjs from "@/lib/dayjs";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import { Box, Stack, SxProps, Theme, Typography } from "@mui/material";
 import React from "react";
+import { SlotTimeRange } from "./SlotTimeRange";
 
 type LastMinuteSlotProps = {
   slot: CalendarEventsSlot;
@@ -16,18 +16,20 @@ const LastMinuteSlot = ({ slot, globalSx }: LastMinuteSlotProps) => {
         styles.container,
       ]}
     >
-      <Typography variant="caption" color="text.secondary" fontWeight={600}>
-        {dayjs(slot.start_date_locale).format("HH:mm")} -{" "}
-        {dayjs(slot.end_date_locale).format("HH:mm")}
-      </Typography>
-      <Box sx={{ overflow: "hidden", mt: 0.5 }}>
-        <Typography
-          variant="caption"
-          sx={{ color: "success.main", fontWeight: "bold", fontSize: "10px" }}
-        >
-          -{slot.last_minute_discount}% OFF
-        </Typography>
-      </Box>
+      <SlotTimeRange
+        startLocale={slot.start_date_locale}
+        endLocale={slot.end_date_locale}
+      />
+      <Stack direction="row" gap={1} alignItems="center" mt={0.5}>
+        <Box sx={{ overflow: "hidden" }}>
+          <Typography variant="caption" sx={styles.lastMinuteText}>
+            Last Minute
+          </Typography>
+          <Typography variant="caption" sx={styles.discountLabel}>
+            Reducere (-{slot.last_minute_discount}%)
+          </Typography>
+        </Box>
+      </Stack>
     </Box>
   );
 };
@@ -48,4 +50,21 @@ const styles = {
     display: "flex",
     flexDirection: "column",
   }),
+  lastMinuteText: {
+    fontWeight: 600,
+    display: "block",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    lineHeight: 1.1,
+    color: "text.primary",
+  },
+  discountLabel: {
+    fontSize: "10px",
+    opacity: 0.8,
+    display: "block",
+    mt: 0.25,
+    color: "error.main",
+    fontWeight: 700,
+  },
 };

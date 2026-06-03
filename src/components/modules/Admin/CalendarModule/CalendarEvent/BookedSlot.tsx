@@ -1,9 +1,9 @@
-import dayjs from "@/lib/dayjs";
 import { AppointmentChannelEnum } from "@/ts/models/booking/appointment/AppointmentChannelEnum";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { formatPrice } from "@/utils/formatPrice";
 import { Box, Stack, SxProps, Typography, Theme } from "@mui/material";
 import React from "react";
+import { SlotTimeRange } from "./SlotTimeRange";
 
 type BookedSlotProps = {
   slot: CalendarEventsSlot;
@@ -23,10 +23,10 @@ const BookedSlot = ({
         styles.container(slot, businessShortDomain),
       ]}
     >
-      <Typography variant="caption" color="text.secondary" fontWeight={600}>
-        {dayjs(slot.start_date_locale).format("HH:mm")} -{" "}
-        {dayjs(slot.end_date_locale).format("HH:mm")}
-      </Typography>
+      <SlotTimeRange
+        startLocale={slot.start_date_locale}
+        endLocale={slot.end_date_locale}
+      />
       <Stack direction="row" gap={1} alignItems="center" mt={0.5}>
         <Box sx={{ overflow: "hidden" }}>
           <Typography variant="caption" sx={styles.customerName}>
@@ -94,5 +94,6 @@ const styles = {
     opacity: 0.8,
     display: "block",
     mt: 0.25,
+    fontWeight: 700,
   },
 };

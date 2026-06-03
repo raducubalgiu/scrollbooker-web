@@ -98,7 +98,7 @@ export const darkTheme = createTheme({
       main: "#FAAF00",
     },
     lastMinute: {
-      main: "06B0CA",
+      main: "#06B0CA",
     },
     beauty: {
       main: "#9B4A55",
