@@ -1,6 +1,6 @@
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { Box, Stack, SxProps, Theme, Typography } from "@mui/material";
-import React from "react";
+import React, { memo } from "react";
 import { SlotTimeRange } from "./SlotTimeRange";
 
 type LastMinuteSlotProps = {
@@ -34,7 +34,7 @@ const LastMinuteSlot = ({ slot, globalSx }: LastMinuteSlotProps) => {
   );
 };
 
-export default LastMinuteSlot;
+export default memo(LastMinuteSlot);
 
 const styles = {
   container: (theme: Theme) => ({

@@ -6,7 +6,7 @@ import {
   CalendarEventsResponse,
   CalendarEventsSlot,
 } from "@/ts/models/booking/availability/CalendarEvents";
-import { Box, Slide, Typography } from "@mui/material";
+import { Box, Theme, Typography } from "@mui/material";
 import { Session } from "next-auth";
 import { useMemo, useState } from "react";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
@@ -194,7 +194,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
       sx={{
         width: "100%",
         boxSizing: "border-box",
-        pb: isBlocking ? "100px" : 0,
+        pb: isBlocking ? "120px" : "24px",
         transition: "padding-bottom 0.2s ease",
       }}
     >
@@ -216,20 +216,27 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
         onAddAppointment={() => handleOpenCreateModal(null)}
       />
 
+      {/* ====================================================================
+      1. CONTAINER STICKY: DOAR RÂNDUL CU ZILELE SĂPTĂMÂNII
+      ==================================================================== */}
       <Box
         sx={{
           display: "grid",
           gridTemplateColumns: `90px repeat(7, minmax(130px, 1fr))`,
-          gridTemplateRows: `100px repeat(${totalRows - 1}, ${currentRowHeight}px)`,
-          overflow: "hidden",
+          gridTemplateRows: `100px`, // Păstrează înălțimea fixă de 100px
           backgroundColor: "background.paper",
-          borderRadius: 5,
-          pb: 0,
+          borderTopLeftRadius: 20, // Păstrăm curbura colțurilor de sus
+          borderTopRightRadius: 20,
+          borderTop: "1px solid",
+          borderLeft: "1px solid",
+          borderRight: "1px solid",
+          borderColor: "divider",
+          position: "sticky",
+          top: 0, // <-- Se va opri și va rămâne fixat exact unde începe padding-ul de 2.5 (20px) al paginii tale
+          zIndex: 10,
         }}
       >
-        {/* ==========================================
-            1. HEADER: ZILELE SĂPTĂMÂNII (Row 1)
-            ========================================== */}
+        {/* Celula goală din colțul stânga sus */}
         <Box
           sx={{
             gridColumn: 1,
@@ -295,12 +302,35 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
             </Box>
           );
         })}
+      </Box>
 
+      {/* ====================================================================
+      2. CONTAINER CONȚINUT: AXA ORARĂ, FUNDALUL ȘI SUPRAPUNERILE
+      ==================================================================== */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: `90px repeat(7, minmax(130px, 1fr))`,
+          gridTemplateRows: `repeat(${totalRows - 1}, ${currentRowHeight}px)`, // Am eliminat primul rând de 100px
+          overflow: "hidden",
+          backgroundColor: "background.paper",
+          borderBottomLeftRadius: 20, // Păstrăm curbura colțurilor de jos
+          borderBottomRightRadius: 20,
+          borderLeft: "1px solid",
+          borderRight: "1px solid",
+          borderBottom: "1px solid",
+          borderColor: "divider",
+          pb: 0,
+        }}
+      >
         {/* ==========================================
-            2. AXA ORARĂ DIN STÂNGA (Coloana 1)
-            ========================================== */}
+        2. AXA ORARĂ DIN STÂNGA (Coloana 1)
+        ========================================== */}
         {timeStrings.map((time) => {
-          const currentRow = rowMap[time];
+          const baseRow = rowMap[time];
+          if (baseRow === undefined) return null;
+          const currentRow = baseRow - 1;
+
           return (
             <Box
               key={`axis-${time}`}
@@ -329,13 +359,16 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
         })}
 
         {/* ==========================================
-          3. STRATUL DE FUNDAL: CELULE ȘI BUTOANE (100% Client-side Static)
-          ========================================== */}
+      3. STRATUL DE FUNDAL: CELULE ȘI BUTOANE
+      ========================================== */}
         {frontendDays.map((dayData, dayIndex) => {
           const colIndex = dayIndex + 2;
 
           return timeStrings.map((time) => {
-            const currentRow = rowMap[time];
+            const baseRow = rowMap[time];
+            if (baseRow === undefined) return null;
+            const currentRow = baseRow - 1;
+
             let isOutsideSchedule = true;
 
             if (
@@ -370,37 +403,15 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                     : "transparent",
                 }}
               >
-                {isOutsideSchedule && (
-                  <Box
-                    sx={(theme) => {
-                      const strokeColor = theme.palette.text.secondary;
-                      return {
-                        width: "100%",
-                        height: "100%",
-                        backgroundImage: `repeating-linear-gradient(
-                          45deg, 
-                          transparent, 
-                          transparent 5px, 
-                          ${strokeColor} 5px, 
-                          ${strokeColor} 6px
-                        )`,
-                        mixBlendMode:
-                          theme.palette.mode === "light"
-                            ? "multiply"
-                            : "screen",
-                        opacity: 0.15,
-                      };
-                    }}
-                  />
-                )}
+                {isOutsideSchedule && <Box sx={styles.outsideSchedule} />}
               </Box>
             );
           });
         })}
 
         {/* ==========================================
-            4. STRATUL DE SUPRAPUNERE: EVENIMENTELE DIN BE
-            ========================================== */}
+        4. STRATUL DE SUPRAPUNERE: EVENIMENTELE DIN BE
+        ========================================== */}
         {data?.days?.map((dayBackend) => {
           const targetFrontendIndex = frontendDays.findIndex(
             (d) => d.dateStr === dayBackend.day
@@ -417,14 +428,28 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
               key={`events-col-${dayBackend.day}`}
               sx={{
                 gridColumn: colIndex,
-                gridRowStart: 2,
-                gridRowEnd: timeStrings.length + 2,
+                gridRowStart: 1,
+                gridRowEnd: timeStrings.length + 1,
                 position: "relative",
                 height: `${totalContentHeight}px`,
                 width: "100%",
               }}
             >
               {dayBackend.slots.map((slot, slotIndex) => {
+                const isSlotInPast = dayjs().isAfter(
+                  dayjs(slot.start_date_locale)
+                );
+
+                const isVacantPastSlot =
+                  isSlotInPast && !slot.is_booked && !slot.is_blocked;
+                if (isVacantPastSlot)
+                  return (
+                    <Box
+                      key={slot.start_date_utc}
+                      sx={styles.outsideSchedule}
+                    />
+                  );
+
                 const isSlotChecked = selectedSlotsToBlock.some(
                   (item) => item.start_date === slot.start_date_utc
                 );
@@ -437,6 +462,9 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                     minTimeStr={bounds.minTime}
                     slotDuration={slotDuration}
                     rowHeight={currentRowHeight}
+                    isSelected={isSlotChecked}
+                    businessShortDomain={data?.business_short_domain}
+                    onToggleSelectSlot={handleToggleSelectSlot}
                     onSelectFreeSlot={(
                       startLocale,
                       endLocale,
@@ -453,9 +481,6 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                         endUtc,
                       });
                     }}
-                    onToggleSelectSlot={handleToggleSelectSlot}
-                    isSelected={isSlotChecked}
-                    businessShortDomain={data?.business_short_domain}
                   />
                 );
               })}
@@ -464,12 +489,30 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
         })}
       </Box>
 
-      <Slide direction="up" in={isBlocking} mountOnEnter unmountOnExit>
-        <BlockAppBar
-          selectedSlotsToBlock={selectedSlotsToBlock}
-          onReset={handleResetSelectedSlots}
-        />
-      </Slide>
+      <BlockAppBar
+        isBlocking={isBlocking}
+        selectedSlotsToBlock={selectedSlotsToBlock}
+        onReset={handleResetSelectedSlots}
+      />
     </Box>
   );
+};
+
+const styles = {
+  outsideSchedule: (theme: Theme) => {
+    const strokeColor = theme.palette.text.secondary;
+    return {
+      width: "100%",
+      height: "100%",
+      backgroundImage: `repeating-linear-gradient(
+        45deg, 
+        transparent, 
+        transparent 5px, 
+        ${strokeColor} 5px, 
+        ${strokeColor} 6px
+      )`,
+      mixBlendMode: theme.palette.mode === "light" ? "multiply" : "screen",
+      opacity: 0.15,
+    };
+  },
 };

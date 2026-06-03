@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useMemo } from "react";
-import dayjs from "dayjs";
+import React, { memo, useMemo } from "react";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import BlockedSlot from "./BlockedSlot";
 import BookedSlot from "./BookedSlot";
 import LastMinuteSlot from "./LastMinuteSlot";
-import PastSlot from "./PastSlot";
 import CalendarAvailableSlot from "./CalendarAvailableSlot";
 import { calculateEventLayout } from "./calculateEventLayout";
 
@@ -27,7 +25,7 @@ interface CalendarEventProps {
   onToggleSelectSlot: (slot: CalendarEventsSlot) => void;
 }
 
-export default function CalendarEvent({
+const CalendarEvent = ({
   businessShortDomain,
   slot,
   isBlocking,
@@ -37,15 +35,10 @@ export default function CalendarEvent({
   isSelected,
   onSelectFreeSlot,
   onToggleSelectSlot,
-}: CalendarEventProps) {
+}: CalendarEventProps) => {
   const absolutePlacementStyles = useMemo(() => {
     return calculateEventLayout({ slot, minTimeStr, slotDuration, rowHeight });
   }, [slot, minTimeStr, slotDuration, rowHeight]);
-
-  const isPast = useMemo(
-    () => dayjs().isAfter(dayjs(slot.start_date_locale)),
-    [slot.start_date_locale]
-  );
 
   if (!absolutePlacementStyles) return null;
 
@@ -62,8 +55,6 @@ export default function CalendarEvent({
       );
     case slot.is_last_minute:
       return <LastMinuteSlot slot={slot} globalSx={absolutePlacementStyles} />;
-    case isPast:
-      return <PastSlot globalSx={absolutePlacementStyles} />;
     default:
       return (
         <CalendarAvailableSlot
@@ -71,9 +62,21 @@ export default function CalendarEvent({
           globalSx={absolutePlacementStyles}
           isBlocking={isBlocking}
           isSelected={isSelected}
-          onToggleSelectSlot={onToggleSelectSlot}
-          onSelectFreeSlot={onSelectFreeSlot}
+          onSlotClick={() => {
+            if (isBlocking) {
+              onToggleSelectSlot(slot);
+            } else {
+              onSelectFreeSlot(
+                slot.start_date_locale,
+                slot.end_date_locale,
+                slot.start_date_utc,
+                slot.end_date_utc
+              );
+            }
+          }}
         />
       );
   }
-}
+};
+
+export default memo(CalendarEvent);

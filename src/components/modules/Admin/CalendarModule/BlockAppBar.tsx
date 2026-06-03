@@ -3,6 +3,7 @@ import {
   AppBar,
   Box,
   Button,
+  Portal,
   Stack,
   Theme,
   Toolbar,
@@ -15,10 +16,11 @@ import { isEmpty } from "lodash";
 type BlockAppBarProps = {
   selectedSlotsToBlock: AppointmentBlockSlot[];
   onReset: () => void;
+  isBlocking: boolean; // <-- MODIFICARE: Adăugăm prop-ul pentru a controla animația intern
 };
 
 const BlockAppBar = forwardRef<HTMLDivElement, BlockAppBarProps>(
-  ({ selectedSlotsToBlock, onReset }, ref) => {
+  ({ selectedSlotsToBlock, onReset, isBlocking }, ref) => {
     const selectedSlotsLength = selectedSlotsToBlock.length;
     const subtitle = isEmpty(selectedSlotsToBlock)
       ? "Selectează unul sau mai multe sloturi libere din calendar pentru a le bloca."
@@ -27,61 +29,74 @@ const BlockAppBar = forwardRef<HTMLDivElement, BlockAppBarProps>(
         } pentru blocare.`;
 
     return (
-      <AppBar
-        ref={ref}
-        position="fixed"
-        color="inherit"
-        elevation={0}
-        sx={styles.container}
-      >
-        <Toolbar sx={styles.toolbar}>
-          <Box>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontWeight: 700, color: "text.primary" }}
-            >
-              Modul de blocare intervale este activ
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ fontWeight: 500, mt: 0.25 }}
-            >
-              {subtitle}
-            </Typography>
-          </Box>
+      // MODIFICARE 1: Învăluim în Portal pentru a ignora modificările de lățime ale drawer-ului
+      <Portal>
+        <AppBar
+          ref={ref}
+          position="fixed"
+          color="inherit"
+          elevation={0}
+          // MODIFICARE 2: Combinăm stilurile tale cu animația nativă pe bază de transform (GPU)
+          sx={[
+            styles.container,
+            {
+              transform: isBlocking ? "translateY(0)" : "translateY(100%)",
+              opacity: isBlocking ? 1 : 0,
+              visibility: isBlocking ? "visible" : "hidden",
+              transition:
+                "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, visibility 0.25s",
+            },
+          ]}
+        >
+          <Toolbar sx={styles.toolbar}>
+            <Box>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: 700, color: "text.primary" }}
+              >
+                Modul de blocare intervale este activ
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, mt: 0.25 }}
+              >
+                {subtitle}
+              </Typography>
+            </Box>
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={2}
-            sx={{ width: { xs: "100%", sm: "auto" } }}
-          >
-            <Button
-              variant="text"
-              color="inherit"
-              size="large"
-              onClick={onReset}
-              sx={styles.cancelButton}
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={2}
+              sx={{ width: { xs: "100%", sm: "auto" } }}
             >
-              Renunță
-            </Button>
+              <Button
+                variant="text"
+                color="inherit"
+                size="large"
+                onClick={onReset}
+                sx={styles.cancelButton}
+              >
+                Renunță
+              </Button>
 
-            <Button
-              variant="contained"
-              color="error"
-              size="large"
-              disableElevation
-              startIcon={<BlockIcon />}
-              disabled={isEmpty(selectedSlotsToBlock)}
-              onClick={() => {}}
-              sx={styles.blockButton}
-            >
-              Blochează ({selectedSlotsLength})
-            </Button>
-          </Stack>
-        </Toolbar>
-      </AppBar>
+              <Button
+                variant="contained"
+                color="error"
+                size="large"
+                disableElevation
+                startIcon={<BlockIcon />}
+                disabled={isEmpty(selectedSlotsToBlock)}
+                onClick={() => {}}
+                sx={styles.blockButton}
+              >
+                Blochează ({selectedSlotsLength})
+              </Button>
+            </Stack>
+          </Toolbar>
+        </AppBar>
+      </Portal>
     );
   }
 );
@@ -90,6 +105,7 @@ BlockAppBar.displayName = "BlockAppBar";
 
 export default BlockAppBar;
 
+// Obiectul tău styles rămâne COMPLET NEMODIFICAT
 const styles = {
   container: (theme: Theme) => ({
     top: "auto",

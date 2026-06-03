@@ -1,6 +1,6 @@
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { Box, SxProps, Typography, Theme } from "@mui/material";
-import React from "react";
+import React, { memo } from "react";
 import { SlotTimeRange } from "./SlotTimeRange";
 
 type BlockedSlotProps = {
@@ -28,7 +28,7 @@ const BlockedSlot = ({ slot, globalSx }: BlockedSlotProps) => {
   );
 };
 
-export default BlockedSlot;
+export default memo(BlockedSlot);
 
 const styles = {
   container: (theme: Theme) => ({

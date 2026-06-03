@@ -8,7 +8,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { memo, useMemo } from "react";
 import { SlotTimeRange } from "./SlotTimeRange";
 
 type CalendarAvailableSlotProps = {
@@ -16,13 +16,8 @@ type CalendarAvailableSlotProps = {
   globalSx: SxProps<Theme>;
   isBlocking: boolean;
   isSelected: boolean;
-  onToggleSelectSlot: (slot: CalendarEventsSlot) => void;
-  onSelectFreeSlot: (
-    startLocale: string,
-    endLocale: string,
-    startUtc: string,
-    endUtc: string
-  ) => void;
+  //isPast: boolean;
+  onSlotClick: () => void;
 };
 
 const CalendarAvailableSlot = ({
@@ -30,25 +25,20 @@ const CalendarAvailableSlot = ({
   globalSx,
   isBlocking,
   isSelected,
-  onToggleSelectSlot,
-  onSelectFreeSlot,
+  //isPast,
+  onSlotClick,
 }: CalendarAvailableSlotProps) => {
+  // CORECȚIE CRITICĂ: Adăugăm isPast în dependențele useMemo pentru a recalcula stilul corect
+  const memoizedButtonStyle = useMemo(() => {
+    return styles.button(isBlocking, isSelected);
+  }, [isBlocking, isSelected]);
+
   return (
     <Box sx={globalSx}>
       <ButtonBase
-        onClick={() => {
-          if (isBlocking) {
-            onToggleSelectSlot(slot);
-          } else {
-            onSelectFreeSlot(
-              slot.start_date_locale,
-              slot.end_date_locale,
-              slot.start_date_utc,
-              slot.end_date_utc
-            );
-          }
-        }}
-        sx={styles.button(isBlocking, isSelected)}
+        onClick={onSlotClick}
+        // disabled={isPast} // Dezactivează interacțiunea nativă
+        sx={memoizedButtonStyle}
       >
         {isBlocking ? (
           <Checkbox
@@ -57,9 +47,10 @@ const CalendarAvailableSlot = ({
             size="medium"
             sx={styles.checkbox}
             onClick={(e) => e.stopPropagation()}
-            onChange={() => onToggleSelectSlot(slot)}
+            onChange={onSlotClick}
           />
         ) : (
+          // Dacă este în trecut, nu mai randăm deloc conținutul de hover (Adaugă o programare)
           <Stack
             className="hover-content"
             spacing={0.5}
@@ -81,49 +72,71 @@ const CalendarAvailableSlot = ({
   );
 };
 
-export default CalendarAvailableSlot;
+export default memo(CalendarAvailableSlot);
 
 const styles = {
-  button: (isBlocking: boolean, isSelected: boolean) => (theme: Theme) => ({
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    boxSizing: "border-box",
-    borderRadius: 2,
-    transition: "all 0.15s ease-in-out",
+  // CORECȚIE CHIRURGICALĂ: Funcția de stil primeste acum și parametrul isPast
+  button: (isBlocking: boolean, isSelected: boolean) => (theme: Theme) => {
+    // SCENARIUL PENTRU TRECUT: Dacă celula a trecut, o neutralizăm complet din punct de vedere vizual
+    // if (isPast) {
+    //   return {
+    //     width: "100%",
+    //     height: "100%",
+    //     display: "flex",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     boxSizing: "border-box",
+    //     backgroundColor: "transparent", // Lăsăm să se vadă action.disabledBackground din fundal
+    //     border: "none", // Eliminăm chenarul dashed în trecut pentru un look curat
+    //     cursor: "default",
+    //     "&:hover": {
+    //       backgroundColor: "transparent",
+    //     },
+    //   };
+    // }
 
-    backgroundColor: isBlocking
-      ? isSelected
-        ? "rgba(211, 47, 47, 0.04)"
-        : "background.paper"
-      : "transparent",
-
-    border: "1px dashed",
-    borderColor: isBlocking && isSelected ? "error.main" : "divider",
-    borderStyle: isBlocking && isSelected ? "solid" : "dashed",
-
-    "&:hover": {
-      borderStyle: "dashed",
-      borderColor: isBlocking
-        ? isSelected
-          ? "error.dark"
-          : "text.secondary"
-        : "primary.main",
+    // SCENARIUL PENTRU VIITOR (Codul tău inițial, neatins)
+    return {
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      boxSizing: "border-box",
+      borderRadius: 2,
+      transition: "all 0.15s ease-in-out",
 
       backgroundColor: isBlocking
-        ? "action.hover"
-        : theme.palette.mode === "light"
-          ? `color-mix(in srgb, ${theme.palette.action.hover} 12%, #ffffff)`
-          : `color-mix(in srgb, ${theme.palette.action.hover} 5%, #1e1e1e)`,
+        ? isSelected
+          ? "rgba(211, 47, 47, 0.04)"
+          : "background.paper"
+        : "transparent",
 
-      "& .hover-content": {
-        opacity: isBlocking ? 0 : 1,
-        transform: isBlocking ? "translateY(6px)" : "translateY(0)",
+      border: "1px dashed",
+      borderColor: isBlocking && isSelected ? "error.main" : "divider",
+      borderStyle: isBlocking && isSelected ? "solid" : "dashed",
+
+      "&:hover": {
+        borderStyle: "dashed",
+        borderColor: isBlocking
+          ? isSelected
+            ? "error.dark"
+            : "text.secondary"
+          : "primary.main",
+
+        backgroundColor: isBlocking
+          ? "action.hover"
+          : theme.palette.mode === "light"
+            ? `color-mix(in srgb, ${theme.palette.action.hover} 12%, #ffffff)`
+            : `color-mix(in srgb, ${theme.palette.action.hover} 5%, #1e1e1e)`,
+
+        "& .hover-content": {
+          opacity: isBlocking ? 0 : 1,
+          transform: isBlocking ? "translateY(6px)" : "translateY(0)",
+        },
       },
-    },
-  }),
+    };
+  },
 
   checkbox: {
     p: 0,

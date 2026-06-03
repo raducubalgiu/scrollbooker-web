@@ -2,7 +2,7 @@ import { AppointmentChannelEnum } from "@/ts/models/booking/appointment/Appointm
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { formatPrice } from "@/utils/formatPrice";
 import { Box, Stack, SxProps, Typography, Theme } from "@mui/material";
-import React from "react";
+import React, { memo } from "react";
 import { SlotTimeRange } from "./SlotTimeRange";
 
 type BookedSlotProps = {
@@ -65,7 +65,7 @@ const BookedSlot = ({
   );
 };
 
-export default BookedSlot;
+export default memo(BookedSlot);
 
 const styles = {
   container:
