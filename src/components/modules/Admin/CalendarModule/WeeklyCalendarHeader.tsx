@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 
 interface WeeklyCalendarHeaderProps {
   currentWeekDate: dayjs.Dayjs;
+  isLoading: boolean;
   isBlocking: boolean;
   slotDuration: number;
   onSlotDurationChange: (duration: number) => void;
@@ -30,6 +31,7 @@ interface WeeklyCalendarHeaderProps {
 
 export const WeeklyCalendarHeader = ({
   currentWeekDate,
+  isLoading,
   isBlocking,
   slotDuration,
   onSlotDurationChange,
@@ -48,6 +50,8 @@ export const WeeklyCalendarHeader = ({
     onSlotDurationChange(Number(event.target.value));
   };
 
+  const isDisabled = isBlocking || isLoading;
+
   return (
     <Stack
       direction={{ xs: "column", lg: "row" }}
@@ -65,7 +69,7 @@ export const WeeklyCalendarHeader = ({
           <Select
             value={slotDuration}
             onChange={handleSelectChange}
-            disabled={isBlocking}
+            disabled={isDisabled}
             sx={{
               borderRadius: 10,
               height: 50,
@@ -98,7 +102,7 @@ export const WeeklyCalendarHeader = ({
           color="inherit"
           size="large"
           onClick={onToday}
-          disabled={isBlocking}
+          disabled={isDisabled}
           sx={{
             backgroundColor: "background.paper",
             border: 1,
@@ -125,7 +129,7 @@ export const WeeklyCalendarHeader = ({
         >
           <IconButton
             onClick={onPrevWeek}
-            disabled={isBlocking}
+            disabled={isDisabled}
             size="large"
             sx={{
               color: "text.primary",
@@ -139,7 +143,7 @@ export const WeeklyCalendarHeader = ({
 
           <IconButton
             onClick={onNextWeek}
-            disabled={isBlocking}
+            disabled={isDisabled}
             size="large"
             sx={{
               color: "text.primary",
@@ -170,6 +174,7 @@ export const WeeklyCalendarHeader = ({
           startIcon={<BlockIcon sx={{ fontSize: 20 }} />}
           onClick={onBlockSlots}
           disableElevation
+          disabled={isLoading}
           sx={{
             textTransform: "none",
             fontWeight: 700,
@@ -187,7 +192,7 @@ export const WeeklyCalendarHeader = ({
             },
           }}
         >
-          Blochează sloturi
+          {isBlocking ? "Renunță" : "Blochează sloturi"}
         </Button>
 
         <Button
@@ -197,7 +202,7 @@ export const WeeklyCalendarHeader = ({
           startIcon={<AddIcon sx={{ fontSize: 22 }} />}
           onClick={onAddAppointment}
           disableElevation
-          disabled={isBlocking}
+          disabled={isDisabled}
           sx={{
             textTransform: "none",
             fontWeight: 700,

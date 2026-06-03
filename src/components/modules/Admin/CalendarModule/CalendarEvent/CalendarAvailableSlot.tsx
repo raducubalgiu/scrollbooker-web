@@ -17,7 +17,12 @@ type CalendarAvailableSlotProps = {
   isBlocking: boolean;
   isSelected: boolean;
   onToggleSelectSlot: (slot: CalendarEventsSlot) => void;
-  onSelectFreeSlot: (start: string, end: string) => void;
+  onSelectFreeSlot: (
+    startLocale: string,
+    endLocale: string,
+    startUtc: string,
+    endUtc: string
+  ) => void;
 };
 
 const CalendarAvailableSlot = ({
@@ -35,7 +40,12 @@ const CalendarAvailableSlot = ({
           if (isBlocking) {
             onToggleSelectSlot(slot);
           } else {
-            onSelectFreeSlot(slot.start_date_utc, slot.end_date_utc);
+            onSelectFreeSlot(
+              slot.start_date_locale,
+              slot.end_date_locale,
+              slot.start_date_utc,
+              slot.end_date_utc
+            );
           }
         }}
         sx={styles.button(isBlocking, isSelected)}

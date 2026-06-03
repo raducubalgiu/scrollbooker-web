@@ -6,15 +6,7 @@ import {
   CalendarEventsResponse,
   CalendarEventsSlot,
 } from "@/ts/models/booking/availability/CalendarEvents";
-import {
-  AppBar,
-  Box,
-  Button,
-  Slide,
-  Stack,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { Box, Slide, Typography } from "@mui/material";
 import { Session } from "next-auth";
 import { useMemo, useState } from "react";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
@@ -23,8 +15,8 @@ import { WeeklyCalendarHeader } from "./WeeklyCalendarHeader";
 import { getFrontendDays } from "./getFrontendDays";
 import CalendarEvent from "./CalendarEvent/CalendarEvent";
 import CreateAppointmentModal from "./CreateAppointmentModal/CreateAppointmentModal";
-import BlockIcon from "@mui/icons-material/Block";
 import { AppointmentBlockSlot } from "@/ts/models/booking/appointment/Appointment";
+import BlockAppBar from "./BlockAppBar";
 
 const rowHeightMap: Record<number, number> = {
   15: 100,
@@ -38,12 +30,27 @@ type WeeklyCalendarProps = {
   schedules: Schedule[];
 };
 
+type CreateAppointmentSlotType = {
+  startLocale: string;
+  endLocale: string;
+  startUtc: string;
+  endUtc: string;
+};
+
+type CreateAppointmentModalType = {
+  open: boolean;
+  slot: CreateAppointmentSlotType | null;
+};
+
 export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
   const [isBlocking, setIsBlocking] = useState(false);
   const [selectedSlotsToBlock, setSelectedSlotsToBlock] = useState<
     AppointmentBlockSlot[]
   >([]);
-  const [openCreate, setOpenCreate] = useState(false);
+  const [createModal, setCreateModal] = useState<CreateAppointmentModalType>({
+    open: false,
+    slot: null,
+  });
   const [slotDuration, setSlotDuration] = useState(60);
   const [currentWeekDate, setCurrentWeekDate] = useState<dayjs.Dayjs>(() =>
     dayjs()
@@ -66,7 +73,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     [currentWeekDate]
   );
 
-  const { data } = useCustomQuery<CalendarEventsResponse>({
+  const { data, isLoading } = useCustomQuery<CalendarEventsResponse>({
     key: [
       "weekly-calendar",
       slotDuration,
@@ -158,6 +165,30 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     });
   };
 
+  const handleToggleBlocking = () => {
+    if (isBlocking) {
+      setIsBlocking(false);
+    } else {
+      setIsBlocking(true);
+    }
+  };
+
+  const handleCloseCreateModal = () => {
+    setCreateModal({ open: false, slot: null });
+  };
+
+  const handleOpenCreateModal = (slot: CreateAppointmentSlotType | null) => {
+    setCreateModal({
+      open: true,
+      slot,
+    });
+  };
+
+  const handleResetSelectedSlots = () => {
+    setIsBlocking(false);
+    setSelectedSlotsToBlock([]);
+  };
+
   return (
     <Box
       sx={{
@@ -168,20 +199,21 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
       }}
     >
       <CreateAppointmentModal
-        open={openCreate}
-        onClose={() => setOpenCreate(false)}
+        open={createModal.open}
+        onClose={handleCloseCreateModal}
       />
 
       <WeeklyCalendarHeader
         currentWeekDate={currentWeekDate}
         isBlocking={isBlocking}
+        isLoading={isLoading}
         onPrevWeek={handlePrevWeek}
         onNextWeek={handleNextWeek}
         onToday={handleToday}
         slotDuration={slotDuration}
         onSlotDurationChange={(duration) => setSlotDuration(duration)}
-        onBlockSlots={() => setIsBlocking(true)}
-        onAddAppointment={() => {}}
+        onBlockSlots={handleToggleBlocking}
+        onAddAppointment={() => handleOpenCreateModal(null)}
       />
 
       <Box
@@ -405,9 +437,18 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                     minTimeStr={bounds.minTime}
                     slotDuration={slotDuration}
                     rowHeight={currentRowHeight}
-                    onSelectFreeSlot={(startUtc, endUtc) => {
-                      setOpenCreate(true);
-                      console.log("Deschide formular programare!", {
+                    onSelectFreeSlot={(
+                      startLocale,
+                      endLocale,
+                      startUtc,
+                      endUtc
+                    ) => {
+                      if (!startLocale || !endLocale || !startUtc || !endUtc)
+                        return;
+
+                      handleOpenCreateModal({
+                        startLocale,
+                        endLocale,
                         startUtc,
                         endUtc,
                       });
@@ -424,123 +465,10 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
       </Box>
 
       <Slide direction="up" in={isBlocking} mountOnEnter unmountOnExit>
-        <AppBar
-          position="fixed"
-          color="inherit"
-          elevation={0}
-          sx={(theme) => ({
-            top: "auto",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            zIndex: theme.zIndex.modal - 1, // Stă deasupra calendarului, dar sub eventualele modale/dialoguri
-            borderTop: "1px solid",
-            borderColor: "divider",
-            // Folosim color-mix pentru un fundal opac premium care blochează textul din spate la scroll
-            backgroundColor: "background.paper",
-            boxShadow:
-              theme.palette.mode === "light"
-                ? "0px -8px 24px rgba(0, 0, 0, 0.06)"
-                : "0px -8px 24px rgba(0, 0, 0, 0.4)",
-          })}
-        >
-          <Toolbar
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              alignItems: "center",
-              justifyContent: "space-between",
-              p: "20px 40px !important", // Padding generos și înalt (SaaS XL vibe)
-              gap: 2,
-            }}
-          >
-            {/* Partea Stângă: Mesajul cu numărul de sloturi selectate */}
-            <Box>
-              <Typography
-                variant="subtitle1"
-                sx={{ fontWeight: 700, color: "text.primary" }}
-              >
-                Modul de blocare intervale este activ
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ fontWeight: 500, mt: 0.25 }}
-              >
-                {selectedSlotsToBlock.length === 0
-                  ? "Selectează unul sau mai multe sloturi libere din calendar pentru a le bloca."
-                  : `Ai selectat ${selectedSlotsToBlock.length} ${
-                      selectedSlotsToBlock.length === 1 ? "slot" : "sloturi"
-                    } pentru blocare.`}
-              </Typography>
-            </Box>
-
-            {/* Partea Dreaptă: Cele două butoane mari de acțiune */}
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={2}
-              sx={{ width: { xs: "100%", sm: "auto" } }}
-            >
-              <Button
-                variant="text"
-                color="inherit"
-                size="large"
-                onClick={() => {
-                  setIsBlocking(false);
-                  setSelectedSlotsToBlock([]); // Curățăm selecția la renunțare
-                }}
-                sx={{
-                  borderRadius: 2.5,
-                  textTransform: "none",
-                  fontWeight: 700,
-                  fontSize: "15px",
-                  px: 3,
-                  height: 46,
-                  color: "text.secondary",
-                  "&:hover": { backgroundColor: "action.hover" },
-                }}
-              >
-                Renunță
-              </Button>
-
-              <Button
-                variant="contained"
-                color="error"
-                size="large"
-                disableElevation
-                startIcon={<BlockIcon />}
-                // Butonul este dezactivat dacă utilizatorul nu a bifat nimic încă
-                disabled={selectedSlotsToBlock.length === 0}
-                onClick={() => {
-                  // eslint-disable-next-line no-console
-                  console.log(
-                    "Trimite cererea de blocare către BE pentru:",
-                    selectedSlotsToBlock
-                  );
-
-                  // Aici vei apela mutația ta de salvare (ex: createBlockSlots)
-                  // După succes, oprești modul: setIsBlocking(false)
-                }}
-                sx={{
-                  borderRadius: 2.5,
-                  textTransform: "none",
-                  fontWeight: 700,
-                  fontSize: "15px",
-                  px: 4,
-                  height: 46,
-                  boxShadow: "none",
-                  "&:disabled": {
-                    backgroundColor: "action.disabledBackground",
-                    color: "text.disabled",
-                  },
-                }}
-              >
-                Blochează ({selectedSlotsToBlock.length})
-              </Button>
-            </Stack>
-          </Toolbar>
-        </AppBar>
+        <BlockAppBar
+          selectedSlotsToBlock={selectedSlotsToBlock}
+          onReset={handleResetSelectedSlots}
+        />
       </Slide>
     </Box>
   );

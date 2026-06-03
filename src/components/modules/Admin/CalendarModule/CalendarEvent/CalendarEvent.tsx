@@ -18,7 +18,12 @@ interface CalendarEventProps {
   slotDuration: number;
   rowHeight: number;
   isSelected: boolean;
-  onSelectFreeSlot: (startDateUtc: string, endDateUtc: string) => void;
+  onSelectFreeSlot: (
+    startLocale: string,
+    endLocale: string,
+    startUtc: string,
+    endUtc: string
+  ) => void;
   onToggleSelectSlot: (slot: CalendarEventsSlot) => void;
 }
 
