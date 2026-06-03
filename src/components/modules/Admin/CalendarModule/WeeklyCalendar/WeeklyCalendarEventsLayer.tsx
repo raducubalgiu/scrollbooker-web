@@ -5,7 +5,11 @@ import { Box, Theme } from "@mui/material";
 import dayjs from "dayjs";
 import CalendarEvent from "../CalendarEvent/CalendarEvent";
 import { FrontendDayResult } from "../getFrontendDays";
-import { CalendarEventsDay } from "@/ts/models/booking/availability/CalendarEvents";
+import {
+  CalendarEventsDay,
+  CalendarEventsSlot,
+} from "@/ts/models/booking/availability/CalendarEvents";
+import { AppointmentBlockSlot } from "@/ts/models/booking/appointment/Appointment";
 
 type WeeklyCalendarEventsLayerProps = {
   daysBackend: CalendarEventsDay[] | undefined;
@@ -17,11 +21,11 @@ type WeeklyCalendarEventsLayerProps = {
   currentRowHeight: number;
   slotDuration: number;
   timeStringsLength: number;
-  selectedSlotsToBlock: any[];
+  selectedSlotsToBlock: AppointmentBlockSlot[];
   isBlocking: boolean;
   businessShortDomain: string;
-  handleToggleSelectSlot: (slot: any) => void;
-  handleOpenCreateModal: (slot: any) => void;
+  onToggleSelectSlot: (slot: CalendarEventsSlot) => void;
+  onOpenCreateModal: (slot: CalendarEventsSlot) => void;
 };
 
 const WeeklyCalendarEventsLayerComponent = ({
@@ -34,8 +38,8 @@ const WeeklyCalendarEventsLayerComponent = ({
   selectedSlotsToBlock,
   isBlocking,
   businessShortDomain,
-  handleToggleSelectSlot,
-  handleOpenCreateModal,
+  onToggleSelectSlot,
+  onOpenCreateModal,
 }: WeeklyCalendarEventsLayerProps) => {
   if (!daysBackend || !bounds || !bounds.minTime) return null;
 
@@ -122,22 +126,8 @@ const WeeklyCalendarEventsLayerComponent = ({
                   rowHeight={currentRowHeight}
                   isSelected={isSlotChecked}
                   businessShortDomain={businessShortDomain}
-                  onToggleSelectSlot={handleToggleSelectSlot}
-                  onSelectFreeSlot={(
-                    startLocale,
-                    endLocale,
-                    startUtc,
-                    endUtc
-                  ) => {
-                    if (!startLocale || !endLocale || !startUtc || !endUtc)
-                      return;
-                    handleOpenCreateModal({
-                      startLocale,
-                      endLocale,
-                      startUtc,
-                      endUtc,
-                    });
-                  }}
+                  onToggleSelectSlot={onToggleSelectSlot}
+                  onOpenCreateModal={onOpenCreateModal}
                 />
               );
             })}

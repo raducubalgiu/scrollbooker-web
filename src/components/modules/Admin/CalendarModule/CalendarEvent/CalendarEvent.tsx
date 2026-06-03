@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import BlockedSlot from "./BlockedSlot";
 import BookedSlot from "./BookedSlot";
@@ -16,12 +16,7 @@ interface CalendarEventProps {
   slotDuration: number;
   rowHeight: number;
   isSelected: boolean;
-  onSelectFreeSlot: (
-    startLocale: string,
-    endLocale: string,
-    startUtc: string,
-    endUtc: string
-  ) => void;
+  onOpenCreateModal: (slot: CalendarEventsSlot) => void;
   onToggleSelectSlot: (slot: CalendarEventsSlot) => void;
 }
 
@@ -33,7 +28,7 @@ const CalendarEvent = ({
   slotDuration,
   rowHeight,
   isSelected,
-  onSelectFreeSlot,
+  onOpenCreateModal,
   onToggleSelectSlot,
 }: CalendarEventProps) => {
   const absolutePlacementStyles = useMemo(() => {
@@ -41,6 +36,14 @@ const CalendarEvent = ({
   }, [slot, minTimeStr, slotDuration, rowHeight]);
 
   if (!absolutePlacementStyles) return null;
+
+  const handleSlotClick = useCallback(() => {
+    if (isBlocking) {
+      onToggleSelectSlot(slot);
+    } else {
+      onOpenCreateModal(slot);
+    }
+  }, [isBlocking]);
 
   switch (true) {
     case slot.is_blocked:
@@ -62,18 +65,7 @@ const CalendarEvent = ({
           globalSx={absolutePlacementStyles}
           isBlocking={isBlocking}
           isSelected={isSelected}
-          onSlotClick={() => {
-            if (isBlocking) {
-              onToggleSelectSlot(slot);
-            } else {
-              onSelectFreeSlot(
-                slot.start_date_locale,
-                slot.end_date_locale,
-                slot.start_date_utc,
-                slot.end_date_utc
-              );
-            }
-          }}
+          onSlotClick={handleSlotClick}
         />
       );
   }
