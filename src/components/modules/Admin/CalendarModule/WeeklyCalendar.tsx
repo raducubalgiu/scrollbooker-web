@@ -21,7 +21,7 @@ import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { getScheduleBounds } from "./getScheduleBounds";
 import { WeeklyCalendarHeader } from "./WeeklyCalendarHeader";
 import { getFrontendDays } from "./getFrontendDays";
-import CalendarEvent from "./CalendarEvent";
+import CalendarEvent from "./CalendarEvent/CalendarEvent";
 import CreateAppointmentModal from "./CreateAppointmentModal/CreateAppointmentModal";
 import BlockIcon from "@mui/icons-material/Block";
 import { AppointmentBlockSlot } from "@/ts/models/booking/appointment/Appointment";

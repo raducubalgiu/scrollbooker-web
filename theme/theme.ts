@@ -30,6 +30,7 @@ declare module "@mui/material/styles" {
     surface: Palette["primary"];
     rating: Palette["primary"];
     border: Palette["primary"];
+    lastMinute: Palette["primary"];
     beauty: Palette["primary"];
     auto: Palette["primary"];
     medical: Palette["primary"];
@@ -40,6 +41,7 @@ declare module "@mui/material/styles" {
     surface?: PaletteOptions["primary"];
     rating?: PaletteOptions["primary"];
     border?: PaletteOptions["primary"];
+    lastMinute: PaletteOptions["primary"];
     beauty?: PaletteOptions["primary"];
     medical?: PaletteOptions["primary"];
     auto?: PaletteOptions["primary"];
@@ -94,6 +96,9 @@ export const darkTheme = createTheme({
     },
     rating: {
       main: "#FAAF00",
+    },
+    lastMinute: {
+      main: "06B0CA",
     },
     beauty: {
       main: "#9B4A55",
@@ -392,6 +397,9 @@ export const lightTheme = createTheme({
     },
     rating: {
       main: "#FAAF00",
+    },
+    lastMinute: {
+      main: "#06B0CA",
     },
     beauty: {
       main: "#7A2E3A",
