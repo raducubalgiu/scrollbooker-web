@@ -28,23 +28,21 @@ declare module "@mui/material/styles" {
   interface Palette {
     neutral: Palette["primary"];
     surface: Palette["primary"];
-    table: Palette["primary"];
     rating: Palette["primary"];
     border: Palette["primary"];
-    slotBlocked: Palette["primary"];
-    slotBookedOwnClient: Palette["primary"];
-    slotBookedScrollBooker: Palette["primary"];
+    beauty: Palette["primary"];
+    auto: Palette["primary"];
+    medical: Palette["primary"];
   }
 
   interface PaletteOptions {
     neutral?: PaletteOptions["primary"];
     surface?: PaletteOptions["primary"];
     rating?: PaletteOptions["primary"];
-    table?: PaletteOptions["primary"];
     border?: PaletteOptions["primary"];
-    slotBlocked?: PaletteOptions["primary"];
-    slotBookedOwnClient?: PaletteOptions["primary"];
-    slotBookedScrollBooker?: PaletteOptions["primary"];
+    beauty?: PaletteOptions["primary"];
+    medical?: PaletteOptions["primary"];
+    auto?: PaletteOptions["primary"];
   }
 }
 
@@ -97,17 +95,14 @@ export const darkTheme = createTheme({
     rating: {
       main: "#FAAF00",
     },
-    table: {
-      main: "#1E1E1E",
+    beauty: {
+      main: "#9B4A55",
     },
-    slotBlocked: {
-      main: "#3b1111",
+    medical: {
+      main: "#5EDAD5",
     },
-    slotBookedOwnClient: {
-      main: "#1B4D1F",
-    },
-    slotBookedScrollBooker: {
-      main: "#C06020",
+    auto: {
+      main: "#6FA8FF",
     },
   },
 
@@ -398,17 +393,14 @@ export const lightTheme = createTheme({
     rating: {
       main: "#FAAF00",
     },
-    table: {
-      main: "#FFFFFF",
+    beauty: {
+      main: "#7A2E3A",
     },
-    slotBlocked: {
-      main: "#3b1111",
+    medical: {
+      main: "#36CFC9",
     },
-    slotBookedOwnClient: {
-      main: "#1B4D1F",
-    },
-    slotBookedScrollBooker: {
-      main: "#C06020",
+    auto: {
+      main: "#3A86FF",
     },
   },
 
