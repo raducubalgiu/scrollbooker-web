@@ -136,3 +136,8 @@ export interface AppointmentBlockSlot {
   start_date: string;
   end_date: string;
 }
+
+export interface AppointmentBlock {
+  blocked_message: string;
+  slots: AppointmentBlockSlot[];
+}

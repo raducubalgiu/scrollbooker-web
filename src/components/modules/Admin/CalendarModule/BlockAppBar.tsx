@@ -15,12 +15,17 @@ import { isEmpty } from "lodash";
 
 type BlockAppBarProps = {
   selectedSlotsToBlock: AppointmentBlockSlot[];
-  onReset: () => void;
-  isBlocking: boolean; // <-- MODIFICARE: Adăugăm prop-ul pentru a controla animația intern
+  isBlocking: boolean;
+  isLoadingBlock: boolean;
+  onCancel: () => void;
+  onBlock: () => void;
 };
 
 const BlockAppBar = forwardRef<HTMLDivElement, BlockAppBarProps>(
-  ({ selectedSlotsToBlock, onReset, isBlocking }, ref) => {
+  (
+    { selectedSlotsToBlock, isBlocking, isLoadingBlock, onCancel, onBlock },
+    ref
+  ) => {
     const selectedSlotsLength = selectedSlotsToBlock.length;
     const subtitle = isEmpty(selectedSlotsToBlock)
       ? "Selectează unul sau mai multe sloturi libere din calendar pentru a le bloca."
@@ -29,14 +34,12 @@ const BlockAppBar = forwardRef<HTMLDivElement, BlockAppBarProps>(
         } pentru blocare.`;
 
     return (
-      // MODIFICARE 1: Învăluim în Portal pentru a ignora modificările de lățime ale drawer-ului
       <Portal>
         <AppBar
           ref={ref}
           position="fixed"
           color="inherit"
           elevation={0}
-          // MODIFICARE 2: Combinăm stilurile tale cu animația nativă pe bază de transform (GPU)
           sx={[
             styles.container,
             {
@@ -75,7 +78,7 @@ const BlockAppBar = forwardRef<HTMLDivElement, BlockAppBarProps>(
                 variant="text"
                 color="inherit"
                 size="large"
-                onClick={onReset}
+                onClick={onCancel}
                 sx={styles.cancelButton}
               >
                 Renunță
@@ -87,9 +90,10 @@ const BlockAppBar = forwardRef<HTMLDivElement, BlockAppBarProps>(
                 size="large"
                 disableElevation
                 startIcon={<BlockIcon />}
-                disabled={isEmpty(selectedSlotsToBlock)}
-                onClick={() => {}}
+                onClick={onBlock}
                 sx={styles.blockButton}
+                loading={isLoadingBlock}
+                disabled={isEmpty(selectedSlotsToBlock) || isLoadingBlock}
               >
                 Blochează ({selectedSlotsLength})
               </Button>
@@ -105,7 +109,6 @@ BlockAppBar.displayName = "BlockAppBar";
 
 export default BlockAppBar;
 
-// Obiectul tău styles rămâne COMPLET NEMODIFICAT
 const styles = {
   container: (theme: Theme) => ({
     top: "auto",

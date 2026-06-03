@@ -1,7 +1,7 @@
 import dayjs from "@/lib/dayjs";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 
-interface FrontendDayResult {
+export interface FrontendDayResult {
   dateStr: string;
   dayName: string;
   dayFormatted: string;

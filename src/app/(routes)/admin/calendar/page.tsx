@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import { WeeklyCalendar } from "@/components/modules/Admin/CalendarModule/WeeklyCalendar";
+import { WeeklyCalendar } from "@/components/modules/Admin/CalendarModule/WeeklyCalendar/WeeklyCalendar";
 import { authOptions } from "@/lib/auth/authOptions";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";

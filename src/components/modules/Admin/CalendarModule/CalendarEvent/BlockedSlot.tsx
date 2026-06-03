@@ -2,6 +2,7 @@ import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEve
 import { Box, SxProps, Typography, Theme } from "@mui/material";
 import React, { memo } from "react";
 import { SlotTimeRange } from "./SlotTimeRange";
+import { alpha } from "@mui/system";
 
 type BlockedSlotProps = {
   slot: CalendarEventsSlot;
@@ -40,7 +41,7 @@ const styles = {
     p: 1,
     borderRadius: 1,
     borderLeft: 3,
-    borderColor: "error.main",
+    borderColor: alpha(theme.palette.error.main, 0.6),
     display: "flex",
     flexDirection: "column",
   }),

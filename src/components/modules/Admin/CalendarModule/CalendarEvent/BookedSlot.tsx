@@ -4,6 +4,7 @@ import { formatPrice } from "@/utils/formatPrice";
 import { Box, Stack, SxProps, Typography, Theme } from "@mui/material";
 import React, { memo } from "react";
 import { SlotTimeRange } from "./SlotTimeRange";
+import { alpha } from "@mui/system";
 
 type BookedSlotProps = {
   slot: CalendarEventsSlot;
@@ -99,7 +100,7 @@ const styles = {
         p: 1,
         borderRadius: 1,
         borderLeft: 3,
-        borderColor: baseBrandColor,
+        borderColor: alpha(baseBrandColor, 0.6),
         display: "flex",
         flexDirection: "column",
       };
