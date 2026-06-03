@@ -18,7 +18,7 @@ export const SlotTimeRange = ({
       variant="caption"
       sx={{
         color: "text.secondary",
-        fontWeight: 600,
+        fontWeight: 500,
         ...sx,
       }}
     >

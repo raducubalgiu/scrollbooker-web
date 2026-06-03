@@ -16,7 +16,7 @@ export interface CalendarEventsGroupedAppointment {
   end_date: string;
   channel: string;
   is_blocked: boolean;
-  message: string | null;
+  blocked_message: string | null;
   customer: CalendarEventsCustomer;
   total_price: number;
   total_price_with_discount: number;
@@ -35,7 +35,7 @@ export interface CalendarEventsProduct {
 export interface CalendarEventsInfo {
   channel: string;
   customer: CalendarEventsCustomer | null;
-  message: string | null;
+  blocked_message: string | null;
   total_price: number;
   total_price_with_discount: number;
   total_discount: number;

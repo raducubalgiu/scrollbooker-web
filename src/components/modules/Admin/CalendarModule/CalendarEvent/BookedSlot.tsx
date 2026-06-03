@@ -27,15 +27,38 @@ const BookedSlot = ({
         startLocale={slot.start_date_locale}
         endLocale={slot.end_date_locale}
       />
-      <Stack direction="row" gap={1} alignItems="center" mt={0.5}>
-        <Box sx={{ overflow: "hidden" }}>
+      <Stack direction="row" gap={1} alignItems="center" mt={1}>
+        <Box sx={{ overflow: "hidden", width: "100%" }}>
           <Typography variant="caption" sx={styles.customerName}>
             {slot.info?.customer?.fullname || "Client propriu"}
           </Typography>
-          <Typography variant="caption" sx={styles.priceLabel}>
-            {formatPrice(slot.info?.total_price_with_discount)}{" "}
-            {slot.info?.payment_currency?.name}
-          </Typography>
+
+          <Box sx={styles.priceLabelRow}>
+            <Typography
+              variant="caption"
+              component="span"
+              sx={styles.serviceName}
+            >
+              Tuns Special
+            </Typography>
+
+            <Typography
+              variant="caption"
+              component="span"
+              sx={styles.dotSeparator}
+            >
+              •
+            </Typography>
+
+            <Typography
+              variant="caption"
+              component="span"
+              sx={styles.priceValue}
+            >
+              {formatPrice(slot.info?.total_price_with_discount)}{" "}
+              {slot.info?.payment_currency?.name}
+            </Typography>
+          </Box>
         </Box>
       </Stack>
     </Box>
@@ -82,18 +105,44 @@ const styles = {
       };
     },
   customerName: {
-    fontWeight: "bold",
+    fontWeight: 600,
     display: "block",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
     lineHeight: 1.1,
   },
-  priceLabel: {
-    fontSize: "10px",
+
+  priceLabelRow: {
+    display: "flex",
+    alignItems: "center",
+    mt: 0.5,
+    width: "100%",
+    overflow: "hidden",
+  },
+
+  serviceName: {
+    fontSize: 11,
     opacity: 0.8,
-    display: "block",
-    mt: 0.25,
+    fontWeight: 600,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    flexShrink: 1,
+  },
+
+  dotSeparator: {
+    fontSize: 11,
+    opacity: 0.8,
+    px: 0.5,
+    flexShrink: 0,
+  },
+
+  priceValue: {
+    fontSize: 11,
+    opacity: 0.8,
     fontWeight: 700,
+    whiteSpace: "nowrap",
+    flexShrink: 0,
   },
 };

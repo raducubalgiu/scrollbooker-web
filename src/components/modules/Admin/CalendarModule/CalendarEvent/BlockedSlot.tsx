@@ -22,7 +22,7 @@ const BlockedSlot = ({ slot, globalSx }: BlockedSlotProps) => {
       />
 
       <Typography variant="caption" sx={styles.message}>
-        {slot.info?.message || "Slot Blocat"}
+        {slot.info?.blocked_message || "Slot Blocat"}
       </Typography>
     </Box>
   );
@@ -51,6 +51,6 @@ const styles = {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    mt: 0.5,
+    mt: 1,
   },
 };

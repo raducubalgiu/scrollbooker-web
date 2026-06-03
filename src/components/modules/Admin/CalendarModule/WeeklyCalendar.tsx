@@ -30,7 +30,7 @@ const rowHeightMap: Record<number, number> = {
   15: 100,
   30: 120,
   45: 140,
-  60: 160,
+  60: 180,
 };
 
 type WeeklyCalendarProps = {

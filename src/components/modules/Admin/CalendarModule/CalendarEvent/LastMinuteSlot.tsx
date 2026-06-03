@@ -20,7 +20,7 @@ const LastMinuteSlot = ({ slot, globalSx }: LastMinuteSlotProps) => {
         startLocale={slot.start_date_locale}
         endLocale={slot.end_date_locale}
       />
-      <Stack direction="row" gap={1} alignItems="center" mt={0.5}>
+      <Stack direction="row" gap={1} alignItems="center" mt={1}>
         <Box sx={{ overflow: "hidden" }}>
           <Typography variant="caption" sx={styles.lastMinuteText}>
             Last Minute
@@ -60,11 +60,14 @@ const styles = {
     color: "text.primary",
   },
   discountLabel: {
-    fontSize: "10px",
+    fontSize: 11,
     opacity: 0.8,
     display: "block",
     mt: 0.25,
     color: "error.main",
     fontWeight: 700,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
 };
