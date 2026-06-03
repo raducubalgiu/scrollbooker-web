@@ -5,8 +5,10 @@ import { Box, Stack, Typography, ButtonBase, Checkbox } from "@mui/material";
 import dayjs from "dayjs";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { formatPrice } from "@/utils/formatPrice";
+import { AppointmentChannelEnum } from "@/ts/models/booking/appointment/AppointmentChannelEnum";
 
 interface CalendarEventProps {
+  businessShortDomain: string;
   slot: CalendarEventsSlot;
   isBlocking: boolean;
   minTimeStr: string | undefined;
@@ -18,6 +20,7 @@ interface CalendarEventProps {
 }
 
 export default function CalendarEvent({
+  businessShortDomain,
   slot,
   isBlocking,
   minTimeStr,
@@ -48,12 +51,11 @@ export default function CalendarEvent({
 
   const hasSpacing = slot.is_booked || slot.is_blocked || slot.is_last_minute;
 
-  const GAP_PIXELS = 3; // Dimensiunea spațiului liber dintre sloturi (pe toate direcțiile)
+  const GAP_PIXELS = 3;
 
   const absolutePlacementStyles = {
     position: "absolute",
 
-    // 2. DINAMIC PE VERTICALĂ: Dacă are spacing aplicăm GAP, altfel ocupă pixelii integrali
     top: hasSpacing
       ? `${topPositionPixels + GAP_PIXELS}px`
       : `${topPositionPixels}px`,
@@ -62,7 +64,6 @@ export default function CalendarEvent({
       ? `${heightPixels - GAP_PIXELS * 2}px`
       : `${heightPixels}px`,
 
-    // 3. DINAMIC PE ORIZONTALĂ: Dacă are spacing lăsăm aer (6px), altfel se lipește perfect (0)
     left: hasSpacing ? "6px" : 0,
     right: hasSpacing ? "6px" : 0,
 
@@ -70,7 +71,6 @@ export default function CalendarEvent({
     boxSizing: "border-box",
     overflow: "hidden",
 
-    // 4. Umbră fină doar pentru programările confirmate ale clienților
     ...(slot.is_booked && {
       boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)",
     }),
@@ -120,22 +120,41 @@ export default function CalendarEvent({
   if (slot.is_booked) {
     return (
       <Box
-        sx={(theme) => ({
-          ...absolutePlacementStyles,
-          backgroundColor: (theme) => {
-            const primaryColor = theme.palette.primary.main;
-            const isLight = theme.palette.mode === "light";
+        sx={(theme) => {
+          const isLight = theme.palette.mode === "light";
+          const channel = slot.info?.channel;
+          const domain = businessShortDomain?.toLowerCase();
 
-            return isLight
-              ? `color-mix(in srgb, ${primaryColor} 12%, #ffffff)`
-              : `color-mix(in srgb, ${primaryColor} 5%, #1e1e1e)`;
-          },
-          color: theme.palette.text.primary,
-          p: 1,
-          borderRadius: 1,
-          borderLeft: 3,
-          borderColor: "primary.main",
-        })}
+          let baseBrandColor = theme.palette.primary.main;
+
+          if (
+            channel === AppointmentChannelEnum.OWN_CLIENT &&
+            domain &&
+            domain in theme.palette
+          ) {
+            const customColorObj = theme.palette[
+              domain as keyof typeof theme.palette
+            ] as typeof theme.palette.primary;
+
+            if (customColorObj && customColorObj.main) {
+              baseBrandColor = customColorObj.main;
+            }
+          }
+
+          return {
+            ...absolutePlacementStyles,
+            backgroundColor: isLight
+              ? `color-mix(in srgb, ${baseBrandColor} 12%, #ffffff)`
+              : `color-mix(in srgb, ${baseBrandColor} 8%, #1c1c1e)`,
+            color: theme.palette.text.primary,
+            p: 1,
+            borderRadius: 1,
+            borderLeft: 3,
+            borderColor: baseBrandColor,
+            display: "flex",
+            flexDirection: "column",
+          };
+        }}
       >
         <Typography variant="caption" color="text.secondary" fontWeight={600}>
           {dayjs(slot.start_date_locale).format("HH:mm")} -{" "}
@@ -154,7 +173,7 @@ export default function CalendarEvent({
                 lineHeight: 1.1,
               }}
             >
-              {slot.info?.customer?.fullname}
+              {slot.info?.customer?.fullname || "Client propriu"}
             </Typography>
             <Typography
               variant="caption"
@@ -165,7 +184,7 @@ export default function CalendarEvent({
                 mt: 0.25,
               }}
             >
-              {formatPrice(slot.info?.total_price_with_discount)}
+              {formatPrice(slot.info?.total_price_with_discount)}{" "}
               {slot.info?.payment_currency?.name}
             </Typography>
           </Box>

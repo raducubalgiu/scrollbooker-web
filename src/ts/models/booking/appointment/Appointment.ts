@@ -131,3 +131,8 @@ export interface ScrollBookerAppointmentCreate {
   product_variants: AppointmentProductVariantCreate[];
   payment_currency_id: number;
 }
+
+export interface AppointmentBlockSlot {
+  start_date: string;
+  end_date: string;
+}

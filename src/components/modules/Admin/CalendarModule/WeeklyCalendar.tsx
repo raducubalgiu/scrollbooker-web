@@ -24,6 +24,7 @@ import { getFrontendDays } from "./getFrontendDays";
 import CalendarEvent from "./CalendarEvent";
 import CreateAppointmentModal from "./CreateAppointmentModal/CreateAppointmentModal";
 import BlockIcon from "@mui/icons-material/Block";
+import { AppointmentBlockSlot } from "@/ts/models/booking/appointment/Appointment";
 
 const rowHeightMap: Record<number, number> = {
   15: 100,
@@ -37,16 +38,10 @@ type WeeklyCalendarProps = {
   schedules: Schedule[];
 };
 
-export interface BlockSlotPayload {
-  start_date_utc: string; // Ex: "2026-06-01T12:00:00+00:00"
-  end_date_utc: string; // Ex: "2026-06-01T13:00:00+00:00"
-  user_id: number; // ID-ul angajatului pentru care se face blocarea
-}
-
 export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
   const [isBlocking, setIsBlocking] = useState(false);
   const [selectedSlotsToBlock, setSelectedSlotsToBlock] = useState<
-    BlockSlotPayload[]
+    AppointmentBlockSlot[]
   >([]);
   const [openCreate, setOpenCreate] = useState(false);
   const [slotDuration, setSlotDuration] = useState(60);
@@ -146,23 +141,17 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
 
   const handleToggleSelectSlot = (slot: CalendarEventsSlot) => {
     setSelectedSlotsToBlock((prev) => {
-      // Verificăm dacă slotul este deja bifat în lista noastră
       const isAlreadySelected = prev.some(
-        (item) => item.start_date_utc === slot.start_date_utc
+        (item) => item.start_date === slot.start_date_utc
       );
 
       if (isAlreadySelected) {
-        // Dacă este deja selectat, îl scoatem din array (debifare)
-        return prev.filter(
-          (item) => item.start_date_utc !== slot.start_date_utc
-        );
+        return prev.filter((item) => item.start_date !== slot.start_date_utc);
       }
 
-      // Dacă nu este selectat, creăm obiectul curat cu datele cerute de BE și îl adăugăm în listă
-      const newBlockItem: BlockSlotPayload = {
-        start_date_utc: slot.start_date_utc,
-        end_date_utc: slot.end_date_utc,
-        user_id: session.user_id, // Preluat direct din sesiunea utilizatorului curent
+      const newBlockItem: AppointmentBlockSlot = {
+        start_date: slot.start_date_utc,
+        end_date: slot.end_date_utc,
       };
 
       return [...prev, newBlockItem];
@@ -405,7 +394,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
             >
               {dayBackend.slots.map((slot, slotIndex) => {
                 const isSlotChecked = selectedSlotsToBlock.some(
-                  (item) => item.start_date_utc === slot.start_date_utc
+                  (item) => item.start_date === slot.start_date_utc
                 );
 
                 return (
@@ -425,6 +414,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                     }}
                     onToggleSelectSlot={handleToggleSelectSlot}
                     isSelected={isSlotChecked}
+                    businessShortDomain={data?.business_short_domain}
                   />
                 );
               })}
