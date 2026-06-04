@@ -127,7 +127,7 @@ const BookingModule = (props: BookingModuleProps) => {
   }, []);
 
   return (
-    <Box sx={{ minHeight: "100vh" }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.paper" }}>
       <BookingAppBar onBack={() => router.back()} />
       <Container maxWidth="xl">
         <BookingBreadcrumbs

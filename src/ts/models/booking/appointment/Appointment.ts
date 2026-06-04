@@ -150,14 +150,20 @@ export interface AppointmentLastMinuteCreate {
   discount: number;
 }
 
-export interface AppointmentOwnClientCreate {
-  start_date: string;
-  end_date: string;
-  user_id: number;
-  customer_fullname: string;
+export interface AppointmentCustomProduct {
   product_name: string;
   price: number;
   discount: number;
   price_with_discount: number;
   duration: number;
+}
+
+export interface AppointmentOwnClientCreate {
+  start_date: string;
+  end_date: string;
+  user_id: number;
+  customer_fullname: string;
+
+  custom_product: AppointmentCustomProduct | null;
+  product_variants: AppointmentProductVariantCreate[] | null;
 }

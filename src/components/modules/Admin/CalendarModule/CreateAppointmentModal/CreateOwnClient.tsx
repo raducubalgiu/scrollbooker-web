@@ -1,6 +1,12 @@
 import Input from "@/components/core/Input/Input";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
-import { maxField, min, minField, required } from "@/utils/validation-rules";
+import {
+  max,
+  maxField,
+  min,
+  minField,
+  required,
+} from "@/utils/validation-rules";
 import { Button, DialogActions, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -58,6 +64,9 @@ const CreateOwnClient = ({
   const minProductNameLength = minField(3);
   const maxProductNameLength = maxField(100);
 
+  const minDiscount = min(0);
+  const maxDiscount = max(100);
+
   const onSubmit = (data: CreateOwnClientFormData) => {
     if (!slot?.start_date_utc || !slot?.end_date_utc) return;
     onCreateOwnClient(data, slot);
@@ -104,7 +113,7 @@ const CreateOwnClient = ({
             placeholder="Discount"
             label="Discount"
             type="number"
-            rules={{ ...isRequiredNumber }}
+            rules={{ ...minDiscount, ...maxDiscount }}
           />
           <Input
             name="priceWithDiscount"
@@ -112,6 +121,15 @@ const CreateOwnClient = ({
             disabled
             label="Pret final"
             type="number"
+            rules={{ ...isRequiredNumber }}
+          />
+
+          <Input
+            name="duration"
+            placeholder="Durata"
+            label="Adauga durata (min)"
+            type="number"
+            disabled
             rules={{ ...isRequiredNumber }}
           />
         </Stack>

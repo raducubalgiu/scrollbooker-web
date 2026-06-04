@@ -24,7 +24,7 @@ const rowHeightMap: Record<number, number> = {
   15: 100,
   30: 120,
   45: 140,
-  60: 180,
+  60: 250,
 };
 
 interface UseWeeklyCalendarProps {
@@ -245,16 +245,19 @@ export const useWeeklyCalendar = ({
   const handleOwnClientPayload = useCallback(
     (data: CreateOwnClientFormData, slot: CalendarEventsSlot) => {
       const payload: AppointmentOwnClientCreate = {
-        customer_fullname: data.customerFullname,
-        product_name: data.productName,
-        price: Number(data.price),
-        discount: Number(data.discount),
-        price_with_discount: Number(data.priceWithDiscount),
-        duration: Number(data.duration),
-
         start_date: slot.start_date_utc,
         end_date: slot.end_date_utc,
         user_id: session?.user_id,
+        customer_fullname: data.customerFullname,
+
+        custom_product: {
+          product_name: data.productName,
+          price: Number(data.price),
+          discount: Number(data.discount),
+          price_with_discount: Number(data.priceWithDiscount),
+          duration: Number(data.duration),
+        },
+        product_variants: null,
       };
 
       handleOwnClient(payload);
