@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth/authOptions";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { get } from "@/utils/requests";
+import { Box } from "@mui/material";
 import { getServerSession } from "next-auth";
 
 async function Calendar() {
@@ -28,7 +29,11 @@ async function Calendar() {
     return <WeeklyCalendar session={session} schedules={schedules} />;
   }
 
-  return <></>;
+  return (
+    <Box>
+      Multi-Calendar pentru role business cu angajati inca nu este implementat
+    </Box>
+  );
 }
 
 export default ProtectedPage(Calendar, PermissionEnum.MY_CALENDAR_VIEW);

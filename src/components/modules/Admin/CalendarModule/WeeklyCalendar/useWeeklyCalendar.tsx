@@ -4,8 +4,10 @@ import { useState, useMemo, useCallback } from "react";
 import dayjs from "dayjs";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import {
-  AppointmentBlock,
+  AppointmentBlockCreate,
   AppointmentBlockSlot,
+  AppointmentLastMinuteCreate,
+  AppointmentOwnClientCreate,
 } from "@/ts/models/booking/appointment/Appointment";
 import { CreateAppointmentModalType } from "./WeeklyCalendar";
 import { getFrontendDays } from "../getFrontendDays";
@@ -16,6 +18,7 @@ import {
 } from "@/ts/models/booking/availability/CalendarEvents";
 import { Session } from "next-auth";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
+import { CreateOwnClientFormData } from "../CreateAppointmentModal/CreateOwnClient";
 
 const rowHeightMap: Record<number, number> = {
   15: 100,
@@ -94,6 +97,29 @@ export const useWeeklyCalendar = ({
       onSuccess: async () => {
         refetch();
         handleCloseBlocking();
+      },
+    },
+  });
+
+  const { mutate: handleLastMinute, isPending: isLoadingLastMinute } =
+    useMutate({
+      key: ["last-minute-appointments"],
+      url: "/api/appointments/last-minute",
+      options: {
+        onSuccess: async () => {
+          refetch();
+          setCreateModal({ open: false, slot: null });
+        },
+      },
+    });
+
+  const { mutate: handleOwnClient, isPending: isLoadingOwnClient } = useMutate({
+    key: ["own-client-appointments"],
+    url: "/api/appointments/own-client",
+    options: {
+      onSuccess: async () => {
+        refetch();
+        setCreateModal({ open: false, slot: null });
       },
     },
   });
@@ -191,7 +217,7 @@ export const useWeeklyCalendar = ({
   const handleConfirmBlockPayload = useCallback(() => {
     if (selectedSlotsToBlock.length === 0) return;
 
-    const payload: AppointmentBlock = {
+    const payload: AppointmentBlockCreate = {
       blocked_message: null,
       slots: selectedSlotsToBlock.map((slot) => ({
         start_date: slot.start_date,
@@ -201,6 +227,40 @@ export const useWeeklyCalendar = ({
     };
     handleBlock(payload);
   }, [selectedSlotsToBlock, session?.user_id, handleBlock]);
+
+  const handleLastMinutePayload = useCallback(
+    (discount: number, slot: CalendarEventsSlot) => {
+      const payload: AppointmentLastMinuteCreate = {
+        discount,
+        start_date: slot.start_date_utc,
+        end_date: slot.end_date_utc,
+        user_id: session?.user_id,
+      };
+
+      handleLastMinute(payload);
+    },
+    []
+  );
+
+  const handleOwnClientPayload = useCallback(
+    (data: CreateOwnClientFormData, slot: CalendarEventsSlot) => {
+      const payload: AppointmentOwnClientCreate = {
+        customer_fullname: data.customerFullname,
+        product_name: data.productName,
+        price: Number(data.price),
+        discount: Number(data.discount),
+        price_with_discount: Number(data.priceWithDiscount),
+        duration: Number(data.duration),
+
+        start_date: slot.start_date_utc,
+        end_date: slot.end_date_utc,
+        user_id: session?.user_id,
+      };
+
+      handleOwnClient(payload);
+    },
+    []
+  );
 
   return {
     isBlocking,
@@ -216,6 +276,8 @@ export const useWeeklyCalendar = ({
     totalRows,
     isLoading: isLoading,
     isLoadingBlock,
+    isLoadingLastMinute,
+    isLoadingOwnClient,
     bounds,
     data,
     handlePrevWeek,
@@ -227,5 +289,7 @@ export const useWeeklyCalendar = ({
     handleOpenCreateModal,
     handleCloseBlocking,
     handleConfirmBlockPayload,
+    handleLastMinutePayload,
+    handleOwnClientPayload,
   };
 };

@@ -1,106 +1,96 @@
-import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
-import Input from "@/components/core/Input/Input";
 import Modal from "@/components/core/Modal/Modal";
-import { required } from "@/utils/validation-rules";
 import { Box, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import CreateOwnClient, { CreateOwnClientFormData } from "./CreateOwnClient";
+import CreateLastMinute from "./CreateLastMinute";
+import { CreateAppointmentModalType } from "../WeeklyCalendar/WeeklyCalendar";
+import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 
 type CreateAppointmentModalProps = {
-  open: boolean;
+  createModal: CreateAppointmentModalType;
+  isLoadingLastMinute: boolean;
+  onCreateLastMinute: (discount: number, slot: CalendarEventsSlot) => void;
+  isLoadingOwnClient: boolean;
+  onCreateOwnClient: (
+    data: CreateOwnClientFormData,
+    slot: CalendarEventsSlot
+  ) => void;
   onClose: () => void;
 };
 
+enum CreateAppointmentTab {
+  OWN_CLIENT,
+  LAST_MINUTE,
+}
+
 const CreateAppointmentModal = ({
-  open,
+  createModal,
+  onCreateLastMinute,
+  isLoadingLastMinute,
+  onCreateOwnClient,
+  isLoadingOwnClient,
   onClose,
 }: CreateAppointmentModalProps) => {
-  const [tab, setTab] = React.useState<number>(0);
-  const methods = useForm({
-    defaultValues: {
-      startDate: "",
-      endDate: "",
-      customerFullname: "",
-      price: "0",
-      discount: "0",
-      priceWithDiscount: "0",
-      duration: "0",
-    },
-  });
-  const {} = methods;
-  const isRequired = required();
-  const isRequiredNumber = required({ isNumber: true });
+  const [tab, setTab] = React.useState<CreateAppointmentTab>(
+    CreateAppointmentTab.OWN_CLIENT
+  );
 
-  const handleTab = (_event: React.MouseEvent<HTMLElement>, newTab: number) => {
+  const handleTab = (
+    _event: React.MouseEvent<HTMLElement>,
+    newTab: CreateAppointmentTab
+  ) => {
     setTab(newTab);
   };
 
-  const actions: ActionButtonType[] = [
-    {
-      title: "Salveaza",
-    },
-  ];
-
   return (
     <Modal
-      open={open}
+      open={createModal.open}
       handleClose={onClose}
       maxWidth="md"
       fullWidth
-      actions={actions}
       title="2 Iunie • 09:00 - 10:00 (30min)"
     >
       <Box px={2}>
-        <FormProvider {...methods}>
-          <Stack justifyContent="center">
-            <ToggleButtonGroup
-              value={tab}
-              exclusive
-              onChange={handleTab}
-              aria-label="text alignment"
-              sx={{
-                mb: 2.5,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+        <Stack justifyContent="center">
+          <ToggleButtonGroup
+            value={tab}
+            exclusive
+            onChange={handleTab}
+            aria-label="text alignment"
+            sx={{
+              mb: 2.5,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ToggleButton
+              value={CreateAppointmentTab.OWN_CLIENT}
+              aria-label="left aligned"
             >
-              <ToggleButton value={0} aria-label="left aligned">
-                Programare noua
-              </ToggleButton>
-              <ToggleButton value={1} aria-label="centered">
-                Oferta Last Minute
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Stack>
+              Programare noua
+            </ToggleButton>
+            <ToggleButton
+              value={CreateAppointmentTab.LAST_MINUTE}
+              aria-label="centered"
+            >
+              Oferta Last Minute
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Stack>
 
-          <Stack spacing={2}>
-            <Input
-              name="customerFullname"
-              placeholder="Nume client"
-              label="Numele clientului"
-              rules={{ ...isRequired }}
-            />
-            <Input
-              name="price"
-              placeholder="Pret standard"
-              label="Pret standard"
-              rules={{ ...isRequiredNumber }}
-            />
-            <Input
-              name="discount"
-              placeholder="Discount"
-              label="Discount"
-              rules={{ ...isRequiredNumber }}
-            />
-            <Input
-              name="priceWithDiscount"
-              placeholder="Pret final"
-              disabled
-              label="Pret final"
-              rules={{ ...isRequiredNumber }}
-            />
-          </Stack>
-        </FormProvider>
+        {tab === CreateAppointmentTab.OWN_CLIENT ? (
+          <CreateOwnClient
+            slot={createModal.slot}
+            onCreateOwnClient={onCreateOwnClient}
+            isLoadingOwnClient={isLoadingOwnClient}
+          />
+        ) : (
+          <CreateLastMinute
+            slot={createModal.slot}
+            onCreateLastMinute={onCreateLastMinute}
+            isLoadingLastMinute={isLoadingLastMinute}
+          />
+        )}
       </Box>
     </Modal>
   );

@@ -138,7 +138,26 @@ export interface AppointmentBlockSlot {
   user_id: number;
 }
 
-export interface AppointmentBlock {
+export interface AppointmentBlockCreate {
   blocked_message: string | null;
   slots: AppointmentBlockSlot[];
+}
+
+export interface AppointmentLastMinuteCreate {
+  start_date: string;
+  end_date: string;
+  user_id: number;
+  discount: number;
+}
+
+export interface AppointmentOwnClientCreate {
+  start_date: string;
+  end_date: string;
+  user_id: number;
+  customer_fullname: string;
+  product_name: string;
+  price: number;
+  discount: number;
+  price_with_discount: number;
+  duration: number;
 }
