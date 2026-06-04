@@ -135,6 +135,7 @@ export interface ScrollBookerAppointmentCreate {
 export interface AppointmentBlockSlot {
   start_date: string;
   end_date: string;
+  user_id: number;
 }
 
 export interface AppointmentBlock {

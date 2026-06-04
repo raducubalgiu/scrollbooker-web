@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 import dayjs from "dayjs";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp"; // Ajustează căile conform proiectului tău
+import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import {
   AppointmentBlock,
   AppointmentBlockSlot,
@@ -152,6 +152,7 @@ export const useWeeklyCalendar = ({
       const newBlockItem: AppointmentBlockSlot = {
         start_date: slot.start_date_utc,
         end_date: slot.end_date_utc,
+        user_id: session?.user_id,
       };
 
       return [...prev, newBlockItem];
@@ -166,7 +167,7 @@ export const useWeeklyCalendar = ({
   const handleToggleBlocking = useCallback(() => {
     setIsBlocking((prev) => {
       if (prev) {
-        setSelectedSlotsToBlock([]); // Resetăm selecțiile direct la închidere
+        setSelectedSlotsToBlock([]);
         return false;
       }
       return true;
@@ -195,6 +196,7 @@ export const useWeeklyCalendar = ({
       slots: selectedSlotsToBlock.map((slot) => ({
         start_date: slot.start_date,
         end_date: slot.end_date,
+        user_id: slot.user_id,
       })),
     };
     handleBlock(payload);
