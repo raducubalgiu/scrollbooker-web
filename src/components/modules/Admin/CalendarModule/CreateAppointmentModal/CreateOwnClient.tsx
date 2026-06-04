@@ -1,7 +1,7 @@
 import Input from "@/components/core/Input/Input";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { maxField, min, minField, required } from "@/utils/validation-rules";
-import { Button, DialogActions, Stack } from "@mui/material";
+import { Button, DialogActions, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -65,53 +65,56 @@ const CreateOwnClient = ({
 
   return (
     <FormProvider {...methods}>
-      <Stack spacing={2}>
-        <Input
-          name="customerFullname"
-          placeholder="Nume client"
-          label="Numele clientului"
-          rules={{ ...isRequired }}
-        />
-        <Input
-          name="productName"
-          placeholder="Nume serviciu"
-          label="Numele serviciului"
-          rules={{
-            ...isRequired,
-            ...minProductNameLength,
-            ...maxProductNameLength,
-          }}
-        />
-        <Input
-          name="price"
-          placeholder="Pret standard"
-          label="Pret standard"
-          type="number"
-          rules={{ ...isRequiredNumber, ...minPrice }}
-        />
-        <Input
-          name="discount"
-          placeholder="Discount"
-          label="Discount"
-          type="number"
-          rules={{ ...isRequiredNumber }}
-        />
-        <Input
-          name="priceWithDiscount"
-          placeholder="Pret final"
-          disabled
-          label="Pret final"
-          type="number"
-          rules={{ ...isRequiredNumber }}
-        />
-        <Input
-          name="priceWithDiscount"
-          placeholder="Pret final"
-          disabled
-          label="Pret final"
-          type="number"
-          rules={{ ...isRequiredNumber }}
-        />
+      <Stack spacing={3}>
+        <Stack spacing={2}>
+          <Typography variant="h6" fontWeight="bold">
+            Detalii Client
+          </Typography>
+          <Input
+            name="customerFullname"
+            placeholder="Adaugă numele clientului"
+            label="Numele clientului"
+            rules={{ ...isRequired }}
+          />
+        </Stack>
+
+        <Stack spacing={2}>
+          <Typography variant="h6" fontWeight="bold">
+            Detalii Servicii
+          </Typography>
+          <Input
+            name="productName"
+            placeholder="Nume serviciu"
+            label="Numele serviciului"
+            rules={{
+              ...isRequired,
+              ...minProductNameLength,
+              ...maxProductNameLength,
+            }}
+          />
+          <Input
+            name="price"
+            placeholder="Pret standard"
+            label="Pret standard"
+            type="number"
+            rules={{ ...isRequiredNumber, ...minPrice }}
+          />
+          <Input
+            name="discount"
+            placeholder="Discount"
+            label="Discount"
+            type="number"
+            rules={{ ...isRequiredNumber }}
+          />
+          <Input
+            name="priceWithDiscount"
+            placeholder="Pret final"
+            disabled
+            label="Pret final"
+            type="number"
+            rules={{ ...isRequiredNumber }}
+          />
+        </Stack>
       </Stack>
 
       <DialogActions sx={{ mt: 2.5 }}>

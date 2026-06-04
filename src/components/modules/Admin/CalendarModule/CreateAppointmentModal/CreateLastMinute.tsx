@@ -1,7 +1,7 @@
 import Input from "@/components/core/Input/Input";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { max, required } from "@/utils/validation-rules";
-import { Button, DialogActions } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -36,26 +36,52 @@ const CreateLastMinute = ({
 
   return (
     <FormProvider {...methods}>
-      <Input
-        name="discount"
-        label="Discount"
-        placeholder="Adauga un discount"
-        type="number"
-        rules={{ ...isRequired, ...maxDiscount }}
-      />
+      <Stack spacing={5} px={2.5}>
+        <Box sx={{ textAlign: "center" }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: 1, maxWidth: "340px", mx: "auto" }}
+          >
+            Reducerea procentuală introdusă mai jos se va aplica automat pentru
+            orice serviciu rezervat în acest interval.
+          </Typography>
+        </Box>
 
-      <DialogActions sx={{ mt: 2.5 }}>
-        <Button
-          variant="contained"
-          onClick={handleSubmit(onSubmit)}
-          size="large"
-          disableElevation
-          disabled={isLoadingLastMinute}
-          loading={isLoadingLastMinute}
-        >
-          Salveaza
-        </Button>
-      </DialogActions>
+        <Stack spacing={2}>
+          <Input
+            name="discount"
+            label="Discount"
+            placeholder="Adauga un discount"
+            type="number"
+            rules={{ ...isRequired, ...maxDiscount }}
+            sx={{
+              "& input": {
+                fontSize: "1.1rem",
+                py: 1.8,
+              },
+            }}
+          />
+
+          <Button
+            variant="contained"
+            onClick={handleSubmit(onSubmit)}
+            size="large"
+            fullWidth
+            disableElevation
+            disabled={isLoadingLastMinute}
+            loading={isLoadingLastMinute}
+            sx={{
+              py: 1.8,
+              fontSize: "1rem",
+              fontWeight: 600,
+              textTransform: "none",
+            }}
+          >
+            Salveaza
+          </Button>
+        </Stack>
+      </Stack>
     </FormProvider>
   );
 };

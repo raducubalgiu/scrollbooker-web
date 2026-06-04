@@ -1,10 +1,15 @@
 import Modal from "@/components/core/Modal/Modal";
-import { Box, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import CreateOwnClient, { CreateOwnClientFormData } from "./CreateOwnClient";
 import CreateLastMinute from "./CreateLastMinute";
 import { CreateAppointmentModalType } from "../WeeklyCalendar/WeeklyCalendar";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
+import {
+  SegmentedButtons,
+  SegmentedOption,
+} from "@/components/core/SegmentedButtons/SegmentedButtons";
+import dayjs from "@/lib/dayjs";
 
 type CreateAppointmentModalProps = {
   createModal: CreateAppointmentModalType;
@@ -35,48 +40,62 @@ const CreateAppointmentModal = ({
     CreateAppointmentTab.OWN_CLIENT
   );
 
-  const handleTab = (
-    _event: React.MouseEvent<HTMLElement>,
-    newTab: CreateAppointmentTab
-  ) => {
-    setTab(newTab);
+  const appointmentTabs: SegmentedOption<CreateAppointmentTab>[] = [
+    { value: CreateAppointmentTab.OWN_CLIENT, label: "Programare nouă" },
+    { value: CreateAppointmentTab.LAST_MINUTE, label: "Ofertă Last Minute" },
+  ];
+
+  const handleTab = (value: CreateAppointmentTab) => {
+    setTab(value);
   };
+
+  const slot = createModal?.slot;
+
+  const startTime = slot?.start_date_utc
+    ? dayjs.utc(slot.start_date_utc).local().format("HH:mm")
+    : "--:--";
+
+  const endTime = slot?.end_date_utc
+    ? dayjs.utc(slot.end_date_utc).local().format("HH:mm")
+    : "--:--";
 
   return (
     <Modal
       open={createModal.open}
       handleClose={onClose}
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
-      title="2 Iunie • 09:00 - 10:00 (30min)"
+      title="Administreaza intervalul"
     >
       <Box px={2}>
-        <Stack justifyContent="center">
-          <ToggleButtonGroup
-            value={tab}
-            exclusive
-            onChange={handleTab}
-            aria-label="text alignment"
+        <SegmentedButtons
+          value={tab}
+          onChange={handleTab}
+          options={appointmentTabs}
+        />
+
+        <Box sx={{ textAlign: "center", my: 1.5 }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
             sx={{
-              mb: 2.5,
-              justifyContent: "center",
-              alignItems: "center",
+              letterSpacing: "1.5px",
+              textTransform: "uppercase",
+              fontWeight: 600,
+              display: "block",
+              mb: 1,
             }}
           >
-            <ToggleButton
-              value={CreateAppointmentTab.OWN_CLIENT}
-              aria-label="left aligned"
-            >
-              Programare noua
-            </ToggleButton>
-            <ToggleButton
-              value={CreateAppointmentTab.LAST_MINUTE}
-              aria-label="centered"
-            >
-              Oferta Last Minute
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Stack>
+            Interval
+          </Typography>
+          <Typography
+            variant="h3"
+            fontWeight="800"
+            sx={{ color: "text.primary", letterSpacing: "-1px" }}
+          >
+            {startTime} — {endTime}
+          </Typography>
+        </Box>
 
         {tab === CreateAppointmentTab.OWN_CLIENT ? (
           <CreateOwnClient
