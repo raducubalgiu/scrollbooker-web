@@ -18,6 +18,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 type SearchHeaderBarProps = {
   selectedServiceDomainName: string | null | undefined;
+  selectedDateTimeLabel: string | null | undefined;
   isExpanded: boolean;
   toggle: (section: SearchHeaderSectionType) => void;
   activeSection: SearchHeaderSectionType | null;
@@ -31,6 +32,7 @@ const COLLAPSED_WIDTH = 250;
 
 const SearchHeaderBar = ({
   selectedServiceDomainName,
+  selectedDateTimeLabel,
   isExpanded,
   toggle,
   activeSection,
@@ -52,11 +54,21 @@ const SearchHeaderBar = ({
         {SEARCH_HEADER_SECTIONS.map((sec, idx, arr) => {
           const sectionKey = sec.key as SearchHeaderSectionType;
           const isSectionActive = activeSection === sectionKey;
+
           const isServicesSection =
             sectionKey === SearchHeaderSectionEnum.Services;
+          const isDatetimeSection =
+            sectionKey === SearchHeaderSectionEnum.Datetime;
 
           const hasFilterApplied =
-            isServicesSection && !!selectedServiceDomainName;
+            (isServicesSection && !!selectedServiceDomainName) ||
+            (isDatetimeSection && !!selectedDateTimeLabel);
+
+          const displayValue = isServicesSection
+            ? selectedServiceDomainName || sec.value
+            : isDatetimeSection
+              ? selectedDateTimeLabel || sec.value
+              : sec.value;
 
           const showClearIcon =
             isExpanded && isSectionActive && hasFilterApplied;
@@ -93,14 +105,12 @@ const SearchHeaderBar = ({
                       {sec.title}
                     </Typography>
                     <Typography
-                      color="text.primary"
+                      color="text.secondary"
                       fontWeight={500}
                       noWrap
                       sx={styles.typographyValue}
                     >
-                      {isServicesSection && selectedServiceDomainName
-                        ? selectedServiceDomainName
-                        : sec.value}
+                      {displayValue}
                     </Typography>
                   </Stack>
 

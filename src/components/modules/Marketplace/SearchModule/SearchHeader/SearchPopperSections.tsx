@@ -88,7 +88,12 @@ const SearchPopperSections = ({
       sectionContent = <SearchLocationSection />;
       break;
     case SearchHeaderSectionEnum.Datetime:
-      sectionContent = <SearchDateTimeSection />;
+      sectionContent = (
+        <SearchDateTimeSection
+          state={state}
+          onSetDateTime={actions.onSetDateTime}
+        />
+      );
       break;
     default:
       sectionContent = null;

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   Box,
   Typography,
@@ -9,36 +9,106 @@ import {
 } from "@mui/material";
 import { Dayjs } from "dayjs";
 import dayjs from "@/lib/dayjs";
+import { SearchHeaderStateType } from "../search-header-types";
 import CustomCalendar from "@/components/cutomized/CustomCalendar/CustomCalendar";
 
-type TimePresetType = "morning" | "noon" | "evening" | "custom" | null;
+type SearchDateTimeSectionProps = {
+  state: SearchHeaderStateType;
+  onSetDateTime: (dateTime: {
+    startDate: string | null;
+    startTime: string | null;
+    endTime: string | null;
+  }) => void;
+};
 
-const SearchDateTimeSection = () => {
+const PRESETS = {
+  morning: { startTime: "08:00", endTime: "12:00" },
+  noon: { startTime: "12:00", endTime: "16:00" },
+  evening: { startTime: "16:00", endTime: "21:00" },
+};
+
+const SearchDateTimeSection = ({
+  state,
+  onSetDateTime,
+}: SearchDateTimeSectionProps) => {
+  const { startDate, startTime, endTime } = state;
+
   const today = useMemo(() => dayjs().startOf("day"), []);
   const tomorrow = useMemo(() => today.add(1, "day"), [today]);
 
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const [activePreset, setActivePreset] = useState<TimePresetType>(null);
-  const [customStartTime, setCustomStartTime] = useState<string>("09:00");
-  const [customEndTime, setCustomEndTime] = useState<string>("18:00");
+  const selectedDateDayjs = useMemo(
+    () => (startDate ? dayjs(startDate) : null),
+    [startDate]
+  );
 
-  const isTodaySelected = selectedDate
-    ? selectedDate.isSame(today, "day")
+  const isTodaySelected = selectedDateDayjs
+    ? selectedDateDayjs.isSame(today, "day")
     : false;
-  const isTomorrowSelected = selectedDate
-    ? selectedDate.isSame(tomorrow, "day")
+  const isTomorrowSelected = selectedDateDayjs
+    ? selectedDateDayjs.isSame(tomorrow, "day")
     : false;
+
+  const activePreset = useMemo(() => {
+    if (!startTime || !endTime) return null;
+    if (
+      startTime === PRESETS.morning.startTime &&
+      endTime === PRESETS.morning.endTime
+    )
+      return "morning";
+    if (
+      startTime === PRESETS.noon.startTime &&
+      endTime === PRESETS.noon.endTime
+    )
+      return "noon";
+    if (
+      startTime === PRESETS.evening.startTime &&
+      endTime === PRESETS.evening.endTime
+    )
+      return "evening";
+    return "custom";
+  }, [startTime, endTime]);
+
+  const handleCalendarChange = useCallback(
+    (date: Dayjs) => {
+      onSetDateTime({
+        startDate: date.format("YYYY-MM-DD"),
+        startTime,
+        endTime,
+      });
+    },
+    [startTime, endTime, onSetDateTime]
+  );
 
   const handleShortcutClick = useCallback(
     (type: "today" | "tomorrow") => {
-      setSelectedDate(type === "today" ? today : tomorrow);
+      const targetDate = type === "today" ? today : tomorrow;
+      onSetDateTime({
+        startDate: targetDate.format("YYYY-MM-DD"),
+        startTime,
+        endTime,
+      });
     },
-    [today, tomorrow]
+    [today, tomorrow, startTime, endTime, onSetDateTime]
   );
 
-  const handlePresetSelect = useCallback((preset: TimePresetType) => {
-    setActivePreset(preset);
-  }, []);
+  const handlePresetSelect = useCallback(
+    (preset: "morning" | "noon" | "evening" | "custom") => {
+      if (preset === "custom") {
+        onSetDateTime({
+          startDate,
+          startTime: startTime || "09:00",
+          endTime: endTime || "18:00",
+        });
+      } else {
+        onSetDateTime({
+          startDate,
+          startTime: PRESETS[preset].startTime,
+          endTime: PRESETS[preset].endTime,
+        });
+      }
+    },
+    [startDate, startTime, endTime, onSetDateTime]
+  );
 
   return (
     <Box>
@@ -105,35 +175,47 @@ const SearchDateTimeSection = () => {
             </Button>
           </Stack>
 
-          {/* 3. Input-uri dinamice pentru opțiunea Custom */}
           {activePreset === "custom" && (
             <Box sx={styles.customTimeContainer}>
               <TextField
                 label="De la"
                 type="time"
-                value={customStartTime}
-                onChange={(e) => setCustomStartTime(e.target.value)}
+                value={startTime || "09:00"}
+                onChange={(e) =>
+                  onSetDateTime({
+                    startDate,
+                    startTime: e.target.value,
+                    endTime,
+                  })
+                }
                 InputLabelProps={{ shrink: true }}
                 inputProps={{ step: 300 }}
                 fullWidth
-                size="small"
               />
               <TextField
                 label="Până la"
                 type="time"
-                value={customEndTime}
-                onChange={(e) => setCustomEndTime(e.target.value)}
+                value={endTime || "18:00"}
+                onChange={(e) =>
+                  onSetDateTime({
+                    startDate,
+                    startTime,
+                    endTime: e.target.value,
+                  })
+                }
                 InputLabelProps={{ shrink: true }}
                 inputProps={{ step: 300 }}
                 fullWidth
-                size="small"
               />
             </Box>
           )}
         </Box>
 
         <Box sx={{ px: 1 }}>
-          <CustomCalendar value={selectedDate} onChange={setSelectedDate} />
+          <CustomCalendar
+            value={selectedDateDayjs}
+            onChange={handleCalendarChange}
+          />
         </Box>
       </Stack>
     </Box>
@@ -152,8 +234,8 @@ const styles = {
   },
   boxButton: (isActive: boolean) => ({
     width: "100%",
-    py: 1.5,
-    px: 2.5,
+    py: 2,
+    px: 3,
     borderRadius: 3,
     textTransform: "none" as const,
     textAlign: "left" as const,
@@ -172,7 +254,8 @@ const styles = {
   }),
   shortcutButton: (isActive: boolean) => ({
     flex: 1,
-    py: 1.5,
+    py: 2,
+    px: 3,
     borderRadius: 3,
     textTransform: "none" as const,
     fontWeight: 600,

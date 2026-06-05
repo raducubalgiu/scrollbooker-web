@@ -158,6 +158,9 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       businessDomainId: state.selectedBusinessDomainId,
       serviceDomainId: state.selectedServiceDomainId,
       serviceId: state.selectedServiceId,
+      startDate: state.startDate,
+      startTime: state.startTime,
+      endTime: state.endTime,
     }));
   }, []);
 
@@ -241,6 +244,9 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
           selectedBusinessDomainId: searchState.businessDomainId,
           selectedServiceDomainId: searchState.serviceDomainId,
           selectedServiceId: searchState.serviceId,
+          startDate: searchState.startDate,
+          startTime: searchState.startTime,
+          endTime: searchState.endTime,
         }}
       />
 

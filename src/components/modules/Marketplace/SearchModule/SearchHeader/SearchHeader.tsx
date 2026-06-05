@@ -19,6 +19,7 @@ import { SearchHeaderStateType } from "./search-header-types";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { getServiceDomainName } from "./getServiceDomainName";
+import dayjs from "@/lib/dayjs";
 
 type SearchHeaderProps = {
   areFiltersActive: boolean;
@@ -46,7 +47,33 @@ const SearchHeader = ({
   displayFiltersSection = true,
 }: SearchHeaderProps) => {
   const [localHeaderState, setLocalHeaderState] =
-    useState<SearchHeaderStateType>(headerState);
+    useState<SearchHeaderStateType>(() => ({
+      selectedBusinessDomainId: headerState.selectedBusinessDomainId,
+      selectedServiceDomainId: headerState.selectedServiceDomainId,
+      selectedServiceId: headerState.selectedServiceId,
+      startDate: headerState.startDate, // Preluate din searchState-ul original al URL-ului
+      startTime: headerState.startTime,
+      endTime: headerState.endTime,
+    }));
+
+  // Efect de sincronizare extins pentru ID-uri și valori primitive
+  useEffect(() => {
+    setLocalHeaderState({
+      selectedBusinessDomainId: headerState.selectedBusinessDomainId,
+      selectedServiceDomainId: headerState.selectedServiceDomainId,
+      selectedServiceId: headerState.selectedServiceId,
+      startDate: headerState.startDate,
+      startTime: headerState.startTime,
+      endTime: headerState.endTime,
+    });
+  }, [
+    headerState.selectedBusinessDomainId,
+    headerState.selectedServiceDomainId,
+    headerState.selectedServiceId,
+    headerState.startDate,
+    headerState.startTime,
+    headerState.endTime,
+  ]);
 
   const [activeSection, setActiveSection] =
     useState<SearchHeaderSectionType | null>(null);
@@ -60,18 +87,6 @@ const SearchHeader = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pillRef = useRef<HTMLDivElement | null>(null);
   const popperRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    setLocalHeaderState({
-      selectedBusinessDomainId: headerState.selectedBusinessDomainId,
-      selectedServiceDomainId: headerState.selectedServiceDomainId,
-      selectedServiceId: headerState.selectedServiceId,
-    });
-  }, [
-    headerState.selectedBusinessDomainId,
-    headerState.selectedServiceDomainId,
-    headerState.selectedServiceId,
-  ]);
 
   const { data: businessDomains } = useCustomQuery<BusinessDomain[]>({
     key: ["business-domains"],
@@ -143,6 +158,9 @@ const SearchHeader = ({
       selectedBusinessDomainId: id,
       selectedServiceDomainId: null,
       selectedServiceId: null,
+      startDate: null,
+      startTime: null,
+      endTime: null,
     });
   }, []);
 
@@ -157,6 +175,37 @@ const SearchHeader = ({
   const handleServiceChange = useCallback((id: number | null) => {
     setLocalHeaderState((prev) => ({ ...prev, selectedServiceId: id }));
   }, []);
+
+  const handleDateTimeChange = useCallback(
+    (dateTime: {
+      startDate: string | null;
+      startTime: string | null;
+      endTime: string | null;
+    }) => {
+      setLocalHeaderState((prev) => ({
+        ...prev,
+        ...dateTime,
+      }));
+    },
+    []
+  );
+
+  const selectedDateTimeLabel = useMemo(() => {
+    const { startDate, startTime, endTime } = headerState;
+
+    if (!startDate) return null;
+    const formattedDate = dayjs(startDate).format("D MMM");
+
+    if (startTime && endTime) {
+      return `${formattedDate}, ${startTime} - ${endTime}`;
+    }
+
+    if (startTime) {
+      return `${formattedDate}, de la ${startTime}`;
+    }
+
+    return formattedDate;
+  }, [headerState.startDate, headerState.startTime, headerState.endTime]);
 
   const handleExecuteSearch = useCallback(() => {
     closeSection();
@@ -177,6 +226,7 @@ const SearchHeader = ({
           <Box ref={pillRef} sx={styles.pill}>
             <SearchHeaderBar
               selectedServiceDomainName={selectedServiceDomainName}
+              selectedDateTimeLabel={selectedDateTimeLabel}
               isExpanded={isExpanded}
               toggle={toggle}
               activeSection={activeSection}
@@ -197,6 +247,7 @@ const SearchHeader = ({
                 onSetBusinessDomainId: handleBusinessDomainChange,
                 onSetServiceDomainId: handleServiceDomainChange,
                 onSetServiceId: handleServiceChange,
+                onSetDateTime: handleDateTimeChange,
               }}
             />
           </Box>
