@@ -12,7 +12,7 @@ import {
 import { SearchHeaderStateType } from "./search-header-types";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import { useCustomQuery } from "@/hooks/useHttp";
-import { find } from "lodash";
+import { getServiceDomainName } from "./getServiceDomainName";
 
 type SearchHeaderProps = {
   areFiltersActive: boolean;
@@ -54,23 +54,8 @@ const SearchHeader = ({
     },
   });
 
-  const getServiceDomainNameById = (
-    businessDomainId: number | null,
-    serviceDomainId: number | null
-  ) => {
-    if (!businessDomainId || !serviceDomainId) return null;
-
-    const selectedBusinessDomain = find(businessDomains, {
-      id: businessDomainId,
-    });
-
-    if (!selectedBusinessDomain) return null;
-
-    return find(selectedBusinessDomain.service_domains, { id: serviceDomainId })
-      ?.name;
-  };
-
-  const selectedServiceDomainName = getServiceDomainNameById(
+  const selectedServiceDomainName = getServiceDomainName(
+    businessDomains,
     headerState.selectedBusinessDomainId,
     headerState.selectedServiceDomainId
   );
