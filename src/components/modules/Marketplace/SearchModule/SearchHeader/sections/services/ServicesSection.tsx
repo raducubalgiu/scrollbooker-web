@@ -98,6 +98,9 @@ const ServicesSection = ({
             return allServices.find((s) => s.id === selected)?.name;
           }}
           sx={{ borderRadius: "12px" }}
+          MenuProps={{
+            disableScrollLock: true,
+          }}
         >
           <MenuItem value={0}>
             <em>Toate serviciile</em>
@@ -144,6 +147,9 @@ const ServicesSection = ({
                   onChange={(e) =>
                     handleFilterChange(f.id, Number(e.target.value))
                   }
+                  MenuProps={{
+                    disableScrollLock: true,
+                  }}
                   sx={{
                     backgroundColor: "background.paper",
                     borderRadius: "12px",

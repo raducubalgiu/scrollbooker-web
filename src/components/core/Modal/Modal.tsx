@@ -105,6 +105,7 @@ export default function Modal({
       open={open}
       maxWidth="lg"
       fullScreen={fullScreen ?? false}
+      disableScrollLock
       {...others}
       sx={{
         "& .MuiDialog-paper": {
