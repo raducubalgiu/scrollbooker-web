@@ -1,22 +1,55 @@
-import { Grow, Paper, Popper, CircularProgress, Box } from "@mui/material";
-import React, { useMemo, Suspense } from "react";
+import React, { memo } from "react";
+import dynamic from "next/dynamic";
 import {
-  SearchHeaderSectionEnum,
-  SearchHeaderSectionType,
-} from "../SearchHeaderSectionEnum";
+  Box,
+  CircularProgress,
+  Popper,
+  Grow,
+  Paper,
+  Theme,
+} from "@mui/material";
+
+const POPPER_MODIFIERS = [{ name: "offset", options: { offset: [0, 12] } }];
+
+const SectionLoader = () => (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      py: 4,
+    }}
+  >
+    <CircularProgress size={20} />
+  </Box>
+);
+
+const SearchLocationSection = dynamic(
+  () => import("./sections/SearchLocationSection"),
+  {
+    loading: () => <SectionLoader />,
+    ssr: false,
+  }
+);
+
+const SearchDateTimeSection = dynamic(
+  () => import("./sections/SearchDateTimeSection"),
+  {
+    loading: () => <SectionLoader />,
+    ssr: false,
+  }
+);
+
 import SearchServicesSection from "./sections/SearchServicesSection";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import {
   SearchHeaderActionsType,
   SearchHeaderStateType,
 } from "./search-header-types";
-import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
-
-const SearchLocationSection = React.lazy(
-  () => import("./sections/SearchLocationSection")
-);
-const SearchDateTimeSection = React.lazy(
-  () => import("./sections/SearchDateTimeSection")
-);
+import {
+  SearchHeaderSectionEnum,
+  SearchHeaderSectionType,
+} from "../SearchHeaderSectionEnum";
 
 type SearchPopperSectionsProps = {
   businessDomains: BusinessDomain[];
@@ -29,8 +62,6 @@ type SearchPopperSectionsProps = {
   popperId?: string;
 };
 
-const POPPER_MODIFIERS = [{ name: "offset", options: { offset: [0, 12] } }];
-
 const SearchPopperSections = ({
   businessDomains,
   state,
@@ -41,65 +72,27 @@ const SearchPopperSections = ({
   activeSection,
   popperId,
 }: SearchPopperSectionsProps) => {
-  const {
-    selectedBusinessDomainId,
-    selectedServiceDomainId,
-    selectedServiceId,
-  } = state;
-  const { onSetBusinessDomainId, onSetServiceDomainId, onSetServiceId } =
-    actions;
+  let sectionContent = null;
 
-  const sections = useMemo(() => {
-    switch (activeSection) {
-      case SearchHeaderSectionEnum.Services:
-        return (
-          <SearchServicesSection
-            businessDomains={businessDomains}
-            state={{
-              selectedBusinessDomainId,
-              selectedServiceDomainId,
-              selectedServiceId,
-            }}
-            actions={{
-              onSetBusinessDomainId,
-              onSetServiceDomainId,
-              onSetServiceId,
-            }}
-          />
-        );
-      case SearchHeaderSectionEnum.Location:
-        return (
-          <Suspense
-            fallback={
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <CircularProgress size={20} />
-              </Box>
-            }
-          >
-            <SearchLocationSection />
-          </Suspense>
-        );
-      case SearchHeaderSectionEnum.Datetime:
-        return (
-          <Suspense
-            fallback={
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <CircularProgress size={20} />
-              </Box>
-            }
-          >
-            <SearchDateTimeSection />
-          </Suspense>
-        );
-      default:
-        return null;
-    }
-  }, [
-    activeSection,
-    selectedBusinessDomainId,
-    selectedServiceDomainId,
-    selectedServiceId,
-  ]);
+  switch (activeSection) {
+    case SearchHeaderSectionEnum.Services:
+      sectionContent = (
+        <SearchServicesSection
+          businessDomains={businessDomains}
+          state={state}
+          actions={actions}
+        />
+      );
+      break;
+    case SearchHeaderSectionEnum.Location:
+      sectionContent = <SearchLocationSection />;
+      break;
+    case SearchHeaderSectionEnum.Datetime:
+      sectionContent = <SearchDateTimeSection />;
+      break;
+    default:
+      sectionContent = null;
+  }
 
   return (
     <Popper
@@ -108,7 +101,7 @@ const SearchPopperSections = ({
       placement="bottom"
       transition
       modifiers={POPPER_MODIFIERS}
-      sx={{ zIndex: (theme) => theme.zIndex.drawer + 3 }}
+      sx={{ zIndex: (theme: Theme) => theme.zIndex.drawer + 3 }}
     >
       {({ TransitionProps }) => (
         <Grow
@@ -127,7 +120,7 @@ const SearchPopperSections = ({
               minWidth: 600,
             }}
           >
-            {sections}
+            {sectionContent}
           </Paper>
         </Grow>
       )}
@@ -135,4 +128,4 @@ const SearchPopperSections = ({
   );
 };
 
-export default React.memo(SearchPopperSections);
+export default memo(SearchPopperSections);
