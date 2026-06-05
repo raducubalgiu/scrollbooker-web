@@ -9,19 +9,18 @@ import {
   MAPBOX_STYLE_LIGHT,
   MAPBOX_TOKEN,
 } from "./search-utils";
-import { BusinessMarker } from "@/ts/models/booking/business/search/BusinessMarker";
 import { useTheme } from "@mui/material/styles";
 import MapLoadingIndicator from "./SearchLoadingIndicator";
+import { useBusinessMarkers } from "@/hooks/useMarkers";
+import { SearchState } from "./SearchModule";
 
 type SearchMapProps = {
-  markers: BusinessMarker[];
+  searchState: SearchState;
   isMapVisible: boolean;
   onMapExpandToggle: () => void;
   isMapExpanded: boolean;
   searchHeaderHeight: number;
   mainPagePadding: string;
-  isLoadingMarkers: boolean;
-  isRefetchingMarkers: boolean;
   refetchData: (bounds: LngLatBounds, zoom: number) => void;
 };
 
@@ -32,14 +31,12 @@ const BUSINESS_DOMAIN_MAP = new Map<string, string>([
 ]);
 
 const SearchMap = ({
-  markers,
+  searchState,
   isMapVisible,
   onMapExpandToggle,
   isMapExpanded,
   searchHeaderHeight,
   mainPagePadding,
-  isLoadingMarkers,
-  isRefetchingMarkers,
   refetchData,
 }: SearchMapProps) => {
   const isFirstMapLoad = React.useRef(true);
@@ -49,6 +46,12 @@ const SearchMap = ({
 
   const mapTopOffset = `calc(${searchHeaderHeight}px + ${mapTopGap})`;
   const mapHeight = `calc(100dvh - ${searchHeaderHeight}px - ${mapTopGap} - ${mainPagePadding} - ${mapBottomGap})`;
+
+  const {
+    data: markers,
+    isLoading: isLoadingMarkers,
+    isRefetching: isRefetchingMarkers,
+  } = useBusinessMarkers(searchState);
 
   const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
   const mapRef = React.useRef<mapboxgl.Map | null>(null);

@@ -11,13 +11,13 @@ import {
 } from "./search-header-utils";
 import { SearchHeaderStateType } from "./search-header-types";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { useCustomQuery } from "@/hooks/useHttp";
+import { find } from "lodash";
 
 type SearchHeaderProps = {
-  businessDomains: BusinessDomain[];
   areFiltersActive: boolean;
   headerState: SearchHeaderStateType;
   onSearch: (state: SearchHeaderStateType) => void;
-  selectedServiceDomainName: string | null | undefined;
   displayFiltersSection?: boolean;
   mainPagePadding?: number | string;
   isMapVisible?: boolean;
@@ -27,11 +27,9 @@ type SearchHeaderProps = {
 };
 
 const SearchHeader = ({
-  businessDomains,
   areFiltersActive,
   headerState,
   onSearch,
-  selectedServiceDomainName,
   isMapVisible,
   onOpenFilters,
   onToggleMap,
@@ -41,6 +39,41 @@ const SearchHeader = ({
 }: SearchHeaderProps) => {
   const theme = useTheme();
   const [state, setState] = useState<SearchHeaderStateType>(headerState);
+
+  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+  const { data: businessDomains } = useCustomQuery<BusinessDomain[]>({
+    key: ["business-domains"],
+    url: "/api/nomenclatures/business-domains",
+    options: {
+      staleTime: ONE_DAY_IN_MS,
+      gcTime: ONE_DAY_IN_MS,
+
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
+  });
+
+  const getServiceDomainNameById = (
+    businessDomainId: number | null,
+    serviceDomainId: number | null
+  ) => {
+    if (!businessDomainId || !serviceDomainId) return null;
+
+    const selectedBusinessDomain = find(businessDomains, {
+      id: businessDomainId,
+    });
+
+    if (!selectedBusinessDomain) return null;
+
+    return find(selectedBusinessDomain.service_domains, { id: serviceDomainId })
+      ?.name;
+  };
+
+  const selectedServiceDomainName = getServiceDomainNameById(
+    headerState.selectedBusinessDomainId,
+    headerState.selectedServiceDomainId
+  );
 
   useEffect(() => {
     setState({
@@ -203,7 +236,7 @@ const SearchHeader = ({
             />
 
             <SearchPopperSections
-              businessDomains={businessDomains}
+              businessDomains={businessDomains || []}
               isExpanded={isExpanded}
               pillRef={pillRef}
               popperRef={popperRef}
@@ -221,7 +254,7 @@ const SearchHeader = ({
 
         {displayFiltersSection && (
           <BusinessDomainsTabs
-            businessDomains={businessDomains}
+            businessDomains={businessDomains || []}
             areFiltersActive={areFiltersActive}
             isExpanded={isExpanded}
             isMapVisible={isMapVisible ?? false}

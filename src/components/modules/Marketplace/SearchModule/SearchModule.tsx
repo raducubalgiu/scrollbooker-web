@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Grid from "@mui/material/Grid2";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import SearchHeader from "./SearchHeader/SearchHeader";
 import SearchMap from "./SearchMap";
 import { useTheme } from "@mui/material/styles";
@@ -11,19 +11,10 @@ import {
   SearchSortEnum,
 } from "@/ts/models/booking/business/search/BusinessMapCombined";
 import { useRouter } from "next/navigation";
-import { useInfiniteBusinessLocations } from "@/hooks/infiniteQuery/useInfiniteBusinessLocations";
-import { useBusinessMarkers } from "@/hooks/useMarkers";
 import { LngLatBounds } from "mapbox-gl";
-import BusinessCardSkeletons from "./BusinessCard/BusinessCardSkeletons";
 import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
-import BusinessCard from "./BusinessCard/BusinessCard";
 import SearchFiltersModal from "./SearchFilters/SearchFiltersModal";
-import NotFound from "@/components/cutomized/NotFound/NotFound";
-import StoreMallDirectoryOutlinedIcon from "@mui/icons-material/StoreMallDirectoryOutlined";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { find } from "lodash";
-import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
-
+import SearchBusinessList from "./SearchBusinessList";
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
 };
@@ -140,49 +131,15 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     return params;
   }, []);
 
-  const {
-    data,
-    isLoading,
-    isFetching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteBusinessLocations(searchState);
-
-  const locations = React.useMemo(() => {
-    if (!data) return [];
-
-    const allResults = data.pages.flatMap((page) => page.results || []);
-
-    const seenIds = new Set<number>();
-    return allResults.filter((loc) => {
-      if (loc?.id == null || seenIds.has(loc.id)) {
-        return false;
-      }
-      seenIds.add(loc.id);
-      return true;
-    });
-  }, [data]);
-
-  const {
-    data: markers,
-    isLoading: isLoadingMarkers,
-    isRefetching: isRefetchingMarkers,
-  } = useBusinessMarkers(searchState);
-
   const [isMapVisible, setIsMapVisible] = React.useState(true);
   const [isMapExpanded, setIsMapExpanded] = React.useState(false);
   const [openFilters, setOpenFilters] = React.useState(false);
   const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
 
-  const loadMoreRef = React.useRef<HTMLDivElement | null>(null);
-
-  const leftGridSize = isMapVisible ? 7 : 12;
-
   const handleToggleMap = React.useCallback(() => {
     setIsMapVisible((prev) => !prev);
-    if (isMapExpanded) setIsMapExpanded(false);
-  }, [isMapExpanded]);
+    setIsMapExpanded((prev) => (prev ? false : prev));
+  }, []);
 
   const handleMapExpandToggle = React.useCallback(() => {
     setIsMapExpanded((prev) => !prev);
@@ -191,23 +148,6 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
   const handleOpenFilters = React.useCallback(() => setOpenFilters(true), []);
   const handleCloseFilters = React.useCallback(() => setOpenFilters(false), []);
-
-  const styles = React.useMemo(
-    () => ({
-      root: { px: isMapExpanded ? 0 : mainPagePadding },
-      list: {
-        display: "grid",
-        gridTemplateColumns: {
-          lg: "1fr",
-          xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
-        },
-        gap: 5,
-        px: { xs: 1, md: 0 },
-      },
-      mapGrid: { width: "100%" },
-    }),
-    [isMapExpanded, mainPagePadding, isMapVisible]
-  );
 
   const hasUserInteracted = React.useRef(false);
 
@@ -257,9 +197,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   );
 
   React.useEffect(() => {
-    if (!hasUserInteracted.current) {
-      return;
-    }
+    if (!hasUserInteracted.current) return;
 
     const params = buildUrlParams(searchState);
     const currentQuery = window.location.search;
@@ -270,76 +208,9 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     }
   }, [searchState, buildUrlParams, router]);
 
-  React.useEffect(() => {
-    const target = loadMoreRef.current;
-    if (!target) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [firstEntry] = entries;
-        if (
-          firstEntry?.isIntersecting &&
-          hasNextPage &&
-          !isFetchingNextPage &&
-          !isFetching
-        ) {
-          fetchNextPage();
-        }
-      },
-      {
-        rootMargin: "300px",
-        threshold: 0.0,
-      }
-    );
-
-    observer.observe(target);
-
-    return () => {
-      if (target) observer.unobserve(target);
-    };
-  }, [hasNextPage, isFetchingNextPage, isFetching, fetchNextPage]);
-
-  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
-
-  const { data: businessDomains } = useCustomQuery<BusinessDomain[]>({
-    key: ["business-domains"],
-    url: "/api/nomenclatures/business-domains",
-    options: {
-      staleTime: ONE_DAY_IN_MS,
-      gcTime: ONE_DAY_IN_MS,
-
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    },
-  });
-
-  const getServiceDomainNameById = (
-    businessDomainId: number | null,
-    serviceDomainId: number | null
-  ) => {
-    if (!businessDomainId || !serviceDomainId) return null;
-
-    const selectedBusinessDomain = find(businessDomains, {
-      id: businessDomainId,
-    });
-
-    if (!selectedBusinessDomain) return null;
-
-    return find(selectedBusinessDomain.service_domains, { id: serviceDomainId })
-      ?.name;
-  };
-
-  const selectedServiceDomainName = getServiceDomainNameById(
-    searchState.businessDomainId,
-    searchState.serviceDomainId
-  );
-
   const areFiltersActive = React.useMemo(() => {
     const isDiscountApplied = searchState.hasDiscount === true;
-
-    const currentMaxPrice =
-      searchState.maxPrice !== null ? Number(searchState.maxPrice) : 5000;
-    const isPriceApplied = currentMaxPrice < 5000;
+    const isPriceApplied = (searchState.maxPrice ?? 5000) < 5000;
     const isSortApplied =
       searchState.sort !== null &&
       searchState.sort !== SearchSortEnum.RECOMMENDED;
@@ -348,7 +219,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   }, [searchState.hasDiscount, searchState.maxPrice, searchState.sort]);
 
   return (
-    <Box sx={styles.root}>
+    <Box sx={{ px: isMapExpanded ? 0 : mainPagePadding }}>
       <SearchFiltersModal
         open={openFilters}
         onClose={handleCloseFilters}
@@ -359,8 +230,6 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       />
 
       <SearchHeader
-        businessDomains={businessDomains || []}
-        selectedServiceDomainName={selectedServiceDomainName}
         isMapVisible={isMapVisible}
         onToggleMap={handleToggleMap}
         onHeightChange={setSearchHeaderHeight}
@@ -377,64 +246,26 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
       <Grid container spacing={isMapExpanded ? 0 : 4}>
         {!isMapExpanded && (
-          <Grid size={{ xs: 12, lg: leftGridSize }} sx={{ mt: 1 }}>
-            {isLoading ? (
-              <BusinessCardSkeletons listSx={styles.list} />
-            ) : locations.length === 0 ? (
-              <NotFound
-                icon={<StoreMallDirectoryOutlinedIcon sx={{ fontSize: 50 }} />}
-                title="Nu au fost găsite potriviri exacte"
-                description="Încearcă să schimbi sau să elimini unele filtre sau să ajustezi zona de căutare."
-              />
-            ) : (
-              <>
-                <Box sx={styles.list}>
-                  {locations.map((b) => (
-                    <BusinessCard key={b.id} business={b} />
-                  ))}
-                </Box>
-
-                <Box
-                  ref={loadMoreRef}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: "80px",
-                    py: 2,
-                    width: "100%",
-                  }}
-                >
-                  {isFetchingNextPage && <CircularProgress size={28} />}
-                  {!hasNextPage && locations.length > 0 && (
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ mt: 2 }}
-                    >
-                      Ai explorat toate locațiile disponibile.
-                    </Typography>
-                  )}
-                </Box>
-              </>
-            )}
+          <Grid size={{ xs: 12, lg: isMapVisible ? 7 : 12 }} sx={{ mt: 1 }}>
+            <SearchBusinessList
+              searchState={searchState}
+              isMapVisible={isMapVisible}
+            />
           </Grid>
         )}
 
         {isMapVisible && (
           <Grid
             size={{ xs: 12, lg: isMapExpanded ? 12 : 5 }}
-            sx={styles.mapGrid}
+            sx={{ width: "100%" }}
           >
             <SearchMap
-              markers={markers || []}
+              searchState={searchState}
               isMapVisible={isMapVisible}
               onMapExpandToggle={handleMapExpandToggle}
               isMapExpanded={isMapExpanded}
               searchHeaderHeight={searchHeaderHeight}
               mainPagePadding={mainPagePadding}
-              isLoadingMarkers={isLoadingMarkers}
-              isRefetchingMarkers={isRefetchingMarkers}
               refetchData={handleSearchFromMap}
             />
           </Grid>
