@@ -152,8 +152,21 @@ const CollectBusinessStep = () => {
     addressQuery,
   ]);
 
-  const isNextDisabled =
-    !businessTypeId || !ownerFullName.length || !selectedPlaceId;
+  const isNextDisabled = useMemo(() => {
+    switch (step) {
+      case BusinessStep.BUSINESS_TYPE:
+        return !businessTypeId;
+
+      case BusinessStep.BUSINESS_LOCATION_DESCRIPTION:
+        return !ownerFullName.trim();
+
+      case BusinessStep.BUSINESS_ADDRESS:
+        return !selectedPlaceId;
+
+      default:
+        return true;
+    }
+  }, [step, businessTypeId, ownerFullName, selectedPlaceId]);
 
   return (
     <Box sx={styles.container}>

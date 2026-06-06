@@ -10,9 +10,14 @@ export const GET = async (req: NextRequest) => {
   const page = req.nextUrl.searchParams.get("page");
   const limit = req.nextUrl.searchParams.get("limit");
 
+  const queryParams = new URLSearchParams({ all: "true" });
+
+  if (page) queryParams.append("page", page);
+  if (limit) queryParams.append("limit", limit);
+
   const response = (
     await get<PaginatedData<BusinessType>>({
-      url: `/business-types?all=true&page=${page}&limit=${limit}`,
+      url: `/business-types?${queryParams.toString()}`,
     })
   ).data;
 

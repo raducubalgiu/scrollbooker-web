@@ -17,16 +17,20 @@ import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout";
 
 const CollectBusinessServicesStep = () => {
-  const { update } = useSession();
+  const { data: session, update } = useSession();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const { data, isLoading } = useCustomQuery<
     SelectedServiceDomainWithServices[]
   >({
-    key: "my-services",
-    url: "/api/my-services",
+    key: ["my-services", session?.business_id ?? undefined],
+    url: `/api/businesses/${session?.business_id}/services`,
+    options: {
+      enabled: !!session?.business_id,
+    },
   });
+
   const defaultServicesIds = useMemo(
     () =>
       data?.flatMap((serviceDomain) =>
@@ -91,7 +95,7 @@ const CollectBusinessServicesStep = () => {
             key={serviceDomain.id}
             sx={{ mb: 1, boxShadow: "none" }}
           >
-            {serviceDomain.services.map((service) => (
+            {serviceDomain?.services?.map((service) => (
               <SelectedServiceItem
                 key={service.id}
                 service={service}
