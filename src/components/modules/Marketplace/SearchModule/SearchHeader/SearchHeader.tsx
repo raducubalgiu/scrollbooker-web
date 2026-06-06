@@ -19,7 +19,7 @@ import { SearchHeaderStateType } from "./search-header-types";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { getServiceDomainName } from "./getServiceDomainName";
-import dayjs from "@/lib/dayjs";
+import { getDateTimeLabel } from "./getDateTimeLabel";
 
 type SearchHeaderProps = {
   areFiltersActive: boolean;
@@ -51,29 +51,14 @@ const SearchHeader = ({
       selectedBusinessDomainId: headerState.selectedBusinessDomainId,
       selectedServiceDomainId: headerState.selectedServiceDomainId,
       selectedServiceId: headerState.selectedServiceId,
-      startDate: headerState.startDate, // Preluate din searchState-ul original al URL-ului
+      startDate: headerState.startDate,
       startTime: headerState.startTime,
       endTime: headerState.endTime,
     }));
 
-  // Efect de sincronizare extins pentru ID-uri și valori primitive
   useEffect(() => {
-    setLocalHeaderState({
-      selectedBusinessDomainId: headerState.selectedBusinessDomainId,
-      selectedServiceDomainId: headerState.selectedServiceDomainId,
-      selectedServiceId: headerState.selectedServiceId,
-      startDate: headerState.startDate,
-      startTime: headerState.startTime,
-      endTime: headerState.endTime,
-    });
-  }, [
-    headerState.selectedBusinessDomainId,
-    headerState.selectedServiceDomainId,
-    headerState.selectedServiceId,
-    headerState.startDate,
-    headerState.startTime,
-    headerState.endTime,
-  ]);
+    setLocalHeaderState(headerState);
+  }, [JSON.stringify(headerState)]);
 
   const [activeSection, setActiveSection] =
     useState<SearchHeaderSectionType | null>(null);
@@ -113,11 +98,23 @@ const SearchHeader = ({
     ]
   );
 
-  const closeSection = useCallback(() => setActiveSection(null), []);
+  const closeSection = useCallback(() => {
+    setActiveSection(null);
+    setLocalHeaderState(headerState);
+  }, [headerState]);
 
-  const toggle = useCallback((section: SearchHeaderSectionType) => {
-    setActiveSection((prev) => (prev === section ? null : section));
-  }, []);
+  const toggle = useCallback(
+    (section: SearchHeaderSectionType) => {
+      setActiveSection((prev) => {
+        if (prev === section) {
+          setLocalHeaderState(headerState);
+          return null;
+        }
+        return section;
+      });
+    },
+    [headerState]
+  );
 
   useEffect(() => {
     const element = containerRef.current;
@@ -154,14 +151,12 @@ const SearchHeader = ({
   });
 
   const handleBusinessDomainChange = useCallback((id: number | null) => {
-    setLocalHeaderState({
+    setLocalHeaderState((prev) => ({
+      ...prev,
       selectedBusinessDomainId: id,
       selectedServiceDomainId: null,
       selectedServiceId: null,
-      startDate: null,
-      startTime: null,
-      endTime: null,
-    });
+    }));
   }, []);
 
   const handleServiceDomainChange = useCallback((id: number | null) => {
@@ -190,27 +185,16 @@ const SearchHeader = ({
     []
   );
 
-  const selectedDateTimeLabel = useMemo(() => {
-    const { startDate, startTime, endTime } = headerState;
-
-    if (!startDate) return null;
-    const formattedDate = dayjs(startDate).format("D MMM");
-
-    if (startTime && endTime) {
-      return `${formattedDate}, ${startTime} - ${endTime}`;
-    }
-
-    if (startTime) {
-      return `${formattedDate}, de la ${startTime}`;
-    }
-
-    return formattedDate;
-  }, [headerState.startDate, headerState.startTime, headerState.endTime]);
-
   const handleExecuteSearch = useCallback(() => {
     closeSection();
     onSearch(localHeaderState);
   }, [closeSection, localHeaderState, onSearch]);
+
+  const selectedDateTimeLabel = getDateTimeLabel({
+    startDate: localHeaderState.startDate,
+    startTime: localHeaderState.startTime,
+    endTime: localHeaderState.endTime,
+  });
 
   return (
     <>

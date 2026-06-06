@@ -5,7 +5,10 @@ import {
   Stack,
   Divider,
   Button,
-  TextField,
+  MenuItem,
+  FormControl,
+  Select,
+  InputLabel,
 } from "@mui/material";
 import { Dayjs } from "dayjs";
 import dayjs from "@/lib/dayjs";
@@ -48,8 +51,16 @@ const SearchDateTimeSection = ({
     ? selectedDateDayjs.isSame(tomorrow, "day")
     : false;
 
+  const hourOptions = useMemo(() => {
+    return Array.from({ length: 24 }, (_, i) => {
+      const hour = String(i).padStart(2, "0");
+      return `${hour}:00`;
+    });
+  }, []);
+
   const activePreset = useMemo(() => {
     if (!startTime || !endTime) return null;
+
     if (
       startTime === PRESETS.morning.startTime &&
       endTime === PRESETS.morning.endTime
@@ -65,6 +76,7 @@ const SearchDateTimeSection = ({
       endTime === PRESETS.evening.endTime
     )
       return "evening";
+
     return "custom";
   }, [startTime, endTime]);
 
@@ -96,8 +108,8 @@ const SearchDateTimeSection = ({
       if (preset === "custom") {
         onSetDateTime({
           startDate,
-          startTime: startTime || "09:00",
-          endTime: endTime || "18:00",
+          startTime: "09:00",
+          endTime: "18:00",
         });
       } else {
         onSetDateTime({
@@ -107,8 +119,14 @@ const SearchDateTimeSection = ({
         });
       }
     },
-    [startDate, startTime, endTime, onSetDateTime]
+    [startDate, onSetDateTime]
   );
+
+  const safeTimeValue = (timeString: string | null, fallback: string) => {
+    if (!timeString) return fallback;
+    const parts = timeString.split(":");
+    return `${parts[0]?.padStart(2, "0")}:00`;
+  };
 
   return (
     <Box>
@@ -176,37 +194,56 @@ const SearchDateTimeSection = ({
           </Stack>
 
           {activePreset === "custom" && (
-            <Box sx={styles.customTimeContainer}>
-              <TextField
-                label="De la"
-                type="time"
-                value={startTime || "09:00"}
-                onChange={(e) =>
-                  onSetDateTime({
-                    startDate,
-                    startTime: e.target.value,
-                    endTime,
-                  })
-                }
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ step: 300 }}
-                fullWidth
-              />
-              <TextField
-                label="Până la"
-                type="time"
-                value={endTime || "18:00"}
-                onChange={(e) =>
-                  onSetDateTime({
-                    startDate,
-                    startTime,
-                    endTime: e.target.value,
-                  })
-                }
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ step: 300 }}
-                fullWidth
-              />
+            <Box sx={{ display: "flex", gap: 2, width: "100%", mt: 2 }}>
+              <FormControl fullWidth size="medium">
+                <InputLabel id="start-time-label">De la</InputLabel>
+                <Select
+                  labelId="start-time-label"
+                  label="De la"
+                  value={safeTimeValue(startTime, "09:00")}
+                  onChange={(e) =>
+                    onSetDateTime({
+                      startDate,
+                      startTime: e.target.value,
+                      endTime,
+                    })
+                  }
+                  MenuProps={{
+                    disableScrollLock: true,
+                  }}
+                >
+                  {hourOptions.map((hour) => (
+                    <MenuItem key={hour} value={hour}>
+                      {hour}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth size="medium">
+                <InputLabel id="end-time-label">Până la</InputLabel>
+                <Select
+                  labelId="end-time-label"
+                  label="Până la"
+                  value={safeTimeValue(endTime, "18:00")}
+                  onChange={(e) =>
+                    onSetDateTime({
+                      startDate,
+                      startTime,
+                      endTime: e.target.value,
+                    })
+                  }
+                  MenuProps={{
+                    disableScrollLock: true,
+                  }}
+                >
+                  {hourOptions.map((hour) => (
+                    <MenuItem key={hour} value={hour}>
+                      {hour}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
           )}
         </Box>

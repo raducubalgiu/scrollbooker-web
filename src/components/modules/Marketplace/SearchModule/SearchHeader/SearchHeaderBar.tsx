@@ -106,7 +106,6 @@ const SearchHeaderBar = ({
                     </Typography>
                     <Typography
                       color="text.secondary"
-                      fontWeight={500}
                       noWrap
                       sx={styles.typographyValue}
                     >

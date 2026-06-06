@@ -47,8 +47,12 @@ export default function InputSelect({
             inputRef={ref}
             disabled={disabled}
             loading={isLoading}
-            MenuProps={{
-              disableScrollLock: true,
+            slotProps={{
+              select: {
+                MenuProps: {
+                  disableScrollLock: true,
+                },
+              },
             }}
           />
         );

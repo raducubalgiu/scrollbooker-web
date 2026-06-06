@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
 import { Service } from "@/ts/models/nomenclatures/service/Service";
 
-type ParamsType = {
-  serviceDomainId: string;
+type RouteContext = {
+  params: Promise<{
+    serviceDomainId: string;
+  }>;
 };
 
-export const GET = async (_: NextRequest, context: { params: ParamsType }) => {
-  const serviceDomainId = context?.params?.serviceDomainId;
+export const GET = async (_: NextRequest, context: RouteContext) => {
+  const { serviceDomainId } = await context.params;
 
   if (
     !serviceDomainId ||
