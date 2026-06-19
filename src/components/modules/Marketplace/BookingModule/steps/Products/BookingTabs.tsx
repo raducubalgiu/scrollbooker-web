@@ -1,15 +1,15 @@
 import { Box, Theme } from "@mui/material";
 import { ScrollTabButton } from "../../components/ScrollTabButton";
-import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { ScrollSyncResult } from "../../useScrollSync";
+import { UserProducts } from "@/ts/models/booking/product/Product";
 
 export const BookingTabs = ({
   sync,
-  services,
+  products,
   top = 90,
 }: {
   sync: ScrollSyncResult;
-  services: BusinessProductsResponse[];
+  products: UserProducts;
   top?: number;
 }) => (
   <Box
@@ -76,7 +76,7 @@ export const BookingTabs = ({
             zIndex: 0,
           }}
         />
-        {services.map((group, index) => (
+        {products.data.map((group, index) => (
           <Box
             key={group.service.id}
             component="button"

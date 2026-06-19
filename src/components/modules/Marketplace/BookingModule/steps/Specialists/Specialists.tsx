@@ -18,17 +18,17 @@ import {
 import React, { memo } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import { formatRating } from "@/utils/formatters";
-import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { SelectedBookingItem } from "../../BookingModule";
 import { ProductUtils } from "@/ts/models/booking/product/Product";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import GroupIcon from "@mui/icons-material/Group";
 import { formatPrice } from "@/utils/formatPrice";
+import { BookingFlowUser } from "@/ts/models/booking/booking/BookingFlow";
 
 type SpecialistsProps = {
   selectedItems: SelectedBookingItem[];
-  employees: BusinessEmployee[];
+  employees: BookingFlowUser[];
   selectedEmployeeId: number | null;
   onChangeSelectedEmployeeId: (event: SelectChangeEvent<number>) => void;
 };
@@ -42,11 +42,11 @@ const Specialists = ({
   const theme = useTheme();
 
   const getSelectedOffering = (item: SelectedBookingItem) => {
-    return item.offerings.find((o) => o.user_id === selectedEmployeeId);
+    return item.offerings.find((o) => o.user.id === selectedEmployeeId);
   };
 
   const renderSpecialistItem = (
-    specialist: BusinessEmployee,
+    specialist: BookingFlowUser,
     isSelected = false
   ) => (
     <Stack flexDirection="row" alignItems="center" gap={2} sx={{ py: 0.5 }}>
@@ -298,7 +298,7 @@ const Specialists = ({
                     <Stack spacing={1.5}>
                       {employees.map((emp) => {
                         const offering = item.offerings.find(
-                          (o) => o.user_id === emp.id
+                          (o) => o.user.id === emp.id
                         );
                         const isCurrentlySelected =
                           emp.id === selectedEmployeeId;

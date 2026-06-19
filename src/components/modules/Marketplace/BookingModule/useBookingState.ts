@@ -8,29 +8,26 @@ import {
 import { useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
 import {
-  BusinessProductsResponse,
+  BusinessServicesWithProducts,
   Product,
 } from "@/ts/models/booking/product/Product";
-import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
-import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
 import { SelectedProductType } from "@/components/cutomized/PostVideo/sidebar/ExploreServicesTab";
 import { AppRoutes, useAppNavigation } from "@/utils/routes";
+import { BookingFlow } from "@/ts/models/booking/booking/BookingFlow";
 
 type BookingModuleProps = {
+  bookingFlow: BookingFlow;
   businessId: number;
   businessOwnerId: number;
   employeeId: number | null;
   selectedServiceId: number | null;
-  businessEmployees: BusinessEmployee[];
-  businessSummary: BusinessBookingSummary;
 };
 
 export const useBookingState = ({
+  bookingFlow,
   businessOwnerId,
   employeeId,
   selectedServiceId,
-  businessEmployees,
-  businessSummary,
 }: BookingModuleProps) => {
   const { navigateTo } = useAppNavigation();
   const [currentStep, setCurrentStep] = useState<BookingStepEnum>(
@@ -46,19 +43,19 @@ export const useBookingState = ({
 
   const [targetUserId, setTargetUserId] = useState<number | null>(() => {
     if (employeeId) return employeeId;
-    if (!businessSummary.has_employees && businessOwnerId)
+    if (!bookingFlow.business.has_employees && businessOwnerId)
       return businessOwnerId;
     return null;
   });
 
   const employeeData = useMemo(() => {
-    const activeEmp = businessEmployees?.find((e) => e.id === targetUserId);
+    const activeEmp = bookingFlow.employees?.find((e) => e.id === targetUserId);
     return {
       selectedEmployeeId: targetUserId,
       avatar: activeEmp?.avatar ?? null,
       fullname: activeEmp?.fullname ?? null,
     };
-  }, [businessEmployees, targetUserId]);
+  }, [bookingFlow.employees, targetUserId]);
 
   const { mutate: handleSaveAppointment, isPending } = useMutate<
     ScrollBookerAppointmentCreate,
@@ -89,11 +86,11 @@ export const useBookingState = ({
   }, []);
 
   const handleDataLoaded = useCallback(
-    (businessProducts: BusinessProductsResponse[]) => {
-      if (!selectedServiceId || businessProducts.length === 0) return;
+    (products: BusinessServicesWithProducts[]) => {
+      if (!selectedServiceId || products.length === 0) return;
 
       let foundProduct: Product | undefined;
-      for (const group of businessProducts) {
+      for (const group of products) {
         foundProduct = group.products.find((p) => p.id === selectedServiceId);
         if (foundProduct) break;
       }
@@ -120,8 +117,8 @@ export const useBookingState = ({
 
   // Determină dacă pasul de specialiști trebuie omis complet din flow-ul de navigare
   const shouldSkipSpecialistsStep = useMemo(() => {
-    return !!employeeId || !businessSummary.has_employees;
-  }, [employeeId, businessSummary.has_employees]);
+    return !!employeeId || !bookingFlow.business.has_employees;
+  }, [employeeId, bookingFlow.business.has_employees]);
 
   const handleNext = useCallback(() => {
     if (currentStep === BookingStepEnum.CONFIRM) {
@@ -135,7 +132,7 @@ export const useBookingState = ({
           id: item.variantId,
           offering: {
             user_id:
-              item.offerings.find((o) => o.user_id === targetUserId)?.user_id ||
+              item.offerings.find((o) => o.user.id === targetUserId)?.user.id ||
               targetUserId,
           },
         })),
@@ -174,7 +171,7 @@ export const useBookingState = ({
       case BookingStepEnum.SPECIALISTS:
         if (targetUserId === null) return true;
         return selectedItems.some(
-          (item) => !item.offerings.find((o) => o.user_id === targetUserId)
+          (item) => !item.offerings.find((o) => o.user.id === targetUserId)
         );
       case BookingStepEnum.DATE_AND_HOUR:
         return selectedTimeSlot === null;

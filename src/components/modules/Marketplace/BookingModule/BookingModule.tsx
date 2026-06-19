@@ -9,21 +9,19 @@ import AvailabilityStep from "./steps/Availability/AvailabilityStep";
 import BookingBreadcrumbs from "./components/BookingBreadcrumbs";
 import Specialists from "./steps/Specialists/Specialists";
 import { ProductOffering } from "@/ts/models/booking/product/Product";
-import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { sumBy } from "lodash";
-import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
 import ConfirmStep from "./steps/Confirm/ConfirmStep";
 import BookingCart from "./components/cart/BookingCart";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
 import { useBookingState } from "./useBookingState";
+import { BookingFlow } from "@/ts/models/booking/booking/BookingFlow";
 
 type BookingModuleProps = {
+  bookingFlow: BookingFlow;
   businessId: number;
   businessOwnerId: number;
   employeeId: number | null;
   selectedServiceId: number | null;
-  businessEmployees: BusinessEmployee[];
-  businessSummary: BusinessBookingSummary;
 };
 
 const SCROLL_OFFSET = 180;
@@ -46,13 +44,7 @@ export interface SelectedBookingItem {
 }
 
 const BookingModule = (props: BookingModuleProps) => {
-  const {
-    businessId,
-    employeeId,
-    selectedServiceId,
-    businessEmployees,
-    businessSummary,
-  } = props;
+  const { bookingFlow, businessId, employeeId, selectedServiceId } = props;
   const router = useRouter();
 
   const {
@@ -78,6 +70,7 @@ const BookingModule = (props: BookingModuleProps) => {
       case BookingStepEnum.SERVICES:
         return (
           <ProductsStep
+            products={bookingFlow.products}
             businessId={businessId}
             employeeId={employeeId}
             selectedItems={selectedItems}
@@ -94,7 +87,7 @@ const BookingModule = (props: BookingModuleProps) => {
         return (
           <Specialists
             selectedItems={selectedItems}
-            employees={businessEmployees}
+            employees={bookingFlow.employees}
             selectedEmployeeId={targetUserId}
             onChangeSelectedEmployeeId={(e) =>
               setTargetUserId(Number(e.target.value))
@@ -114,7 +107,7 @@ const BookingModule = (props: BookingModuleProps) => {
         return (
           <ConfirmStep
             selectedTimeSlot={selectedTimeSlot}
-            address={businessSummary.formatted_address}
+            address={bookingFlow.business.formatted_address}
           />
         );
       default:
@@ -132,7 +125,7 @@ const BookingModule = (props: BookingModuleProps) => {
       <Container maxWidth="xl">
         <BookingBreadcrumbs
           currentStep={currentStep}
-          hasEmployees={businessSummary.has_employees}
+          hasEmployees={bookingFlow.business.has_employees}
           employeeId={employeeId}
         />
 
@@ -140,7 +133,7 @@ const BookingModule = (props: BookingModuleProps) => {
           <Box>{renderStepContent()}</Box>
 
           <BookingCart
-            businessSummary={businessSummary}
+            owner={bookingFlow.business.owner}
             selectedItems={selectedItems}
             employeeData={employeeData}
             currentStep={currentStep}

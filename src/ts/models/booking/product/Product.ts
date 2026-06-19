@@ -50,7 +50,6 @@ export interface ProductVariant {
 }
 
 export interface Product {
-  [x: string]: unknown;
   id: number;
   name: string;
   description: string | null;
@@ -103,11 +102,15 @@ export const ProductUtils = {
   },
 };
 
-export interface BusinessProductsResponse {
+export interface BusinessServicesWithProducts {
   service: Service;
   products: Product[];
 }
-[];
+
+export interface UserProducts {
+  total_count: number;
+  data: BusinessServicesWithProducts[];
+}
 
 // Create Products DTOs
 export interface ProductFilterCreate {

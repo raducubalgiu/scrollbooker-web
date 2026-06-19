@@ -1,22 +1,21 @@
 "use client";
 
 import { Box, Stack, Typography } from "@mui/material";
-import React, { memo, useMemo, useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import { BookingTabs } from "./BookingTabs";
 import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
 import {
-  BusinessProductsResponse,
+  BusinessServicesWithProducts,
   Product,
+  UserProducts,
 } from "@/ts/models/booking/product/Product";
-import { useCustomQuery } from "@/hooks/useHttp";
 import { useScrollSync } from "../../useScrollSync";
-import ProductsStepSkeleton from "./ProductsStepSkeleton";
 import { SelectedBookingItem } from "../../BookingModule";
-import { isEmpty } from "lodash";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 
 type ProductsStepProps = {
+  products: UserProducts;
   businessId: number;
   employeeId: number | null;
   scrollOffset: number;
@@ -26,35 +25,28 @@ type ProductsStepProps = {
   selectedServiceId: number | null;
   onAdd: (item: SelectedBookingItem) => void;
   onOpenDetail: (product: Product) => void;
-  onDataLoaded: (products: BusinessProductsResponse[]) => void;
+  onDataLoaded: (products: BusinessServicesWithProducts[]) => void;
 };
 
 const ProductsStep = ({
-  businessId,
-  employeeId,
+  products,
   scrollOffset,
   top = 90,
   displayTitle = true,
   selectedItems,
   onAdd,
   onOpenDetail,
-  onDataLoaded,
   selectedServiceId,
+  onDataLoaded,
 }: ProductsStepProps) => {
-  const { data, isLoading } = useCustomQuery<BusinessProductsResponse[]>({
-    key: ["business-products", businessId, employeeId ?? undefined],
-    url: `/api/businesses/${businessId}/products${employeeId ? `?employeeId=${employeeId}` : ""}`,
-  });
-
-  const businessProducts = useMemo(() => data ?? [], [data]);
-  const sync = useScrollSync(businessProducts, scrollOffset);
+  const sync = useScrollSync(products, scrollOffset);
 
   useEffect(() => {
-    if (!isLoading && businessProducts.length > 0) {
-      onDataLoaded(businessProducts);
+    if (products.total_count > 0) {
+      onDataLoaded(products.data);
 
       if (selectedServiceId) {
-        const groupIndex = businessProducts.findIndex((group) =>
+        const groupIndex = products.data.findIndex((group) =>
           group.products.some((product) => product.id === selectedServiceId)
         );
 
@@ -65,8 +57,7 @@ const ProductsStep = ({
         }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [businessProducts, isLoading, selectedServiceId]);
+  }, [selectedServiceId]);
 
   return (
     <Box sx={{ minWidth: 0 }}>
@@ -76,9 +67,7 @@ const ProductsStep = ({
         </Typography>
       )}
 
-      {isLoading && <ProductsStepSkeleton />}
-
-      {!isLoading && isEmpty(businessProducts) && (
+      {products.total_count === 0 && (
         <NotFound
           icon={<ShoppingBagOutlinedIcon sx={{ fontSize: 50 }} />}
           title="Servicii"
@@ -86,48 +75,46 @@ const ProductsStep = ({
         />
       )}
 
-      {!isLoading && (
+      <Box>
+        <BookingTabs top={top} sync={sync} products={products} />
+
         <Box>
-          <BookingTabs top={top} sync={sync} services={businessProducts} />
+          {products.data.map((group, index) => (
+            <Box
+              key={group.service.id}
+              data-index={index}
+              ref={(el: HTMLDivElement | null) => {
+                if (sync.sectionRefs.current)
+                  sync.sectionRefs.current[index] = el;
+              }}
+              sx={{ mb: 8, scrollMarginTop: scrollOffset }}
+            >
+              <Typography variant="h5" fontWeight={700} mb={3}>
+                {group.service.short_name}
+              </Typography>
+              <Stack spacing={2}>
+                {group.products.map((prod) => {
+                  const isSelected = selectedItems.some(
+                    (item) => item.productId === prod.id
+                  );
 
-          <Box>
-            {businessProducts.map((group, index) => (
-              <Box
-                key={group.service.id}
-                data-index={index}
-                ref={(el: HTMLDivElement | null) => {
-                  if (sync.sectionRefs.current)
-                    sync.sectionRefs.current[index] = el;
-                }}
-                sx={{ mb: 8, scrollMarginTop: scrollOffset }}
-              >
-                <Typography variant="h5" fontWeight={700} mb={3}>
-                  {group.service.short_name}
-                </Typography>
-                <Stack spacing={2}>
-                  {group.products.map((prod) => {
-                    const isSelected = selectedItems.some(
-                      (item) => item.productId === prod.id
-                    );
-
-                    return (
-                      <ProductCard
-                        key={prod.id}
-                        product={prod}
-                        isSelected={isSelected}
-                        showIcon={true}
-                        onOpenDetail={() => onOpenDetail(prod)}
-                        onAdd={onAdd}
-                        onNavigateToBooking={() => {}}
-                      />
-                    );
-                  })}
-                </Stack>
-              </Box>
-            ))}
-          </Box>
+                  return (
+                    <ProductCard
+                      key={prod.id}
+                      product={prod}
+                      isSelected={isSelected}
+                      showIcon={true}
+                      onOpenDetail={() => onOpenDetail(prod)}
+                      onAdd={onAdd}
+                      onNavigateToBooking={() => {}}
+                    />
+                  );
+                })}
+              </Stack>
+            </Box>
+          ))}
         </Box>
-      )}
+      </Box>
     </Box>
   );
 };

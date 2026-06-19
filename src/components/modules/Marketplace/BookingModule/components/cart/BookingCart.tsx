@@ -1,6 +1,5 @@
 import { alpha, Box, Theme } from "@mui/material";
 import { useMemo } from "react";
-import { BusinessBookingSummary } from "@/ts/models/booking/business/Business";
 import { BookingStepEnum, SelectedBookingItem } from "../../BookingModule";
 import BookingCartHeader from "./BookingCartHeader";
 import BookingCartActions from "./BookingCartActions";
@@ -8,6 +7,7 @@ import BookingCartTotals from "./BookingCartTotals";
 import BookingCartContent from "./BookingCartContent";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { BookingFlowUser } from "@/ts/models/booking/booking/BookingFlow";
 
 export type EmployeeDataType = {
   selectedEmployeeId: number | null;
@@ -16,7 +16,7 @@ export type EmployeeDataType = {
 };
 
 type BookingCartProps = {
-  businessSummary: BusinessBookingSummary;
+  owner: BookingFlowUser;
   selectedItems: SelectedBookingItem[];
   employeeData: EmployeeDataType;
   currentStep: BookingStepEnum;
@@ -27,7 +27,7 @@ type BookingCartProps = {
 };
 
 const BookingCart = ({
-  businessSummary,
+  owner,
   selectedItems,
   employeeData,
   isNextDisabled,
@@ -58,7 +58,7 @@ const BookingCart = ({
       }
 
       const currentOffering = offerings.find(
-        (o) => o.user_id === selectedEmployeeId
+        (o) => o.user.id === selectedEmployeeId
       );
 
       minTotal += minPrice;
@@ -77,10 +77,7 @@ const BookingCart = ({
 
   return (
     <Box sx={styles.container}>
-      <BookingCartHeader
-        businessOwner={businessSummary.owner}
-        employeeData={employeeData}
-      />
+      <BookingCartHeader businessOwner={owner} employeeData={employeeData} />
 
       <BookingCartContent
         selectedItems={selectedItems}

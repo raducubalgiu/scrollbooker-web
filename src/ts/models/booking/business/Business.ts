@@ -39,9 +39,3 @@ export interface BusinessBookingOwner {
   ratings_average: number;
   ratings_count: number;
 }
-
-export interface BusinessBookingSummary {
-  owner: BusinessBookingOwner;
-  has_employees: boolean;
-  formatted_address: string;
-}

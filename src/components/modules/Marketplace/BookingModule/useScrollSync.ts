@@ -1,4 +1,4 @@
-import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
+import { UserProducts } from "@/ts/models/booking/product/Product";
 import {
   useState,
   useRef,
@@ -27,7 +27,7 @@ export interface ScrollSyncResult {
 }
 
 export const useScrollSync = (
-  services: BusinessProductsResponse[],
+  products: UserProducts,
   offset: number
 ): ScrollSyncResult => {
   const [currentTab, setCurrentTab] = useState(0);
@@ -98,7 +98,7 @@ export const useScrollSync = (
   );
 
   useEffect(() => {
-    if (services.length === 0) return;
+    if (products.total_count === 0) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (isClickScrolling.current) return;
@@ -113,11 +113,11 @@ export const useScrollSync = (
     );
     Object.values(sectionRefs.current).forEach((s) => s && observer.observe(s));
     return () => observer.disconnect();
-  }, [services, offset]);
+  }, [products, offset]);
 
   useLayoutEffect(() => {
     updateIndicator(currentTab);
-  }, [currentTab, updateIndicator, services]);
+  }, [currentTab, updateIndicator, products]);
 
   return {
     currentTab,

@@ -1,11 +1,11 @@
-import { BusinessBookingOwner } from "@/ts/models/booking/business/Business";
 import { formatRating } from "@/utils/formatters";
 import { Avatar, Box, Rating, Stack, Typography } from "@mui/material";
 import React from "react";
 import { EmployeeDataType } from "./BookingCart";
+import { BookingFlowUser } from "@/ts/models/booking/booking/BookingFlow";
 
 type BookingCartHeaderProps = {
-  businessOwner: BusinessBookingOwner;
+  businessOwner: BookingFlowUser;
   employeeData: EmployeeDataType;
 };
 

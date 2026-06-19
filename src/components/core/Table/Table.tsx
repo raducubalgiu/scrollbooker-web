@@ -144,9 +144,6 @@ export default function Table<T extends Record<string, unknown>>({
         boxShadow: "0 px 24px rgba(0, 0, 0, 0.06)",
       },
     },
-    mrtTheme: (theme) => ({
-      baseBackgroundColor: bgColor ?? theme.palette.table.main,
-    }),
     localization: MRT_Localization_RO,
     ...props,
   });
