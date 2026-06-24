@@ -22,7 +22,7 @@ type ProductsStepProps = {
   displayTitle?: boolean;
   top?: number;
   selectedItems: SelectedBookingItem[];
-  selectedServiceId: number | null;
+  selectedProductId: number | null;
   onAdd: (item: SelectedBookingItem) => void;
   onOpenDetail: (product: Product) => void;
   onDataLoaded: (products: BusinessServicesWithProducts[]) => void;
@@ -36,7 +36,7 @@ const ProductsStep = ({
   selectedItems,
   onAdd,
   onOpenDetail,
-  selectedServiceId,
+  selectedProductId,
   onDataLoaded,
 }: ProductsStepProps) => {
   const sync = useScrollSync(products, scrollOffset);
@@ -45,9 +45,9 @@ const ProductsStep = ({
     if (products.total_count > 0) {
       onDataLoaded(products.data);
 
-      if (selectedServiceId) {
+      if (selectedProductId) {
         const groupIndex = products.data.findIndex((group) =>
-          group.products.some((product) => product.id === selectedServiceId)
+          group.products.some((product) => product.id === selectedProductId)
         );
 
         if (groupIndex !== -1) {
@@ -57,7 +57,7 @@ const ProductsStep = ({
         }
       }
     }
-  }, [selectedServiceId]);
+  }, [selectedProductId]);
 
   return (
     <Box sx={{ minWidth: 0 }}>

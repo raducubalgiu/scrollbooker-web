@@ -41,6 +41,15 @@ const Specialists = ({
 }: SpecialistsProps) => {
   const theme = useTheme();
 
+  const eligibleEmployees = React.useMemo(() => {
+    if (!employees || employees.length === 0) return [];
+    return employees.filter((emp) =>
+      selectedItems.some((item) =>
+        (item.offerings || []).some((o) => o.user?.id === emp.id)
+      )
+    );
+  }, [employees, selectedItems]);
+
   const getSelectedOffering = (item: SelectedBookingItem) => {
     return item.offerings.find((o) => o.user.id === selectedEmployeeId);
   };
@@ -151,11 +160,11 @@ const Specialists = ({
                 </Stack>
               );
             }
-            const selected = employees.find((s) => s.id === value);
+            const selected = eligibleEmployees.find((s) => s.id === value);
             return selected ? renderSpecialistItem(selected, true) : null;
           }}
         >
-          {employees.map((specialist) => (
+          {eligibleEmployees.map((specialist) => (
             <MenuItem
               key={specialist.id}
               value={specialist.id}
@@ -296,7 +305,7 @@ const Specialists = ({
                   </AccordionSummary>
                   <AccordionDetails sx={{ pt: 0 }}>
                     <Stack spacing={1.5}>
-                      {employees.map((emp) => {
+                      {eligibleEmployees.map((emp) => {
                         const offering = item.offerings.find(
                           (o) => o.user.id === emp.id
                         );

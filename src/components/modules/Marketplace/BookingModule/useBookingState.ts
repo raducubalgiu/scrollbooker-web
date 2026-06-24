@@ -17,17 +17,14 @@ import { BookingFlow } from "@/ts/models/booking/booking/BookingFlow";
 
 type BookingModuleProps = {
   bookingFlow: BookingFlow;
-  businessId: number;
-  businessOwnerId: number;
   employeeId: number | null;
-  selectedServiceId: number | null;
+  selectedProductId: number | null;
 };
 
 export const useBookingState = ({
   bookingFlow,
-  businessOwnerId,
   employeeId,
-  selectedServiceId,
+  selectedProductId,
 }: BookingModuleProps) => {
   const { navigateTo } = useAppNavigation();
   const [currentStep, setCurrentStep] = useState<BookingStepEnum>(
@@ -41,21 +38,20 @@ export const useBookingState = ({
     open: false,
   });
 
-  const [targetUserId, setTargetUserId] = useState<number | null>(() => {
-    if (employeeId) return employeeId;
-    if (!bookingFlow.business.has_employees && businessOwnerId)
-      return businessOwnerId;
-    return null;
-  });
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
+    () => employeeId
+  );
 
   const employeeData = useMemo(() => {
-    const activeEmp = bookingFlow.employees?.find((e) => e.id === targetUserId);
+    const activeEmp = bookingFlow.employees?.find(
+      (e) => e.id === selectedEmployeeId
+    );
     return {
-      selectedEmployeeId: targetUserId,
+      selectedEmployeeId: selectedEmployeeId,
       avatar: activeEmp?.avatar ?? null,
       fullname: activeEmp?.fullname ?? null,
     };
-  }, [bookingFlow.employees, targetUserId]);
+  }, [bookingFlow.employees, selectedEmployeeId]);
 
   const { mutate: handleSaveAppointment, isPending } = useMutate<
     ScrollBookerAppointmentCreate,
@@ -87,11 +83,11 @@ export const useBookingState = ({
 
   const handleDataLoaded = useCallback(
     (products: BusinessServicesWithProducts[]) => {
-      if (!selectedServiceId || products.length === 0) return;
+      if (!selectedProductId || products.length === 0) return;
 
       let foundProduct: Product | undefined;
       for (const group of products) {
-        foundProduct = group.products.find((p) => p.id === selectedServiceId);
+        foundProduct = group.products.find((p) => p.id === selectedProductId);
         if (foundProduct) break;
       }
 
@@ -112,17 +108,17 @@ export const useBookingState = ({
         setSelectedProduct({ product: foundProduct, open: true });
       }
     },
-    [selectedServiceId, handleSelectItem]
+    [selectedProductId, handleSelectItem]
   );
 
   // Determină dacă pasul de specialiști trebuie omis complet din flow-ul de navigare
   const shouldSkipSpecialistsStep = useMemo(() => {
-    return !!employeeId || !bookingFlow.business.has_employees;
-  }, [employeeId, bookingFlow.business.has_employees]);
+    return !!selectedEmployeeId || !bookingFlow.business.has_employees;
+  }, [selectedEmployeeId, bookingFlow.business.has_employees]);
 
   const handleNext = useCallback(() => {
     if (currentStep === BookingStepEnum.CONFIRM) {
-      if (!selectedTimeSlot || !targetUserId) return;
+      if (!selectedTimeSlot || !selectedEmployeeId) return;
 
       const body: ScrollBookerAppointmentCreate = {
         start_date: selectedTimeSlot.start_date_utc,
@@ -132,8 +128,8 @@ export const useBookingState = ({
           id: item.variantId,
           offering: {
             user_id:
-              item.offerings.find((o) => o.user.id === targetUserId)?.user.id ||
-              targetUserId,
+              item.offerings.find((o) => o.user.id === selectedEmployeeId)?.user
+                .id || selectedEmployeeId,
           },
         })),
       };
@@ -150,7 +146,7 @@ export const useBookingState = ({
     currentStep,
     selectedTimeSlot,
     selectedItems,
-    targetUserId,
+    selectedEmployeeId,
     shouldSkipSpecialistsStep,
     handleSaveAppointment,
   ]);
@@ -169,9 +165,10 @@ export const useBookingState = ({
       case BookingStepEnum.SERVICES:
         return selectedItems.length === 0;
       case BookingStepEnum.SPECIALISTS:
-        if (targetUserId === null) return true;
+        if (selectedEmployeeId === null) return true;
         return selectedItems.some(
-          (item) => !item.offerings.find((o) => o.user.id === targetUserId)
+          (item) =>
+            !item.offerings.find((o) => o.user.id === selectedEmployeeId)
         );
       case BookingStepEnum.DATE_AND_HOUR:
         return selectedTimeSlot === null;
@@ -180,18 +177,18 @@ export const useBookingState = ({
       default:
         return true;
     }
-  }, [currentStep, selectedItems, targetUserId, selectedTimeSlot]);
+  }, [currentStep, selectedItems, selectedEmployeeId, selectedTimeSlot]);
 
   return {
     currentStep,
     selectedItems,
-    targetUserId,
+    selectedEmployeeId,
     selectedTimeSlot,
     selectedProduct,
     employeeData,
     isNextDisabled,
     isPending,
-    setTargetUserId,
+    setSelectedEmployeeId,
     setSelectedTimeSlot,
     setSelectedProduct,
     handleSelectItem,

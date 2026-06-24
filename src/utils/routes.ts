@@ -14,6 +14,15 @@ export const AppRoutes = {
   notifications: () => "/notifications",
   search: () => "/search",
 
+  booking: (
+    businessId: number,
+    businessOwnerId: number,
+    userId: number,
+    source: string,
+    selectedProductId: number | null
+  ) =>
+    `/booking/${businessId}/${businessOwnerId}/${userId}?product=${selectedProductId}&source=${source}`,
+
   appointments: () => "/appointments",
   appointmentDetails: (appointmentId: number) =>
     `/appointments/${appointmentId}`,
@@ -55,14 +64,10 @@ export const AppRoutes = {
     return `${baseUrl}?tab=${tabParam}`;
   },
 
-  // Auth
   login: () => "/auth/login",
   register: () => "/auth/register",
 
-  // Admin
   calendar: () => "/admin/calendar",
-
-  // Nomenclatures
 } as const;
 
 export type AppRouteType = typeof AppRoutes;

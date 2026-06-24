@@ -5,7 +5,8 @@ import { AvailableTimeslotsResponse } from "@/ts/models/booking/availability/Ava
 import { useMemo } from "react";
 
 export const useAvailabilityData = (
-  userId: number,
+  businessId: number,
+  selectedEmployeeId: number | null,
   slotDuration: number,
   activeDate: Dayjs,
   maxDate: Dayjs
@@ -15,13 +16,13 @@ export const useAvailabilityData = (
   const maxDateStr = maxDate.format("YYYY-MM-DD");
 
   const timeslotsQuery = useCustomQuery<AvailableTimeslotsResponse>({
-    key: ["available-timeslots", day, userId],
-    url: `/api/availability/timeslots?day=${day}&userId=${userId}&slotDuration=${slotDuration}`,
+    key: ["available-timeslots", day, businessId],
+    url: `/api/availability/${businessId}/timeslots?day=${day}&employeeId=${selectedEmployeeId}&slotDuration=${slotDuration}`,
   });
 
   const availableDaysQuery = useCustomQuery<string[]>({
-    key: ["user-available-days", userId],
-    url: `/api/availability?userId=${userId}&startDate=${todayStr}&endDate=${maxDateStr}`,
+    key: ["user-available-days", businessId],
+    url: `/api/availability/${businessId}/available-days?employeeId=${selectedEmployeeId}&startDate=${todayStr}&endDate=${maxDateStr}`,
   });
 
   const availableDaysSet = useMemo(

@@ -74,15 +74,17 @@ const ProfileUserInfo = ({
   }, [opening_hours]);
 
   const handleBookNow = () => {
-    const isBusiness = profile.business_owner?.id === profile.id;
+    // const isBusiness = profile.business_owner?.id === profile.id;
 
-    let url = `/booking/${profile.business_id}?businessOwnerId=${profile.business_owner?.id}`;
+    // let url = `/booking/${profile.business_id}?businessOwnerId=${profile.business_owner?.id}`;
 
-    if (!isBusiness) {
-      url += `&employeeId=${profile.id}`;
-    }
+    // if (!isBusiness) {
+    //   url += `&employeeId=${profile.id}`;
+    // }
 
-    router.push(url);
+    router.push(
+      `/booking/${profile.business_id}/${profile.business_owner?.id}/${profile.id}?source=profile`
+    );
   };
 
   const actions = useMemo(() => {

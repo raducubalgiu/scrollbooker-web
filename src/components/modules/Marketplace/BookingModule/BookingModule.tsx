@@ -20,8 +20,8 @@ type BookingModuleProps = {
   bookingFlow: BookingFlow;
   businessId: number;
   businessOwnerId: number;
-  employeeId: number | null;
-  selectedServiceId: number | null;
+  userId: number;
+  selectedProductId: number | null;
 };
 
 const SCROLL_OFFSET = 180;
@@ -44,26 +44,33 @@ export interface SelectedBookingItem {
 }
 
 const BookingModule = (props: BookingModuleProps) => {
-  const { bookingFlow, businessId, employeeId, selectedServiceId } = props;
+  const {
+    bookingFlow,
+    businessId,
+    businessOwnerId,
+    userId,
+    selectedProductId,
+  } = props;
   const router = useRouter();
+  const employeeId = businessOwnerId !== userId ? userId : null;
 
   const {
     currentStep,
     selectedItems,
-    targetUserId,
+    selectedEmployeeId,
     selectedTimeSlot,
     selectedProduct,
     employeeData,
     isNextDisabled,
     isPending,
-    setTargetUserId,
+    setSelectedEmployeeId,
     setSelectedTimeSlot,
     setSelectedProduct,
     handleSelectItem,
     handleDataLoaded,
     handleNext,
     handleBack,
-  } = useBookingState(props);
+  } = useBookingState({ bookingFlow, employeeId, selectedProductId });
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -73,9 +80,9 @@ const BookingModule = (props: BookingModuleProps) => {
             products={bookingFlow.products}
             businessId={businessId}
             employeeId={employeeId}
+            selectedProductId={selectedProductId}
             selectedItems={selectedItems}
             scrollOffset={SCROLL_OFFSET}
-            selectedServiceId={selectedServiceId}
             onAdd={handleSelectItem}
             onOpenDetail={(product) =>
               setSelectedProduct({ product, open: true })
@@ -88,16 +95,17 @@ const BookingModule = (props: BookingModuleProps) => {
           <Specialists
             selectedItems={selectedItems}
             employees={bookingFlow.employees}
-            selectedEmployeeId={targetUserId}
+            selectedEmployeeId={selectedEmployeeId}
             onChangeSelectedEmployeeId={(e) =>
-              setTargetUserId(Number(e.target.value))
+              setSelectedEmployeeId(Number(e.target.value))
             }
           />
         );
       case BookingStepEnum.DATE_AND_HOUR:
         return (
           <AvailabilityStep
-            userId={targetUserId}
+            businessId={businessId}
+            selectedEmployeeId={selectedEmployeeId}
             slotDuration={sumBy(selectedItems, "variantDuration")}
             selectedTimeSlot={selectedTimeSlot}
             onSelectTimeSlot={setSelectedTimeSlot}
