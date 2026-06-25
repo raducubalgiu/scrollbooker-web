@@ -1,19 +1,20 @@
-import "./globals.css";
-import MUIProvider from "../providers/MUIProvider";
-import QueryClientProvider from "../providers/QueryClientProvider";
-import SessionProvider from "../providers/SessionProvider";
-import ToastProvider from "@/providers/ToastProvider";
-import AuthListener from "@/components/core/AuthListener/AuthListener";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import { Inter } from "next/font/google";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/ro";
-import Layout from "@/components/core/Layout/Layout";
 
+import MUIProvider from "../providers/MUIProvider";
+import QueryClientProvider from "../providers/QueryClientProvider";
+import SessionProvider from "../providers/SessionProvider";
+import ToastProvider from "@/providers/ToastProvider";
+import AuthListener from "@/components/core/AuthListener/AuthListener";
+import Layout from "@/components/core/Layout/Layout";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import type { Viewport } from "next";
+
+import "./globals.css";
 
 dayjs.extend(utc);
 dayjs.locale("ro");
