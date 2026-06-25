@@ -31,6 +31,7 @@ const inter = Inter({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
 };
 
 export default async function RootLayout({ children }: ChildrenType) {
@@ -38,6 +39,12 @@ export default async function RootLayout({ children }: ChildrenType) {
 
   return (
     <html lang="en">
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
+      </head>
       <body className={inter.className}>
         <SessionProvider session={session}>
           <AuthListener />
