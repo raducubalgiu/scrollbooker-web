@@ -12,6 +12,9 @@ import utc from "dayjs/plugin/utc";
 import "dayjs/locale/ro";
 import Layout from "@/components/core/Layout/Layout";
 
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import type { Viewport } from "next";
+
 dayjs.extend(utc);
 dayjs.locale("ro");
 
@@ -24,6 +27,11 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default async function RootLayout({ children }: ChildrenType) {
   const session = await getServerSession(authOptions);
 
@@ -32,12 +40,14 @@ export default async function RootLayout({ children }: ChildrenType) {
       <body className={inter.className}>
         <SessionProvider session={session}>
           <AuthListener />
-          <MUIProvider>
-            <ToastProvider />
-            <QueryClientProvider>
-              <Layout>{children}</Layout>
-            </QueryClientProvider>
-          </MUIProvider>
+          <AppRouterCacheProvider>
+            <MUIProvider>
+              <ToastProvider />
+              <QueryClientProvider>
+                <Layout>{children}</Layout>
+              </QueryClientProvider>
+            </MUIProvider>
+          </AppRouterCacheProvider>
         </SessionProvider>
       </body>
     </html>
