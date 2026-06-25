@@ -1,5 +1,5 @@
 import MyProductsModule from "@/components/modules/Admin/MyBusiness/MyProductsModule/MyProductsModule";
-import React from "react";
+import React, { JSX } from "react";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { getServerSession } from "next-auth";
@@ -8,7 +8,7 @@ import { get } from "@/utils/requests";
 import { authOptions } from "@/lib/auth/authOptions";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 
-async function Products() {
+async function Products(): Promise<JSX.Element> {
   const session = await getServerSession(authOptions);
 
   if (!session?.business_id || !session?.business_owner_id) {

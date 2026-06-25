@@ -6,5 +6,5 @@ export function reviewLabelText(value: number): string {
     4: "Mi-a plăcut",
     5: "Mi-a plăcut foarte mult",
   };
-  return labels[value] ?? labels[3];
+  return labels[value] ?? labels[3] ?? "";
 }

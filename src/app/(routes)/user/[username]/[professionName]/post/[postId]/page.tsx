@@ -16,7 +16,7 @@ export default async function PostPage({
   params,
   searchParams,
 }: PostPageProps) {
-  const { username, profession, postId } = await params;
+  const { postId } = await params;
   const { tab } = await searchParams;
 
   const response = await get<Post | null>({

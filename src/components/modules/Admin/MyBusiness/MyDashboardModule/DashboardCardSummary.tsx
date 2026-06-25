@@ -3,10 +3,10 @@ import { Paper, Typography, Box, Stack } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import Grid from "@mui/material/Grid2";
-import { DashboardSummaryType } from "@/ts/models/DashboardSummary";
+import { DashboardSummary } from "@/ts/models/DashboardSummary";
 
 type DashboardSummaryProps = {
-  summary: DashboardSummaryType | null;
+  summary: DashboardSummary | null;
 };
 
 export default function DashboardCardSummary({

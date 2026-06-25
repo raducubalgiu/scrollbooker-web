@@ -1,5 +1,5 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Button, Menu, MenuItem, Theme } from "@mui/material";
+import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 
 type AsCustomerButtonProps = {

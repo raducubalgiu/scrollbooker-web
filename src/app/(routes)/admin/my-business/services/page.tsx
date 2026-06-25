@@ -4,8 +4,9 @@ import { authOptions } from "@/lib/auth/authOptions";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import { get } from "@/utils/requests";
 import { getServerSession } from "next-auth";
+import { JSX } from "react";
 
-async function Services() {
+async function Services(): Promise<JSX.Element> {
   const session = await getServerSession(authOptions);
 
   if (!session?.business_id) {

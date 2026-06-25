@@ -4,7 +4,7 @@ import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/Busines
 import { Profession } from "@/ts/models/nomenclatures/profession/ProfessionType";
 import { get } from "@/utils/requests";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { JSX } from "react";
 
 const PAGE_SIZE = 10;
 
@@ -15,7 +15,7 @@ const ProfessionsModule = dynamic(
     )
 );
 
-async function Professions() {
+async function Professions(): Promise<JSX.Element> {
   const businessDomainsResponse = await get<BusinessDomain[]>({
     url: `/business-domains`,
   });

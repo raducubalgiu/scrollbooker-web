@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { get } from "@/utils/requests";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
@@ -9,7 +9,7 @@ import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 
-async function Schedules() {
+async function Schedules(): Promise<JSX.Element> {
   const session = await getServerSession(authOptions);
 
   if (!session?.user_id) {

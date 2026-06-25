@@ -28,7 +28,7 @@ const BookingCartContent = ({
         selectedItems.map((item) => {
           const offerings = item.offerings || [];
           const currentOffering = offerings.find(
-            (o) => o.user_id === selectedEmployeeId
+            (o) => o.user.id === selectedEmployeeId
           );
           const minPrice = minBy(
             offerings,

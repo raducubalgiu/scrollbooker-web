@@ -21,7 +21,6 @@ import { Delete, Edit } from "@mui/icons-material";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import ServiceDomainsModal from "./ServiceDomainModal";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
-import ServiceDomainUploadImageModal from "./ServiceDomainUploadImageModal";
 
 type ServiceDomainsModuleProps = {
   initialData: PaginatedData<ServiceDomain>;
@@ -65,6 +64,8 @@ export default function ServiceDomainsModule({
       open: false,
       url: null,
     });
+
+  console.log(openUploadModal);
 
   const { data, isLoading, isError, refetch } = useCustomQuery<
     PaginatedData<ServiceDomain>
@@ -246,17 +247,6 @@ export default function ServiceDomainsModule({
           refetch();
           setOpenModal({ open: false, data: null });
         }}
-      />
-
-      <ServiceDomainUploadImageModal
-        open={openUploadModal.open}
-        url={openUploadModal.url}
-        onClose={() =>
-          setOpenUploadModal({
-            open: false,
-            url: null,
-          })
-        }
       />
 
       <MaterialReactTable table={table} />

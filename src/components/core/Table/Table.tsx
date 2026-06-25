@@ -33,7 +33,7 @@ export type TableRowAndTable<T extends Record<string, unknown>> = {
 
 type TableProps<T extends Record<string, unknown>> = {
   manualPagination?: boolean;
-  data: T[] | undefined;
+  data: T[];
   columns: MRT_ColumnDef<T>[];
   onDeletingRowSave?: ({
     row,

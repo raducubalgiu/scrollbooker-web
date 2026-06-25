@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { get } from "@/utils/requests";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
@@ -15,7 +15,7 @@ const BusinessTypesModule = dynamic(
     )
 );
 
-async function BusinessTypes() {
+async function BusinessTypes(): Promise<JSX.Element> {
   const businessDomains = (
     await get<BusinessDomain[]>({
       url: `/business-domains`,

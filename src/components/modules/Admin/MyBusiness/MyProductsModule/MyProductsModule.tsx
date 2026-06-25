@@ -6,7 +6,6 @@ import * as React from "react";
 import { Session } from "next-auth/core/types";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 import AddProductModal from "./AddProductModal/AddProductModal";
-import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import MyProductsDisplayTabs from "./tabs/MyProductsDisplayTabs/MyProductsDisplayTabs";
@@ -15,6 +14,7 @@ import { toast } from "react-toastify";
 import MyProductsHeader from "./tabs/MyProductsHeader";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import dynamic from "next/dynamic";
+import { BusinessServicesWithProducts } from "@/ts/models/booking/product/Product";
 
 const MyProductsDisplayTable = dynamic(
   () => import("./tabs/MyProductsDisplayTable/MyProductsDisplayTable"),
@@ -72,7 +72,7 @@ export default function MyProductsModule({
   }, [isEmployee, authUserId, employeeId, productType, serviceId]);
 
   const { data, isLoading, refetch } = useCustomQuery<
-    BusinessProductsResponse[]
+    BusinessServicesWithProducts[]
   >({
     key: [
       "business-products",

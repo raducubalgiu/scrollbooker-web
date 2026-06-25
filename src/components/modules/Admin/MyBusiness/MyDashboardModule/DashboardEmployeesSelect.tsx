@@ -26,7 +26,7 @@ export default function DashboardEmployeesSelect({
       <Select
         labelId="employees"
         id="employees"
-        value={selectedEmployeeId}
+        value={selectedEmployeeId ?? 0}
         label="Angajați"
         onChange={onSetSelectedEmployee}
       >

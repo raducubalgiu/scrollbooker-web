@@ -19,8 +19,10 @@ const VideoReviewsTab = ({
     isFetchingNextPage,
   } = useInfiniteReviews(userId, new Set<number>());
 
-  //const reviews = videoReviews?.pages.flatMap((p) => p.results) ?? [];
+  const reviews = videoReviews?.pages.flatMap((p) => p.results) ?? [];
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  console.log(reviews);
 
   useEffect(() => {
     const root = rootRef?.current ?? null;

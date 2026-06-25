@@ -44,17 +44,17 @@ export default function RolesModule({ open, handleClose }: RolesModuleProps) {
   return (
     <Modal title="Roluri" open={open} handleClose={handleClose} actions={[]}>
       <Paper sx={{ minWidth: 1000 }}>
-        <Table
-          data={data?.results}
-          rowCount={data?.count}
+        <Table<Role>
+          data={data?.results ?? []}
+          rowCount={data?.count ?? 0}
           columns={columns}
           manualPagination={true}
-          onPaginationChange={setPagination}
-          onCreatingRowSave={onCreatingRowSave}
-          onEditingRowSave={onEditingRowSave}
-          onDeletingRowSave={onDeletingRowSave}
+          onPaginationChange={setPagination ?? (() => {})}
+          onCreatingRowSave={onCreatingRowSave ?? (() => Promise.resolve())}
+          onEditingRowSave={onEditingRowSave ?? (() => Promise.resolve())}
+          onDeletingRowSave={onDeletingRowSave ?? (() => Promise.resolve())}
           state={{
-            pagination,
+            pagination: pagination ?? { pageIndex: 0, pageSize: 10 },
             isLoading,
           }}
           bgColor={theme.palette.background.default}

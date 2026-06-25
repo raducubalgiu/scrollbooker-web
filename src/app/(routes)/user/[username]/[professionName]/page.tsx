@@ -4,7 +4,7 @@ import React from "react";
 import { UserProfile } from "@/ts/models/user/UserProfile";
 
 interface UserProfilePageProps {
-  params: { username: string };
+  params: Promise<{ username: string }>;
   searchParams: Promise<{ tab?: string | null }>;
 }
 
@@ -12,8 +12,8 @@ export default async function UserProfilePage({
   params,
   searchParams,
 }: UserProfilePageProps) {
-  const { username } = await Promise.resolve(params);
-  const { tab } = await Promise.resolve(searchParams);
+  const { username } = await params;
+  const { tab } = await searchParams;
 
   if (!username) {
     throw new Error("Username param was not provided");

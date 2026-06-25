@@ -1,31 +1,31 @@
 "use client";
 
-import { useCustomQuery } from "@/hooks/useHttp";
-import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { Box } from "@mui/material";
-import React, { memo, useMemo } from "react";
-import { useScrollSync } from "../../BookingModule/useScrollSync";
+import React, { memo } from "react";
 
 type ProfileProductsTabProps = {
   businessId: number | null;
   userId: number;
 };
 
-const SCROLL_OFFSET = 80;
+//const SCROLL_OFFSET = 80;
 const SIDEBAR_WIDTH = 650;
 
 const ProfileProductsTab = ({
   businessId,
   userId,
 }: ProfileProductsTabProps) => {
-  const { data } = useCustomQuery<BusinessProductsResponse[]>({
-    key: ["business-products", !!businessId, userId],
-    url: businessId ? `/api/businesses/${businessId}/products` : "",
-    options: { enabled: !!businessId },
-  });
+  console.log(businessId);
+  console.log(userId);
 
-  const businessProducts = useMemo(() => data ?? [], [data]);
-  const sync = useScrollSync(businessProducts, SCROLL_OFFSET);
+  // const { data } = useCustomQuery<UserProducts>({
+  //   key: ["business-products", !!businessId, userId],
+  //   url: businessId ? `/api/businesses/${businessId}/products` : "",
+  //   options: { enabled: !!businessId },
+  // });
+
+  // const businessProducts = useMemo(() => data ?? [], [data]);
+  // const sync = useScrollSync(businessProducts, SCROLL_OFFSET);
 
   return (
     <Box

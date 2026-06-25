@@ -7,14 +7,13 @@ import { useInfiniteUserBookmarkedPosts } from "@/hooks/infiniteQuery/useInfinit
 import { isEmpty } from "lodash";
 import { CircularProgress, Stack } from "@mui/material";
 import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
-import { useAppNavigation } from "@/utils/routes";
 
 type ProfileBookmarksTabProps = {
   username: string;
 };
 
 const ProfileBookmarksTab = ({ username }: ProfileBookmarksTabProps) => {
-  const { navigateTo } = useAppNavigation();
+  console.log(username);
 
   const { data, isLoading, isError } = useInfiniteUserBookmarkedPosts();
 

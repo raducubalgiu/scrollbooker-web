@@ -6,8 +6,9 @@ import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { get } from "@/utils/requests";
 import { Box } from "@mui/material";
 import { getServerSession } from "next-auth";
+import { JSX } from "react";
 
-async function Calendar() {
+async function Calendar(): Promise<JSX.Element> {
   const session = await getServerSession(authOptions);
 
   if (!session) {

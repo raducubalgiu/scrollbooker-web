@@ -5,6 +5,7 @@ import { ServiceDomain } from "@/ts/models/nomenclatures/serviceDomain/ServiceDo
 import dynamic from "next/dynamic";
 import { PaginatedData } from "@/components/core/Table/Table";
 import { Service } from "@/ts/models/nomenclatures/service/Service";
+import { JSX } from "react";
 
 const PAGE_SIZE = 10;
 
@@ -15,7 +16,7 @@ const ServicesModule = dynamic(
     )
 );
 
-async function Services() {
+async function Services(): Promise<JSX.Element> {
   const businessDomainsResponse = await get<BusinessDomain[]>({
     url: `/business-domains`,
   });

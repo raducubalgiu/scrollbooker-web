@@ -58,14 +58,15 @@ const BusinessProfileHeader = () => {
       </Box>
 
       <SearchHeader
-        businessDomains={[]}
         areFiltersActive={false}
-        selectedServiceDomainName=""
         mainPagePadding={mainPagePadding}
         headerState={{
           selectedBusinessDomainId: null,
           selectedServiceDomainId: null,
           selectedServiceId: null,
+          startDate: null,
+          startTime: null,
+          endTime: null,
         }}
         displayFiltersSection={false}
         onSearch={handleSearch}

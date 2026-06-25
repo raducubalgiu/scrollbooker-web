@@ -11,14 +11,14 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { find } from "lodash";
 import {
-  BusinessProductsResponse,
+  BusinessServicesWithProducts,
   Product,
   ProductUtils,
 } from "@/ts/models/booking/product/Product";
 import { formatPrice } from "@/utils/formatPrice";
 
 type ProductsSelectionListProps = {
-  activeGroup: BusinessProductsResponse | undefined;
+  activeGroup: BusinessServicesWithProducts | undefined;
   localSelectedProducts: Product[];
   onToggleProduct: (product: Product, isSelected: boolean) => void;
 };

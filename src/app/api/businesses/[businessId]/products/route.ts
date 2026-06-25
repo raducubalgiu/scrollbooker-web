@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
 import { get } from "@/utils/requests";
+import { UserProducts } from "@/ts/models/booking/product/Product";
 
 interface ProductSearchParams {
   employee_id?: string;
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
       queryParams as Record<string, string>
     ).toString();
 
-    const response = await get<BusinessProductsResponse[]>({
+    const response = await get<UserProducts>({
       url: `/businesses/${businessId}/products?${queryString}`,
     });
 

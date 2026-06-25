@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
@@ -8,7 +8,7 @@ import { Business } from "@/ts/models/booking/business/Business";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 
-async function MyBusiness() {
+async function MyBusiness(): Promise<JSX.Element> {
   const session = await getServerSession(authOptions);
 
   if (!session?.user_id) {

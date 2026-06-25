@@ -31,6 +31,9 @@ const ExploreDrawer = ({
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
+      lastMinute: {
+        main: "#06B0CA",
+      },
     },
   });
 

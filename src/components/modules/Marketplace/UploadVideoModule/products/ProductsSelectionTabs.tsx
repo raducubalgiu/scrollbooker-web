@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Theme } from "@mui/material";
-import { BusinessProductsResponse } from "@/ts/models/booking/product/Product";
+import { BusinessServicesWithProducts } from "@/ts/models/booking/product/Product";
 
 type ProductsSelectionTabsProps = {
-  services: BusinessProductsResponse[];
+  services: BusinessServicesWithProducts[];
   currentTab: number;
   setCurrentTab: (index: number) => void;
   tabsContainerRef: React.RefObject<HTMLDivElement | null>;

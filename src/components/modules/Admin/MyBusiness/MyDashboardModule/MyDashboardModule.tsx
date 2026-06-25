@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { Box, Button, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { DashboardSummaryType } from "@/ts/models/DashboardSummary";
+import { DashboardSummary } from "@/ts/models/DashboardSummary";
 import { useDashboardReducer } from "@/hooks/useDashboardReducer";
 import Protected from "@/components/cutomized/Protected/Protected";
-import usePermission from "@/components/cutomized/Protected/usePermission";
 import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import DashboardCardSummary from "@/components/modules/Admin/MyBusiness/MyDashboardModule/DashboardCardSummary";
@@ -16,7 +14,7 @@ type DashboardModuleProps = {
   userId: number | undefined;
 };
 
-const dummySummary: DashboardSummaryType[] = [
+const dummySummary: DashboardSummary[] = [
   {
     title: "Total rezervari",
     amount: 250,
@@ -50,13 +48,13 @@ const dummySummary: DashboardSummaryType[] = [
 export default function MyDashboardModule({ userId }: DashboardModuleProps) {
   const { filters, handleDaily, handleMonthly, handleWeekly, PeriodEnum } =
     useDashboardReducer();
-  const { startDate, endDate } = filters;
-  const [selectedEmployee, setSelectedEmployee] = useState({ id: userId });
-  const { hasPermission } = usePermission({ permission: "EMPLOYEES_VIEW" });
+  // const { startDate, endDate } = filters;
+  // const [selectedEmployee, setSelectedEmployee] = useState({ id: userId });
+  //const { hasPermission } = usePermission({ permission: "EMPLOYEES_VIEW" });
 
-  useEffect(() => {
-    if (hasPermission) setSelectedEmployee({ id: 0 });
-  }, [hasPermission]);
+  // useEffect(() => {
+  //   if (hasPermission) setSelectedEmployee({ id: 0 });
+  // }, [hasPermission]);
 
   // const { data: employeesData } = useCustomQuery<PaginatedData<UserMiniType>>({
   // 	key: ["employees", hasPermission],

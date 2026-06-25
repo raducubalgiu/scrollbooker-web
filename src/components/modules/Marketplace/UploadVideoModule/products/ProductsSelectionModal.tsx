@@ -1,7 +1,7 @@
 import Modal from "@/components/core/Modal/Modal";
 import { useCustomQuery } from "@/hooks/useHttp";
 import {
-  BusinessProductsResponse,
+  BusinessServicesWithProducts,
   Product,
 } from "@/ts/models/booking/product/Product";
 import { Box, CircularProgress, Theme } from "@mui/material";
@@ -42,7 +42,7 @@ const ProductsSelectionModal = ({
   }, [selectedProducts]);
 
   const { data: services = [], isLoading } = useCustomQuery<
-    BusinessProductsResponse[]
+    BusinessServicesWithProducts[]
   >({
     key: ["business-products", businessId ?? undefined, userId ?? undefined],
     url: `/api/businesses/${session?.business_id}/products${isEmployee ? `?employeeId=${userId}` : ""}`,

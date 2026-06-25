@@ -1,141 +1,128 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useMutate } from "@/hooks/useHttp";
-import { toast } from "react-toastify";
+// type GalleryItem = {
+//   id: string;
+//   src: string | null;
+//   file?: File;
+//   remote?: boolean;
+// };
 
-type GalleryItem = {
-  id: string;
-  src: string | null;
-  file?: File;
-  remote?: boolean;
-};
+import { Box } from "@mui/material";
 
 type Props = {
   businessId: number;
   initialImages?: string[];
 };
 
-const MAX_IMAGES = 5;
+//const MAX_IMAGES = 5;
 
 const BusinessGalleryTab: React.FC<Props> = ({
   businessId,
   initialImages = [],
 }) => {
-  const [items, setItems] = useState<GalleryItem[]>(() => {
-    const initial: GalleryItem[] = initialImages
-      .slice(0, MAX_IMAGES)
-      .map((url, idx) => ({
-        id: `remote-${idx}-${Date.now()}`,
-        src: url,
-        remote: true,
-      }));
-    while (initial.length < MAX_IMAGES)
-      initial.push({ id: `empty-${initial.length}-${Date.now()}`, src: null });
-    return initial;
-  });
+  console.log(businessId);
+  console.log(initialImages);
+  // const [items, setItems] = useState<GalleryItem[]>(() => {
+  //   const initial: GalleryItem[] = initialImages
+  //     .slice(0, MAX_IMAGES)
+  //     .map((url, idx) => ({
+  //       id: `remote-${idx}-${Date.now()}`,
+  //       src: url,
+  //       remote: true,
+  //     }));
+  //   while (initial.length < MAX_IMAGES)
+  //     initial.push({ id: `empty-${initial.length}-${Date.now()}`, src: null });
+  //   return initial;
+  // });
 
-  const inputRefs = useRef<Array<HTMLInputElement | null>>(
-    Array(MAX_IMAGES).fill(null)
-  );
+  // const inputRefs = useRef<Array<HTMLInputElement | null>>(
+  //   Array(MAX_IMAGES).fill(null)
+  // );
 
-  useEffect(() => {
-    return () => {
-      items.forEach((it) => {
-        if (it?.file && it.src && it.src.startsWith("blob:")) {
-          URL.revokeObjectURL(it.src);
-        }
-      });
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     items.forEach((it) => {
+  //       if (it?.file && it.src && it.src.startsWith("blob:")) {
+  //         URL.revokeObjectURL(it.src);
+  //       }
+  //     });
+  //   };
+  // }, []);
 
-  const { mutate, isPending } = useMutate<FormData, unknown>({
-    key: ["business-gallery", businessId],
-    url: "/api/my-business/gallery",
-    method: "POST",
-    options: {
-      onSuccess: () => {
-        toast.success("Galeria a fost actualizata cu succes.");
-      },
-    },
-  });
+  // const { mutate, isPending } = useMutate<FormData, unknown>({
+  //   key: ["business-gallery", businessId],
+  //   url: "/api/my-business/gallery",
+  //   method: "POST",
+  //   options: {
+  //     onSuccess: () => {
+  //       toast.success("Galeria a fost actualizata cu succes.");
+  //     },
+  //   },
+  // });
 
-  const handlePick = (index: number) => {
-    inputRefs.current[index]?.click();
-  };
+  // const handlePick = (index: number) => {
+  //   inputRefs.current[index]?.click();
+  // };
 
-  const onFileSelected = (index: number, file?: File | null) => {
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast.error("Te rog selecteaza un fisier de tip imagine.");
-      return;
-    }
+  // const onFileSelected = (index: number, file?: File | null) => {
+  //   if (!file) return;
+  //   if (!file.type.startsWith("image/")) {
+  //     toast.error("Te rog selecteaza un fisier de tip imagine.");
+  //     return;
+  //   }
 
-    setItems((prev) => {
-      const copy = [...prev];
-      const prevItem = copy[index];
-      if (prevItem?.file && prevItem.src && prevItem.src.startsWith("blob:")) {
-        URL.revokeObjectURL(prevItem.src);
-      }
+  //   setItems((prev) => {
+  //     const copy = [...prev];
+  //     const prevItem = copy[index];
+  //     if (prevItem?.file && prevItem.src && prevItem.src.startsWith("blob:")) {
+  //       URL.revokeObjectURL(prevItem.src);
+  //     }
 
-      const objectUrl = URL.createObjectURL(file);
-      copy[index] = { id: prevItem.id, src: objectUrl, file, remote: false };
-      return copy;
-    });
-  };
+  //     const objectUrl = URL.createObjectURL(file);
+  //     copy[index] = { id: prevItem?.id, src: objectUrl, file, remote: false };
+  //     return copy;
+  //   });
+  // };
 
-  const handleRemove = (index: number) => {
-    setItems((prev) => {
-      const copy = [...prev];
-      const it = copy[index];
-      if (it?.file && it.src && it.src.startsWith("blob:")) {
-        URL.revokeObjectURL(it.src);
-      }
-      copy[index] = { id: `empty-${index}-${Date.now()}`, src: null };
-      return copy;
-    });
-  };
+  // const handleRemove = (index: number) => {
+  //   setItems((prev) => {
+  //     const copy = [...prev];
+  //     const it = copy[index];
+  //     if (it?.file && it.src && it.src.startsWith("blob:")) {
+  //       URL.revokeObjectURL(it.src);
+  //     }
+  //     copy[index] = { id: `empty-${index}-${Date.now()}`, src: null };
+  //     return copy;
+  //   });
+  // };
 
-  const move = (from: number, to: number) => {
-    if (to < 0 || to >= MAX_IMAGES) return;
-    setItems((prev) => {
-      const copy = [...prev];
-      const [item] = copy.splice(from, 1);
-      copy.splice(to, 0, item);
-      return copy;
-    });
-  };
+  // const move = (from: number, to: number) => {
+  //   if (to < 0 || to >= MAX_IMAGES) return;
+  //   setItems((prev) => {
+  //     const copy = [...prev];
+  //     const [item] = copy.splice(from, 1);
+  //     copy.splice(to, 0, item);
+  //     return copy;
+  //   });
+  // };
 
-  const handleUpload = () => {
-    // // collect new files to upload (those with file defined)
-    // const filesToUpload = items.reduce<File[]>((acc, it) => {
-    //   if (it.file) acc.push(it.file);
-    //   return acc;
-    // }, []);
-    // if (filesToUpload.length === 0) {
-    //   toast.info("Nu sunt fisiere noi de incarcat.");
-    //   return;
-    // }
-    // const form = new FormData();
-    // filesToUpload.forEach((f) => form.append("images[]", f));
-    // form.append("businessId", businessId);
-    // mutate(form as unknown as any);
-  };
+  // const handleUpload = () => {
+  //   // collect new files to upload (those with file defined)
+  //   const filesToUpload = items.reduce<File[]>((acc, it) => {
+  //     if (it.file) acc.push(it.file);
+  //     return acc;
+  //   }, []);
+  //   if (filesToUpload.length === 0) {
+  //     toast.info("Nu sunt fisiere noi de incarcat.");
+  //     return;
+  //   }
+  //   const form = new FormData();
+  //   filesToUpload.forEach((f) => form.append("images[]", f));
+  //   form.append("businessId", businessId);
+  //   mutate(form as unknown as any);
+  // };
 
   return (
     <Box>
-      <Card>
+      {/* <Card>
         <CardContent>
           <Stack spacing={2}>
             <Typography variant="h6">
@@ -271,7 +258,7 @@ const BusinessGalleryTab: React.FC<Props> = ({
             </Button>
           </Stack>
         </CardActions>
-      </Card>
+      </Card> */}
     </Box>
   );
 };

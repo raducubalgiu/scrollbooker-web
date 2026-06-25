@@ -6,7 +6,7 @@ import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee"
 import { get } from "@/utils/requests";
 import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { JSX } from "react";
 
 const PAGE_SIZE = 10;
 
@@ -17,7 +17,7 @@ const MyEmployeesModule = dynamic(
     )
 );
 
-async function Employees() {
+async function Employees(): Promise<JSX.Element> {
   const session = await getServerSession(authOptions);
 
   if (!session) {

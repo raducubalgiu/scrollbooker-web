@@ -51,7 +51,7 @@ export default function PermissionsModule() {
 
   const allRolesNames = useMemo(() => {
     if (data?.results?.length === 0 || data?.results == undefined) return [];
-    return data?.results[0].roles.map((role) => role.name);
+    return data?.results[0]?.roles.map((role) => role.name);
   }, [data]);
 
   const columns = useMemo<MRT_ColumnDef<PermissionWithRolesType>[]>(() => {
@@ -133,16 +133,16 @@ export default function PermissionsModule() {
         }}
       />
       <Table<PermissionWithRolesType>
-        data={data?.results}
-        rowCount={data?.count}
+        data={data?.results ?? []}
+        rowCount={data?.count ?? 0}
         columns={columns}
         manualPagination={true}
-        onPaginationChange={setPagination}
-        onCreatingRowSave={onCreatingRowSave}
-        onEditingRowSave={onEditingRowSave}
-        onDeletingRowSave={onDeletingRowSave}
+        onPaginationChange={setPagination ?? (() => {})}
+        onCreatingRowSave={onCreatingRowSave ?? (() => Promise.resolve())}
+        onEditingRowSave={onEditingRowSave ?? (() => Promise.resolve())}
+        onDeletingRowSave={onDeletingRowSave ?? (() => Promise.resolve())}
         state={{
-          pagination,
+          pagination: pagination ?? { pageIndex: 0, pageSize: 10 },
           isLoading,
           showProgressBars: isPendingAttach || isPendingDetach,
         }}

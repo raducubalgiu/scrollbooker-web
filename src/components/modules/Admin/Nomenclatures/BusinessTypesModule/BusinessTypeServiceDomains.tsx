@@ -1,41 +1,40 @@
-import Table from "@/components/core/Table/Table";
-import { ServiceDomainsResponse } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Typography,
 } from "@mui/material";
-import { MRT_ColumnDef } from "material-react-table";
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ServiceDomain } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 
 type BusinessTypeServiceDomainsModuleType = {
-  data: ServiceDomainsResponse[];
+  data: ServiceDomain[];
 };
 
 const BusinessTypeServiceDomains = ({
   data,
 }: BusinessTypeServiceDomainsModuleType) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  console.log(data);
 
-  const columns = useMemo<MRT_ColumnDef<ServiceDomainsResponse>[]>(
-    () => [
-      {
-        accessorKey: "id",
-        header: "ID",
-        size: 50,
-        enableEditing: false,
-      },
-      {
-        accessorKey: "name",
-        header: "Nume",
-        size: 50,
-        enableEditing: false,
-      },
-    ],
-    []
-  );
+  // const columns = useMemo<MRT_ColumnDef<ServiceDomain>[]>(
+  //   () => [
+  //     {
+  //       accessorKey: "id",
+  //       header: "ID",
+  //       size: 50,
+  //       enableEditing: false,
+  //     },
+  //     {
+  //       accessorKey: "name",
+  //       header: "Nume",
+  //       size: 50,
+  //       enableEditing: false,
+  //     },
+  //   ],
+  //   []
+  // );
 
   return (
     <Accordion
@@ -53,8 +52,8 @@ const BusinessTypeServiceDomains = ({
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Table
-          data={data}
+        {/* <Table<ServiceDomain>
+          data={data ?? []}
           columns={columns}
           manualPagination={false}
           enablePagination={false}
@@ -65,7 +64,7 @@ const BusinessTypeServiceDomains = ({
           enableColumnActions={false}
           enableEditing={false}
           enableTopToolbar={false}
-        />
+        /> */}
       </AccordionDetails>
     </Accordion>
   );

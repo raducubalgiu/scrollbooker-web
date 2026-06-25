@@ -84,17 +84,20 @@ export default function ProfessionBusinessTypes({
       </AccordionSummary>
       <AccordionDetails>
         <Table<BusinessType>
-          data={data?.results}
-          rowCount={data?.count}
+          data={data?.results ?? []}
+          rowCount={data?.count ?? 0}
           columns={columns}
           onCreatingRowSave={onCreatingRowSave}
           onEditingRowSave={onEditingRowSave}
           onDeletingRowSave={onDeletingRowSave}
           manualPagination={true}
-          onPaginationChange={setPagination}
+          onPaginationChange={setPagination ?? (() => {})}
           enableTopToolbar={false}
           enableEditing={false}
-          state={{ pagination, isLoading }}
+          state={{
+            pagination: pagination ?? { pageIndex: 0, pageSize: 10 },
+            isLoading,
+          }}
           muiTableHeadCellProps={{ sx: { bgcolor: "background.default" } }}
         />
       </AccordionDetails>

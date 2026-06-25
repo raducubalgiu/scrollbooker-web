@@ -7,16 +7,16 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 interface BusinessProfilePageProps {
-  params: {
+  params: Promise<{
     ownerUsername: string;
     profession: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({
   params,
 }: BusinessProfilePageProps): Promise<Metadata> {
-  const { ownerUsername } = await Promise.resolve(params);
+  const { ownerUsername, profession } = await params;
 
   const response = await get<BusinessProfile | null>({
     url: `/businesses/${ownerUsername}/profile`,
@@ -45,7 +45,7 @@ export async function generateMetadata({
     },
 
     alternates: {
-      canonical: `https://scrollbooker.com/business/${params.profession}/${params.ownerUsername}`,
+      canonical: `https://scrollbooker.com/business/${profession}/${ownerUsername}`,
     },
   };
 }
@@ -53,7 +53,7 @@ export async function generateMetadata({
 export default async function BusinessProfilePage({
   params,
 }: BusinessProfilePageProps) {
-  const { ownerUsername } = await Promise.resolve(params);
+  const { ownerUsername, profession } = await params;
 
   const response = await get<BusinessProfile | null>({
     url: `/businesses/${ownerUsername}/profile`,
@@ -67,7 +67,7 @@ export default async function BusinessProfilePage({
 
   const expectedSlug = makeProfessionSlug(profileData.owner.profession);
 
-  if (params.profession !== expectedSlug) {
+  if (profession !== expectedSlug) {
     redirect(`/business/${expectedSlug}/${profileData.owner.username}`);
   }
 

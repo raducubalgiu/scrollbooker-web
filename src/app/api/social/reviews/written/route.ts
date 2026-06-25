@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
-import { ReviewsResponse } from "@/ts/models/booking/review/Review";
 
 export const GET = async (req: NextRequest) => {
   const userId = req.nextUrl.searchParams.get("userId");
@@ -24,7 +23,7 @@ export const GET = async (req: NextRequest) => {
     : "";
 
   const response = (
-    await get<ReviewsResponse>({
+    await get({
       url: `/users/${userId}/reviews?page=${page}&limit=${limit}${ratingsSuffix}`,
     })
   ).data;
