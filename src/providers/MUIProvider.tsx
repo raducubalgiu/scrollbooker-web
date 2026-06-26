@@ -1,17 +1,12 @@
 "use client";
 
 import React from "react";
-import NextAppDirEmotionCacheProvider from "../../theme/EmotionCache";
 import { ThemeModeProvider } from "./ThemeContext";
 
 export default function MUIProvider({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
-      <ThemeModeProvider>{children}</ThemeModeProvider>
-    </NextAppDirEmotionCacheProvider>
-  );
+	return <ThemeModeProvider>{children}</ThemeModeProvider>;
 }
