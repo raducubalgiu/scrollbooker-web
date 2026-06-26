@@ -164,8 +164,8 @@ const AppointmentsModule = ({
 						top: 0,
 						zIndex: 10,
 						backgroundColor: "background.paper",
-						px: { xs: 1.5, lg: 3 },
-						pt: { xs: 1.5, sm: 3 },
+						px: { xs: 1.5, sm: 3 },
+						pt: { xs: 1, sm: 3 },
 					}}
 				>
 					<Typography

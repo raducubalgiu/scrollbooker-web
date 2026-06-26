@@ -64,8 +64,9 @@ const styles = {
 	container: {
 		height: 50,
 		display: { xs: "flex", lg: "none" },
-		position: "sticky",
-		top: 0,
+		flexShrink: 0,
+		width: "100%",
+
 		zIndex: 10,
 		backgroundColor: "background.paper",
 		px: 1,
