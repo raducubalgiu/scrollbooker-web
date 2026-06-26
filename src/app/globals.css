@@ -1,20 +1,26 @@
 html,
 body {
-  padding: 0;
-  margin: 0;
-  scrollbar-gutter: stable;
+	padding: 0;
+	margin: 0;
+	scrollbar-gutter: stable;
+
+	height: 100vh;
+	width: 100vw;
+	overflow: hidden; /* Împiedică scroll-ul pe corpul principal al paginii */
+	position: fixed; /* Blochează elasticitatea nativă din Safari iOS */
+	overscroll-behavior: none;
 }
 
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 img {
-  max-width: 100%;
-  display: block;
+	max-width: 100%;
+	display: block;
 }
 
 #__next-build-watcher,
 .nextjs-dev-overlay {
-  display: none !important;
+	display: none !important;
 }
