@@ -2,69 +2,70 @@ import { Button } from "@mui/material";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import React from "react";
-import { AppRoutes, useAppNavigation } from "@/utils/routes";
+import { AppRoutes } from "@/utils/routes";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 type OwnProfileActionsProps = {
-  is_business_or_employee: boolean;
-  onOpenEditModal: () => void;
+	is_business_or_employee: boolean;
+	onOpenEditModal: () => void;
 };
 
 const OwnProfileActions = ({
-  is_business_or_employee,
-  onOpenEditModal,
+	is_business_or_employee,
+	onOpenEditModal,
 }: OwnProfileActionsProps) => {
-  const { navigateTo } = useAppNavigation();
+	const { navigateTo } = useAppNavigation();
 
-  const buttonSx = {
-    textTransform: "none",
-    flex: { xs: 1, sm: "none" },
-    whiteSpace: "nowrap",
-    minWidth: "max-content",
-    py: { xs: 1, lg: 1.5 },
-    px: { xs: 2.5, lg: 2 },
-    color: "text.primary",
-  };
+	const buttonSx = {
+		textTransform: "none",
+		flex: { xs: 1, sm: "none" },
+		whiteSpace: "nowrap",
+		minWidth: "max-content",
+		py: { xs: 1, lg: 1.5 },
+		px: { xs: 2.5, lg: 2 },
+		color: "text.primary",
+	};
 
-  return (
-    <>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={onOpenEditModal}
-        size="large"
-        sx={buttonSx}
-        disableElevation
-      >
-        Editează
-      </Button>
+	return (
+		<>
+			<Button
+				variant="contained"
+				color="secondary"
+				onClick={onOpenEditModal}
+				size="large"
+				sx={buttonSx}
+				disableElevation
+			>
+				Editează
+			</Button>
 
-      {is_business_or_employee ? (
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => navigateTo(AppRoutes.calendar())}
-          size="large"
-          startIcon={<DateRangeOutlinedIcon />}
-          sx={buttonSx}
-          disableElevation
-        >
-          Calendar
-        </Button>
-      ) : (
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => {}}
-          size="large"
-          startIcon={<IosShareIcon />}
-          sx={buttonSx}
-          disableElevation
-        >
-          Distribuie
-        </Button>
-      )}
-    </>
-  );
+			{is_business_or_employee ? (
+				<Button
+					variant="contained"
+					color="secondary"
+					onClick={() => navigateTo(AppRoutes.calendar())}
+					size="large"
+					startIcon={<DateRangeOutlinedIcon />}
+					sx={buttonSx}
+					disableElevation
+				>
+					Calendar
+				</Button>
+			) : (
+				<Button
+					variant="contained"
+					color="secondary"
+					onClick={() => {}}
+					size="large"
+					startIcon={<IosShareIcon />}
+					sx={buttonSx}
+					disableElevation
+				>
+					Distribuie
+				</Button>
+			)}
+		</>
+	);
 };
 
 export default OwnProfileActions;

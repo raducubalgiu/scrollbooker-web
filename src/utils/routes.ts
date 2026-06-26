@@ -1,92 +1,72 @@
 import {
-  ProfileTabEnum,
-  tabEnumToParamMap,
+	ProfileTabEnum,
+	tabEnumToParamMap,
 } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
-import { useRouter } from "next/navigation";
 import { makeProfessionSlug } from "./make-profession-slug";
 
 export type AppRouteValues = ReturnType<
-  (typeof AppRoutes)[keyof typeof AppRoutes]
+	(typeof AppRoutes)[keyof typeof AppRoutes]
 >;
 
 export const AppRoutes = {
-  home: () => "/",
-  notifications: () => "/notifications",
-  search: () => "/search",
+	home: () => "/",
+	notifications: () => "/notifications",
+	search: () => "/search",
 
-  booking: (
-    businessId: number,
-    businessOwnerId: number,
-    userId: number,
-    source: string,
-    selectedProductId: number | null
-  ) =>
-    `/booking/${businessId}/${businessOwnerId}/${userId}?product=${selectedProductId}&source=${source}`,
+	booking: (
+		businessId: number,
+		businessOwnerId: number,
+		userId: number,
+		source: string,
+		selectedProductId: number | null,
+	) =>
+		`/booking/${businessId}/${businessOwnerId}/${userId}?product=${selectedProductId}&source=${source}`,
 
-  appointments: () => "/appointments",
-  appointmentDetails: (appointmentId: number) =>
-    `/appointments/${appointmentId}`,
+	appointments: () => "/appointments",
+	appointmentDetails: (appointmentId: number) =>
+		`/appointments/${appointmentId}`,
 
-  employmentRequest: (employmentRequestId: number) => {
-    return `/employment-request/${employmentRequestId}`;
-  },
+	employmentRequest: (employmentRequestId: number) => {
+		return `/employment-request/${employmentRequestId}`;
+	},
 
-  uploadVideo: () => "/upload-video",
-  more: () => "/more",
+	uploadVideo: () => "/upload-video",
+	more: () => "/more",
 
-  profile: (
-    username: string,
-    profession: string,
-    tab: ProfileTabEnum = ProfileTabEnum.POSTS
-  ) => {
-    const professionSlug = makeProfessionSlug(profession);
-    const baseUrl = `/user/${username}/${professionSlug}`;
+	profile: (
+		username: string,
+		profession: string,
+		tab: ProfileTabEnum = ProfileTabEnum.POSTS,
+	) => {
+		const professionSlug = makeProfessionSlug(profession);
+		const baseUrl = `/user/${username}/${professionSlug}`;
 
-    const tabParam = tabEnumToParamMap[tab];
+		const tabParam = tabEnumToParamMap[tab];
 
-    return `${baseUrl}?tab=${tabParam}`;
-  },
+		return `${baseUrl}?tab=${tabParam}`;
+	},
 
-  postDetail: (
-    username: string,
-    profession: string,
-    postId: number,
-    tab?: ProfileTabEnum
-  ) => {
-    const professionSlug = makeProfessionSlug(profession);
-    const baseUrl = `/user/${username}/${professionSlug}/post/${postId}`;
+	postDetail: (
+		username: string,
+		profession: string,
+		postId: number,
+		tab?: ProfileTabEnum,
+	) => {
+		const professionSlug = makeProfessionSlug(profession);
+		const baseUrl = `/user/${username}/${professionSlug}/post/${postId}`;
 
-    if (tab === undefined) {
-      return baseUrl;
-    }
+		if (tab === undefined) {
+			return baseUrl;
+		}
 
-    const tabParam = tabEnumToParamMap[tab];
-    return `${baseUrl}?tab=${tabParam}`;
-  },
+		const tabParam = tabEnumToParamMap[tab];
+		return `${baseUrl}?tab=${tabParam}`;
+	},
 
-  login: () => "/auth/login",
-  register: () => "/auth/register",
+	login: () => "/auth/login",
+	register: () => "/auth/register",
 
-  calendar: () => "/admin/calendar",
+	calendar: () => "/admin/calendar",
 } as const;
 
 export type AppRouteType = typeof AppRoutes;
-
-export const useAppNavigation = () => {
-  const router = useRouter();
-
-  const navigateTo = (
-    routeUrl: string,
-    options?: { replace?: boolean; scroll?: boolean }
-  ) => {
-    if (options?.replace) {
-      router.replace(routeUrl, { scroll: options.scroll ?? false });
-    } else {
-      router.push(routeUrl, { scroll: options?.scroll ?? false });
-    }
-  };
-
-  const goBack = () => router.back();
-
-  return { navigateTo, goBack };
-};

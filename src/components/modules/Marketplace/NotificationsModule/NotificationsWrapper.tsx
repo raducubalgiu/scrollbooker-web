@@ -1,7 +1,8 @@
 import React from "react";
 import { Box } from "@mui/material";
 import NotificationsModule from "./NotificationsModule";
-import { AppRoutes, useAppNavigation } from "@/utils/routes";
+import { AppRoutes } from "@/utils/routes";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 const NotificationsWrapper = () => {
 	const { navigateTo } = useAppNavigation();
