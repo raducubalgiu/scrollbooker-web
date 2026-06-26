@@ -6,9 +6,9 @@ body {
 
 	height: 100dvh;
 	width: 100vw;
-	overflow: hidden;
-	position: fixed;
-	overscroll-behavior: none;
+
+	overflow-x: hidden;
+	overscroll-behavior-y: none;
 }
 
 * {

@@ -115,6 +115,12 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
 				display: { xs: "block", lg: "none" },
 				borderTop: "1px solid",
 				borderColor: isDarkPage ? "transparent" : "divider",
+
+				// --- REZOLVARE LINIE ALBĂ SUBPIXELARĂ ---
+				marginTop: "-1px", // Ridică bara cu 1px pentru a acoperi luftul matematic din Safari iOS
+
+				// --- REZOLVARE DYNAMICS PENTRU SAFE AREA ---
+				backgroundColor: getBgColor(), // Se asigură că fundalul coboară și sub bară în zona indicatorului iOS Home
 			}}
 		>
 			<BottomNavigation
@@ -127,7 +133,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
 				sx={{
 					height: "65px",
 					backgroundColor: getBgColor(),
-					pb: "safe-area-inset-bottom",
+					pb: "safe-area-inset-bottom", // Creează spațiu de siguranță pe iPhone-urile noi
 					"& .MuiBottomNavigationAction-root": {
 						minWidth: 0,
 						color: getInactiveColor(),
