@@ -265,7 +265,9 @@ const getStyles = (
 			minWidth: 0,
 			transition: "width 220ms ease",
 			overflowY: "auto",
-			height: "100%",
+			height: { xs: "auto", lg: "100%" },
+			flex: { xs: "1 1 auto", lg: "none" },
+
 			WebkitOverflowScrolling: "touch",
 			overscrollBehaviorY: "contain",
 		},
