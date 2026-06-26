@@ -17,265 +17,260 @@ const OVERLAY_WIDTH = 500;
 export type ActiveView = "search" | "notifications" | "appointments" | null;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-	const pathname = usePathname() || "";
-	const theme = useTheme();
-	const { data: session, status } = useSession();
+  const pathname = usePathname() || "";
+  const theme = useTheme();
+  const { data: session, status } = useSession();
 
-	const [activeView, setActiveView] = React.useState<ActiveView>(null);
-	const [isDrawerCollapsed, setIsDrawerCollapsed] = React.useState(false);
+  const [activeView, setActiveView] = React.useState<ActiveView>(null);
+  const [isDrawerCollapsed, setIsDrawerCollapsed] = React.useState(false);
 
-	const overlayScrollRef = React.useRef<HTMLDivElement | null>(null);
+  const overlayScrollRef = React.useRef<HTMLDivElement | null>(null);
 
-	React.useEffect(() => {
-		if (overlayScrollRef.current) {
-			overlayScrollRef.current.scrollTop = 0;
-		}
-	}, [activeView]);
+  React.useEffect(() => {
+    if (overlayScrollRef.current) {
+      overlayScrollRef.current.scrollTop = 0;
+    }
+  }, [activeView]);
 
-	const { isNoLayoutPage, isVideoPage, isAdminPage } = React.useMemo(() => {
-		if (!pathname)
-			return { isNoLayoutPage: true, isVideoPage: false, isAdminPage: false };
+  const { isNoLayoutPage, isVideoPage, isAdminPage } = React.useMemo(() => {
+    if (!pathname)
+      return { isNoLayoutPage: true, isVideoPage: false, isAdminPage: false };
 
-		const staticPaths = ["/unauthorized", "/_not-found"];
-		const isNoLayout =
-			staticPaths.includes(pathname) ||
-			[
-				"/auth",
-				"/onboarding",
-				"/business/",
-				"/booking/",
-				"/employment-request",
-			].some(p => pathname.startsWith(p));
+    const staticPaths = ["/unauthorized", "/_not-found"];
+    const isNoLayout =
+      staticPaths.includes(pathname) ||
+      [
+        "/auth",
+        "/onboarding",
+        "/business/",
+        "/booking/",
+        "/employment-request",
+      ].some((p) => pathname.startsWith(p));
 
-		return {
-			isNoLayoutPage: isNoLayout,
-			isVideoPage:
-				pathname === "/" ||
-				(pathname.startsWith("/user/") && pathname.includes("/post/")),
-			isAdminPage: pathname.startsWith("/admin/"),
-		};
-	}, [pathname]);
+    return {
+      isNoLayoutPage: isNoLayout,
+      isVideoPage: pathname.startsWith("/user/") && pathname.includes("/post/"),
+      isAdminPage: pathname.startsWith("/admin/"),
+    };
+  }, [pathname]);
 
-	const isSessionLoading = status === "loading";
-	const isAuthenticated = status === "authenticated";
-	const isOverlayOpen = activeView !== null;
-	const visualDrawerCollapsed = isOverlayOpen || isDrawerCollapsed;
+  const isSessionLoading = status === "loading";
+  const isAuthenticated = status === "authenticated";
+  const isOverlayOpen = activeView !== null;
+  const visualDrawerCollapsed = isOverlayOpen || isDrawerCollapsed;
 
-	const navWidth = isOverlayOpen
-		? DRAWER_WIDTH
-		: isDrawerCollapsed
-			? COLLAPSED_WIDTH
-			: DRAWER_WIDTH;
+  const navWidth = isOverlayOpen
+    ? DRAWER_WIDTH
+    : isDrawerCollapsed
+      ? COLLAPSED_WIDTH
+      : DRAWER_WIDTH;
 
-	const bgColor = isVideoPage
-		? "#000000"
-		: theme.palette.mode === "dark"
-			? "background.default"
-			: "background.paper";
+  const bgColor =
+    theme.palette.mode === "dark" ? "background.default" : "background.paper";
 
-	const styles = React.useMemo(
-		() =>
-			getStyles(
-				theme,
-				{ isOverlayOpen, visualDrawerCollapsed, navWidth },
-				bgColor,
-			),
-		[theme, isOverlayOpen, visualDrawerCollapsed, navWidth, bgColor],
-	);
+  const styles = React.useMemo(
+    () =>
+      getStyles(
+        theme,
+        { isOverlayOpen, visualDrawerCollapsed, navWidth },
+        bgColor
+      ),
+    [theme, isOverlayOpen, visualDrawerCollapsed, navWidth, bgColor]
+  );
 
-	const handleCloseAll = React.useCallback(() => setActiveView(null), []);
+  const handleCloseAll = React.useCallback(() => setActiveView(null), []);
 
-	const handleToggleDrawer = React.useCallback(() => {
-		if (isOverlayOpen) {
-			setActiveView(null);
-			return;
-		}
-		setIsDrawerCollapsed(prev => !prev);
-	}, [isOverlayOpen]);
+  const handleToggleDrawer = React.useCallback(() => {
+    if (isOverlayOpen) {
+      setActiveView(null);
+      return;
+    }
+    setIsDrawerCollapsed((prev) => !prev);
+  }, [isOverlayOpen]);
 
-	const handleOpenSearch = React.useCallback(
-		() =>
-			activeView === "search" ? handleCloseAll() : setActiveView("search"),
-		[activeView, handleCloseAll],
-	);
+  const handleOpenSearch = React.useCallback(
+    () =>
+      activeView === "search" ? handleCloseAll() : setActiveView("search"),
+    [activeView, handleCloseAll]
+  );
 
-	const handleOpenNotifications = React.useCallback(
-		() =>
-			activeView === "notifications"
-				? handleCloseAll()
-				: setActiveView("notifications"),
-		[activeView, handleCloseAll],
-	);
+  const handleOpenNotifications = React.useCallback(
+    () =>
+      activeView === "notifications"
+        ? handleCloseAll()
+        : setActiveView("notifications"),
+    [activeView, handleCloseAll]
+  );
 
-	const handleOpenAppointments = React.useCallback(
-		() =>
-			activeView === "appointments"
-				? handleCloseAll()
-				: setActiveView("appointments"),
-		[activeView, handleCloseAll],
-	);
+  const handleOpenAppointments = React.useCallback(
+    () =>
+      activeView === "appointments"
+        ? handleCloseAll()
+        : setActiveView("appointments"),
+    [activeView, handleCloseAll]
+  );
 
-	if (isNoLayoutPage) {
-		return <>{children}</>;
-	}
+  if (isNoLayoutPage) {
+    return <>{children}</>;
+  }
 
-	return (
-		<Box sx={styles.layoutContainer}>
-			<CssBaseline />
+  return (
+    <Box sx={styles.layoutContainer}>
+      <CssBaseline />
 
-			<Backdrop
-				open={isOverlayOpen}
-				onClick={handleCloseAll}
-				sx={styles.backdrop}
-			/>
+      <Backdrop
+        open={isOverlayOpen}
+        onClick={handleCloseAll}
+        sx={styles.backdrop}
+      />
 
-			{!isVideoPage && (
-				<Box component="nav" sx={styles.navWrapper}>
-					<Drawer
-						variant="permanent"
-						open
-						slotProps={{ paper: { sx: styles.drawerPaper } }}
-						sx={styles.drawerRoot}
-					>
-						<LayoutDrawer
-							session={session}
-							isSessionLoading={isSessionLoading}
-							isAuthenticated={isAuthenticated}
-							isCollapsed={visualDrawerCollapsed}
-							activeView={activeView}
-							onOpenSearchView={handleOpenSearch}
-							onOpenNotificationsView={handleOpenNotifications}
-							onOpenAppointmentsView={handleOpenAppointments}
-							onToggleDrawer={handleToggleDrawer}
-						/>
-					</Drawer>
-				</Box>
-			)}
+      {!isVideoPage && (
+        <Box component="nav" sx={styles.navWrapper}>
+          <Drawer
+            variant="permanent"
+            open
+            slotProps={{ paper: { sx: styles.drawerPaper } }}
+            sx={styles.drawerRoot}
+          >
+            <LayoutDrawer
+              session={session}
+              isSessionLoading={isSessionLoading}
+              isAuthenticated={isAuthenticated}
+              isCollapsed={visualDrawerCollapsed}
+              activeView={activeView}
+              onOpenSearchView={handleOpenSearch}
+              onOpenNotificationsView={handleOpenNotifications}
+              onOpenAppointmentsView={handleOpenAppointments}
+              onToggleDrawer={handleToggleDrawer}
+            />
+          </Drawer>
+        </Box>
+      )}
 
-			<Slide
-				in={isOverlayOpen}
-				direction="right"
-				timeout={300}
-				mountOnEnter
-				unmountOnExit
-			>
-				<Box ref={overlayScrollRef} sx={styles.overlayContainer}>
-					<Box key={activeView} sx={styles.overlayContent}>
-						<LayoutOverlayContent
-							activeView={activeView}
-							overlayScrollRef={overlayScrollRef}
-							onClose={handleCloseAll}
-						/>
-					</Box>
-				</Box>
-			</Slide>
+      <Slide
+        in={isOverlayOpen}
+        direction="right"
+        timeout={300}
+        mountOnEnter
+        unmountOnExit
+      >
+        <Box ref={overlayScrollRef} sx={styles.overlayContainer}>
+          <Box key={activeView} sx={styles.overlayContent}>
+            <LayoutOverlayContent
+              activeView={activeView}
+              overlayScrollRef={overlayScrollRef}
+              onClose={handleCloseAll}
+            />
+          </Box>
+        </Box>
+      </Slide>
 
-			<Box
-				component="main"
-				sx={{
-					...styles.mainContent,
-					bgcolor: isAdminPage ? "background.default" : bgColor,
-					p: { xs: isAdminPage ? 2.5 : 0, md: isNoLayoutPage ? 0 : 2.5 },
-				}}
-			>
-				{children}
-			</Box>
+      <Box
+        component="main"
+        sx={{
+          ...styles.mainContent,
+          bgcolor: isAdminPage ? "background.default" : bgColor,
+          p: { xs: isAdminPage ? 2.5 : 0, md: isNoLayoutPage ? 0 : 2.5 },
+        }}
+      >
+        {children}
+      </Box>
 
-			<BottomBar
-				username={session?.username}
-				profession={session?.profession}
-			/>
-		</Box>
-	);
+      <BottomBar
+        username={session?.username}
+        profession={session?.profession}
+      />
+    </Box>
+  );
 }
 
 const getStyles = (
-	theme: Theme,
-	layoutState: {
-		isOverlayOpen: boolean;
-		visualDrawerCollapsed: boolean;
-		navWidth: number;
-	},
-	bgColor: string,
+  theme: Theme,
+  layoutState: {
+    isOverlayOpen: boolean;
+    visualDrawerCollapsed: boolean;
+    navWidth: number;
+  },
+  bgColor: string
 ) => {
-	const { isOverlayOpen, visualDrawerCollapsed, navWidth } = layoutState;
+  const { isOverlayOpen, visualDrawerCollapsed, navWidth } = layoutState;
 
-	return {
-		layoutContainer: {
-			display: "flex",
-			flexDirection: { xs: "column", lg: "row" },
-			height: "100dvh",
-			width: "100vw",
-			overflow: "hidden",
-			backgroundColor: bgColor,
-		},
+  return {
+    layoutContainer: {
+      display: "flex",
+      flexDirection: { xs: "column", lg: "row" },
+      height: "100dvh",
+      width: "100vw",
+      overflow: "hidden",
+      backgroundColor: bgColor,
+    },
 
-		backdrop: {
-			zIndex: theme.zIndex.drawer - 2,
-			bgcolor: "rgba(0, 0, 0, 0.4)",
-		},
+    backdrop: {
+      zIndex: theme.zIndex.drawer - 2,
+      bgcolor: "rgba(0, 0, 0, 0.4)",
+    },
 
-		navWrapper: {
-			width: { lg: `${navWidth}px` },
-			flexShrink: 0,
-			display: { xs: "none", lg: "block" },
-			transition: "width 220ms ease",
-		},
+    navWrapper: {
+      width: { lg: `${navWidth}px` },
+      flexShrink: 0,
+      display: { xs: "none", lg: "block" },
+      transition: "width 220ms ease",
+    },
 
-		drawerRoot: {
-			"& .MuiDrawer-paper": {
-				transition: "width 220ms ease",
-			},
-		},
+    drawerRoot: {
+      "& .MuiDrawer-paper": {
+        transition: "width 220ms ease",
+      },
+    },
 
-		drawerPaper: {
-			width: visualDrawerCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH,
-			bgcolor: bgColor,
-			boxSizing: "border-box",
-			boxShadow: "none",
-			borderRight: "1px solid",
-			borderColor: visualDrawerCollapsed ? "divider" : "transparent",
-			overflowX: "hidden",
-			zIndex: theme.zIndex.drawer,
-			transition: "width 220ms ease, border-color 220ms ease",
-		},
+    drawerPaper: {
+      width: visualDrawerCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH,
+      bgcolor: bgColor,
+      boxSizing: "border-box",
+      boxShadow: "none",
+      borderRight: "1px solid",
+      borderColor: visualDrawerCollapsed ? "divider" : "transparent",
+      overflowX: "hidden",
+      zIndex: theme.zIndex.drawer,
+      transition: "width 220ms ease, border-color 220ms ease",
+    },
 
-		overlayContainer: {
-			position: "fixed",
-			left: COLLAPSED_WIDTH,
-			top: 0,
-			bottom: 0,
-			width: OVERLAY_WIDTH,
-			bgcolor: "background.paper",
-			zIndex: theme.zIndex.drawer - 1,
-			borderRight: "1px solid",
-			borderColor: "divider",
-			boxShadow: "20px 0 40px rgba(0,0,0,0.05)",
-			pb: 3,
-			overflowY: "auto",
-			"&::-webkit-scrollbar": { width: "6px" },
-			"&::-webkit-scrollbar-thumb": {
-				backgroundColor: theme.palette.divider,
-				borderRadius: "10px",
-			},
-		},
+    overlayContainer: {
+      position: "fixed",
+      left: COLLAPSED_WIDTH,
+      top: 0,
+      bottom: 0,
+      width: OVERLAY_WIDTH,
+      bgcolor: "background.paper",
+      zIndex: theme.zIndex.drawer - 1,
+      borderRight: "1px solid",
+      borderColor: "divider",
+      boxShadow: "20px 0 40px rgba(0,0,0,0.05)",
+      pb: 3,
+      overflowY: "auto",
+      "&::-webkit-scrollbar": { width: "6px" },
+      "&::-webkit-scrollbar-thumb": {
+        backgroundColor: theme.palette.divider,
+        borderRadius: "10px",
+      },
+    },
 
-		overlayContent: {
-			opacity: isOverlayOpen ? 1 : 0,
-			transition: "opacity 0.2s",
-		},
+    overlayContent: {
+      opacity: isOverlayOpen ? 1 : 0,
+      transition: "opacity 0.2s",
+    },
 
-		mainContent: {
-			flexGrow: 1,
-			width: { lg: `calc(100% - ${navWidth}px)` },
-			minWidth: 0,
-			transition: "width 220ms ease",
-			overflowY: "auto",
-			height: { xs: "auto", lg: "100%" },
-			flex: { xs: "1 1 auto", lg: "none" },
+    mainContent: {
+      flexGrow: 1,
+      width: { lg: `calc(100% - ${navWidth}px)` },
+      minWidth: 0,
+      transition: "width 220ms ease",
+      overflowY: "auto",
+      height: { xs: "auto", lg: "100%" },
+      flex: { xs: "1 1 auto", lg: "none" },
 
-			WebkitOverflowScrolling: "touch",
-			overscrollBehaviorY: "contain",
-		},
-	};
+      WebkitOverflowScrolling: "touch",
+      overscrollBehaviorY: "contain",
+    },
+  };
 };
