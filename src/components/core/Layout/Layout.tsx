@@ -199,7 +199,7 @@ const getStyles = (
 		layoutContainer: {
 			display: "flex",
 			flexDirection: { xs: "column", lg: "row" },
-			height: "100vh",
+			height: "100dvh",
 			width: "100vw",
 			overflow: "hidden",
 		},
