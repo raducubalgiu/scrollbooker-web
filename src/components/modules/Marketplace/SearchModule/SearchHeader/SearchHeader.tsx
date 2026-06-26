@@ -265,6 +265,7 @@ export default memo(SearchHeader);
 
 const styles = {
   container: (isExpanded: boolean, mainPagePadding: string | number) => ({
+    display: { xs: "none", lg: "block" },
     position: "sticky",
     top: 0,
     mt: `calc(-1 * ${mainPagePadding})`,

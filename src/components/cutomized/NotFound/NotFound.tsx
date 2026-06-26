@@ -23,26 +23,36 @@ const NotFound = ({ title, description, icon }: NotFoundProps) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: { xs: 90, md: 120 },
-            height: { xs: 90, md: 120 },
+            width: { xs: 70, md: 120 },
+            height: { xs: 70, md: 120 },
           }}
         >
           {icon}
         </Box>
-        <Typography
-          sx={{
-            color: "text.primary",
-            fontWeight: 600,
-            fontSize: { xs: 18, lg: 25 },
-          }}
-        >
-          {title}
-        </Typography>
-        {description && (
-          <Typography sx={{ color: "text.secondary", textAlign: "center" }}>
-            {description}
+
+        <Stack justifyContent="center" alignItems="center" spacing={0.5}>
+          <Typography
+            sx={{
+              color: "text.primary",
+              fontWeight: 600,
+              fontSize: { xs: 18, lg: 25 },
+            }}
+          >
+            {title}
           </Typography>
-        )}
+
+          {description && (
+            <Typography
+              sx={{
+                color: "text.secondary",
+                textAlign: "center",
+                fontSize: { xs: 14, lg: 16 },
+              }}
+            >
+              {description}
+            </Typography>
+          )}
+        </Stack>
       </Stack>
     </Container>
   );

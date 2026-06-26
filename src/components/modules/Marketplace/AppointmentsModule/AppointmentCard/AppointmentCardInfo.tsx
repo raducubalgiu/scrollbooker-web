@@ -36,23 +36,11 @@ export default function AppointmentCardInfo({
         />
 
         <Stack minWidth={0}>
-          <Typography
-            sx={{
-              fontSize: 18,
-              fontWeight: 600,
-            }}
-            noWrap
-          >
+          <Typography sx={{ fontWeight: 600 }} noWrap>
             {user.fullname}
           </Typography>
 
-          <Typography
-            sx={{
-              fontSize: 15,
-              color: "text.secondary",
-            }}
-            noWrap
-          >
+          <Typography sx={{ color: "text.secondary" }} noWrap variant="body2">
             {user.profession ?? ""}
           </Typography>
         </Stack>
@@ -62,7 +50,6 @@ export default function AppointmentCardInfo({
 
       <Typography
         sx={{
-          fontSize: 17,
           fontWeight: 400,
           color: "text.secondary",
         }}
@@ -77,7 +64,7 @@ export default function AppointmentCardInfo({
         <AccessTimeOutlinedIcon
           sx={{ fontSize: 20, color: "text.secondary" }}
         />
-        <Typography sx={{ color: "text.secondary", fontSize: 15 }}>
+        <Typography sx={{ color: "text.secondary" }} variant="body2">
           {durationText}
         </Typography>
       </Stack>

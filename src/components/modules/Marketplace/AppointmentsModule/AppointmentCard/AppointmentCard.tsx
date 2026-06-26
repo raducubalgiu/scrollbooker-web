@@ -43,13 +43,7 @@ export default function AppointmentCard({
           }}
         >
           <Stack sx={{ width: "100%" }}>
-            <Typography
-              color={statusColor}
-              sx={{
-                fontSize: 18,
-                fontWeight: 600,
-              }}
-            >
+            <Typography color={statusColor} sx={{ fontWeight: 600 }}>
               {statusLabel}
             </Typography>
 

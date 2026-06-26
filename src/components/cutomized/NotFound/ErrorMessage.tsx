@@ -25,7 +25,10 @@ const ErrorMessage = ({ resource }: NotFoundProps) => {
           height: 120,
         }}
       >
-        <ReportProblemOutlinedIcon color="error" sx={{ fontSize: 50 }} />
+        <ReportProblemOutlinedIcon
+          color="error"
+          sx={{ fontSize: { sx: 30, lg: 50 } }}
+        />
       </Box>
       <Typography variant="h4" color="text.primary" fontWeight={600}>
         A apărut o eroare

@@ -241,7 +241,10 @@ const getStyles = (
       top: 0,
       bottom: 0,
       width: OVERLAY_WIDTH,
-      bgcolor: "background.paper",
+      bgcolor:
+        theme.palette.mode === "dark"
+          ? "background.default"
+          : "background.paper",
       zIndex: theme.zIndex.drawer - 1,
       borderRight: "1px solid",
       borderColor: "divider",
