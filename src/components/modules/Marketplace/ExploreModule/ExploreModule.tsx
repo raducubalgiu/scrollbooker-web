@@ -196,7 +196,6 @@ const styles = {
 			md: "calc(100vh - 40px)",
 		},
 		overflow: "hidden",
-		bgcolor: "black",
 	},
 
 	mainContent: {
