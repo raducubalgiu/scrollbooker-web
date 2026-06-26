@@ -117,42 +117,36 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
 				onSetIsMenuOpen={() => setIsMenuOpen(true)}
 			/>
 
-			<Box
-				sx={{
-					flexGrow: 1,
-					overflowY: { xs: "auto", lg: "visible" },
-					WebkitOverflowScrolling: "touch",
-					overscrollBehaviorY: "contain",
-				}}
-			>
-				<ProfileCounters
-					onClick={tab => {
-						setOpenSocialModal({
-							selectedTab: tab,
-							userId: localProfile.id,
-							username: localProfile.username,
-						});
-					}}
-					counters={localProfile?.counters ?? emptyCounters}
-				/>
+			<ProfileTabs
+				userId={localProfile.id}
+				businessId={localProfile.business_id}
+				username={localProfile.username}
+				businessOwnerId={localProfile.business_owner?.id}
+				isBusinessOrEmployee={localProfile.is_business_or_employee}
+				isMyProfile={localProfile.is_own_profile}
+				tab={tab}
+				profileHeaderContent={
+					<>
+						<ProfileCounters
+							onClick={tab => {
+								setOpenSocialModal({
+									selectedTab: tab,
+									userId: localProfile.id,
+									username: localProfile.username,
+								});
+							}}
+							counters={localProfile?.counters ?? emptyCounters}
+						/>
 
-				<ProfileUserInfo
-					profile={localProfile}
-					onOpenScheduleModal={() => setOpenScheduleModal(true)}
-					onOpenEditModal={() => setOpenEditProfileModal(true)}
-					onUpdateFollows={handleUpdateFollows}
-				/>
-
-				<ProfileTabs
-					userId={localProfile.id}
-					businessId={localProfile.business_id}
-					username={localProfile.username}
-					businessOwnerId={localProfile.business_owner?.id}
-					isBusinessOrEmployee={localProfile.is_business_or_employee}
-					isMyProfile={localProfile.is_own_profile}
-					tab={tab}
-				/>
-			</Box>
+						<ProfileUserInfo
+							profile={localProfile}
+							onOpenScheduleModal={() => setOpenScheduleModal(true)}
+							onOpenEditModal={() => setOpenEditProfileModal(true)}
+							onUpdateFollows={handleUpdateFollows}
+						/>
+					</>
+				}
+			/>
 
 			<Drawer
 				anchor="bottom"
