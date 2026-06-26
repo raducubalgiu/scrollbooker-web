@@ -49,7 +49,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 		return {
 			isNoLayoutPage: isNoLayout,
-			isVideoPage: pathname.startsWith("/user/") && pathname.includes("/post/"),
+			isVideoPage:
+				pathname === "/" ||
+				(pathname.startsWith("/user/") && pathname.includes("/post/")),
 			isAdminPage: pathname.startsWith("/admin/"),
 		};
 	}, [pathname]);
