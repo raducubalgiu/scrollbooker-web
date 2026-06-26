@@ -1,5 +1,7 @@
+"use client";
+
 import AppointmentsWrapper from "@/components/modules/Marketplace/AppointmentsModule/AppointmentsWrapper";
 
-export default async function AppointmentsPage() {
-  return <AppointmentsWrapper />;
+export default function AppointmentsPage() {
+	return <AppointmentsWrapper />;
 }
