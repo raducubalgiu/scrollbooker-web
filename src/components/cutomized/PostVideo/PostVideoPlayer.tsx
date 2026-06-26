@@ -772,7 +772,7 @@ const styles = {
     width: { xs: 50, lg: 60 },
     height: { xs: 50, lg: 60 },
     borderRadius: "50%",
-    display: "flex",
+    display: { xs: "none", lg: "flex" },
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
