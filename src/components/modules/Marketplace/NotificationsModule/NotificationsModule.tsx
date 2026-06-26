@@ -182,7 +182,6 @@ const NotificationsModule = ({
 					overflowY: "auto",
 					WebkitOverflowScrolling: "touch",
 					overscrollBehaviorY: "contain",
-					px: { xs: 1.5, sm: 3 },
 				}}
 			>
 				{renderListContent()}

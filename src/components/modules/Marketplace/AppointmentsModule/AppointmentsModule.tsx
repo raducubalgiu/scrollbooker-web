@@ -24,8 +24,6 @@ const AppointmentsModule = ({
 	onNavigateToAppointment,
 }: AppointmentsModuleProps) => {
 	const sentinelRef = React.useRef<HTMLDivElement | null>(null);
-
-	// Ref local utilizat exclusiv când componenta rulează ca pagină pe mobil
 	const localListScrollRef = React.useRef<HTMLDivElement | null>(null);
 
 	const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
@@ -250,7 +248,6 @@ const AppointmentsModule = ({
 					overflowY: "auto",
 					WebkitOverflowScrolling: "touch",
 					overscrollBehaviorY: "contain",
-					px: { xs: 1.5, lg: 3 },
 				}}
 			>
 				{renderListContent()}
