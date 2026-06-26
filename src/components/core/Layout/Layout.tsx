@@ -49,7 +49,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 		return {
 			isNoLayoutPage: isNoLayout,
-			isVideoPage: pathname.startsWith("/user/") && pathname.includes("/post/"),
+			isVideoPage:
+				pathname === "/" ||
+				(pathname.startsWith("/user/") && pathname.includes("/post/")),
 			isAdminPage: pathname.startsWith("/admin/"),
 		};
 	}, [pathname]);
@@ -65,8 +67,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 			? COLLAPSED_WIDTH
 			: DRAWER_WIDTH;
 
-	const bgColor =
-		theme.palette.mode === "dark" ? "background.default" : "background.paper";
+	const bgColor = isVideoPage
+		? "#000000"
+		: theme.palette.mode === "dark"
+			? "background.default"
+			: "background.paper";
 
 	const styles = React.useMemo(
 		() =>
@@ -202,6 +207,7 @@ const getStyles = (
 			height: "100dvh",
 			width: "100vw",
 			overflow: "hidden",
+			backgroundColor: bgColor,
 		},
 
 		backdrop: {

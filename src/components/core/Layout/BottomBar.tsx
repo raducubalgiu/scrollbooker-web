@@ -51,11 +51,10 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
 	};
 
 	const getBgColor = () => {
-		if (isDarkPage || isAnyVideoPage) return "#000000 !important";
-		return theme.palette.background.paper;
+		if (isDarkPage || isAnyVideoPage) return "#121212 !important";
+		return theme.palette.background.default;
 	};
 
-	// Înfășurăm inițializarea matricei 'actions' în propriul useMemo
 	const actions = React.useMemo(
 		() => [
 			{
@@ -115,12 +114,9 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
 				display: { xs: "block", lg: "none" },
 				borderTop: "1px solid",
 				borderColor: isDarkPage ? "transparent" : "divider",
+				marginTop: "-1px",
 
-				// --- REZOLVARE LINIE ALBĂ SUBPIXELARĂ ---
-				marginTop: "-1px", // Ridică bara cu 1px pentru a acoperi luftul matematic din Safari iOS
-
-				// --- REZOLVARE DYNAMICS PENTRU SAFE AREA ---
-				backgroundColor: getBgColor(), // Se asigură că fundalul coboară și sub bară în zona indicatorului iOS Home
+				backgroundColor: getBgColor(),
 			}}
 		>
 			<BottomNavigation
@@ -133,7 +129,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
 				sx={{
 					height: "65px",
 					backgroundColor: getBgColor(),
-					pb: "safe-area-inset-bottom", // Creează spațiu de siguranță pe iPhone-urile noi
+					pb: "safe-area-inset-bottom",
 					"& .MuiBottomNavigationAction-root": {
 						minWidth: 0,
 						color: getInactiveColor(),
