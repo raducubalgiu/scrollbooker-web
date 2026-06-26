@@ -192,7 +192,7 @@ const styles = {
 		alignItems: "stretch",
 		width: "100%",
 		height: {
-			xs: "100dvh",
+			xs: "100%",
 			md: "calc(100vh - 40px)",
 		},
 		overflow: "hidden",
@@ -205,6 +205,8 @@ const styles = {
 		alignItems: "center",
 		justifyContent: "center",
 		gap: { xs: 0, md: 3 },
+		height: "100%",
+		width: "100%",
 	},
 
 	controlsSection: {
@@ -221,7 +223,7 @@ const styles = {
 		alignItems: "center",
 		justifyContent: "center",
 		gap: { xs: 0, md: 2.5 },
-		width: { md: "calc((100vh - 40px) * 9 / 16)" },
+		width: { xs: "100%", md: "calc((100vh - 40px) * 9 / 16)" },
 	},
 
 	videoContainer: {
