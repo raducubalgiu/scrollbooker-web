@@ -1,10 +1,10 @@
 "use client";
 
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useState } from "react";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { PostUser } from "@/ts/models/social/Post";
-import { Box, Button, Collapse, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
 
@@ -23,21 +23,10 @@ const PostOverlay = ({
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleToggle = (e: React.MouseEvent) => {
+  const handleToggleDescription = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsExpanded(!isExpanded);
+    setIsExpanded((prev) => !prev);
   };
-
-  const [showButton, setShowButton] = useState(false);
-  const textRef = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    const element = textRef.current;
-    if (element) {
-      const isOverflowing = element.scrollHeight > element.clientHeight;
-      setShowButton(isOverflowing);
-    }
-  }, [description]);
 
   return (
     <>
@@ -61,10 +50,16 @@ const PostOverlay = ({
           p: { xs: 2, md: 3 },
           zIndex: 20,
           color: "common.white",
+          pointerEvents: "none",
         }}
       >
-        <Stack direction="row" alignItems="flex-end" spacing={2}>
-          <Stack spacing={1.5} sx={{ flex: 1, minWidth: 0 }}>
+        <Stack
+          direction="row"
+          alignItems="flex-end"
+          spacing={2}
+          sx={{ pointerEvents: "auto", mb: { xs: 1, lg: 0 } }}
+        >
+          <Stack spacing={2} sx={{ flex: 1, minWidth: 0 }}>
             {isVideoReview && (
               <Box
                 sx={{
@@ -90,7 +85,7 @@ const PostOverlay = ({
                 <Typography
                   variant="subtitle1"
                   fontWeight={800}
-                  sx={{ lineHeight: 1.2 }}
+                  sx={{ lineHeight: 1.2, mb: 0.5 }}
                 >
                   {user?.fullname}
                 </Typography>
@@ -104,44 +99,24 @@ const PostOverlay = ({
               </Link>
             </Box>
 
-            <Box sx={{ position: "relative" }}>
-              {description && description?.length && (
-                <Collapse in={isExpanded} collapsedSize={40}>
-                  <Typography
-                    ref={textRef}
-                    variant="body2"
-                    sx={{
-                      opacity: 0.95,
-                      lineHeight: 1.4,
-                      ...(!isExpanded && {
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }),
-                    }}
-                  >
-                    {description}
-                  </Typography>
-                </Collapse>
-              )}
-
-              {(showButton || isExpanded) && (
+            {description && description.length > 0 && (
+              <Box onClick={handleToggleDescription} sx={{ cursor: "pointer" }}>
                 <Typography
-                  component="span"
-                  onClick={handleToggle}
+                  variant="body2"
                   sx={{
-                    cursor: "pointer",
-                    fontWeight: 800,
-                    fontSize: "0.875rem",
-                    mt: 0.5,
-                    display: "block",
+                    opacity: 0.95,
+                    lineHeight: 1.4,
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: isExpanded ? "unset" : 2,
+                    overflow: isExpanded ? "unset" : "hidden",
+                    transition: "all 0.2s ease-in-out",
                   }}
                 >
-                  {isExpanded ? "Mai puțin" : "Mai mult"}
+                  {description}
                 </Typography>
-              )}
-            </Box>
+              </Box>
+            )}
 
             <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
               <Button
@@ -160,9 +135,7 @@ const PostOverlay = ({
             </Protected>
           </Stack>
 
-          <Box
-            sx={{ display: { xs: "block", md: "none" }, pb: { xs: 1, md: 0 } }}
-          >
+          <Box sx={{ display: { xs: "block", md: "none" } }}>
             <Box>Actions</Box>
           </Box>
         </Stack>

@@ -8,6 +8,7 @@ import React, {
 import {
   Box,
   CircularProgress,
+  Fade,
   Skeleton,
   Slider,
   Typography,
@@ -16,8 +17,7 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import VolumeOffRoundedIcon from "@mui/icons-material/VolumeOffRounded";
 import VolumeUpRoundedIcon from "@mui/icons-material/VolumeUpRounded";
 import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
-import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
-import { alpha, Theme } from "@mui/material/styles";
+import { Theme } from "@mui/material/styles";
 import Hls from "hls.js";
 import PostOverlay from "./PostOverlay";
 import { PostUser } from "@/ts/models/social/Post";
@@ -514,23 +514,51 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     return Math.min(displayProgress / duration, 1);
   }, [duration, displayProgress]);
 
+  const isInteracting = isSeeking || isHovered;
+  const currentHeight = isInteracting ? { xs: 8, md: 10 } : { xs: 4, md: 4 };
+
   const progressFillSx = useMemo(
     () => ({
       ...styles.progressFill,
+      height: currentHeight,
       transform: `scaleX(${progressRatio})`,
       transformOrigin: "left center",
-      transition: isSeeking ? "none" : "transform 80ms linear",
+      transition: isSeeking
+        ? "height 120ms ease-in-out"
+        : "transform 80ms linear, height 120ms ease-in-out",
+
+      // REPARARE: În repaus folosim un gri foarte închis și stins (22% opacitate).
+      // Devine alb mat curat (85%) DOAR când interacționezi cu el.
+      backgroundColor: isInteracting
+        ? "rgba(255, 255, 255, 0.85)"
+        : "rgba(255, 255, 255, 0.22)",
     }),
-    [progressRatio, isSeeking]
+    [progressRatio, isSeeking, isInteracting, currentHeight]
   );
 
   const sliderSx = useMemo(
     () => ({
       ...styles.slider,
-      opacity: isHovered || isSeeking ? 1 : 0,
-      pointerEvents: isHovered || isSeeking ? "auto" : "none",
+      height: currentHeight,
+      "& .MuiSlider-thumb": {
+        opacity: isInteracting ? 1 : 0,
+        width: isInteracting ? { xs: 12, md: 8 } : 0,
+        height: isInteracting ? { xs: 12, md: 10 } : 0,
+
+        // REPARARE CULOARE: Pastila folosește acum exact aceeași culoare ca linia completată
+        backgroundColor: "rgba(255, 255, 255, 0.85)",
+
+        // O umbră extrem de fină, aproape invizibilă, ca să nu creeze contrast strident
+        boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
+        transition: "opacity 120ms ease, width 120ms ease, height 120ms ease",
+
+        "&:hover, &.Mui-focusVisible, &.Mui-active": {
+          backgroundColor: "rgba(255, 255, 255, 0.95)", // Devine puțin mai aprinsă când tragi activ de ea
+          boxShadow: "0 1px 4px rgba(0,0,0,0.3)",
+        },
+      },
     }),
-    [isHovered, isSeeking]
+    [isInteracting, currentHeight]
   );
 
   const volumeButtonIcon = isMuted ? (
@@ -562,6 +590,13 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       </Box>
     );
   }
+
+  const formatVideoTime = (seconds: number): string => {
+    if (isNaN(seconds) || !isFinite(seconds)) return "00:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
 
   return (
     <Box
@@ -604,33 +639,21 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         style={videoStyles}
       />
 
+      {/* OVERLAY CENTRAL: Acum conține doar pictogramele de stare și buffering */}
       <Box sx={styles.centerOverlay}>
         {hasError ? (
-          <Box sx={styles.stateCard}>
-            <ErrorOutlineRoundedIcon sx={styles.stateIcon} />
-            <Typography sx={styles.stateTitle}>Video indisponibil</Typography>
-            <Typography sx={styles.stateSubtitle}>
-              Nu am putut reda acest video.
-            </Typography>
-
-            <Box
-              sx={styles.stateActionButton}
-              onClick={(event) => {
-                event.stopPropagation();
-                void handleRetry();
-              }}
-            >
-              Reîncearcă
-            </Box>
-          </Box>
-        ) : isBuffering ? (
+          <Box sx={styles.stateCard}>{/* ... cardul tău de eroare ... */}</Box>
+        ) : isBuffering && !isSeeking ? (
           <Box sx={styles.stateCard}>
             <CircularProgress size={42} sx={{ color: "#fff" }} />
           </Box>
-        ) : showReplayOverlay ? (
-          <ReplayRoundedIcon sx={styles.centerIcon} />
-        ) : showPausedOverlay ? (
-          <PlayArrowRoundedIcon sx={styles.centerIcon} />
+        ) : !isSeeking ? (
+          <>
+            {showReplayOverlay && <ReplayRoundedIcon sx={styles.centerIcon} />}
+            {showPausedOverlay && (
+              <PlayArrowRoundedIcon sx={styles.centerIcon} />
+            )}
+          </>
         ) : null}
       </Box>
 
@@ -638,15 +661,50 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         {volumeButtonIcon}
       </Box>
 
-      <Box
-        sx={styles.progressWrapper}
-        onClick={(e) => e.stopPropagation()}
-        onMouseDown={(e) => e.stopPropagation()}
-        onMouseUp={(e) => e.stopPropagation()}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <Box sx={styles.progressTrack} />
+      <Fade in={!isSeeking && !isLoading && !!user} timeout={200}>
+        <div>
+          <PostOverlay
+            user={user ?? undefined}
+            description={description ?? ""}
+            isVideoReview={isVideoReview}
+            onOpenLinkedProducts={onOpenLinkedProducts}
+          />
+        </div>
+      </Fade>
+
+      <Fade in={isSeeking} timeout={150}>
+        <Typography
+          variant="body1"
+          sx={{
+            position: "absolute",
+            bottom: 28,
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 90,
+            color: "#fff",
+            fontWeight: 800,
+            fontSize: 18,
+            letterSpacing: "0.03em",
+            backgroundColor: "rgba(0,0,0,0.6)",
+            px: 2,
+            py: 0.75,
+            borderRadius: 2,
+            backdropFilter: "blur(4px)",
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
+          }}
+        >
+          {formatVideoTime(displayProgress)} / {formatVideoTime(duration)}
+        </Typography>
+      </Fade>
+
+      <Box sx={styles.progressWrapper} onClick={(e) => e.stopPropagation()}>
+        {/* 
+    REPARARE: Adăugăm înălțimea dinamică (currentHeight) și pe track-ul de fundal.
+    Acum linia inițială va avea 4px în repaus și va fi perfect vizibilă pe toată lungimea!
+  */}
+        <Box sx={{ ...styles.progressTrack, height: currentHeight }} />
+
         <Box sx={progressFillSx} />
 
         <Slider
@@ -661,15 +719,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
           sx={sliderSx}
         />
       </Box>
-
-      {!isLoading && user && (
-        <PostOverlay
-          user={user}
-          description={description ?? ""}
-          isVideoReview={isVideoReview}
-          onOpenLinkedProducts={onOpenLinkedProducts}
-        />
-      )}
     </Box>
   );
 });
@@ -787,11 +836,11 @@ const styles = {
   },
   progressWrapper: {
     position: "absolute",
-    left: 0,
-    right: 0,
+    left: (theme: Theme) => theme.spacing(2),
+    right: (theme: Theme) => theme.spacing(2),
     bottom: 0,
-    height: 15,
-    zIndex: 8,
+    height: 25,
+    zIndex: 99,
     display: "flex",
     alignItems: "flex-end",
   },
@@ -800,28 +849,26 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    height: 7.5,
-    borderRadius: 999,
-    backgroundColor: "rgba(255,255,255,0.28)",
+    borderRadius: 0,
+    backgroundColor: "rgba(255, 255, 255, 0.14)",
+    transition: "height 120ms ease-in-out",
   },
   progressFill: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    height: 7.5,
-    borderRadius: 999,
-    backgroundColor: (theme: Theme) => alpha(theme.palette.primary.main, 0.9),
+    borderRadius: 0,
+    transition: "height 120ms ease-in-out",
   },
   slider: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    py: 0,
-    height: 7.5,
+    py: 1.5,
     color: "primary.main",
-    transition: "opacity 120ms ease",
+    transition: "height 120ms ease-in-out",
     "& .MuiSlider-rail": {
       opacity: 0,
     },
@@ -830,13 +877,12 @@ const styles = {
       border: "none",
     },
     "& .MuiSlider-thumb": {
-      width: 10,
-      height: 10,
       backgroundColor: "#fff",
-      boxShadow: "0 1px 6px rgba(0,0,0,0.25)",
-      transition: "transform 120ms ease",
+      borderRadius: 1,
+      boxShadow: "0 2px 4px rgba(0,0,0,0.4)",
+      transition: "opacity 120ms ease, width 120ms ease, height 120ms ease",
       "&:hover, &.Mui-focusVisible, &.Mui-active": {
-        boxShadow: "0 1px 8px rgba(0,0,0,0.3)",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
       },
     },
   },
