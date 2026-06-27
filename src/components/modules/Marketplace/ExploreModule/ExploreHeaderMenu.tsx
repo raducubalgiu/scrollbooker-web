@@ -27,6 +27,7 @@ const ExploreHeaderMenu = ({
               variant="contained"
               color="primary"
               disableElevation
+              size="small"
               sx={{
                 mr: 1,
                 bgcolor: (theme) => alpha(theme.palette.primary.main, 0.7),
@@ -38,7 +39,11 @@ const ExploreHeaderMenu = ({
               Explorează
             </Button>
 
-            <Button sx={{ color: "common.white" }} disableElevation>
+            <Button
+              sx={{ color: "common.white" }}
+              size="small"
+              disableElevation
+            >
               Urmărești
             </Button>
           </Stack>
@@ -47,9 +52,7 @@ const ExploreHeaderMenu = ({
             size="large"
             sx={{ display: { xs: "block", lg: "none" } }}
           >
-            <SearchIcon
-              sx={{ color: "common.white", width: 32.5, height: 32.5 }}
-            />
+            <SearchIcon sx={{ color: "common.white", width: 30, height: 30 }} />
           </IconButton>
         </Stack>
       </Box>
@@ -71,7 +74,7 @@ const styles = {
   containerMenu: {
     position: "absolute",
     left: { xs: 1.5, lg: 16 },
-    top: { xs: 1.5, lg: 16 },
+    top: 0,
     right: 1.5,
     zIndex: 11,
     pointerEvents: "auto",
