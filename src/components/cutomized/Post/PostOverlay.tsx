@@ -1,7 +1,11 @@
 "use client";
 
 import React, { memo, useState } from "react";
-import { PostCounters, PostUser } from "@/ts/models/social/Post";
+import {
+  PostCounters,
+  PostUser,
+  PostUserActions,
+} from "@/ts/models/social/Post";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
@@ -10,6 +14,7 @@ import PostActionsMobile from "./PostActionsMobile";
 type PostOverlayProps = {
   user: PostUser | null;
   counters: PostCounters | null;
+  userActions: PostUserActions | null;
   isVideoReview: boolean | undefined;
   description: string | null;
   onOpenLinkedProducts: () => void;
@@ -18,6 +23,7 @@ type PostOverlayProps = {
 const PostOverlay = ({
   user,
   counters,
+  userActions,
   description,
   isVideoReview,
   onOpenLinkedProducts,
@@ -137,13 +143,14 @@ const PostOverlay = ({
           </Stack>
 
           <Box sx={{ display: { xs: "block", md: "none" } }}>
-            {user && counters && (
+            {user && counters && userActions && (
               <PostActionsMobile
                 user={user}
                 isSavingLike={false}
                 isSavingBookmark={false}
                 isVideoReview={isVideoReview ?? false}
                 counters={counters}
+                userActions={userActions}
                 onLike={() => {}}
                 onBookmark={() => {}}
                 onNavigateToUser={() => {}}

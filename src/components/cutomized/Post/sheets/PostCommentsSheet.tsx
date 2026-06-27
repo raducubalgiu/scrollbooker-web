@@ -54,7 +54,6 @@ const styles = {
   drawer: {
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    backgroundColor: "background.paper",
     height: "75vh",
     display: "flex",
     flexDirection: "column",

@@ -11,14 +11,15 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
-import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import { AppRoutes } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+
+import VideoIcon from "@/assets/icons/ic_video_outline.svg";
+import BusinessIcon from "@/assets/icons/ic_business_outline.svg";
+import SettingsIcon from "@/assets/icons/ic_settings_outline.svg";
 
 type ProfileMenuSheetProps = {
   isMenuOpen: boolean;
@@ -78,7 +79,21 @@ const ProfileMenuSheet = ({
                 }}
               >
                 <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
-                  <VideocamOutlinedIcon />
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      backgroundColor: "currentColor",
+                      maskImage: `url(${VideoIcon.src})`,
+                      WebkitMaskImage: `url(${VideoIcon.src})`,
+                      maskSize: "contain",
+                      WebkitMaskSize: "contain",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskRepeat: "no-repeat",
+                      maskPosition: "center",
+                      WebkitMaskPosition: "center",
+                    }}
+                  />
                 </ListItemIcon>
                 <ListItemText
                   primary="Creează o postare"
@@ -102,7 +117,21 @@ const ProfileMenuSheet = ({
                 }}
               >
                 <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
-                  <BusinessCenterOutlinedIcon />
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      backgroundColor: "currentColor",
+                      maskImage: `url(${BusinessIcon.src})`,
+                      WebkitMaskImage: `url(${BusinessIcon.src})`,
+                      maskSize: "contain",
+                      WebkitMaskSize: "contain",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskRepeat: "no-repeat",
+                      maskPosition: "center",
+                      WebkitMaskPosition: "center",
+                    }}
+                  />
                 </ListItemIcon>
                 <ListItemText
                   primary="Afacerea mea"
@@ -125,7 +154,21 @@ const ProfileMenuSheet = ({
               }}
             >
               <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
-                <SettingsOutlinedIcon />
+                <Box
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    backgroundColor: "currentColor",
+                    maskImage: `url(${SettingsIcon.src})`,
+                    WebkitMaskImage: `url(${SettingsIcon.src})`,
+                    maskSize: "contain",
+                    WebkitMaskSize: "contain",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskPosition: "center",
+                    WebkitMaskPosition: "center",
+                  }}
+                />
               </ListItemIcon>
               <ListItemText
                 primary="Setări"
@@ -147,7 +190,6 @@ const styles = {
   drawer: {
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    backgroundColor: "background.paper",
     py: 1.5,
   },
 };

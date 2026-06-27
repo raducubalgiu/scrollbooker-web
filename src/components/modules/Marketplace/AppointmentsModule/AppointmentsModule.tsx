@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import React from "react";
 import AppointmentCard from "./AppointmentCard/AppointmentCard";
 import { useInfiniteAppointments } from "@/hooks/infiniteQuery/useInfiniteAppointments";
@@ -91,7 +84,7 @@ const AppointmentsModule = ({
               : "center",
           }}
         >
-          Rezervări și abonamente
+          Rezervări
         </Typography>
       </Box>
     );
@@ -99,15 +92,6 @@ const AppointmentsModule = ({
 
   const renderListContent = () => (
     <>
-      <Stack flexDirection="row" alignItems="center" gap={1} m={1.5}>
-        <Button variant="contained" color="primary" disableElevation>
-          Rezervări
-        </Button>
-        <Button variant="outlined" color="secondary" disableElevation>
-          Abonamente
-        </Button>
-      </Stack>
-
       {isLoading && <AppointmentCardSkeleton />}
 
       {!isLoading &&

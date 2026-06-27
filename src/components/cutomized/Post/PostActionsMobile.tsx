@@ -8,7 +8,11 @@ import {
   ButtonBase,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
-import { PostCounters, PostUser } from "@/ts/models/social/Post";
+import {
+  PostCounters,
+  PostUser,
+  PostUserActions,
+} from "@/ts/models/social/Post";
 import { formatRating } from "@/utils/formatters";
 import { useCallback } from "react";
 
@@ -24,6 +28,7 @@ type PostActionsProps = {
   isSavingBookmark: boolean;
   isVideoReview: boolean;
   counters: PostCounters;
+  userActions: PostUserActions;
   onLike: () => void;
   onBookmark: () => void;
   onNavigateToUser: () => void;
@@ -35,6 +40,7 @@ export default function PostActionsMobile({
   isSavingBookmark,
   isVideoReview,
   counters,
+  userActions,
   onLike,
   onBookmark,
   onNavigateToUser,
@@ -98,7 +104,9 @@ export default function PostActionsMobile({
               sx={{
                 width: 35,
                 height: 35,
-                backgroundColor: "currentColor",
+                backgroundColor: userActions.is_liked
+                  ? "error.main"
+                  : "common.white",
                 maskImage: `url(${LikeIconSolid.src})`,
                 WebkitMaskImage: `url(${LikeIconSolid.src})`,
                 maskSize: "contain",
@@ -113,7 +121,7 @@ export default function PostActionsMobile({
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 15 }}
+            sx={{ color: "#fff", fontSize: 14 }}
           >
             {counters.like_count}
           </Typography>
@@ -140,7 +148,7 @@ export default function PostActionsMobile({
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 15 }}
+            sx={{ color: "#fff", fontSize: 14 }}
           >
             {user.ratings_count}
           </Typography>
@@ -167,7 +175,7 @@ export default function PostActionsMobile({
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 15 }}
+            sx={{ color: "#fff", fontSize: 14 }}
           >
             {counters.comment_count}
           </Typography>
@@ -183,7 +191,9 @@ export default function PostActionsMobile({
               sx={{
                 width: 35,
                 height: 35,
-                backgroundColor: "currentColor",
+                backgroundColor: userActions.is_bookmarked
+                  ? "rating.main"
+                  : "common.white",
                 maskImage: `url(${BookmarkIconSolid.src})`,
                 WebkitMaskImage: `url(${BookmarkIconSolid.src})`,
                 maskSize: "contain",
@@ -198,7 +208,7 @@ export default function PostActionsMobile({
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 15 }}
+            sx={{ color: "#fff", fontSize: 14 }}
           >
             {counters.bookings_count}
           </Typography>
@@ -247,7 +257,7 @@ const styles = {
     },
   },
   badgeContent: {
-    backgroundColor: "background.paper",
+    backgroundColor: "common.white",
     px: 0.75,
     py: 0.25,
     borderRadius: 50,

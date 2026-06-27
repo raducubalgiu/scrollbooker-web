@@ -21,7 +21,11 @@ import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import { Theme } from "@mui/material/styles";
 import Hls from "hls.js";
 import PostOverlay from "./PostOverlay";
-import { PostCounters, PostUser } from "@/ts/models/social/Post";
+import {
+  PostCounters,
+  PostUser,
+  PostUserActions,
+} from "@/ts/models/social/Post";
 
 type PostVideoPlayerProps = {
   isLoading?: boolean;
@@ -29,6 +33,7 @@ type PostVideoPlayerProps = {
   isActive: boolean;
   user: PostUser | null;
   counters: PostCounters | null;
+  userActions: PostUserActions | null;
   description: string | null;
   isVideoReview: boolean;
   preload?: "none" | "metadata" | "auto";
@@ -52,6 +57,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   isLoading = false,
   user,
   counters,
+  userActions,
   description,
   isVideoReview,
   preload = "metadata",
@@ -682,6 +688,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
           <PostOverlay
             user={user}
             counters={counters}
+            userActions={userActions}
             description={description ?? ""}
             isVideoReview={isVideoReview}
             onOpenLinkedProducts={onOpenLinkedProducts}

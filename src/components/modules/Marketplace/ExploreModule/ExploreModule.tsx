@@ -131,6 +131,7 @@ export default function ExploreModule() {
               isLoading={isLoading}
               user={currentPost?.user ?? null}
               counters={currentPost?.counters ?? null}
+              userActions={currentPost?.user_actions ?? null}
               description={currentPost?.description ?? null}
               isVideoReview={currentPost?.is_video_review ?? false}
               onOpenLinkedProducts={() => setIsProductsOpen(true)}

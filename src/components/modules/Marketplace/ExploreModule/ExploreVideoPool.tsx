@@ -1,6 +1,10 @@
 import { Box } from "@mui/material";
 import { PoolItem } from "./useExplorePlayerPool";
-import { PostCounters, PostUser } from "@/ts/models/social/Post";
+import {
+  PostCounters,
+  PostUser,
+  PostUserActions,
+} from "@/ts/models/social/Post";
 import { PostVideoPlayer } from "../../../cutomized/Post/PostVideoPlayer";
 import { useRef } from "react";
 
@@ -9,6 +13,7 @@ type ExploreVideoPoolProps = {
   isLoading: boolean;
   user: PostUser | null;
   counters: PostCounters | null;
+  userActions: PostUserActions | null;
   description: string | null;
   isVideoReview: boolean;
   onNext: () => void;
@@ -21,6 +26,7 @@ export function ExploreVideoPool({
   isLoading,
   user,
   counters,
+  userActions,
   description,
   isVideoReview,
   onNext,
@@ -79,6 +85,7 @@ export function ExploreVideoPool({
               isLoading={isLoading && isCurrent}
               user={user}
               counters={counters}
+              userActions={userActions}
               description={description ?? ""}
               isVideoReview={isVideoReview}
               preload="metadata"

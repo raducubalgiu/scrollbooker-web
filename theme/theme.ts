@@ -495,7 +495,7 @@ export const lightTheme = createTheme({
     MuiDrawer: {
       styleOverrides: {
         paper: ({ theme }) => ({
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.palette.background.default,
           backgroundImage: "none",
           borderRadius: 0,
         }),
