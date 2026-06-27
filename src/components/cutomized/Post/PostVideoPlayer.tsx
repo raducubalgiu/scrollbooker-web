@@ -17,6 +17,7 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import VolumeOffRoundedIcon from "@mui/icons-material/VolumeOffRounded";
 import VolumeUpRoundedIcon from "@mui/icons-material/VolumeUpRounded";
 import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
+import { ErrorOutlineRounded } from "@mui/icons-material";
 import { Theme } from "@mui/material/styles";
 import Hls from "hls.js";
 import PostOverlay from "./PostOverlay";
@@ -526,9 +527,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       transition: isSeeking
         ? "height 120ms ease-in-out"
         : "transform 80ms linear, height 120ms ease-in-out",
-
-      // REPARARE: În repaus folosim un gri foarte închis și stins (22% opacitate).
-      // Devine alb mat curat (85%) DOAR când interacționezi cu el.
       backgroundColor: isInteracting
         ? "rgba(255, 255, 255, 0.85)"
         : "rgba(255, 255, 255, 0.22)",
@@ -544,16 +542,12 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         opacity: isInteracting ? 1 : 0,
         width: isInteracting ? { xs: 12, md: 8 } : 0,
         height: isInteracting ? { xs: 12, md: 10 } : 0,
-
-        // REPARARE CULOARE: Pastila folosește acum exact aceeași culoare ca linia completată
         backgroundColor: "rgba(255, 255, 255, 0.85)",
-
-        // O umbră extrem de fină, aproape invizibilă, ca să nu creeze contrast strident
         boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
         transition: "opacity 120ms ease, width 120ms ease, height 120ms ease",
 
         "&:hover, &.Mui-focusVisible, &.Mui-active": {
-          backgroundColor: "rgba(255, 255, 255, 0.95)", // Devine puțin mai aprinsă când tragi activ de ea
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
           boxShadow: "0 1px 4px rgba(0,0,0,0.3)",
         },
       },
@@ -639,10 +633,25 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         style={videoStyles}
       />
 
-      {/* OVERLAY CENTRAL: Acum conține doar pictogramele de stare și buffering */}
       <Box sx={styles.centerOverlay}>
         {hasError ? (
-          <Box sx={styles.stateCard}>{/* ... cardul tău de eroare ... */}</Box>
+          <Box sx={styles.stateCard}>
+            <ErrorOutlineRounded sx={styles.stateIcon} />
+            <Typography sx={styles.stateTitle}>Video indisponibil</Typography>
+            <Typography sx={styles.stateSubtitle}>
+              Nu am putut reda acest video.
+            </Typography>
+
+            <Box
+              sx={styles.stateActionButton}
+              onClick={(event) => {
+                event.stopPropagation();
+                void handleRetry();
+              }}
+            >
+              Reîncearcă
+            </Box>
+          </Box>
         ) : isBuffering && !isSeeking ? (
           <Box sx={styles.stateCard}>
             <CircularProgress size={42} sx={{ color: "#fff" }} />
@@ -698,11 +707,12 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         </Typography>
       </Fade>
 
-      <Box sx={styles.progressWrapper} onClick={(e) => e.stopPropagation()}>
-        {/* 
-    REPARARE: Adăugăm înălțimea dinamică (currentHeight) și pe track-ul de fundal.
-    Acum linia inițială va avea 4px în repaus și va fi perfect vizibilă pe toată lungimea!
-  */}
+      <Box
+        sx={styles.progressWrapper}
+        onClick={(e) => e.stopPropagation()}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <Box sx={{ ...styles.progressTrack, height: currentHeight }} />
 
         <Box sx={progressFillSx} />
