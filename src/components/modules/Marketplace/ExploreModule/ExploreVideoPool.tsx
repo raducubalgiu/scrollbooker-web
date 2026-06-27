@@ -12,6 +12,7 @@ type ExploreVideoPoolProps = {
   isVideoReview: boolean;
   onNext: () => void;
   onPrev: () => void;
+  onOpenLinkedProducts: () => void;
 };
 
 export function ExploreVideoPool({
@@ -22,6 +23,7 @@ export function ExploreVideoPool({
   isVideoReview,
   onNext,
   onPrev,
+  onOpenLinkedProducts,
 }: ExploreVideoPoolProps) {
   const touchStartY = useRef<number | undefined>(undefined);
 
@@ -78,6 +80,7 @@ export function ExploreVideoPool({
               isVideoReview={isVideoReview}
               preload="metadata"
               resetOnInactive={false}
+              onOpenLinkedProducts={onOpenLinkedProducts}
             />
           </Box>
         );

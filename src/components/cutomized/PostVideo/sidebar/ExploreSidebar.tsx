@@ -6,6 +6,7 @@ import ExploreServicesTab from "./ExploreServicesTab";
 import PostComments from "@/components/modules/Marketplace/CommentsModule/PostComments";
 import VideoHeaderSkeleton from "../VideoHeaderSkeleton";
 import VideoHeader from "../VideoHeader";
+import { Product } from "@/ts/models/booking/product/Product";
 
 enum ExploreSidebarTab {
   SERVICES,
@@ -14,6 +15,8 @@ enum ExploreSidebarTab {
 }
 
 type ExploreSidebarProps = {
+  linkedProducts: Product[];
+  isLoadingLinkedProducts: boolean;
   isLoading: boolean;
   commentsCount: number | undefined;
   postId: number | undefined;
@@ -24,6 +27,8 @@ type ExploreSidebarProps = {
 };
 
 const ExploreSidebar = ({
+  linkedProducts,
+  isLoadingLinkedProducts,
   commentsCount,
   postId,
   user,
@@ -57,7 +62,8 @@ const ExploreSidebar = ({
       case ExploreSidebarTab.SERVICES:
         return (
           <ExploreServicesTab
-            postId={postId}
+            linkedProducts={linkedProducts}
+            isLoadingLinkedProducts={isLoadingLinkedProducts}
             userId={user?.id}
             isLoadingPosts={isLoading}
             onNavigateToBooking={onNavigateToBooking}

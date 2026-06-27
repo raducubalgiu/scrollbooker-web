@@ -12,12 +12,14 @@ type PostOverlayProps = {
   user: PostUser | undefined;
   description: string | null;
   isVideoReview: boolean | undefined;
+  onOpenLinkedProducts: () => void;
 };
 
 const PostOverlay = ({
   user,
   description,
   isVideoReview,
+  onOpenLinkedProducts,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -143,6 +145,10 @@ const PostOverlay = ({
 
             <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
               <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenLinkedProducts();
+                }}
                 variant="contained"
                 fullWidth
                 sx={{

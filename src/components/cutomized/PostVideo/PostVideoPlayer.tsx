@@ -31,6 +31,7 @@ type PostVideoPlayerProps = {
   isVideoReview: boolean;
   preload?: "none" | "metadata" | "auto";
   resetOnInactive?: boolean;
+  onOpenLinkedProducts: () => void;
 };
 
 const PROGRESS_EPSILON = 0.1;
@@ -52,6 +53,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   isVideoReview,
   preload = "metadata",
   resetOnInactive = true,
+  onOpenLinkedProducts,
 }: PostVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -665,6 +667,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
           user={user}
           description={description ?? ""}
           isVideoReview={isVideoReview}
+          onOpenLinkedProducts={onOpenLinkedProducts}
         />
       )}
     </Box>

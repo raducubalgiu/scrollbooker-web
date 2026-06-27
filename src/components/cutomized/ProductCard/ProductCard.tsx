@@ -111,7 +111,7 @@ const ProductCard = ({
       >
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography
-            fontSize={20}
+            fontSize={{ xs: 17, lg: 20 }}
             fontWeight={600}
             noWrap
             sx={{
@@ -121,12 +121,12 @@ const ProductCard = ({
           >
             {name}
           </Typography>
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant="body2" color="text.secondary">
             {filtersText}
           </Typography>
 
           <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
-            <Typography fontSize={18} fontWeight={600}>
+            <Typography fontSize={{ xs: 17, lg: 18 }} fontWeight={600}>
               {has_different_prices && "de la"}{" "}
               {`${formatPrice(starting_offering.price_with_discount)} RON`}
             </Typography>
@@ -169,6 +169,7 @@ const ProductCard = ({
                 e.stopPropagation();
                 onNavigateToBooking(product);
               }}
+              sx={{ px: 2.5, py: 1, fontSize: { xs: 14, lg: 16 } }}
             >
               Rezervă
             </Button>

@@ -2,7 +2,6 @@
 
 import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
 import ProductCardSkeleton from "@/components/cutomized/ProductCard/ProductCardSkeleton";
-import { useCustomQuery } from "@/hooks/useHttp";
 import { Product } from "@/ts/models/booking/product/Product";
 import { Box, Divider, Button, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
@@ -10,7 +9,8 @@ import React, { memo, useCallback, useMemo, useState } from "react";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
 
 type ExploreServicesTabProps = {
-  postId: number | undefined;
+  linkedProducts: Product[];
+  isLoadingLinkedProducts: boolean;
   userId: number | undefined;
   isLoadingPosts: boolean;
   onNavigateToBooking: (selectedProductId: number | null) => void;
@@ -22,21 +22,14 @@ export type SelectedProductType = {
 };
 
 const ExploreServicesTab = ({
-  postId,
+  linkedProducts,
+  isLoadingLinkedProducts,
   isLoadingPosts,
   onNavigateToBooking,
 }: ExploreServicesTabProps) => {
   const [selectedProduct, setSelectedProduct] = useState<SelectedProductType>({
     product: null,
     open: false,
-  });
-
-  const { data: products, isLoading } = useCustomQuery<Product[]>({
-    key: ["post-linked-products", postId],
-    url: `/api/posts/${postId}/linked-products`,
-    options: {
-      enabled: !!postId,
-    },
   });
 
   const skeletons = useMemo(
@@ -74,10 +67,10 @@ const ExploreServicesTab = ({
       )}
 
       <Box sx={styles.listContainer}>
-        {(isLoading || isLoadingPosts) && skeletons}
+        {(isLoadingLinkedProducts || isLoadingPosts) && skeletons}
 
-        {!isLoading &&
-          products?.map((prod, i) => (
+        {!isLoadingLinkedProducts &&
+          linkedProducts?.map((prod, i) => (
             <Box key={prod.id}>
               <ProductCard
                 product={prod}
@@ -90,11 +83,11 @@ const ExploreServicesTab = ({
                 onAdd={() => {}}
               />
 
-              {i < products?.length - 1 && <Divider sx={{ my: 1.5 }} />}
+              {i < linkedProducts?.length - 1 && <Divider sx={{ my: 1.5 }} />}
             </Box>
           ))}
 
-        {!isLoading && !isEmpty(products) && (
+        {!isLoadingLinkedProducts && !isEmpty(linkedProducts) && (
           <Button
             variant="outlined"
             color="secondary"
@@ -106,7 +99,7 @@ const ExploreServicesTab = ({
           </Button>
         )}
 
-        {!isLoading && products?.length === 0 && (
+        {!isLoadingLinkedProducts && linkedProducts?.length === 0 && (
           <Typography color="text.secondary">
             Nu există servicii momentan.
           </Typography>
