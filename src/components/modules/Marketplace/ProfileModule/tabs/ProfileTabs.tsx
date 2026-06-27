@@ -4,11 +4,6 @@ import { Box, Tab, Tabs, Typography } from "@mui/material";
 import React, { useMemo, useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Theme } from "@mui/material/styles";
-import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
-import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
-import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import {
   ProfileTabEnum,
   tabEnumToParamMap,
@@ -19,11 +14,18 @@ import ProfileProductsTab from "./ProfileProductsTab";
 import ProfileEmployeesTab from "./ProfileEmployeesTab";
 import ProfileBookmarksTab from "./ProfileBookmarksTab";
 import ProfileInfoTab from "./info/ProfileInfoTab";
+import { StaticImageData } from "next/image";
+
+import VideoIcon from "@/assets/icons/ic_video_outline.svg";
+import BagIcon from "@/assets/icons/ic_shopping_outline.svg";
+import UsersIcon from "@/assets/icons/ic_users_outline.svg";
+import BookmarkIcon from "@/assets/icons/ic_bookmark_outline.svg";
+import LocationIcon from "@/assets/icons/ic_location_outline.svg";
 
 type ProfileTabType = {
   route: ProfileTabEnum;
   label: string;
-  icon: React.ReactElement;
+  icon: StaticImageData;
 };
 
 type ProfileTabsProps = {
@@ -53,14 +55,14 @@ const getTabs = (
     {
       route: ProfileTabEnum.POSTS,
       label: "Postări",
-      icon: <VideoLibraryOutlinedIcon sx={{ fontSize: 30 }} />,
+      icon: VideoIcon,
     },
     ...(isBusinessOrEmployee
       ? [
           {
             route: ProfileTabEnum.PRODUCTS,
             label: "Prețuri",
-            icon: <ShoppingBagOutlinedIcon sx={{ fontSize: 30 }} />,
+            icon: BagIcon,
           },
         ]
       : []),
@@ -69,7 +71,7 @@ const getTabs = (
           {
             route: ProfileTabEnum.EMPLOYEES,
             label: "Specialiști",
-            icon: <PeopleOutlinedIcon sx={{ fontSize: 30 }} />,
+            icon: UsersIcon,
           },
         ]
       : []),
@@ -78,7 +80,7 @@ const getTabs = (
           {
             route: ProfileTabEnum.BOOKMARKS,
             label: "Salvat",
-            icon: <BookmarkBorderOutlinedIcon sx={{ fontSize: 30 }} />,
+            icon: BookmarkIcon,
           },
         ]
       : []),
@@ -87,7 +89,7 @@ const getTabs = (
           {
             route: ProfileTabEnum.INFO,
             label: "Info",
-            icon: <FmdGoodOutlinedIcon sx={{ fontSize: 30 }} />,
+            icon: LocationIcon,
           },
         ]
       : []),
@@ -168,7 +170,24 @@ const ProfileTabs = ({
             <Tab
               key={t.route}
               value={t.route}
-              icon={t.icon}
+              icon={
+                <Box
+                  sx={{
+                    width: { xs: 20, lg: 25 },
+                    height: { xs: 20, lg: 25 },
+                    backgroundColor: "currentColor",
+                    maskImage: `url(${t.icon.src})`,
+                    WebkitMaskImage: `url(${t.icon.src})`,
+                    maskSize: "contain",
+                    WebkitMaskSize: "contain",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskPosition: "center",
+                    WebkitMaskPosition: "center",
+                    mr: 1,
+                  }}
+                />
+              }
               iconPosition="start"
               label={<Typography sx={styles.label}>{t.label}</Typography>}
             />
