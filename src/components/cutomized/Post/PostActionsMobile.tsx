@@ -61,7 +61,7 @@ export default function PostActionsMobile({
             >
               <StarIcon sx={{ fontSize: 18, color: "rating.main" }} />
               <Typography
-                sx={{ fontSize: 15, fontWeight: 600, color: "text.primary" }}
+                sx={{ fontSize: 15, fontWeight: 600, color: "common.black" }}
               >
                 {formatRating(user.ratings_average)}
               </Typography>
@@ -102,8 +102,8 @@ export default function PostActionsMobile({
           >
             <Box
               sx={{
-                width: 35,
-                height: 35,
+                width: 32.5,
+                height: 32.5,
                 backgroundColor: userActions.is_liked
                   ? "error.main"
                   : "common.white",
@@ -121,7 +121,7 @@ export default function PostActionsMobile({
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 14 }}
+            sx={{ color: "#fff", fontSize: 13 }}
           >
             {counters.like_count}
           </Typography>
@@ -131,8 +131,8 @@ export default function PostActionsMobile({
           <ButtonBase onClick={() => {}} sx={styles.actionButton}>
             <Box
               sx={{
-                width: 35,
-                height: 35,
+                width: 32.5,
+                height: 32.5,
                 backgroundColor: "currentColor",
                 maskImage: `url(${ClipboardIconSolid.src})`,
                 WebkitMaskImage: `url(${ClipboardIconSolid.src})`,
@@ -148,7 +148,7 @@ export default function PostActionsMobile({
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 14 }}
+            sx={{ color: "#fff", fontSize: 13 }}
           >
             {user.ratings_count}
           </Typography>
@@ -158,8 +158,8 @@ export default function PostActionsMobile({
           <ButtonBase onClick={() => {}} sx={styles.actionButton}>
             <Box
               sx={{
-                width: 35,
-                height: 35,
+                width: 32.5,
+                height: 32.5,
                 backgroundColor: "currentColor",
                 maskImage: `url(${CommentIconSolid.src})`,
                 WebkitMaskImage: `url(${CommentIconSolid.src})`,
@@ -175,7 +175,7 @@ export default function PostActionsMobile({
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 14 }}
+            sx={{ color: "#fff", fontSize: 13 }}
           >
             {counters.comment_count}
           </Typography>
@@ -189,8 +189,8 @@ export default function PostActionsMobile({
           >
             <Box
               sx={{
-                width: 35,
-                height: 35,
+                width: 32.5,
+                height: 32.5,
                 backgroundColor: userActions.is_bookmarked
                   ? "rating.main"
                   : "common.white",
@@ -208,7 +208,7 @@ export default function PostActionsMobile({
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 14 }}
+            sx={{ color: "#fff", fontSize: 13 }}
           >
             {counters.bookings_count}
           </Typography>
@@ -217,8 +217,8 @@ export default function PostActionsMobile({
         <ButtonBase onClick={() => {}} sx={styles.actionButton}>
           <Box
             sx={{
-              width: 35,
-              height: 35,
+              width: 32.5,
+              height: 32.5,
               backgroundColor: "currentColor",
               maskImage: `url(${MoreIcon.src})`,
               WebkitMaskImage: `url(${MoreIcon.src})`,

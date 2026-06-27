@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Box, IconButton, Skeleton, Typography, Theme } from "@mui/material";
+import { Box, IconButton, Skeleton, Typography } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -118,7 +118,7 @@ const PostActions = ({
     ]
   );
 
-  const getActionStyles = (actionId: string, theme: Theme) => {
+  const getActionStyles = (actionId: string) => {
     const isOptions = actionId === "options";
     const size = isOptions ? 40 : 60;
 
@@ -126,11 +126,7 @@ const PostActions = ({
       width: size,
       height: size,
       borderRadius: "50%",
-      bgcolor: isOptions
-        ? "transparent"
-        : theme.palette.mode === "light"
-          ? "background.default"
-          : "background.paper",
+      bgcolor: isOptions ? "transparent" : "background.paper",
       color: "text.primary",
       display: "flex",
       alignItems: "center",
@@ -165,7 +161,7 @@ const PostActions = ({
           <IconButton
             onClick={action.onClick}
             disableRipple
-            sx={(theme) => getActionStyles(action.id, theme)}
+            sx={() => getActionStyles(action.id)}
           >
             {action.icon}
           </IconButton>
