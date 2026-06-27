@@ -91,7 +91,7 @@ export const darkTheme = createTheme({
       200: "#FFFDF9",
     },
     background: {
-      default: "#121212",
+      default: "#1C1B1F",
       paper: "#262626",
     },
     rating: {
