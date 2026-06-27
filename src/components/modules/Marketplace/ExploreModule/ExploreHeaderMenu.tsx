@@ -1,7 +1,8 @@
 import { alpha, Box, Button, IconButton, Stack } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import React from "react";
+
+import SearchIcon from "@/assets/icons/ic_search.svg";
+import BurgerIcon from "@/assets/icons/ic_menu_solid.svg";
 
 type ExploreHeaderMenuProps = {
   onHandleToggleDrawer: () => void;
@@ -20,7 +21,21 @@ const ExploreHeaderMenu = ({
         >
           <Stack flexDirection="row" alignItems="center">
             <IconButton size="large" onClick={onHandleToggleDrawer}>
-              <MenuIcon sx={{ color: "common.white", width: 30, height: 30 }} />
+              <Box
+                sx={{
+                  width: 30,
+                  height: 30,
+                  backgroundColor: "common.white",
+                  maskImage: `url(${BurgerIcon.src})`,
+                  WebkitMaskImage: `url(${BurgerIcon.src})`,
+                  maskSize: "contain",
+                  WebkitMaskSize: "contain",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskPosition: "center",
+                  WebkitMaskPosition: "center",
+                }}
+              />
             </IconButton>
 
             <Button
@@ -52,7 +67,21 @@ const ExploreHeaderMenu = ({
             size="large"
             sx={{ display: { xs: "block", lg: "none" } }}
           >
-            <SearchIcon sx={{ color: "common.white", width: 30, height: 30 }} />
+            <Box
+              sx={{
+                width: 30,
+                height: 30,
+                backgroundColor: "common.white",
+                maskImage: `url(${SearchIcon.src})`,
+                WebkitMaskImage: `url(${SearchIcon.src})`,
+                maskSize: "contain",
+                WebkitMaskSize: "contain",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: "center",
+                WebkitMaskPosition: "center",
+              }}
+            />
           </IconButton>
         </Stack>
       </Box>
@@ -65,7 +94,7 @@ export default ExploreHeaderMenu;
 const styles = {
   container: {
     position: "absolute",
-    top: 0,
+    top: 1.5,
     right: 0,
     left: 0,
     width: "100%",

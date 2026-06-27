@@ -9,21 +9,34 @@ import {
   Badge,
 } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
-
-import HomeIcon from "@mui/icons-material/Home";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import SearchIcon from "@mui/icons-material/Search";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
-import PersonIcon from "@mui/icons-material/Person";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import { StaticImageData } from "next/image";
 import { AppRoutes } from "@/utils/routes";
+
+import HomeIconOutlined from "@/assets/icons/ic_home_outline.svg";
+import HomeIconSolid from "@/assets/icons/ic_home_solid.svg";
+
+import NotificationsIconOutlined from "@/assets/icons/ic_notifications_outline.svg";
+import NotificationsIconSolid from "@/assets/icons/ic_notifications_solid.svg";
+
+import SearchIcon from "@/assets/icons/ic_search.svg";
+
+import AppointmentsIconOutlined from "@/assets/icons/ic_clipboard_outline.svg";
+import AppointmentsSolidOutlined from "@/assets/icons/ic_clipboard_solid.svg";
+
+import PersonIconOutlined from "@/assets/icons/ic_person_outline.svg";
+import PersonIconSolid from "@/assets/icons/ic_person_solid.svg";
 
 type BottomBarProps = {
   username: string | undefined;
   profession: string | undefined;
+};
+
+type BottomBarActionItem = {
+  label: string;
+  route: string | undefined;
+  activeIcon: StaticImageData;
+  inactiveIcon: StaticImageData;
+  badge?: number;
 };
 
 export default function BottomBar({ username, profession }: BottomBarProps) {
@@ -55,32 +68,32 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
     return theme.palette.background.default;
   };
 
-  const actions = React.useMemo(
+  const actions: BottomBarActionItem[] = React.useMemo(
     () => [
       {
         label: "Acasă",
         route: AppRoutes.home(),
-        activeIcon: <HomeIcon />,
-        inactiveIcon: <HomeOutlinedIcon />,
+        activeIcon: HomeIconSolid,
+        inactiveIcon: HomeIconOutlined,
       },
       {
         label: "Notificări",
         route: AppRoutes.notifications(),
-        activeIcon: <NotificationsIcon />,
-        inactiveIcon: <NotificationsNoneOutlinedIcon />,
+        activeIcon: NotificationsIconSolid,
+        inactiveIcon: NotificationsIconOutlined,
         badge: notificationsCount,
       },
       {
         label: "Caută",
         route: AppRoutes.search(),
-        activeIcon: <SearchIcon />,
-        inactiveIcon: <SearchIcon />,
+        activeIcon: SearchIcon,
+        inactiveIcon: SearchIcon,
       },
       {
         label: "Rezervări",
         route: "/appointments",
-        activeIcon: <AccessTimeFilledIcon />,
-        inactiveIcon: <AccessTimeIcon />,
+        activeIcon: AppointmentsSolidOutlined,
+        inactiveIcon: AppointmentsIconOutlined,
         badge: appointmentsCount,
       },
       {
@@ -89,8 +102,8 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
           username && profession
             ? AppRoutes.profile(username, profession)
             : undefined,
-        activeIcon: <PersonIcon />,
-        inactiveIcon: <PersonOutlineOutlinedIcon />,
+        activeIcon: PersonIconSolid,
+        inactiveIcon: PersonIconOutlined,
       },
     ],
     [username, profession, notificationsCount, appointmentsCount]
@@ -162,7 +175,21 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
                     },
                   }}
                 >
-                  {baseIcon}
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      backgroundColor: "currentColor",
+                      maskImage: `url(${baseIcon.src})`,
+                      WebkitMaskImage: `url(${baseIcon.src})`,
+                      maskSize: "contain",
+                      WebkitMaskSize: "contain",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskRepeat: "no-repeat",
+                      maskPosition: "center",
+                      WebkitMaskPosition: "center",
+                    }}
+                  />
                 </Badge>
               }
             />

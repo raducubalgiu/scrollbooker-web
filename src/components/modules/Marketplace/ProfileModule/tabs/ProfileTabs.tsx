@@ -197,6 +197,7 @@ const styles = {
     top: 0,
     zIndex: 10,
     mt: { md: 0, lg: 5 },
+    bgcolor: "background.default",
     borderBottom: 1,
     borderColor: "divider",
     boxShadow: (theme: Theme) => `0 1px 0 ${theme.palette.divider}`,

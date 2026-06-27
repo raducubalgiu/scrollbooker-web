@@ -1,22 +1,22 @@
 import {
   Box,
   Stack,
-  IconButton,
   Typography,
-  CircularProgress,
   alpha,
   Avatar,
   Badge,
+  ButtonBase,
 } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import TextsmsIcon from "@mui/icons-material/Textsms";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import ClipboardCheckIcon from "@mui/icons-material/AssignmentTurnedIn";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import StarIcon from "@mui/icons-material/Star";
 import { PostCounters, PostUser } from "@/ts/models/social/Post";
 import { formatRating } from "@/utils/formatters";
 import { useCallback } from "react";
+
+import LikeIconSolid from "@/assets/icons/ic_heart_solid.svg";
+import ClipboardIconSolid from "@/assets/icons/ic_clipboard_solid.svg";
+import CommentIconSolid from "@/assets/icons/ic_comment_solid.svg";
+import BookmarkIconSolid from "@/assets/icons/ic_bookmark_solid.svg";
+import MoreIcon from "@/assets/icons/ic_elipsis-horizontal.svg";
 
 type PostActionsProps = {
   user: PostUser;
@@ -89,82 +89,138 @@ export default function PostActionsMobile({
         spacing={1}
       >
         <Stack alignItems="center">
-          <IconButton
+          <ButtonBase
             disabled={isSavingLike}
             onClick={onLike}
             sx={styles.actionButton}
           >
-            {isSavingLike ? (
-              <CircularProgress size={20} sx={{ color: "#fff" }} />
-            ) : (
-              <FavoriteIcon
-                sx={{
-                  fontSize: 35,
-                  color: "#fff",
-                }}
-              />
-            )}
-          </IconButton>
+            <Box
+              sx={{
+                width: 35,
+                height: 35,
+                backgroundColor: "currentColor",
+                maskImage: `url(${LikeIconSolid.src})`,
+                WebkitMaskImage: `url(${LikeIconSolid.src})`,
+                maskSize: "contain",
+                WebkitMaskSize: "contain",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: "center",
+                WebkitMaskPosition: "center",
+              }}
+            />
+          </ButtonBase>
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 13 }}
+            sx={{ color: "#fff", fontSize: 15 }}
           >
             {counters.like_count}
           </Typography>
         </Stack>
 
         <Stack alignItems="center">
-          <IconButton onClick={() => {}} sx={styles.actionButton}>
-            <ClipboardCheckIcon sx={{ fontSize: 35, color: "#fff" }} />
-          </IconButton>
+          <ButtonBase onClick={() => {}} sx={styles.actionButton}>
+            <Box
+              sx={{
+                width: 35,
+                height: 35,
+                backgroundColor: "currentColor",
+                maskImage: `url(${ClipboardIconSolid.src})`,
+                WebkitMaskImage: `url(${ClipboardIconSolid.src})`,
+                maskSize: "contain",
+                WebkitMaskSize: "contain",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: "center",
+                WebkitMaskPosition: "center",
+              }}
+            />
+          </ButtonBase>
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 13 }}
+            sx={{ color: "#fff", fontSize: 15 }}
           >
             {user.ratings_count}
           </Typography>
         </Stack>
 
         <Stack alignItems="center">
-          <IconButton onClick={() => {}} sx={styles.actionButton}>
-            <TextsmsIcon sx={{ fontSize: 35, color: "#fff" }} />
-          </IconButton>
+          <ButtonBase onClick={() => {}} sx={styles.actionButton}>
+            <Box
+              sx={{
+                width: 35,
+                height: 35,
+                backgroundColor: "currentColor",
+                maskImage: `url(${CommentIconSolid.src})`,
+                WebkitMaskImage: `url(${CommentIconSolid.src})`,
+                maskSize: "contain",
+                WebkitMaskSize: "contain",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: "center",
+                WebkitMaskPosition: "center",
+              }}
+            />
+          </ButtonBase>
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 13 }}
+            sx={{ color: "#fff", fontSize: 15 }}
           >
             {counters.comment_count}
           </Typography>
         </Stack>
 
         <Stack alignItems="center" spacing={0.5}>
-          <IconButton
+          <ButtonBase
             disabled={isSavingBookmark}
             onClick={onBookmark}
             sx={styles.actionButton}
           >
-            <BookmarkIcon
+            <Box
               sx={{
-                fontSize: 35,
-                color: "#fff",
+                width: 35,
+                height: 35,
+                backgroundColor: "currentColor",
+                maskImage: `url(${BookmarkIconSolid.src})`,
+                WebkitMaskImage: `url(${BookmarkIconSolid.src})`,
+                maskSize: "contain",
+                WebkitMaskSize: "contain",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: "center",
+                WebkitMaskPosition: "center",
               }}
             />
-          </IconButton>
+          </ButtonBase>
           <Typography
             variant="caption"
             fontWeight={700}
-            sx={{ color: "#fff", fontSize: 13 }}
+            sx={{ color: "#fff", fontSize: 15 }}
           >
             {counters.bookings_count}
           </Typography>
         </Stack>
 
-        <IconButton onClick={() => {}} sx={styles.actionButton}>
-          <MoreHorizIcon sx={{ fontSize: 35, color: "#fff" }} />
-        </IconButton>
+        <ButtonBase onClick={() => {}} sx={styles.actionButton}>
+          <Box
+            sx={{
+              width: 35,
+              height: 35,
+              backgroundColor: "currentColor",
+              maskImage: `url(${MoreIcon.src})`,
+              WebkitMaskImage: `url(${MoreIcon.src})`,
+              maskSize: "contain",
+              WebkitMaskSize: "contain",
+              maskRepeat: "no-repeat",
+              WebkitMaskRepeat: "no-repeat",
+              maskPosition: "center",
+              WebkitMaskPosition: "center",
+            }}
+          />
+        </ButtonBase>
       </Stack>
     </Stack>
   );
@@ -172,8 +228,6 @@ export default function PostActionsMobile({
 
 const styles = {
   actionButton: {
-    width: 35,
-    height: 35,
     borderRadius: "50%",
     color: "#fff",
     transition: "all 0.15ms ease",

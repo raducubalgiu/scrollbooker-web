@@ -1,9 +1,10 @@
 "use client";
 
 import { Box, ButtonBase, Stack, Typography } from "@mui/material";
-import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import Image from "next/image";
 import React from "react";
+
+import PlayIcon from "@/assets/icons/ic_play_outline.svg";
 
 type PostGridProps = {
   thumbnailUrl: string | null;
@@ -69,7 +70,22 @@ const PostGrid = ({
           }}
         >
           <Stack direction="row" alignItems="center">
-            <PlayArrowOutlinedIcon sx={{ color: "#fff", fontSize: 30 }} />
+            <Box
+              sx={{
+                width: 17.5,
+                height: 17.5,
+                backgroundColor: "common.white",
+                maskImage: `url(${PlayIcon.src})`,
+                WebkitMaskImage: `url(${PlayIcon.src})`,
+                maskSize: "contain",
+                WebkitMaskSize: "contain",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: "center",
+                WebkitMaskPosition: "center",
+              }}
+            />
+
             <Typography
               sx={{
                 color: "#fff",
