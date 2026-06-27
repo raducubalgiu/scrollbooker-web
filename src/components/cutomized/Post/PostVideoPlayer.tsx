@@ -17,7 +17,7 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import VolumeOffRoundedIcon from "@mui/icons-material/VolumeOffRounded";
 import VolumeUpRoundedIcon from "@mui/icons-material/VolumeUpRounded";
 import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
-import { ErrorOutlineRounded } from "@mui/icons-material";
+import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import { Theme } from "@mui/material/styles";
 import Hls from "hls.js";
 import PostOverlay from "./PostOverlay";
@@ -636,7 +636,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       <Box sx={styles.centerOverlay}>
         {hasError ? (
           <Box sx={styles.stateCard}>
-            <ErrorOutlineRounded sx={styles.stateIcon} />
+            <ErrorOutlineRoundedIcon sx={styles.stateIcon} />
             <Typography sx={styles.stateTitle}>Video indisponibil</Typography>
             <Typography sx={styles.stateSubtitle}>
               Nu am putut reda acest video.
@@ -653,16 +653,11 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
             </Box>
           </Box>
         ) : isBuffering && !isSeeking ? (
-          <Box sx={styles.stateCard}>
-            <CircularProgress size={42} sx={{ color: "#fff" }} />
-          </Box>
-        ) : !isSeeking ? (
-          <>
-            {showReplayOverlay && <ReplayRoundedIcon sx={styles.centerIcon} />}
-            {showPausedOverlay && (
-              <PlayArrowRoundedIcon sx={styles.centerIcon} />
-            )}
-          </>
+          <CircularProgress size={42} sx={{ color: "#fff" }} />
+        ) : showReplayOverlay ? (
+          <ReplayRoundedIcon sx={styles.centerIcon} />
+        ) : showPausedOverlay ? (
+          <PlayArrowRoundedIcon sx={styles.centerIcon} />
         ) : null}
       </Box>
 
@@ -670,6 +665,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         {volumeButtonIcon}
       </Box>
 
+      {/* Post Overlay */}
       <Fade in={!isSeeking && !isLoading && !!user} timeout={200}>
         <div>
           <PostOverlay
@@ -681,6 +677,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         </div>
       </Fade>
 
+      {/* Time */}
       <Fade in={isSeeking} timeout={150}>
         <Typography
           variant="body1"
@@ -707,6 +704,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         </Typography>
       </Fade>
 
+      {/* Slider */}
       <Box
         sx={styles.progressWrapper}
         onClick={(e) => e.stopPropagation()}
