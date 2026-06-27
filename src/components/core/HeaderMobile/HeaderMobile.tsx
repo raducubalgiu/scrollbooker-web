@@ -1,14 +1,14 @@
 import { IconButton, Stack, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 type HeaderMobileProps = {
   title?: string;
 };
 
 const HeaderMobile = ({ title }: HeaderMobileProps) => {
-  const router = useRouter();
+  const { goBack } = useAppNavigation();
 
   return (
     <Stack
@@ -17,10 +17,18 @@ const HeaderMobile = ({ title }: HeaderMobileProps) => {
       justifyContent="space-between"
       sx={styles.container}
     >
-      <IconButton onClick={() => router.back()}>
+      <IconButton onClick={() => goBack()}>
         <ArrowBackIcon />
       </IconButton>
-      <Typography>{title}</Typography>
+      <Typography
+        variant="h6"
+        sx={{
+          fontWeight: "bold",
+          color: "text.primary",
+        }}
+      >
+        {title}
+      </Typography>
       <IconButton onClick={() => {}} disabled>
         <ArrowBackIcon sx={{ color: "transparent" }} />
       </IconButton>
@@ -32,17 +40,12 @@ export default HeaderMobile;
 
 const styles = {
   container: {
-    display: {
-      xs: "flex",
-      lg: "none",
-    },
+    height: 50,
+    display: { xs: "flex", lg: "none" },
+    flexShrink: 0,
     width: "100%",
-    position: "sticky",
-    borderBottom: 1,
-    borderColor: "divider",
-    top: 0,
+
     zIndex: 10,
-    backgroundColor: "background.paper",
-    p: 1,
+    px: 1,
   },
 };

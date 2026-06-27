@@ -18,7 +18,7 @@ const NotFound = ({ title, description, icon }: NotFoundProps) => {
       >
         <Box
           sx={{
-            bgcolor: "background.default",
+            bgcolor: "background.paper",
             borderRadius: "50%",
             display: "flex",
             alignItems: "center",

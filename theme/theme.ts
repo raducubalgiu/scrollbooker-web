@@ -400,8 +400,8 @@ export const lightTheme = createTheme({
       main: "#F1F1F1",
     },
     background: {
-      default: "#F1F1F1",
-      paper: "#FFFFFF",
+      default: "#FFFFFF",
+      paper: "#F1F1F1",
     },
     rating: {
       main: "#FAAF00",

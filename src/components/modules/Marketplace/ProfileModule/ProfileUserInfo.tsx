@@ -10,6 +10,7 @@ import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import { UserProfile } from "@/ts/models/user/UserProfile";
 import { formatRating } from "@/utils/formatters";
 import { useRouter } from "next/navigation";
+import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 
 type ProfileUserInfoProps = {
   profile: UserProfile;
@@ -74,16 +75,8 @@ const ProfileUserInfo = ({
   }, [opening_hours]);
 
   const handleBookNow = () => {
-    // const isBusiness = profile.business_owner?.id === profile.id;
-
-    // let url = `/booking/${profile.business_id}?businessOwnerId=${profile.business_owner?.id}`;
-
-    // if (!isBusiness) {
-    //   url += `&employeeId=${profile.id}`;
-    // }
-
     router.push(
-      `/booking/${profile.business_id}/${profile.business_owner?.id}/${profile.id}?source=profile`
+      `/booking/${profile.business_id}/${profile.business_owner?.id}/${profile.id}?source=${BookingSourceEnum.PROFILE}`
     );
   };
 
@@ -350,7 +343,17 @@ const ProfileUserInfo = ({
       </Stack>
 
       <Box sx={{ display: { xs: "block", sm: "none" } }}>
-        <Box sx={{ maxWidth: "sm", mt: 1.5, mx: 5 }}>
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          gap={1}
+          mt={1.5}
+          sx={{ width: "100%", mt: 1.5 }}
+        >
+          {actions}
+        </Stack>
+
+        <Box sx={{ maxWidth: "sm", mt: 2.5, mx: 5 }}>
           <Typography
             sx={{
               textAlign: "center",
@@ -360,16 +363,6 @@ const ProfileUserInfo = ({
             {bio}
           </Typography>
         </Box>
-
-        <Stack
-          flexDirection="row"
-          alignItems="center"
-          gap={1}
-          mt={1.5}
-          sx={{ width: "100%" }}
-        >
-          {actions}
-        </Stack>
       </Box>
     </Box>
   );

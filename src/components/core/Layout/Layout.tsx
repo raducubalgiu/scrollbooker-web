@@ -65,17 +65,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       ? COLLAPSED_WIDTH
       : DRAWER_WIDTH;
 
-  const bgColor =
-    theme.palette.mode === "dark" ? "background.default" : "background.paper";
-
   const styles = React.useMemo(
-    () =>
-      getStyles(
-        theme,
-        { isOverlayOpen, visualDrawerCollapsed, navWidth },
-        bgColor
-      ),
-    [theme, isOverlayOpen, visualDrawerCollapsed, navWidth, bgColor]
+    () => getStyles(theme, { isOverlayOpen, visualDrawerCollapsed, navWidth }),
+    [theme, isOverlayOpen, visualDrawerCollapsed, navWidth]
   );
 
   const handleCloseAll = React.useCallback(() => setActiveView(null), []);
@@ -169,7 +161,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         component="main"
         sx={{
           ...styles.mainContent,
-          bgcolor: isAdminPage ? "background.default" : bgColor,
           p: { xs: isAdminPage ? 2.5 : 0, md: isNoLayoutPage ? 0 : 2.5 },
         }}
       >
@@ -190,8 +181,7 @@ const getStyles = (
     isOverlayOpen: boolean;
     visualDrawerCollapsed: boolean;
     navWidth: number;
-  },
-  bgColor: string
+  }
 ) => {
   const { isOverlayOpen, visualDrawerCollapsed, navWidth } = layoutState;
 
@@ -202,7 +192,7 @@ const getStyles = (
       height: "100dvh",
       width: "100vw",
       overflow: "hidden",
-      backgroundColor: bgColor,
+      backgroundColor: "background.default",
     },
 
     backdrop: {
@@ -225,7 +215,7 @@ const getStyles = (
 
     drawerPaper: {
       width: visualDrawerCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH,
-      bgcolor: bgColor,
+      bgcolor: "background.default",
       boxSizing: "border-box",
       boxShadow: "none",
       borderRight: "1px solid",
@@ -271,6 +261,7 @@ const getStyles = (
       overflowY: "auto",
       height: { xs: "auto", lg: "100%" },
       flex: { xs: "1 1 auto", lg: "none" },
+      bgColor: "background.default",
 
       WebkitOverflowScrolling: "touch",
       overscrollBehaviorY: "contain",

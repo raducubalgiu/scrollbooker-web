@@ -1,8 +1,6 @@
 "use client";
 
 import React, { memo, useState } from "react";
-import Protected from "@/components/cutomized/Protected/Protected";
-import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { PostCounters, PostUser } from "@/ts/models/social/Post";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
@@ -123,21 +121,19 @@ const PostOverlay = ({
               </Box>
             )}
 
-            <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenLinkedProducts();
-                }}
-                variant="contained"
-                fullWidth
-                sx={{
-                  display: { xs: "flex", lg: "none" },
-                }}
-              >
-                Rezervă acum
-              </Button>
-            </Protected>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenLinkedProducts();
+              }}
+              variant="contained"
+              fullWidth
+              sx={{
+                display: { xs: "flex", lg: "none" },
+              }}
+            >
+              Rezervă acum
+            </Button>
           </Stack>
 
           <Box sx={{ display: { xs: "block", md: "none" } }}>

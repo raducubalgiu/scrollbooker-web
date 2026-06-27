@@ -193,7 +193,6 @@ const styles = {
   },
   container: {
     width: "100%",
-    bgcolor: "background.paper",
     position: "sticky",
     top: 0,
     zIndex: 10,

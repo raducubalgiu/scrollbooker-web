@@ -15,6 +15,10 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import CloseIcon from "@mui/icons-material/Close";
+import { AppRoutes } from "@/utils/routes";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
+import Protected from "@/components/cutomized/Protected/Protected";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 type ProfileMenuSheetProps = {
   isMenuOpen: boolean;
@@ -25,6 +29,8 @@ const ProfileMenuSheet = ({
   isMenuOpen,
   onCloseMenu,
 }: ProfileMenuSheetProps) => {
+  const { navigateTo } = useAppNavigation();
+
   return (
     <Drawer
       anchor="bottom"
@@ -32,14 +38,7 @@ const ProfileMenuSheet = ({
       onClose={onCloseMenu}
       sx={{ display: { xs: "block", lg: "none" } }}
       slotProps={{
-        paper: {
-          sx: {
-            borderTopLeftRadius: 24,
-            borderTopRightRadius: 24,
-            backgroundColor: "background.paper",
-            pt: 1.5,
-          },
-        },
+        paper: { sx: styles.drawer },
       }}
     >
       <Box sx={{ width: "100%" }}>
@@ -67,53 +66,57 @@ const ProfileMenuSheet = ({
         </Stack>
 
         <List sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <ListItem disablePadding>
-            <ListItemButton
-              onClick={() => {}}
-              sx={{
-                borderRadius: 2,
-                "&:hover": {
-                  backgroundColor: "action.hover",
-                },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
-                <VideocamOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Creează o postare"
-                slotProps={{
-                  primary: { fontWeight: 500 },
+          <Protected permission={PermissionEnum.CREATE_POST}>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={() => {}}
+                sx={{
+                  borderRadius: 2,
+                  "&:hover": {
+                    backgroundColor: "action.hover",
+                  },
                 }}
-              />
-            </ListItemButton>
-          </ListItem>
+              >
+                <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
+                  <VideocamOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Creează o postare"
+                  slotProps={{
+                    primary: { fontWeight: 500 },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Protected>
+
+          <Protected permission={PermissionEnum.MY_BUSINESS_ROUTES_VIEW}>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={() => navigateTo(AppRoutes.myBusiness())}
+                sx={{
+                  borderRadius: 2,
+                  "&:hover": {
+                    backgroundColor: "action.hover",
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
+                  <BusinessCenterOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Afacerea mea"
+                  slotProps={{
+                    primary: { fontWeight: 500 },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Protected>
 
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => {}}
-              sx={{
-                borderRadius: 2,
-                "&:hover": {
-                  backgroundColor: "action.hover",
-                },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
-                <BusinessCenterOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Afacerea mea"
-                slotProps={{
-                  primary: { fontWeight: 500 },
-                }}
-              />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton
-              onClick={() => {}}
+              onClick={() => navigateTo(AppRoutes.settings())}
               sx={{
                 borderRadius: 2,
                 "&:hover": {
@@ -139,3 +142,12 @@ const ProfileMenuSheet = ({
 };
 
 export default ProfileMenuSheet;
+
+const styles = {
+  drawer: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    backgroundColor: "background.paper",
+    py: 1.5,
+  },
+};

@@ -92,5 +92,6 @@ export const config = {
     "/appointments/:path*",
     "/businesses/:path*",
     "/nomenclatures/:path*",
+    "/settings/:path*",
   ],
 };

@@ -28,7 +28,6 @@ const styles = {
     borderRadius: "18px",
     border: "1px solid",
     borderColor: "divider",
-    backgroundColor: "background.paper",
   },
   day: {
     fontSize: 24,

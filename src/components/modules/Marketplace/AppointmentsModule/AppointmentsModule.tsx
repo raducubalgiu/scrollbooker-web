@@ -69,19 +69,15 @@ const AppointmentsModule = ({
   const renderHeader = () => {
     return (
       <Box
-        sx={(theme) => ({
+        sx={{
           position: isInsideOverlay ? "sticky" : "initial",
           top: isInsideOverlay ? 0 : "initial",
           zIndex: isInsideOverlay ? 10 : "initial",
           flexShrink: isInsideOverlay ? "initial" : 0,
-          backgroundColor:
-            theme.palette.mode === "dark"
-              ? "background.default"
-              : "background.paper",
           borderBottom: 1,
           borderColor: "divider",
           p: { xs: 1, lg: 2.5 },
-        })}
+        }}
       >
         <Typography
           variant="h6"
