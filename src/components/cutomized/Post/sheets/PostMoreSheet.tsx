@@ -12,6 +12,8 @@ const PostMoreSheet = ({
   onClose,
   isLoadingPosts,
 }: PostMoreSheetProps) => {
+  console.log(isLoadingPosts);
+
   return (
     <Drawer
       anchor="bottom"

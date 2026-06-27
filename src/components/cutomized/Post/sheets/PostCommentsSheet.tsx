@@ -12,6 +12,8 @@ const PostCommentsSheet = ({
   onClose,
   isLoadingPosts,
 }: PostCommentsSheetProps) => {
+  console.log(isLoadingPosts);
+
   return (
     <Drawer
       anchor="bottom"

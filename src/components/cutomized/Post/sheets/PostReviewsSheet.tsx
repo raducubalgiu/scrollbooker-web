@@ -12,6 +12,8 @@ const PostReviewsSheet = ({
   onClose,
   isLoadingPosts,
 }: PostReviewsSheetProps) => {
+  console.log(isLoadingPosts);
+
   return (
     <Drawer
       anchor="bottom"
