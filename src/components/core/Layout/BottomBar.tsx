@@ -51,7 +51,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
   };
 
   const getBgColor = () => {
-    if (isDarkPage || isAnyVideoPage) return "#121212 !important";
+    if (isDarkPage || isAnyVideoPage) return "#000000 !important";
     return theme.palette.mode === "dark"
       ? theme.palette.background.default
       : theme.palette.background.paper;
