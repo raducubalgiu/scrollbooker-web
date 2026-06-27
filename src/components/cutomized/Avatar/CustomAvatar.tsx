@@ -30,7 +30,7 @@ const CustomAvatar = ({
       },
     },
     badgeContent: {
-      backgroundColor: "background.paper",
+      backgroundColor: "background.default",
       px: { xs: 0.8, md: 1.2 },
       py: { xs: 0.2, md: 0.4 },
       borderRadius: 50,

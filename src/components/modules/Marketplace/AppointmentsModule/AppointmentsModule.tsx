@@ -70,6 +70,7 @@ const AppointmentsModule = ({
           borderBottom: 1,
           borderColor: "divider",
           p: { xs: 1, lg: 2.5 },
+          bgcolor: "background.default",
         }}
       >
         <Typography

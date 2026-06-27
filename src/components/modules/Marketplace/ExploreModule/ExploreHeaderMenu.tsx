@@ -1,8 +1,10 @@
-import { alpha, Box, Button, IconButton, Stack } from "@mui/material";
+import { alpha, Box, Button, IconButton, Stack, Theme } from "@mui/material";
 import React from "react";
 
 import SearchIcon from "@/assets/icons/ic_search.svg";
 import BurgerIcon from "@/assets/icons/ic_menu_solid.svg";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
+import { AppRoutes } from "@/utils/routes";
 
 type ExploreHeaderMenuProps = {
   onHandleToggleDrawer: () => void;
@@ -11,6 +13,8 @@ type ExploreHeaderMenuProps = {
 const ExploreHeaderMenu = ({
   onHandleToggleDrawer,
 }: ExploreHeaderMenuProps) => {
+  const { navigateTo } = useAppNavigation();
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.containerMenu}>
@@ -64,6 +68,7 @@ const ExploreHeaderMenu = ({
           </Stack>
 
           <IconButton
+            onClick={() => navigateTo(AppRoutes.searchUsers())}
             size="large"
             sx={{ display: { xs: "block", lg: "none" } }}
           >
@@ -94,18 +99,22 @@ export default ExploreHeaderMenu;
 const styles = {
   container: {
     position: "absolute",
-    top: 1.5,
+    top: 0,
     right: 0,
     left: 0,
     width: "100%",
-    background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent)",
+    background:
+      "linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.1) 60%, transparent 100%)",
+    height: 75,
+    zIndex: 10,
+    pointerEvents: "none",
   },
   containerMenu: {
     position: "absolute",
-    left: { xs: 1.5, lg: 16 },
-    top: 0,
-    right: 1.5,
+    left: 0,
+    right: 0,
+    top: (theme: Theme) => theme.spacing(1),
     zIndex: 11,
     pointerEvents: "auto",
   },
-};
+} as const;

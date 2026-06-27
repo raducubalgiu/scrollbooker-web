@@ -7,23 +7,29 @@ import {
   Stack,
   CircularProgress,
   Box,
+  IconButton,
 } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState } from "react";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { SearchUser } from "@/ts/models/search/SearchUser";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { SearchUserItem } from "./SearchUserItem";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 type SearchUsersModuleProps = {
   onNavigateToUserProfile: (username: string, profession: string) => void;
+  showTitle?: boolean;
 };
 
 const SearchUsersModule = ({
   onNavigateToUserProfile,
+  showTitle = true,
 }: SearchUsersModuleProps) => {
   const [value, setValue] = useState("");
   const debouncedValue = useDebouncedValue(value, 400);
+  const { goBack } = useAppNavigation();
 
   const {
     data: users = [],
@@ -50,41 +56,49 @@ const SearchUsersModule = ({
           position: "sticky",
           top: 0,
           zIndex: 10,
-          backgroundColor: "background.paper",
           px: 3,
           pt: 3,
+          bgcolor: "background.default",
         }}
       >
-        <Typography
-          variant="h6"
-          noWrap
-          component="div"
-          fontWeight={700}
-          fontSize={25}
-          sx={{ mb: 2.5 }}
-        >
-          Caută utilizatori
-        </Typography>
+        {showTitle && (
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            fontWeight={700}
+            fontSize={25}
+            sx={{ mb: 2.5 }}
+          >
+            Caută utilizatori
+          </Typography>
+        )}
 
-        <TextField
-          autoFocus={true}
-          placeholder="Caută utilizatori, afaceri, specialisti"
-          variant="outlined"
-          fullWidth
-          onFocus={() => {}}
-          onBlur={() => {}}
-          onChange={(e) => setValue(e.target.value)}
-          sx={styles.search}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
-                </InputAdornment>
-              ),
-            },
-          }}
-        />
+        <Stack flexDirection="row" alignItems="center" gap={1}>
+          <IconButton onClick={() => goBack()}>
+            <ArrowBackIcon />
+          </IconButton>
+
+          <TextField
+            autoFocus={true}
+            placeholder="Caută utilizatori, afaceri, specialisti"
+            variant="outlined"
+            fullWidth
+            onFocus={() => {}}
+            onBlur={() => {}}
+            onChange={(e) => setValue(e.target.value)}
+            sx={styles.search}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        </Stack>
       </Box>
 
       {loading && (
@@ -142,7 +156,7 @@ const styles = {
     },
   },
   badgeContent: {
-    backgroundColor: "background.paper",
+    backgroundColor: "background.default",
     px: 1.5,
     py: 0.5,
     borderRadius: 50,

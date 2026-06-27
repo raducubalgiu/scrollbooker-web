@@ -12,6 +12,7 @@ export const AppRoutes = {
   home: () => "/",
   notifications: () => "/notifications",
   search: () => "/search",
+  searchUsers: () => "/search-users",
 
   booking: (
     businessId: number,
