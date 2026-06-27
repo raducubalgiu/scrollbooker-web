@@ -169,7 +169,7 @@ const ProductCard = ({
                 e.stopPropagation();
                 onNavigateToBooking(product);
               }}
-              sx={{ px: 2.5, py: 1, fontSize: { xs: 14, lg: 16 } }}
+              //sx={{ px: 2.5, py: 1, fontSize: { xs: 14, lg: 16 } }}
             >
               Rezervă
             </Button>

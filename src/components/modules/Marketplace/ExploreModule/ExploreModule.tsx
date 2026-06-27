@@ -81,7 +81,7 @@ export default function ExploreModule() {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
   }, []);
 
-  const { user_actions, counters, is_video_review } = currentPost ?? {};
+  const { user_actions, counters } = currentPost ?? {};
 
   const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
     key: ["delete-post", currentPost?.id ?? undefined],
@@ -130,8 +130,9 @@ export default function ExploreModule() {
               items={poolItems}
               isLoading={isLoading}
               user={currentPost?.user ?? null}
+              counters={currentPost?.counters ?? null}
               description={currentPost?.description ?? null}
-              isVideoReview={is_video_review ?? false}
+              isVideoReview={currentPost?.is_video_review ?? false}
               onOpenLinkedProducts={() => setIsProductsOpen(true)}
               onNext={goToNext}
               onPrev={goToPrev}

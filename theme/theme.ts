@@ -229,10 +229,17 @@ export const darkTheme = createTheme({
             pointerEvents: "auto",
           },
         },
-        sizeLarge: {
-          padding: "10px 20px",
-          minHeight: 44,
-        },
+        sizeLarge: ({ theme }) => ({
+          padding: "6px 16px",
+          minHeight: 38,
+          fontSize: "0.875rem",
+
+          [theme.breakpoints.up("lg")]: {
+            padding: "10px 20px",
+            minHeight: 44,
+            fontSize: "1rem",
+          },
+        }),
         containedPrimary: ({ theme }) => ({
           color: theme.palette.common.white,
         }),
@@ -255,6 +262,7 @@ export const darkTheme = createTheme({
         }),
       },
     },
+
     MuiListItemButton: {
       styleOverrides: {
         root: ({ theme }) => ({
@@ -532,10 +540,17 @@ export const lightTheme = createTheme({
             pointerEvents: "auto",
           },
         },
-        sizeLarge: {
-          padding: "10px 20px",
-          minHeight: 44,
-        },
+        sizeLarge: ({ theme }) => ({
+          padding: "6px 16px",
+          minHeight: 38,
+          fontSize: "0.875rem",
+
+          [theme.breakpoints.up("lg")]: {
+            padding: "10px 20px",
+            minHeight: 44,
+            fontSize: "1rem",
+          },
+        }),
         containedPrimary: ({ theme }) => ({
           color: theme.palette.common.white,
         }),
@@ -561,6 +576,7 @@ export const lightTheme = createTheme({
         }),
       },
     },
+
     MuiListItemButton: {
       styleOverrides: {
         root: ({ theme }) => ({

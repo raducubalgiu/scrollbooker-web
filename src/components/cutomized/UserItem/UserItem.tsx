@@ -80,11 +80,6 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
         onClick={handleFollowClick}
         size="large"
         disableElevation
-        sx={{
-          py: { xs: 0.35, lg: 0.5 },
-          px: { xs: 1.25, lg: 1.5 },
-          fontSize: { xs: "0.875rem", sm: "1rem" },
-        }}
       >
         {is_follow ? "Urmărești" : "Urmărește"}
       </Button>

@@ -3,20 +3,23 @@
 import React, { memo, useState } from "react";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { PostUser } from "@/ts/models/social/Post";
+import { PostCounters, PostUser } from "@/ts/models/social/Post";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
+import PostActionsMobile from "./PostActionsMobile";
 
 type PostOverlayProps = {
-  user: PostUser | undefined;
-  description: string | null;
+  user: PostUser | null;
+  counters: PostCounters | null;
   isVideoReview: boolean | undefined;
+  description: string | null;
   onOpenLinkedProducts: () => void;
 };
 
 const PostOverlay = ({
   user,
+  counters,
   description,
   isVideoReview,
   onOpenLinkedProducts,
@@ -47,7 +50,9 @@ const PostOverlay = ({
           left: 0,
           right: 0,
           bottom: 0,
-          p: { xs: 1.5, md: 3 },
+          pl: { xs: 1.5, md: 3 },
+          pr: { xs: 1, md: 3 },
+          py: { xs: 1.5, md: 3 },
           zIndex: 20,
           color: "common.white",
           pointerEvents: "none",
@@ -136,7 +141,18 @@ const PostOverlay = ({
           </Stack>
 
           <Box sx={{ display: { xs: "block", md: "none" } }}>
-            <Box>Actions</Box>
+            {user && counters && (
+              <PostActionsMobile
+                user={user}
+                isSavingLike={false}
+                isSavingBookmark={false}
+                isVideoReview={isVideoReview ?? false}
+                counters={counters}
+                onLike={() => {}}
+                onBookmark={() => {}}
+                onNavigateToUser={() => {}}
+              />
+            )}
           </Box>
         </Stack>
       </Box>
