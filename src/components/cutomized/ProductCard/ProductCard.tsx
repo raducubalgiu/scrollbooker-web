@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   IconButton,
-  lighten,
   Stack,
   SxProps,
   Theme,
@@ -79,25 +78,17 @@ const ProductCard = ({
   return (
     <Box
       sx={[
-        (theme) => {
-          const isDark = theme.palette.mode === "dark";
-          const baseBg = isDark ? "background.default" : "background.paper";
-          const selectedBg = "background.default";
-
-          return {
-            bgcolor: isSelected ? selectedBg : baseBg,
-            p: 2.5,
-            borderRadius: 2.5,
-            border: 1.5,
-            borderColor: "divider",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            "&:hover": {
-              bgcolor: isDark
-                ? lighten(theme.palette.background.default, 0.1)
-                : lighten(theme.palette.background.default, 0.2),
-            },
-          };
+        {
+          bgcolor: "background.default",
+          p: 2.5,
+          borderRadius: 2.5,
+          border: 1.5,
+          borderColor: "divider",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+          "&:hover": {
+            bgcolor: "background.paper",
+          },
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
@@ -169,7 +160,6 @@ const ProductCard = ({
                 e.stopPropagation();
                 onNavigateToBooking(product);
               }}
-              //sx={{ px: 2.5, py: 1, fontSize: { xs: 14, lg: 16 } }}
             >
               Rezervă
             </Button>

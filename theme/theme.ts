@@ -243,7 +243,7 @@ export const darkTheme = createTheme({
           fontSize: "0.875rem",
 
           [theme.breakpoints.up("lg")]: {
-            padding: "14px 20px",
+            padding: "12px 20px",
             minHeight: 44,
             fontSize: "1rem",
           },
@@ -562,7 +562,7 @@ export const lightTheme = createTheme({
           fontSize: "0.875rem",
 
           [theme.breakpoints.up("lg")]: {
-            padding: "14px 20px",
+            padding: "10px 20px",
             minHeight: 44,
             fontSize: "1rem",
           },
