@@ -194,6 +194,14 @@ export const darkTheme = createTheme({
         }),
       },
     },
+    MuiDialog: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          backgroundColor: theme.palette.background.default,
+          backgroundImage: "none",
+        }),
+      },
+    },
     MuiAccordion: {
       styleOverrides: {
         root: {
@@ -498,6 +506,14 @@ export const lightTheme = createTheme({
           backgroundColor: theme.palette.background.default,
           backgroundImage: "none",
           borderRadius: 0,
+        }),
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          backgroundColor: theme.palette.background.default,
+          backgroundImage: "none",
         }),
       },
     },

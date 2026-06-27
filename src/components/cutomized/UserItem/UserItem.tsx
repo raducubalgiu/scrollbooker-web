@@ -131,7 +131,7 @@ const styles = {
     },
   },
   badgeContent: {
-    backgroundColor: "background.paper",
+    backgroundColor: "background.default",
     px: { xs: 1, lg: 1.5 },
     py: { xs: 0.2, lg: 0.5 },
     borderRadius: 50,

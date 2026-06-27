@@ -9,6 +9,8 @@ import {
   Stack,
   useTheme,
   useMediaQuery,
+  SxProps,
+  Theme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { ActionButtonType } from "../ActionButton/ActionButton";
@@ -21,6 +23,7 @@ type ModalPropsType = DialogProps & {
   dividers?: boolean;
   align?: "center" | "left";
   customFooter?: React.ReactNode;
+  headerPadding?: SxProps<Theme> | undefined;
 };
 
 type ModalTitlePropsType = {
@@ -28,6 +31,7 @@ type ModalTitlePropsType = {
   onClose: () => void;
   fullScreen?: boolean;
   align?: "center" | "left";
+  headerPadding?: SxProps<Theme> | undefined;
 };
 
 const ModalTitle = ({
@@ -35,43 +39,51 @@ const ModalTitle = ({
   onClose,
   fullScreen = false,
   align = "left",
+  headerPadding,
   ...other
 }: ModalTitlePropsType) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <DialogTitle component="div" {...other}>
+    <DialogTitle
+      component="div"
+      sx={{
+        p: { xs: 1, md: 3 },
+        ...headerPadding,
+      }}
+      {...other}
+    >
       <Stack
         direction="row"
         alignItems="center"
-        justifyContent={"space-between"}
+        justifyContent={align === "center" ? "center" : "space-between"}
+        position="relative"
+        width="100%"
+        minHeight={40}
       >
-        {align === "center" && (
-          <IconButton
-            aria-label="close"
-            size={isMobile ? "medium" : "large"}
-            disabled={true}
-          >
-            <CloseIcon
-              fontSize={isMobile ? "medium" : "large"}
-              sx={{ color: "transparent" }}
-            />
-          </IconButton>
-        )}
         <Typography
-          variant="h4"
-          fontWeight={600}
-          sx={align === "center" ? { flex: 1, textAlign: "center" } : {}}
+          fontSize={{ xs: 16, lg: 22 }}
+          fontWeight={700}
+          sx={{
+            textAlign: align,
+            width: align === "center" ? "100%" : "auto",
+            px: align === "center" ? 4 : 0,
+          }}
         >
           {title}
         </Typography>
+
         <IconButton
           aria-label="close"
           onClick={onClose}
           size={isMobile ? "medium" : "large"}
+          sx={{
+            position: align === "center" ? "absolute" : "relative",
+            right: align === "center" ? 0 : undefined,
+          }}
         >
-          <CloseIcon fontSize={isMobile ? "medium" : "large"} />
+          <CloseIcon sx={{ fontSize: { xs: 27.5, lg: 35 } }} />
         </IconButton>
       </Stack>
     </DialogTitle>
@@ -94,6 +106,7 @@ export default function Modal({
   fullScreen,
   align = "left",
   customFooter,
+  headerPadding,
   ...others
 }: ModalPropsType) {
   const showFooter = actions.length > 0;
@@ -105,24 +118,42 @@ export default function Modal({
       open={open}
       maxWidth="lg"
       fullScreen={fullScreen ?? false}
-      disableScrollLock
+      disableScrollLock={false}
       {...others}
       sx={{
         "& .MuiDialog-paper": {
           borderRadius: fullScreen ? 0 : 10,
           transition: "border-radius 0.2s ease-in-out",
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: fullScreen ? "100vh" : "calc(100vh - 64px)",
         },
       }}
     >
-      <ModalTitle title={title} onClose={handleClose} align={align} />
+      <ModalTitle
+        title={title}
+        onClose={handleClose}
+        align={align}
+        headerPadding={headerPadding}
+      />
+
       <DialogContent
         dividers={dividers}
-        sx={{ pb: showFooter ? undefined : 0, p: { xs: 0, lg: 2 } }}
+        sx={{
+          pb: showFooter ? undefined : 0,
+          p: { xs: 0, lg: 3 },
+          flexGrow: 1,
+          overflowY: "auto",
+          WebkitOverflowScrolling: "touch",
+        }}
       >
         {children}
       </DialogContent>
+
       {showFooter && <ModalFooter actions={actions} />}
-      {customFooter && <DialogActions>{customFooter}</DialogActions>}
+      {customFooter && (
+        <DialogActions sx={{ p: 3, pt: 0 }}>{customFooter}</DialogActions>
+      )}
     </Dialog>
   );
 }
