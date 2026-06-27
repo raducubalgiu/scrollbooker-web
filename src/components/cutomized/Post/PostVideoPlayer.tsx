@@ -655,7 +655,17 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         ) : isBuffering && !isSeeking ? (
           <CircularProgress size={42} sx={{ color: "#fff" }} />
         ) : showReplayOverlay ? (
-          <ReplayRoundedIcon sx={styles.centerIcon} />
+          <Box
+            sx={styles.stateCard}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleTogglePlay();
+            }}
+            style={{ cursor: "pointer" }}
+          >
+            <ReplayRoundedIcon sx={styles.stateIcon} />
+            <Typography sx={styles.stateTitle}>Revedeți acest clip</Typography>
+          </Box>
         ) : showPausedOverlay ? (
           <PlayArrowRoundedIcon sx={styles.centerIcon} />
         ) : null}
@@ -665,7 +675,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         {volumeButtonIcon}
       </Box>
 
-      {/* Post Overlay */}
       <Fade in={!isSeeking && !isLoading && !!user} timeout={200}>
         <div>
           <PostOverlay
@@ -677,7 +686,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         </div>
       </Fade>
 
-      {/* Time */}
       <Fade in={isSeeking} timeout={150}>
         <Typography
           variant="body1"
@@ -704,7 +712,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         </Typography>
       </Fade>
 
-      {/* Slider */}
       <Box
         sx={styles.progressWrapper}
         onClick={(e) => e.stopPropagation()}
@@ -775,19 +782,21 @@ const styles = {
     opacity: 0.65,
   },
   stateCard: {
-    minWidth: 92,
-    minHeight: 92,
-    px: 2,
-    py: 2,
+    minWidth: 110,
+    maxWidth: 260,
+    px: 2.5,
+    py: 2.5,
     borderRadius: 4,
-    backgroundColor: "rgba(0,0,0,0.45)",
-    backdropFilter: "blur(10px)",
+    backgroundColor: "rgba(0, 0, 0, 0.55)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    gap: 1,
+    gap: 1.25,
     pointerEvents: "auto",
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.24)",
   },
   stateIcon: {
     fontSize: 42,
