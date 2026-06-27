@@ -846,8 +846,8 @@ const styles = {
   },
   progressWrapper: {
     position: "absolute",
-    left: (theme: Theme) => theme.spacing(2),
-    right: (theme: Theme) => theme.spacing(2),
+    left: (theme: Theme) => theme.spacing(1.5),
+    right: (theme: Theme) => theme.spacing(1.5),
     bottom: 0,
     height: 25,
     zIndex: 99,

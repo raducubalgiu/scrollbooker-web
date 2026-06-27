@@ -70,9 +70,9 @@ const styles = {
   },
   containerMenu: {
     position: "absolute",
-    left: { xs: 2, lg: 16 },
-    top: { xs: 2, lg: 16 },
-    right: 2,
+    left: { xs: 1.5, lg: 16 },
+    top: { xs: 1.5, lg: 16 },
+    right: 1.5,
     zIndex: 11,
     pointerEvents: "auto",
   },

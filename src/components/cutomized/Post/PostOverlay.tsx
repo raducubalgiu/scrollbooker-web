@@ -47,7 +47,7 @@ const PostOverlay = ({
           left: 0,
           right: 0,
           bottom: 0,
-          p: { xs: 2, md: 3 },
+          p: { xs: 1.5, md: 3 },
           zIndex: 20,
           color: "common.white",
           pointerEvents: "none",
