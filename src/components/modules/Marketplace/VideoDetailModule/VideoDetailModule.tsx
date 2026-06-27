@@ -89,6 +89,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
               isLoading={false}
               user={post.user}
               counters={post.counters}
+              userActions={post.user_actions}
               description={post.description ?? ""}
               isVideoReview={post.is_video_review}
               onOpenLinkedProducts={() => {}}
