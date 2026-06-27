@@ -8,6 +8,9 @@ import { PostVideoPlayer } from "../../../cutomized/PostVideo/PostVideoPlayer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ExploreSidebar from "@/components/cutomized/PostVideo/sidebar/ExploreSidebar";
 import { useVideoDetail } from "./useVideoDetail";
+import { useCustomQuery } from "@/hooks/useHttp";
+import { Product } from "@/ts/models/booking/product/Product";
+import ExploreLinkedProductsSheet from "../ExploreModule/ExploreLinkedProductsSheet";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -17,6 +20,9 @@ type ProfileVideoDetailPageProps = {
 };
 
 export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
+  const [isExploreProductsOpen, setIsExploreProductsOpen] =
+    React.useState(false);
+
   const {
     post,
     handleClose,
@@ -26,6 +32,15 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
     isPendingDelete,
     goBack,
   } = useVideoDetail(props);
+
+  const { data: linkedProducts, isLoading: isLoadingLinkedProducts } =
+    useCustomQuery<Product[]>({
+      key: ["post-linked-products", post.id],
+      url: `/api/posts/${post.id}/linked-products`,
+      options: {
+        enabled: !!post.id,
+      },
+    });
 
   return (
     <Box sx={styles.container}>
@@ -49,6 +64,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
               user={post.user}
               description={post.description ?? ""}
               isVideoReview={post.is_video_review}
+              onOpenLinkedProducts={() => {}}
             />
           </Box>
 
@@ -68,6 +84,8 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
         </Box>
 
         <ExploreSidebar
+          linkedProducts={linkedProducts || []}
+          isLoadingLinkedProducts={isLoadingLinkedProducts}
           isLoading={false}
           commentsCount={post.counters.comment_count}
           postId={post.id}
@@ -77,6 +95,14 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
           isVideoReview={post.is_video_review}
         />
       </Box>
+
+      <ExploreLinkedProductsSheet
+        open={isExploreProductsOpen}
+        onClose={() => setIsExploreProductsOpen(false)}
+        linkedProducts={linkedProducts || []}
+        isLoadingLinkedProducts={isLoadingLinkedProducts}
+        isLoadingPosts={false}
+      />
     </Box>
   );
 }
