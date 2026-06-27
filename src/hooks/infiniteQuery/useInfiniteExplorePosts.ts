@@ -5,17 +5,9 @@ import axios from "axios";
 
 const PAGE_LIMIT = 10;
 
-const fetchExplorePosts = async ({
-  pageParam,
-  selectedBusinessTypes,
-}: {
-  pageParam: number;
-  selectedBusinessTypes: Set<number>;
-}) => {
-  const businessTypeIds = Array.from(selectedBusinessTypes).join(",");
-
+const fetchExplorePosts = async ({ pageParam }: { pageParam: number }) => {
   const { data } = await axios.get<PaginatedData<Post>>(
-    `/api/posts?page=${pageParam}&limit=${PAGE_LIMIT}&businessTypeIds=${businessTypeIds}`
+    `/api/posts?page=${pageParam}&limit=${PAGE_LIMIT}`
   );
 
   return {
@@ -24,13 +16,10 @@ const fetchExplorePosts = async ({
   };
 };
 
-export const useInfiniteExplorePosts = (selectedBusinessTypes: Set<number>) => {
-  const queryKeyFilter = Array.from(selectedBusinessTypes).sort();
-
+export const useInfiniteExplorePosts = () => {
   return useInfiniteQuery({
-    queryKey: ["explorePosts", queryKeyFilter],
-    queryFn: ({ pageParam = 1 }) =>
-      fetchExplorePosts({ pageParam, selectedBusinessTypes }),
+    queryKey: ["explorePosts"],
+    queryFn: ({ pageParam = 1 }) => fetchExplorePosts({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
       const totalFetched = pages.flatMap((p) => p.results).length;

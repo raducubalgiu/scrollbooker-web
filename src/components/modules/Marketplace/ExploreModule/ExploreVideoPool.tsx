@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { PoolItem } from "./useExplorePlayerPool";
 import { PostUser } from "@/ts/models/social/Post";
-import { PostVideoPlayer } from "../../../cutomized/PostVideo/PostVideoPlayer";
+import { PostVideoPlayer } from "../../../cutomized/Post/PostVideoPlayer";
 import { useRef } from "react";
 
 type ExploreVideoPoolProps = {

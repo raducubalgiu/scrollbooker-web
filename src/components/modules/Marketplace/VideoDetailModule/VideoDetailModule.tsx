@@ -3,14 +3,21 @@
 import * as React from "react";
 import { alpha, Box, IconButton, Theme } from "@mui/material";
 import { Post } from "@/ts/models/social/Post";
-import PostActions from "../../../cutomized/PostVideo/PostActions";
-import { PostVideoPlayer } from "../../../cutomized/PostVideo/PostVideoPlayer";
+import PostActions from "../../../cutomized/Post/PostActions";
+import { PostVideoPlayer } from "../../../cutomized/Post/PostVideoPlayer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ExploreSidebar from "@/components/cutomized/PostVideo/sidebar/ExploreSidebar";
+import ExploreSidebar from "@/components/cutomized/Post/sidebar/ExploreSidebar";
 import { useVideoDetail } from "./useVideoDetail";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { Product } from "@/ts/models/booking/product/Product";
-import ExploreLinkedProductsSheet from "../ExploreModule/ExploreLinkedProductsSheet";
+import PostLinkedProductsSheet from "../../../cutomized/Post/sheets/PostLinkedProductsSheet";
+import { useState } from "react";
+import PostCommentsSheet from "@/components/cutomized/Post/sheets/PostCommentsSheet";
+import PostReviewsSheet from "@/components/cutomized/Post/sheets/PostReviewsSheet";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
+import { AppRoutes } from "@/utils/routes";
+import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
+import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -20,8 +27,11 @@ type ProfileVideoDetailPageProps = {
 };
 
 export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
-  const [isExploreProductsOpen, setIsExploreProductsOpen] =
-    React.useState(false);
+  const { navigateTo } = useAppNavigation();
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const [isReviewsOpen, setIsReviewsOpen] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   const {
     post,
@@ -41,6 +51,22 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
         enabled: !!post.id,
       },
     });
+
+  const handleNavigateToBooking = (selectedProdId: number | null) => {
+    const { user, business_id, business_owner } = post;
+
+    if (!business_id || !business_owner?.id || !user?.id) return;
+
+    navigateTo(
+      AppRoutes.booking(
+        business_id,
+        business_owner.id,
+        user.id,
+        BookingSourceEnum.EXPLORE_FEED,
+        selectedProdId
+      )
+    );
+  };
 
   return (
     <Box sx={styles.container}>
@@ -96,11 +122,31 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
         />
       </Box>
 
-      <ExploreLinkedProductsSheet
-        open={isExploreProductsOpen}
-        onClose={() => setIsExploreProductsOpen(false)}
+      {/* Sheets */}
+      <PostLinkedProductsSheet
+        open={isProductsOpen}
+        onClose={() => setIsProductsOpen(false)}
         linkedProducts={linkedProducts || []}
         isLoadingLinkedProducts={isLoadingLinkedProducts}
+        isLoadingPosts={false}
+        onNavigateToBooking={handleNavigateToBooking}
+      />
+
+      <PostCommentsSheet
+        open={isCommentsOpen}
+        onClose={() => setIsCommentsOpen(false)}
+        isLoadingPosts={false}
+      />
+
+      <PostReviewsSheet
+        open={isReviewsOpen}
+        onClose={() => setIsReviewsOpen(false)}
+        isLoadingPosts={false}
+      />
+
+      <PostMoreSheet
+        open={isMoreOpen}
+        onClose={() => setIsMoreOpen(false)}
         isLoadingPosts={false}
       />
     </Box>

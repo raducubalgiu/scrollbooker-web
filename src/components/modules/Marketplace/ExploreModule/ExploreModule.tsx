@@ -2,7 +2,7 @@
 
 import { Box, Slide } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import PostActions from "../../../cutomized/PostVideo/PostActions";
+import PostActions from "../../../cutomized/Post/PostActions";
 import ExploreControls from "./ExploreControls";
 import { useInfiniteExplorePosts } from "@/hooks/infiniteQuery/useInfiniteExplorePosts";
 import ExploreDrawer from "./ExploreDrawer";
@@ -10,34 +10,40 @@ import { useExplorePlayerPool } from "./useExplorePlayerPool";
 import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
 import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
 import { ExploreVideoPool } from "./ExploreVideoPool";
-import { useRouter } from "next/navigation";
 import ExploreHeaderMenu from "./ExploreHeaderMenu";
-import ExploreSidebar from "@/components/cutomized/PostVideo/sidebar/ExploreSidebar";
+import ExploreSidebar from "@/components/cutomized/Post/sidebar/ExploreSidebar";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import ExploreLinkedProductsSheet from "./ExploreLinkedProductsSheet";
 import { Product } from "@/ts/models/booking/product/Product";
+import PostLinkedProductsSheet from "../../../cutomized/Post/sheets/PostLinkedProductsSheet";
+import PostCommentsSheet from "@/components/cutomized/Post/sheets/PostCommentsSheet";
+import PostReviewsSheet from "@/components/cutomized/Post/sheets/PostReviewsSheet";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
+import { AppRoutes } from "@/utils/routes";
+import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
+import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
 
 const PREFETCH_OFFSET = 2;
 
 export default function ExploreModule() {
+  const { navigateTo } = useAppNavigation();
+
   const [showDrawer, setShowDrawer] = useState(false);
-  const [isExploreProductsOpen, setIsExploreProductsOpen] = useState(false);
-  const [selectedBusinessTypes, setSelectedBusinessTypes] = useState<
-    Set<number>
-  >(new Set());
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const router = useRouter();
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const [isReviewsOpen, setIsReviewsOpen] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-    useInfiniteExplorePosts(selectedBusinessTypes);
+    useInfiniteExplorePosts();
 
   const posts = useMemo(
     () => data?.pages.flatMap((page) => page.results) ?? [],
     [data]
   );
 
-  const postsCount = data?.pages[0]?.count ?? 0;
+  const postsCount = useMemo(() => data?.pages[0]?.count ?? 0, [data]);
 
+  const [currentIndex, setCurrentIndex] = useState(0);
   const { prevPost, currentPost, nextPost, poolItems } = useExplorePlayerPool({
     posts,
     currentIndex,
@@ -64,10 +70,6 @@ export default function ExploreModule() {
     }
   }, [currentIndex, posts.length]);
 
-  const handleToggleDrawer = useCallback(() => {
-    setShowDrawer((prev) => !prev);
-  }, []);
-
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => {
       const maxIndex = Math.max(0, posts.length - 1);
@@ -78,29 +80,6 @@ export default function ExploreModule() {
   const goToPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
   }, []);
-
-  const navigateToBooking = useCallback(
-    (selectedProductId: number | null) => {
-      const businessOwnerId = currentPost?.business_owner?.id;
-      const employeeId = currentPost?.employee?.id;
-      const businessId = currentPost?.business_id;
-
-      if (businessOwnerId) {
-        let url = `/booking/${businessId}?businessOwnerId=${businessOwnerId}`;
-
-        if (employeeId) {
-          url += `&employeeId=${employeeId}`;
-        }
-
-        if (selectedProductId) {
-          url += `&selectedServiceId=${selectedProductId}`;
-        }
-
-        router.push(url);
-      }
-    },
-    [router, currentPost]
-  );
 
   const { user_actions, counters, is_video_review } = currentPost ?? {};
 
@@ -122,6 +101,26 @@ export default function ExploreModule() {
       },
     });
 
+  const handleToggleDrawer = useCallback(() => {
+    setShowDrawer((prev) => !prev);
+  }, []);
+
+  const handleNavigateToBooking = (selectedProdId: number | null) => {
+    const { user, business_id, business_owner } = currentPost || {};
+
+    if (!business_id || !business_owner?.id || !user?.id) return;
+
+    navigateTo(
+      AppRoutes.booking(
+        business_id,
+        business_owner.id,
+        user.id,
+        BookingSourceEnum.EXPLORE_FEED,
+        selectedProdId
+      )
+    );
+  };
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.mainContent}>
@@ -133,26 +132,12 @@ export default function ExploreModule() {
               user={currentPost?.user ?? null}
               description={currentPost?.description ?? null}
               isVideoReview={is_video_review ?? false}
-              onOpenLinkedProducts={() => setIsExploreProductsOpen(true)}
+              onOpenLinkedProducts={() => setIsProductsOpen(true)}
               onNext={goToNext}
               onPrev={goToPrev}
             />
 
             <ExploreHeaderMenu onHandleToggleDrawer={handleToggleDrawer} />
-
-            <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
-              <Box sx={styles.drawerContainer}>
-                <ExploreDrawer
-                  defaultBusinessTypes={selectedBusinessTypes}
-                  onCloseDrawer={() => setShowDrawer(false)}
-                  onFilter={(ids) => {
-                    setSelectedBusinessTypes(ids);
-                    setShowDrawer(false);
-                    setCurrentIndex(0);
-                  }}
-                />
-              </Box>
-            </Slide>
           </Box>
 
           <PostActions
@@ -179,7 +164,7 @@ export default function ExploreModule() {
           user={currentPost?.user}
           isVideoReview={currentPost?.is_video_review === true}
           businessLocation={currentPost?.business_location}
-          onNavigateToBooking={navigateToBooking}
+          onNavigateToBooking={handleNavigateToBooking}
         />
       </Box>
 
@@ -196,12 +181,38 @@ export default function ExploreModule() {
         )}
       </Box>
 
-      <ExploreLinkedProductsSheet
-        open={isExploreProductsOpen}
-        onClose={() => setIsExploreProductsOpen(false)}
+      {/* Sheets */}
+      <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
+        <Box sx={styles.drawerContainer}>
+          <ExploreDrawer onCloseDrawer={() => setShowDrawer(false)} />
+        </Box>
+      </Slide>
+
+      <PostLinkedProductsSheet
+        open={isProductsOpen}
+        onClose={() => setIsProductsOpen(false)}
         linkedProducts={linkedProducts || []}
         isLoadingLinkedProducts={isLoadingLinkedProducts}
         isLoadingPosts={isLoading}
+        onNavigateToBooking={handleNavigateToBooking}
+      />
+
+      <PostCommentsSheet
+        open={isCommentsOpen}
+        onClose={() => setIsCommentsOpen(false)}
+        isLoadingPosts={false}
+      />
+
+      <PostReviewsSheet
+        open={isReviewsOpen}
+        onClose={() => setIsReviewsOpen(false)}
+        isLoadingPosts={false}
+      />
+
+      <PostMoreSheet
+        open={isMoreOpen}
+        onClose={() => setIsMoreOpen(false)}
+        isLoadingPosts={false}
       />
     </Box>
   );

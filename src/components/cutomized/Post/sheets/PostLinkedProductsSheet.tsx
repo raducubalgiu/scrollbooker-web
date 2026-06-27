@@ -16,21 +16,23 @@ import { isEmpty } from "lodash";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 
-type ExploreLinkedProductsSheetProps = {
+type PostLinkedProductsSheetProps = {
   open: boolean;
   onClose: () => void;
   linkedProducts: Product[];
   isLoadingLinkedProducts: boolean;
   isLoadingPosts: boolean;
+  onNavigateToBooking: (prodId: number | null) => void;
 };
 
-const ExploreLinkedProductsSheet = ({
+const PostLinkedProductsSheet = ({
   open,
   onClose,
   linkedProducts,
   isLoadingLinkedProducts,
   isLoadingPosts,
-}: ExploreLinkedProductsSheetProps) => {
+  onNavigateToBooking,
+}: PostLinkedProductsSheetProps) => {
   const skeletons = useMemo(
     () =>
       Array.from({ length: 5 }).map((_, index) => {
@@ -85,7 +87,7 @@ const ExploreLinkedProductsSheet = ({
                 showIcon={false}
                 showDescription={false}
                 onOpenDetail={() => {}}
-                onNavigateToBooking={() => {}}
+                onNavigateToBooking={() => onNavigateToBooking(prod.id)}
                 sx={{ borderColor: "transparent", p: 1.5 }}
                 onAdd={() => {}}
               />
@@ -106,7 +108,7 @@ const ExploreLinkedProductsSheet = ({
               px: 2.5,
               fontSize: { xs: 14, lg: 16 },
             }}
-            onClick={() => {}}
+            onClick={() => onNavigateToBooking(null)}
           >
             Vezi toate serviciile
           </Button>
@@ -124,7 +126,7 @@ const ExploreLinkedProductsSheet = ({
   );
 };
 
-export default ExploreLinkedProductsSheet;
+export default PostLinkedProductsSheet;
 
 const styles = {
   drawer: {

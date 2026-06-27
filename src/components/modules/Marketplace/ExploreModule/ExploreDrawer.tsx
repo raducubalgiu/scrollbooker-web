@@ -7,27 +7,13 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
 type ExploreDrawerProps = {
-  defaultBusinessTypes: Set<number>;
   onCloseDrawer: () => void;
-  onFilter: (selectedIds: Set<number>) => void;
 };
 
-const ExploreDrawer = ({
-  defaultBusinessTypes,
-  onCloseDrawer,
-  onFilter,
-}: ExploreDrawerProps) => {
-  const [selectedBusinessTypes, setSelectedBusinessTypes] =
-    useState<Set<number>>(defaultBusinessTypes);
-
-  useEffect(() => {
-    setSelectedBusinessTypes(defaultBusinessTypes);
-  }, [defaultBusinessTypes]);
-
+const ExploreDrawer = ({ onCloseDrawer }: ExploreDrawerProps) => {
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -144,7 +130,7 @@ const ExploreDrawer = ({
           fullWidth
           variant="contained"
           size="large"
-          onClick={() => onFilter(selectedBusinessTypes)}
+          onClick={() => {}}
           sx={{
             py: 1.5,
             fontWeight: "bold",
