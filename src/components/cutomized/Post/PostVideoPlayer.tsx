@@ -481,8 +481,8 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       ref={containerRef}
       sx={styles.root}
       onClick={(e) => {
-        e.stopPropagation();
-        handleTogglePlay();
+        //e.stopPropagation();
+        //handleTogglePlay();
       }}
       className={isSeeking || isHovered ? "is-interacting" : ""}
     >
