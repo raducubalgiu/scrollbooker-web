@@ -6,6 +6,8 @@ import AppointmentCard from "./AppointmentCard/AppointmentCard";
 import { useInfiniteAppointments } from "@/hooks/infiniteQuery/useInfiniteAppointments";
 import { isEmpty } from "lodash";
 import AppointmentCardSkeleton from "./AppointmentCardSkeleton";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 
 type AppointmentsModuleProps = {
   scrollRootRef?: React.RefObject<HTMLDivElement | null>;
@@ -142,9 +144,11 @@ const AppointmentsModule = ({
       )}
 
       {!isLoading && isEmpty(appointments) && (
-        <Typography sx={{ textAlign: "center", py: 3 }} color="text.secondary">
-          Nu au fost găsite rezervări
-        </Typography>
+        <NotFound
+          title="Rezervări"
+          description="Nu ai nici o rezervare activă"
+          icon={<CalendarTodayOutlinedIcon />}
+        />
       )}
     </>
   );

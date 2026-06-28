@@ -13,109 +13,109 @@ import { AppRoutes } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 type SignInForm = {
-	username: string;
-	password: string;
+  username: string;
+  password: string;
 };
 
 export default function SignInPage() {
-	const router = useRouter();
-	const { navigateTo } = useAppNavigation();
-	const searchParams = useSearchParams();
+  const router = useRouter();
+  const { navigateTo } = useAppNavigation();
+  const searchParams = useSearchParams();
 
-	const methods = useForm<SignInForm>({
-		defaultValues: {
-			username: "",
-			password: "",
-		},
-	});
+  const methods = useForm<SignInForm>({
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
 
-	const [loading, setLoading] = useState(false);
-	const isRequired = required();
+  const [loading, setLoading] = useState(false);
+  const isRequired = required();
 
-	const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-	const handleLogin = async (data: SignInForm) => {
-		setLoading(true);
+  const handleLogin = async (data: SignInForm) => {
+    setLoading(true);
 
-		const result = await signIn("credentials", {
-			redirect: false,
-			username: data.username,
-			password: data.password,
-			callbackUrl,
-		});
+    const result = await signIn("credentials", {
+      redirect: false,
+      username: data.username,
+      password: data.password,
+      callbackUrl,
+    });
 
-		setLoading(false);
+    setLoading(false);
 
-		if (result?.error) {
-			toast.error("Username sau parolă greșită.");
-			return;
-		}
+    if (result?.error) {
+      toast.error("Username sau parolă greșită.");
+      return;
+    }
 
-		router.replace(result?.url || callbackUrl);
-		router.refresh();
-	};
+    router.replace(result?.url || callbackUrl);
+    router.refresh();
+  };
 
-	return (
-		<FormProvider {...methods}>
-			<Stack
-				alignItems="center"
-				justifyContent="center"
-				sx={{ minHeight: "100vh", bgcolor: "background.paper" }}
-			>
-				<Container maxWidth="sm">
-					<Stack>
-						<Typography
-							variant="h4"
-							sx={{ mb: 2.5, fontWeight: 700, textAlign: "center" }}
-						>
-							Conectare
-						</Typography>
+  return (
+    <FormProvider {...methods}>
+      <Stack
+        alignItems="center"
+        justifyContent="center"
+        sx={{ minHeight: "100%" }}
+      >
+        <Container maxWidth="sm">
+          <Stack>
+            <Typography
+              variant="h4"
+              sx={{ mb: 2.5, fontWeight: 700, textAlign: "center" }}
+            >
+              Conectare
+            </Typography>
 
-						<Input
-							label="Username sau email"
-							name="username"
-							rules={isRequired}
-							placeholder="Username sau email"
-							sx={{ mb: 1.5 }}
-							size="medium"
-						/>
+            <Input
+              label="Username sau email"
+              name="username"
+              rules={isRequired}
+              placeholder="Username sau email"
+              sx={{ mb: 1.5 }}
+              size="medium"
+            />
 
-						<Input
-							label="Parola"
-							name="password"
-							type="password"
-							rules={isRequired}
-							placeholder="Password"
-							sx={{ mb: 1.5 }}
-							size="medium"
-						/>
+            <Input
+              label="Parola"
+              name="password"
+              type="password"
+              rules={isRequired}
+              placeholder="Password"
+              sx={{ mb: 1.5 }}
+              size="medium"
+            />
 
-						<Button
-							variant="contained"
-							size="large"
-							fullWidth
-							loading={loading}
-							onClick={methods.handleSubmit(handleLogin)}
-							disableElevation
-							sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
-						>
-							Login
-						</Button>
+            <Button
+              variant="contained"
+              size="large"
+              fullWidth
+              loading={loading}
+              onClick={methods.handleSubmit(handleLogin)}
+              disableElevation
+              sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
+            >
+              Login
+            </Button>
 
-						<Stack flexDirection="row" alignItems="center" gap={1} my={1.5}>
-							<Typography color="text.secondary">
-								Nu ai încă un cont?
-							</Typography>
-							<Button
-								sx={{ textTransform: "none" }}
-								onClick={() => navigateTo(AppRoutes.register())}
-							>
-								Înregistrare
-							</Button>
-						</Stack>
-					</Stack>
-				</Container>
-			</Stack>
-		</FormProvider>
-	);
+            <Stack flexDirection="row" alignItems="center" gap={1} my={1.5}>
+              <Typography color="text.secondary">
+                Nu ai încă un cont?
+              </Typography>
+              <Button
+                sx={{ textTransform: "none" }}
+                onClick={() => navigateTo(AppRoutes.register())}
+              >
+                Înregistrare
+              </Button>
+            </Stack>
+          </Stack>
+        </Container>
+      </Stack>
+    </FormProvider>
+  );
 }
