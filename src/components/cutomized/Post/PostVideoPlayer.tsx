@@ -152,6 +152,12 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       setIsReady(true);
       setIsBuffering(false);
     };
+
+    // 🚀 FAILSAFE ADĂUGAT: Dacă browserul zice că poate rula clipul complet, forțăm starea isReady
+    const onCanPlayThrough = () => {
+      setIsReady(true);
+      setIsBuffering(false);
+    };
     const onEnded = () => {
       setIsEnded(true);
       setIsPlaying(false);
@@ -167,6 +173,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     video.addEventListener("loadedmetadata", onLoadedMetadata);
     video.addEventListener("loadeddata", onLoadedData);
     video.addEventListener("canplay", onCanPlay);
+    video.addEventListener("canplaythrough", onCanPlayThrough); // ✅ Adăugat
     video.addEventListener("ended", onEnded);
     video.addEventListener("error", onError);
 
@@ -232,34 +239,31 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     clearVideoSource,
   ]);
 
-  // AMÂNARE AUTOPLAY: Pornește decodarea HLS doar DUPĂ ce se termină animația din pool (300ms)
-  // REPARARE PLAYBACK: Pornire instantanee dacă video-ul este deja bufferat în fundal
+  // REPARARE AUTOPLAY: Reacționează instant când ambele condiții (activ + gata de rulare) devin adevărate
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !hasValidSource || hasError) return;
 
     if (isActive) {
-      // Dacă video-ul este deja pregătit de HLS, apelăm direct play() fără nicio întârziere
+      // ✅ DACĂ este activ ȘI a devenit ready (gata descărcat de HLS), pornește-l instant!
       if (isReady) {
         void tryPlay();
+        // Ne asigurăm că starea internă este setată corect în cazul în care evenimentul onPlay are întârziere
+        setIsPlaying(true);
       }
       return;
     }
 
-    // Când părăsim clipul (isActive devine false), îl oprim instantaneu
+    // Când utilizatorul pleacă de pe clip (isActive devine false), oprește-l imediat
     video.pause();
+    setIsPlaying(false);
 
     if (resetOnInactive) {
       if (video.readyState > 0 && Number.isFinite(video.duration)) {
         video.currentTime = 0;
       }
       resetPlaybackState();
-      return;
     }
-
-    setIsPlaying(false);
-    setIsBuffering(false);
-    wasPlayingBeforeSeekRef.current = false;
   }, [
     hasError,
     hasValidSource,
@@ -480,9 +484,9 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     <Box
       ref={containerRef}
       sx={styles.root}
-      onClick={() => {
-        //e.stopPropagation();
-        //handleTogglePlay();
+      onClick={(e) => {
+        e.stopPropagation();
+        handleTogglePlay();
       }}
       className={isSeeking || isHovered ? "is-interacting" : ""}
     >
