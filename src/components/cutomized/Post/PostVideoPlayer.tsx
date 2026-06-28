@@ -1,85 +1,61 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import {
   Box,
-  CircularProgress,
-  Fade,
-  Skeleton,
-  Slider,
   Typography,
+  Skeleton,
+  Fade,
+  Slider,
+  CircularProgress,
 } from "@mui/material";
-import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
-import VolumeOffRoundedIcon from "@mui/icons-material/VolumeOffRounded";
-import VolumeUpRoundedIcon from "@mui/icons-material/VolumeUpRounded";
-import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
-import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import { Theme } from "@mui/material/styles";
 import Hls from "hls.js";
+import VolumeUpRoundedIcon from "@mui/icons-material/VolumeUpRounded";
+import VolumeOffRoundedIcon from "@mui/icons-material/VolumeOffRounded";
+import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
+import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PostOverlay from "./PostOverlay";
-import {
-  PostCounters,
-  PostUser,
-  PostUserActions,
-} from "@/ts/models/social/Post";
+import { Post } from "@/ts/models/social/Post";
 
 type PostVideoPlayerProps = {
-  isLoading?: boolean;
+  post: Post | null;
   src: string;
   isActive: boolean;
-  user: PostUser | null;
-  counters: PostCounters | null;
-  userActions: PostUserActions | null;
-  isOwnPost: boolean;
-  description: string | null;
-  isVideoReview: boolean;
+  isLoading?: boolean;
   preload?: "none" | "metadata" | "auto";
   resetOnInactive?: boolean;
   onOpenLinkedProducts: () => void;
 };
 
-const PROGRESS_EPSILON = 0.1;
-
 const getSliderValue = (value: number | number[]): number => {
-  if (Array.isArray(value)) {
-    return value[0] ?? 0;
-  }
-
+  if (Array.isArray(value)) return value[0] ?? 0;
   return value;
 };
 
 export const PostVideoPlayer = React.memo(function PostVideoPlayer({
+  post,
   src,
   isActive,
   isLoading = false,
-  user,
-  counters,
-  userActions,
-  isOwnPost,
-  description,
-  isVideoReview,
   preload = "metadata",
   resetOnInactive = true,
   onOpenLinkedProducts,
 }: PostVideoPlayerProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null);
-  const lastProgressRef = useRef(0);
   const wasPlayingBeforeSeekRef = useRef(false);
 
   const [isReady, setIsReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [duration, setDuration] = useState(0);
-  const [progress, setProgress] = useState(0);
+
+  // Starea React este izolată doar pentru când utilizatorul face seek manual
+  const [sliderProgress, setSliderProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isEnded, setIsEnded] = useState(false);
-  const [seekValue, setSeekValue] = useState<number | null>(null);
   const [isBuffering, setIsBuffering] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -93,71 +69,66 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   }, []);
 
   const resetUiState = useCallback(() => {
-    lastProgressRef.current = 0;
     wasPlayingBeforeSeekRef.current = false;
     setIsReady(false);
     setIsPlaying(false);
     setIsEnded(false);
-    setProgress(0);
     setDuration(0);
-    setSeekValue(null);
+    setSliderProgress(0);
     setIsSeeking(false);
     setIsBuffering(false);
     setHasError(false);
+    if (containerRef.current) {
+      containerRef.current.style.setProperty("--video-progress-ratio", "0");
+    }
   }, []);
 
   const resetPlaybackState = useCallback(() => {
-    lastProgressRef.current = 0;
     wasPlayingBeforeSeekRef.current = false;
-    setProgress(0);
-    setSeekValue(null);
+    setSliderProgress(0);
     setIsSeeking(false);
     setIsEnded(false);
     setIsPlaying(false);
     setIsBuffering(false);
+    if (containerRef.current) {
+      containerRef.current.style.setProperty("--video-progress-ratio", "0");
+    }
   }, []);
 
   const updateDuration = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
-
     const nextDuration = video.duration;
-
     if (Number.isFinite(nextDuration) && nextDuration > 0) {
-      setDuration((prev) => (prev === nextDuration ? prev : nextDuration));
+      setDuration(nextDuration);
     }
   }, []);
 
   const clearVideoSource = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
-
     video.pause();
     video.removeAttribute("src");
     video.load();
   }, []);
-
   const tryPlay = useCallback(async () => {
     const video = videoRef.current;
-    if (!video || !isActive || !isReady || hasError || !hasValidSource) {
-      return;
-    }
+    if (!video || !isActive || !isReady || hasError || !hasValidSource) return;
 
     try {
       await video.play();
-    } catch (error: unknown) {
-      if (error instanceof DOMException && error.name === "NotAllowedError") {
+    } catch (error) {
+      if (
+        error instanceof DOMException &&
+        (error.name === "NotAllowedError" || error.name === "AbortError")
+      ) {
         return;
       }
-
-      if (error instanceof DOMException && error.name === "AbortError") {
-        return;
-      }
-
       console.error("Unexpected play() error:", error);
     }
   }, [hasError, hasValidSource, isActive, isReady]);
 
+  // HLS & Init Effect
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -171,27 +142,21 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       return;
     }
 
-    const onLoadedMetadata = () => {
-      updateDuration();
-    };
-
+    const onLoadedMetadata = () => updateDuration();
     const onLoadedData = () => {
       updateDuration();
       setIsReady(true);
       setHasError(false);
     };
-
     const onCanPlay = () => {
       setIsReady(true);
       setIsBuffering(false);
     };
-
     const onEnded = () => {
       setIsEnded(true);
       setIsPlaying(false);
       setIsBuffering(false);
     };
-
     const onError = () => {
       setHasError(true);
       setIsBuffering(false);
@@ -211,53 +176,29 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         lowLatencyMode: true,
         backBufferLength: 30,
       });
-
       hlsRef.current = hls;
       setIsBuffering(preload !== "none");
-
       hls.attachMedia(video);
 
       hls.on(Hls.Events.MEDIA_ATTACHED, () => {
         hls.loadSource(src);
-
-        if (preload === "none") {
-          hls.stopLoad();
-        }
+        if (preload === "none") hls.stopLoad();
       });
-
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        updateDuration();
-      });
-
-      hls.on(Hls.Events.LEVEL_LOADED, () => {
-        setHasError(false);
-      });
-
-      hls.on(Hls.Events.ERROR, (_event, data) => {
-        if (!data.fatal) {
-          return;
-        }
-
-        switch (data.type) {
-          case Hls.ErrorTypes.NETWORK_ERROR: {
-            setIsBuffering(true);
-            hls.startLoad();
-            break;
-          }
-
-          case Hls.ErrorTypes.MEDIA_ERROR: {
-            hls.recoverMediaError();
-            break;
-          }
-
-          default: {
-            setHasError(true);
-            setIsBuffering(false);
-            setIsPlaying(false);
-            setIsReady(false);
-            destroyHlsInstance();
-            break;
-          }
+      hls.on(Hls.Events.MANIFEST_PARSED, () => updateDuration());
+      hls.on(Hls.Events.LEVEL_LOADED, () => setHasError(false));
+      hls.on(Hls.Events.ERROR, (_, data) => {
+        if (!data.fatal) return;
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          setIsBuffering(true);
+          hls.startLoad();
+        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hls.recoverMediaError();
+        } else {
+          setHasError(true);
+          setIsBuffering(false);
+          setIsPlaying(false);
+          setIsReady(false);
+          destroyHlsInstance();
         }
       });
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
@@ -291,24 +232,27 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     clearVideoSource,
   ]);
 
+  // AMÂNARE AUTOPLAY: Pornește decodarea HLS doar DUPĂ ce se termină animația din pool (300ms)
+  // REPARARE PLAYBACK: Pornire instantanee dacă video-ul este deja bufferat în fundal
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !hasValidSource || hasError) {
+    if (!video || !hasValidSource || hasError) return;
+
+    if (isActive) {
+      // Dacă video-ul este deja pregătit de HLS, apelăm direct play() fără nicio întârziere
+      if (isReady) {
+        void tryPlay();
+      }
       return;
     }
 
-    if (isActive && isReady) {
-      void tryPlay();
-      return;
-    }
-
+    // Când părăsim clipul (isActive devine false), îl oprim instantaneu
     video.pause();
 
     if (resetOnInactive) {
       if (video.readyState > 0 && Number.isFinite(video.duration)) {
         video.currentTime = 0;
       }
-
       resetPlaybackState();
       return;
     }
@@ -326,27 +270,41 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     tryPlay,
   ]);
 
+  // Visibility change
   useEffect(() => {
     const handleVisibilityChange = () => {
       const video = videoRef.current;
       if (!video) return;
-
       if (document.hidden) {
         video.pause();
-        return;
-      }
-
-      if (isActive && isReady && !hasError) {
+      } else if (isActive && isReady && !hasError) {
         void tryPlay();
       }
     };
-
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
+    return () =>
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
   }, [hasError, isActive, isReady, tryPlay]);
+  // OPTIMIZARE: TimeUpdate direct în DOM prin variabilă CSS (0 re-renders în timpul rulării)
+  const handleTimeUpdateNativ = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || isSeeking) return;
+
+    const current = video.currentTime;
+    const dur = video.duration || 1;
+    const ratio = Math.min(current / dur, 1);
+
+    // Injectăm progresul direct în CSS
+    if (containerRef.current) {
+      containerRef.current.style.setProperty(
+        "--video-progress-ratio",
+        `${ratio}`
+      );
+    }
+
+    // Actualizăm valoarea discret pentru cazul în care utilizatorul vrea să facă drag subit
+    setSliderProgress(current);
+  }, [isSeeking]);
 
   const handleRetry = useCallback(async () => {
     const video = videoRef.current;
@@ -356,9 +314,10 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     setIsReady(false);
     setIsBuffering(true);
     setIsEnded(false);
-    setProgress(0);
-    setSeekValue(null);
-    lastProgressRef.current = 0;
+    setSliderProgress(0);
+    if (containerRef.current) {
+      containerRef.current.style.setProperty("--video-progress-ratio", "0");
+    }
 
     destroyHlsInstance();
 
@@ -368,38 +327,24 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         lowLatencyMode: true,
         backBufferLength: 30,
       });
-
       hlsRef.current = hls;
       hls.attachMedia(video);
-
-      hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-        hls.loadSource(src);
-      });
-
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        updateDuration();
-      });
-
-      hls.on(Hls.Events.ERROR, (_event, data) => {
+      hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(src));
+      hls.on(Hls.Events.MANIFEST_PARSED, () => updateDuration());
+      hls.on(Hls.Events.ERROR, (_, data) => {
         if (!data.fatal) return;
-
-        switch (data.type) {
-          case Hls.ErrorTypes.NETWORK_ERROR:
-            hls.startLoad();
-            break;
-          case Hls.ErrorTypes.MEDIA_ERROR:
-            hls.recoverMediaError();
-            break;
-          default:
-            setHasError(true);
-            setIsBuffering(false);
-            setIsPlaying(false);
-            setIsReady(false);
-            destroyHlsInstance();
-            break;
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          hls.startLoad();
+        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hls.recoverMediaError();
+        } else {
+          setHasError(true);
+          setIsBuffering(false);
+          setIsPlaying(false);
+          setIsReady(false);
+          destroyHlsInstance();
         }
       });
-
       return;
     }
 
@@ -422,19 +367,16 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       video.currentTime = 0;
       setIsEnded(false);
       setIsBuffering(true);
-
       try {
         await video.play();
       } catch {
         return;
       }
-
       return;
     }
 
     if (video.paused) {
       setIsBuffering(true);
-
       try {
         await video.play();
       } catch {
@@ -448,10 +390,8 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
 
   const handleToggleMute = useCallback((event: React.MouseEvent) => {
     event.stopPropagation();
-
     const video = videoRef.current;
     if (!video) return;
-
     const nextMuted = !video.muted;
     video.muted = nextMuted;
     setIsMuted(nextMuted);
@@ -467,9 +407,17 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       }
 
       setIsSeeking(true);
-      setSeekValue(nextValue);
+      setSliderProgress(nextValue);
+
+      const dur = duration || 1;
+      if (containerRef.current) {
+        containerRef.current.style.setProperty(
+          "--video-progress-ratio",
+          `${nextValue / dur}`
+        );
+      }
     },
-    [isSeeking]
+    [isSeeking, duration]
   );
 
   const handleSeekCommit = useCallback(
@@ -481,10 +429,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       const shouldResume = wasPlayingBeforeSeekRef.current;
 
       video.currentTime = nextValue;
-      lastProgressRef.current = nextValue;
-
-      setProgress(nextValue);
-      setSeekValue(null);
+      setSliderProgress(nextValue);
       setIsSeeking(false);
       setIsEnded(false);
       setIsBuffering(true);
@@ -502,88 +447,25 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     [hasError, isActive]
   );
 
-  const handleTimeUpdate = useCallback(() => {
-    const video = videoRef.current;
-    if (!video || isSeeking) return;
-
-    const currentTime = video.currentTime;
-
-    if (Math.abs(currentTime - lastProgressRef.current) < PROGRESS_EPSILON) {
-      return;
-    }
-
-    lastProgressRef.current = currentTime;
-    setProgress(currentTime);
-  }, [isSeeking]);
-
-  const displayProgress = useMemo(() => {
-    return isSeeking ? (seekValue ?? progress) : progress;
-  }, [isSeeking, seekValue, progress]);
-
-  const progressRatio = useMemo(() => {
-    if (duration <= 0) return 0;
-    return Math.min(displayProgress / duration, 1);
-  }, [duration, displayProgress]);
-
-  const isInteracting = isSeeking || isHovered;
-  const currentHeight = isInteracting ? { xs: 8, md: 10 } : { xs: 4, md: 4 };
-
-  const progressFillSx = useMemo(
-    () => ({
-      ...styles.progressFill,
-      height: currentHeight,
-      transform: `scaleX(${progressRatio})`,
-      transformOrigin: "left center",
-      transition: isSeeking
-        ? "height 120ms ease-in-out"
-        : "transform 80ms linear, height 120ms ease-in-out",
-      backgroundColor: isInteracting
-        ? "rgba(255, 255, 255, 0.85)"
-        : "rgba(255, 255, 255, 0.22)",
-    }),
-    [progressRatio, isSeeking, isInteracting, currentHeight]
-  );
-
-  const sliderSx = useMemo(
-    () => ({
-      ...styles.slider,
-      height: currentHeight,
-      "& .MuiSlider-thumb": {
-        opacity: isInteracting ? 1 : 0,
-        width: isInteracting ? { xs: 12, md: 8 } : 0,
-        height: isInteracting ? { xs: 12, md: 10 } : 0,
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
-        transition: "opacity 120ms ease, width 120ms ease, height 120ms ease",
-
-        "&:hover, &.Mui-focusVisible, &.Mui-active": {
-          backgroundColor: "rgba(255, 255, 255, 0.95)",
-          boxShadow: "0 1px 4px rgba(0,0,0,0.3)",
-        },
-      },
-    }),
-    [isInteracting, currentHeight]
-  );
+  const formatVideoTime = (seconds: number): string => {
+    if (isNaN(seconds) || !isFinite(seconds)) return "00:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
 
   const volumeButtonIcon = isMuted ? (
     <VolumeOffRoundedIcon
-      sx={{
-        color: "#fff",
-        fontSize: { xs: "1.5rem", sm: "2.1875rem" },
-      }}
+      sx={{ color: "#fff", fontSize: { xs: "1.5rem", sm: "2.1875rem" } }}
     />
   ) : (
     <VolumeUpRoundedIcon
-      sx={{
-        color: "#fff",
-        fontSize: { xs: "1.5rem", sm: "2.1875rem" },
-      }}
+      sx={{ color: "#fff", fontSize: { xs: "1.5rem", sm: "2.1875rem" } }}
     />
   );
 
   const showPausedOverlay =
     !hasError && !isBuffering && !isPlaying && isReady && !isEnded;
-
   const showReplayOverlay =
     !hasError && !isBuffering && !isPlaying && isEnded && isReady;
 
@@ -594,21 +476,15 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       </Box>
     );
   }
-
-  const formatVideoTime = (seconds: number): string => {
-    if (isNaN(seconds) || !isFinite(seconds)) return "00:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
   return (
     <Box
+      ref={containerRef}
       sx={styles.root}
       onClick={(e) => {
         e.stopPropagation();
         handleTogglePlay();
       }}
+      className={isSeeking || isHovered ? "is-interacting" : ""}
     >
       <video
         ref={videoRef}
@@ -620,13 +496,11 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         onLoadedMetadata={updateDuration}
         onLoadedData={updateDuration}
         onDurationChange={updateDuration}
-        onTimeUpdate={handleTimeUpdate}
+        onTimeUpdate={handleTimeUpdateNativ}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onWaiting={() => {
-          if (!isSeeking) {
-            setIsBuffering(true);
-          }
+          if (!isSeeking) setIsBuffering(true);
         }}
         onPlaying={() => {
           setIsPlaying(true);
@@ -651,7 +525,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
             <Typography sx={styles.stateSubtitle}>
               Nu am putut reda acest video.
             </Typography>
-
             <Box
               sx={styles.stateActionButton}
               onClick={(event) => {
@@ -678,50 +551,31 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
           </Box>
         ) : showPausedOverlay ? (
           <PlayArrowRoundedIcon sx={styles.centerIcon} />
-        ) : null}
+        ) : // <PlayArrowRoundedIcon sx={styles.centerIcon} />
+        null}
       </Box>
 
       <Box sx={styles.volumeButton} onClick={handleToggleMute}>
         {volumeButtonIcon}
       </Box>
 
-      <Fade in={!isSeeking && !isLoading && !!user} timeout={200}>
+      <Fade in={!isSeeking && !isLoading} timeout={200}>
         <div>
           <PostOverlay
-            user={user}
-            counters={counters}
-            isOwnPost={isOwnPost}
-            userActions={userActions}
-            description={description ?? ""}
-            isVideoReview={isVideoReview}
+            user={post?.user ?? null}
+            counters={post?.counters ?? null}
+            isOwnPost={post?.is_own_post ?? false}
+            userActions={post?.user_actions ?? null}
+            description={post?.description ?? ""}
+            isVideoReview={post?.is_video_review}
             onOpenLinkedProducts={onOpenLinkedProducts}
           />
         </div>
       </Fade>
 
       <Fade in={isSeeking} timeout={150}>
-        <Typography
-          variant="body1"
-          sx={{
-            position: "absolute",
-            bottom: 28,
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 90,
-            color: "#fff",
-            fontWeight: 800,
-            fontSize: 18,
-            letterSpacing: "0.03em",
-            backgroundColor: "rgba(0,0,0,0.6)",
-            px: 2,
-            py: 0.75,
-            borderRadius: 2,
-            backdropFilter: "blur(4px)",
-            whiteSpace: "nowrap",
-            pointerEvents: "none",
-          }}
-        >
-          {formatVideoTime(displayProgress)} / {formatVideoTime(duration)}
+        <Typography variant="body1" sx={styles.seekTimeIndicator}>
+          {formatVideoTime(sliderProgress)} / {formatVideoTime(duration)}
         </Typography>
       </Fade>
 
@@ -731,20 +585,19 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Box sx={{ ...styles.progressTrack, height: currentHeight }} />
-
-        <Box sx={progressFillSx} />
+        <Box sx={styles.progressTrack} />
+        <Box sx={styles.progressFill} />
 
         <Slider
           min={0}
           max={duration || 0}
           step={0.1}
-          value={Math.min(displayProgress, duration || 0)}
+          value={Math.min(sliderProgress, duration || 0)}
           onChange={handleSeekChange}
           onChangeCommitted={handleSeekCommit}
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
-          sx={sliderSx}
+          sx={styles.slider}
         />
       </Box>
     </Box>
@@ -769,9 +622,8 @@ const styles = {
     backgroundColor: "black",
     WebkitTapHighlightColor: "transparent",
     userSelect: "none",
-    "&:focus": {
-      outline: "none",
-    },
+    "&:focus": { outline: "none" },
+    "--video-progress-ratio": 0,
   },
   skeletonContainer: {
     width: "100%",
@@ -811,11 +663,7 @@ const styles = {
     pointerEvents: "auto",
     boxShadow: "0 8px 32px rgba(0, 0, 0, 0.24)",
   },
-  stateIcon: {
-    fontSize: 42,
-    color: "#fff",
-    opacity: 0.95,
-  },
+  stateIcon: { fontSize: 42, color: "#fff", opacity: 0.95 },
   stateTitle: {
     color: "#fff",
     fontWeight: 700,
@@ -841,10 +689,7 @@ const styles = {
     fontWeight: 700,
     lineHeight: 1,
     cursor: "pointer",
-    userSelect: "none",
-    "&:hover": {
-      backgroundColor: "rgba(255,255,255,0.22)",
-    },
+    "&:hover": { backgroundColor: "rgba(255,255,255,0.22)" },
   },
   volumeButton: {
     position: "absolute",
@@ -860,9 +705,25 @@ const styles = {
     cursor: "pointer",
     backgroundColor: "rgba(0,0,0,0.18)",
     backdropFilter: "blur(6px)",
-    "&:hover": {
-      backgroundColor: "rgba(0,0,0,0.28)",
-    },
+    "&:hover": { backgroundColor: "rgba(0,0,0,0.28)" },
+  },
+  seekTimeIndicator: {
+    position: "absolute",
+    bottom: 28,
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: 90,
+    color: "#fff",
+    fontWeight: 800,
+    fontSize: 18,
+    letterSpacing: "0.03em",
+    backgroundColor: "rgba(0,0,0,0.6)",
+    px: 2,
+    py: 0.75,
+    borderRadius: 2,
+    backdropFilter: "blur(4px)",
+    whiteSpace: "nowrap",
+    pointerEvents: "none",
   },
   progressWrapper: {
     position: "absolute",
@@ -873,23 +734,37 @@ const styles = {
     zIndex: 99,
     display: "flex",
     alignItems: "flex-end",
+    cursor: "pointer",
   },
   progressTrack: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
+    height: 4,
     borderRadius: 0,
     backgroundColor: "rgba(255, 255, 255, 0.14)",
-    transition: "height 120ms ease-in-out",
+    transformOrigin: "bottom",
+    transition: "transform 120ms ease-in-out",
+    ".is-interacting &": {
+      transform: "scaleY(2)",
+    },
   },
   progressFill: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
+    height: 4,
     borderRadius: 0,
-    transition: "height 120ms ease-in-out",
+    backgroundColor: "rgba(255, 255, 255, 0.22)",
+    transformOrigin: "left bottom",
+    transform: "scaleX(var(--video-progress-ratio))",
+    transition: "transform 80ms linear",
+    ".is-interacting &": {
+      transform: "scaleX(var(--video-progress-ratio)) scaleY(2)",
+      backgroundColor: "rgba(255, 255, 255, 0.85)",
+    },
   },
   slider: {
     position: "absolute",
@@ -897,21 +772,24 @@ const styles = {
     right: 0,
     bottom: 0,
     py: 1.5,
+    height: 4,
     color: "primary.main",
-    transition: "height 120ms ease-in-out",
-    "& .MuiSlider-rail": {
-      opacity: 0,
-    },
-    "& .MuiSlider-track": {
-      opacity: 0,
-      border: "none",
-    },
+    "& .MuiSlider-rail, & .MuiSlider-track": { opacity: 0, border: "none" },
     "& .MuiSlider-thumb": {
-      backgroundColor: "#fff",
+      opacity: 0,
+      width: 0,
+      height: 0,
+      backgroundColor: "rgba(255, 255, 255, 0.85)",
       borderRadius: 1,
       boxShadow: "0 2px 4px rgba(0,0,0,0.4)",
       transition: "opacity 120ms ease, width 120ms ease, height 120ms ease",
+      ".is-interacting &": {
+        opacity: 1,
+        width: { xs: 12, md: 8 },
+        height: { xs: 12, md: 10 },
+      },
       "&:hover, &.Mui-focusVisible, &.Mui-active": {
+        backgroundColor: "rgba(255, 255, 255, 0.95)",
         boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
       },
     },

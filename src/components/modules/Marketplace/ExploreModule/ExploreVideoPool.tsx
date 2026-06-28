@@ -25,26 +25,22 @@ type ExploreVideoPoolProps = {
 };
 
 const ANIMATION_DURATION_MS = 300;
-const SWIPE_THRESHOLD = 50;
+const SWIPE_PERCENT_THRESHOLD = 0.22;
 const DRAG_CLICK_THRESHOLD = 5;
+const VELOCITY_THRESHOLD = 0.5;
 
 export function ExploreVideoPool({
   items,
   isLoading,
   slideOffset,
   isAnimating,
-  user,
-  counters,
-  userActions,
-  description,
-  isOwnPost,
-  isVideoReview,
   onNext,
   onPrev,
   onOpenLinkedProducts,
 }: ExploreVideoPoolProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dragStartY = useRef<number | undefined>(undefined);
+  const dragStartTimeRef = useRef<number>(0); // 🚀 Memorează timpul exact de start
   const isDragging = useRef(false);
 
   useEffect(() => {
@@ -66,6 +62,7 @@ export function ExploreVideoPool({
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (isAnimating) return;
     dragStartY.current = e.touches[0]?.clientY;
+    dragStartTimeRef.current = performance.now();
     isDragging.current = false;
   };
 
@@ -91,6 +88,7 @@ export function ExploreVideoPool({
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isAnimating) return;
     dragStartY.current = e.clientY;
+    dragStartTimeRef.current = performance.now();
     isDragging.current = false;
   };
 
@@ -120,7 +118,23 @@ export function ExploreVideoPool({
   const commitDrag = (delta: number) => {
     dragStartY.current = undefined;
 
-    if (!isDragging.current || Math.abs(delta) < SWIPE_THRESHOLD) {
+    if (!isDragging.current) {
+      resetDrag();
+      return;
+    }
+
+    // 🚀 CALCUL VITEZĂ: Câți pixeli s-au parcurs într-o milisecundă
+    const timeElapsed = performance.now() - dragStartTimeRef.current;
+    const velocity = Math.abs(delta) / (timeElapsed || 1);
+
+    const windowHeight =
+      typeof window !== "undefined" ? window.innerHeight : 800;
+    const dragDistanceRatio = Math.abs(delta) / windowHeight;
+
+    const isFlickGesture = velocity > VELOCITY_THRESHOLD;
+    const isLongSwipeGesture = dragDistanceRatio >= SWIPE_PERCENT_THRESHOLD;
+
+    if (!isFlickGesture && !isLongSwipeGesture) {
       resetDrag();
       return;
     }
@@ -138,9 +152,11 @@ export function ExploreVideoPool({
   const resetDrag = () => {
     dragStartY.current = undefined;
     isDragging.current = false;
+
     if (rootRef.current) {
       rootRef.current.classList.add("is-animating");
       rootRef.current.style.setProperty("--drag-offset", "0px");
+
       setTimeout(() => {
         rootRef.current?.classList.remove("is-animating");
       }, ANIMATION_DURATION_MS);
@@ -164,29 +180,22 @@ export function ExploreVideoPool({
 
         return (
           <Box
-            key={item.slot}
+            key={item.post?.id ?? item.slot}
             data-slot={item.slot}
             sx={{
               ...styles.playerLayer,
               zIndex: isCurrent ? 2 : 1,
             }}
           >
-            {item.post && item.src ? (
-              <PostVideoPlayer
-                src={item.src}
-                isActive={item.isActive}
-                isLoading={isLoading && isCurrent}
-                preload={item.shouldPreload ? "auto" : "none"}
-                user={isCurrent ? user : null}
-                counters={isCurrent ? counters : null}
-                userActions={isCurrent ? userActions : null}
-                description={isCurrent ? (description ?? "") : ""}
-                isOwnPost={isOwnPost}
-                isVideoReview={isVideoReview}
-                resetOnInactive={false}
-                onOpenLinkedProducts={onOpenLinkedProducts}
-              />
-            ) : null}
+            <PostVideoPlayer
+              post={item.post ?? null}
+              src={item.src ?? ""}
+              isActive={item.isActive}
+              isLoading={isLoading && isCurrent}
+              preload={item.shouldPreload ? "auto" : "none"}
+              resetOnInactive={false}
+              onOpenLinkedProducts={onOpenLinkedProducts}
+            />
           </Box>
         );
       })}
@@ -219,7 +228,7 @@ const styles = {
     },
 
     "&.is-animating [data-slot]": {
-      transition: `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.15, 0.3, 0.25, 1) !important`,
+      transition: `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.215, 0.610, 0.355, 1.000) !important`,
     },
   },
   playerLayer: {
