@@ -4,6 +4,7 @@ import { useMutate } from "@/hooks/useHttp";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import IosShareIcon from "@mui/icons-material/IosShare";
 
 type UserProfileActionsProps = {
   userId: number;
@@ -11,6 +12,7 @@ type UserProfileActionsProps = {
   is_follow: boolean;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
   onBookNow: () => void;
+  onShare: () => void;
 };
 
 const UserProfileActions = ({
@@ -19,6 +21,7 @@ const UserProfileActions = ({
   is_follow,
   onUpdateFollows,
   onBookNow,
+  onShare,
 }: UserProfileActionsProps) => {
   const [localFollow, setLocalFollow] = useState<boolean>(is_follow);
   const previousLocalRef = useRef<boolean>(is_follow);
@@ -154,6 +157,20 @@ const UserProfileActions = ({
       >
         {localFollow ? "Urmărești" : "Urmărește"}
       </Button>
+
+      {!is_business_or_employee && (
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={onShare}
+          size="large"
+          startIcon={<IosShareIcon />}
+          sx={buttonSx}
+          disableElevation
+        >
+          Distribuie
+        </Button>
+      )}
     </>
   );
 };

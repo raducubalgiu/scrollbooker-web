@@ -1,9 +1,16 @@
 import UserAvatar from "@/components/core/Avatar/UserAvatar";
-import { Box, ButtonBase, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  ButtonBase,
+  Snackbar,
+  Stack,
+  Typography,
+} from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
@@ -11,6 +18,7 @@ import { UserProfile } from "@/ts/models/user/UserProfile";
 import { formatRating } from "@/utils/formatters";
 import { useRouter } from "next/navigation";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
+import { LOG } from "@/utils/logger";
 
 type ProfileUserInfoProps = {
   profile: UserProfile;
@@ -25,6 +33,7 @@ const ProfileUserInfo = ({
   onUpdateFollows,
   onOpenEditModal,
 }: ProfileUserInfoProps) => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const router = useRouter();
   const {
     id,
@@ -80,12 +89,57 @@ const ProfileUserInfo = ({
     );
   };
 
+  const handleShare = async () => {
+    const shareData = {
+      title: "Profilul meu",
+      text: "Aruncă o privire peste profilul meu!",
+      url: window.location.href,
+    };
+
+    if (navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        LOG.error(`Eroare tehnică la partajare: ${errorMessage}`);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setSnackbarOpen(true);
+      } catch (error) {
+        try {
+          const textarea = document.createElement("textarea");
+          textarea.value = window.location.href;
+          textarea.style.position = "fixed";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
+          setSnackbarOpen(true);
+        } catch (fallbackError) {
+          const msg =
+            fallbackError instanceof Error
+              ? fallbackError.message
+              : String(fallbackError);
+          LOG.error(`Eșec total la copiere link: ${msg}`);
+        }
+      }
+    }
+  };
+
   const actions = useMemo(() => {
     if (is_own_profile) {
       return (
         <OwnProfileActions
           is_business_or_employee={is_business_or_employee}
           onOpenEditModal={onOpenEditModal}
+          onShare={handleShare}
         />
       );
     }
@@ -97,6 +151,7 @@ const ProfileUserInfo = ({
         is_follow={is_follow}
         onUpdateFollows={onUpdateFollows}
         onBookNow={handleBookNow}
+        onShare={handleShare}
       />
     );
   }, [is_business_or_employee, is_own_profile, is_follow, id, onUpdateFollows]);
@@ -221,110 +276,6 @@ const ProfileUserInfo = ({
             )}
           </Stack>
 
-          {/* {business_owner && (
-          <Stack flexDirection="row" alignItems="center" mt={0.5}>
-            {business_owner.id !== id && (
-              <>
-                <Stack flexDirection="row" alignItems="center">
-                  <CachedIcon />
-
-                  <ButtonBase>
-                    <Avatar
-                      src={business_owner?.avatar ?? ""}
-                      sx={{ border: 1, borderColor: "text.secondary", ml: 1.5 }}
-                    />
-                    <Typography
-                      variant="body1"
-                      color="primary"
-                      fontWeight={600}
-                      sx={{ ml: 1 }}
-                    >
-                      @{business_owner?.username}
-                    </Typography>
-                  </ButtonBase>
-                </Stack>
-
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{
-                    ml: 1.5,
-                    mr: 1,
-                    borderColor: "divider",
-                    height: 15,
-                    alignSelf: "center",
-                  }}
-                />
-              </>
-            )}
-
-            <Button
-              size="medium"
-              sx={{ textTransform: "capitalize", color: "text.primary" }}
-              startIcon={<LocationOnOutlinedIcon color="primary" />}
-            >
-              Locatie
-            </Button>
-
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{
-                mx: 1,
-                borderColor: "divider",
-                height: 15,
-                alignSelf: "center",
-              }}
-            />
-
-            <Button
-              size="medium"
-              sx={{ textTransform: "capitalize", color: "text.primary" }}
-              startIcon={<LocalPhoneOutlinedIcon color="primary" />}
-            >
-              Telefon
-            </Button>
-
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{
-                mx: 1,
-                borderColor: "divider",
-                height: 15,
-                alignSelf: "center",
-              }}
-            />
-
-            <Button
-              size="medium"
-              sx={{ textTransform: "capitalize", color: "text.primary" }}
-              startIcon={<EmailOutlinedIcon color="primary" />}
-            >
-              Email
-            </Button>
-
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{
-                mx: 1,
-                borderColor: "divider",
-                height: 15,
-                alignSelf: "center",
-              }}
-            />
-
-            <Button
-              size="medium"
-              sx={{ textTransform: "capitalize", color: "text.primary" }}
-              startIcon={<LanguageOutlinedIcon color="primary" />}
-            >
-              Website
-            </Button>
-          </Stack>
-        )} */}
-
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             <Box
               sx={{
@@ -364,6 +315,17 @@ const ProfileUserInfo = ({
           </Typography>
         </Box>
       </Box>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
+          Link-ul a fost copiat în clipboard!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

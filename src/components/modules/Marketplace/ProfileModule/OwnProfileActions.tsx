@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Alert, Button, Snackbar } from "@mui/material";
+import { Button } from "@mui/material";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import React from "react";
@@ -9,14 +8,15 @@ import { useAppNavigation } from "@/hooks/useAppNavigation";
 type OwnProfileActionsProps = {
   is_business_or_employee: boolean;
   onOpenEditModal: () => void;
+  onShare: () => void;
 };
 
 const OwnProfileActions = ({
   is_business_or_employee,
   onOpenEditModal,
+  onShare,
 }: OwnProfileActionsProps) => {
   const { navigateTo } = useAppNavigation();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const buttonSx = {
     textTransform: "none",
@@ -26,33 +26,6 @@ const OwnProfileActions = ({
     py: { xs: 1, lg: 1.5 },
     px: { xs: 2.5, lg: 2 },
     color: "text.primary",
-  };
-
-  const handleShare = async () => {
-    const shareData = {
-      title: "Profilul meu",
-      text: "Aruncă o privire peste profilul meu!",
-      url: window.location.href,
-    };
-
-    if (navigator.share && navigator.canShare?.(shareData)) {
-      try {
-        await navigator.share(shareData);
-      } catch (error: any) {
-        if (error.name === "AbortError") {
-          console.log("Utilizatorul a anulat partajarea.");
-          return;
-        }
-        console.error("Eroare reală la partajare:", error);
-      }
-    } else {
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        setSnackbarOpen(true);
-      } catch (error) {
-        console.error("Eroare la copiere:", error);
-      }
-    }
   };
 
   return (
@@ -84,7 +57,7 @@ const OwnProfileActions = ({
         <Button
           variant="contained"
           color="secondary"
-          onClick={handleShare}
+          onClick={onShare}
           size="large"
           startIcon={<IosShareIcon />}
           sx={buttonSx}
@@ -93,17 +66,6 @@ const OwnProfileActions = ({
           Distribuie
         </Button>
       )}
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
-          Link-ul a fost copiat în clipboard!
-        </Alert>
-      </Snackbar>
     </>
   );
 };
