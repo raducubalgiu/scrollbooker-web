@@ -84,6 +84,7 @@ const SearchUsersModule = ({
             placeholder="Caută utilizatori, afaceri, specialisti"
             variant="outlined"
             fullWidth
+            focused
             onFocus={() => {}}
             onBlur={() => {}}
             onChange={(e) => setValue(e.target.value)}
