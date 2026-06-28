@@ -84,15 +84,10 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
         <Box sx={styles.leftSection}>
           <Box sx={styles.videoContainer}>
             <PostVideoPlayer
+              post={post}
               src={post.media_files[0]?.url ?? ""}
               isActive={true}
               isLoading={false}
-              user={post.user}
-              counters={post.counters}
-              userActions={post.user_actions}
-              description={post.description ?? ""}
-              isOwnPost={post.is_own_post}
-              isVideoReview={post.is_video_review}
               onOpenLinkedProducts={() => {}}
             />
           </Box>
