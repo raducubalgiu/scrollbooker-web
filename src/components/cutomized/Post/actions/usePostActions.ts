@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   PostCounters,
   PostUserActions,
@@ -52,17 +52,6 @@ export const usePostActions = ({
   onDeleteClick,
   onReportClick,
 }: UsePostActionsProps) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const isMenuOpen = Boolean(anchorEl);
-
-  const handleOptionsOpen = (event?: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl((event?.currentTarget as HTMLElement) ?? null);
-  };
-
-  const handleOptionsClose = () => {
-    setAnchorEl(null);
-  };
-
   const actions = useMemo<PostAction[]>(
     () => [
       {
@@ -92,12 +81,9 @@ export const usePostActions = ({
         onClick: onBookmark,
       },
       {
-        key: "options",
-        onClick: () => handleOptionsOpen(),
-      },
-      {
         key: "share",
         onClick: onShareClick,
+        count: 100,
       },
     ],
     [
@@ -115,15 +101,8 @@ export const usePostActions = ({
 
   return {
     actions,
-    anchorEl,
-    isMenuOpen,
-    handleOptionsOpen,
-    handleOptionsClose,
     moreMenuProps: {
-      anchorEl,
-      isMenuOpen,
       isOwnPost,
-      handleOptionsClose,
       onReportClick,
       onDeleteClick,
     },

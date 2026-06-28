@@ -6,11 +6,10 @@ import LikeIconSolid from "@/assets/icons/ic_heart_solid.svg";
 import CommentIconSolid from "@/assets/icons/ic_comment_solid.svg";
 import BookmarkIconSolid from "@/assets/icons/ic_bookmark_solid.svg";
 import MoreIcon from "@/assets/icons/ic_elipsis-horizontal.svg";
-import ShareIcon from "@/assets/icons/ic_share_solid.svg";
+import ShareIcon from "@/assets/icons/ic_share.svg";
 
 import { PostActionKey, usePostActions } from "./usePostActions";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
-import MoreOptionsMenu from "../MoreOptionsMenu";
 import { PostActionsProps } from "./postActionTypes";
 
 const POST_ICONS: Partial<Record<PostActionKey, StaticImageData>> = {
@@ -54,7 +53,7 @@ const PostActions = ({
     onReportClick,
   },
 }: PostActionsProps) => {
-  const { actions, moreMenuProps } = usePostActions({
+  const { actions } = usePostActions({
     user,
     counters,
     userActions,
@@ -128,8 +127,6 @@ const PostActions = ({
           </Box>
         );
       })}
-
-      <MoreOptionsMenu {...moreMenuProps} isLoadingDelete={isLoadingDelete} />
     </Box>
   );
 };

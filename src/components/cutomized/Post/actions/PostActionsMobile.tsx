@@ -13,12 +13,11 @@ import LikeIconSolid from "@/assets/icons/ic_heart_solid.svg";
 import ClipboardIconSolid from "@/assets/icons/ic_clipboard_solid.svg";
 import CommentIconSolid from "@/assets/icons/ic_comment_solid.svg";
 import BookmarkIconSolid from "@/assets/icons/ic_bookmark_solid.svg";
-import MoreIcon from "@/assets/icons/ic_elipsis-horizontal.svg";
+import ShareIcon from "@/assets/icons/ic_share.svg";
 import { PostActionKey, usePostActions } from "./usePostActions";
 
 import { formatRating } from "@/utils/formatters";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
-import MoreOptionsMenu from "../MoreOptionsMenu";
 import { PostActionsProps } from "./postActionTypes";
 
 const MOBILE_ICONS: Partial<Record<PostActionKey, StaticImageData>> = {
@@ -26,6 +25,7 @@ const MOBILE_ICONS: Partial<Record<PostActionKey, StaticImageData>> = {
   clipboard: ClipboardIconSolid,
   comment: CommentIconSolid,
   bookmark: BookmarkIconSolid,
+  share: ShareIcon,
 };
 
 const MOBILE_KEYS: PostActionKey[] = [
@@ -33,6 +33,7 @@ const MOBILE_KEYS: PostActionKey[] = [
   "clipboard",
   "comment",
   "bookmark",
+  "share",
 ];
 
 export default function PostActionsMobile({
@@ -52,7 +53,7 @@ export default function PostActionsMobile({
     onNavigateToUser,
   },
 }: PostActionsProps) {
-  const { actions, moreMenuProps, handleOptionsOpen } = usePostActions({
+  const { actions } = usePostActions({
     user,
     counters,
     userActions,
@@ -114,7 +115,7 @@ export default function PostActionsMobile({
         direction="column"
         justifyContent="center"
         alignItems="center"
-        spacing={1}
+        spacing={0.5}
       >
         {mobileActions.map(
           ({ key, count, disabled, isActive, activeColor, onClick }) => {
@@ -122,7 +123,7 @@ export default function PostActionsMobile({
             if (!icon) return null;
 
             return (
-              <Stack key={key} alignItems="center" spacing={0.5}>
+              <Stack key={key} alignItems="center">
                 <ButtonBase
                   disabled={disabled ?? false}
                   onClick={(e) => {
@@ -133,7 +134,7 @@ export default function PostActionsMobile({
                 >
                   <CustomSvg
                     src={icon}
-                    size={32.5}
+                    size={35}
                     sx={{
                       backgroundColor:
                         isActive && activeColor ? activeColor : "common.white",
@@ -142,7 +143,7 @@ export default function PostActionsMobile({
                 </ButtonBase>
                 <Typography
                   variant="caption"
-                  fontWeight={700}
+                  fontWeight={600}
                   sx={{ color: "#fff", fontSize: 13 }}
                 >
                   {count}
@@ -151,18 +152,6 @@ export default function PostActionsMobile({
             );
           }
         )}
-
-        <ButtonBase
-          onClick={(e) => {
-            e.stopPropagation();
-            handleOptionsOpen(e);
-          }}
-          sx={styles.actionButton}
-        >
-          <CustomSvg src={MoreIcon} size={32.5} />
-        </ButtonBase>
-
-        <MoreOptionsMenu {...moreMenuProps} isLoadingDelete={false} />
       </Stack>
     </Stack>
   );

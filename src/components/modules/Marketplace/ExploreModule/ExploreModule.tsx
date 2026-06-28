@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Slide } from "@mui/material";
+import { Alert, Box, Slide, Snackbar } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PostActions from "../../../cutomized/Post/actions/PostActions";
 import ExploreControls from "./ExploreControls";
@@ -23,10 +23,12 @@ import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
 import { useQueryClient } from "@tanstack/react-query";
+import { LOG } from "@/utils/logger";
 
 const PREFETCH_OFFSET = 2;
 
 export default function ExploreModule() {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState<ExploreTabEnum>(
     ExploreTabEnum.EXPLORE
   );
@@ -247,6 +249,54 @@ export default function ExploreModule() {
     );
   };
 
+  const handleShare = async () => {
+    if (!currentPost) return;
+
+    const { user } = currentPost;
+
+    const shareData = {
+      title: "Postare Video",
+      text: "Aruncă o privire peste aceasta postare video",
+      url: `https://scrollbooker-web.vercel.app/user/${user.username}/${user.profession}/post/${currentPost.id}`,
+    };
+
+    if (navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        LOG.error(`Eroare tehnică la partajare: ${errorMessage}`);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setSnackbarOpen(true);
+      } catch (error) {
+        try {
+          const textarea = document.createElement("textarea");
+          textarea.value = window.location.href;
+          textarea.style.position = "fixed";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
+          setSnackbarOpen(true);
+        } catch (fallbackError) {
+          const msg =
+            fallbackError instanceof Error
+              ? fallbackError.message
+              : String(fallbackError);
+          LOG.error(`Eșec total la copiere link: ${msg}`);
+        }
+      }
+    }
+  };
+
   const loaders = {
     isLoading,
     isSavingLike: false,
@@ -257,9 +307,9 @@ export default function ExploreModule() {
   const callbacks = {
     onLike: handleLike,
     onBookmarkClick: handleBookmark,
+    onShareClick: handleShare,
     onCommentClick: () => setIsCommentsOpen(true),
     onDeleteClick: () => {},
-    onShareClick: () => {},
     onReportClick: () => {},
     onNavigateToUser: () => {},
   };
@@ -355,6 +405,17 @@ export default function ExploreModule() {
         onClose={() => setIsMoreOpen(false)}
         isLoadingPosts={false}
       />
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
+          Link-ul a fost copiat în clipboard!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
