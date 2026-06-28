@@ -480,7 +480,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     <Box
       ref={containerRef}
       sx={styles.root}
-      onClick={(e) => {
+      onClick={() => {
         //e.stopPropagation();
         //handleTogglePlay();
       }}
