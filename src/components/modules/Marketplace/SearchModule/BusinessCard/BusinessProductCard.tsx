@@ -31,10 +31,22 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
           justifyContent="space-between"
           gap={2}
         >
-          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontWeight: 700,
+              fontSize: { xs: "0.937rem", sm: "1rem" },
+            }}
+          >
             {name}
           </Typography>
-          <Typography sx={{ fontWeight: 700 }}>
+
+          <Typography
+            sx={{
+              fontWeight: 700,
+              fontSize: { xs: "0.937rem", sm: "1rem" },
+            }}
+          >
             {formatPrice(starting_offering.price_with_discount)} RON
           </Typography>
         </Stack>
@@ -44,8 +56,17 @@ const BusinessProductCard = ({ product }: BusinessProductCardProps) => {
             size="small"
             icon={<AccessTimeOutlinedIcon />}
             label={`${starting_offering.duration} min`}
+            sx={{
+              "& .MuiChip-label": {
+                fontSize: { xs: "0.75rem", sm: "0.8125rem" },
+              },
+            }}
           />
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+          >
             {filtersText}
           </Typography>
         </Stack>
@@ -58,15 +79,16 @@ export default BusinessProductCard;
 
 const styles = {
   container: {
-    display: "block", // IMPORTANT: Transformă tag-ul <a> într-un element de tip block
-    p: 2,
+    display: "block",
+    // Reducem p (padding) de la 2 (16px) la 1.5 (12px) pe mobile pentru a economisi spațiu spațial
+    p: { xs: 1.5, sm: 2 },
     borderRadius: 5,
     mb: 1.5,
     bgcolor: "secondary.main",
     cursor: "pointer",
     transition: "background-color 0.2s ease",
-    textDecoration: "none !important", // Forțează eliminarea sublinierii textului în unele browsere
-    color: "text.primary", // Folosește culoarea principală a textului din tema MUI în loc de albastrul nativ link-urilor
+    textDecoration: "none !important",
+    color: "text.primary",
 
     "&:hover": {
       bgcolor: (theme: Theme) => alpha(theme.palette.secondary.dark, 0.4),

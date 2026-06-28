@@ -46,8 +46,8 @@ const SearchBusinessList: React.FC<SearchBusinessListProps> = ({
         lg: "1fr",
         xl: isMapVisible ? "1fr 1fr" : "repeat(3, 1fr)",
       },
-      gap: 5,
-      px: { xs: 1, md: 0 },
+      gap: { xs: 3, md: 5 },
+      px: 0,
     }),
     [isMapVisible]
   );

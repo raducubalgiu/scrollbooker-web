@@ -46,33 +46,57 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
           flexDirection="row"
           justifyContent="space-between"
           alignItems="flex-start"
-          mt={1.5}
+          mt={{ xs: 1, sm: 1.5 }}
         >
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            {/* Folosim sx pentru dimensiunea fontului în funcție de breakpoint */}
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                fontSize: { xs: "1rem", sm: "1.25rem" }, // h6 implicit are 1.25rem (20px), pe mobile punem 1rem (16px)
+              }}
+            >
               {fullname}
             </Typography>
           </Box>
 
           <Stack flexDirection="row" alignItems="center" gap={1}>
             <StarIcon fontSize="small" color="primary" />
-            <Typography variant="h6" fontWeight={600}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+            >
               {formatRating(ratings_average)}
             </Typography>
-            <Typography color="text.secondary" fontWeight={400}>
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              fontWeight={400}
+              sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }} // body2 pe mobile (14px), body1 pe desktop (16px)
+            >
               ({ratings_count})
             </Typography>
           </Stack>
         </Stack>
 
-        <Typography color="text.secondary">{profession}</Typography>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
+        >
+          {profession}
+        </Typography>
 
         <Typography
+          variant="body1"
           color="text.secondary"
           noWrap
           fontWeight={400}
-          mt={1.5}
-          mb={2.5}
+          mt={{ xs: 1, sm: 1.5 }}
+          mb={{ xs: 1.5, sm: 2.5 }}
+          sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
         >
           {address}
         </Typography>
@@ -100,7 +124,8 @@ const styles = {
   imageContainer: {
     position: "relative",
     width: "100%",
-    height: 280,
+    height: { xs: 0, sm: 280 },
+    paddingTop: { xs: "56.25%", sm: 0 },
     overflow: "hidden",
     borderRadius: 5,
   },

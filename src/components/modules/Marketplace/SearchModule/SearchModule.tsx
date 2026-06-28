@@ -15,6 +15,7 @@ import { LngLatBounds } from "mapbox-gl";
 import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
 import SearchFiltersModal from "./SearchFilters/SearchFiltersModal";
 import SearchBusinessList from "./SearchBusinessList";
+
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
 };
@@ -222,7 +223,11 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   }, [searchState.hasDiscount, searchState.maxPrice, searchState.sort]);
 
   return (
-    <Box sx={{ px: isMapExpanded ? 0 : mainPagePadding }}>
+    <Box
+      sx={{
+        px: isMapExpanded ? 0 : { xs: 2, md: mainPagePadding },
+      }}
+    >
       <SearchFiltersModal
         open={openFilters}
         onClose={handleCloseFilters}
@@ -250,7 +255,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         }}
       />
 
-      <Grid container spacing={isMapExpanded ? 0 : 4}>
+      <Grid container spacing={isMapExpanded ? 0 : { xs: 2, lg: 4 }}>
         {!isMapExpanded && (
           <Grid size={{ xs: 12, lg: isMapVisible ? 7 : 12 }} sx={{ mt: 1 }}>
             <SearchBusinessList
@@ -263,7 +268,10 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         {isMapVisible && (
           <Grid
             size={{ xs: 12, lg: isMapExpanded ? 12 : 5 }}
-            sx={{ width: "100%" }}
+            sx={{
+              width: "100%",
+              display: { xs: "none", lg: "block" },
+            }}
           >
             <SearchMap
               searchState={searchState}

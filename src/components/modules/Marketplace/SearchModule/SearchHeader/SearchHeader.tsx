@@ -270,8 +270,7 @@ const styles = {
     top: 0,
     mt: `calc(-1 * ${mainPagePadding})`,
     zIndex: (theme: Theme) => theme.zIndex.appBar + 2,
-    backgroundColor: (theme: Theme) =>
-      theme.palette.mode === "dark" ? "background.default" : "background.paper",
+    backgroundColor: "background.default",
     pt: (theme: Theme) => `calc(${mainPagePadding} + ${theme.spacing(1)})`,
     pb: 2.5,
     ...(isExpanded && {
