@@ -1,14 +1,14 @@
+import { useMemo, useRef, useState, useEffect } from "react";
 import { Post } from "@/ts/models/social/Post";
-import { useMemo } from "react";
 
-type PoolSlot = "prev" | "current" | "next";
+export type SlotPosition = "prev" | "current" | "next";
 
 export type PoolItem = {
-  slot: PoolSlot;
-  post: Post | null | undefined;
-  index: number;
+  slot: SlotPosition;
+  post: Post | null;
   src: string;
   isActive: boolean;
+  shouldPreload: boolean;
 };
 
 type UseExplorePlayerPoolParams = {
@@ -16,54 +16,96 @@ type UseExplorePlayerPoolParams = {
   currentIndex: number;
 };
 
-type UseExplorePlayerPoolReturn = {
-  prevPost: Post | null | undefined;
-  currentPost: Post | null | undefined;
-  nextPost: Post | null | undefined;
+type UseExplorePlayerPoolResult = {
   poolItems: PoolItem[];
+  prevPost: Post | null;
+  currentPost: Post | null;
+  nextPost: Post | null;
+  slideOffset: number;
+  isAnimating: boolean;
 };
+
+const ANIMATION_DURATION_MS = 300;
 
 export function useExplorePlayerPool({
   posts,
   currentIndex,
-}: UseExplorePlayerPoolParams): UseExplorePlayerPoolReturn {
-  return useMemo(() => {
-    const prevIndex = currentIndex - 1;
-    const nextIndex = currentIndex + 1;
+}: UseExplorePlayerPoolParams): UseExplorePlayerPoolResult {
+  const [committedIndex, setCommittedIndex] = useState(currentIndex);
+  const [slideOffset, setSlideOffset] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
-    const prevPost = prevIndex >= 0 ? posts[prevIndex] : null;
-    const currentPost = posts[currentIndex] ?? null;
-    const nextPost = nextIndex < posts.length ? posts[nextIndex] : null;
+  const prevIndexRef = useRef(currentIndex);
+  const animationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const poolItems: PoolItem[] = [
+  useEffect(() => {
+    const prev = prevIndexRef.current;
+    const next = currentIndex;
+
+    if (prev === next) return;
+
+    // Anulăm orice animație în curs
+    if (animationTimerRef.current) {
+      clearTimeout(animationTimerRef.current);
+    }
+
+    const direction = next > prev ? -1 : 1;
+
+    setIsAnimating(true);
+    setSlideOffset(direction);
+
+    animationTimerRef.current = setTimeout(() => {
+      setSlideOffset(0);
+      setIsAnimating(false);
+      setCommittedIndex(next);
+    }, ANIMATION_DURATION_MS);
+
+    prevIndexRef.current = next;
+
+    return () => {
+      if (animationTimerRef.current) {
+        clearTimeout(animationTimerRef.current);
+      }
+    };
+  }, [currentIndex]);
+
+  const prevPost = posts[committedIndex - 1] ?? null;
+  const currentPost = posts[committedIndex] ?? null;
+  const nextPost = posts[committedIndex + 1] ?? null;
+
+  const poolItems = useMemo<PoolItem[]>(
+    () => [
       {
         slot: "prev",
         post: prevPost,
-        index: prevIndex,
         src: prevPost?.media_files?.[0]?.url ?? "",
         isActive: false,
+        shouldPreload: !!prevPost,
       },
       {
         slot: "current",
         post: currentPost,
-        index: currentIndex,
         src: currentPost?.media_files?.[0]?.url ?? "",
         isActive: true,
+        shouldPreload: true,
       },
       {
         slot: "next",
         post: nextPost,
-        index: nextIndex,
         src: nextPost?.media_files?.[0]?.url ?? "",
         isActive: false,
+        shouldPreload: !!nextPost,
       },
-    ];
+    ],
+    [prevPost, currentPost, nextPost]
+  );
 
-    return {
-      prevPost,
-      currentPost,
-      nextPost,
-      poolItems,
-    };
-  }, [posts, currentIndex]);
+  return {
+    poolItems,
+    prevPost,
+    currentPost,
+    nextPost,
+    slideOffset,
+    isAnimating,
+  };
 }

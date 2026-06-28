@@ -37,13 +37,10 @@ export default function ExploreModule() {
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
-  const explorePosts = useInfiniteExplorePosts({
-    enabled: currentTab === ExploreTabEnum.EXPLORE,
-  });
-  const followingPosts = useInfiniteFollowingPosts({
-    enabled: currentTab === ExploreTabEnum.FOLLOWING,
-  });
+  const explorePosts = useInfiniteExplorePosts();
+  const followingPosts = useInfiniteFollowingPosts();
 
+  // Selectăm sursa activă în funcție de tab
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     currentTab === ExploreTabEnum.EXPLORE ? explorePosts : followingPosts;
 
@@ -56,12 +53,20 @@ export default function ExploreModule() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Reset index când se schimbă tab-ul
   const handleTabChange = useCallback((tab: ExploreTabEnum) => {
     setCurrentTab(tab);
     setCurrentIndex(0);
   }, []);
 
-  const { prevPost, currentPost, nextPost, poolItems } = useExplorePlayerPool({
+  const {
+    prevPost,
+    currentPost,
+    nextPost,
+    poolItems,
+    slideOffset,
+    isAnimating,
+  } = useExplorePlayerPool({
     posts,
     currentIndex,
   });
@@ -146,6 +151,8 @@ export default function ExploreModule() {
             <ExploreVideoPool
               items={poolItems}
               isLoading={isLoading}
+              slideOffset={slideOffset}
+              isAnimating={isAnimating}
               user={currentPost?.user ?? null}
               counters={currentPost?.counters ?? null}
               userActions={currentPost?.user_actions ?? null}
