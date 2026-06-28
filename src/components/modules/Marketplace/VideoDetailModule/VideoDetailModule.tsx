@@ -3,7 +3,7 @@
 import * as React from "react";
 import { alpha, Box, IconButton, Theme } from "@mui/material";
 import { Post } from "@/ts/models/social/Post";
-import PostActions from "../../../cutomized/Post/PostActions";
+import PostActions from "../../../cutomized/Post/actions/PostActions";
 import { PostVideoPlayer } from "../../../cutomized/Post/PostVideoPlayer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ExploreSidebar from "@/components/cutomized/Post/sidebar/ExploreSidebar";
@@ -91,6 +91,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
               counters={post.counters}
               userActions={post.user_actions}
               description={post.description ?? ""}
+              isOwnPost={post.is_own_post}
               isVideoReview={post.is_video_review}
               onOpenLinkedProducts={() => {}}
             />

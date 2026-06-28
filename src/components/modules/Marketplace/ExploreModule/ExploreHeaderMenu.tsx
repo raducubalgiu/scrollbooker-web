@@ -5,13 +5,28 @@ import SearchIcon from "@/assets/icons/ic_search.svg";
 import BurgerIcon from "@/assets/icons/ic_menu_solid.svg";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
+import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
+
+export enum ExploreTabEnum {
+  EXPLORE,
+  FOLLOWING,
+}
 
 type ExploreHeaderMenuProps = {
+  activeTab: ExploreTabEnum;
   onHandleToggleDrawer: () => void;
+  onTabChange: (tab: ExploreTabEnum) => void;
 };
 
+const TABS: { key: ExploreTabEnum; label: string }[] = [
+  { key: ExploreTabEnum.EXPLORE, label: "Explorează" },
+  { key: ExploreTabEnum.FOLLOWING, label: "Urmărești" },
+];
+
 const ExploreHeaderMenu = ({
+  activeTab,
   onHandleToggleDrawer,
+  onTabChange,
 }: ExploreHeaderMenuProps) => {
   const { navigateTo } = useAppNavigation();
 
@@ -25,46 +40,35 @@ const ExploreHeaderMenu = ({
         >
           <Stack flexDirection="row" alignItems="center">
             <IconButton size="large" onClick={onHandleToggleDrawer}>
-              <Box
-                sx={{
-                  width: 30,
-                  height: 30,
-                  backgroundColor: "common.white",
-                  maskImage: `url(${BurgerIcon.src})`,
-                  WebkitMaskImage: `url(${BurgerIcon.src})`,
-                  maskSize: "contain",
-                  WebkitMaskSize: "contain",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskPosition: "center",
-                  WebkitMaskPosition: "center",
-                }}
+              <CustomSvg
+                src={BurgerIcon}
+                size={30}
+                sx={{ backgroundColor: "common.white" }}
               />
             </IconButton>
 
-            <Button
-              variant="contained"
-              color="primary"
-              disableElevation
-              size="small"
-              sx={{
-                mr: 1,
-                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.7),
-                "&:hover": {
-                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.3),
-                },
-              }}
-            >
-              Explorează
-            </Button>
-
-            <Button
-              sx={{ color: "common.white" }}
-              size="small"
-              disableElevation
-            >
-              Urmărești
-            </Button>
+            {TABS.map(({ key, label }) => {
+              const isActive = activeTab === key;
+              return (
+                <Button
+                  key={key}
+                  variant={isActive ? "contained" : "text"}
+                  disableElevation
+                  size="small"
+                  onClick={() => onTabChange(key)}
+                  sx={{
+                    mr: 1,
+                    color: "common.white",
+                    ...(isActive && {
+                      bgcolor: (theme: Theme) =>
+                        alpha(theme.palette.primary.main, 0.7),
+                    }),
+                  }}
+                >
+                  {label}
+                </Button>
+              );
+            })}
           </Stack>
 
           <IconButton
@@ -72,20 +76,10 @@ const ExploreHeaderMenu = ({
             size="large"
             sx={{ display: { xs: "block", lg: "none" } }}
           >
-            <Box
-              sx={{
-                width: 30,
-                height: 30,
-                backgroundColor: "common.white",
-                maskImage: `url(${SearchIcon.src})`,
-                WebkitMaskImage: `url(${SearchIcon.src})`,
-                maskSize: "contain",
-                WebkitMaskSize: "contain",
-                maskRepeat: "no-repeat",
-                WebkitMaskRepeat: "no-repeat",
-                maskPosition: "center",
-                WebkitMaskPosition: "center",
-              }}
+            <CustomSvg
+              src={SearchIcon}
+              size={30}
+              sx={{ backgroundColor: "common.white" }}
             />
           </IconButton>
         </Stack>

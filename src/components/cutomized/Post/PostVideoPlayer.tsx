@@ -34,6 +34,7 @@ type PostVideoPlayerProps = {
   user: PostUser | null;
   counters: PostCounters | null;
   userActions: PostUserActions | null;
+  isOwnPost: boolean;
   description: string | null;
   isVideoReview: boolean;
   preload?: "none" | "metadata" | "auto";
@@ -58,6 +59,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   user,
   counters,
   userActions,
+  isOwnPost,
   description,
   isVideoReview,
   preload = "metadata",
@@ -688,6 +690,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
           <PostOverlay
             user={user}
             counters={counters}
+            isOwnPost={isOwnPost}
             userActions={userActions}
             description={description ?? ""}
             isVideoReview={isVideoReview}

@@ -2,12 +2,12 @@
 
 import React from "react";
 import {
-  Box,
+  Badge,
   BottomNavigation,
   BottomNavigationAction,
-  useTheme,
-  Badge,
+  Box,
 } from "@mui/material";
+import { Theme, useTheme } from "@mui/material/styles";
 import { usePathname, useRouter } from "next/navigation";
 import { StaticImageData } from "next/image";
 import { AppRoutes } from "@/utils/routes";
@@ -25,6 +25,7 @@ import AppointmentsSolidOutlined from "@/assets/icons/ic_clipboard_solid.svg";
 
 import PersonIconOutlined from "@/assets/icons/ic_person_outline.svg";
 import PersonIconSolid from "@/assets/icons/ic_person_solid.svg";
+import CustomSvg from "../CustomSvg/CustomSvg";
 
 type BottomBarProps = {
   username: string | undefined;
@@ -106,7 +107,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
         inactiveIcon: PersonIconOutlined,
       },
     ],
-    [username, profession, notificationsCount, appointmentsCount]
+    [username, profession]
   );
 
   const currentIndex = React.useMemo(() => {
@@ -121,13 +122,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
   return (
     <Box
       sx={{
-        width: "100%",
-        flexShrink: 0,
-        zIndex: (theme) => theme.zIndex.appBar,
-        display: { xs: "block", lg: "none" },
-        borderTop: "1px solid",
-        borderColor: isDarkPage ? "transparent" : "divider",
-        marginTop: "-1px",
+        ...styles.container,
         backgroundColor: getBgColor(),
       }}
     >
@@ -140,7 +135,6 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
         }}
         sx={{
           height: "65px",
-          backgroundColor: getBgColor(),
           pb: "safe-area-inset-bottom",
           "& .MuiBottomNavigationAction-root": {
             minWidth: 0,
@@ -152,6 +146,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
               },
             },
           },
+          backgroundColor: getBgColor(),
         }}
       >
         {actions.map((a, index) => {
@@ -163,32 +158,8 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
               key={a.label}
               label={a.label}
               icon={
-                <Badge
-                  badgeContent={a.badge}
-                  color="error"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      fontSize: 10,
-                      height: 16,
-                      minWidth: 16,
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      backgroundColor: "currentColor",
-                      maskImage: `url(${baseIcon.src})`,
-                      WebkitMaskImage: `url(${baseIcon.src})`,
-                      maskSize: "contain",
-                      WebkitMaskSize: "contain",
-                      maskRepeat: "no-repeat",
-                      WebkitMaskRepeat: "no-repeat",
-                      maskPosition: "center",
-                      WebkitMaskPosition: "center",
-                    }}
-                  />
+                <Badge badgeContent={a.badge} color="error" sx={styles.badge}>
+                  <CustomSvg src={baseIcon} />
                 </Badge>
               }
             />
@@ -198,3 +169,23 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
     </Box>
   );
 }
+
+const styles = {
+  container: {
+    width: "100%",
+    flexShrink: 0,
+    zIndex: (theme: Theme) => theme.zIndex.appBar,
+    display: { xs: "block", lg: "none" },
+    borderTop: "1px solid",
+    borderColor: (theme: Theme) =>
+      theme.palette.mode === "dark" ? "transparent" : "divider",
+    marginTop: "-1px",
+  },
+  badge: {
+    "& .MuiBadge-badge": {
+      fontSize: 10,
+      height: 16,
+      minWidth: 16,
+    },
+  },
+};

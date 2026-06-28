@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   alpha,
   Box,
@@ -22,6 +22,11 @@ import PublicRoutes from "./PublicRoutes";
 import AdminRoutes from "./AdminRoutes";
 import { AppRoutes, AppRouteValues } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
+import {
+  DRAWER_PADDING_X,
+  ICON_SLOT_SIZE,
+  BOTTOM_BAR_HEIGHT,
+} from "./Drawer.constants";
 
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
@@ -37,10 +42,6 @@ type LayoutDrawerProps = {
   onToggleDrawer: () => void;
 };
 
-const DRAWER_PADDING_X = 20;
-const ICON_SLOT_SIZE = 72;
-const BOTTOM_BAR_HEIGHT = 72;
-
 const LayoutDrawer = ({
   session,
   isSessionLoading,
@@ -55,12 +56,18 @@ const LayoutDrawer = ({
   const pathname = usePathname() || "/";
   const { navigateTo } = useAppNavigation();
 
+  // Ref to avoid including pathname in navigate's dependency array
+  const pathnameRef = useRef(pathname);
+  useEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
+
   const [moreOpen, setMoreOpen] = React.useState(false);
   const [moreAnchorEl, setMoreAnchorEl] = React.useState<HTMLElement | null>(
     null
   );
 
-  const navigate = React.useCallback(
+  const navigate = useCallback(
     (route: AppRouteValues, e?: React.MouseEvent<HTMLElement>) => {
       if (route === AppRoutes.more()) {
         const el = (e?.currentTarget as HTMLElement) ?? moreAnchorEl;
@@ -73,11 +80,12 @@ const LayoutDrawer = ({
         setMoreOpen(false);
       }
 
-      if (pathname !== route) {
+      const routePath = route.split("?")[0];
+      if (pathnameRef.current !== routePath) {
         navigateTo(route);
       }
     },
-    [moreAnchorEl, moreOpen, pathname, navigateTo]
+    [moreAnchorEl, moreOpen, navigateTo]
   );
 
   const handleCloseMorePopper = useCallback(() => {

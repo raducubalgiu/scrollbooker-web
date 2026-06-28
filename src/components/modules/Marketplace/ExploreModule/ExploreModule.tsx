@@ -2,7 +2,7 @@
 
 import { Box, Slide } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import PostActions from "../../../cutomized/Post/PostActions";
+import PostActions from "../../../cutomized/Post/actions/PostActions";
 import ExploreControls from "./ExploreControls";
 import { useInfiniteExplorePosts } from "@/hooks/infiniteQuery/useInfiniteExplorePosts";
 import ExploreDrawer from "./ExploreDrawer";
@@ -10,7 +10,7 @@ import { useExplorePlayerPool } from "./useExplorePlayerPool";
 import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
 import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
 import { ExploreVideoPool } from "./ExploreVideoPool";
-import ExploreHeaderMenu from "./ExploreHeaderMenu";
+import ExploreHeaderMenu, { ExploreTabEnum } from "./ExploreHeaderMenu";
 import ExploreSidebar from "@/components/cutomized/Post/sidebar/ExploreSidebar";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { Product } from "@/ts/models/booking/product/Product";
@@ -25,6 +25,9 @@ import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
 const PREFETCH_OFFSET = 2;
 
 export default function ExploreModule() {
+  const [currentTab, setCurrentTab] = useState<ExploreTabEnum>(
+    ExploreTabEnum.EXPLORE
+  );
   const { navigateTo } = useAppNavigation();
 
   const [showDrawer, setShowDrawer] = useState(false);
@@ -133,20 +136,26 @@ export default function ExploreModule() {
               counters={currentPost?.counters ?? null}
               userActions={currentPost?.user_actions ?? null}
               description={currentPost?.description ?? null}
+              isOwnPost={currentPost?.is_own_post ?? false}
               isVideoReview={currentPost?.is_video_review ?? false}
               onOpenLinkedProducts={() => setIsProductsOpen(true)}
               onNext={goToNext}
               onPrev={goToPrev}
             />
 
-            <ExploreHeaderMenu onHandleToggleDrawer={handleToggleDrawer} />
+            <ExploreHeaderMenu
+              activeTab={currentTab}
+              onHandleToggleDrawer={handleToggleDrawer}
+              onTabChange={(tab) => setCurrentTab(tab)}
+            />
           </Box>
 
           <PostActions
+            user={currentPost?.user ?? null}
             isLoading={isLoading}
             isOwnPost={currentPost?.is_own_post ?? false}
-            counters={counters}
-            userActions={user_actions}
+            counters={counters ?? null}
+            userActions={user_actions ?? null}
             onCommentClick={() => {}}
             onBookmarkClick={() => {}}
             onLike={() => {}}
@@ -154,6 +163,9 @@ export default function ExploreModule() {
             isLoadingDelete={isPendingDelete}
             onShareClick={() => {}}
             onReportClick={() => {}}
+            isSavingLike={false}
+            isSavingBookmark={false}
+            onNavigateToUser={() => {}}
           />
         </Box>
 

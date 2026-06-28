@@ -9,13 +9,14 @@ import {
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { ProfileTabEnum } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
-import PostActionsMobile from "./PostActionsMobile";
+import PostActionsMobile from "./actions/PostActionsMobile";
 import { AppRoutes } from "@/utils/routes";
 
 type PostOverlayProps = {
   user: PostUser | null;
   counters: PostCounters | null;
   userActions: PostUserActions | null;
+  isOwnPost: boolean;
   isVideoReview: boolean | undefined;
   description: string | null;
   onOpenLinkedProducts: () => void;
@@ -25,6 +26,7 @@ const PostOverlay = ({
   user,
   counters,
   userActions,
+  isOwnPost,
   description,
   isVideoReview,
   onOpenLinkedProducts,
@@ -155,14 +157,20 @@ const PostOverlay = ({
             {user && counters && userActions && (
               <PostActionsMobile
                 user={user}
+                counters={counters}
+                userActions={userActions}
+                isOwnPost={isOwnPost}
                 isSavingLike={false}
                 isSavingBookmark={false}
                 isVideoReview={isVideoReview ?? false}
-                counters={counters}
-                userActions={userActions}
                 onLike={() => {}}
-                onBookmark={() => {}}
+                onBookmarkClick={() => {}}
                 onNavigateToUser={() => {}}
+                isLoadingDelete={false}
+                onCommentClick={() => {}}
+                onShareClick={() => {}}
+                onDeleteClick={() => {}}
+                onReportClick={() => {}}
               />
             )}
           </Box>

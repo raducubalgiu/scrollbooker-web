@@ -539,10 +539,11 @@ export const lightTheme = createTheme({
         elevation: 0,
       },
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           boxShadow: "0 8px 24px rgba(0, 0, 0, 0.06)",
           borderRadius: 10,
-        },
+          backgroundColor: theme.palette.background.default,
+        }),
       },
     },
     MuiButton: {

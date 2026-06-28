@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import {
   Avatar,
   Badge,
@@ -10,23 +10,24 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
-import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
-import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { Session } from "next-auth";
-import Protected from "@/components/cutomized/Protected/Protected";
 import { AppRoutes, AppRouteValues } from "@/utils/routes";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { DRAWER_PADDING_X, ICON_SLOT_SIZE, ITEM_GAP } from "./Drawer.constants";
+import Protected from "@/components/cutomized/Protected/Protected";
 
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
 type PublicRoutesProps = {
   session: Session | null;
-  isSelected: (route: string) => boolean;
+  isSelected: (route: AppRouteValues) => boolean;
   isCollapsed: boolean;
   activeView: ActiveView;
   onNavigate: (
@@ -47,9 +48,23 @@ export type NavigationItem = {
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
-const DRAWER_PADDING_X = 15;
-const ICON_SLOT_SIZE = 72;
-const ITEM_GAP = 10;
+const STATIC_ICONS = {
+  explore: <VideoLibraryOutlinedIcon />,
+  search: <SearchOutlinedIcon />,
+  appointments: (
+    <Badge badgeContent={0} color="error">
+      <QueryBuilderOutlinedIcon />
+    </Badge>
+  ),
+  notifications: (
+    <Badge badgeContent={4} color="error">
+      <NotificationsNoneOutlinedIcon />
+    </Badge>
+  ),
+  personOutline: <PersonOutlineOutlinedIcon />,
+  upload: <AddBoxOutlinedIcon />,
+  more: <MoreHorizOutlinedIcon />,
+};
 
 const getPublicRoutes = ({
   username,
@@ -68,34 +83,26 @@ const getPublicRoutes = ({
   {
     label: "Explorează",
     route: AppRoutes.home(),
-    icon: <VideoLibraryOutlinedIcon />,
+    icon: STATIC_ICONS.explore,
     permission: PermissionEnum.NO_PROTECTION,
   },
   {
     label: "Servicii",
     route: AppRoutes.search(),
-    icon: <SearchOutlinedIcon />,
+    icon: STATIC_ICONS.search,
     permission: PermissionEnum.NO_PROTECTION,
   },
   {
     label: "Rezervări",
     overlayView: "appointments",
-    icon: (
-      <Badge badgeContent={0} color="error">
-        <QueryBuilderOutlinedIcon />
-      </Badge>
-    ),
+    icon: STATIC_ICONS.appointments,
     permission: PermissionEnum.NO_PROTECTION,
     onClick: () => onOpenAppointmentsView(),
   },
   {
     label: "Notificări",
     overlayView: "notifications",
-    icon: (
-      <Badge badgeContent={4} color="error">
-        <NotificationsNoneOutlinedIcon />
-      </Badge>
-    ),
+    icon: STATIC_ICONS.notifications,
     permission: PermissionEnum.NO_PROTECTION,
     onClick: () => onOpenNotificationsView(),
   },
@@ -120,23 +127,73 @@ const getPublicRoutes = ({
         {username.charAt(0).toUpperCase()}
       </Avatar>
     ) : (
-      <PersonOutlineOutlinedIcon />
+      STATIC_ICONS.personOutline
     ),
     permission: PermissionEnum.NO_PROTECTION,
   },
   {
     label: "Upload",
     route: AppRoutes.uploadVideo(),
-    icon: <AddBoxOutlinedIcon />,
+    icon: STATIC_ICONS.upload,
     permission: PermissionEnum.CREATE_POST,
   },
   {
     label: "Mai mult",
     route: AppRoutes.more(),
-    icon: <MoreHorizOutlinedIcon />,
+    icon: STATIC_ICONS.more,
     permission: PermissionEnum.NO_PROTECTION,
   },
 ];
+
+const getIconStyles = (selected: boolean) => ({
+  minWidth: "unset",
+  width: ICON_SLOT_SIZE,
+  height: 25,
+  m: 0,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: selected ? "primary.main" : "text.secondary",
+  "& svg": {
+    fontSize: 32,
+  },
+  "& .MuiAvatar-root": {
+    width: 32,
+    height: 32,
+    outline: selected ? "2px solid currentColor" : "none",
+    outlineOffset: 2,
+  },
+});
+
+const getTextStyles = (selected: boolean) => ({
+  fontSize: 20,
+  fontWeight: 600,
+  color: selected ? "primary.main" : "text.secondary",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+});
+
+const buttonSx = {
+  width: "100%",
+  minHeight: 56,
+  borderRadius: 2,
+  px: `${DRAWER_PADDING_X}px`,
+  py: 0.75,
+  display: "grid",
+  gridTemplateColumns: `${ICON_SLOT_SIZE}px minmax(0, 1fr)`,
+  alignItems: "center",
+  columnGap: `${ITEM_GAP}px`,
+  justifyContent: "flex-start",
+  bgcolor: "transparent",
+  transition: "none !important",
+  "&.Mui-selected": {
+    bgcolor: "transparent !important",
+  },
+  "&:hover, &.Mui-selected:hover": {
+    bgcolor: (theme: Theme) => `${theme.palette.action.hover} !important`,
+  },
+};
 
 const PublicRoutes = ({
   session,
@@ -168,70 +225,18 @@ const PublicRoutes = ({
     ]
   );
 
-  const styles = React.useMemo(
+  const textWrapperSx = React.useMemo(
     () => ({
-      button: {
-        width: "100%",
-        minHeight: 56,
-        borderRadius: 2,
-        px: `${DRAWER_PADDING_X}px`,
-        py: 0.75,
-        display: "grid",
-        gridTemplateColumns: `${ICON_SLOT_SIZE}px minmax(0, 1fr)`,
-        alignItems: "center",
-        columnGap: `${ITEM_GAP}px`,
-        justifyContent: "flex-start",
-        bgcolor: "transparent",
-        transition: "none !important",
-        "&.Mui-selected": {
-          bgcolor: "transparent !important",
-        },
-        "&:hover, &.Mui-selected:hover": {
-          bgcolor: (theme: Theme) => `${theme.palette.action.hover} !important`,
-        },
-      },
-
-      getIconStyles: (selected: boolean) => ({
-        minWidth: "unset",
-        width: ICON_SLOT_SIZE,
-        height: 25,
-        m: 0,
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: selected ? "primary.main" : "text.secondary",
-        "& svg": {
-          fontSize: 32,
-        },
-        "& .MuiAvatar-root": {
-          width: 32,
-          height: 32,
-          outline: selected ? "2px solid currentColor" : "none",
-          outlineOffset: 2,
-        },
-      }),
-
-      textWrapper: {
-        minWidth: 0,
-        overflow: "hidden",
-        width: isCollapsed ? 0 : "auto",
-        opacity: isCollapsed ? 0 : 1,
-        pointerEvents: isCollapsed ? "none" : "auto",
-      },
-
-      getTextStyles: (selected: boolean) => ({
-        fontSize: 20,
-        fontWeight: 600,
-        color: selected ? "primary.main" : "text.secondary",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      }),
+      minWidth: 0,
+      overflow: "hidden",
+      width: isCollapsed ? 0 : "auto",
+      opacity: isCollapsed ? 0 : 1,
+      pointerEvents: isCollapsed ? ("none" as const) : ("auto" as const),
     }),
     [isCollapsed]
   );
 
-  const handleItemClick = React.useCallback(
+  const handleItemClick = useCallback(
     (
       item: NavigationItem,
       event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -248,7 +253,7 @@ const PublicRoutes = ({
     [onNavigate]
   );
 
-  const getItemSelected = React.useCallback(
+  const getItemSelected = useCallback(
     (item: NavigationItem) => {
       if (activeView) {
         return item.overlayView === activeView;
@@ -274,16 +279,16 @@ const PublicRoutes = ({
               <ListItemButton
                 onClick={(e) => handleItemClick(item, e)}
                 selected={selected}
-                sx={styles.button}
+                sx={buttonSx}
               >
-                <ListItemIcon sx={styles.getIconStyles(selected)}>
+                <ListItemIcon sx={getIconStyles(selected)}>
                   {item.icon}
                 </ListItemIcon>
 
-                <Box sx={styles.textWrapper}>
+                <Box sx={textWrapperSx}>
                   <ListItemText
                     primary={
-                      <Typography sx={styles.getTextStyles(selected)}>
+                      <Typography sx={getTextStyles(selected)}>
                         {item.label}
                       </Typography>
                     }

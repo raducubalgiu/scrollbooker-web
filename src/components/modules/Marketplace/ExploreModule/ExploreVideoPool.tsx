@@ -15,6 +15,7 @@ type ExploreVideoPoolProps = {
   counters: PostCounters | null;
   userActions: PostUserActions | null;
   description: string | null;
+  isOwnPost: boolean;
   isVideoReview: boolean;
   onNext: () => void;
   onPrev: () => void;
@@ -28,6 +29,7 @@ export function ExploreVideoPool({
   counters,
   userActions,
   description,
+  isOwnPost,
   isVideoReview,
   onNext,
   onPrev,
@@ -87,6 +89,7 @@ export function ExploreVideoPool({
               counters={counters}
               userActions={userActions}
               description={description ?? ""}
+              isOwnPost={isOwnPost}
               isVideoReview={isVideoReview}
               preload="metadata"
               resetOnInactive={false}
