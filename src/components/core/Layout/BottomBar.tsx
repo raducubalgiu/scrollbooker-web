@@ -8,7 +8,8 @@ import {
   Box,
 } from "@mui/material";
 import { Theme, useTheme } from "@mui/material/styles";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { StaticImageData } from "next/image";
 import { AppRoutes } from "@/utils/routes";
 
@@ -34,7 +35,7 @@ type BottomBarProps = {
 
 type BottomBarActionItem = {
   label: string;
-  route: string | undefined;
+  route: string;
   activeIcon: StaticImageData;
   inactiveIcon: StaticImageData;
   badge?: number;
@@ -43,7 +44,6 @@ type BottomBarActionItem = {
 export default function BottomBar({ username, profession }: BottomBarProps) {
   const theme = useTheme();
   const pathname = usePathname() || "/";
-  const router = useRouter();
 
   const notificationsCount = 5;
   const appointmentsCount = 2;
@@ -53,21 +53,14 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
   const isAnyVideoPage =
     pathname.startsWith("/user") && pathname.includes("/post/");
 
-  const getActiveColor = () => {
-    if (isDarkPage || isDarkMode || isAnyVideoPage) return "#ffffff";
-    return "#000000";
-  };
+  const isDarkThemeRequired = isDarkPage || isDarkMode || isAnyVideoPage;
 
-  const getInactiveColor = () => {
-    if (isDarkPage || isDarkMode || isAnyVideoPage)
-      return "rgba(255, 255, 255, 0.6)";
-    return "rgba(0, 0, 0, 0.6)";
-  };
-
-  const getBgColor = () => {
-    if (isDarkPage || isAnyVideoPage) return "#000000 !important";
-    return theme.palette.background.default;
-  };
+  const activeColor = isDarkThemeRequired ? "#ffffff" : "#000000";
+  const inactiveColor = isDarkThemeRequired
+    ? "rgba(255, 255, 255, 0.6)"
+    : "rgba(0, 0, 0, 0.6)";
+  const bgColor =
+    isDarkPage || isAnyVideoPage ? "#000000" : theme.palette.background.default;
 
   const actions: BottomBarActionItem[] = React.useMemo(
     () => [
@@ -99,10 +92,11 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
       },
       {
         label: "Profil",
+        // Dacă nu avem username/profession, trimitem către o rută sigură sau fallback (ex: /profile-redirect sau home)
         route:
           username && profession
             ? AppRoutes.profile(username, profession)
-            : undefined,
+            : AppRoutes.home(),
         activeIcon: PersonIconSolid,
         inactiveIcon: PersonIconOutlined,
       },
@@ -112,7 +106,6 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
 
   const currentIndex = React.useMemo(() => {
     return actions.findIndex((a) => {
-      if (!a.route) return false;
       const routePath = a.route.split("?")[0];
       if (routePath === "/") return pathname === "/";
       return pathname === routePath || pathname.startsWith(routePath + "/");
@@ -123,30 +116,50 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
     <Box
       sx={{
         ...styles.container,
-        backgroundColor: getBgColor(),
+        backgroundColor: bgColor,
       }}
     >
       <BottomNavigation
         showLabels
         value={currentIndex}
-        onChange={(_, newValue) => {
-          const route = actions[newValue]?.route;
-          if (route) router.push(route);
-        }}
+        onChange={() => {}}
         sx={{
           height: "65px",
           pb: "safe-area-inset-bottom",
+          backgroundColor: bgColor,
+          transition:
+            "background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease",
+
           "& .MuiBottomNavigationAction-root": {
             minWidth: 0,
-            color: getInactiveColor(),
+            color: inactiveColor,
+            transition: "color 0.3s ease",
+            padding: "10px 0",
+            textDecoration: "none", // Elimină sublinierile native de link HTML
+
+            "& svg, & img": {
+              transition: "fill 0.3s ease, stroke 0.3s ease, color 0.3s ease",
+              fill: "currentColor",
+            },
+
+            "& .MuiBottomNavigationAction-label": {
+              fontSize: "0.75rem",
+              transition: "color 0.3s ease",
+            },
+
             "&.Mui-selected": {
-              color: getActiveColor(),
-              "& .MuiSvgIcon-root, & .MuiBottomNavigationAction-label": {
-                color: getActiveColor(),
+              color: activeColor,
+              paddingTop: "10px",
+
+              "& .MuiBottomNavigationAction-label": {
+                fontSize: "0.75rem !important",
+                color: activeColor,
+              },
+              "& svg, & img": {
+                fill: "currentColor",
               },
             },
           },
-          backgroundColor: getBgColor(),
         }}
       >
         {actions.map((a, index) => {
@@ -157,9 +170,14 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
             <BottomNavigationAction
               key={a.label}
               label={a.label}
+              component={Link}
+              href={a.route}
               icon={
                 <Badge badgeContent={a.badge} color="error" sx={styles.badge}>
-                  <CustomSvg src={baseIcon} />
+                  <CustomSvg
+                    src={baseIcon}
+                    sx={{ color: "inherit", fill: "currentColor" }}
+                  />
                 </Badge>
               }
             />
@@ -180,6 +198,7 @@ const styles = {
     borderColor: (theme: Theme) =>
       theme.palette.mode === "dark" ? "transparent" : "divider",
     marginTop: "-1px",
+    transition: "background-color 0.3s ease, border-color 0.3s ease",
   },
   badge: {
     "& .MuiBadge-badge": {
