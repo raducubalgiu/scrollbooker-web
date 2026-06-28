@@ -173,7 +173,7 @@ const styles = {
     alignItems: "stretch",
     width: "100%",
     height: {
-      xs: "calc(100vh - 65px)",
+      xs: "100%",
       md: "calc(100vh - 40px)",
     },
     overflow: "hidden",
