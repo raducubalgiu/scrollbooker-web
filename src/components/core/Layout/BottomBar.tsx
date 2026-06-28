@@ -110,12 +110,12 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
   );
 
   const currentIndex = React.useMemo(() => {
-    const idx = actions.findIndex(
-      (a) =>
-        pathname === a.route ||
-        (a.route !== "/" && pathname.startsWith(a.route + "/"))
-    );
-    return idx >= 0 ? idx : 0;
+    return actions.findIndex((a) => {
+      if (!a.route) return false;
+      const routePath = a.route.split("?")[0];
+      if (routePath === "/") return pathname === "/";
+      return pathname === routePath || pathname.startsWith(routePath + "/");
+    });
   }, [pathname, actions]);
 
   return (
@@ -128,7 +128,6 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
         borderTop: "1px solid",
         borderColor: isDarkPage ? "transparent" : "divider",
         marginTop: "-1px",
-
         backgroundColor: getBgColor(),
       }}
     >

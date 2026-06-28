@@ -73,6 +73,7 @@ export const AppRoutes = {
 
   // My Business
   myBusiness: () => "/admin/my-business",
+  myDashboard: () => "/admin/my-business/dashboard",
   myBusinessDetails: () => "/admin/my-business/business-details",
   mySchedules: () => "/admin/my-business/schedules",
   myServices: () => "/admin/my-business/services",

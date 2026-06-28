@@ -80,7 +80,7 @@ const AdminRoutes = ({
       },
       {
         label: "Dashboard",
-        route: AppRoutes.dashboard(),
+        route: AppRoutes.myDashboard(),
         icon: <DashboardOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
