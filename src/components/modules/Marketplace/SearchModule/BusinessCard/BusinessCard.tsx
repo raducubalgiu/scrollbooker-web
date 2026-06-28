@@ -49,12 +49,11 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
           mt={{ xs: 1, sm: 1.5 }}
         >
           <Box>
-            {/* Folosim sx pentru dimensiunea fontului în funcție de breakpoint */}
             <Typography
               variant="h6"
               sx={{
                 fontWeight: 600,
-                fontSize: { xs: "1rem", sm: "1.25rem" }, // h6 implicit are 1.25rem (20px), pe mobile punem 1rem (16px)
+                fontSize: { xs: "1rem", sm: "1.25rem" },
               }}
             >
               {fullname}
@@ -74,7 +73,7 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
               variant="body1"
               color="text.secondary"
               fontWeight={400}
-              sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }} // body2 pe mobile (14px), body1 pe desktop (16px)
+              sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
             >
               ({ratings_count})
             </Typography>

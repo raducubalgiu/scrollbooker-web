@@ -92,7 +92,6 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
       },
       {
         label: "Profil",
-        // Dacă nu avem username/profession, trimitem către o rută sigură sau fallback (ex: /profile-redirect sau home)
         route:
           username && profession
             ? AppRoutes.profile(username, profession)
@@ -135,7 +134,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
             color: inactiveColor,
             transition: "color 0.3s ease",
             padding: "10px 0",
-            textDecoration: "none", // Elimină sublinierile native de link HTML
+            textDecoration: "none",
 
             "& svg, & img": {
               transition: "fill 0.3s ease, stroke 0.3s ease, color 0.3s ease",
