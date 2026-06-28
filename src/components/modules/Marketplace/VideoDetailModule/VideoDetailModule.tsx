@@ -98,6 +98,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
           </Box>
 
           <PostActions
+            user={null}
             isLoading={false}
             isOwnPost={post.is_own_post}
             counters={post.counters}
@@ -109,6 +110,9 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
             isLoadingDelete={isPendingDelete}
             onShareClick={() => {}}
             onReportClick={() => {}}
+            isSavingLike={false}
+            isSavingBookmark={false}
+            onNavigateToUser={() => {}}
           />
         </Box>
 

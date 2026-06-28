@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PostActions from "../../../cutomized/Post/actions/PostActions";
 import ExploreControls from "./ExploreControls";
 import { useInfiniteExplorePosts } from "@/hooks/infiniteQuery/useInfiniteExplorePosts";
+import { useInfiniteFollowingPosts } from "@/hooks/infiniteQuery/useInfiniteFollowingPosts";
 import ExploreDrawer from "./ExploreDrawer";
 import { useExplorePlayerPool } from "./useExplorePlayerPool";
 import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
@@ -36,8 +37,15 @@ export default function ExploreModule() {
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
+  const explorePosts = useInfiniteExplorePosts({
+    enabled: currentTab === ExploreTabEnum.EXPLORE,
+  });
+  const followingPosts = useInfiniteFollowingPosts({
+    enabled: currentTab === ExploreTabEnum.FOLLOWING,
+  });
+
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-    useInfiniteExplorePosts();
+    currentTab === ExploreTabEnum.EXPLORE ? explorePosts : followingPosts;
 
   const posts = useMemo(
     () => data?.pages.flatMap((page) => page.results) ?? [],
@@ -47,6 +55,12 @@ export default function ExploreModule() {
   const postsCount = useMemo(() => data?.pages[0]?.count ?? 0, [data]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleTabChange = useCallback((tab: ExploreTabEnum) => {
+    setCurrentTab(tab);
+    setCurrentIndex(0);
+  }, []);
+
   const { prevPost, currentPost, nextPost, poolItems } = useExplorePlayerPool({
     posts,
     currentIndex,
@@ -146,7 +160,7 @@ export default function ExploreModule() {
             <ExploreHeaderMenu
               activeTab={currentTab}
               onHandleToggleDrawer={handleToggleDrawer}
-              onTabChange={(tab) => setCurrentTab(tab)}
+              onTabChange={handleTabChange}
             />
           </Box>
 
@@ -195,7 +209,6 @@ export default function ExploreModule() {
         )}
       </Box>
 
-      {/* Sheets */}
       <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
         <Box sx={styles.drawerContainer}>
           <ExploreDrawer onCloseDrawer={() => setShowDrawer(false)} />
@@ -245,7 +258,6 @@ const styles = {
     },
     overflow: "hidden",
   },
-
   mainContent: {
     minWidth: 0,
     minHeight: 0,
@@ -256,14 +268,12 @@ const styles = {
     height: "100%",
     width: "100%",
   },
-
   controlsSection: {
     display: { xs: "none", lg: "flex" },
     alignItems: "center",
     justifyContent: "flex-end",
     pl: 3,
   },
-
   leftSection: {
     flex: { xs: "1 1 100%", md: "0 0 auto" },
     height: "100%",
@@ -273,7 +283,6 @@ const styles = {
     gap: { xs: 0, md: 2.5 },
     width: { xs: "100%", md: "calc((100vh - 40px) * 9 / 16)" },
   },
-
   videoContainer: {
     position: "relative",
     height: "100%",
@@ -284,7 +293,6 @@ const styles = {
     flexShrink: 0,
     backgroundColor: "black",
   },
-
   drawerContainer: {
     position: "absolute",
     top: 0,

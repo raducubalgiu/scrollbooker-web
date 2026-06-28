@@ -5,9 +5,9 @@ import axios from "axios";
 
 const PAGE_LIMIT = 10;
 
-const fetchExplorePosts = async ({ pageParam }: { pageParam: number }) => {
+const fetchFollowingPosts = async ({ pageParam }: { pageParam: number }) => {
   const { data } = await axios.get<PaginatedData<Post>>(
-    `/api/posts/explore?page=${pageParam}&limit=${PAGE_LIMIT}`
+    `/api/posts/following?page=${pageParam}&limit=${PAGE_LIMIT}`
   );
 
   return {
@@ -16,12 +16,12 @@ const fetchExplorePosts = async ({ pageParam }: { pageParam: number }) => {
   };
 };
 
-export const useInfiniteExplorePosts = ({
+export const useInfiniteFollowingPosts = ({
   enabled = true,
 }: { enabled?: boolean } = {}) => {
   return useInfiniteQuery({
-    queryKey: ["explorePosts"],
-    queryFn: ({ pageParam = 1 }) => fetchExplorePosts({ pageParam }),
+    queryKey: ["followingPosts"],
+    queryFn: ({ pageParam = 1 }) => fetchFollowingPosts({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
       const totalFetched = pages.flatMap((p) => p.results).length;
