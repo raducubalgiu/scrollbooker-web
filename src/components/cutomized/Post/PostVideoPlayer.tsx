@@ -16,9 +16,15 @@ import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PostOverlay from "./PostOverlay";
 import { Post } from "@/ts/models/social/Post";
+import {
+  PostActionCallbacks,
+  PostActionLoaders,
+} from "./actions/postActionTypes";
 
 type PostVideoPlayerProps = {
   post: Post | null;
+  loaders: PostActionLoaders;
+  callbacks: PostActionCallbacks;
   src: string;
   isActive: boolean;
   isLoading?: boolean;
@@ -34,6 +40,8 @@ const getSliderValue = (value: number | number[]): number => {
 
 export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   post,
+  loaders,
+  callbacks,
   src,
   isActive,
   isLoading = false,
@@ -555,8 +563,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
           </Box>
         ) : showPausedOverlay ? (
           <PlayArrowRoundedIcon sx={styles.centerIcon} />
-        ) : // <PlayArrowRoundedIcon sx={styles.centerIcon} />
-        null}
+        ) : null}
       </Box>
 
       <Box sx={styles.volumeButton} onClick={handleToggleMute}>
@@ -566,12 +573,15 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       <Fade in={!isSeeking && !isLoading} timeout={200}>
         <div>
           <PostOverlay
-            user={post?.user ?? null}
-            counters={post?.counters ?? null}
-            isOwnPost={post?.is_own_post ?? false}
-            userActions={post?.user_actions ?? null}
-            description={post?.description ?? ""}
-            isVideoReview={post?.is_video_review}
+            actions={{
+              user: post?.user ?? null,
+              userActions: post?.user_actions ?? null,
+              counters: post?.counters ?? null,
+              isOwnPost: post?.is_own_post ?? false,
+              loaders,
+              callbacks,
+            }}
+            description={post?.description ?? null}
             onOpenLinkedProducts={onOpenLinkedProducts}
           />
         </div>

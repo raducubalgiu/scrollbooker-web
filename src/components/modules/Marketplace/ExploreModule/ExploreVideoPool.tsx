@@ -2,10 +2,15 @@ import React, { useRef, useEffect } from "react";
 import { Box } from "@mui/material";
 import { PoolItem } from "./useExplorePlayerPool";
 import { PostVideoPlayer } from "@/components/cutomized/Post/PostVideoPlayer";
+import {
+  PostActionCallbacks,
+  PostActionLoaders,
+} from "@/components/cutomized/Post/actions/postActionTypes";
 
 type ExploreVideoPoolProps = {
   items: PoolItem[];
-  isLoading: boolean;
+  loaders: PostActionLoaders;
+  callbacks: PostActionCallbacks;
   slideOffset: number;
   isAnimating: boolean;
   onNext: () => void;
@@ -20,7 +25,8 @@ const VELOCITY_THRESHOLD = 0.5;
 
 export function ExploreVideoPool({
   items,
-  isLoading,
+  loaders,
+  callbacks,
   slideOffset,
   isAnimating,
   onNext,
@@ -177,9 +183,11 @@ export function ExploreVideoPool({
           >
             <PostVideoPlayer
               post={item.post ?? null}
+              loaders={loaders}
+              callbacks={callbacks}
               src={item.src ?? ""}
               isActive={item.isActive}
-              isLoading={isLoading && isCurrent}
+              isLoading={loaders.isLoading && isCurrent}
               preload={item.shouldPreload ? "auto" : "none"}
               resetOnInactive={false}
               onOpenLinkedProducts={onOpenLinkedProducts}

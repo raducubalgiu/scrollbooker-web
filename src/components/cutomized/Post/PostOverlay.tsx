@@ -1,37 +1,26 @@
 "use client";
 
 import React, { memo, useState } from "react";
-import {
-  PostCounters,
-  PostUser,
-  PostUserActions,
-} from "@/ts/models/social/Post";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { ProfileTabEnum } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
 import PostActionsMobile from "./actions/PostActionsMobile";
 import { AppRoutes } from "@/utils/routes";
+import { PostActionsProps } from "./actions/postActionTypes";
 
 type PostOverlayProps = {
-  user: PostUser | null;
-  counters: PostCounters | null;
-  userActions: PostUserActions | null;
-  isOwnPost: boolean;
-  isVideoReview: boolean | undefined;
+  actions: PostActionsProps;
   description: string | null;
   onOpenLinkedProducts: () => void;
 };
 
 const PostOverlay = ({
-  user,
-  counters,
-  userActions,
-  isOwnPost,
+  actions,
   description,
-  isVideoReview,
   onOpenLinkedProducts,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { user, counters, userActions, isOwnPost, isVideoReview } = actions;
 
   const handleToggleDescription = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -130,21 +119,8 @@ const PostOverlay = ({
                 userActions={userActions}
                 isOwnPost={isOwnPost}
                 isVideoReview={isVideoReview ?? false}
-                loaders={{
-                  isLoading: false,
-                  isSavingLike: false,
-                  isSavingBookmark: false,
-                  isLoadingDelete: false,
-                }}
-                callbacks={{
-                  onLike: () => {},
-                  onCommentClick: () => {},
-                  onBookmarkClick: () => {},
-                  onShareClick: () => {},
-                  onDeleteClick: () => {},
-                  onReportClick: () => {},
-                  onNavigateToUser: () => {},
-                }}
+                loaders={actions.loaders}
+                callbacks={actions.callbacks}
               />
             )}
           </Box>

@@ -68,6 +68,23 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
     );
   };
 
+  const loaders = {
+    isLoading: false,
+    isSavingLike: false,
+    isSavingBookmark: false,
+    isLoadingDelete: isPendingDelete,
+  };
+
+  const callbacks = {
+    onLike: handleLike,
+    onBookmarkClick: handleBookmark,
+    onDeleteClick: handleDelete,
+    onCommentClick: () => setIsCommentsOpen(true),
+    onShareClick: () => {},
+    onReportClick: () => {},
+    onNavigateToUser: () => {},
+  };
+
   return (
     <Box sx={styles.container}>
       <IconButton
@@ -85,6 +102,8 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
           <Box sx={styles.videoContainer}>
             <PostVideoPlayer
               post={post}
+              loaders={loaders}
+              callbacks={callbacks}
               src={post.media_files[0]?.url ?? ""}
               isActive={true}
               isLoading={false}
@@ -93,21 +112,12 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
           </Box>
 
           <PostActions
-            user={null}
-            isLoading={false}
-            isOwnPost={post.is_own_post}
+            user={post.user}
             counters={post.counters}
             userActions={post.user_actions}
-            onCommentClick={() => {}}
-            onLike={handleLike}
-            onBookmarkClick={handleBookmark}
-            onDeleteClick={() => handleDelete()}
-            isLoadingDelete={isPendingDelete}
-            onShareClick={() => {}}
-            onReportClick={() => {}}
-            isSavingLike={false}
-            isSavingBookmark={false}
-            onNavigateToUser={() => {}}
+            isOwnPost={post.is_own_post}
+            loaders={loaders}
+            callbacks={callbacks}
           />
         </Box>
 

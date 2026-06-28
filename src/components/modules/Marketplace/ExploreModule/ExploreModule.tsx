@@ -22,6 +22,7 @@ import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PREFETCH_OFFSET = 2;
 
@@ -30,6 +31,7 @@ export default function ExploreModule() {
     ExploreTabEnum.EXPLORE
   );
   const { navigateTo } = useAppNavigation();
+  const queryClient = useQueryClient();
 
   const [showDrawer, setShowDrawer] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
@@ -39,6 +41,11 @@ export default function ExploreModule() {
 
   const explorePosts = useInfiniteExplorePosts();
   const followingPosts = useInfiniteFollowingPosts();
+
+  const activeQueryKey =
+    currentTab === ExploreTabEnum.EXPLORE
+      ? ["explore-posts"]
+      : ["following-posts"];
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     currentTab === ExploreTabEnum.EXPLORE ? explorePosts : followingPosts;
@@ -103,13 +110,28 @@ export default function ExploreModule() {
 
   const { user_actions, counters } = currentPost ?? {};
 
-  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
-    key: ["delete-post", currentPost?.id ?? undefined],
-    url: `/api/posts/${currentPost?.id}`,
+  const { mutate: apiLike } = useMutate({
+    key: ["like-post", currentPost?.id],
+    method: "POST",
+    url: `/api/posts/like`,
+  });
+
+  const { mutate: apiUnlike } = useMutate({
+    key: ["unlike-post", currentPost?.id],
     method: "DELETE",
-    options: {
-      onSuccess: () => {},
-    },
+    url: `/api/posts/like`,
+  });
+
+  const { mutate: apiBookmark } = useMutate({
+    key: ["bookmark-post", currentPost?.id],
+    method: "POST",
+    url: `/api/posts/bookmark`,
+  });
+
+  const { mutate: apiUnbookmark } = useMutate({
+    key: ["unbookmark-post", currentPost?.id],
+    method: "DELETE",
+    url: `/api/posts/bookmark`,
   });
 
   const { data: linkedProducts, isLoading: isLoadingLinkedProducts } =
@@ -120,6 +142,90 @@ export default function ExploreModule() {
         enabled: !!currentPost?.id,
       },
     });
+
+  const updateInfinitePostState = useCallback(
+    (
+      postId: number,
+      type: "is_liked" | "is_bookmarked",
+      action: "increment" | "decrement"
+    ) => {
+      const counterKey = type === "is_liked" ? "like_count" : "bookmark_count";
+      const change = action === "increment" ? 1 : -1;
+
+      queryClient.setQueryData(activeQueryKey, (oldData: any) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            results: page.results.map((p: any) => {
+              if (p.id !== postId) return p;
+              return {
+                ...p,
+                counters: {
+                  ...p.counters,
+                  [counterKey]: Math.max(0, p.counters[counterKey] + change),
+                },
+                user_actions: {
+                  ...p.user_actions,
+                  [type]: action === "increment",
+                },
+              };
+            }),
+          })),
+        };
+      });
+    },
+    [queryClient, activeQueryKey]
+  );
+
+  const handleLike = useCallback(() => {
+    if (!currentPost) return;
+    const isLiked = currentPost.user_actions.is_liked;
+
+    updateInfinitePostState(
+      currentPost.id,
+      "is_liked",
+      isLiked ? "decrement" : "increment"
+    );
+
+    const triggerApi = isLiked ? apiUnlike : apiLike;
+    triggerApi(
+      { post_id: currentPost.id },
+      {
+        onError: () =>
+          updateInfinitePostState(
+            currentPost.id,
+            "is_liked",
+            isLiked ? "increment" : "decrement"
+          ),
+      }
+    );
+  }, [currentPost, apiLike, apiUnlike, updateInfinitePostState]);
+
+  const handleBookmark = useCallback(() => {
+    if (!currentPost) return;
+    const isBookmarked = currentPost.user_actions.is_bookmarked;
+
+    updateInfinitePostState(
+      currentPost.id,
+      "is_bookmarked",
+      isBookmarked ? "decrement" : "increment"
+    );
+
+    const triggerApi = isBookmarked ? apiUnbookmark : apiBookmark;
+    triggerApi(
+      { post_id: currentPost.id },
+      {
+        onError: () =>
+          updateInfinitePostState(
+            currentPost.id,
+            "is_bookmarked",
+            isBookmarked ? "increment" : "decrement"
+          ),
+      }
+    );
+  }, [currentPost, apiBookmark, apiUnbookmark, updateInfinitePostState]);
 
   const handleToggleDrawer = useCallback(() => {
     setShowDrawer((prev) => !prev);
@@ -141,6 +247,23 @@ export default function ExploreModule() {
     );
   };
 
+  const loaders = {
+    isLoading,
+    isSavingLike: false,
+    isSavingBookmark: false,
+    isLoadingDelete: false,
+  };
+
+  const callbacks = {
+    onLike: handleLike,
+    onBookmarkClick: handleBookmark,
+    onCommentClick: () => setIsCommentsOpen(true),
+    onDeleteClick: () => {},
+    onShareClick: () => {},
+    onReportClick: () => {},
+    onNavigateToUser: () => {},
+  };
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.mainContent}>
@@ -148,7 +271,8 @@ export default function ExploreModule() {
           <Box sx={styles.videoContainer}>
             <ExploreVideoPool
               items={poolItems}
-              isLoading={isLoading}
+              loaders={loaders}
+              callbacks={callbacks}
               slideOffset={slideOffset}
               isAnimating={isAnimating}
               onOpenLinkedProducts={() => setIsProductsOpen(true)}
@@ -168,21 +292,8 @@ export default function ExploreModule() {
             counters={counters ?? null}
             userActions={user_actions ?? null}
             isOwnPost={currentPost?.is_own_post ?? false}
-            loaders={{
-              isLoading,
-              isSavingLike: false,
-              isSavingBookmark: false,
-              isLoadingDelete: isPendingDelete,
-            }}
-            callbacks={{
-              onLike: () => {},
-              onCommentClick: () => {},
-              onBookmarkClick: () => {},
-              onShareClick: () => {},
-              onDeleteClick: () => handleDelete({}),
-              onReportClick: () => {},
-              onNavigateToUser: () => {},
-            }}
+            loaders={loaders}
+            callbacks={callbacks}
           />
         </Box>
 
