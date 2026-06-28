@@ -40,31 +40,9 @@ const PostOverlay = ({
 
   return (
     <>
-      <Box
-        sx={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 25%, transparent 50%)",
-          pointerEvents: "none",
-          zIndex: 10,
-        }}
-      />
+      <Box sx={styles.bottomShadow} />
 
-      <Box
-        sx={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          pl: { xs: 1.5, md: 3 },
-          pr: { xs: 1, md: 3 },
-          py: { xs: 1.5, md: 3 },
-          zIndex: 20,
-          color: "common.white",
-          pointerEvents: "none",
-        }}
-      >
+      <Box sx={styles.container}>
         <Stack
           direction="row"
           alignItems="flex-end"
@@ -73,16 +51,7 @@ const PostOverlay = ({
         >
           <Stack spacing={2} sx={{ flex: 1, minWidth: 0 }}>
             {isVideoReview && (
-              <Box
-                sx={{
-                  bgcolor: "rgba(255,255,255,0.15)",
-                  px: 1.5,
-                  py: 1,
-                  width: "fit-content",
-                  borderRadius: 50,
-                  border: "1px solid rgba(255,255,255,0.1)",
-                }}
-              >
+              <Box sx={styles.videoReview}>
                 <Typography variant="body2" fontWeight={700}>
                   Recenzie Video
                 </Typography>
@@ -160,17 +129,22 @@ const PostOverlay = ({
                 counters={counters}
                 userActions={userActions}
                 isOwnPost={isOwnPost}
-                isSavingLike={false}
-                isSavingBookmark={false}
                 isVideoReview={isVideoReview ?? false}
-                onLike={() => {}}
-                onBookmarkClick={() => {}}
-                onNavigateToUser={() => {}}
-                isLoadingDelete={false}
-                onCommentClick={() => {}}
-                onShareClick={() => {}}
-                onDeleteClick={() => {}}
-                onReportClick={() => {}}
+                loaders={{
+                  isLoading: false,
+                  isSavingLike: false,
+                  isSavingBookmark: false,
+                  isLoadingDelete: false,
+                }}
+                callbacks={{
+                  onLike: () => {},
+                  onCommentClick: () => {},
+                  onBookmarkClick: () => {},
+                  onShareClick: () => {},
+                  onDeleteClick: () => {},
+                  onReportClick: () => {},
+                  onNavigateToUser: () => {},
+                }}
               />
             )}
           </Box>
@@ -181,3 +155,34 @@ const PostOverlay = ({
 };
 
 export default memo(PostOverlay);
+
+const styles = {
+  bottomShadow: {
+    position: "absolute",
+    inset: 0,
+    background:
+      "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 25%, transparent 50%)",
+    pointerEvents: "none",
+    zIndex: 10,
+  },
+  container: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    pl: { xs: 1.5, md: 3 },
+    pr: { xs: 1, md: 3 },
+    py: { xs: 1.5, md: 3 },
+    zIndex: 20,
+    color: "common.white",
+    pointerEvents: "none",
+  },
+  videoReview: {
+    bgcolor: "rgba(255,255,255,0.15)",
+    px: 1.5,
+    py: 1,
+    width: "fit-content",
+    borderRadius: 50,
+    border: "1px solid rgba(255,255,255,0.1)",
+  },
+};

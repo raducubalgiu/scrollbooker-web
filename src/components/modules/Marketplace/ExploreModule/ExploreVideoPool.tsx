@@ -1,11 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { Box } from "@mui/material";
 import { PoolItem } from "./useExplorePlayerPool";
-import {
-  PostUser,
-  PostCounters,
-  PostUserActions,
-} from "@/ts/models/social/Post";
 import { PostVideoPlayer } from "@/components/cutomized/Post/PostVideoPlayer";
 
 type ExploreVideoPoolProps = {
@@ -13,12 +8,6 @@ type ExploreVideoPoolProps = {
   isLoading: boolean;
   slideOffset: number;
   isAnimating: boolean;
-  user: PostUser | null;
-  counters: PostCounters | null;
-  userActions: PostUserActions | null;
-  description: string | null;
-  isOwnPost: boolean;
-  isVideoReview: boolean;
   onNext: () => void;
   onPrev: () => void;
   onOpenLinkedProducts: () => void;
@@ -40,7 +29,7 @@ export function ExploreVideoPool({
 }: ExploreVideoPoolProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dragStartY = useRef<number | undefined>(undefined);
-  const dragStartTimeRef = useRef<number>(0); // 🚀 Memorează timpul exact de start
+  const dragStartTimeRef = useRef<number>(0);
   const isDragging = useRef(false);
 
   useEffect(() => {
@@ -123,7 +112,6 @@ export function ExploreVideoPool({
       return;
     }
 
-    // 🚀 CALCUL VITEZĂ: Câți pixeli s-au parcurs într-o milisecundă
     const timeElapsed = performance.now() - dragStartTimeRef.current;
     const velocity = Math.abs(delta) / (timeElapsed || 1);
 

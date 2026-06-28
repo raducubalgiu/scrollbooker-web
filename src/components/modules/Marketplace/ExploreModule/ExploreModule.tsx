@@ -40,7 +40,6 @@ export default function ExploreModule() {
   const explorePosts = useInfiniteExplorePosts();
   const followingPosts = useInfiniteFollowingPosts();
 
-  // Selectăm sursa activă în funcție de tab
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     currentTab === ExploreTabEnum.EXPLORE ? explorePosts : followingPosts;
 
@@ -53,7 +52,6 @@ export default function ExploreModule() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Reset index când se schimbă tab-ul
   const handleTabChange = useCallback((tab: ExploreTabEnum) => {
     setCurrentTab(tab);
     setCurrentIndex(0);
@@ -153,12 +151,6 @@ export default function ExploreModule() {
               isLoading={isLoading}
               slideOffset={slideOffset}
               isAnimating={isAnimating}
-              user={currentPost?.user ?? null}
-              counters={currentPost?.counters ?? null}
-              userActions={currentPost?.user_actions ?? null}
-              description={currentPost?.description ?? null}
-              isOwnPost={currentPost?.is_own_post ?? false}
-              isVideoReview={currentPost?.is_video_review ?? false}
               onOpenLinkedProducts={() => setIsProductsOpen(true)}
               onNext={goToNext}
               onPrev={goToPrev}
@@ -173,20 +165,24 @@ export default function ExploreModule() {
 
           <PostActions
             user={currentPost?.user ?? null}
-            isLoading={isLoading}
-            isOwnPost={currentPost?.is_own_post ?? false}
             counters={counters ?? null}
             userActions={user_actions ?? null}
-            onCommentClick={() => {}}
-            onBookmarkClick={() => {}}
-            onLike={() => {}}
-            onDeleteClick={() => handleDelete({})}
-            isLoadingDelete={isPendingDelete}
-            onShareClick={() => {}}
-            onReportClick={() => {}}
-            isSavingLike={false}
-            isSavingBookmark={false}
-            onNavigateToUser={() => {}}
+            isOwnPost={currentPost?.is_own_post ?? false}
+            loaders={{
+              isLoading,
+              isSavingLike: false,
+              isSavingBookmark: false,
+              isLoadingDelete: isPendingDelete,
+            }}
+            callbacks={{
+              onLike: () => {},
+              onCommentClick: () => {},
+              onBookmarkClick: () => {},
+              onShareClick: () => {},
+              onDeleteClick: () => handleDelete({}),
+              onReportClick: () => {},
+              onNavigateToUser: () => {},
+            }}
           />
         </Box>
 

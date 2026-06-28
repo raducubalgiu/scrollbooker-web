@@ -1,11 +1,6 @@
 import React from "react";
 import { Box, IconButton, Skeleton, Typography } from "@mui/material";
 import { StaticImageData } from "next/image";
-import {
-  PostCounters,
-  PostUser,
-  PostUserActions,
-} from "@/ts/models/social/Post";
 
 import LikeIconSolid from "@/assets/icons/ic_heart_solid.svg";
 import CommentIconSolid from "@/assets/icons/ic_comment_solid.svg";
@@ -16,24 +11,7 @@ import ShareIcon from "@/assets/icons/ic_share_solid.svg";
 import { PostActionKey, usePostActions } from "./usePostActions";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
 import MoreOptionsMenu from "../MoreOptionsMenu";
-
-type PostActionsProps = {
-  user: PostUser | null;
-  counters: PostCounters | null;
-  userActions: PostUserActions | null;
-  isOwnPost: boolean;
-  isSavingLike: boolean;
-  isSavingBookmark: boolean;
-  isLoading: boolean;
-  isLoadingDelete: boolean;
-  onLike: () => void;
-  onCommentClick: () => void;
-  onBookmarkClick: () => void;
-  onShareClick: () => void;
-  onDeleteClick: () => void;
-  onReportClick: () => void;
-  onNavigateToUser: () => void;
-};
+import { PostActionsProps } from "./postActionTypes";
 
 const POST_ICONS: Partial<Record<PostActionKey, StaticImageData>> = {
   like: LikeIconSolid,
@@ -63,19 +41,18 @@ const getButtonStyles = (key: PostActionKey) => ({
 
 const PostActions = ({
   user,
-  isSavingLike,
-  isSavingBookmark,
   counters,
   userActions,
   isOwnPost,
-  isLoading,
-  isLoadingDelete,
-  onLike,
-  onCommentClick,
-  onBookmarkClick,
-  onShareClick,
-  onDeleteClick,
-  onReportClick,
+  loaders: { isLoading, isSavingLike, isSavingBookmark, isLoadingDelete },
+  callbacks: {
+    onLike,
+    onBookmarkClick,
+    onCommentClick,
+    onShareClick,
+    onDeleteClick,
+    onReportClick,
+  },
 }: PostActionsProps) => {
   const { actions, moreMenuProps } = usePostActions({
     user,

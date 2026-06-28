@@ -8,11 +8,6 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { StaticImageData } from "next/image";
-import {
-  PostUser,
-  PostCounters,
-  PostUserActions,
-} from "@/ts/models/social/Post";
 
 import LikeIconSolid from "@/assets/icons/ic_heart_solid.svg";
 import ClipboardIconSolid from "@/assets/icons/ic_clipboard_solid.svg";
@@ -24,24 +19,7 @@ import { PostActionKey, usePostActions } from "./usePostActions";
 import { formatRating } from "@/utils/formatters";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
 import MoreOptionsMenu from "../MoreOptionsMenu";
-
-type PostActionsProps = {
-  user: PostUser | null;
-  counters: PostCounters | null;
-  userActions: PostUserActions | null;
-  isOwnPost: boolean;
-  isSavingLike: boolean;
-  isSavingBookmark: boolean;
-  isVideoReview: boolean;
-  isLoadingDelete: boolean;
-  onLike: () => void;
-  onCommentClick: () => void;
-  onBookmarkClick: () => void;
-  onShareClick: () => void;
-  onDeleteClick: () => void;
-  onReportClick: () => void;
-  onNavigateToUser: () => void;
-};
+import { PostActionsProps } from "./postActionTypes";
 
 const MOBILE_ICONS: Partial<Record<PostActionKey, StaticImageData>> = {
   like: LikeIconSolid,
@@ -59,20 +37,20 @@ const MOBILE_KEYS: PostActionKey[] = [
 
 export default function PostActionsMobile({
   user,
-  isSavingLike,
-  isSavingBookmark,
-  isVideoReview,
   counters,
   userActions,
   isOwnPost,
-  isLoadingDelete,
-  onLike,
-  onCommentClick,
-  onBookmarkClick,
-  onShareClick,
-  onDeleteClick,
-  onReportClick,
-  onNavigateToUser,
+  isVideoReview,
+  loaders: { isSavingLike, isSavingBookmark, isLoadingDelete },
+  callbacks: {
+    onLike,
+    onCommentClick,
+    onBookmarkClick,
+    onShareClick,
+    onDeleteClick,
+    onReportClick,
+    onNavigateToUser,
+  },
 }: PostActionsProps) {
   const { actions, moreMenuProps, handleOptionsOpen } = usePostActions({
     user,
