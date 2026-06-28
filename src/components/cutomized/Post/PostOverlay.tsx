@@ -8,8 +8,9 @@ import {
 } from "@/ts/models/social/Post";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
-import { getProfileUrl } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
+import { ProfileTabEnum } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
 import PostActionsMobile from "./PostActionsMobile";
+import { AppRoutes } from "@/utils/routes";
 
 type PostOverlayProps = {
   user: PostUser | null;
@@ -88,7 +89,15 @@ const PostOverlay = ({
 
             <Box onClick={(e) => e.stopPropagation()}>
               <Link
-                href={user?.username ? getProfileUrl(user?.username) : "#"}
+                href={
+                  user
+                    ? AppRoutes.profile(
+                        user?.username,
+                        user?.profession,
+                        ProfileTabEnum.POSTS
+                      )
+                    : ""
+                }
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Typography

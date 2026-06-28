@@ -31,11 +31,3 @@ export const getProfileRoute = (
 
   return foundEnum !== undefined ? foundEnum : ProfileTabEnum.POSTS;
 };
-
-export const getProfileUrl = (
-  username: string,
-  tab: ProfileTabEnum = ProfileTabEnum.POSTS
-) => {
-  const tabParam = tabEnumToParamMap[tab];
-  return `/profile/${username}?tab=${tabParam}`;
-};

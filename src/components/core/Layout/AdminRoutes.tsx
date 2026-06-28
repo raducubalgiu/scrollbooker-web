@@ -31,6 +31,7 @@ import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Session } from "next-auth";
+import { AppRoutes } from "@/utils/routes";
 
 type AdminRoutesProps = {
   session: Session | null;
@@ -73,43 +74,43 @@ const AdminRoutes = ({
     () => [
       {
         label: "Calendar",
-        route: "/admin/calendar",
+        route: AppRoutes.calendar(),
         icon: <CalendarMonthIcon />,
         permission: PermissionEnum.MY_CALENDAR_VIEW,
       },
       {
         label: "Dashboard",
-        route: "/admin/my-business/dashboard",
+        route: AppRoutes.dashboard(),
         icon: <DashboardOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Detalii Business",
-        route: "/admin/my-business/business-details",
+        route: AppRoutes.myBusinessDetails(),
         icon: <PlaceOutlinedIcon />,
         permission: PermissionEnum.MY_BUSINESS_LOCATION_VIEW,
       },
       {
         label: "Programul de lucru",
-        route: "/admin/my-business/schedules",
+        route: AppRoutes.mySchedules(),
         icon: <ScheduleIcon />,
         permission: PermissionEnum.MY_SCHEDULES_VIEW,
       },
       {
         label: "Categorii",
-        route: "/admin/my-business/services",
+        route: AppRoutes.myServices(),
         icon: <AssignmentTurnedInOutlinedIcon />,
         permission: PermissionEnum.MY_SERVICES_VIEW,
       },
       {
         label: "Serviciile mele",
-        route: "/admin/my-business/products",
+        route: AppRoutes.myProducts(),
         icon: <ShoppingBagOutlinedIcon />,
         permission: PermissionEnum.MY_PRODUCTS_VIEW,
       },
       {
         label: "Angajați",
-        route: "/admin/my-business/employees",
+        route: AppRoutes.myEmployees(),
         icon: <PeopleAltOutlinedIcon />,
         permission: PermissionEnum.MY_EMPLOYEES_VIEW,
       },
@@ -121,61 +122,61 @@ const AdminRoutes = ({
     () => [
       {
         label: "Validează afacerea",
-        route: "/admin/businesses/approve",
+        route: AppRoutes.approve(),
         icon: <BeenhereOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Roluri și permisiuni",
-        route: "/admin/nomenclatures/roles-and-permissions",
+        route: AppRoutes.rolesAndPermissions(),
         icon: <AddModeratorOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Domeniu Business",
-        route: "/admin/nomenclatures/business-domains",
+        route: AppRoutes.businessDomains(),
         icon: <PlaylistAddCheckOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Tip Business",
-        route: "/admin/nomenclatures/business-types",
+        route: AppRoutes.businessTypes(),
         icon: <PlaylistAddCheckOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Domeniu Serviciu",
-        route: "/admin/nomenclatures/service-domains",
+        route: AppRoutes.serviceDomains(),
         icon: <PlaylistAddCheckOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Categorie Serviciu",
-        route: "/admin/nomenclatures/services",
+        route: AppRoutes.services(),
         icon: <PlaylistAddCheckOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Filtre",
-        route: "/admin/nomenclatures/filters",
+        route: AppRoutes.filters(),
         icon: <FilterAltOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Profesii",
-        route: "/admin/nomenclatures/professions",
+        route: AppRoutes.professions(),
         icon: <BusinessCenterOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Monede",
-        route: "/admin/nomenclatures/currencies",
+        route: AppRoutes.currencies(),
         icon: <MonetizationOnOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
       {
         label: "Consents",
-        route: "/admin/nomenclatures/consents",
+        route: AppRoutes.consents(),
         icon: <FeedOutlinedIcon />,
         permission: PermissionEnum.NO_PROTECTION,
       },
