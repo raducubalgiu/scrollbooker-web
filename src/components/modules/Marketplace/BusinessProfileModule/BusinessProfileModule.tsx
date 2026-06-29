@@ -77,9 +77,9 @@ const BusinessProfileModule = ({
 					onShare={handleShare}
 				/>
 
-				<Grid container spacing={7.5}>
+				<Grid container spacing={{ xs: 3, lg: 7.5 }}>
 					<Grid size={{ xs: 12, lg: 7.5 }}>
-						<Stack sx={{ py: 3 }} spacing={10}>
+						<Stack sx={{ py: 3 }} spacing={{ xs: 5, md: 10 }}>
 							<BusinessServicesTab
 								id="services"
 								innerRef={sectionRefCallbacks.services}
@@ -102,7 +102,11 @@ const BusinessProfileModule = ({
 							/>
 						</Stack>
 					</Grid>
-					<Grid size={{ xs: 12, lg: 4.5 }}>
+
+					<Grid
+						size={{ xs: 12, lg: 4.5 }}
+						sx={{ display: { xs: "none", lg: "block" } }}
+					>
 						<BusinessStickyCard business={profile} />
 					</Grid>
 				</Grid>
