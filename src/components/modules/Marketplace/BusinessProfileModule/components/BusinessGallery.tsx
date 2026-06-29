@@ -20,11 +20,9 @@ export default function BusinessProfileGallery({
 	const safeImages = allImages.slice(0, 5);
 	const totalCount = allImages.length;
 
-	// State pentru a urmări imaginea curentă din caruselul de mobil
 	const [activeMobileIndex, setActiveMobileIndex] = useState(0);
 	const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
-	// Monitorizăm scroll-ul pe mobil pentru a actualiza contorul numeric în timp real
 	const handleMobileScroll = () => {
 		if (!scrollContainerRef.current) return;
 		const { scrollLeft, clientWidth } = scrollContainerRef.current;
@@ -40,7 +38,7 @@ export default function BusinessProfileGallery({
 			<Box
 				sx={{
 					width: "100%",
-					aspectRatio: { xs: "1.2/1", md: "2/1" }, // Ceva mai înalt pe mobil pentru impact vizual
+					aspectRatio: { xs: "1.2/1", md: "2/1" },
 					borderRadius: 3,
 					bgcolor: "action.hover",
 				}}
@@ -54,7 +52,6 @@ export default function BusinessProfileGallery({
 
 	return (
 		<Box sx={{ width: "100%", position: "relative" }}>
-			{/* 1. VARIANTĂ MOBIL: Carusel Full-Width cu Scroll Snap (Stil TikTok/Fresha) */}
 			<Box
 				ref={scrollContainerRef}
 				onScroll={handleMobileScroll}
@@ -65,10 +62,9 @@ export default function BusinessProfileGallery({
 					scrollBehavior: "smooth",
 					WebkitOverflowScrolling: "touch",
 					width: "100vw",
-					// Scoatem containerul din padding-ul paginii pentru a fi lipit de margini pe telefon
 					marginLeft: { xs: "-16px", sm: "-24px" },
 					marginRight: { xs: "-16px", sm: "-24px" },
-					aspectRatio: "1.1/1", // Format excelent pentru carusel foto pe mobil
+					aspectRatio: "1.1/1",
 					"&::-webkit-scrollbar": { display: "none" },
 				}}
 			>
@@ -96,7 +92,6 @@ export default function BusinessProfileGallery({
 					</Box>
 				))}
 
-				{/* Indicator de pagină plutitor în colț (ex: 1 / 8) */}
 				<Typography
 					sx={{
 						position: "absolute",
@@ -118,7 +113,6 @@ export default function BusinessProfileGallery({
 				</Typography>
 			</Box>
 
-			{/* 2. VARIANTĂ DESKTOP: Grid-ul tău inițial (Rămâne neatins) */}
 			<Box
 				sx={{
 					display: { xs: "none", md: "grid" },
@@ -197,7 +191,6 @@ export default function BusinessProfileGallery({
 	);
 }
 
-// Subcomponentele ajutătoare din codul tău inițial (Rămân identice)
 type GalleryTileProps = {
 	src: string;
 	alt: string;

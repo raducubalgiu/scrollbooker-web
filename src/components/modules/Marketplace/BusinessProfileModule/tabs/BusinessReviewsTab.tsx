@@ -93,14 +93,7 @@ const BusinessReviewsTab = ({
 				>
 					{reviews.data.map(r => {
 						return (
-							<Box
-								key={r.id}
-								sx={{
-									borderBottom: { xs: "1px solid", md: "none" },
-									borderColor: "divider",
-									pb: { xs: 3, md: 0 },
-								}}
-							>
+							<Box key={r.id} sx={{ pb: { xs: 3, md: 0 } }}>
 								<Stack flexDirection="row" alignItems="center" gap={2}>
 									<Avatar
 										src={r.reviewer.avatar ?? ""}
