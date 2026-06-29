@@ -51,6 +51,7 @@ export default async function RootLayout({ children }: ChildrenType) {
 							</QueryClientProvider>
 						</MUIProvider>
 					</SessionProvider>
+					<SpeedInsights />
 				</body>
 			</AppRouterCacheProvider>
 		</html>
