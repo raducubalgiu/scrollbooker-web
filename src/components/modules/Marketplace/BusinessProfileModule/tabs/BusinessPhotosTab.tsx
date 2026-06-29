@@ -37,7 +37,7 @@ const BusinessPhotosTab = ({
 				>
 					<Stack spacing={0.5} sx={{ width: "100%", minWidth: 0 }}>
 						<Typography
-							variant="h3"
+							variant="h4"
 							sx={{
 								fontWeight: 700,
 								textTransform: "uppercase",

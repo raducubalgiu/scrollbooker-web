@@ -25,7 +25,7 @@ const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
 			}}
 		>
 			<Typography
-				variant="h3"
+				variant="h4"
 				sx={{ fontSize: { xs: "1.75rem", md: "3rem" }, fontWeight: 600 }}
 				gutterBottom
 			>
