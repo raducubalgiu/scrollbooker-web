@@ -136,14 +136,13 @@ const styles = {
 	},
 	grid: {
 		display: "grid",
-		// Soluția principală: definirea corectă a numărului de coloane în funcție de ecran
 		gridTemplateColumns: {
-			xs: "repeat(2, 1fr)", // 2 coloane pe mobil (imaginile vor fi mari și lizibile)
-			sm: "repeat(3, 1fr)", // 3 coloane pe tablete
-			lg: "repeat(4, 1fr)", // 4 coloane pe desktop
+			xs: "repeat(2, 1fr)",
+			sm: "repeat(3, 1fr)",
+			lg: "repeat(4, 1fr)",
 		},
 		gap: {
-			xs: "8px", // Am mărit distanța pe mobil pentru că 2px era mult prea lipit
+			xs: "8px",
 			sm: "12px",
 			md: 2,
 			lg: 2.5,
