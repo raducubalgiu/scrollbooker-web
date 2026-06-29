@@ -4,86 +4,87 @@ import { SearchHeaderStateType } from "../../SearchModule/SearchHeader/search-he
 import SearchHeader from "../../SearchModule/SearchHeader/SearchHeader";
 
 const BusinessProfileHeader = () => {
-  const theme = useTheme();
-  const router = useRouter();
-  const mainPagePadding = theme.spacing(2.5);
+	const theme = useTheme();
+	const router = useRouter();
+	const mainPagePadding = theme.spacing(2.5);
 
-  const handleSearch = (state: SearchHeaderStateType) => {
-    const params = new URLSearchParams();
+	const handleSearch = (state: SearchHeaderStateType) => {
+		const params = new URLSearchParams();
 
-    if (state.selectedBusinessDomainId != null) {
-      params.set("businessDomain", String(state.selectedBusinessDomainId));
-    }
+		if (state.selectedBusinessDomainId != null) {
+			params.set("businessDomain", String(state.selectedBusinessDomainId));
+		}
 
-    if (state.selectedServiceDomainId != null) {
-      params.set("serviceDomain", String(state.selectedServiceDomainId));
-    }
+		if (state.selectedServiceDomainId != null) {
+			params.set("serviceDomain", String(state.selectedServiceDomainId));
+		}
 
-    if (state.selectedServiceId != null) {
-      params.set("service", String(state.selectedServiceId));
-    }
+		if (state.selectedServiceId != null) {
+			params.set("service", String(state.selectedServiceId));
+		}
 
-    router.push(`/search?${params.toString()}`, { scroll: false });
-  };
+		router.push(`/search?${params.toString()}`, { scroll: false });
+	};
 
-  return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      mt={1}
-      mb={7.5}
-      mx={7.5}
-    >
-      <Box
-        component={Link}
-        href="/"
-        sx={{
-          textDecoration: "none",
-          display: "block",
-          color: "inherit",
-          cursor: "pointer",
-          "&:hover .imageWrapper": { transform: "scale(1.05)" },
-        }}
-      >
-        <Typography
-          variant="h6"
-          noWrap
-          component="div"
-          fontWeight={600}
-          fontSize={32.5}
-        >
-          ScrollBooker
-        </Typography>
-      </Box>
+	return (
+		<Stack
+			direction="row"
+			alignItems="center"
+			justifyContent="space-between"
+			mt={1}
+			mb={7.5}
+			mx={7.5}
+			sx={{ display: { xs: "none", lg: "flex" } }}
+		>
+			<Box
+				component={Link}
+				href="/"
+				sx={{
+					textDecoration: "none",
+					display: "block",
+					color: "inherit",
+					cursor: "pointer",
+					"&:hover .imageWrapper": { transform: "scale(1.05)" },
+				}}
+			>
+				<Typography
+					variant="h6"
+					noWrap
+					component="div"
+					fontWeight={600}
+					fontSize={32.5}
+				>
+					ScrollBooker
+				</Typography>
+			</Box>
 
-      <SearchHeader
-        areFiltersActive={false}
-        mainPagePadding={mainPagePadding}
-        headerState={{
-          selectedBusinessDomainId: null,
-          selectedServiceDomainId: null,
-          selectedServiceId: null,
-          startDate: null,
-          startTime: null,
-          endTime: null,
-        }}
-        displayFiltersSection={false}
-        onSearch={handleSearch}
-      />
+			<SearchHeader
+				areFiltersActive={false}
+				mainPagePadding={mainPagePadding}
+				headerState={{
+					selectedBusinessDomainId: null,
+					selectedServiceDomainId: null,
+					selectedServiceId: null,
+					startDate: null,
+					startTime: null,
+					endTime: null,
+				}}
+				displayFiltersSection={false}
+				onSearch={handleSearch}
+			/>
 
-      <Typography
-        variant="h6"
-        noWrap
-        component="div"
-        fontWeight={700}
-        fontSize={30}
-        sx={{ color: "transparent" }}
-      >
-        ScrollBooker
-      </Typography>
-    </Stack>
-  );
+			<Typography
+				variant="h6"
+				noWrap
+				component="div"
+				fontWeight={700}
+				fontSize={30}
+				sx={{ color: "transparent" }}
+			>
+				ScrollBooker
+			</Typography>
+		</Stack>
+	);
 };
 
 export default BusinessProfileHeader;
