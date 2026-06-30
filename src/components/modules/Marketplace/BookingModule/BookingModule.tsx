@@ -24,6 +24,7 @@ type BookingModuleProps = {
   selectedProductId: number | null;
 };
 
+const HEADER_HEIGHT = 90;
 const SCROLL_OFFSET = 180;
 const SIDEBAR_WIDTH = 600;
 
@@ -83,6 +84,7 @@ const BookingModule = (props: BookingModuleProps) => {
             selectedProductId={selectedProductId}
             selectedItems={selectedItems}
             scrollOffset={SCROLL_OFFSET}
+            headerHeight={HEADER_HEIGHT}
             onAdd={handleSelectItem}
             onOpenDetail={(product) =>
               setSelectedProduct({ product, open: true })
@@ -128,8 +130,11 @@ const BookingModule = (props: BookingModuleProps) => {
   }, []);
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.paper" }}>
-      <BookingAppBar onBack={() => router.back()} />
+    <Box sx={{ minHeight: "100vh" }}>
+      <BookingAppBar
+        headerHeight={HEADER_HEIGHT}
+        onBack={() => router.back()}
+      />
       <Container maxWidth="xl">
         <BookingBreadcrumbs
           currentStep={currentStep}
@@ -138,7 +143,15 @@ const BookingModule = (props: BookingModuleProps) => {
         />
 
         <Box sx={styles.container}>
-          <Box>{renderStepContent()}</Box>
+          <Box
+            sx={{
+              minWidth: 0,
+              width: "100%",
+              maxWidth: "100%",
+            }}
+          >
+            {renderStepContent()}
+          </Box>
 
           <BookingCart
             owner={bookingFlow.business.owner}
@@ -170,8 +183,11 @@ export default BookingModule;
 const styles = {
   container: {
     display: "grid",
-    gridTemplateColumns: `minmax(0, 1fr) ${SIDEBAR_WIDTH}px`,
-    gap: 8,
+    gridTemplateColumns: {
+      xs: "1fr",
+      md: `minmax(0, 1fr) ${SIDEBAR_WIDTH}px`,
+    },
+    gap: { xs: 2, md: 8 },
     alignItems: "start",
   },
 };

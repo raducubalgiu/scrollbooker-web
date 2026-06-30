@@ -3,13 +3,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 
 type BookingAppBarProps = {
+  headerHeight: number;
   onBack: () => void;
 };
 
-const BookingAppBar = ({ onBack }: BookingAppBarProps) => {
+const BookingAppBar = ({ headerHeight, onBack }: BookingAppBarProps) => {
   return (
-    <AppBar position="sticky" color="inherit" elevation={0}>
-      <Toolbar disableGutters sx={{ height: 90, px: 5 }}>
+    <AppBar
+      position="sticky"
+      color="inherit"
+      elevation={0}
+      sx={{ bgcolor: "background.default" }}
+    >
+      <Toolbar disableGutters sx={{ height: headerHeight, px: 5 }}>
         <IconButton
           onClick={(e) => {
             e.stopPropagation();

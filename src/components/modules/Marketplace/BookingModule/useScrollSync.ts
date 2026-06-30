@@ -63,6 +63,7 @@ export const useScrollSync = (
     const containerRect = container.getBoundingClientRect();
     const activeRect = activeTab.getBoundingClientRect();
 
+    // 1. Calculăm și setăm stilul indicatorului (rămâne neschimbat, funcționează corect)
     setIndicatorStyle({
       width: activeRect.width,
       height: activeRect.height,
@@ -71,10 +72,15 @@ export const useScrollSync = (
       ready: true,
     });
 
-    activeTab.scrollIntoView({
+    // 2. --- REZOLVARE MOBIL: Înlocuim scrollIntoView ---
+    // Calculăm unde ar trebui să fie scroll-ul containerului ca tab-ul să fie pe centru
+    const targetScrollLeft =
+      activeTab.offsetLeft - containerRect.width / 2 + activeRect.width / 2;
+
+    // Dăm scroll strict containerului de tab-uri, fără să afectăm body-ul paginii
+    container.scrollTo({
+      left: targetScrollLeft,
       behavior: "smooth",
-      inline: "center",
-      block: "nearest",
     });
   }, []);
 

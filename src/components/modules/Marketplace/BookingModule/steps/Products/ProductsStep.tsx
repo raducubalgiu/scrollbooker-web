@@ -19,8 +19,8 @@ type ProductsStepProps = {
   businessId: number;
   employeeId: number | null;
   scrollOffset: number;
+  headerHeight: number;
   displayTitle?: boolean;
-  top?: number;
   selectedItems: SelectedBookingItem[];
   selectedProductId: number | null;
   onAdd: (item: SelectedBookingItem) => void;
@@ -31,7 +31,7 @@ type ProductsStepProps = {
 const ProductsStep = ({
   products,
   scrollOffset,
-  top = 90,
+  headerHeight,
   displayTitle = true,
   selectedItems,
   onAdd,
@@ -62,7 +62,7 @@ const ProductsStep = ({
   return (
     <Box sx={{ minWidth: 0 }}>
       {displayTitle && (
-        <Typography fontWeight={800} fontSize={47.5} mt={3}>
+        <Typography fontWeight={800} variant="h2" mt={3}>
           Servicii
         </Typography>
       )}
@@ -76,7 +76,7 @@ const ProductsStep = ({
       )}
 
       <Box>
-        <BookingTabs top={top} sync={sync} products={products} />
+        <BookingTabs top={headerHeight} sync={sync} products={products} />
 
         <Box>
           {products.data.map((group, index) => (

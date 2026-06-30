@@ -6,7 +6,7 @@ import { UserProducts } from "@/ts/models/booking/product/Product";
 export const BookingTabs = ({
   sync,
   products,
-  top = 90,
+  top,
 }: {
   sync: ScrollSyncResult;
   products: UserProducts;
@@ -15,15 +15,18 @@ export const BookingTabs = ({
   <Box
     sx={{
       position: "sticky",
-      top: top,
+      top,
       zIndex: 10,
-      bgcolor: "background.paper",
-      mx: -2.5,
-      px: 2.5,
+      bgcolor: "background.default",
       mb: 4,
-      height: 90,
+      height: top,
       display: "flex",
       alignItems: "center",
+      width: { xs: "100vw", md: "100%" },
+      maxWidth: { xs: "100vw", md: "100%" },
+      overflow: "hidden",
+      borderBottom: 1,
+      borderColor: "divider",
     }}
   >
     <Box
@@ -35,29 +38,38 @@ export const BookingTabs = ({
       }}
     >
       {sync.canScrollLeft && (
-        <ScrollTabButton
-          direction="left"
-          onClick={() =>
-            sync.tabsContainerRef.current?.scrollBy({
-              left: -220,
-              behavior: "smooth",
-            })
-          }
-        />
+        <Box sx={{ display: { xs: "none", md: "block" } }}>
+          <ScrollTabButton
+            direction="left"
+            onClick={() =>
+              sync.tabsContainerRef.current?.scrollBy({
+                left: -220,
+                behavior: "smooth",
+              })
+            }
+          />
+        </Box>
       )}
+
       <Box
         ref={sync.tabsContainerRef}
         onScroll={sync.checkTabsOverflow}
         sx={{
           display: "flex",
-          overflowX: "auto",
+          overflowX: "scroll",
           overflowY: "hidden",
           scrollBehavior: "smooth",
           "&::-webkit-scrollbar": { display: "none" },
+          msOverflowStyle: "none",
+          scrollbarWidth: "none",
           position: "relative",
           alignItems: "center",
           gap: 1,
           py: 1,
+          width: "100%",
+          minWidth: 0,
+          flexShrink: 0,
+          WebkitOverflowScrolling: "touch",
         }}
       >
         <Box
@@ -91,13 +103,13 @@ export const BookingTabs = ({
               border: 0,
               outline: 0,
               background: "transparent",
-              px: 3.5,
-              py: 2,
+              px: { xs: 2.5, md: 3.5 },
+              py: { xs: 1.5, md: 2 },
               borderRadius: 999,
               whiteSpace: "nowrap",
               cursor: "pointer",
               flexShrink: 0,
-              fontSize: 18,
+              fontSize: { xs: 14, md: 18 },
               fontWeight: 600,
               color:
                 sync.currentTab === index
@@ -110,16 +122,19 @@ export const BookingTabs = ({
           </Box>
         ))}
       </Box>
+
       {sync.canScrollRight && (
-        <ScrollTabButton
-          direction="right"
-          onClick={() =>
-            sync.tabsContainerRef.current?.scrollBy({
-              left: 220,
-              behavior: "smooth",
-            })
-          }
-        />
+        <Box sx={{ display: { xs: "none", md: "block" } }}>
+          <ScrollTabButton
+            direction="right"
+            onClick={() =>
+              sync.tabsContainerRef.current?.scrollBy({
+                left: 220,
+                behavior: "smooth",
+              })
+            }
+          />
+        </Box>
       )}
     </Box>
   </Box>

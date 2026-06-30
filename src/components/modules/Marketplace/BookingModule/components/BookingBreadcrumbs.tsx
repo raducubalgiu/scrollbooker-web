@@ -67,6 +67,7 @@ export default BookingBreadcrumbs;
 
 const styles = {
   container: {
+    display: { xs: "none", lg: "block" },
     "& .MuiBreadcrumbs-separator": {
       mx: 2,
       fontSize: 22,

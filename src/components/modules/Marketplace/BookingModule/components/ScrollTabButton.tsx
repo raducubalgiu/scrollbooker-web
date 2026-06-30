@@ -16,14 +16,16 @@ export const ScrollTabButton = ({
     size="large"
     sx={{
       position: "absolute",
-      [direction]: -25,
+      top: "50%",
+      transform: "translateY(-50%)",
+      [direction]: 0,
       zIndex: 3,
-      bgcolor: "background.paper",
+      bgcolor: "background.default",
       boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.12)",
       "&:hover": {
-        bgcolor: "background.paper",
+        bgcolor: "background.default",
         boxShadow: "0px 15px 35px rgba(0, 0, 0, 0.18)",
-        transform: "translateY(-1px)",
+        transform: "translateY(calc(-50% - 1px))",
       },
       transition: "all 0.2s ease-in-out",
       "& .MuiSvgIcon-root": {

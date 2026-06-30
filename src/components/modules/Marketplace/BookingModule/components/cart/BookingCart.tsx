@@ -115,7 +115,6 @@ const styles = {
     position: "sticky",
     top: 130,
     height: "calc(100vh - 170px)",
-    bgcolor: "background.paper",
     borderRadius: 8,
     border: 1.5,
     borderColor: (theme: Theme) => alpha(theme.palette.divider, 0.1),
@@ -127,6 +126,5 @@ const styles = {
     pt: 3,
     borderTop: "1px solid",
     borderColor: "divider",
-    bgcolor: "background.paper",
   },
 };
