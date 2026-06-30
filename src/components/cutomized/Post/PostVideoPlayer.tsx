@@ -771,7 +771,7 @@ const styles = {
     bottom: 0,
     height: 4,
     borderRadius: 0,
-    backgroundColor: "rgba(255, 255, 255, 0.22)",
+    backgroundColor: { xs: "rgba(255, 255, 255, 0.22)", md: "primary.main" },
     transformOrigin: "left bottom",
     transform: "scaleX(var(--video-progress-ratio))",
     transition: "transform 80ms linear",

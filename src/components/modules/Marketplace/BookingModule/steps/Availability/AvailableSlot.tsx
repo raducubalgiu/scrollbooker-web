@@ -22,12 +22,7 @@ const AvailableSlot = ({
       justifyContent="space-between"
       onClick={() => onSelectSlot(slot)}
       sx={(theme) => {
-        const isDark = theme.palette.mode === "dark";
-        const baseBg = isDark ? "background.default" : "background.paper";
-        const selectedBg = "background.default";
-
         return {
-          bgcolor: isSelected ? selectedBg : baseBg,
           p: 3,
           border: 1.5,
           borderColor: "divider",
@@ -38,8 +33,8 @@ const AvailableSlot = ({
           "&:hover": {
             bgcolor:
               theme.palette.mode === "dark"
-                ? lighten(theme.palette.background.default, 0.1)
-                : lighten(theme.palette.background.default, 0.2),
+                ? lighten(theme.palette.background.paper, 0.1)
+                : lighten(theme.palette.background.paper, 0.2),
           },
         };
       }}

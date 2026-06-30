@@ -15,29 +15,46 @@ export const GET = async (req: NextRequest, context: RouteContext) => {
   const employeeId = req.nextUrl.searchParams.get("employeeId");
   const slotDuration = req.nextUrl.searchParams.get("slotDuration");
 
-  if (!day || !slotDuration) {
+  const isValidParam = (val: string | null) => {
+    return (
+      val !== null && val !== "null" && val !== "undefined" && val.trim() !== ""
+    );
+  };
+
+  if (!isValidParam(day) || !isValidParam(slotDuration)) {
     return NextResponse.json(
-      { error: "Parametrul 'day' si 'slotDuration' este obligatoriu." },
+      {
+        error:
+          "Parametrii 'day' și 'slotDuration' sunt obligatorii și trebuie să aibă valori valide.",
+      },
       { status: 400 }
     );
   }
 
   const queryParams = new URLSearchParams();
+  queryParams.append("day", day!);
+  queryParams.append("slot_duration", slotDuration!);
 
-  queryParams.append("day", day);
-  queryParams.append("slot_duration", slotDuration);
-
-  if (employeeId) {
-    queryParams.append("employee_id", employeeId);
+  if (isValidParam(employeeId)) {
+    queryParams.append("employee_id", employeeId!);
   }
 
   const apiUrl = `/businesses/${businessId}/availability/timeslots?${queryParams.toString()}`;
 
-  const response = (
-    await get<AvailableTimeslotsResponse>({
-      url: apiUrl,
-    })
-  ).data;
+  try {
+    const response = (
+      await get<AvailableTimeslotsResponse>({
+        url: apiUrl,
+      })
+    ).data;
 
-  return NextResponse.json(response);
+    return NextResponse.json(response);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "A apărut o eroare la preluarea intervalelor orare disponibile.",
+      },
+      { status: 500 }
+    );
+  }
 };

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import { useTheme, Theme } from "@mui/material/styles";
-import { Backdrop, Box, CssBaseline, Drawer, Slide } from "@mui/material";
+import { Backdrop, Box, Drawer, Slide } from "@mui/material";
 
 import LayoutDrawer from "./LayoutDrawer";
 import BottomBar from "./BottomBar";
@@ -98,14 +98,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <Box
-      sx={{
-        ...styles.layoutContainer,
-        backgroundColor: pathname === "/" ? "#000000" : "background.default",
-      }}
-    >
-      <CssBaseline />
-
+    <Box sx={styles.layoutContainer}>
       <Backdrop
         open={isOverlayOpen}
         onClick={handleCloseAll}
