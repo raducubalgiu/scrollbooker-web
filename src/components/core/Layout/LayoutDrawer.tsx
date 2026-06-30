@@ -56,7 +56,6 @@ const LayoutDrawer = ({
   const pathname = usePathname() || "/";
   const { navigateTo } = useAppNavigation();
 
-  // Ref to avoid including pathname in navigate's dependency array
   const pathnameRef = useRef(pathname);
   useEffect(() => {
     pathnameRef.current = pathname;
@@ -131,7 +130,7 @@ const LayoutDrawer = ({
               ]}
             >
               <Typography
-                variant="h6"
+                variant="h3"
                 noWrap
                 component="div"
                 fontWeight={700}

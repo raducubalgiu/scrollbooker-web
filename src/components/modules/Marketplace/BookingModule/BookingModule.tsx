@@ -53,8 +53,6 @@ const BookingModule = (props: BookingModuleProps) => {
     selectedProductId,
   } = props;
   const router = useRouter();
-  const employeeId = businessOwnerId !== userId ? userId : null;
-
   const {
     currentStep,
     selectedItems,
@@ -64,6 +62,7 @@ const BookingModule = (props: BookingModuleProps) => {
     employeeData,
     isNextDisabled,
     isPending,
+    shouldSkipSpecialistsStep,
     setSelectedEmployeeId,
     setSelectedTimeSlot,
     setSelectedProduct,
@@ -71,7 +70,12 @@ const BookingModule = (props: BookingModuleProps) => {
     handleDataLoaded,
     handleNext,
     handleBack,
-  } = useBookingState({ bookingFlow, employeeId, selectedProductId });
+  } = useBookingState({
+    bookingFlow,
+    businessOwnerId,
+    userId,
+    selectedProductId,
+  });
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -80,7 +84,7 @@ const BookingModule = (props: BookingModuleProps) => {
           <ProductsStep
             products={bookingFlow.products}
             businessId={businessId}
-            employeeId={employeeId}
+            employeeId={businessOwnerId !== userId ? userId : null}
             selectedProductId={selectedProductId}
             selectedItems={selectedItems}
             scrollOffset={SCROLL_OFFSET}
@@ -138,8 +142,7 @@ const BookingModule = (props: BookingModuleProps) => {
       <Container maxWidth="xl">
         <BookingBreadcrumbs
           currentStep={currentStep}
-          hasEmployees={bookingFlow.business.has_employees}
-          employeeId={employeeId}
+          shouldSkipSpecialistsStep={shouldSkipSpecialistsStep}
         />
 
         <Box sx={styles.container}>

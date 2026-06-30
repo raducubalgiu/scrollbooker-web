@@ -18,13 +18,15 @@ import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 type BookingModuleProps = {
   bookingFlow: BookingFlow;
-  employeeId: number | null;
+  businessOwnerId: number;
+  userId: number | null;
   selectedProductId: number | null;
 };
 
 export const useBookingState = ({
   bookingFlow,
-  employeeId,
+  businessOwnerId,
+  userId,
   selectedProductId,
 }: BookingModuleProps) => {
   const { navigateTo } = useAppNavigation();
@@ -41,7 +43,7 @@ export const useBookingState = ({
   });
 
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
-    () => employeeId
+    () => (businessOwnerId !== userId ? userId : null)
   );
 
   const employeeData = useMemo(() => {
@@ -119,7 +121,21 @@ export const useBookingState = ({
 
   const handleNext = useCallback(() => {
     if (currentStep === BookingStepEnum.CONFIRM) {
-      if (!selectedTimeSlot || !selectedEmployeeId) return;
+      if (!selectedTimeSlot || !userId) return;
+
+      const isEmployee = businessOwnerId !== userId ? userId : null;
+      const targetUserId = isEmployee ? selectedEmployeeId : userId;
+
+      const allItemsHaveOffering = selectedItems.every((item) =>
+        item.offerings.some((o) => o.user.id === targetUserId)
+      );
+
+      if (!allItemsHaveOffering) {
+        console.error(
+          "Eroare: Angajatul selectat nu ofer cabină/serviciu pentru toate produsele din coș."
+        );
+        return;
+      }
 
       const body: ScrollBookerAppointmentCreate = {
         start_date: selectedTimeSlot.start_date_utc,
@@ -128,9 +144,7 @@ export const useBookingState = ({
         product_variants: selectedItems.map((item) => ({
           id: item.variantId,
           offering: {
-            user_id:
-              item.offerings.find((o) => o.user.id === selectedEmployeeId)?.user
-                .id || selectedEmployeeId,
+            user_id: targetUserId as number,
           },
         })),
       };
@@ -145,6 +159,8 @@ export const useBookingState = ({
     }
   }, [
     currentStep,
+    businessOwnerId,
+    userId,
     selectedTimeSlot,
     selectedItems,
     selectedEmployeeId,
@@ -189,6 +205,7 @@ export const useBookingState = ({
     employeeData,
     isNextDisabled,
     isPending,
+    shouldSkipSpecialistsStep,
     setSelectedEmployeeId,
     setSelectedTimeSlot,
     setSelectedProduct,

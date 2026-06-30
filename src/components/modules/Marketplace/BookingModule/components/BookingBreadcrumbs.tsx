@@ -3,8 +3,7 @@ import React from "react";
 
 type BookingBreadcrumbsProps = {
   currentStep: BookingStepEnum;
-  hasEmployees: boolean;
-  employeeId: number | null;
+  shouldSkipSpecialistsStep: boolean;
 };
 
 export enum BookingStepEnum {
@@ -23,18 +22,10 @@ const STEPS = [
 
 const BookingBreadcrumbs = ({
   currentStep,
-  hasEmployees,
-  employeeId,
+  shouldSkipSpecialistsStep,
 }: BookingBreadcrumbsProps) => {
   const visibleSteps = STEPS.filter((step) => {
-    if (employeeId && step.id === BookingStepEnum.SPECIALISTS) {
-      return false;
-    }
-    if (
-      !employeeId &&
-      !hasEmployees &&
-      step.id === BookingStepEnum.SPECIALISTS
-    ) {
+    if (shouldSkipSpecialistsStep && step.id === BookingStepEnum.SPECIALISTS) {
       return false;
     }
     return true;
