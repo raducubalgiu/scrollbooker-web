@@ -40,7 +40,7 @@ export default function MainLayout({
           overscrollBehaviorY: "contain",
         }}
       >
-        <Box sx={{ p: { xs: 1.5, lg: 2.5 }, ...sx }}>
+        <Box sx={{ p: 2.5, ...sx }}>
           {showHeader && (
             <Stack
               flexDirection="row"

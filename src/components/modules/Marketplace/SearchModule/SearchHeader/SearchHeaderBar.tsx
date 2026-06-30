@@ -13,8 +13,9 @@ import {
   SearchHeaderSectionEnum,
   SearchHeaderSectionType,
 } from "../SearchHeaderSectionEnum";
-import SearchIcon from "@mui/icons-material/Search";
+import SearchIcon from "@/assets/icons/ic_search.svg";
 import CancelIcon from "@mui/icons-material/Cancel";
+import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
 
 type SearchHeaderBarProps = {
   selectedServiceDomainName: string | null | undefined;
@@ -130,19 +131,28 @@ const SearchHeaderBar = ({
           );
         })}
 
-        <Button
-          onClick={onSearch}
-          aria-label="Caută"
-          variant="contained"
-          color="primary"
-          size="large"
-          startIcon={<SearchIcon sx={styles.searchIcon} />}
-          sx={styles.searchSubmitButton(isExpanded)}
-        >
-          {isExpanded && (
+        {isExpanded ? (
+          <Button
+            onClick={onSearch}
+            aria-label="Caută"
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<CustomSvg src={SearchIcon} sx={styles.searchIcon} />}
+            sx={styles.searchSubmitButtonExpanded}
+          >
             <span style={styles.searchLabel as React.CSSProperties}>Caută</span>
-          )}
-        </Button>
+          </Button>
+        ) : (
+          <IconButton
+            onClick={onSearch}
+            aria-label="Caută"
+            color="primary"
+            sx={styles.searchSubmitButtonCollapsed}
+          >
+            <CustomSvg src={SearchIcon} sx={styles.searchIcon} />
+          </IconButton>
+        )}
       </Stack>
     </Paper>
   );
@@ -165,7 +175,7 @@ const styles = {
     maxWidth: "calc(100vw - 64px)",
     p: 1,
     borderRadius: 16,
-    backgroundColor: "transparent",
+    backgroundColor: "background.default",
     boxShadow: "none",
     "&::before": {
       content: '""',
@@ -181,7 +191,7 @@ const styles = {
       backdropFilter: "saturate(140%) blur(6px)",
       backgroundColor: (theme: Theme) =>
         theme.palette.mode === "dark"
-          ? "background.paper"
+          ? "background.default"
           : "rgba(255,255,255,0.8)",
       transform: isExpanded ? "scale(1, 1.015)" : "scale(1, 1)",
       transformOrigin: "center center",
@@ -212,7 +222,7 @@ const styles = {
       isSectionActive
         ? theme.palette.mode === "dark"
           ? "secondary.main"
-          : "background.paper"
+          : "background.default"
         : "transparent",
     boxShadow: isSectionActive ? "0 2px 12px rgba(0,0,0,0.12)" : "none",
     "&:hover": {
@@ -220,7 +230,7 @@ const styles = {
         isSectionActive
           ? theme.palette.mode === "dark"
             ? "secondary.main"
-            : "background.paper"
+            : "background.default"
           : "action.hover",
     },
   }),
@@ -245,36 +255,40 @@ const styles = {
     height: 28,
     mx: 0.5,
   },
-  searchSubmitButton: (isExpanded: boolean) => ({
+  searchSubmitButtonExpanded: {
     textTransform: "none",
-    ml: 0.5,
     borderRadius: 50,
-    py: 2,
-    pl: 2.5,
     fontWeight: 700,
-    fontSize: 18,
-    pr: isExpanded ? 2 : 1.25,
-    minWidth: isExpanded ? 100 : 48,
     boxShadow: "none",
     display: "flex",
     alignItems: "center",
     gap: 1,
-    transition:
-      "min-width 0.28s cubic-bezier(0.4,0,0.2,1), padding 0.28s cubic-bezier(0.4,0,0.2,1)",
+    height: 55,
     bgcolor: "primary.main",
     color: "common.white",
     "&:hover": {
       bgcolor: "primary.dark",
       boxShadow: "none",
     },
-  }),
+  },
+  searchSubmitButtonCollapsed: {
+    width: 55,
+    height: 55,
+    borderRadius: "50%",
+    bgcolor: "primary.main",
+    color: "common.white",
+    p: 0,
+    "&:hover": {
+      bgcolor: "primary.dark",
+    },
+  },
   searchLabel: {
     display: "inline-block",
     overflow: "hidden",
     whiteSpace: "nowrap",
   },
   searchIcon: {
-    width: 26,
-    height: 26,
+    width: 22.5,
+    height: 22.5,
   },
 };

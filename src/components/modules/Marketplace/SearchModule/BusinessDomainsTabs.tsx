@@ -61,7 +61,6 @@ const BusinessDomainsTabs = ({
                 color={isSelected ? "primary" : "secondary"}
                 size="large"
                 disableElevation
-                sx={{ py: 1.5, px: 3 }}
                 onClick={() => onSelectBusinessDomain(d.id)}
               >
                 {d.short_name}
@@ -80,7 +79,6 @@ const BusinessDomainsTabs = ({
             color={areFiltersActive ? "primary" : "secondary"}
             size="large"
             disableElevation
-            sx={{ py: 1.5, px: 3 }}
             startIcon={<TuneOutlinedIcon />}
             onClick={onOpenFilters}
           >
@@ -91,7 +89,6 @@ const BusinessDomainsTabs = ({
             color="secondary"
             size="large"
             disableElevation
-            sx={{ py: 1.5, px: 3 }}
             startIcon={<MapOutlinedIcon />}
             onClick={onToggleMap}
           >

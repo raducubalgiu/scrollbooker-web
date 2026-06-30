@@ -48,6 +48,7 @@ const SearchBusinessList: React.FC<SearchBusinessListProps> = ({
       },
       gap: { xs: 3, md: 5 },
       px: 0,
+      mt: 2,
     }),
     [isMapVisible]
   );

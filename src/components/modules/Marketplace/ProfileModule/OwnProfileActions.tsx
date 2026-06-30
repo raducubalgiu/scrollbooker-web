@@ -23,8 +23,6 @@ const OwnProfileActions = ({
     flex: { xs: 1, sm: "none" },
     whiteSpace: "nowrap",
     minWidth: "max-content",
-    py: { xs: 1, lg: 1.5 },
-    px: { xs: 2.5, lg: 2 },
     color: "text.primary",
   };
 

@@ -78,7 +78,7 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
         variant={!is_follow ? "contained" : "outlined"}
         color={is_follow ? "secondary" : "primary"}
         onClick={handleFollowClick}
-        size="large"
+        size="medium"
         disableElevation
       >
         {is_follow ? "Urmărești" : "Urmărește"}

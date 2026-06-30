@@ -91,7 +91,6 @@ const ExploreServicesTab = ({
           <Button
             variant="outlined"
             color="secondary"
-            size="large"
             sx={{ mt: 2.5 }}
             onClick={() => onNavigateToBooking(null)}
           >

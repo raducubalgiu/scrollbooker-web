@@ -78,6 +78,10 @@ declare module "@mui/material/SvgIcon" {
 
 const defaultTheme = createTheme();
 
+// ---------------------------------------------------------------------------
+// Tipografie comuna (identica intre dark si light, cu o singura exceptie: h6)
+// ---------------------------------------------------------------------------
+
 type Mode = "dark" | "light";
 
 const commonTypography = {
@@ -88,6 +92,7 @@ const commonTypography = {
   fontWeightSemiBold: 600,
   fontWeightBold: 700,
 
+  // --- TITLURI RESPONSIVE ---
   h1: {
     fontSize: "2rem",
     fontWeight: 700,
@@ -228,16 +233,32 @@ const getComponents = (mode: Mode) => ({
         fontWeight: theme.palette.mode === "dark" ? "bold" : 600,
         borderRadius: 50,
         textTransform: "none",
-        ...(theme.palette.mode === "light" ? { fontSize: "1rem" } : {}),
+        padding: "6px 14px",
+        fontSize: "0.8125rem",
+        [defaultTheme.breakpoints.up("md")]: {
+          padding: "10px 18px",
+          fontSize: "0.875rem",
+        },
         "&.Mui-disabled": {
           pointerEvents: "auto",
         },
       }),
-      sizeLarge: () => ({
-        padding: "6px 16px",
-        minHeight: 38,
+      sizeSmall: {
+        padding: "4px 10px",
+        fontSize: "0.75rem",
+        [defaultTheme.breakpoints.up("md")]: {
+          padding: "6px 14px",
+          fontSize: "0.8125rem",
+        },
+      },
+      sizeLarge: {
+        padding: "8px 18px",
         fontSize: "0.875rem",
-      }),
+        [defaultTheme.breakpoints.up("md")]: {
+          padding: "12px 28px",
+          fontSize: "1rem",
+        },
+      },
       containedPrimary: ({ theme }: { theme: Theme }) => ({
         color: theme.palette.common.white,
       }),
@@ -255,14 +276,12 @@ const getComponents = (mode: Mode) => ({
         const isDark = theme.palette.mode === "dark";
         return {
           ...(isDark ? {} : { borderWidth: 1.25 }),
-          borderColor: theme.palette.grey[isDark ? 700 : 400],
+          borderColor: theme.palette.grey[isDark ? 700 : 300],
           color: theme.palette.text.primary,
           "&:hover": {
             color: theme.palette.text.primary + "90",
-            borderColor: theme.palette.grey[500],
-            ...(isDark
-              ? {}
-              : { backgroundColor: alpha(theme.palette.grey[400], 0.2) }),
+            borderColor: theme.palette.grey,
+            backgroundColor: alpha(theme.palette.grey[400], 0.2),
           },
         };
       },
@@ -402,6 +421,11 @@ const getComponents = (mode: Mode) => ({
     },
   },
 });
+
+// ---------------------------------------------------------------------------
+// Teme: contin DOAR paleta de culori si tipografia specifica modului.
+// Toata logica de stilizare a componentelor traieste in getComponents().
+// ---------------------------------------------------------------------------
 
 export const darkTheme = createTheme({
   palette: {

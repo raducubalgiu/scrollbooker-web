@@ -102,7 +102,7 @@ const ProductCard = ({
       >
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography
-            fontSize={{ xs: 17, lg: 20 }}
+            variant="h5"
             fontWeight={600}
             noWrap
             sx={{
@@ -155,7 +155,6 @@ const ProductCard = ({
             <Button
               variant="contained"
               disableElevation
-              size="large"
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigateToBooking(product);

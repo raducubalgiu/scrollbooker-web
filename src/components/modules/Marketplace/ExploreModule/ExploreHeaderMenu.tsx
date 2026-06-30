@@ -54,7 +54,6 @@ const ExploreHeaderMenu = ({
                   key={key}
                   variant={isActive ? "contained" : "text"}
                   disableElevation
-                  size="small"
                   onClick={() => onTabChange(key)}
                   sx={{
                     mr: 1,

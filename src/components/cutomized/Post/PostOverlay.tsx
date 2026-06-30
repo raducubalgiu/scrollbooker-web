@@ -103,6 +103,7 @@ const PostOverlay = ({
               }}
               variant="contained"
               fullWidth
+              size="large"
               sx={{
                 display: { xs: "flex", lg: "none" },
               }}

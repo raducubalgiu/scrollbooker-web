@@ -23,7 +23,7 @@ import {
 } from "@/ts/models/booking/review/Review";
 import { isEmpty } from "lodash";
 import { useSession } from "next-auth/react";
-import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
+import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 
 type AppointmentDetailsModuleProps = {
   appointment: Appointment;
@@ -164,9 +164,7 @@ const AppointmentDetailsModule = ({
   }, []);
 
   return (
-    <>
-      <HeaderMobile title="" />
-
+    <MainLayout showHeader={false}>
       <Box sx={styles.container}>
         <CancelAppointmentModal
           open={openCancel}
@@ -227,7 +225,7 @@ const AppointmentDetailsModule = ({
 
         <AppointmentDetailsMap business={business} />
       </Box>
-    </>
+    </MainLayout>
   );
 };
 
@@ -241,7 +239,6 @@ const styles = {
       md: "1fr 1fr",
     },
     gap: { xs: 4, md: 10 },
-    p: 2.5,
     alignItems: "start",
   },
 };

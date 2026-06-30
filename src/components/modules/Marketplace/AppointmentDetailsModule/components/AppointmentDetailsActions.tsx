@@ -26,7 +26,7 @@ const AppointmentDetailsActions = ({
           fullWidth
           disableElevation
           size="large"
-          sx={{ mt: 4, py: 1.5, fontSize: 18 }}
+          sx={{ mt: 4 }}
           onClick={onBookAgain}
         >
           Rezervă din nou
@@ -40,7 +40,7 @@ const AppointmentDetailsActions = ({
           fullWidth
           disableElevation
           size="large"
-          sx={{ mt: 4, py: 1.5, fontSize: 18 }}
+          sx={{ mt: 4 }}
           onClick={onCancel}
         >
           Anulează
