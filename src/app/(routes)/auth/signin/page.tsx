@@ -97,7 +97,6 @@ export default function SignInPage() {
               loading={loading}
               onClick={methods.handleSubmit(handleLogin)}
               disableElevation
-              sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
             >
               Login
             </Button>

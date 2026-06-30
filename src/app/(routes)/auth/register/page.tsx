@@ -135,7 +135,6 @@ export default function RegisterPage() {
               loading={loading}
               onClick={methods.handleSubmit(onSubmit)}
               disableElevation
-              sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
             >
               Inregistrare
             </Button>
