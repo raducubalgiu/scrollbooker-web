@@ -32,27 +32,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }, [activeView]);
 
-  const { isNoLayoutPage, isVideoPage, isAdminPage } = React.useMemo(() => {
-    if (!pathname)
-      return { isNoLayoutPage: true, isVideoPage: false, isAdminPage: false };
+  const isNoLayoutPage = [
+    "/unauthorized",
+    "/_not-found",
+    "/auth",
+    "/onboarding",
+    "/business/",
+    "/booking/",
+    "/employment-request",
+  ].some((p) => pathname.startsWith(p));
 
-    const staticPaths = ["/unauthorized", "/_not-found"];
-    const isNoLayout =
-      staticPaths.includes(pathname) ||
-      [
-        "/auth",
-        "/onboarding",
-        "/business/",
-        "/booking/",
-        "/employment-request",
-      ].some((p) => pathname.startsWith(p));
-
-    return {
-      isNoLayoutPage: isNoLayout,
-      isVideoPage: pathname.startsWith("/user/") && pathname.includes("/post/"),
-      isAdminPage: pathname.startsWith("/admin/"),
-    };
-  }, [pathname]);
+  const isVideoPage =
+    pathname.startsWith("/user/") && pathname.includes("/post/");
 
   const isSessionLoading = status === "loading";
   const isAuthenticated = status === "authenticated";
@@ -157,13 +148,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Box>
       </Slide>
 
-      <Box
-        component="main"
-        sx={{
-          ...styles.mainContent,
-          p: { xs: isAdminPage ? 2.5 : 0, md: isNoLayoutPage ? 0 : 2.5 },
-        }}
-      >
+      <Box component="main" sx={styles.mainContent}>
         {children}
       </Box>
 

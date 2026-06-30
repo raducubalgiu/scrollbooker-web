@@ -315,107 +315,109 @@ export default function ExploreModule() {
   };
 
   return (
-    <Box sx={styles.container}>
-      <Box sx={styles.mainContent}>
-        <Box sx={styles.leftSection}>
-          <Box sx={styles.videoContainer}>
-            <ExploreVideoPool
-              items={poolItems}
+    <Box p={{ xs: 0, lg: 2.5, width: "100%", height: "100%" }}>
+      <Box sx={styles.container}>
+        <Box sx={styles.mainContent}>
+          <Box sx={styles.leftSection}>
+            <Box sx={styles.videoContainer}>
+              <ExploreVideoPool
+                items={poolItems}
+                loaders={loaders}
+                callbacks={callbacks}
+                slideOffset={slideOffset}
+                isAnimating={isAnimating}
+                onOpenLinkedProducts={() => setIsProductsOpen(true)}
+                onNext={goToNext}
+                onPrev={goToPrev}
+              />
+
+              <ExploreHeaderMenu
+                activeTab={currentTab}
+                onHandleToggleDrawer={handleToggleDrawer}
+                onTabChange={handleTabChange}
+              />
+            </Box>
+
+            <PostActions
+              user={currentPost?.user ?? null}
+              counters={counters ?? null}
+              userActions={user_actions ?? null}
+              isOwnPost={currentPost?.is_own_post ?? false}
               loaders={loaders}
               callbacks={callbacks}
-              slideOffset={slideOffset}
-              isAnimating={isAnimating}
-              onOpenLinkedProducts={() => setIsProductsOpen(true)}
-              onNext={goToNext}
-              onPrev={goToPrev}
-            />
-
-            <ExploreHeaderMenu
-              activeTab={currentTab}
-              onHandleToggleDrawer={handleToggleDrawer}
-              onTabChange={handleTabChange}
             />
           </Box>
 
-          <PostActions
-            user={currentPost?.user ?? null}
-            counters={counters ?? null}
-            userActions={user_actions ?? null}
-            isOwnPost={currentPost?.is_own_post ?? false}
-            loaders={loaders}
-            callbacks={callbacks}
+          <ExploreSidebar
+            linkedProducts={linkedProducts || []}
+            isLoadingLinkedProducts={isLoadingLinkedProducts}
+            postId={currentPost?.id}
+            isLoading={isLoading}
+            commentsCount={currentPost?.counters.comment_count}
+            user={currentPost?.user}
+            isVideoReview={currentPost?.is_video_review === true}
+            businessLocation={currentPost?.business_location}
+            onNavigateToBooking={handleNavigateToBooking}
           />
         </Box>
 
-        <ExploreSidebar
+        <Box sx={styles.controlsSection}>
+          {isLoading ? (
+            <Box width={70} />
+          ) : (
+            <ExploreControls
+              isDisabledPrev={currentIndex === 0}
+              isDisabledNext={currentIndex >= posts.length - 1}
+              onGoToPrev={goToPrev}
+              onGoToNext={goToNext}
+            />
+          )}
+        </Box>
+
+        <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
+          <Box sx={styles.drawerContainer}>
+            <ExploreDrawer onCloseDrawer={() => setShowDrawer(false)} />
+          </Box>
+        </Slide>
+
+        <PostLinkedProductsSheet
+          open={isProductsOpen}
+          onClose={() => setIsProductsOpen(false)}
           linkedProducts={linkedProducts || []}
           isLoadingLinkedProducts={isLoadingLinkedProducts}
-          postId={currentPost?.id}
-          isLoading={isLoading}
-          commentsCount={currentPost?.counters.comment_count}
-          user={currentPost?.user}
-          isVideoReview={currentPost?.is_video_review === true}
-          businessLocation={currentPost?.business_location}
+          isLoadingPosts={isLoading}
           onNavigateToBooking={handleNavigateToBooking}
         />
+
+        <PostCommentsSheet
+          open={isCommentsOpen}
+          onClose={() => setIsCommentsOpen(false)}
+          isLoadingPosts={false}
+        />
+
+        <PostReviewsSheet
+          open={isReviewsOpen}
+          onClose={() => setIsReviewsOpen(false)}
+          isLoadingPosts={false}
+        />
+
+        <PostMoreSheet
+          open={isMoreOpen}
+          onClose={() => setIsMoreOpen(false)}
+          isLoadingPosts={false}
+        />
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
+            Link-ul a fost copiat în clipboard!
+          </Alert>
+        </Snackbar>
       </Box>
-
-      <Box sx={styles.controlsSection}>
-        {isLoading ? (
-          <Box width={70} />
-        ) : (
-          <ExploreControls
-            isDisabledPrev={currentIndex === 0}
-            isDisabledNext={currentIndex >= posts.length - 1}
-            onGoToPrev={goToPrev}
-            onGoToNext={goToNext}
-          />
-        )}
-      </Box>
-
-      <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
-        <Box sx={styles.drawerContainer}>
-          <ExploreDrawer onCloseDrawer={() => setShowDrawer(false)} />
-        </Box>
-      </Slide>
-
-      <PostLinkedProductsSheet
-        open={isProductsOpen}
-        onClose={() => setIsProductsOpen(false)}
-        linkedProducts={linkedProducts || []}
-        isLoadingLinkedProducts={isLoadingLinkedProducts}
-        isLoadingPosts={isLoading}
-        onNavigateToBooking={handleNavigateToBooking}
-      />
-
-      <PostCommentsSheet
-        open={isCommentsOpen}
-        onClose={() => setIsCommentsOpen(false)}
-        isLoadingPosts={false}
-      />
-
-      <PostReviewsSheet
-        open={isReviewsOpen}
-        onClose={() => setIsReviewsOpen(false)}
-        isLoadingPosts={false}
-      />
-
-      <PostMoreSheet
-        open={isMoreOpen}
-        onClose={() => setIsMoreOpen(false)}
-        isLoadingPosts={false}
-      />
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
-          Link-ul a fost copiat în clipboard!
-        </Alert>
-      </Snackbar>
     </Box>
   );
 }

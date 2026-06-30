@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Box,
   Stack,
   Table,
   TableBody,
@@ -115,50 +114,60 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
 
   return (
     <FormProvider {...methods}>
-      <Box>
-        <Table size="medium">
-          <TableHead>
-            <TableRow>
-              <TableCell
-                component="th"
-                scope="col"
-                sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-              >
-                Ziua
-              </TableCell>
-              <TableCell
-                component="th"
-                scope="col"
-                align="center"
-                sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-              >
-                Start
-              </TableCell>
-              <TableCell
-                component="th"
-                scope="col"
-                align="center"
-                sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-              >
-                Sfârșit
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {schedules?.map((schedule, i) => (
-              <SchedulesSelectHours
-                key={i}
-                schedule={schedule}
-                namePath={`schedules.${i}`}
-                disabled={disabled}
-              />
-            ))}
-          </TableBody>
-        </Table>
-        <Stack alignItems="flex-end" sx={{ p: 1.5 }}>
-          <ActionButton actions={actions} />
-        </Stack>
-      </Box>
+      <Table size="medium">
+        <TableHead>
+          <TableRow>
+            <TableCell
+              component="th"
+              scope="col"
+              sx={{
+                fontWeight: 700,
+                fontSize: "1rem",
+                letterSpacing: 0.2,
+              }}
+            >
+              Ziua
+            </TableCell>
+            <TableCell
+              component="th"
+              scope="col"
+              align="center"
+              sx={{
+                fontWeight: 700,
+                fontSize: "1rem",
+                letterSpacing: 0.2,
+              }}
+            >
+              Start
+            </TableCell>
+            <TableCell
+              component="th"
+              scope="col"
+              align="center"
+              sx={{
+                fontWeight: 700,
+                fontSize: "1rem",
+                letterSpacing: 0.2,
+              }}
+            >
+              Sfârșit
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {schedules?.map((schedule, i) => (
+            <SchedulesSelectHours
+              key={i}
+              schedule={schedule}
+              namePath={`schedules.${i}`}
+              disabled={disabled}
+            />
+          ))}
+        </TableBody>
+      </Table>
+      <Stack alignItems="flex-end" sx={{ p: 1.5 }}>
+        <ActionButton actions={actions} />
+      </Stack>
     </FormProvider>
   );
 }

@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import Grid from "@mui/material/Grid2";
-import { Box, IconButton, Stack, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
@@ -10,13 +10,13 @@ import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import MyBusinessCard from "./MyBusinessCard";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { Session } from "next-auth";
+import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 
 type BusinessCardItem = {
   title: string;
@@ -38,7 +38,7 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
     permissions,
   } = session;
 
-  const { navigateTo, goBack } = useAppNavigation();
+  const { navigateTo } = useAppNavigation();
 
   const pages = useMemo<BusinessCardItem[]>(
     () => [
@@ -115,37 +115,7 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
   }, [pages, hasEmployees]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
-    >
-      <Stack
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={styles.container}
-      >
-        <IconButton onClick={() => goBack()}>
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: "bold",
-            color: "text.primary",
-          }}
-        >
-          Afacerea mea
-        </Typography>
-        <IconButton onClick={() => {}} disabled>
-          <ArrowBackIcon sx={{ color: "transparent" }} />
-        </IconButton>
-      </Stack>
-
+    <MainLayout hideAction showHeader={false}>
       <Box sx={{ height: "100%" }}>
         <Grid container columnSpacing={1} rowSpacing={1} sx={{ width: "100%" }}>
           {visiblePages.map((page, index) => (
@@ -160,19 +130,8 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
           ))}
         </Grid>
       </Box>
-    </Box>
+    </MainLayout>
   );
 };
 
 export default MyBusinessModule;
-
-const styles = {
-  container: {
-    height: 50,
-    display: { xs: "flex", lg: "none" },
-    flexShrink: 0,
-    width: "100%",
-
-    zIndex: 10,
-  },
-};

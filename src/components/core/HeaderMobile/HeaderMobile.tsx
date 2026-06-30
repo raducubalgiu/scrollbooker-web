@@ -1,4 +1,4 @@
-import { IconButton, Stack, Typography } from "@mui/material";
+import { Divider, IconButton, Stack, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
@@ -11,28 +11,31 @@ const HeaderMobile = ({ title }: HeaderMobileProps) => {
   const { goBack } = useAppNavigation();
 
   return (
-    <Stack
-      flexDirection="row"
-      alignItems="center"
-      justifyContent="space-between"
-      sx={styles.container}
-    >
-      <IconButton onClick={() => goBack()}>
-        <ArrowBackIcon />
-      </IconButton>
-      <Typography
-        variant="h6"
-        sx={{
-          fontWeight: "bold",
-          color: "text.primary",
-        }}
+    <>
+      <Stack
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={styles.container}
       >
-        {title}
-      </Typography>
-      <IconButton onClick={() => {}} disabled>
-        <ArrowBackIcon sx={{ color: "transparent" }} />
-      </IconButton>
-    </Stack>
+        <IconButton onClick={() => goBack()}>
+          <ArrowBackIcon />
+        </IconButton>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: "bold",
+            color: "text.primary",
+          }}
+        >
+          {title}
+        </Typography>
+        <IconButton onClick={() => {}} disabled>
+          <ArrowBackIcon sx={{ color: "transparent" }} />
+        </IconButton>
+      </Stack>
+      <Divider />
+    </>
   );
 };
 

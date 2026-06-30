@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Box, Paper, Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 import MySchedulesModule from "../MySchedulesModule/MySchedulesModule";
 import CustomTabs, {
   CustomTabType,
@@ -10,6 +10,7 @@ import { Business } from "@/ts/models/booking/business/Business";
 import BusinessDescriptionTab from "./BusinessDescriptionTab";
 import BusinessAddressTab from "./BusinessAddressTab";
 import BusinessGalleryTab from "./BusinessGalleryTab";
+import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 
 type MyBusinessDetailsProps = {
   business: Business;
@@ -49,27 +50,20 @@ export default function MyBusinessDetailsModule({
           <BusinessGalleryTab businessId={business.id} initialImages={[]} />
         );
       case 3:
-        return (
-          <>
-            <Typography variant="h6" sx={{ mb: 2.5 }}>
-              Programul locației
-            </Typography>
-            <MySchedulesModule data={business.schedules} />
-          </>
-        );
+        return <MySchedulesModule data={business.schedules} />;
       default:
         return null;
     }
   }, [currentTab, business]);
 
   return (
-    <Box>
+    <MainLayout hideAction title="Detalii Business">
       <CustomTabs
         currentTab={currentTab}
         setValue={setCurrentTab}
         tabs={TABS}
       />
-      <Paper sx={{ mt: 3, p: 2.5 }}>{sections}</Paper>
-    </Box>
+      <Paper sx={{ mt: 3 }}>{sections}</Paper>
+    </MainLayout>
   );
 }

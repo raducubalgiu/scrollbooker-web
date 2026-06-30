@@ -166,6 +166,7 @@ const AppointmentDetailsModule = ({
   return (
     <>
       <HeaderMobile title="" />
+
       <Box sx={styles.container}>
         <CancelAppointmentModal
           open={openCancel}

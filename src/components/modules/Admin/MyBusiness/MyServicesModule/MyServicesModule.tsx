@@ -111,7 +111,7 @@ export const MyServicesModule = ({
   ];
 
   return (
-    <MainLayout title="Categorii de servicii" hideAction>
+    <MainLayout title="Categorii de servicii" showHeader={true} hideAction>
       {services?.map((serviceDomain) => (
         <Accordion
           title={serviceDomain.name}

@@ -1,7 +1,6 @@
 import React, { JSX } from "react";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { get } from "@/utils/requests";
 import MyBusinessDetailsModule from "@/components/modules/Admin/MyBusiness/MyBusinessDetailsModule/MyBusinessDetailsModule";
 import { Business } from "@/ts/models/booking/business/Business";
@@ -27,11 +26,7 @@ async function MyBusiness(): Promise<JSX.Element> {
     throw new Error("An error occured when fetching business data");
   }
 
-  return (
-    <MainLayout title="Detalii Business" hideAction>
-      <MyBusinessDetailsModule business={businessData} />
-    </MainLayout>
-  );
+  return <MyBusinessDetailsModule business={businessData} />;
 }
 
 export default ProtectedPage(
