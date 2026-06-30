@@ -98,7 +98,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <Box sx={styles.layoutContainer}>
+    <Box
+      sx={{
+        ...styles.layoutContainer,
+        backgroundColor: pathname === "/" ? "#000000" : "background.default",
+      }}
+    >
       <CssBaseline />
 
       <Backdrop
@@ -148,13 +153,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Box>
       </Slide>
 
-      <Box
-        component="main"
-        sx={{
-          ...styles.mainContent,
-          backgroundColor: pathname === "/" ? "#000000" : "background.default",
-        }}
-      >
+      <Box component="main" sx={styles.mainContent}>
         {children}
       </Box>
 
