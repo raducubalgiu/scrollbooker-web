@@ -23,8 +23,8 @@ const NotFound = ({ title, description, icon }: NotFoundProps) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: { xs: 70, md: 120 },
-            height: { xs: 70, md: 120 },
+            width: 70,
+            height: 70,
           }}
         >
           {icon}

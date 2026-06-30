@@ -23,6 +23,7 @@ const BookingCartActions = ({
       {!isFirstStep && (
         <Button
           variant="outlined"
+          size="large"
           color="secondary"
           onClick={onBack}
           sx={{ flex: 1, ...styles.button }}

@@ -1,26 +1,26 @@
 html,
 body {
-	padding: 0;
-	margin: 0;
-	scrollbar-gutter: stable;
+  padding: 0;
+  margin: 0;
+  scrollbar-gutter: stable;
 
-	height: 100dvh;
-	width: 100vw;
+  height: 100dvh;
+  width: 100vw;
 
-	overflow-x: hidden;
-	overscroll-behavior-y: none;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 img {
-	max-width: 100%;
-	display: block;
+  max-width: 100%;
+  display: block;
 }
 
 #__next-build-watcher,
 .nextjs-dev-overlay {
-	display: none !important;
+  display: none !important;
 }

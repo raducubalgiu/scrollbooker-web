@@ -127,6 +127,16 @@ const commonTypography = {
   h5: {
     fontSize: "1.125rem",
     fontWeight: 600,
+    [defaultTheme.breakpoints.up("md")]: {
+      fontSize: "1rem",
+    },
+  },
+  h6: {
+    fontSize: "1rem",
+    fontWeight: 600,
+    [defaultTheme.breakpoints.up("md")]: {
+      fontSize: "0.95rem",
+    },
   },
   body1: {
     fontSize: "1rem",
@@ -141,18 +151,6 @@ const commonTypography = {
     fontWeight: 600,
   },
 };
-
-const getH6 = (mode: Mode) => ({
-  fontSize: "1rem",
-  fontWeight: 600,
-  ...(mode === "dark"
-    ? {
-        [defaultTheme.breakpoints.up("md")]: {
-          fontSize: "0.95rem",
-        },
-      }
-    : {}),
-});
 
 const getComponents = (mode: Mode) => ({
   MuiAppBar: {
@@ -280,8 +278,10 @@ const getComponents = (mode: Mode) => ({
           color: theme.palette.text.primary,
           "&:hover": {
             color: theme.palette.text.primary + "90",
-            borderColor: theme.palette.grey,
-            backgroundColor: alpha(theme.palette.grey[400], 0.2),
+            borderColor: theme.palette.grey[400],
+            ...(isDark
+              ? {}
+              : { backgroundColor: alpha(theme.palette.grey[400], 0.2) }),
           },
         };
       },
@@ -460,11 +460,7 @@ export const darkTheme = createTheme({
     },
   },
 
-  typography: {
-    ...commonTypography,
-    h6: getH6("dark"),
-  },
-
+  typography: commonTypography,
   components: getComponents("dark"),
 });
 
@@ -500,10 +496,6 @@ export const lightTheme = createTheme({
     },
   },
 
-  typography: {
-    ...commonTypography,
-    h6: getH6("light"),
-  },
-
+  typography: commonTypography,
   components: getComponents("light"),
 });

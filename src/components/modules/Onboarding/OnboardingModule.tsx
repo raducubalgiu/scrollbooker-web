@@ -118,7 +118,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
 
 const styles = {
   container: {
-    bgcolor: "background.paper",
+    bgcolor: "background.default",
     height: "100vh",
     overflow: "hidden",
   },

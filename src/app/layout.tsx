@@ -23,37 +23,37 @@ dayjs.locale("ro");
 type ChildrenType = { children: React.ReactNode };
 
 const inter = Inter({
-	subsets: ["latin"],
-	weight: ["300", "400", "500", "600", "700"],
-	display: "swap",
-	variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-inter",
 });
 
 export const viewport: Viewport = {
-	width: "device-width",
-	initialScale: 1,
-	maximumScale: 1,
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default async function RootLayout({ children }: ChildrenType) {
-	const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
-	return (
-		<html lang="en">
-			<AppRouterCacheProvider options={{ enableCssLayer: true }}>
-				<body className={inter.className}>
-					<SessionProvider session={session}>
-						<AuthListener />
-						<MUIProvider>
-							<ToastProvider />
-							<QueryClientProvider>
-								<Layout>{children}</Layout>
-							</QueryClientProvider>
-						</MUIProvider>
-					</SessionProvider>
-					<SpeedInsights />
-				</body>
-			</AppRouterCacheProvider>
-		</html>
-	);
+  return (
+    <html lang="en">
+      <AppRouterCacheProvider options={{ enableCssLayer: false }}>
+        <body className={inter.className}>
+          <SessionProvider session={session}>
+            <AuthListener />
+            <MUIProvider>
+              <ToastProvider />
+              <QueryClientProvider>
+                <Layout>{children}</Layout>
+              </QueryClientProvider>
+            </MUIProvider>
+          </SessionProvider>
+          <SpeedInsights />
+        </body>
+      </AppRouterCacheProvider>
+    </html>
+  );
 }

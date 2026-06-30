@@ -40,7 +40,7 @@ export default function CollectEmailVerificationStep() {
     <Stack
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: "100vh", bgcolor: "background.paper" }}
+      sx={{ minHeight: "100vh" }}
     >
       <Container maxWidth="sm">
         <Stack spacing={3}>

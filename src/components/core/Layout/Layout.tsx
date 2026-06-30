@@ -148,7 +148,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Box>
       </Slide>
 
-      <Box component="main" sx={styles.mainContent}>
+      <Box
+        component="main"
+        sx={{
+          ...styles.mainContent,
+          backgroundColor: pathname === "/" ? "#000000" : "background.default",
+        }}
+      >
         {children}
       </Box>
 

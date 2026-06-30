@@ -65,7 +65,7 @@ export default function SignInPage() {
         <Container maxWidth="sm">
           <Stack>
             <Typography
-              variant="h4"
+              variant="h3"
               sx={{ mb: 2.5, fontWeight: 700, textAlign: "center" }}
             >
               Conectare

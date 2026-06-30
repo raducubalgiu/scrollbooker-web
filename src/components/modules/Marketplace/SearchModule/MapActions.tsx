@@ -36,7 +36,7 @@ export default function MapActions({
       <IconButton
         size="large"
         sx={{
-          bgcolor: "background.paper",
+          bgcolor: "background.default",
           boxShadow: 2,
         }}
         onClick={onMapExpandToggle}
@@ -51,7 +51,7 @@ export default function MapActions({
         sx={{
           mt: 1,
           boxShadow: 2,
-          bgcolor: "background.paper",
+          bgcolor: "background.default",
           borderRadius: 20,
         }}
       >

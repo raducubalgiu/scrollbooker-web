@@ -82,7 +82,6 @@ const SearchMap = ({
   React.useEffect(() => {
     if (!mapContainerRef.current) return;
 
-    // Dacă există deja o hartă veche (la schimbarea stilului), o curățăm mai întâi
     if (mapRef.current) {
       mapRef.current.remove();
       mapRef.current = null;
@@ -91,7 +90,7 @@ const SearchMap = ({
     mapboxgl.accessToken = MAPBOX_TOKEN;
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: mapStyle, // <--- Va primi noul stil corect la reconstrucție
+      style: mapStyle,
       bounds: initialBounds,
       fitBoundsOptions: {
         padding: 20,
@@ -107,13 +106,12 @@ const SearchMap = ({
       if (isFirstMapLoad.current) {
         isFirstMapLoad.current = false;
 
-        // Salvăm totuși camera curentă ca punct de reper pentru viitoarele mișcări
         lastCameraRef.current = {
           lat: map.getCenter().lat,
           lng: map.getCenter().lng,
           zoom: map.getZoom(),
         };
-        return; // Oprim execuția, nu chemăm refetchRef.current()
+        return;
       }
 
       const center = map.getCenter();
@@ -167,13 +165,10 @@ const SearchMap = ({
     };
   }, [mapStyle]);
 
-  // 2. EFECT PENTRU ACTUALIZARE MARKERI (Rulează la fiecare schimbare de date)
   React.useEffect(() => {
     const map = mapRef.current;
     if (!map || !isMapVisible || !Array.isArray(markers)) return;
 
-    // GARDA ANTI-FLICKER: Dacă react-query încarcă sau reface cererea,
-    // lăsăm markerii existenți pe ecran și oprim execuția până vin noile date.
     if (isLoadingMarkers || isRefetchingMarkers) return;
 
     if (!(markersRef.current instanceof Map)) {
@@ -182,8 +177,6 @@ const SearchMap = ({
 
     const currentMarkersMap = markersRef.current;
 
-    // VERIFICARE INSTANȚĂ: Dacă vreun marker din memorie nu mai are elementul în DOM
-    // (pentru că s-a schimbat tema și s-a dat map.remove()), curățăm referințele vechi ca să-i forțăm redesenarea.
     let isMapRebuilt = false;
     if (currentMarkersMap.size > 0) {
       const firstMarker = currentMarkersMap.values().next().value;
@@ -198,7 +191,6 @@ const SearchMap = ({
 
     const newMarkerIds = new Set(markers.map((m) => m.id));
 
-    // Ștergem doar markerii care au ieșit din Bounding Box-ul curent
     currentMarkersMap.forEach((marker, id) => {
       if (!newMarkerIds.has(id)) {
         marker.remove();
@@ -206,7 +198,6 @@ const SearchMap = ({
       }
     });
 
-    // Adăugăm incremental DOAR markerii noi
     markers.forEach((m) => {
       if (!currentMarkersMap.has(m.id)) {
         const lat = m?.coordinates?.lat;
@@ -268,7 +259,6 @@ const SearchMap = ({
     }
   }, [mapRef]);
 
-  // 4. RESIZE UNIFICAT
   React.useEffect(() => {
     if (!mapRef.current || !isMapVisible) return;
     const animId = requestAnimationFrame(() => {
@@ -288,6 +278,7 @@ const SearchMap = ({
         bgcolor: "background.default",
         borderRadius: 5,
         overflow: "hidden",
+        mt: 2,
       }}
     >
       <Box
@@ -323,7 +314,7 @@ const getDistanceInMeters = (
   lat2: number,
   lon2: number
 ) => {
-  const R = 6371e3; // Raza Pământului în metri
+  const R = 6371e3;
   const φ1 = (lat1 * Math.PI) / 180;
   const φ2 = (lat2 * Math.PI) / 180;
   const Δφ = ((lat2 - lat1) * Math.PI) / 180;

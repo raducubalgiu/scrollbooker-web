@@ -50,10 +50,9 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
         >
           <Box>
             <Typography
-              variant="h6"
               sx={{
                 fontWeight: 600,
-                fontSize: { xs: "1rem", sm: "1.25rem" },
+                fontSize: { xs: "1rem", sm: "1.1rem" },
               }}
             >
               {fullname}
@@ -65,7 +64,7 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
             <Typography
               variant="h6"
               fontWeight={600}
-              sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+              sx={{ fontSize: { xs: "1rem", sm: "1.1rem" } }}
             >
               {formatRating(ratings_average)}
             </Typography>
@@ -81,7 +80,6 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
         </Stack>
 
         <Typography
-          variant="body1"
           color="text.secondary"
           sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
         >
@@ -89,7 +87,6 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
         </Typography>
 
         <Typography
-          variant="body1"
           color="text.secondary"
           noWrap
           fontWeight={400}

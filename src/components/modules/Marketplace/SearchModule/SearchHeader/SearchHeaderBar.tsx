@@ -191,7 +191,7 @@ const styles = {
       backdropFilter: "saturate(140%) blur(6px)",
       backgroundColor: (theme: Theme) =>
         theme.palette.mode === "dark"
-          ? "background.default"
+          ? "background.paper"
           : "rgba(255,255,255,0.8)",
       transform: isExpanded ? "scale(1, 1.015)" : "scale(1, 1)",
       transformOrigin: "center center",

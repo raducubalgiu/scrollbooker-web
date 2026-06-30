@@ -6,6 +6,8 @@ import isEmpty from "lodash/isEmpty";
 import NotificationItem from "./NotificationItem";
 import { useInfiniteNotifications } from "@/hooks/infiniteQuery/useInfiniteNotifications";
 import NotificationSkeletons from "@/components/cutomized/Skeletons/NotificationSkeletons";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
 
 type NotificationsModuleProps = {
   scrollRootRef?: React.RefObject<HTMLDivElement | null>;
@@ -108,9 +110,11 @@ const NotificationsModule = ({
       )}
 
       {!isLoading && isEmpty(notifications) && (
-        <Typography sx={{ textAlign: "center", py: 3 }} color="text.secondary">
-          Nu au fost găsite notificări
-        </Typography>
+        <NotFound
+          title="Notificari"
+          description="Nu ai nici o notificare primita"
+          icon={<NotificationsNoneOutlinedIcon />}
+        />
       )}
     </>
   );

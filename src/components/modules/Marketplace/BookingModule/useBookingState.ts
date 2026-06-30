@@ -28,6 +28,7 @@ export const useBookingState = ({
   selectedProductId,
 }: BookingModuleProps) => {
   const { navigateTo } = useAppNavigation();
+
   const [currentStep, setCurrentStep] = useState<BookingStepEnum>(
     BookingStepEnum.SERVICES
   );
@@ -112,7 +113,6 @@ export const useBookingState = ({
     [selectedProductId, handleSelectItem]
   );
 
-  // Determină dacă pasul de specialiști trebuie omis complet din flow-ul de navigare
   const shouldSkipSpecialistsStep = useMemo(() => {
     return !!selectedEmployeeId || !bookingFlow.business.has_employees;
   }, [selectedEmployeeId, bookingFlow.business.has_employees]);
