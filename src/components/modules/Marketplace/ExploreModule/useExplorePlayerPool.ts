@@ -41,16 +41,11 @@ export function useExplorePlayerPool({
   useEffect(() => {
     const prev = prevIndexRef.current;
     const next = currentIndex;
-
     if (prev === next) return;
 
-    // Anulăm orice animație în curs
-    if (animationTimerRef.current) {
-      clearTimeout(animationTimerRef.current);
-    }
+    if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
 
     const direction = next > prev ? -1 : 1;
-
     setIsAnimating(true);
     setSlideOffset(direction);
 
@@ -63,9 +58,7 @@ export function useExplorePlayerPool({
     prevIndexRef.current = next;
 
     return () => {
-      if (animationTimerRef.current) {
-        clearTimeout(animationTimerRef.current);
-      }
+      if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
     };
   }, [currentIndex]);
 
@@ -73,31 +66,35 @@ export function useExplorePlayerPool({
   const currentPost = posts[committedIndex] ?? null;
   const nextPost = posts[committedIndex + 1] ?? null;
 
+  // ✅ activePostId derivat din currentIndex (sincron cu gestul),
+  //    nu din committedIndex (care vine după 300ms).
+  const activePostId = posts[currentIndex]?.id;
+
   const poolItems = useMemo<PoolItem[]>(
     () => [
       {
         slot: "prev",
         post: prevPost,
         src: prevPost?.media_files?.[0]?.url ?? "",
-        isActive: false,
+        isActive: !!prevPost && prevPost.id === activePostId,
         shouldPreload: !!prevPost,
       },
       {
         slot: "current",
         post: currentPost,
         src: currentPost?.media_files?.[0]?.url ?? "",
-        isActive: true,
+        isActive: !!currentPost && currentPost.id === activePostId,
         shouldPreload: true,
       },
       {
         slot: "next",
         post: nextPost,
         src: nextPost?.media_files?.[0]?.url ?? "",
-        isActive: false,
+        isActive: !!nextPost && nextPost.id === activePostId,
         shouldPreload: !!nextPost,
       },
     ],
-    [prevPost, currentPost, nextPost]
+    [prevPost, currentPost, nextPost, activePostId]
   );
 
   return {

@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useLayoutEffect,
+} from "react";
 import {
   Box,
   Typography,
@@ -119,20 +125,21 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     video.removeAttribute("src");
     video.load();
   }, []);
+
   const tryPlay = useCallback(async () => {
     const video = videoRef.current;
     if (!video || !isActive || !isReady || hasError || !hasValidSource) return;
-
     try {
       await video.play();
     } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      // NotAllowedError sau orice altceva → resetăm starea optimistă
+      setIsPlaying(false);
       if (
-        error instanceof DOMException &&
-        (error.name === "NotAllowedError" || error.name === "AbortError")
+        !(error instanceof DOMException && error.name === "NotAllowedError")
       ) {
-        return;
+        console.error("Unexpected play() error:", error);
       }
-      console.error("Unexpected play() error:", error);
     }
   }, [hasError, hasValidSource, isActive, isReady]);
 
@@ -247,25 +254,27 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     clearVideoSource,
   ]);
 
-  // REPARARE AUTOPLAY: Reacționează instant când ambele condiții (activ + gata de rulare) devin adevărate
+  // ✅ useLayoutEffect rulează sincron înainte de paint — elimină frame-ul
+  //    parazit în care isActive=true dar isPlaying e încă false.
+  useLayoutEffect(() => {
+    if (isActive && isReady && !hasError && !isEnded) {
+      setIsPlaying(true); // optimist, corectat de onPause/tryPlay dacă fail
+    } else if (!isActive) {
+      setIsPlaying(false);
+    }
+  }, [isActive, isReady, hasError, isEnded]);
+
+  // useEffect-ul existent rămâne pentru logica efectivă de play/pause:
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !hasValidSource || hasError) return;
 
     if (isActive) {
-      // ✅ DACĂ este activ ȘI a devenit ready (gata descărcat de HLS), pornește-l instant!
-      if (isReady) {
-        void tryPlay();
-        // Ne asigurăm că starea internă este setată corect în cazul în care evenimentul onPlay are întârziere
-        setIsPlaying(true);
-      }
+      if (isReady) void tryPlay();
       return;
     }
 
-    // Când utilizatorul pleacă de pe clip (isActive devine false), oprește-l imediat
     video.pause();
-    setIsPlaying(false);
-
     if (resetOnInactive) {
       if (video.readyState > 0 && Number.isFinite(video.duration)) {
         video.currentTime = 0;
