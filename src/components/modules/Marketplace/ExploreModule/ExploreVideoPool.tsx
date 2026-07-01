@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { Box } from "@mui/material";
 import { PoolItem } from "./useExplorePlayerPool";
 import { PostVideoPlayer } from "@/components/cutomized/Post/PostVideoPlayer";
@@ -110,6 +110,13 @@ export function ExploreVideoPool({
     commitDrag(delta);
   };
 
+  const playVideoInSlot = useCallback((slot: "prev" | "next") => {
+    const video = rootRef.current?.querySelector<HTMLVideoElement>(
+      `[data-slot="${slot}"] video`
+    );
+    video?.play().catch(() => {});
+  }, []);
+
   const commitDrag = (delta: number) => {
     dragStartY.current = undefined;
 
@@ -137,8 +144,14 @@ export function ExploreVideoPool({
       rootRef.current.style.setProperty("--drag-offset", "0px");
     }
 
-    if (delta > 0) onNext();
-    else onPrev();
+    // ✅ play() sincronic ÎNAINTE de onNext/onPrev — rămâne în user gesture context
+    if (delta > 0) {
+      playVideoInSlot("next");
+      onNext();
+    } else {
+      playVideoInSlot("prev");
+      onPrev();
+    }
 
     isDragging.current = false;
   };

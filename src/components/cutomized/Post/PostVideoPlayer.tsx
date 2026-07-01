@@ -133,7 +133,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       await video.play();
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
-      // NotAllowedError sau orice altceva → resetăm starea optimistă
       setIsPlaying(false);
       if (
         !(error instanceof DOMException && error.name === "NotAllowedError")
@@ -254,16 +253,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     clearVideoSource,
   ]);
 
-  // ✅ useLayoutEffect rulează sincron înainte de paint — elimină frame-ul
-  //    parazit în care isActive=true dar isPlaying e încă false.
-  useLayoutEffect(() => {
-    if (isActive && isReady && !hasError && !isEnded) {
-      setIsPlaying(true); // optimist, corectat de onPause/tryPlay dacă fail
-    } else if (!isActive) {
-      setIsPlaying(false);
-    }
-  }, [isActive, isReady, hasError, isEnded]);
-
   // useEffect-ul existent rămâne pentru logica efectivă de play/pause:
   useEffect(() => {
     const video = videoRef.current;
@@ -306,6 +295,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     return () =>
       document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [hasError, isActive, isReady, tryPlay]);
+
   // OPTIMIZARE: TimeUpdate direct în DOM prin variabilă CSS (0 re-renders în timpul rulării)
   const handleTimeUpdateNativ = useCallback(() => {
     const video = videoRef.current;
@@ -486,9 +476,9 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   );
 
   const showPausedOverlay =
-    !hasError && !isBuffering && !isPlaying && isReady && !isEnded;
+    isActive && !hasError && !isBuffering && !isPlaying && isReady && !isEnded;
   const showReplayOverlay =
-    !hasError && !isBuffering && !isPlaying && isEnded && isReady;
+    isActive && !hasError && !isBuffering && !isPlaying && isEnded && isReady;
 
   if (isLoading) {
     return (
@@ -570,10 +560,24 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
             <ReplayRoundedIcon sx={styles.stateIcon} />
             <Typography sx={styles.stateTitle}>Revedeți acest clip</Typography>
           </Box>
-        ) : showPausedOverlay ? (
-          <PlayArrowRoundedIcon sx={styles.centerIcon} />
         ) : null}
       </Box>
+
+      <Fade in={showPausedOverlay} timeout={{ enter: 150, exit: 0 }}>
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            pointerEvents: "none",
+            zIndex: 6,
+          }}
+        >
+          <PlayArrowRoundedIcon sx={styles.centerIcon} />
+        </Box>
+      </Fade>
 
       <Box sx={styles.volumeButton} onClick={handleToggleMute}>
         {volumeButtonIcon}
