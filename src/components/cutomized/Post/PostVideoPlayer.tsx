@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import {
   Box,
   Typography,
@@ -38,6 +44,27 @@ const getSliderValue = (value: number | number[]): number => {
   return value;
 };
 
+const formatVideoTime = (seconds: number): string => {
+  if (isNaN(seconds) || !isFinite(seconds)) return "00:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+};
+
+const volumeIconSx = {
+  color: "#fff",
+  fontSize: { xs: "1.5rem", sm: "2.1875rem" },
+};
+const fadeContainerSx = {
+  position: "absolute",
+  inset: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  pointerEvents: "none",
+  zIndex: 6,
+} as const;
+
 export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   post,
   loaders,
@@ -58,14 +85,15 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [duration, setDuration] = useState(0);
-
-  // Starea React este izolată doar pentru când utilizatorul face seek manual
   const [sliderProgress, setSliderProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isEnded, setIsEnded] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const [hasError, setHasError] = useState(false);
+
+  const isSeekingRef = useRef(false);
+  const sliderProgressRef = useRef(0);
 
   const hasValidSource = Boolean(src?.trim());
 
@@ -78,6 +106,8 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
 
   const resetUiState = useCallback(() => {
     wasPlayingBeforeSeekRef.current = false;
+    isSeekingRef.current = false;
+    sliderProgressRef.current = 0;
     setIsReady(false);
     setIsPlaying(false);
     setIsEnded(false);
@@ -93,6 +123,8 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
 
   const resetPlaybackState = useCallback(() => {
     wasPlayingBeforeSeekRef.current = false;
+    isSeekingRef.current = false;
+    sliderProgressRef.current = 0;
     setSliderProgress(0);
     setIsSeeking(false);
     setIsEnded(false);
@@ -136,6 +168,64 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     }
   }, [hasError, hasValidSource, isActive, isReady]);
 
+  // ✅ ZERO re-renders în timpul redării — progresul merge direct în CSS
+  const handleTimeUpdateNativ = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const current = video.currentTime;
+    const dur = video.duration || 1;
+    const ratio = Math.min(current / dur, 1);
+
+    sliderProgressRef.current = current; // ✅ Ref, nu state → zero re-render
+
+    if (containerRef.current) {
+      containerRef.current.style.setProperty(
+        "--video-progress-ratio",
+        `${ratio}`
+      );
+    }
+    // ✅ Nu mai apelăm setSliderProgress aici deloc
+  }, []); // ✅ Deps goale — referință stabilă pentru totdeauna
+
+  // ✅ Handleri video stabili într-un effect separat — se atașează o singură dată
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+    const onWaiting = () => {
+      if (!isSeekingRef.current) setIsBuffering(true); // ✅ Ref în loc de state
+    };
+    const onPlaying = () => {
+      setIsPlaying(true);
+      setIsBuffering(false);
+      setIsReady(true);
+      setHasError(false);
+    };
+    const onSeeking = () => setIsBuffering(true);
+    const onSeeked = () => setIsBuffering(false);
+
+    video.addEventListener("play", onPlay);
+    video.addEventListener("pause", onPause);
+    video.addEventListener("waiting", onWaiting);
+    video.addEventListener("playing", onPlaying);
+    video.addEventListener("seeking", onSeeking);
+    video.addEventListener("seeked", onSeeked);
+    video.addEventListener("timeupdate", handleTimeUpdateNativ);
+
+    return () => {
+      video.removeEventListener("play", onPlay);
+      video.removeEventListener("pause", onPause);
+      video.removeEventListener("waiting", onWaiting);
+      video.removeEventListener("playing", onPlaying);
+      video.removeEventListener("seeking", onSeeking);
+      video.removeEventListener("seeked", onSeeked);
+      video.removeEventListener("timeupdate", handleTimeUpdateNativ);
+    };
+  }, [handleTimeUpdateNativ]); // ✅ handleTimeUpdateNativ e stabil → effect rulează o singură dată
+
   // HLS & Init Effect
   useEffect(() => {
     const video = videoRef.current;
@@ -160,8 +250,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       setIsReady(true);
       setIsBuffering(false);
     };
-
-    // 🚀 FAILSAFE ADĂUGAT: Dacă browserul zice că poate rula clipul complet, forțăm starea isReady
     const onCanPlayThrough = () => {
       setIsReady(true);
       setIsBuffering(false);
@@ -181,7 +269,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     video.addEventListener("loadedmetadata", onLoadedMetadata);
     video.addEventListener("loadeddata", onLoadedData);
     video.addEventListener("canplay", onCanPlay);
-    video.addEventListener("canplaythrough", onCanPlayThrough); // ✅ Adăugat
+    video.addEventListener("canplaythrough", onCanPlayThrough);
     video.addEventListener("ended", onEnded);
     video.addEventListener("error", onError);
 
@@ -232,6 +320,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       video.removeEventListener("loadedmetadata", onLoadedMetadata);
       video.removeEventListener("loadeddata", onLoadedData);
       video.removeEventListener("canplay", onCanPlay);
+      video.removeEventListener("canplaythrough", onCanPlayThrough);
       video.removeEventListener("ended", onEnded);
       video.removeEventListener("error", onError);
       destroyHlsInstance();
@@ -247,7 +336,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     clearVideoSource,
   ]);
 
-  // useEffect-ul existent rămâne pentru logica efectivă de play/pause:
+  // Play/Pause effect
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !hasValidSource || hasError) return;
@@ -290,27 +379,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [hasError, isActive, isReady, tryPlay]);
 
-  // OPTIMIZARE: TimeUpdate direct în DOM prin variabilă CSS (0 re-renders în timpul rulării)
-  const handleTimeUpdateNativ = useCallback(() => {
-    const video = videoRef.current;
-    if (!video || isSeeking) return;
-
-    const current = video.currentTime;
-    const dur = video.duration || 1;
-    const ratio = Math.min(current / dur, 1);
-
-    // Injectăm progresul direct în CSS
-    if (containerRef.current) {
-      containerRef.current.style.setProperty(
-        "--video-progress-ratio",
-        `${ratio}`
-      );
-    }
-
-    // Actualizăm valoarea discret pentru cazul în care utilizatorul vrea să facă drag subit
-    setSliderProgress(current);
-  }, [isSeeking]);
-
   const handleRetry = useCallback(async () => {
     const video = videoRef.current;
     if (!video || !hasValidSource) return;
@@ -319,6 +387,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     setIsReady(false);
     setIsBuffering(true);
     setIsEnded(false);
+    sliderProgressRef.current = 0;
     setSliderProgress(0);
     if (containerRef.current) {
       containerRef.current.style.setProperty("--video-progress-ratio", "0");
@@ -407,10 +476,13 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       const video = videoRef.current;
       const nextValue = getSliderValue(value);
 
-      if (!isSeeking && video) {
+      if (!isSeekingRef.current && video) {
         wasPlayingBeforeSeekRef.current = !video.paused;
+        // ✅ Sincronizăm state-ul din ref la începutul seek-ului
+        setSliderProgress(sliderProgressRef.current);
       }
 
+      isSeekingRef.current = true;
       setIsSeeking(true);
       setSliderProgress(nextValue);
 
@@ -422,7 +494,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         );
       }
     },
-    [isSeeking, duration]
+    [duration] // ✅ Eliminat isSeeking — folosim ref
   );
 
   const handleSeekCommit = useCallback(
@@ -434,7 +506,9 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       const shouldResume = wasPlayingBeforeSeekRef.current;
 
       video.currentTime = nextValue;
+      sliderProgressRef.current = nextValue;
       setSliderProgress(nextValue);
+      isSeekingRef.current = false;
       setIsSeeking(false);
       setIsEnded(false);
       setIsBuffering(true);
@@ -452,21 +526,14 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     [hasError, isActive]
   );
 
-  const formatVideoTime = (seconds: number): string => {
-    if (isNaN(seconds) || !isFinite(seconds)) return "00:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const volumeButtonIcon = isMuted ? (
-    <VolumeOffRoundedIcon
-      sx={{ color: "#fff", fontSize: { xs: "1.5rem", sm: "2.1875rem" } }}
-    />
-  ) : (
-    <VolumeUpRoundedIcon
-      sx={{ color: "#fff", fontSize: { xs: "1.5rem", sm: "2.1875rem" } }}
-    />
+  const volumeButtonIcon = useMemo(
+    () =>
+      isMuted ? (
+        <VolumeOffRoundedIcon sx={volumeIconSx} />
+      ) : (
+        <VolumeUpRoundedIcon sx={volumeIconSx} />
+      ),
+    [isMuted]
   );
 
   const showPausedOverlay =
@@ -481,6 +548,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       </Box>
     );
   }
+
   return (
     <Box
       ref={containerRef}
@@ -491,6 +559,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       }}
       className={isSeeking || isHovered ? "is-interacting" : ""}
     >
+      {/* ✅ Video fără niciun handler inline — toți sunt nativi în useEffect */}
       <video
         ref={videoRef}
         controls={false}
@@ -498,27 +567,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         muted={isMuted}
         preload={preload}
         loop={false}
-        onLoadedMetadata={updateDuration}
-        onLoadedData={updateDuration}
-        onDurationChange={updateDuration}
-        onTimeUpdate={handleTimeUpdateNativ}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onWaiting={() => {
-          if (!isSeeking) setIsBuffering(true);
-        }}
-        onPlaying={() => {
-          setIsPlaying(true);
-          setIsBuffering(false);
-          setIsReady(true);
-          setHasError(false);
-        }}
-        onCanPlay={() => {
-          setIsReady(true);
-          setIsBuffering(false);
-        }}
-        onSeeking={() => setIsBuffering(true)}
-        onSeeked={() => setIsBuffering(false)}
         style={videoStyles}
       />
 
@@ -557,18 +605,9 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         ) : null}
       </Box>
 
+      {/* ✅ fadeContainerSx e stabil (definit afara) — nu se recreează */}
       <Fade in={showPausedOverlay} timeout={{ enter: 150, exit: 0 }}>
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            pointerEvents: "none",
-            zIndex: 6,
-          }}
-        >
+        <Box sx={fadeContainerSx}>
           <PlayArrowRoundedIcon sx={styles.centerIcon} />
         </Box>
       </Fade>
@@ -608,7 +647,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       >
         <Box sx={styles.progressTrack} />
         <Box sx={styles.progressFill} />
-
         <Slider
           min={0}
           max={duration || 0}

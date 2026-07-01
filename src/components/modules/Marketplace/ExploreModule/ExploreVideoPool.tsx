@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect } from "react";
 import { Box } from "@mui/material";
 import { PoolItem } from "./useExplorePlayerPool";
 import { PostVideoPlayer } from "@/components/cutomized/Post/PostVideoPlayer";
@@ -18,10 +18,10 @@ type ExploreVideoPoolProps = {
   onOpenLinkedProducts: () => void;
 };
 
-const ANIMATION_DURATION_MS = 300;
-const SWIPE_PERCENT_THRESHOLD = 0.22;
+const ANIMATION_DURATION_MS = 280;
+const SWIPE_PERCENT_THRESHOLD = 0.2;
 const DRAG_CLICK_THRESHOLD = 5;
-const VELOCITY_THRESHOLD = 0.5;
+const VELOCITY_THRESHOLD = 0.45;
 
 export function ExploreVideoPool({
   items,
@@ -38,161 +38,208 @@ export function ExploreVideoPool({
   const dragStartTimeRef = useRef<number>(0);
   const isDragging = useRef(false);
 
-  useEffect(() => {
-    if (rootRef.current) {
-      rootRef.current.style.setProperty(
-        "--slide-offset",
-        `${slideOffset * 100}%`
-      );
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-      if (isAnimating) {
-        rootRef.current.style.setProperty("--drag-offset", "0px");
-        rootRef.current.classList.add("is-animating");
-      } else {
-        rootRef.current.classList.remove("is-animating");
-      }
+  const isAnimatingRef = useRef(isAnimating);
+  const onNextRef = useRef(onNext);
+  const onPrevRef = useRef(onPrev);
+
+  useEffect(() => {
+    isAnimatingRef.current = isAnimating;
+  }, [isAnimating]);
+  useEffect(() => {
+    onNextRef.current = onNext;
+  }, [onNext]);
+  useEffect(() => {
+    onPrevRef.current = onPrev;
+  }, [onPrev]);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+
+    el.style.setProperty("--slide-offset", `${slideOffset * 100}%`);
+
+    if (isAnimating) {
+      el.style.setProperty("--drag-offset", "0px");
+      el.classList.add("is-animating");
+    } else {
+      el.classList.remove("is-animating");
     }
   }, [slideOffset, isAnimating]);
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (isAnimating) return;
-    dragStartY.current = e.touches[0]?.clientY;
-    dragStartTimeRef.current = performance.now();
-    isDragging.current = false;
-  };
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
 
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (dragStartY.current === undefined || isAnimating) return;
-    const delta = dragStartY.current - (e.touches[0]?.clientY ?? 0);
+    const playVideoInSlot = (slot: "prev" | "next") => {
+      const video = el.querySelector<HTMLVideoElement>(
+        `[data-slot="${slot}"] video`
+      );
+      video?.play().catch(() => {});
+    };
 
-    if (!isDragging.current && Math.abs(delta) > DRAG_CLICK_THRESHOLD) {
-      isDragging.current = true;
-    }
+    const resetDrag = () => {
+      // Curățăm orice timer activ anterior pentru a preveni scoaterea bruscă a clasei CSS
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
 
-    if (isDragging.current && rootRef.current) {
-      rootRef.current.style.setProperty("--drag-offset", `${-delta}px`);
-    }
-  };
+      dragStartY.current = undefined;
+      isDragging.current = false;
 
-  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (dragStartY.current === undefined) return;
-    const delta = dragStartY.current - (e.changedTouches[0]?.clientY ?? 0);
-    commitDrag(delta);
-  };
+      el.classList.add("is-animating");
+      el.style.setProperty("--drag-offset", "0px");
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isAnimating) return;
-    dragStartY.current = e.clientY;
-    dragStartTimeRef.current = performance.now();
-    isDragging.current = false;
-  };
+      resetTimerRef.current = setTimeout(() => {
+        el.classList.remove("is-animating");
+      }, ANIMATION_DURATION_MS);
+    };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (dragStartY.current === undefined || isAnimating) return;
-    if (e.buttons === 0) {
-      resetDrag();
-      return;
-    }
-    const delta = dragStartY.current - e.clientY;
+    const commitDrag = (delta: number) => {
+      dragStartY.current = undefined;
 
-    if (!isDragging.current && Math.abs(delta) > DRAG_CLICK_THRESHOLD) {
-      isDragging.current = true;
-    }
+      if (!isDragging.current) {
+        resetDrag();
+        return;
+      }
 
-    if (isDragging.current && rootRef.current) {
-      rootRef.current.style.setProperty("--drag-offset", `${-delta}px`);
-    }
-  };
+      const timeElapsed = performance.now() - dragStartTimeRef.current;
+      const velocity = Math.abs(delta) / (timeElapsed || 1);
 
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (dragStartY.current === undefined) return;
-    const delta = dragStartY.current - e.clientY;
-    commitDrag(delta);
-  };
+      const containerHeight = el.clientHeight || window.innerHeight;
+      const dragDistanceRatio = Math.abs(delta) / containerHeight;
 
-  const playVideoInSlot = useCallback((slot: "prev" | "next") => {
-    const video = rootRef.current?.querySelector<HTMLVideoElement>(
-      `[data-slot="${slot}"] video`
-    );
-    video?.play().catch(() => {});
+      if (
+        velocity <= VELOCITY_THRESHOLD &&
+        dragDistanceRatio < SWIPE_PERCENT_THRESHOLD
+      ) {
+        resetDrag();
+        return;
+      }
+
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      el.classList.add("is-animating");
+      el.style.setProperty("--drag-offset", "0px");
+
+      if (delta > 0) {
+        playVideoInSlot("next");
+        onNextRef.current();
+      } else {
+        playVideoInSlot("prev");
+        onPrevRef.current();
+      }
+
+      isDragging.current = false;
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (isAnimatingRef.current) return;
+
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      el.classList.remove("is-animating");
+
+      const touchY = e.touches[0]?.clientY;
+      if (touchY === undefined) return;
+
+      dragStartY.current = touchY;
+      dragStartTimeRef.current = performance.now();
+      isDragging.current = false;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (dragStartY.current === undefined || isAnimatingRef.current) return;
+
+      const touchY = e.touches[0]?.clientY;
+      if (touchY === undefined) return;
+
+      const delta = dragStartY.current - touchY;
+
+      if (!isDragging.current && Math.abs(delta) > DRAG_CLICK_THRESHOLD) {
+        isDragging.current = true;
+      }
+
+      if (isDragging.current) {
+        if (e.cancelable) e.preventDefault();
+        el.style.setProperty("--drag-offset", `${-delta}px`);
+      }
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (dragStartY.current === undefined) return;
+
+      const touchY = e.changedTouches[0]?.clientY;
+      if (touchY === undefined) {
+        resetDrag();
+        return;
+      }
+
+      const delta = dragStartY.current - touchY;
+      commitDrag(delta);
+    };
+
+    const onMouseDown = (e: MouseEvent) => {
+      if (isAnimatingRef.current) return;
+
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      el.classList.remove("is-animating");
+
+      dragStartY.current = e.clientY;
+      dragStartTimeRef.current = performance.now();
+      isDragging.current = false;
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (dragStartY.current === undefined || isAnimatingRef.current) return;
+
+      if (e.buttons === 0) {
+        resetDrag();
+        return;
+      }
+
+      const delta = dragStartY.current - e.clientY;
+
+      if (!isDragging.current && Math.abs(delta) > DRAG_CLICK_THRESHOLD) {
+        isDragging.current = true;
+      }
+
+      if (isDragging.current) {
+        el.style.setProperty("--drag-offset", `${-delta}px`);
+      }
+    };
+
+    const onMouseUp = (e: MouseEvent) => {
+      if (dragStartY.current === undefined) return;
+      commitDrag(dragStartY.current - e.clientY);
+    };
+
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+    el.addEventListener("mousedown", onMouseDown);
+    el.addEventListener("mousemove", onMouseMove);
+    el.addEventListener("mouseup", onMouseUp);
+    el.addEventListener("mouseleave", resetDrag);
+
+    return () => {
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("mousedown", onMouseDown);
+      el.removeEventListener("mousemove", onMouseMove);
+      el.removeEventListener("mouseup", onMouseUp);
+      el.removeEventListener("mouseleave", resetDrag);
+    };
   }, []);
 
-  const commitDrag = (delta: number) => {
-    dragStartY.current = undefined;
-
-    if (!isDragging.current) {
-      resetDrag();
-      return;
-    }
-
-    const timeElapsed = performance.now() - dragStartTimeRef.current;
-    const velocity = Math.abs(delta) / (timeElapsed || 1);
-
-    const windowHeight =
-      typeof window !== "undefined" ? window.innerHeight : 800;
-    const dragDistanceRatio = Math.abs(delta) / windowHeight;
-
-    const isFlickGesture = velocity > VELOCITY_THRESHOLD;
-    const isLongSwipeGesture = dragDistanceRatio >= SWIPE_PERCENT_THRESHOLD;
-
-    if (!isFlickGesture && !isLongSwipeGesture) {
-      resetDrag();
-      return;
-    }
-
-    if (rootRef.current) {
-      rootRef.current.style.setProperty("--drag-offset", "0px");
-    }
-
-    // ✅ play() sincronic ÎNAINTE de onNext/onPrev — rămâne în user gesture context
-    if (delta > 0) {
-      playVideoInSlot("next");
-      onNext();
-    } else {
-      playVideoInSlot("prev");
-      onPrev();
-    }
-
-    isDragging.current = false;
-  };
-
-  const resetDrag = () => {
-    dragStartY.current = undefined;
-    isDragging.current = false;
-
-    if (rootRef.current) {
-      rootRef.current.classList.add("is-animating");
-      rootRef.current.style.setProperty("--drag-offset", "0px");
-
-      setTimeout(() => {
-        rootRef.current?.classList.remove("is-animating");
-      }, ANIMATION_DURATION_MS);
-    }
-  };
-
   return (
-    <Box
-      ref={rootRef}
-      sx={styles.root}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={resetDrag}
-    >
+    <Box ref={rootRef} sx={styles.root}>
       {items.map((item) => {
         const isCurrent = item.slot === "current";
-
         return (
           <Box
             key={item.post?.id ?? item.slot}
             data-slot={item.slot}
-            sx={{
-              ...styles.playerLayer,
-              zIndex: isCurrent ? 2 : 1,
-            }}
+            sx={{ ...styles.playerLayer, zIndex: isCurrent ? 2 : 1 }}
           >
             <PostVideoPlayer
               post={item.post ?? null}
@@ -220,24 +267,25 @@ const styles = {
     overflow: "hidden",
     userSelect: "none",
     WebkitUserSelect: "none",
+    touchAction: "none",
     "--slide-offset": "0%",
     "--drag-offset": "0px",
 
     "& [data-slot='prev']": {
       transform:
-        "translateY(calc(-100% + var(--slide-offset) + var(--drag-offset)))",
+        "translate3d(0, calc(-100% + var(--slide-offset) + var(--drag-offset)), 0)",
     },
     "& [data-slot='current']": {
       transform:
-        "translateY(calc(0% + var(--slide-offset) + var(--drag-offset)))",
+        "translate3d(0, calc(0% + var(--slide-offset) + var(--drag-offset)), 0)",
     },
     "& [data-slot='next']": {
       transform:
-        "translateY(calc(100% + var(--slide-offset) + var(--drag-offset)))",
+        "translate3d(0, calc(100% + var(--slide-offset) + var(--drag-offset)), 0)",
     },
 
     "&.is-animating [data-slot]": {
-      transition: `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.215, 0.610, 0.355, 1.000) !important`,
+      transition: `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.25, 1, 0.5, 1) !important`,
     },
   },
   playerLayer: {
@@ -247,5 +295,6 @@ const styles = {
     height: "100%",
     willChange: "transform",
     backfaceVisibility: "hidden",
+    transformStyle: "flat",
   },
 } as const;
