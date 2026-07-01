@@ -25,13 +25,12 @@ type UseExplorePlayerPoolResult = {
   isAnimating: boolean;
 };
 
-const ANIMATION_DURATION_MS = 300;
+const ANIMATION_DURATION_MS = 280;
 
 export function useExplorePlayerPool({
   posts,
   currentIndex,
 }: UseExplorePlayerPoolParams): UseExplorePlayerPoolResult {
-  const [committedIndex, setCommittedIndex] = useState(currentIndex);
   const [slideOffset, setSlideOffset] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -44,33 +43,33 @@ export function useExplorePlayerPool({
 
     if (prev === next) return;
 
-    if (animationTimerRef.current) {
-      clearTimeout(animationTimerRef.current);
-    }
+    if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
 
-    const direction = next > prev ? -1 : 1;
+    const initialOffset = next > prev ? 1 : -1;
 
-    setIsAnimating(true);
-    setSlideOffset(direction);
+    setIsAnimating(false);
+    setSlideOffset(initialOffset);
+
+    const rafId = requestAnimationFrame(() => {
+      setIsAnimating(true);
+      setSlideOffset(0);
+    });
 
     animationTimerRef.current = setTimeout(() => {
-      setSlideOffset(0);
       setIsAnimating(false);
-      setCommittedIndex(next);
     }, ANIMATION_DURATION_MS);
 
     prevIndexRef.current = next;
 
     return () => {
-      if (animationTimerRef.current) {
-        clearTimeout(animationTimerRef.current);
-      }
+      cancelAnimationFrame(rafId);
+      if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
     };
   }, [currentIndex]);
 
-  const prevPost = posts[committedIndex - 1] ?? null;
-  const currentPost = posts[committedIndex] ?? null;
-  const nextPost = posts[committedIndex + 1] ?? null;
+  const prevPost = posts[currentIndex - 1] ?? null;
+  const currentPost = posts[currentIndex] ?? null;
+  const nextPost = posts[currentIndex + 1] ?? null;
 
   const poolItems = useMemo<PoolItem[]>(
     () => [
@@ -85,7 +84,7 @@ export function useExplorePlayerPool({
         slot: "current",
         post: currentPost,
         src: currentPost?.media_files?.[0]?.url ?? "",
-        isActive: true,
+        isActive: !isAnimating,
         shouldPreload: true,
       },
       {
@@ -96,7 +95,7 @@ export function useExplorePlayerPool({
         shouldPreload: !!nextPost,
       },
     ],
-    [prevPost, currentPost, nextPost]
+    [prevPost, currentPost, nextPost, isAnimating]
   );
 
   return {
