@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  useLayoutEffect,
-} from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import {
   Box,
   Typography,
