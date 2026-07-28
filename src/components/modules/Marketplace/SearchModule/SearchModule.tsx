@@ -15,6 +15,7 @@ import { LngLatBounds } from "mapbox-gl";
 import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
 import SearchFiltersModal from "./SearchFilters/SearchFiltersModal";
 import SearchBusinessList from "./SearchBusinessList";
+import SearchHeaderMobile from "./SearchHeaderMobile";
 
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -235,6 +236,10 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         maxPrice={searchState.maxPrice}
         sort={searchState.sort}
         onApplyFilters={handleApplyFilters}
+      />
+
+      <SearchHeaderMobile 
+        onFilterClick={handleOpenFilters}
       />
 
       <SearchHeader

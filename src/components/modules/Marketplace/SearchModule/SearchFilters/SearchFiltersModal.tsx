@@ -1,6 +1,6 @@
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
-import { Box, Button, Slider, Stack, Typography } from "@mui/material";
+import { Box, Button, Slider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import React, { useState, useEffect } from "react";
 import { formatPrice } from "@/utils/formatPrice";
@@ -35,6 +35,9 @@ export default function SearchFiltersModal({
     sort: sort ?? SearchSortEnum.RECOMMENDED,
   }));
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
     if (open) {
       setState({
@@ -43,7 +46,7 @@ export default function SearchFiltersModal({
         sort: sort ?? SearchSortEnum.RECOMMENDED,
       });
     }
-  }, [open, hasDiscount, maxPrice]);
+  }, [open, hasDiscount, maxPrice, sort]);
 
   const handleDiscountToggle = () => {
     setState((prev) => ({ ...prev, hasDiscount: !prev.hasDiscount }));
@@ -101,6 +104,7 @@ export default function SearchFiltersModal({
       maxWidth="md"
       fullWidth
       actions={actions}
+      fullScreen={isMobile}
     >
       <Box sx={{ p: 2 }}>
         <Typography variant="h5" fontWeight={600}>
