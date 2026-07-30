@@ -5,7 +5,7 @@ import axios from "axios";
 
 const fetchNotifications = async ({ pageParam }: { pageParam: number }) => {
   const { data } = await axios.get<PaginatedData<Notification>>(
-    `/api/notifications?page=${pageParam}&limit=10`
+    `/api/user/notification?page=${pageParam}&limit=10`
   );
   return {
     ...data,

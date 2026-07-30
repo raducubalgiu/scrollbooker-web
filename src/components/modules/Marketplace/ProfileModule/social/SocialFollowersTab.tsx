@@ -47,7 +47,7 @@ const SocialFollowersTab = ({
       clearTimeout(initTimer);
       observer.disconnect();
     };
-  }, [rootRef, fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [rootRef, fetchNextPage, hasNextPage, isFetchingNextPage, disableInitialIgnore]);
 
   return (
     <>

@@ -16,7 +16,10 @@ import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
 import SearchFiltersModal from "./SearchFilters/SearchFiltersModal";
 import SearchBusinessList from "./SearchBusinessList";
 import SearchHeaderMobile from "./SearchHeaderMobile";
+import { useCustomQuery } from "@/hooks/useHttp";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
+const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 type SearchPageProps = {
   searchParams: Record<string, string | string[] | undefined>;
 };
@@ -223,6 +226,17 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     return isDiscountApplied || isPriceApplied || isSortApplied;
   }, [searchState.hasDiscount, searchState.maxPrice, searchState.sort]);
 
+  const { data: businessDomains } = useCustomQuery<BusinessDomain[]>({
+    key: ["business-domains"],
+    url: "/api/nomenclatures/business-domains",
+    options: {
+      staleTime: ONE_DAY_IN_MS,
+      gcTime: ONE_DAY_IN_MS,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
+  });
+
   return (
     <Box
       sx={{
@@ -240,6 +254,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
 
       <SearchHeaderMobile 
         onFilterClick={handleOpenFilters}
+        onOpenServicesSheet={() => {}}
       />
 
       <SearchHeader
@@ -250,6 +265,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         mainPagePadding={mainPagePadding}
         areFiltersActive={areFiltersActive}
         onSearch={handleSearch}
+        businessDomains={businessDomains ?? []}
         headerState={{
           selectedBusinessDomainId: searchState.businessDomainId,
           selectedServiceDomainId: searchState.serviceDomainId,

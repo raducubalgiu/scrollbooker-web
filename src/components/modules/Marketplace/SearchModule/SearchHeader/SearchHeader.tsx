@@ -17,7 +17,6 @@ import {
 } from "./search-header-utils";
 import { SearchHeaderStateType } from "./search-header-types";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
-import { useCustomQuery } from "@/hooks/useHttp";
 import { getServiceDomainName } from "./getServiceDomainName";
 import { getDateTimeLabel } from "./getDateTimeLabel";
 
@@ -31,9 +30,8 @@ type SearchHeaderProps = {
   onOpenFilters?: () => void;
   onToggleMap?: () => void;
   onHeightChange?: (height: number) => void;
+  businessDomains?: BusinessDomain[];
 };
-
-const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 const SearchHeader = ({
   areFiltersActive,
@@ -45,6 +43,7 @@ const SearchHeader = ({
   onHeightChange,
   mainPagePadding = 0,
   displayFiltersSection = true,
+  businessDomains = [],
 }: SearchHeaderProps) => {
   const [localHeaderState, setLocalHeaderState] =
     useState<SearchHeaderStateType>(() => ({
@@ -58,7 +57,7 @@ const SearchHeader = ({
 
   useEffect(() => {
     setLocalHeaderState(headerState);
-  }, [JSON.stringify(headerState)]);
+  }, [headerState]);
 
   const [activeSection, setActiveSection] =
     useState<SearchHeaderSectionType | null>(null);
@@ -72,17 +71,6 @@ const SearchHeader = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pillRef = useRef<HTMLDivElement | null>(null);
   const popperRef = useRef<HTMLDivElement | null>(null);
-
-  const { data: businessDomains } = useCustomQuery<BusinessDomain[]>({
-    key: ["business-domains"],
-    url: "/api/nomenclatures/business-domains",
-    options: {
-      staleTime: ONE_DAY_IN_MS,
-      gcTime: ONE_DAY_IN_MS,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    },
-  });
 
   const selectedServiceDomainName = useMemo(
     () =>

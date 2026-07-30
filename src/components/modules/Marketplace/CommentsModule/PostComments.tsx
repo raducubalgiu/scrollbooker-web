@@ -50,7 +50,7 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
   const { mutate: createComment } = useMutate({
     key: ["comments", postId],
     method: "POST",
-    url: "/api/comments",
+    url: "/api/social/comment",
     options: {
       onSuccess: () => {
         setNewCommentText("");
@@ -64,13 +64,13 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
   const { mutate: likeComment } = useMutate({
     key: ["like-comment", postId],
     method: "POST",
-    url: "/api/comments/like",
+    url: "/api/social/comment/like",
   });
 
   const { mutate: unlikeComment } = useMutate({
     key: ["unlike-comment", postId],
     method: "DELETE",
-    url: "/api/comments/like",
+    url: "/api/social/comment/like",
   });
 
   if (!postId) {

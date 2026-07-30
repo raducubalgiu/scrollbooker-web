@@ -91,7 +91,7 @@ const AppointmentDetailsModule = ({
 
   const { mutate: handleDeleteReview } = useMutate({
     key: ["create-written-review"],
-    url: `/api/reviews/${writtenReview?.id}/delete-review`,
+    url: `/api/booking/review/${writtenReview?.id}`,
     method: "DELETE",
     options: {
       onSuccess: () => {
@@ -104,7 +104,7 @@ const AppointmentDetailsModule = ({
   const { mutate: handleUpdateReview, isPending: isPendingUpdateReview } =
     useMutate({
       key: ["update-written-review"],
-      url: `/api/reviews/${writtenReview?.id}/update-review`,
+      url: `/api/booking/review/${writtenReview?.id}`,
       method: "PUT",
       options: {
         onSuccess: (review: Review) => {
@@ -161,7 +161,7 @@ const AppointmentDetailsModule = ({
 
   const onHandleDeleteReview = useCallback(() => {
     handleDeleteReview({});
-  }, []);
+  }, [handleDeleteReview]);
 
   return (
     <MainLayout showHeader={false}>

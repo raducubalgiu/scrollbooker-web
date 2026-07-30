@@ -20,7 +20,7 @@ export default function NearbyBusinessImage({
           src={url}
           alt={username}
           fill
-          sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 25vw"
+          sizes="(max-width: 600px) 100vw, 50vw"
           className="business-image"
           style={{
             objectFit: "cover",

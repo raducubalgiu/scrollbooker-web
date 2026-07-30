@@ -107,7 +107,7 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 {fullname}
               </Typography>
-              <Typography color="text.secondary">
+              <Typography color="text.secondary" variant="body2">
                 {is_business_or_employee ? profession : `@${username}`}
               </Typography>
             </Box>
@@ -138,8 +138,8 @@ const styles = {
     boxShadow: 1,
   },
   avatar: {
-    width: { xs: 55, lg: 70 },
-    height: { xs: 55, lg: 70 },
+    width: { xs: 50, lg: 70 },
+    height: { xs: 50, lg: 70 },
     border: 1,
     borderColor: "divider",
   },

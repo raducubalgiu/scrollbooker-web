@@ -76,11 +76,9 @@ const SocialModal = ({
   const handleTabChange = useCallback(
     (_: React.SyntheticEvent, newValue: SocialTabEnum) => {
       const root = scrollRootRef.current;
-      try {
-        if (root) {
+      if (root) {
           positionsRef.current[String(currentTab)] = root.scrollTop;
         }
-      } catch (e) {}
 
       setCurrentTab(newValue);
     },
@@ -92,9 +90,7 @@ const SocialModal = ({
     if (!root) return;
     const saved = positionsRef.current[String(currentTab)];
     requestAnimationFrame(() => {
-      try {
-        root.scrollTop = saved ?? 0;
-      } catch (e) {}
+      root.scrollTop = saved ?? 0;
     });
   }, [currentTab]);
 
@@ -114,7 +110,7 @@ const SocialModal = ({
     if (!available.includes(currentTab)) {
       setCurrentTab(SocialTabEnum.REVIEWS);
     }
-  }, [tabs]);
+  }, [currentTab, tabs]);
 
   const handleChange = handleTabChange;
 
