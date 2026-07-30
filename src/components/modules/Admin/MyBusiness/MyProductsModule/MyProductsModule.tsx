@@ -3,7 +3,6 @@
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { ProductTypeEnum } from "@/ts/enums/ProductTypeEnum";
 import * as React from "react";
-import { Session } from "next-auth/core/types";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 import AddProductModal from "./AddProductModal/AddProductModal";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
@@ -15,6 +14,7 @@ import MyProductsHeader from "./tabs/MyProductsHeader";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import dynamic from "next/dynamic";
 import { BusinessServicesWithProducts } from "@/ts/models/booking/product/Product";
+import { Session } from "next-auth";
 
 const MyProductsDisplayTable = dynamic(
   () => import("./tabs/MyProductsDisplayTable/MyProductsDisplayTable"),
