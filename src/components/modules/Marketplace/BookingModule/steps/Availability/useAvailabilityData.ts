@@ -17,12 +17,12 @@ export const useAvailabilityData = (
 
   const timeslotsQuery = useCustomQuery<AvailableTimeslotsResponse>({
     key: ["available-timeslots", day, businessId],
-    url: `/api/availability/${businessId}/timeslots?day=${day}&employeeId=${selectedEmployeeId}&slotDuration=${slotDuration}`,
+    url: `/api/booking/availability/${businessId}/timeslots?day=${day}&employeeId=${selectedEmployeeId}&slotDuration=${slotDuration}`,
   });
 
   const availableDaysQuery = useCustomQuery<string[]>({
     key: ["user-available-days", businessId],
-    url: `/api/availability/${businessId}/available-days?employeeId=${selectedEmployeeId}&startDate=${todayStr}&endDate=${maxDateStr}`,
+    url: `/api/booking/availability/${businessId}/available-days?employeeId=${selectedEmployeeId}&startDate=${todayStr}&endDate=${maxDateStr}`,
   });
 
   const availableDaysSet = useMemo(

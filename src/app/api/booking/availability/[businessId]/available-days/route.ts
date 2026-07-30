@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
+import { LOG } from "@/utils/logger";
 
 type RouteContext = {
   params: Promise<{
@@ -45,6 +46,9 @@ export const GET = async (req: NextRequest, context: RouteContext) => {
 
     return NextResponse.json(response);
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    LOG.error(`[API ERROR] Preluare disponibilitate eșuată: ${errorMessage}`);
+
     return NextResponse.json(
       { error: "A apărut o eroare la preluarea datelor." },
       { status: 500 }

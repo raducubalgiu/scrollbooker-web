@@ -78,7 +78,7 @@ export const useWeeklyCalendar = ({
       startDateStr,
       endDateStr,
     ],
-    url: "/api/availability/weekly-calendar",
+    url: "/api/booking/availability/weekly-calendar",
     options: {
       enabled: !!session?.user_id,
     },

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@/utils/requests";
 import { AvailableTimeslotsResponse } from "@/ts/models/booking/availability/AvailableTimeSlot";
+import { LOG } from "@/utils/logger";
 
 type RouteContext = {
   params: Promise<{
@@ -50,6 +51,9 @@ export const GET = async (req: NextRequest, context: RouteContext) => {
 
     return NextResponse.json(response);
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    LOG.error(`[API ERROR] Available Timeslots retrieval failed: ${errorMessage}`);
+        
     return NextResponse.json(
       {
         error: "A apărut o eroare la preluarea intervalelor orare disponibile.",
