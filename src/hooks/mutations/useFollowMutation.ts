@@ -1,4 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { PaginatedData } from "@/components/core/Table/Table";
+import { UserMini } from "@/ts/models/user/UserMini";
+import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export const useFollowMutation = (
@@ -16,7 +18,7 @@ export const useFollowMutation = (
       targetUserId: number;
       isFollow: boolean;
     }) => {
-      const url = `/api/follow`;
+      const url = `/api/social/follow`;
       const data = { followeeId: targetUserId };
 
       if (isFollow) {
@@ -30,13 +32,13 @@ export const useFollowMutation = (
       await queryClient.cancelQueries({ queryKey });
       const previousData = queryClient.getQueryData(queryKey);
 
-      queryClient.setQueryData(queryKey, (old: any) => {
+      queryClient.setQueryData(queryKey, (old: InfiniteData<PaginatedData<UserMini>>) => {
         if (!old) return old;
         return {
           ...old,
-          pages: old.pages.map((page: any) => ({
+          pages: old.pages.map((page) => ({
             ...page,
-            results: page.results.map((user: any) =>
+            results: page.results.map((user) =>
               user.id === targetUserId
                 ? { ...user, is_follow: !user.is_follow }
                 : user

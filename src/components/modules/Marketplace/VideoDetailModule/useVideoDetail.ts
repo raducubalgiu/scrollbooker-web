@@ -35,27 +35,27 @@ export const useVideoDetail = ({
 	const { mutate: apiLike } = useMutate({
 		key: ["like-post", post.id],
 		method: "POST",
-		url: `/api/posts/like`,
+		url: `/api/social/post/like`,
 	});
 	const { mutate: apiUnlike } = useMutate({
 		key: ["unlike-post", post.id],
 		method: "DELETE",
-		url: `/api/posts/like`,
+		url: `/api/social/post/like`,
 	});
 	const { mutate: apiBookmark } = useMutate({
 		key: ["bookmark-post", post.id],
 		method: "POST",
-		url: `/api/posts/bookmark`,
+		url: `/api/social/post/bookmark`,
 	});
 	const { mutate: apiUnbookmark } = useMutate({
 		key: ["unbookmark-post", post.id],
 		method: "DELETE",
-		url: `/api/posts/bookmark`,
+		url: `/api/social/post/bookmark`,
 	});
 
 	const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
 		key: ["delete-post", post.id],
-		url: `/api/posts/${post.id}`,
+		url: `/api/social/post/${post.id}`,
 		method: "DELETE",
 		options: { onSuccess: goBack },
 	});

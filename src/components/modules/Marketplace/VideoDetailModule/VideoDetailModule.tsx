@@ -46,7 +46,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
   const { data: linkedProducts, isLoading: isLoadingLinkedProducts } =
     useCustomQuery<Product[]>({
       key: ["post-linked-products", post.id],
-      url: `/api/posts/${post.id}/linked-products`,
+      url: `/api/social/post/${post.id}/linked-products`,
       options: {
         enabled: !!post.id,
       },

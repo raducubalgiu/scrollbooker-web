@@ -55,7 +55,7 @@ const UploadVideoModule = () => {
     setUploadProgress(0);
 
     try {
-      const initResponse = await fetch("/api/posts/upload-stream", {
+      const initResponse = await fetch("/api/social/post/upload-stream", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

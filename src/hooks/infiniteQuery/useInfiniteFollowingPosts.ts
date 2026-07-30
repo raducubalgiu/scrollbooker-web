@@ -7,7 +7,7 @@ const PAGE_LIMIT = 10;
 
 const fetchFollowingPosts = async ({ pageParam }: { pageParam: number }) => {
   const { data } = await axios.get<PaginatedData<Post>>(
-    `/api/posts/following?page=${pageParam}&limit=${PAGE_LIMIT}`
+    `/api/social/post/following?page=${pageParam}&limit=${PAGE_LIMIT}`
   );
 
   return {

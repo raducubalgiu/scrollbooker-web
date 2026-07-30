@@ -7,7 +7,7 @@ const PAGE_LIMIT = 10;
 
 const fetchExplorePosts = async ({ pageParam }: { pageParam: number }) => {
   const { data } = await axios.get<PaginatedData<Post>>(
-    `/api/posts/explore?page=${pageParam}&limit=${PAGE_LIMIT}`
+    `/api/social/post/explore?page=${pageParam}&limit=${PAGE_LIMIT}`
   );
 
   return {

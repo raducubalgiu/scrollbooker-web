@@ -70,7 +70,7 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
     e.stopPropagation();
 
     toggleFollow({ targetUserId: id, isFollow: !!is_follow });
-  }, []);
+  }, [id, is_follow, toggleFollow]);
 
   const followButton = useMemo(
     () => (

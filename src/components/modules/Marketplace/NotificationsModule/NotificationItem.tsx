@@ -71,7 +71,7 @@ export default function NotificationItem({
       targetUserId: number;
       isFollow: boolean;
     }) => {
-      const url = `/api/follow`;
+      const url = `/api/social/follow`;
       const data = { followeeId: targetUserId };
       return isFollow ? axios.delete(url, { data }) : axios.post(url, data);
     },

@@ -22,8 +22,10 @@ import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
-import { useQueryClient } from "@tanstack/react-query";
+import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { LOG } from "@/utils/logger";
+import { PaginatedData } from "@/components/core/Table/Table";
+import { Post } from "@/ts/models/social/Post";
 
 const PREFETCH_OFFSET = 2;
 
@@ -44,10 +46,13 @@ export default function ExploreModule() {
   const explorePosts = useInfiniteExplorePosts();
   const followingPosts = useInfiniteFollowingPosts();
 
-  const activeQueryKey =
-    currentTab === ExploreTabEnum.EXPLORE
-      ? ["explore-posts"]
-      : ["following-posts"];
+  const activeQueryKey = useMemo(
+    () =>
+      currentTab === ExploreTabEnum.EXPLORE
+        ? ["explore-posts"]
+        : ["following-posts"],
+    [currentTab]
+  );
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     currentTab === ExploreTabEnum.EXPLORE ? explorePosts : followingPosts;
@@ -115,31 +120,31 @@ export default function ExploreModule() {
   const { mutate: apiLike } = useMutate({
     key: ["like-post", currentPost?.id],
     method: "POST",
-    url: `/api/posts/like`,
+    url: `/api/social/post/like`,
   });
 
   const { mutate: apiUnlike } = useMutate({
     key: ["unlike-post", currentPost?.id],
     method: "DELETE",
-    url: `/api/posts/like`,
+    url: `/api/social/post/like`,
   });
 
   const { mutate: apiBookmark } = useMutate({
     key: ["bookmark-post", currentPost?.id],
     method: "POST",
-    url: `/api/posts/bookmark`,
+    url: `/api/social/post/bookmark`,
   });
 
   const { mutate: apiUnbookmark } = useMutate({
     key: ["unbookmark-post", currentPost?.id],
     method: "DELETE",
-    url: `/api/posts/bookmark`,
+    url: `/api/social/post/bookmark`,
   });
 
   const { data: linkedProducts, isLoading: isLoadingLinkedProducts } =
     useCustomQuery<Product[]>({
       key: ["post-linked-products", currentPost?.id],
-      url: `/api/posts/${currentPost?.id}/linked-products`,
+      url: `/api/social/post/${currentPost?.id}/linked-products`,
       options: {
         enabled: !!currentPost?.id,
       },
@@ -154,13 +159,13 @@ export default function ExploreModule() {
       const counterKey = type === "is_liked" ? "like_count" : "bookmark_count";
       const change = action === "increment" ? 1 : -1;
 
-      queryClient.setQueryData(activeQueryKey, (oldData: any) => {
+      queryClient.setQueryData(activeQueryKey, (oldData: InfiniteData<PaginatedData<Post>>) => {
         if (!oldData) return oldData;
         return {
           ...oldData,
-          pages: oldData.pages.map((page: any) => ({
+          pages: oldData.pages.map((page) => ({
             ...page,
-            results: page.results.map((p: any) => {
+            results: page.results.map((p) => {
               if (p.id !== postId) return p;
               return {
                 ...p,
@@ -249,51 +254,47 @@ export default function ExploreModule() {
     );
   };
 
-  const handleShare = async () => {
+  const handleShare = async (): Promise<void> => {
     if (!currentPost) return;
 
     const { user } = currentPost;
+    const shareUrl = `https://scrollbooker-web.vercel.app/user/${user.username}/${user.profession}/post/${currentPost.id}`;
 
-    const shareData = {
+    const shareData: ShareData = {
       title: "Postare Video",
       text: "Aruncă o privire peste aceasta postare video",
-      url: `https://scrollbooker-web.vercel.app/user/${user.username}/${user.profession}/post/${currentPost.id}`,
+      url: shareUrl,
     };
 
     if (navigator.share && navigator.canShare?.(shareData)) {
       try {
         await navigator.share(shareData);
-      } catch (error) {
+        return;
+      } catch (error: unknown) {
         if (error instanceof DOMException && error.name === "AbortError") {
           return;
         }
+        const msg = error instanceof Error ? error.message : String(error);
+        LOG.error(`Web Share API a eșuat sau a fost anulat: ${msg}. Trecem la clipboard.`);
+      }
+    }
 
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        LOG.error(`Eroare tehnică la partajare: ${errorMessage}`);
-      }
-    } else {
+    if (navigator.clipboard?.writeText) {
       try {
-        await navigator.clipboard.writeText(window.location.href);
+        await navigator.clipboard.writeText(shareUrl);
         setSnackbarOpen(true);
-      } catch (error) {
-        try {
-          const textarea = document.createElement("textarea");
-          textarea.value = window.location.href;
-          textarea.style.position = "fixed";
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand("copy");
-          document.body.removeChild(textarea);
-          setSnackbarOpen(true);
-        } catch (fallbackError) {
-          const msg =
-            fallbackError instanceof Error
-              ? fallbackError.message
-              : String(fallbackError);
-          LOG.error(`Eșec total la copiere link: ${msg}`);
-        }
+        return;
+      } catch (error: unknown) {
+        const msg = error instanceof Error ? error.message : String(error);
+        LOG.error(`Clipboard API asincron a eșuat: ${msg}`);
       }
+    }
+
+    try {
+      window.prompt("Copierea automată nu este permisă de browser. Copiază link-ul de mai jos:", shareUrl);
+    } catch (fallbackError: unknown) {
+      const msg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+      LOG.error(`Eșec total la orice metodă de partajare/copiere: ${msg}`);
     }
   };
 
