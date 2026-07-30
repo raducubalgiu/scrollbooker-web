@@ -13,7 +13,7 @@ type ScheduleModalProps = {
 
 const ScheduleModal = ({ userId, open, handleClose }: ScheduleModalProps) => {
   const { data, isLoading } = useCustomQuery<Schedule[]>({
-    url: `/api/schedules?userId=${userId}`,
+    url: `/api/booking/schedule?userId=${userId}`,
     key: ["user-schedule", userId],
     options: {
       enabled: open,

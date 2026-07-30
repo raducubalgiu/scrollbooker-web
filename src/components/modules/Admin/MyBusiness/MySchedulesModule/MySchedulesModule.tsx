@@ -50,7 +50,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
     ScheduleUpdate[]
   >({
     key: ["update-schedules"],
-    url: "/api/schedules",
+    url: "/api/booking/schedule",
     method: "PUT",
     options: {
       onSuccess: () => {
