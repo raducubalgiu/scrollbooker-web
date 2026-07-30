@@ -12,7 +12,7 @@ type FetchCommentsParams = {
 
 const fetchComments = async ({ pageParam, postId }: FetchCommentsParams) => {
   const { data } = await axios.get<PaginatedData<PostComment>>(
-    `/api/comments?postId=${postId}&page=${pageParam}&limit=${PAGE_LIMIT}`
+    `/api/social/comment?postId=${postId}&page=${pageParam}&limit=${PAGE_LIMIT}`
   );
 
   return {
