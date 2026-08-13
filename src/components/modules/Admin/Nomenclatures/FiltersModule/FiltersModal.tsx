@@ -1,15 +1,8 @@
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Input from "@/components/core/Input/Input";
 import InputCheckbox from "@/components/core/Input/InputCheckbox";
-import InputSelect from "@/components/core/Input/InputSelect";
 import Modal from "@/components/core/Modal/Modal";
 import { useMutate } from "@/hooks/useHttp";
-import {
-  allFilterEnums,
-  filterLabels,
-  FilterTypeEnum,
-  filterTypefromKey,
-} from "@/ts/enums/FilterTypeEnum";
 import {
   Filter,
   FilterCreateOrUpdate,
@@ -35,7 +28,6 @@ type FilterFormData = {
 
 const DEFAULT_VALUES = {
   name: "",
-  type: FilterTypeEnum.OPTIONS,
   single_select: true,
   active: true,
 };
@@ -88,12 +80,8 @@ const FiltersModal = ({ open, onClose, data, onSuccess }: FilterModalProps) => {
   });
 
   const onSubmit = (data: FilterFormData) => {
-    const type = filterTypefromKey(data.type);
-    if (!type) return;
-
     const payload: FilterCreateOrUpdate = {
       name: data.name,
-      type,
       single_select: data.single_select,
       active: data.active,
     };
@@ -134,17 +122,6 @@ const FiltersModal = ({ open, onClose, data, onSuccess }: FilterModalProps) => {
             placeholder="Adauga nume.."
             label="Nume"
             rules={{ ...isRequired, ...minLength, ...maxLength }}
-          />
-
-          <InputSelect
-            label="Tipul filtrului"
-            name="type"
-            options={allFilterEnums.map((fil) => {
-              return {
-                value: fil,
-                name: filterLabels[fil],
-              };
-            })}
           />
 
           <InputCheckbox

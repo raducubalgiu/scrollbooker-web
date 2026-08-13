@@ -1,11 +1,9 @@
-import { FilterTypeEnum } from "@/ts/enums/FilterTypeEnum";
 import { SubFilter } from "../subFilter/SubFilter";
 
 export interface Filter {
   id: number;
   name: string;
   active: boolean;
-  type: string;
   single_select: boolean;
   created_at: string;
   updated_at: string;
@@ -15,6 +13,5 @@ export interface Filter {
 export interface FilterCreateOrUpdate {
   name: string;
   active: boolean;
-  type: FilterTypeEnum;
   single_select: boolean;
 }

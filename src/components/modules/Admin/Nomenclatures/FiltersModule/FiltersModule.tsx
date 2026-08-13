@@ -14,7 +14,6 @@ import {
 } from "material-react-table";
 import { useCallback, useMemo, useState } from "react";
 import { Button, Checkbox } from "@mui/material";
-import { filterTypefromKey } from "@/ts/enums/FilterTypeEnum";
 import { Filter } from "@/ts/models/nomenclatures/filter/FilterType";
 import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { Delete, Edit } from "@mui/icons-material";
@@ -136,11 +135,6 @@ export default function FiltersModule({
       {
         accessorKey: "name",
         header: "Name",
-      },
-      {
-        accessorKey: "type",
-        header: "Tip",
-        Cell: ({ row }) => filterTypefromKey(row.original.type)?.toUpperCase(),
       },
       {
         accessorKey: "single_select",

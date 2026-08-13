@@ -1,16 +1,10 @@
 import { SubFilter } from "../../nomenclatures/subFilter/SubFilter";
 import { Service } from "../../nomenclatures/service/Service";
-import { FilterTypeEnum } from "@/ts/enums/FilterTypeEnum";
 
 export interface ProductFilter {
   id: number;
   name: string;
   sub_filters: SubFilter[];
-  type: string;
-  unit?: string | null;
-  minim?: number | null;
-  maxim?: number | null;
-  display_as_tab: boolean;
 }
 
 export interface StartingOffering {
@@ -82,23 +76,17 @@ export const ProductUtils = {
     return [hoursPart, minutesPart].filter(Boolean).join(" ");
   },
 
-  getFiltersSummary(product: Product): string {
+  getFiltersSummary(product: Product) {
     const filterParts = product.filters
       .map((filter) => {
-        if (filter.type === "options") {
-          return filter.sub_filters.map((sf) => sf.name).join(" & ");
+        if (!filter.sub_filters || filter.sub_filters.length === 0) {
+          return null;
         }
-        if (filter.type === "range") {
-          const { minim, maxim, unit } = filter;
-          if (minim != null && maxim == null) return `> ${minim} ${unit}`;
-          if (minim == null && maxim != null) return `< ${maxim} ${unit}`;
-          return `${minim} - ${maxim} ${unit}`;
-        }
-        return null;
+        return filter.sub_filters.map((sf) => sf.name).join(" & ");
       })
       .filter(Boolean);
 
-    return [filterParts].join(" \u2022 ");
+    return filterParts.join(" \u2022 ");
   },
 };
 
@@ -116,9 +104,6 @@ export interface UserProducts {
 export interface ProductFilterCreate {
   filter_id: number;
   sub_filter_ids: number[];
-  type: FilterTypeEnum;
-  minim: number | null;
-  maxim: number | null;
   is_not_applicable: boolean;
 }
 

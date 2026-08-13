@@ -1,7 +1,10 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import {
   MaterialReactTable,
+  MRT_ActionMenuItem,
   MRT_ColumnDef,
+  MRT_Row,
+  MRT_TableInstance,
   useMaterialReactTable,
 } from "material-react-table";
 import {
@@ -13,15 +16,35 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { SubFilter } from "@/ts/models/nomenclatures/subFilter/SubFilter";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
+import { Delete } from "@mui/icons-material";
+import { useMutate } from "@/hooks/useHttp";
+import { useQueryClient } from "@tanstack/react-query";
 
 type SubFiltersModuleType = { subFilters: SubFilter[] | undefined };
 
+type RenderRowActionMenuItemsProps = {
+  row: MRT_Row<SubFilter>;
+  table: MRT_TableInstance<SubFilter>;
+};
+
 const SubFiltersModule = ({ subFilters }: SubFiltersModuleType) => {
+  const queryClient = useQueryClient();
   const [isExpanded, setIsExpanded] = useState(true);
 
   const memoizedData = useMemo(() => {
     return subFilters || [];
   }, [subFilters]);
+
+  const { mutate: handleDelete } = useMutate<{ subFilterId: number }>({
+    key: ["delete-sub-filter"],
+    url: ({ subFilterId }) => `/api/nomenclatures/sub-filters/${subFilterId}`,
+    method: "DELETE",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["filters"] });
+      },
+    },
+  });
 
   const columns = useMemo<MRT_ColumnDef<SubFilter>[]>(
     () => [
@@ -36,6 +59,19 @@ const SubFiltersModule = ({ subFilters }: SubFiltersModuleType) => {
         header: "Name",
         size: 300,
       },
+    ],
+    []
+  );
+
+  const renderRowActionMenuItems = useCallback(
+    ({ row, table }: RenderRowActionMenuItemsProps) => [
+      <MRT_ActionMenuItem
+        key={1}
+        label="Șterge"
+        icon={<Delete />}
+        onClick={() => handleDelete({ subFilterId: row.original.id })}
+        table={table}
+      />,
     ],
     []
   );
@@ -66,6 +102,7 @@ const SubFiltersModule = ({ subFilters }: SubFiltersModuleType) => {
         borderColor: "divider",
       },
     },
+    renderRowActionMenuItems,
   });
 
   return (

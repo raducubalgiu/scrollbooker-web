@@ -1,20 +1,14 @@
 import Input from "@/components/core/Input/Input";
 import InputSelect from "@/components/core/Input/InputSelect";
-import { useCustomQuery } from "@/hooks/useHttp";
 import {
   getProductTypeLabel,
   ProductTypeEnum,
 } from "@/ts/enums/ProductTypeEnum";
-import { Filter } from "@/ts/models/nomenclatures/filter/FilterType";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Box, Checkbox, Divider, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { useEffect, useMemo } from "react";
-import { FormProductFilter } from "./AddProductModal";
-import { useFormContext } from "react-hook-form";
-import { FilterTypeEnum, filterTypefromKey } from "@/ts/enums/FilterTypeEnum";
-import { isEmpty } from "lodash";
+import { useMemo } from "react";
 
 type ProductGeneralInfoProps = {
   open: boolean;
@@ -23,41 +17,40 @@ type ProductGeneralInfoProps = {
 };
 
 const ProductGeneralInfo = ({
-  open,
   selectedDomainId,
   serviceDomainServices,
 }: ProductGeneralInfoProps) => {
-  const { setValue, watch } = useFormContext();
-  const selectedServiceId = watch("serviceId");
+  // const { setValue, watch } = useFormContext();
+  // const selectedServiceId = watch("serviceId");
 
   const isRequired = required();
   const nameMinLength = minField(3);
   const nameMaxLength = maxField(100);
 
-  const { data: filters } = useCustomQuery<Filter[]>({
-    key: ["filters-by-service-id", selectedServiceId],
-    url: `/api/nomenclatures/services/${selectedServiceId}/filters`,
-    options: {
-      enabled: open && !!selectedServiceId,
-      staleTime: 5 * 60 * 1000,
-    },
-  });
+  // const { data: filters } = useCustomQuery<Filter[]>({
+  //   key: ["filters-by-service-id", selectedServiceId],
+  //   url: `/api/nomenclatures/services/${selectedServiceId}/filters`,
+  //   options: {
+  //     enabled: open && !!selectedServiceId,
+  //     staleTime: 5 * 60 * 1000,
+  //   },
+  // });
 
-  useEffect(() => {
-    if (filters) {
-      const initialFormFilters: FormProductFilter[] = filters.map((f) => ({
-        filter_id: f.id,
-        type: filterTypefromKey(f.type) || FilterTypeEnum.OPTIONS,
-        value: f.single_select ? "" : [],
-        minim: null,
-        maxim: null,
-      }));
+  // useEffect(() => {
+  //   if (filters) {
+  //     const initialFormFilters: FormProductFilter[] = filters.map((f) => ({
+  //       filter_id: f.id,
+  //       type: filterTypefromKey(f.type) || FilterTypeEnum.OPTIONS,
+  //       value: f.single_select ? "" : [],
+  //       minim: null,
+  //       maxim: null,
+  //     }));
 
-      setValue("filters", initialFormFilters);
-    } else {
-      setValue("filters", []);
-    }
-  }, [filters, setValue]);
+  //     setValue("filters", initialFormFilters);
+  //   } else {
+  //     setValue("filters", []);
+  //   }
+  // }, [filters, setValue]);
 
   const validDomains = useMemo(() => {
     if (!serviceDomainServices) return [];
@@ -129,7 +122,7 @@ const ProductGeneralInfo = ({
 
         <Input name="description" label="Descriere" multiline rows={3} />
 
-        {!isEmpty(filters) && (
+        {/* {!isEmpty(filters) && (
           <Box sx={{ py: 2 }}>
             <Typography variant="h6" mb={3} fontWeight="600">
               Filtre pentru acest serviciu
@@ -200,7 +193,7 @@ const ProductGeneralInfo = ({
               })}
             </Stack>
           </Box>
-        )}
+        )} */}
 
         <Divider sx={{ my: 1 }} />
 

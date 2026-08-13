@@ -153,7 +153,8 @@ const ProductCard = ({
             </IconButton>
           ) : (
             <Button
-              variant="contained"
+              variant="outlined"
+              color="secondary"
               disableElevation
               onClick={(e) => {
                 e.stopPropagation();
