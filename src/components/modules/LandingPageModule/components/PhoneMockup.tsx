@@ -22,7 +22,6 @@ export default function PhoneMockup({
         width: "100%",
         maxWidth: 320,
         mx: "auto",
-        aspectRatio: "1170 / 2532",
         borderRadius: "44px",
         p: "12px",
         backgroundColor: "#0d0d0d",
@@ -34,7 +33,7 @@ export default function PhoneMockup({
         sx={{
           position: "relative",
           width: "100%",
-          height: "100%",
+          aspectRatio: "1170 / 2532",
           borderRadius: "32px",
           overflow: "hidden",
           backgroundColor: "#000",
