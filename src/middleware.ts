@@ -82,16 +82,20 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    "/",
     "/unauthorized",
     "/auth/:path*",
     "/onboarding/:path*",
+    "/explore/:path*",
+    "/search/:path*",
+    "/search-users/:path*",
     "/notifications/:path*",
-    "/admin/:path*",
-    "/my-business/:path*",
     "/appointments/:path*",
-    "/businesses/:path*",
-    "/nomenclatures/:path*",
+    "/booking/:path*",
+    "/business/:path*",
+    "/employment-request/:path*",
+    "/upload-video/:path*",
+    "/user/:path*",
+    "/admin/:path*",
     "/settings/:path*",
   ],
 };

@@ -82,7 +82,7 @@ const getPublicRoutes = ({
 }): NavigationItem[] => [
   {
     label: "Explorează",
-    route: AppRoutes.home(),
+    route: AppRoutes.explore(),
     icon: STATIC_ICONS.explore,
     permission: PermissionEnum.NO_PROTECTION,
   },
