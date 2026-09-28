@@ -159,9 +159,6 @@ export default function BusinessDomainsModule({
     renderRowActionMenuItems,
     renderTopToolbarCustomActions,
     positionActionsColumn: "last",
-    mrtTheme: (theme) => ({
-      baseBackgroundColor: theme.palette.background.paper,
-    }),
     localization: MRT_Localization_RO,
     state: {
       isLoading,

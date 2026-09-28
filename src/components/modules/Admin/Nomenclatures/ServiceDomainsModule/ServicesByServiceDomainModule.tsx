@@ -57,9 +57,6 @@ const ServicesByServiceDomainModule = ({
     enableRowActions: false,
     enableTopToolbar: false,
     positionActionsColumn: "last",
-    mrtTheme: (theme) => ({
-      baseBackgroundColor: theme.palette.background.paper,
-    }),
     localization: MRT_Localization_RO,
     muiTablePaperProps: {
       elevation: 0,
