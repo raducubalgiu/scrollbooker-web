@@ -32,7 +32,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }, [activeView]);
 
-  const isNoLayoutPage = [
+  const isSessionLoading = status === "loading";
+  const isAuthenticated = status === "authenticated";
+
+  const isExplicitNoLayoutPage = [
+    "/",
     "/unauthorized",
     "/_not-found",
     "/auth",
@@ -40,13 +44,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     "/business/",
     "/booking/",
     "/employment-request",
-  ].some((p) => pathname.startsWith(p));
+  ].some((p) => (p === "/" ? pathname === "/" : pathname.startsWith(p)));
+
+  // The app shell (Drawer + BottomBar) only makes sense once there's a
+  // session to navigate around — an unauthenticated visitor (landing page
+  // today, any future public page) never gets it, regardless of whether
+  // that page happens to be in the explicit list below. Gated on
+  // `!isSessionLoading` so an actually-authenticated user doesn't see the
+  // chrome flash away while the session is still resolving.
+  const isNoLayoutPage =
+    isExplicitNoLayoutPage || (!isSessionLoading && !isAuthenticated);
 
   const isVideoPage =
     pathname.startsWith("/user/") && pathname.includes("/post/");
-
-  const isSessionLoading = status === "loading";
-  const isAuthenticated = status === "authenticated";
   const isOverlayOpen = activeView !== null;
   const visualDrawerCollapsed = isOverlayOpen || isDrawerCollapsed;
 
