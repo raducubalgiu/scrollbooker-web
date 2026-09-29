@@ -83,7 +83,6 @@ const styles = {
     px: { xs: 3, md: 8 },
     borderTop: "1px solid",
     borderColor: "divider",
-    bgcolor: "background.paper",
     display: "flex",
     justifyContent: "flex-end",
   },

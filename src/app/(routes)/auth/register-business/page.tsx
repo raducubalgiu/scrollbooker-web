@@ -13,7 +13,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { signIn, SignInResponse, useSession } from "next-auth/react";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import AppleIcon from "@mui/icons-material/Apple";
@@ -27,6 +27,7 @@ import { AppRoutes } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
 import LandingLogo from "@/components/modules/LandingPageModule/components/LandingLogo";
+import { registerWithCredentials } from "@/controllers/auth/auth.service";
 
 type RegisterForm = {
   email: string;
@@ -83,10 +84,7 @@ export default function RegisterBusinessPage() {
     };
 
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/register`,
-        registerPayload
-      );
+      await registerWithCredentials(registerPayload);
 
       const result: SignInResponse | undefined = await signIn("credentials", {
         redirect: false,
@@ -130,7 +128,6 @@ export default function RegisterBusinessPage() {
   return (
     <Box
       sx={{
-        backgroundColor: LANDING_COLORS.background,
         minHeight: "100dvh",
         py: { xs: 5, md: 8 },
       }}
@@ -143,11 +140,10 @@ export default function RegisterBusinessPage() {
           spacing={1}
           alignItems="center"
           sx={{
-            color: LANDING_COLORS.textSecondary,
+            color: "text.primary",
             textDecoration: "none",
             mb: 5,
             width: "fit-content",
-            "&:hover": { color: LANDING_COLORS.textPrimary },
           }}
         >
           <ArrowBackRoundedIcon fontSize="small" />
@@ -162,7 +158,6 @@ export default function RegisterBusinessPage() {
 
         <Box
           sx={{
-            backgroundColor: "#FFFFFF",
             borderRadius: 4,
             p: { xs: 3, sm: 5 },
             boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
@@ -178,38 +173,24 @@ export default function RegisterBusinessPage() {
           <Stack spacing={1.5} sx={{ mb: 3 }}>
             <Button
               variant="outlined"
+              color="secondary"
               size="large"
               fullWidth
               loading={googleLoading}
               onClick={handleGoogleSignIn}
               startIcon={<GoogleIcon />}
               disableElevation
-              sx={{
-                py: 1.25,
-                borderColor: "rgba(0,0,0,0.15)",
-                color: "text.primary",
-                textTransform: "none",
-                fontWeight: 600,
-                "&:hover": { borderColor: "rgba(0,0,0,0.3)", backgroundColor: "rgba(0,0,0,0.02)" },
-              }}
             >
               {t("continueWithGoogle")}
             </Button>
 
             <Button
               variant="outlined"
+              color="secondary"
               size="large"
               fullWidth
-              disabled
               startIcon={<AppleIcon />}
               disableElevation
-              sx={{
-                py: 1.25,
-                borderColor: "rgba(0,0,0,0.1)",
-                color: "text.disabled",
-                textTransform: "none",
-                fontWeight: 600,
-              }}
             >
               {t("continueWithApple")}
             </Button>

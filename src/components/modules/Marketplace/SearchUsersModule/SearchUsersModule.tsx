@@ -12,8 +12,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState } from "react";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { SearchUser } from "@/ts/models/search/SearchUser";
+import { useSearchUsers } from "@/controllers/search/search.controller";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { SearchUserItem } from "./SearchUserItem";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
@@ -35,16 +34,8 @@ const SearchUsersModule = ({
     data: users = [],
     isLoading,
     isFetching,
-  } = useCustomQuery<SearchUser[]>({
-    key: ["search-users", debouncedValue],
-    url: "/api/search/users",
-    params: {
-      query: debouncedValue,
-    },
-    options: {
-      enabled: debouncedValue.trim().length >= 2,
-      staleTime: 1000 * 60,
-    },
+  } = useSearchUsers({
+    query: debouncedValue.trim().length >= 2 ? debouncedValue : "",
   });
 
   const loading = isLoading || isFetching;

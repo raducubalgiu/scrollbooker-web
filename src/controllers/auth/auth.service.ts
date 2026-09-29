@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import axios, { AxiosResponse } from "axios";
 import { map } from "lodash";
 import { LOG } from "@/utils/logger";
-import { AuthTokens, UserInfo } from "@/ts/models/auth/auth";
+import { AuthTokens, UserInfo, UserRegister } from "@/ts/models/auth/auth";
 import { Permission } from "@/ts/models/user/Permission";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT;
@@ -15,6 +15,36 @@ export type DecodedAccessToken = {
   role: string;
   exp: number;
 };
+
+export async function registerWithCredentials(
+  registerPayload: UserRegister
+): Promise<AuthTokens | null> {
+  try {
+    const response = await axios.post<AuthTokens>(
+      `${BACKEND_URL}/auth/register`,
+      registerPayload
+    );
+    return response.data;
+  } catch (error: unknown) {
+    const axiosError = error as {
+      response?: { status?: number; data?: unknown };
+    };
+
+    if (axiosError?.response) {
+      LOG.error(
+        `Register request failed: status=${axiosError.response.status}, data=${JSON.stringify(
+          axiosError.response.data
+        )}`
+      );
+    } else {
+      LOG.error(
+        `Register Error: ${error instanceof Error ? error.message : "unknown error"}`
+      );
+    }
+
+    return null;
+  }
+}
 
 export async function loginWithCredentials(
   username: string,
@@ -93,20 +123,18 @@ export async function refreshAccessToken(
   return response.data;
 }
 
-// role_name e citit de backend doar când id_token-ul nu corespunde niciunui
-// user existent (înregistrare nouă) — pentru un user existent (căutat după
-// google_id SAU email), backend-ul îl loghează direct pe rolul lui curent și
-// ignoră complet role_name. Vezi signIn() din authOptions.ts pentru guard-ul
-// aferent (pe pagina de register-business acceptăm doar rolul "business").
 export async function signInWithGoogle(
   idToken: string,
   roleName?: string
 ): Promise<AuthTokens | null> {
   try {
-    const response = await axios.post<AuthTokens>(`${BACKEND_URL}/auth/google`, {
-      id_token: idToken,
-      role_name: roleName,
-    });
+    const response = await axios.post<AuthTokens>(
+      `${BACKEND_URL}/auth/google`,
+      {
+        id_token: idToken,
+        role_name: roleName,
+      }
+    );
     return response.data;
   } catch (error: unknown) {
     const axiosError = error as {

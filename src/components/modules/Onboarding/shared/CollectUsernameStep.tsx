@@ -7,11 +7,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { SearchUsername } from "@/ts/models/user/SearchUsername";
+import { debounce } from "lodash";
+import { useCheckUsernameAvailability } from "@/controllers/search/search.controller";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { useRouter } from "next/navigation";
@@ -22,22 +21,22 @@ import { useTranslations } from "next-intl";
 const CollectUsernameStep = () => {
   const t = useTranslations("onboarding.username");
   const [username, setUsername] = useState("");
+  const [debouncedValue, setDebouncedValue] = useState("");
   const { update } = useSession();
   const router = useRouter();
 
-  const debouncedValue = useDebouncedValue(username, 400);
+  const debouncedSetValue = useMemo(
+    () => debounce((value: string) => setDebouncedValue(value), 400),
+    []
+  );
 
-  const { data, isLoading, isFetching } = useCustomQuery<SearchUsername>({
-    key: ["search-users", debouncedValue],
-    url: "/api/user/search-username",
-    params: {
-      query: debouncedValue.replace(/\s+/g, ""),
-    },
-    options: {
-      enabled: debouncedValue.replace(/\s+/g, "").length > 2,
-      staleTime: 1000 * 60,
-    },
-  });
+  useEffect(() => {
+    debouncedSetValue(username);
+    return () => debouncedSetValue.cancel();
+  }, [username, debouncedSetValue]);
+
+  const { data, isLoading, isFetching } =
+    useCheckUsernameAvailability(debouncedValue);
 
   const { mutate: handleSaveUsername, isPending: isLoadingSave } =
     useCollectUsernameMutation();
