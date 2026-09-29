@@ -2,7 +2,6 @@ import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Input from "@/components/core/Input/Input";
 import InputCheckbox from "@/components/core/Input/InputCheckbox";
 import Modal from "@/components/core/Modal/Modal";
-import { useMutate } from "@/hooks/useHttp";
 import {
   ServiceDomain,
   ServiceDomainCreateOrUpdate,
@@ -12,11 +11,12 @@ import { Stack } from "@mui/material";
 import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-type ServiceDomainModalProps = {
+type ServiceDomainsModalProps = {
   open: boolean;
   onClose: () => void;
   data: ServiceDomain | null;
-  onSuccess: () => void;
+  onSave: (data: ServiceDomainCreateOrUpdate) => void;
+  isSubmitting: boolean;
 };
 
 const DEFAULT_VALUES = {
@@ -29,8 +29,9 @@ const ServiceDomainsModal = ({
   open,
   onClose,
   data,
-  onSuccess,
-}: ServiceDomainModalProps) => {
+  onSave,
+  isSubmitting,
+}: ServiceDomainsModalProps) => {
   const isEditMode = !!data;
 
   const methods = useForm<ServiceDomainCreateOrUpdate>({
@@ -53,45 +54,13 @@ const ServiceDomainsModal = ({
     }
   }, [open, data, reset]);
 
-  const { mutate: handleCreate, isPending: isPendingCreate } = useMutate<
-    ServiceDomainCreateOrUpdate,
-    ServiceDomain
-  >({
-    key: ["create-service-domain"],
-    url: `/api/nomenclatures/service-domains`,
-    method: "POST",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const { mutate: handleUpdate, isPending: isPendingUpdate } = useMutate<
-    ServiceDomainCreateOrUpdate,
-    ServiceDomain
-  >({
-    key: ["update-service-domain", data?.id],
-    url: `/api/nomenclatures/service-domains/${data?.id}`,
-    method: "PUT",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const onSubmit = (data: ServiceDomainCreateOrUpdate) => {
-    if (isEditMode) {
-      handleUpdate(data);
-    } else {
-      handleCreate(data);
-    }
-  };
-
   const actions: ActionButtonType[] = [
     {
       title: isEditMode ? "Modifică" : "Adaugă",
       props: {
-        onClick: handleSubmit(onSubmit),
-        loading: isPendingCreate || isPendingUpdate,
-        disabled: isPendingCreate || isPendingUpdate || !isDirty,
+        onClick: handleSubmit(onSave),
+        loading: isSubmitting,
+        disabled: isSubmitting || !isDirty,
       },
     },
   ];
@@ -100,7 +69,7 @@ const ServiceDomainsModal = ({
     <Modal
       title={
         isEditMode
-          ? `Editează Domeniu Serviciu cu ID: ${data.id}`
+          ? `Editează Domeniu Serviciu cu ID: ${data?.id}`
           : "Adaugă un Domeniu Serviciu"
       }
       open={open}
