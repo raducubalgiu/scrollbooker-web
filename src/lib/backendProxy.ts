@@ -12,13 +12,11 @@ export type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
 const randomHex = () => crypto.randomBytes(8).toString("hex");
 
 function isMultipart(req: NextRequest): boolean {
-  return (req.headers.get("content-type") ?? "").includes("multipart/form-data");
+  return (req.headers.get("content-type") ?? "").includes(
+    "multipart/form-data"
+  );
 }
 
-// Backend-ul întoarce mereu {"detail": ...} pe eroare — îl trecem mai
-// departe exact cum e, în loc să-l înlocuim cu un mesaj generic (gap
-// documentat deja pentru toate cele trei client-uri: niciunul nu arăta
-// până acum mesajul real userului).
 function errorToResponse(error: unknown) {
   const axiosError = error as {
     response?: { status?: number; data?: unknown };
@@ -30,7 +28,7 @@ function errorToResponse(error: unknown) {
     detail: axiosError?.message ?? "A apărut o eroare neașteptată.",
   };
 
-  LOG.error(`[backendProxy] ${status}: ${JSON.stringify(body)}`);
+  LOG.error(`[BACKEND PROXY] ${status}: ${JSON.stringify(body)}`);
   return NextResponse.json(body, { status });
 }
 
@@ -48,7 +46,8 @@ async function forwardJson(
   });
 
   const params = Object.fromEntries(req.nextUrl.searchParams);
-  const data = method === "get" ? undefined : await req.json().catch(() => undefined);
+  const data =
+    method === "get" ? undefined : await req.json().catch(() => undefined);
 
   const response = await axios.request({
     baseURL: BASE_URL!,
@@ -59,12 +58,13 @@ async function forwardJson(
     headers,
   });
 
+  if (response.status === 204) {
+    return new NextResponse(null, { status: 204 });
+  }
+
   return NextResponse.json(response.data, { status: response.status });
 }
 
-// Multipart nu trece prin axios — same reasoning ca la
-// collect-business-gallery deja existent: axios nu calculează corect
-// boundary-ul de multipart în acest runtime, fetch-ul nativ o face singur.
 async function forwardMultipart(
   method: HttpMethod,
   path: string,
@@ -89,7 +89,9 @@ export async function forwardToBackend(
   req: NextRequest
 ): Promise<NextResponse> {
   if (!BASE_URL) {
-    LOG.error("[backendProxy] NEXT_PUBLIC_BE_BASE_ENDPOINT nu este configurat");
+    LOG.error(
+      "[BACKEND PROXY] NEXT_PUBLIC_BE_BASE_ENDPOINT nu este configurat"
+    );
     return NextResponse.json(
       { detail: "Eroare tehnică de configurare." },
       { status: 500 }

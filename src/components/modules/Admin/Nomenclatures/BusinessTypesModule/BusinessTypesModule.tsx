@@ -1,24 +1,33 @@
 "use client";
 
-import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
-import { PaginatedData } from "@/components/core/Table/Table";
+import { useState, useMemo, useCallback } from "react";
+import { Button, Switch } from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
 import {
   MaterialReactTable,
-  MRT_ActionMenuItem,
-  MRT_ColumnDef,
-  MRT_PaginationState,
-  MRT_Row,
-  MRT_TableInstance,
   useMaterialReactTable,
+  type MRT_ColumnDef,
+  type MRT_Row,
+  type MRT_TableInstance,
+  type MRT_PaginationState,
+  MRT_ActionMenuItem,
 } from "material-react-table";
-import { useCallback, useMemo, useState } from "react";
-import { BusinessType } from "@/ts/models/nomenclatures/businessType/BusinessType";
-import { Delete, Edit } from "@mui/icons-material";
-import { Button, Switch } from "@mui/material";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { toast } from "react-toastify";
+import {
+  BusinessType,
+  BusinessTypeCreateOrUpdate,
+} from "@/ts/models/nomenclatures/businessType/BusinessType";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import {
+  useAllBusinessTypes,
+  useCreateBusinessType,
+  useDeleteBusinessType,
+  useUpdateBusinessType,
+} from "@/controllers/nomenclature/business-type.controller";
+import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import BusinessTypeModal from "./BusinessTypeModal";
+import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<BusinessType>;
@@ -31,20 +40,22 @@ type BusinessTypeModalState = {
   data: BusinessType | null;
 };
 
+type DeleteModalState = {
+  open: boolean;
+  id: string | null;
+  name: string;
+};
+
 type BusinessTypeModuleProps = {
-  initialData: PaginatedData<BusinessType>;
   businessDomains: BusinessDomain[];
-  pageSize: number;
 };
 
 export default function BusinessTypesModule({
-  initialData,
   businessDomains,
-  pageSize,
 }: BusinessTypeModuleProps) {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize,
+    pageSize: 10,
   });
 
   const [openModal, setOpenModal] = useState<BusinessTypeModalState>({
@@ -52,29 +63,69 @@ export default function BusinessTypesModule({
     data: null,
   });
 
-  const { data, isLoading, isError, refetch } = useCustomQuery<
-    PaginatedData<BusinessType>
-  >({
-    key: ["business-types", pagination.pageIndex, pagination.pageSize],
-    url: `/api/nomenclatures/business-types?page=${pagination.pageIndex + 1}&limit=${pagination.pageSize}`,
-    options: {
-      ...(pagination.pageIndex === 0 && pagination.pageSize === pageSize
-        ? { initialData }
-        : {}),
-    },
+  const [deleteModal, setDeleteModal] = useState<DeleteModalState>({
+    open: false,
+    id: null,
+    name: "",
   });
 
-  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
-    key: ["delete-business-type"],
-    url: "/api/nomenclatures/business-types",
-    method: "DELETE",
-    options: {
-      onSuccess: () => refetch(),
-    },
+  const { data, isLoading, isError } = useAllBusinessTypes({
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+    all: true,
   });
+
+  const { mutate: createType, isPending: isPendingCreate } =
+    useCreateBusinessType();
+  const { mutate: updateType, isPending: isPendingUpdate } =
+    useUpdateBusinessType();
+  const { mutate: deleteType, isPending: isPendingDelete } =
+    useDeleteBusinessType();
 
   const tableData = useMemo(() => data?.results || [], [data]);
   const totalCount = useMemo(() => data?.count ?? 0, [data]);
+
+  const handleCloseModal = () => setOpenModal({ open: false, data: null });
+  const handleCloseDeleteModal = () =>
+    setDeleteModal({ open: false, id: null, name: "" });
+
+  const handleSaveBusinessType = (formData: BusinessTypeCreateOrUpdate) => {
+    const isEditMode = !!openModal.data;
+
+    if (isEditMode && openModal.data) {
+      updateType(
+        { id: String(openModal.data.id), data: formData },
+        {
+          onSuccess: () => {
+            toast.success("Tipul de business a fost modificat cu succes!");
+            handleCloseModal();
+          },
+          onError: () =>
+            toast.error("Eroare la modificarea tipului de business."),
+        }
+      );
+    } else {
+      createType(formData, {
+        onSuccess: () => {
+          toast.success("Tipul de business a fost adăugat cu succes!");
+          handleCloseModal();
+        },
+        onError: () => toast.error("Eroare la adăugarea tipului de business."),
+      });
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteModal.id) return;
+
+    deleteType(deleteModal.id, {
+      onSuccess: () => {
+        toast.success("Tipul de business a fost șters cu succes!");
+        handleCloseDeleteModal();
+      },
+      onError: () => toast.error("A apărut o eroare la ștergere."),
+    });
+  };
 
   const columns = useMemo<MRT_ColumnDef<BusinessType>[]>(
     () => [
@@ -126,7 +177,6 @@ export default function BusinessTypesModule({
             open: true,
             data: row.original,
           });
-
           closeMenu();
         }}
         table={table}
@@ -136,8 +186,11 @@ export default function BusinessTypesModule({
         label="Șterge"
         icon={<Delete />}
         onClick={() => {
-          handleDelete({ businessTypeId: row.original.id });
-
+          setDeleteModal({
+            open: true,
+            id: String(row.original.id),
+            name: row.original.name,
+          });
           closeMenu();
         }}
         table={table}
@@ -168,10 +221,8 @@ export default function BusinessTypesModule({
     columns,
     data: tableData,
     rowCount: totalCount,
-
     enablePagination: true,
     manualPagination: true,
-
     enableKeyboardShortcuts: false,
     enableColumnActions: false,
     enableColumnFilters: false,
@@ -184,10 +235,10 @@ export default function BusinessTypesModule({
     localization: MRT_Localization_RO,
     state: {
       pagination,
-      isLoading: !tableData.length || isLoading || isPendingDelete,
+      isLoading: !tableData.length || isLoading,
+      showLoadingOverlay: isPendingDelete,
       showAlertBanner: isError,
     },
-
     onPaginationChange: setPagination,
     muiTablePaperProps: {
       elevation: 0,
@@ -205,12 +256,21 @@ export default function BusinessTypesModule({
         open={openModal.open}
         data={openModal.data}
         businessDomains={businessDomains}
-        onClose={() => setOpenModal({ open: false, data: null })}
-        onSuccess={() => {
-          refetch();
-          setOpenModal({ open: false, data: null });
-        }}
+        onClose={handleCloseModal}
+        onSave={handleSaveBusinessType}
+        isSubmitting={isPendingCreate || isPendingUpdate}
       />
+
+      <ConfirmationModal
+        title="Confirmă ștergerea"
+        primaryActionTitle="Șterge"
+        message={`Sigur dorești să ștergi tipul de business "${deleteModal.name}"? Această acțiune este ireversibilă.`}
+        open={deleteModal.open}
+        isLoading={isPendingDelete}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+      />
+
       <MaterialReactTable table={table} />
     </MainLayout>
   );

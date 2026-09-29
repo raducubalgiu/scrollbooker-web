@@ -3,7 +3,6 @@ import Input from "@/components/core/Input/Input";
 import InputCheckbox from "@/components/core/Input/InputCheckbox";
 import InputSelect from "@/components/core/Input/InputSelect";
 import Modal from "@/components/core/Modal/Modal";
-import { useMutate } from "@/hooks/useHttp";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import {
   BusinessType,
@@ -18,7 +17,8 @@ type BusinessTypeModalProps = {
   open: boolean;
   onClose: () => void;
   data: BusinessType | null;
-  onSuccess: () => void;
+  onSave: (data: BusinessTypeCreateOrUpdate) => void;
+  isSubmitting: boolean;
   businessDomains: BusinessDomain[];
 };
 
@@ -33,7 +33,8 @@ const BusinessTypeModal = ({
   open,
   onClose,
   data,
-  onSuccess,
+  onSave,
+  isSubmitting,
   businessDomains,
 }: BusinessTypeModalProps) => {
   const isEditMode = !!data;
@@ -60,48 +61,27 @@ const BusinessTypeModal = ({
   useEffect(() => {
     if (open) {
       reset(
-        data || { name: "", plural: "", business_domain_id: "", active: true }
+        data
+          ? {
+              name: data.name ?? "",
+              plural: (data.plural as string) ?? "",
+              business_domain_id: String(data.business_domain_id ?? ""),
+              active: !!data.active,
+            }
+          : { name: "", plural: "", business_domain_id: "", active: true }
       );
     }
   }, [open, data, reset]);
 
-  const { mutate: handleCreate, isPending: isPendingCreate } = useMutate<
-    BusinessTypeCreateOrUpdate,
-    BusinessType
-  >({
-    key: ["create-business-type"],
-    url: `/api/nomenclatures/business-types`,
-    method: "POST",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const { mutate: handleUpdate, isPending: isPendingUpdate } = useMutate<
-    BusinessTypeCreateOrUpdate,
-    BusinessType
-  >({
-    key: ["update-business-type", data?.id],
-    url: `/api/nomenclatures/business-types/${data?.id}`,
-    method: "PUT",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const onSubmit = (data: BusinessTypeFormData) => {
+  const onSubmit = (formData: BusinessTypeFormData) => {
     const payload: BusinessTypeCreateOrUpdate = {
-      name: data.name,
-      plural: data.name,
-      business_domain_id: Number(data.business_domain_id),
-      active: data.active,
+      name: formData.name,
+      plural: formData.plural,
+      business_domain_id: Number(formData.business_domain_id),
+      active: formData.active,
     };
 
-    if (isEditMode) {
-      handleUpdate(payload);
-    } else {
-      handleCreate(payload);
-    }
+    onSave(payload);
   };
 
   const actions: ActionButtonType[] = [
@@ -109,8 +89,8 @@ const BusinessTypeModal = ({
       title: isEditMode ? "Modifică" : "Adaugă",
       props: {
         onClick: handleSubmit(onSubmit),
-        loading: isPendingCreate || isPendingUpdate,
-        disabled: isPendingCreate || isPendingUpdate || !isDirty,
+        loading: isSubmitting,
+        disabled: isSubmitting || !isDirty,
       },
     },
   ];
@@ -119,7 +99,7 @@ const BusinessTypeModal = ({
     <Modal
       title={
         isEditMode
-          ? `Editează Business Type ID: ${data.id}`
+          ? `Editează Business Type ID: ${data?.id}`
           : "Adaugă un Business Type"
       }
       open={open}
@@ -146,12 +126,10 @@ const BusinessTypeModal = ({
           <InputSelect
             name="business_domain_id"
             label="Domeniu Business"
-            options={businessDomains.map((bd) => {
-              return {
-                value: String(bd.id),
-                name: bd.name,
-              };
-            })}
+            options={businessDomains.map((bd) => ({
+              value: String(bd.id),
+              name: bd.name,
+            }))}
             rules={isRequired}
           />
 
