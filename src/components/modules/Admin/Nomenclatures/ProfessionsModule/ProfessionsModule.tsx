@@ -1,24 +1,33 @@
 "use client";
 
-import { PaginatedData } from "@/components/core/Table/Table";
-import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
+import { useState, useMemo, useCallback } from "react";
+import { Button, Switch } from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
 import {
   MaterialReactTable,
-  MRT_ActionMenuItem,
-  MRT_ColumnDef,
-  MRT_PaginationState,
-  MRT_Row,
-  MRT_TableInstance,
   useMaterialReactTable,
+  type MRT_ColumnDef,
+  type MRT_Row,
+  type MRT_TableInstance,
+  type MRT_PaginationState,
+  MRT_ActionMenuItem,
 } from "material-react-table";
-import { useCallback, useMemo, useState } from "react";
-import { Profession } from "@/ts/models/nomenclatures/profession/ProfessionType";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { Delete, Edit } from "@mui/icons-material";
-import { Button, Switch } from "@mui/material";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
+import { toast } from "react-toastify";
+import {
+  Profession,
+  ProfessionCreateOrUpdate,
+} from "@/ts/models/nomenclatures/profession/ProfessionType";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import {
+  useAllProfessions,
+  useCreateProfession,
+  useDeleteProfession,
+  useUpdateProfession,
+} from "@/controllers/nomenclature/professions.controller";
+import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import ProfessionModal from "./ProfessionModal";
+import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<Profession>;
@@ -31,20 +40,22 @@ type ProfessionModalState = {
   data: Profession | null;
 };
 
+type DeleteModalState = {
+  open: boolean;
+  id: string | null;
+  name: string;
+};
+
 type ProfessionModuleProps = {
-  initialData: PaginatedData<Profession>;
   businessDomains: BusinessDomain[];
-  pageSize: number;
 };
 
 export default function ProfessionsModule({
-  initialData,
   businessDomains,
-  pageSize,
 }: ProfessionModuleProps) {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize,
+    pageSize: 10,
   });
 
   const [openModal, setOpenModal] = useState<ProfessionModalState>({
@@ -52,29 +63,68 @@ export default function ProfessionsModule({
     data: null,
   });
 
-  const { data, isLoading, isError, refetch } = useCustomQuery<
-    PaginatedData<Profession>
-  >({
-    key: ["professions", pagination.pageIndex, pagination.pageSize],
-    url: `/api/nomenclatures/professions?page=${pagination.pageIndex + 1}&limit=${pagination.pageSize}`,
-    options: {
-      ...(pagination.pageIndex === 0 && pagination.pageSize === pageSize
-        ? { initialData }
-        : {}),
-    },
+  const [deleteModal, setDeleteModal] = useState<DeleteModalState>({
+    open: false,
+    id: null,
+    name: "",
   });
 
-  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
-    key: ["delete-profession"],
-    url: "/api/nomenclatures/professions",
-    method: "DELETE",
-    options: {
-      onSuccess: () => refetch(),
-    },
+  const { data, isLoading, isError } = useAllProfessions({
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+    all: true,
   });
+
+  const { mutate: createProfession, isPending: isPendingCreate } =
+    useCreateProfession();
+  const { mutate: updateProfession, isPending: isPendingUpdate } =
+    useUpdateProfession();
+  const { mutate: deleteProfession, isPending: isPendingDelete } =
+    useDeleteProfession();
 
   const tableData = useMemo(() => data?.results || [], [data]);
   const totalCount = useMemo(() => data?.count ?? 0, [data]);
+
+  const handleCloseModal = () => setOpenModal({ open: false, data: null });
+  const handleCloseDeleteModal = () =>
+    setDeleteModal({ open: false, id: null, name: "" });
+
+  const handleSaveProfession = (formData: ProfessionCreateOrUpdate) => {
+    const isEditMode = !!openModal.data;
+
+    if (isEditMode && openModal.data) {
+      updateProfession(
+        { id: String(openModal.data.id), data: formData },
+        {
+          onSuccess: () => {
+            toast.success("Profesia a fost modificată cu succes!");
+            handleCloseModal();
+          },
+          onError: () => toast.error("Eroare la modificarea profesiei."),
+        }
+      );
+    } else {
+      createProfession(formData, {
+        onSuccess: () => {
+          toast.success("Profesia a fost adăugată cu succes!");
+          handleCloseModal();
+        },
+        onError: () => toast.error("Eroare la adăugarea profesiei."),
+      });
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteModal.id) return;
+
+    deleteProfession(deleteModal.id, {
+      onSuccess: () => {
+        toast.success("Profesia a fost ștearsă cu succes!");
+        handleCloseDeleteModal();
+      },
+      onError: () => toast.error("A apărut o eroare la ștergerea profesiei."),
+    });
+  };
 
   const columns = useMemo<MRT_ColumnDef<Profession>[]>(
     () => [
@@ -111,11 +161,7 @@ export default function ProfessionsModule({
         label="Editeaza"
         icon={<Edit />}
         onClick={() => {
-          setOpenModal({
-            open: true,
-            data: row.original,
-          });
-
+          setOpenModal({ open: true, data: row.original });
           closeMenu();
         }}
         table={table}
@@ -125,8 +171,11 @@ export default function ProfessionsModule({
         label="Șterge"
         icon={<Delete />}
         onClick={() => {
-          handleDelete({ professionId: row.original.id });
-
+          setDeleteModal({
+            open: true,
+            id: String(row.original.id),
+            name: row.original.name,
+          });
           closeMenu();
         }}
         table={table}
@@ -138,12 +187,7 @@ export default function ProfessionsModule({
   const renderTopToolbarCustomActions = useCallback(
     () => (
       <Button
-        onClick={() => {
-          setOpenModal({
-            open: true,
-            data: null,
-          });
-        }}
+        onClick={() => setOpenModal({ open: true, data: null })}
         variant="contained"
         disableElevation
       >
@@ -157,10 +201,8 @@ export default function ProfessionsModule({
     columns,
     data: tableData,
     rowCount: totalCount,
-
     enablePagination: true,
     manualPagination: true,
-
     enableKeyboardShortcuts: false,
     enableColumnActions: false,
     enableColumnFilters: false,
@@ -173,10 +215,10 @@ export default function ProfessionsModule({
     localization: MRT_Localization_RO,
     state: {
       pagination,
-      isLoading: !tableData.length || isLoading || isPendingDelete,
+      isLoading: !tableData.length || isLoading,
+      showLoadingOverlay: isPendingDelete,
       showAlertBanner: isError,
     },
-
     onPaginationChange: setPagination,
     muiTablePaperProps: {
       elevation: 0,
@@ -194,12 +236,21 @@ export default function ProfessionsModule({
         open={openModal.open}
         data={openModal.data}
         businessDomains={businessDomains}
-        onClose={() => setOpenModal({ open: false, data: null })}
-        onSuccess={() => {
-          refetch();
-          setOpenModal({ open: false, data: null });
-        }}
+        onClose={handleCloseModal}
+        onSave={handleSaveProfession}
+        isSubmitting={isPendingCreate || isPendingUpdate}
       />
+
+      <ConfirmationModal
+        title="Confirmă ștergerea"
+        primaryActionTitle="Șterge"
+        message={`Sigur dorești să ștergi profesia "${deleteModal.name}"?`}
+        open={deleteModal.open}
+        isLoading={isPendingDelete}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+      />
+
       <MaterialReactTable table={table} />
     </MainLayout>
   );

@@ -1,6 +1,7 @@
 export interface Profession {
   id: number;
   name: string;
+  business_domain_id: number;
   active: boolean;
   created_at: string;
   updated_at: string;

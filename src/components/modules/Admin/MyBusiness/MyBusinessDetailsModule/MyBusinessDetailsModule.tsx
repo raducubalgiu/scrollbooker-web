@@ -1,20 +1,16 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { Paper } from "@mui/material";
+import React, { useState } from "react";
+import { Box, CircularProgress, Paper } from "@mui/material";
 import MySchedulesModule from "../MySchedulesModule/MySchedulesModule";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
-import { Business } from "@/ts/models/booking/business/Business";
 import BusinessDescriptionTab from "./BusinessDescriptionTab";
 import BusinessAddressTab from "./BusinessAddressTab";
 import BusinessGalleryTab from "./BusinessGalleryTab";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-
-type MyBusinessDetailsProps = {
-  business: Business;
-};
+import { useGetMyBusinessDetails } from "@/controllers/booking/business/business.controller";
 
 const TABS: CustomTabType[] = [
   { key: 0, label: "Sumar" },
@@ -23,38 +19,51 @@ const TABS: CustomTabType[] = [
   { key: 3, label: "Program" },
 ];
 
-export default function MyBusinessDetailsModule({
-  business,
-}: MyBusinessDetailsProps) {
+export default function MyBusinessDetailsModule() {
+  const { data: myBusinessDetails, isLoading } = useGetMyBusinessDetails();
   const [currentTab, setCurrentTab] = useState(0);
 
-  const sections = useMemo(() => {
+  if (isLoading || !myBusinessDetails) {
+    return (
+      <MainLayout hideAction title="Detalii Business">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "50vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </MainLayout>
+    );
+  }
+
+  const { id, location, has_employees, schedules } = myBusinessDetails || {};
+
+  const renderTabContent = () => {
     switch (currentTab) {
       case 0:
         return (
           <BusinessAddressTab
-            address={business.formatted_address}
-            map_url={business.map_url}
-            has_employees={business.has_employees}
+            address={location?.formatted_address ?? ""}
+            map_url={location?.map_url ?? ""}
+            has_employees={has_employees ?? false}
           />
         );
       case 1:
         return (
-          <BusinessDescriptionTab
-            businessId={business.id}
-            defaultDescription={business.description}
-          />
+          <BusinessDescriptionTab businessId={id} defaultDescription={""} />
         );
       case 2:
-        return (
-          <BusinessGalleryTab businessId={business.id} initialImages={[]} />
-        );
+        return <BusinessGalleryTab businessId={id} initialImages={[]} />;
       case 3:
-        return <MySchedulesModule data={business.schedules} />;
+        return <MySchedulesModule data={schedules} />;
       default:
         return null;
     }
-  }, [currentTab, business]);
+  };
 
   return (
     <MainLayout hideAction title="Detalii Business">
@@ -63,7 +72,7 @@ export default function MyBusinessDetailsModule({
         setValue={setCurrentTab}
         tabs={TABS}
       />
-      <Paper sx={{ mt: 3 }}>{sections}</Paper>
+      <Paper sx={{ mt: 3, p: 3 }}>{renderTabContent()}</Paper>
     </MainLayout>
   );
 }

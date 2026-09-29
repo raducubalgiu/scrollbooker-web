@@ -1,24 +1,24 @@
-import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import { useEffect } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { Stack } from "@mui/material";
+import Modal from "@/components/core/Modal/Modal"; // ajustează calea
 import Input from "@/components/core/Input/Input";
 import InputCheckbox from "@/components/core/Input/InputCheckbox";
 import InputSelect from "@/components/core/Input/InputSelect";
-import Modal from "@/components/core/Modal/Modal";
-import { useMutate } from "@/hooks/useHttp";
-import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import { maxField, minField, required } from "@/utils/validation-rules";
 import {
   Profession,
   ProfessionCreateOrUpdate,
 } from "@/ts/models/nomenclatures/profession/ProfessionType";
-import { maxField, minField, required } from "@/utils/validation-rules";
-import { Stack } from "@mui/material";
-import React, { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type ProfessionModalProps = {
   open: boolean;
   onClose: () => void;
   data: Profession | null;
-  onSuccess: () => void;
+  onSave: (data: ProfessionCreateOrUpdate) => void;
+  isSubmitting: boolean;
   businessDomains: BusinessDomain[];
 };
 
@@ -32,7 +32,8 @@ const ProfessionModal = ({
   open,
   onClose,
   data,
-  onSuccess,
+  onSave,
+  isSubmitting,
   businessDomains,
 }: ProfessionModalProps) => {
   const isEditMode = !!data;
@@ -57,46 +58,28 @@ const ProfessionModal = ({
 
   useEffect(() => {
     if (open) {
-      reset(data || { name: "", business_domain_id: "", active: true });
+      reset(
+        data
+          ? {
+              name: data.name ?? "",
+              business_domain_id: data.business_domain_id
+                ? String(data.business_domain_id)
+                : "",
+              active: !!data.active,
+            }
+          : { name: "", business_domain_id: "", active: true }
+      );
     }
   }, [open, data, reset]);
 
-  const { mutate: handleCreate, isPending: isPendingCreate } = useMutate<
-    ProfessionCreateOrUpdate,
-    Profession
-  >({
-    key: ["create-profession"],
-    url: `/api/nomenclatures/professions`,
-    method: "POST",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const { mutate: handleUpdate, isPending: isPendingUpdate } = useMutate<
-    ProfessionCreateOrUpdate,
-    Profession
-  >({
-    key: ["update-profession", data?.id],
-    url: `/api/nomenclatures/professions/${data?.id}`,
-    method: "PUT",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const onSubmit = (data: ProfessionFormData) => {
+  const onSubmit = (formData: ProfessionFormData) => {
     const payload: ProfessionCreateOrUpdate = {
-      name: data.name,
-      business_domain_id: Number(data.business_domain_id),
-      active: data.active,
+      name: formData.name,
+      business_domain_id: Number(formData.business_domain_id),
+      active: formData.active,
     };
 
-    if (isEditMode) {
-      handleUpdate(payload);
-    } else {
-      handleCreate(payload);
-    }
+    onSave(payload);
   };
 
   const actions: ActionButtonType[] = [
@@ -104,8 +87,8 @@ const ProfessionModal = ({
       title: isEditMode ? "Modifică" : "Adaugă",
       props: {
         onClick: handleSubmit(onSubmit),
-        loading: isPendingCreate || isPendingUpdate,
-        disabled: isPendingCreate || isPendingUpdate || !isDirty,
+        loading: isSubmitting,
+        disabled: isSubmitting || !isDirty,
       },
     },
   ];
@@ -113,7 +96,7 @@ const ProfessionModal = ({
   return (
     <Modal
       title={
-        isEditMode ? `Editează Profesia ID: ${data.id}` : "Adaugă o Profesie"
+        isEditMode ? `Editează Profesia ID: ${data?.id}` : "Adaugă o Profesie"
       }
       open={open}
       handleClose={onClose}
@@ -133,12 +116,10 @@ const ProfessionModal = ({
           <InputSelect
             name="business_domain_id"
             label="Domeniu Business"
-            options={businessDomains.map((bd) => {
-              return {
-                value: String(bd.id),
-                name: bd.name,
-              };
-            })}
+            options={businessDomains.map((bd) => ({
+              value: String(bd.id),
+              name: bd.name,
+            }))}
             rules={isRequired}
           />
 

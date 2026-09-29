@@ -1,28 +1,29 @@
-import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
-import Input from "@/components/core/Input/Input";
+import { useEffect } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { Stack } from "@mui/material";
 import Modal from "@/components/core/Modal/Modal";
-import { useMutate } from "@/hooks/useHttp";
+import Input from "@/components/core/Input/Input";
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import { maxField, minField, required } from "@/utils/validation-rules";
 import {
   Consent,
   ConsentCreateOrUpdate,
 } from "@/ts/models/nomenclatures/consent/Consent";
-import { maxField, minField, required } from "@/utils/validation-rules";
-import { Stack } from "@mui/material";
-import React, { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
 
 type ConsentModalProps = {
   open: boolean;
   data: Consent | null;
   onClose: () => void;
-  onSuccess: () => void;
+  onSave: (data: ConsentCreateOrUpdate) => void;
+  isSubmitting: boolean;
 };
 
 const ConsentModal = ({
   open,
   data,
   onClose,
-  onSuccess,
+  onSave,
+  isSubmitting,
 }: ConsentModalProps) => {
   const isEditMode = !!data;
 
@@ -50,49 +51,26 @@ const ConsentModal = ({
 
   useEffect(() => {
     if (open) {
-      reset(data || { name: "", title: "", text: "", version: "" });
+      reset(
+        data
+          ? {
+              name: data.name ?? "",
+              title: data.title ?? "",
+              text: data.text ?? "",
+              version: data.version ?? "",
+            }
+          : { name: "", title: "", text: "", version: "" }
+      );
     }
   }, [open, data, reset]);
-
-  const { mutate: handleCreate, isPending: isPendingCreate } = useMutate<
-    ConsentCreateOrUpdate,
-    Consent
-  >({
-    key: ["create-consent"],
-    url: `/api/nomenclatures/consents`,
-    method: "POST",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const { mutate: handleUpdate, isPending: isPendingUpdate } = useMutate<
-    ConsentCreateOrUpdate,
-    Consent
-  >({
-    key: ["update-consent", data?.id],
-    url: `/api/nomenclatures/consents/${data?.id}`,
-    method: "PUT",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const onSubmit = (data: ConsentCreateOrUpdate) => {
-    if (isEditMode) {
-      handleUpdate(data);
-    } else {
-      handleCreate(data);
-    }
-  };
 
   const actions: ActionButtonType[] = [
     {
       title: isEditMode ? "Modifică" : "Adaugă",
       props: {
-        onClick: handleSubmit(onSubmit),
-        loading: isPendingCreate || isPendingUpdate,
-        disabled: isPendingCreate || isPendingUpdate || !isDirty,
+        onClick: handleSubmit(onSave),
+        loading: isSubmitting,
+        disabled: isSubmitting || !isDirty,
       },
     },
   ];
@@ -100,7 +78,7 @@ const ConsentModal = ({
   return (
     <Modal
       title={
-        isEditMode ? `Editează Consent ID: ${data.id}` : "Adaugă un Consent"
+        isEditMode ? `Editează Consent ID: ${data?.id}` : "Adaugă un Consent"
       }
       open={open}
       handleClose={onClose}

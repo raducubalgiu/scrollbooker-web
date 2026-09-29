@@ -1,25 +1,31 @@
 "use client";
 
-import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { Consent } from "@/ts/models/nomenclatures/consent/Consent";
-import { Delete, Edit } from "@mui/icons-material";
-import { Box, Button } from "@mui/material";
+import { useState, useMemo, useCallback } from "react";
+import { Button, Box } from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
 import {
   MaterialReactTable,
   MRT_ActionMenuItem,
-  MRT_ColumnDef,
-  MRT_Row,
-  MRT_TableInstance,
   useMaterialReactTable,
+  type MRT_ColumnDef,
+  type MRT_Row,
+  type MRT_TableInstance,
 } from "material-react-table";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
-import { useCallback, useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import {
+  Consent,
+  ConsentCreateOrUpdate,
+} from "@/ts/models/nomenclatures/consent/Consent";
+import {
+  useAllConsents,
+  useCreateConsent,
+  useDeleteConsent,
+  useUpdateConsent,
+} from "@/controllers/nomenclature/consent.controller";
+import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import ConsentModal from "./ConsentModal";
-
-type ConsentsModuleProps = {
-  initialData: Consent[];
-};
+import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<Consent>;
@@ -32,32 +38,78 @@ type ConsentModalState = {
   data: Consent | null;
 };
 
-const ConsentsModule = ({ initialData }: ConsentsModuleProps) => {
+type DeleteModalState = {
+  open: boolean;
+  id: string | null;
+  name: string;
+};
+
+const ConsentsModule = () => {
   const [openModal, setOpenModal] = useState<ConsentModalState>({
     open: false,
     data: null,
   });
 
-  const { data, isLoading, refetch } = useCustomQuery<Consent[]>({
-    key: ["consents"],
-    url: "/api/nomenclatures/consents",
-    options: {
-      initialData: initialData ?? [],
-    },
+  const [deleteModal, setDeleteModal] = useState<DeleteModalState>({
+    open: false,
+    id: null,
+    name: "",
   });
+
+  const { data, isLoading } = useAllConsents();
+
+  const { mutate: createConsent, isPending: isPendingCreate } =
+    useCreateConsent();
+  const { mutate: updateConsent, isPending: isPendingUpdate } =
+    useUpdateConsent();
+  const { mutate: deleteConsent, isPending: isPendingDelete } =
+    useDeleteConsent();
 
   const memoizedData = useMemo(() => {
     return data || [];
   }, [data]);
 
-  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
-    key: ["delete-consent"],
-    url: "/api/nomenclatures/consents",
-    method: "DELETE",
-    options: {
-      onSuccess: () => refetch(),
-    },
-  });
+  const handleCloseModal = () => setOpenModal({ open: false, data: null });
+  const handleCloseDeleteModal = () =>
+    setDeleteModal({ open: false, id: null, name: "" });
+
+  const handleSaveConsent = (formData: ConsentCreateOrUpdate) => {
+    const isEditMode = !!openModal.data;
+
+    if (isEditMode && openModal.data) {
+      updateConsent(
+        { id: String(openModal.data.id), data: formData },
+        {
+          onSuccess: () => {
+            toast.success("Consimțământul a fost modificat cu succes!");
+            handleCloseModal();
+          },
+          onError: () => toast.error("Eroare la modificarea consimțământului."),
+        }
+      );
+    } else {
+      createConsent(formData, {
+        onSuccess: () => {
+          toast.success("Consimțământul a fost adăugat cu succes!");
+          handleCloseModal();
+        },
+        onError: () => toast.error("Eroare la adăugarea consimțământului."),
+      });
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteModal.id) return;
+
+    deleteConsent(deleteModal.id, {
+      onSuccess: () => {
+        toast.success("Consimțământul a fost șters cu succes!");
+        handleCloseDeleteModal();
+      },
+      onError: () =>
+        toast.error("A apărut o eroare la ștergerea consimțământului."),
+    });
+  };
 
   const columns = useMemo<MRT_ColumnDef<Consent>[]>(
     () => [
@@ -116,7 +168,6 @@ const ConsentsModule = ({ initialData }: ConsentsModuleProps) => {
             open: true,
             data: row.original,
           });
-
           closeMenu();
         }}
         table={table}
@@ -126,8 +177,11 @@ const ConsentsModule = ({ initialData }: ConsentsModuleProps) => {
         label="Șterge"
         icon={<Delete />}
         onClick={() => {
-          handleDelete({ consentId: row.original.id });
-
+          setDeleteModal({
+            open: true,
+            id: String(row.original.id),
+            name: row.original.name,
+          });
           closeMenu();
         }}
         table={table}
@@ -187,12 +241,21 @@ const ConsentsModule = ({ initialData }: ConsentsModuleProps) => {
       <ConsentModal
         open={openModal.open}
         data={openModal.data}
-        onClose={() => setOpenModal({ open: false, data: null })}
-        onSuccess={() => {
-          refetch();
-          setOpenModal({ open: false, data: null });
-        }}
+        onClose={handleCloseModal}
+        onSave={handleSaveConsent}
+        isSubmitting={isPendingCreate || isPendingUpdate}
       />
+
+      <ConfirmationModal
+        title="Confirmă ștergerea"
+        primaryActionTitle="Șterge"
+        message={`Sigur dorești să ștergi consimțământul "${deleteModal.name}"?`}
+        open={deleteModal.open}
+        isLoading={isPendingDelete}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+      />
+
       <MaterialReactTable table={table} />
     </MainLayout>
   );
