@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useMutate } from "@/hooks/useHttp";
+import { useVerifyEmailMutation } from "@/controllers/auth/auth.controller";
 import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -19,10 +19,10 @@ export default function CollectEmailVerificationStep() {
   const { update } = useSession();
   const [code, setCode] = useState("");
 
-  const { mutate: handleVerify, isPending } = useMutate({
-    key: ["verify-email"],
-    url: "/api/auth/verify-email",
-    options: {
+  const { mutate: verifyEmail, isPending } = useVerifyEmailMutation();
+
+  const handleVerify = () => {
+    verifyEmail(undefined, {
       onSuccess: async (data: OnboardingResponse) => {
         await update({
           is_validated: data.is_validated,
@@ -31,8 +31,8 @@ export default function CollectEmailVerificationStep() {
 
         router.refresh();
       },
-    },
-  });
+    });
+  };
 
   const handleResend = async () => {};
 
@@ -77,7 +77,7 @@ export default function CollectEmailVerificationStep() {
             size="large"
             fullWidth
             loading={isPending}
-            onClick={() => handleVerify({})}
+            onClick={handleVerify}
             disableElevation
             sx={{ py: 1.5, fontSize: 16, fontWeight: 600 }}
           >

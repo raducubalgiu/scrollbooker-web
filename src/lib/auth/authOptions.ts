@@ -2,29 +2,46 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { AuthOptions, User } from "next-auth";
 import { LOG } from "@/utils/logger";
 import { SECOND } from "@/utils/date-utils";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import axios, { AxiosResponse } from "axios";
-import { map } from "lodash";
 import { JWT } from "next-auth/jwt";
-import { Permission } from "@/ts/models/user/Permission";
-import { UserInfo } from "@/ts/models/auth/auth";
-
-type DecodedTokenType = {
-  id: number;
-  sub: string;
-  fullname: string;
-  email: string;
-  role: string;
-  exp: number;
-};
-
-type AuthResponseType = {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-};
+import {
+  fetchUserInfo,
+  fetchUserPermissions,
+  loginWithCredentials,
+  refreshAccessToken,
+  verifyAccessToken,
+} from "@/controllers/auth/auth.service";
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60;
+
+async function buildRefreshedJwt(refreshToken: string): Promise<JWT> {
+  const refreshed = await refreshAccessToken(refreshToken);
+
+  const decoded = await verifyAccessToken(refreshed.access_token);
+  if (!decoded?.exp) throw new Error("Invalid refreshed token");
+
+  const [permissions, userInfo] = await Promise.all([
+    fetchUserPermissions(refreshed.access_token),
+    fetchUserInfo(refreshed.access_token),
+  ]);
+
+  return {
+    accessToken: refreshed.access_token,
+    refreshToken: refreshed.refresh_token,
+    accessTokenExpires: decoded.exp * 1000,
+    user_id: userInfo.id,
+    username: userInfo.username,
+    profession: userInfo.profession,
+    is_validated: userInfo.is_validated,
+    registration_step: userInfo.registration_step,
+    permissions: permissions,
+    avatar: userInfo.avatar,
+    business_id: userInfo.business_id,
+    business_owner_id: userInfo.business_owner_id,
+    business_type_id: userInfo.business_type_id,
+    has_employees: userInfo.has_employees,
+    is_employee: userInfo.is_employee,
+  };
+}
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -42,10 +59,10 @@ export const authOptions: AuthOptions = {
 
         if (!username || !password) return null;
 
-        const auth = await login(username, password);
+        const auth = await loginWithCredentials(username, password);
         if (!auth) return null;
 
-        const decoded = await verifyToken(auth.access_token);
+        const decoded = await verifyAccessToken(auth.access_token);
         if (!decoded) return null;
 
         const user: User = {
@@ -75,28 +92,8 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user, trigger, session }): Promise<JWT> {
       if (trigger === "update" && session) {
         try {
-          const refreshed = await refreshToken(token.refreshToken);
-          const newestToken = refreshed.accessToken;
-
-          const userInfo = await getUserInfo(newestToken);
-          const permissions = await getPermissions(newestToken);
-
-          return {
-            ...token,
-            ...refreshed,
-            user_id: userInfo.id,
-            username: userInfo.username,
-            profession: userInfo.profession,
-            is_validated: userInfo.is_validated,
-            registration_step: userInfo.registration_step,
-            avatar: userInfo.avatar,
-            business_id: userInfo.business_id,
-            business_owner_id: userInfo.business_owner_id,
-            business_type_id: userInfo.business_type_id,
-            has_employees: userInfo.has_employees,
-            is_employee: userInfo.is_employee,
-            permissions: permissions,
-          };
+          const refreshed = await buildRefreshedJwt(token.refreshToken);
+          return { ...token, ...refreshed };
         } catch (error: unknown) {
           const errorMessage =
             error instanceof Error ? error.message : String(error);
@@ -109,8 +106,8 @@ export const authOptions: AuthOptions = {
 
       if (user) {
         const [permissions, userInfo] = await Promise.all([
-          getPermissions(user.accessToken),
-          getUserInfo(user.accessToken),
+          fetchUserPermissions(user.accessToken),
+          fetchUserInfo(user.accessToken),
         ]);
 
         return {
@@ -140,7 +137,7 @@ export const authOptions: AuthOptions = {
         }
 
         try {
-          const refreshed = await refreshToken(token.refreshToken);
+          const refreshed = await buildRefreshedJwt(token.refreshToken);
           return { ...token, ...refreshed, error: undefined };
         } catch (error) {
           const errorMessage =
@@ -187,112 +184,3 @@ export const authOptions: AuthOptions = {
     signIn: "/auth/signin",
   },
 };
-
-async function login(
-  username: string,
-  password: string
-): Promise<AuthResponseType | null> {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/login`,
-      new URLSearchParams({ username, password }),
-      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-    );
-    return response.data;
-  } catch (error: unknown) {
-    // Enhanced logging to aid debugging 401/500 responses from backend
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const errAny: any = error;
-    if (errAny && errAny.response) {
-      try {
-        LOG.error(
-          `Login request failed: status=${errAny.response.status}, data=${JSON.stringify(
-            errAny.response.data
-          )}`
-        );
-      } catch (e) {
-        LOG.error(`Login request failed: ${errAny.response.status}`);
-      }
-    } else if (error instanceof Error) {
-      LOG.error(`Login Error: ${error.message}`);
-    } else {
-      LOG.error(`Login Error: unknown error`);
-    }
-
-    // return null so authorize treats login as failure (previous behavior)
-    return null;
-  }
-}
-
-async function verifyToken(token: string): Promise<DecodedTokenType | null> {
-  try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    ) as JwtPayload & DecodedTokenType;
-
-    if (!decoded.id || !decoded.role) {
-      LOG.error("Invalid token or missing User id or Role");
-      return null;
-    }
-
-    return decoded;
-  } catch (err) {
-    LOG.error(`JWT verification failed, ${err}`);
-    return null;
-  }
-}
-
-async function getPermissions(token: string): Promise<string[]> {
-  const userPermissions: AxiosResponse<Permission[]> = await axios.get(
-    `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/user-permissions`,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return map(userPermissions.data, "code");
-}
-
-async function getUserInfo(token: string): Promise<UserInfo> {
-  const user = await axios.get(
-    `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/user-info`,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return user.data;
-}
-
-async function refreshToken(refreshToken: string): Promise<JWT> {
-  try {
-    const { data } = await axios.post(
-      `${process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT}/auth/refresh`,
-      { refresh_token: refreshToken }
-    );
-
-    const decoded = await verifyToken(data.access_token);
-    if (!decoded?.exp) throw new Error("Invalid refreshed token");
-
-    const [permissions, userInfo] = await Promise.all([
-      getPermissions(data.access_token),
-      getUserInfo(data.access_token),
-    ]);
-
-    return {
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token,
-      accessTokenExpires: decoded.exp * 1000,
-      user_id: userInfo.id,
-      username: userInfo.username,
-      profession: userInfo.profession,
-      is_validated: userInfo.is_validated,
-      registration_step: userInfo.registration_step,
-      permissions: permissions,
-      avatar: userInfo.avatar,
-      business_id: userInfo.business_id,
-      business_owner_id: userInfo.business_owner_id,
-      business_type_id: userInfo.business_type_id,
-      has_employees: userInfo.has_employees,
-      is_employee: userInfo.is_employee,
-    };
-  } catch (e) {
-    LOG.error("Token cannot be refreshed! Session will be terminated");
-    throw e;
-  }
-}
