@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "title": "ScrollBooker — Video-First Booking for Beauty",
+    "description": "ScrollBooker is the social network you book from: video feed, follows, likes, comments, video reviews — plus calendar, services, products, and staff, fully managed in one place."
+  },
+  "nav": {
+    "login": "Log in",
+    "registerFull": "Register your business",
+    "registerShort": "Register"
+  },
+  "announcementBar": {
+    "message": "We're launching ScrollBooker — the first businesses to sign up get priority access, before the market fills up.",
+    "cta": "Claim your spot"
+  },
+  "hero": {
+    "badge": "The first Video-First Booking platform for Beauty",
+    "titlePrefix": "Discovery like",
+    "titleHighlight": "TikTok",
+    "titleSuffix": ", booking like ScrollBooker",
+    "subtitle": "Clients follow your business, like and share your content, comment — and book instantly, straight from the video, without leaving the feed. Alongside the community that builds around you, you get a fully managed calendar, services, products, and staff.",
+    "ctaPrimary": "Register your business",
+    "ctaSecondary": "See how it works",
+    "imageAlt": "The ScrollBooker feed — video discovery, with likes, comments, and an instant booking button"
+  },
+  "socialContrast": {
+    "kicker": "Why it's not just another booking app",
+    "title": "The engagement of a social network, with instant booking built in",
+    "oldWayLabel": "A typical booking app",
+    "newWayLabel": "ScrollBooker",
+    "oldWay": [
+      "A static list of businesses, sorted or filtered",
+      "You search actively, only when you already need a booking",
+      "Reviews = text and a score, that's it",
+      "No reason to ever open the app between bookings"
+    ],
+    "newWay": [
+      "A vertical video feed, like TikTok — you discover organically, not just search",
+      "You follow the businesses you like, see their new content in the feed",
+      "Likes, comments, shares — a real community forms",
+      "Reviews are video clips, not just stars — real proof that circulates as organic advertising for you",
+      "Instant booking, straight from the video, without leaving the app"
+    ]
+  },
+  "features": {
+    "kicker": "Why ScrollBooker",
+    "title": "Everything you need to grow, in a single app",
+    "items": [
+      {
+        "title": "A community, not just customers",
+        "description": "Likes, comments, shares, followers — every interaction puts you in front of more and more new people, just like on any social network."
+      },
+      {
+        "title": "Online booking, 24/7",
+        "description": "Clients book straight from the video, anytime, without phone calls or messages. Your calendar updates automatically, in real time."
+      },
+      {
+        "title": "Complete management",
+        "description": "Calendar, services, products, working hours, and staff — all in one panel, whether you work solo or with a team."
+      },
+      {
+        "title": "Video reviews = free advertising",
+        "description": "Your happy clients post their own video reviews — real content that circulates in other people's feeds and brings you new clients, at no cost."
+      }
+    ]
+  },
+  "profileShowcase": {
+    "kicker": "For your profile",
+    "title": "Your profile becomes a community, not just a list of services",
+    "subtitle": "Just like on any social network — except here you can also book directly, without switching apps.",
+    "imageAlt": "A business profile on ScrollBooker, with followers, reviews, and a video portfolio",
+    "items": [
+      {
+        "title": "Followers, not just past clients",
+        "description": "Anyone who likes your work can follow you — they see your new content first, even before they have a booking planned."
+      },
+      {
+        "title": "A video portfolio, not static photos",
+        "description": "Every post you make stays on your profile — new clients see exactly what you can do, not just a description."
+      },
+      {
+        "title": "Reviews you can see, not just read",
+        "description": "Your score and review count show up right on your profile, next to the content that earned them."
+      },
+      {
+        "title": "Your business link, clearly visible",
+        "description": "If you're staff, your profile shows exactly which business you work at — clients book with you, knowing exactly where."
+      }
+    ]
+  },
+  "howItWorks": {
+    "kicker": "How it works",
+    "title": "From sign-up to your first booking",
+    "clientsKicker": "And your clients",
+    "clientsTitle": "Book just as easily — straight from a video",
+    "bookingFlowImageAlt": "Booking flow straight from a video post: see a look in the feed, pick the service, pick the time, confirm the booking",
+    "steps": [
+      {
+        "title": "You sign up",
+        "description": "Fill in your business details — it takes a few minutes, straight from the browser, no app install needed."
+      },
+      {
+        "title": "You set up your profile",
+        "description": "Add a photo gallery, your services and products, your working hours, and, if it applies, your staff."
+      },
+      {
+        "title": "You get bookings",
+        "description": "Once approved, your profile becomes visible in the app — clients discover you and book directly."
+      }
+    ]
+  },
+  "adminShowcase": {
+    "kicker": "For your team",
+    "title": "Not just bookings — your whole business, managed",
+    "subtitle": "Whether you work solo or with a full team, ScrollBooker gives you every tool you need day to day, not just the storefront your clients see.",
+    "imageAlt": "A modern salon interior, with a management device at the front desk",
+    "items": [
+      {
+        "title": "Calendar",
+        "description": "A calendar of its own per staff member, or a single one if you work solo — always in sync."
+      },
+      {
+        "title": "Services & hours",
+        "description": "Set your services, their duration, and your working hours."
+      },
+      {
+        "title": "Products",
+        "description": "Manage the products/packages you sell to clients."
+      },
+      {
+        "title": "Staff",
+        "description": "Invite your team into the app — each with their own calendar and their own bookings."
+      },
+      {
+        "title": "Statistics",
+        "description": "See at a glance how your business is growing over time."
+      }
+    ]
+  },
+  "gallery": {
+    "kicker": "For any Beauty business",
+    "title": "From hairdressers and barbershops, to nails, lashes, and massage",
+    "items": [
+      { "label": "Hair & beard", "alt": "A modern barbershop, with clients getting a haircut" },
+      { "label": "Make-up", "alt": "A make-up artist working with a client" },
+      { "label": "Brows & lashes", "alt": "Lash extensions being applied, in a treatment room" },
+      { "label": "Nails", "alt": "A manicure, close-up on finished nails" },
+      { "label": "Facial care", "alt": "A cosmetic facial treatment, at a salon" },
+      { "label": "Massage", "alt": "A therapeutic massage, at a spa salon" }
+    ]
+  },
+  "mobileApps": {
+    "kicker": "Mobile apps",
+    "title": "Just a little longer — and we'll be in your pocket too",
+    "subtitle": "The native ScrollBooker experience, with a full-screen video feed, is coming soon to iOS and Android. Until then, everything you need to get your business ready already works, right here, on the web.",
+    "forPrefix": "for",
+    "soonChip": "Coming soon"
+  },
+  "cta": {
+    "title": "Be ready before the wave hits, not after",
+    "subtitle": "The earlier your profile is set up, the more visibility you get once clients start arriving in the app — and the less competition for that same attention. Signing up takes a few minutes and costs nothing.",
+    "button": "Register your business"
+  },
+  "footer": {
+    "login": "Log in",
+    "registerBusiness": "Register your business"
+  },
+  "languageSwitcher": {
+    "ro": "RO",
+    "en": "EN"
+  }
+}

@@ -1,11 +1,15 @@
 import { Metadata, Viewport } from "next";
+import { getTranslations } from "next-intl/server";
 import LandingPageModule from "@/components/modules/LandingPageModule/LandingPageModule";
 
-export const metadata: Metadata = {
-  title: "ScrollBooker — Video-First Booking pentru Beauty",
-  description:
-    "ScrollBooker e rețeaua socială din care se rezervă: feed video, follow, like, comentarii, recenzii video — plus calendar, servicii, produse și angajați administrate complet, într-un singur loc.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 // Landing page-ul rămâne mereu dark (aceeași logică ca BottomBar.isDarkPage
 // pentru "/"), deci forțăm și chrome-ul mobil (status bar iOS, bara Chrome

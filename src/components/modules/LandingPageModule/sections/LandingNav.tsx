@@ -2,12 +2,16 @@
 
 import { Box, Button, Container, Stack } from "@mui/material";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { AppRoutes } from "@/utils/routes";
 import { LANDING_COLORS } from "../landing.constants";
 import LandingLogo from "../components/LandingLogo";
 import LandingSymbol from "../components/LandingSymbol";
+import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
 
 export default function LandingNav() {
+  const t = useTranslations("nav");
+
   return (
     <Box
       component="header"
@@ -35,13 +39,16 @@ export default function LandingNav() {
           </Box>
 
           <Stack direction="row" spacing={{ xs: 0.75, sm: 1.25 }} alignItems="center">
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              <LandingLanguageSwitcher />
+            </Box>
             <Button
               component={Link}
               href={AppRoutes.login()}
               variant="text"
               sx={{ color: "rgba(255,255,255,0.85)", px: { xs: 1.25, sm: 1.75 } }}
             >
-              Autentificare
+              {t("login")}
             </Button>
             <Button
               component={Link}
@@ -56,10 +63,10 @@ export default function LandingNav() {
               }}
             >
               <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
-                Înregistrează-ți afacerea
+                {t("registerFull")}
               </Box>
               <Box component="span" sx={{ display: { xs: "inline", sm: "none" } }}>
-                Înregistrare
+                {t("registerShort")}
               </Box>
             </Button>
           </Stack>

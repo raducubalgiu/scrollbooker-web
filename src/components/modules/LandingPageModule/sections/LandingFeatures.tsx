@@ -6,36 +6,22 @@ import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import DashboardCustomizeRoundedIcon from "@mui/icons-material/DashboardCustomizeRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
+import { useTranslations } from "next-intl";
 import { LANDING_COLORS } from "../landing.constants";
 
-const FEATURES = [
-  {
-    icon: GroupsRoundedIcon,
-    title: "Comunitate, nu doar clienți",
-    description:
-      "Like-uri, comentarii, distribuiri, urmăritori — fiecare interacțiune te aduce în fața a tot mai mulți oameni noi, ca pe orice rețea socială.",
-  },
-  {
-    icon: CalendarMonthRoundedIcon,
-    title: "Programări online, 24/7",
-    description:
-      "Clienții rezervă direct din videoclip, oricând, fără telefoane sau mesaje. Calendarul tău se actualizează automat, în timp real.",
-  },
-  {
-    icon: DashboardCustomizeRoundedIcon,
-    title: "Administrare completă",
-    description:
-      "Calendar, servicii, produse, program de lucru și angajați — toate într-un singur panou, indiferent dacă lucrezi singur sau cu o echipă.",
-  },
-  {
-    icon: VideocamRoundedIcon,
-    title: "Recenzii video = reclamă gratuită",
-    description:
-      "Clienții tăi mulțumiți postează chiar ei clipuri video-review — conținut real, care circulă în feed-ul altora și îți aduce clienți noi, fără cost.",
-  },
+const ICONS = [
+  GroupsRoundedIcon,
+  CalendarMonthRoundedIcon,
+  DashboardCustomizeRoundedIcon,
+  VideocamRoundedIcon,
 ];
 
+type FeatureItem = { title: string; description: string };
+
 export default function LandingFeatures() {
+  const t = useTranslations("features");
+  const items = t.raw("items") as FeatureItem[];
+
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 12 } }}>
       <Container maxWidth="lg">
@@ -44,15 +30,18 @@ export default function LandingFeatures() {
             variant="overline"
             sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
           >
-            De ce ScrollBooker
+            {t("kicker")}
           </Typography>
           <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary }}>
-            Tot ce îți trebuie ca să crești, într-o singură aplicație
+            {t("title")}
           </Typography>
         </Stack>
 
         <Grid container spacing={3}>
-          {FEATURES.map((feature) => (
+          {items.map((feature, index) => {
+            const Icon = ICONS[index]!;
+
+            return (
             <Grid key={feature.title} size={{ xs: 12, sm: 6, md: 3 }}>
               <Stack
                 spacing={2}
@@ -81,7 +70,7 @@ export default function LandingFeatures() {
                     color: LANDING_COLORS.primary,
                   }}
                 >
-                  <feature.icon fontSize="small" />
+                  <Icon fontSize="small" />
                 </Box>
                 <Typography
                   variant="h6"
@@ -97,7 +86,8 @@ export default function LandingFeatures() {
                 </Typography>
               </Stack>
             </Grid>
-          ))}
+            );
+          })}
         </Grid>
       </Container>
     </Box>

@@ -7,39 +7,23 @@ import ContentCutRoundedIcon from "@mui/icons-material/ContentCutRounded";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
+import { useTranslations } from "next-intl";
 import { LANDING_COLORS } from "../landing.constants";
 
-const ADMIN_ITEMS = [
-  {
-    icon: CalendarMonthRoundedIcon,
-    title: "Calendar",
-    description:
-      "Un calendar propriu per angajat, sau unul singur dacă lucrezi pe cont propriu — mereu sincronizat.",
-  },
-  {
-    icon: ContentCutRoundedIcon,
-    title: "Servicii & program",
-    description: "Definești serviciile oferite, durata și orele de funcționare.",
-  },
-  {
-    icon: Inventory2RoundedIcon,
-    title: "Produse",
-    description: "Administrezi produsele/pachetele pe care le vinzi clienților.",
-  },
-  {
-    icon: GroupsRoundedIcon,
-    title: "Angajați",
-    description:
-      "Îți inviți echipa în aplicație — fiecare cu propriul calendar și propriile programări.",
-  },
-  {
-    icon: QueryStatsRoundedIcon,
-    title: "Statistici",
-    description: "Vezi dintr-o privire cum evoluează afacerea ta în timp.",
-  },
+const ICONS = [
+  CalendarMonthRoundedIcon,
+  ContentCutRoundedIcon,
+  Inventory2RoundedIcon,
+  GroupsRoundedIcon,
+  QueryStatsRoundedIcon,
 ];
 
+type AdminItem = { title: string; description: string };
+
 export default function LandingAdminShowcase() {
+  const t = useTranslations("adminShowcase");
+  const items = t.raw("items") as AdminItem[];
+
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 12 } }}>
       <Container maxWidth="lg">
@@ -62,7 +46,7 @@ export default function LandingAdminShowcase() {
           >
             <Image
               src="https://images.unsplash.com/photo-1746723375184-5f537d2e6f31?fm=jpg&q=80&w=1200&auto=format&fit=crop"
-              alt="Interior de salon modern, cu un dispozitiv de administrare pe recepție"
+              alt={t("imageAlt")}
               fill
               sizes="(max-width: 900px) 90vw, 560px"
               style={{ objectFit: "cover" }}
@@ -74,25 +58,26 @@ export default function LandingAdminShowcase() {
               variant="overline"
               sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
             >
-              Pentru echipa ta
+              {t("kicker")}
             </Typography>
             <Typography
               variant="h2"
               sx={{ color: LANDING_COLORS.textPrimary, mt: 1.5, mb: 2 }}
             >
-              Nu doar rezervări — administrarea completă a afacerii
+              {t("title")}
             </Typography>
             <Typography
               variant="body1"
               sx={{ color: LANDING_COLORS.textSecondary, mb: 4, lineHeight: 1.7 }}
             >
-              Fie că lucrezi singur, fie că ai o echipă întreagă, ScrollBooker
-              îți pune la dispoziție toate uneltele de care ai nevoie zi de zi,
-              nu doar vitrina din fața clienților.
+              {t("subtitle")}
             </Typography>
 
             <Stack spacing={2.5}>
-              {ADMIN_ITEMS.map((item) => (
+              {items.map((item, index) => {
+                const Icon = ICONS[index]!;
+
+                return (
                 <Stack key={item.title} direction="row" spacing={2}>
                   <Box
                     sx={{
@@ -107,7 +92,7 @@ export default function LandingAdminShowcase() {
                       flexShrink: 0,
                     }}
                   >
-                    <item.icon fontSize="small" />
+                    <Icon fontSize="small" />
                   </Box>
                   <Box>
                     <Typography
@@ -123,7 +108,8 @@ export default function LandingAdminShowcase() {
                     </Typography>
                   </Box>
                 </Stack>
-              ))}
+                );
+              })}
             </Stack>
           </Box>
         </Stack>

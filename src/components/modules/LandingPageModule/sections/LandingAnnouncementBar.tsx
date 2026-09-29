@@ -2,11 +2,14 @@
 
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { AppRoutes } from "@/utils/routes";
 import { LANDING_COLORS } from "../landing.constants";
 
 export default function LandingAnnouncementBar() {
+  const t = useTranslations("announcementBar");
+
   return (
     <Box
       component={Link}
@@ -32,8 +35,7 @@ export default function LandingAnnouncementBar() {
             variant="body2"
             sx={{ color: LANDING_COLORS.textSecondary, fontWeight: 500 }}
           >
-            Lansăm ScrollBooker — primele afaceri înscrise au acces
-            prioritar, înainte să se aglomereze piața.
+            {t("message")}
           </Typography>
           <Stack
             direction="row"
@@ -42,7 +44,7 @@ export default function LandingAnnouncementBar() {
             sx={{ color: LANDING_COLORS.primary, fontWeight: 600, flexShrink: 0 }}
           >
             <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              Rezervă-ți locul
+              {t("cta")}
             </Typography>
             <ArrowForwardRoundedIcon sx={{ fontSize: 16 }} />
           </Stack>

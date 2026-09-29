@@ -2,11 +2,14 @@
 
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { AppRoutes } from "@/utils/routes";
 import { LANDING_COLORS } from "../landing.constants";
 
 export default function LandingCTA() {
+  const t = useTranslations("cta");
+
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 10 } }}>
       <Container maxWidth="lg">
@@ -26,16 +29,13 @@ export default function LandingCTA() {
               variant="h2"
               sx={{ color: "#000", maxWidth: 640, letterSpacing: "-0.01em" }}
             >
-              Fii pregătit înainte să vină valul, nu după
+              {t("title")}
             </Typography>
             <Typography
               variant="body1"
               sx={{ color: "rgba(0,0,0,0.75)", maxWidth: 520, fontWeight: 500 }}
             >
-              Cu cât profilul tău e configurat mai devreme, cu atât ai mai
-              multă vizibilitate atunci când clienții ajung în aplicație — și
-              mai puțină concurență pentru aceeași atenție. Înregistrarea
-              durează câteva minute și nu costă nimic.
+              {t("subtitle")}
             </Typography>
             <Button
               component={Link}
@@ -52,7 +52,7 @@ export default function LandingCTA() {
                 "&:hover": { backgroundColor: "#1a1a1a" },
               }}
             >
-              Înregistrează-ți afacerea
+              {t("button")}
             </Button>
           </Stack>
         </Box>

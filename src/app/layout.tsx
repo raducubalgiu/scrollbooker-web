@@ -5,6 +5,8 @@ import { Inter } from "next/font/google";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/ro";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 import MUIProvider from "../providers/MUIProvider";
 import QueryClientProvider from "../providers/QueryClientProvider";
@@ -37,20 +39,24 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children }: ChildrenType) {
   const session = await getServerSession(authOptions);
+  const locale = await getLocale();
+  const messages = await getMessages();
 
   return (
-    <html lang="en">
+    <html lang={locale}>
       <AppRouterCacheProvider options={{ enableCssLayer: false }}>
         <body className={inter.className}>
-          <SessionProvider session={session}>
-            <AuthListener />
-            <MUIProvider>
-              <ToastProvider />
-              <QueryClientProvider>
-                <Layout>{children}</Layout>
-              </QueryClientProvider>
-            </MUIProvider>
-          </SessionProvider>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <SessionProvider session={session}>
+              <AuthListener />
+              <MUIProvider>
+                <ToastProvider />
+                <QueryClientProvider>
+                  <Layout>{children}</Layout>
+                </QueryClientProvider>
+              </MUIProvider>
+            </SessionProvider>
+          </NextIntlClientProvider>
           <SpeedInsights />
         </body>
       </AppRouterCacheProvider>

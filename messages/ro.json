@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "title": "ScrollBooker — Video-First Booking pentru Beauty",
+    "description": "ScrollBooker e rețeaua socială din care se rezervă: feed video, follow, like, comentarii, recenzii video — plus calendar, servicii, produse și angajați administrate complet, într-un singur loc."
+  },
+  "nav": {
+    "login": "Autentificare",
+    "registerFull": "Înregistrează-ți afacerea",
+    "registerShort": "Înregistrare"
+  },
+  "announcementBar": {
+    "message": "Lansăm ScrollBooker — primele afaceri înscrise au acces prioritar, înainte să se aglomereze piața.",
+    "cta": "Rezervă-ți locul"
+  },
+  "hero": {
+    "badge": "Prima platformă Video-First Booking pentru Beauty",
+    "titlePrefix": "Descoperirea în stil",
+    "titleHighlight": "TikTok",
+    "titleSuffix": ", rezervările în stil ScrollBooker",
+    "subtitle": "Clienții urmăresc afacerea ta, apreciază și distribuie conținutul tău, comentează — și rezervă instant, direct din videoclip, fără să iasă din feed. Tu primești, pe lângă comunitatea care se formează în jurul tău, un calendar, servicii, produse și angajați administrate complet.",
+    "ctaPrimary": "Înregistrează-ți afacerea",
+    "ctaSecondary": "Vezi cum funcționează",
+    "imageAlt": "Feed-ul ScrollBooker — descoperire video, cu like-uri, comentarii și buton de rezervare instant"
+  },
+  "socialContrast": {
+    "kicker": "De ce nu e doar o aplicație de programări",
+    "title": "Interacțiunea unei rețele sociale, cu rezervare instant inclusă",
+    "oldWayLabel": "O aplicație de programări obișnuită",
+    "newWayLabel": "ScrollBooker",
+    "oldWay": [
+      "O listă statică de afaceri, sortată sau filtrată",
+      "Cauți activ, doar când ai deja nevoie de o programare",
+      "Recenzii = text și un scor, atât",
+      "Zero motiv să mai deschizi aplicația între două programări"
+    ],
+    "newWay": [
+      "Feed video vertical, ca pe TikTok — descoperi organic, nu doar cauți",
+      "Urmărești afacerile care îți plac, le vezi conținutul nou în feed",
+      "Aprecieri, comentarii, distribuiri — se formează o comunitate reală",
+      "Recenziile sunt clipuri video, nu doar stele — dovadă reală, care circulă ca reclamă organică pentru tine",
+      "Rezervare instant, direct din videoclip, fără să ieși din aplicație"
+    ]
+  },
+  "features": {
+    "kicker": "De ce ScrollBooker",
+    "title": "Tot ce îți trebuie ca să crești, într-o singură aplicație",
+    "items": [
+      {
+        "title": "Comunitate, nu doar clienți",
+        "description": "Like-uri, comentarii, distribuiri, urmăritori — fiecare interacțiune te aduce în fața a tot mai mulți oameni noi, ca pe orice rețea socială."
+      },
+      {
+        "title": "Programări online, 24/7",
+        "description": "Clienții rezervă direct din videoclip, oricând, fără telefoane sau mesaje. Calendarul tău se actualizează automat, în timp real."
+      },
+      {
+        "title": "Administrare completă",
+        "description": "Calendar, servicii, produse, program de lucru și angajați — toate într-un singur panou, indiferent dacă lucrezi singur sau cu o echipă."
+      },
+      {
+        "title": "Recenzii video = reclamă gratuită",
+        "description": "Clienții tăi mulțumiți postează chiar ei clipuri video-review — conținut real, care circulă în feed-ul altora și îți aduce clienți noi, fără cost."
+      }
+    ]
+  },
+  "profileShowcase": {
+    "kicker": "Pentru profilul tău",
+    "title": "Profilul tău devine o comunitate, nu doar o listă de servicii",
+    "subtitle": "Ca pe orice rețea socială — doar că de aici se și rezervă direct, fără să schimbi aplicația.",
+    "imageAlt": "Profil de business în ScrollBooker, cu urmăritori, recenzii și portofoliu video",
+    "items": [
+      {
+        "title": "Urmăritori, nu doar clienți vechi",
+        "description": "Oricine te apreciază te poate urmări — vede conținutul tău nou primul, chiar dacă nu are încă o programare în plan."
+      },
+      {
+        "title": "Un portofoliu video, nu poze statice",
+        "description": "Fiecare lucrare postată rămâne pe profil — clienții noi văd exact ce știi să faci, nu doar o descriere."
+      },
+      {
+        "title": "Recenzii care se văd, nu doar se citesc",
+        "description": "Scorul și numărul de recenzii apar direct pe profil, alături de conținutul care le-a generat."
+      },
+      {
+        "title": "Legătura cu afacerea, vizibilă clar",
+        "description": "Dacă ești angajat, profilul tău arată direct cu ce business lucrezi — clienții rezervă cu tine, știind exact unde."
+      }
+    ]
+  },
+  "howItWorks": {
+    "kicker": "Cum funcționează",
+    "title": "De la înregistrare la prima programare",
+    "clientsKicker": "Iar clienții tăi",
+    "clientsTitle": "Rezervă la fel de simplu — direct dintr-un videoclip",
+    "bookingFlowImageAlt": "Flux de rezervare direct dintr-o postare video: vezi un look în feed, alegi serviciul, alegi ora, confirmi rezervarea",
+    "steps": [
+      {
+        "title": "Te înregistrezi",
+        "description": "Completezi datele afacerii tale — durează câteva minute, direct din browser, fără instalare de aplicație."
+      },
+      {
+        "title": "Îți configurezi profilul",
+        "description": "Adaugi galerie foto, serviciile și produsele oferite, programul de lucru și, dacă e cazul, angajații tăi."
+      },
+      {
+        "title": "Primești programări",
+        "description": "După aprobare, profilul tău devine vizibil în aplicație — clienții te descoperă și rezervă direct."
+      }
+    ]
+  },
+  "adminShowcase": {
+    "kicker": "Pentru echipa ta",
+    "title": "Nu doar rezervări — administrarea completă a afacerii",
+    "subtitle": "Fie că lucrezi singur, fie că ai o echipă întreagă, ScrollBooker îți pune la dispoziție toate uneltele de care ai nevoie zi de zi, nu doar vitrina din fața clienților.",
+    "imageAlt": "Interior de salon modern, cu un dispozitiv de administrare pe recepție",
+    "items": [
+      {
+        "title": "Calendar",
+        "description": "Un calendar propriu per angajat, sau unul singur dacă lucrezi pe cont propriu — mereu sincronizat."
+      },
+      {
+        "title": "Servicii & program",
+        "description": "Definești serviciile oferite, durata și orele de funcționare."
+      },
+      {
+        "title": "Produse",
+        "description": "Administrezi produsele/pachetele pe care le vinzi clienților."
+      },
+      {
+        "title": "Angajați",
+        "description": "Îți inviți echipa în aplicație — fiecare cu propriul calendar și propriile programări."
+      },
+      {
+        "title": "Statistici",
+        "description": "Vezi dintr-o privire cum evoluează afacerea ta în timp."
+      }
+    ]
+  },
+  "gallery": {
+    "kicker": "Pentru orice afacere din Beauty",
+    "title": "De la coafură și barbershop, la unghii, gene și masaj",
+    "items": [
+      { "label": "Păr & barbă", "alt": "Barbershop modern, cu clienți la tuns" },
+      { "label": "Make-up", "alt": "Make-up artist lucrând cu o clientă" },
+      { "label": "Sprâncene & gene", "alt": "Aplicare extensii de gene, în cabinet" },
+      { "label": "Unghii", "alt": "Manichiură, close-up pe unghii lucrate" },
+      { "label": "Cosmetică facială", "alt": "Tratament facial cosmetic, într-un salon" },
+      { "label": "Masaj", "alt": "Masaj terapeutic, într-un salon spa" }
+    ]
+  },
+  "mobileApps": {
+    "kicker": "Aplicații mobile",
+    "title": "Încă puțin — și ajungem și în buzunarul tău",
+    "subtitle": "Experiența nativă ScrollBooker, cu feed video full-screen, vine curând pe iOS și Android. Până atunci, tot ce ai nevoie ca să-ți pregătești afacerea funcționează deja, aici, pe web.",
+    "forPrefix": "pentru",
+    "soonChip": "Curând"
+  },
+  "cta": {
+    "title": "Fii pregătit înainte să vină valul, nu după",
+    "subtitle": "Cu cât profilul tău e configurat mai devreme, cu atât ai mai multă vizibilitate atunci când clienții ajung în aplicație — și mai puțină concurență pentru aceeași atenție. Înregistrarea durează câteva minute și nu costă nimic.",
+    "button": "Înregistrează-ți afacerea"
+  },
+  "footer": {
+    "login": "Autentificare",
+    "registerBusiness": "Înregistrare business"
+  },
+  "languageSwitcher": {
+    "ro": "RO",
+    "en": "EN"
+  }
+}

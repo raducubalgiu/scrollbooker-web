@@ -4,24 +4,14 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import { useTranslations } from "next-intl";
 import { LANDING_COLORS } from "../landing.constants";
 
-const OLD_WAY = [
-  "O listă statică de afaceri, sortată sau filtrată",
-  "Cauți activ, doar când ai deja nevoie de o programare",
-  "Recenzii = text și un scor, atât",
-  "Zero motiv să mai deschizi aplicația între două programări",
-];
-
-const NEW_WAY = [
-  "Feed video vertical, ca pe TikTok — descoperi organic, nu doar cauți",
-  "Urmărești afacerile care îți plac, le vezi conținutul nou în feed",
-  "Aprecieri, comentarii, distribuiri — se formează o comunitate reală",
-  "Recenziile sunt clipuri video, nu doar stele — dovadă reală, care circulă ca reclamă organică pentru tine",
-  "Rezervare instant, direct din videoclip, fără să ieși din aplicație",
-];
-
 export default function LandingSocialContrast() {
+  const t = useTranslations("socialContrast");
+  const oldWay = t.raw("oldWay") as string[];
+  const newWay = t.raw("newWay") as string[];
+
   return (
     <Box
       component="section"
@@ -38,10 +28,10 @@ export default function LandingSocialContrast() {
             variant="overline"
             sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
           >
-            De ce nu e doar o aplicație de programări
+            {t("kicker")}
           </Typography>
           <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary }}>
-            Interacțiunea unei rețele sociale, cu rezervare instant inclusă
+            {t("title")}
           </Typography>
         </Stack>
 
@@ -63,10 +53,10 @@ export default function LandingSocialContrast() {
                   fontSize: "0.95rem",
                 }}
               >
-                O aplicație de programări obișnuită
+                {t("oldWayLabel")}
               </Typography>
 
-              {OLD_WAY.map((item) => (
+              {oldWay.map((item) => (
                 <Stack key={item} direction="row" spacing={1.5}>
                   <CloseRoundedIcon
                     fontSize="small"
@@ -101,10 +91,10 @@ export default function LandingSocialContrast() {
                   fontSize: "0.95rem",
                 }}
               >
-                ScrollBooker
+                {t("newWayLabel")}
               </Typography>
 
-              {NEW_WAY.map((item) => (
+              {newWay.map((item) => (
                 <Stack key={item} direction="row" spacing={1.5}>
                   <Box
                     sx={{

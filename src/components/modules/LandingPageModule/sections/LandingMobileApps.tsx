@@ -3,6 +3,7 @@
 import { Box, Chip, Container, Stack, Typography } from "@mui/material";
 import AppleIcon from "@mui/icons-material/Apple";
 import AndroidRoundedIcon from "@mui/icons-material/AndroidRounded";
+import { useTranslations } from "next-intl";
 import { LANDING_COLORS } from "../landing.constants";
 
 const PLATFORMS = [
@@ -19,6 +20,8 @@ const PLATFORMS = [
 ];
 
 export default function LandingMobileApps() {
+  const t = useTranslations("mobileApps");
+
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 12 }, position: "relative", overflow: "hidden" }}>
       <Box
@@ -41,21 +44,19 @@ export default function LandingMobileApps() {
             variant="overline"
             sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
           >
-            Aplicații mobile
+            {t("kicker")}
           </Typography>
           <Typography
             variant="h2"
             sx={{ color: LANDING_COLORS.textPrimary, maxWidth: 640 }}
           >
-            Încă puțin — și ajungem și în buzunarul tău
+            {t("title")}
           </Typography>
           <Typography
             variant="body1"
             sx={{ color: LANDING_COLORS.textSecondary, maxWidth: 520 }}
           >
-            Experiența nativă ScrollBooker, cu feed video full-screen, vine
-            curând pe iOS și Android. Până atunci, tot ce ai nevoie ca să-ți
-            pregătești afacerea funcționează deja, aici, pe web.
+            {t("subtitle")}
           </Typography>
         </Stack>
 
@@ -106,12 +107,12 @@ export default function LandingMobileApps() {
                   variant="body2"
                   sx={{ color: LANDING_COLORS.textSecondary }}
                 >
-                  pentru {platform.name}
+                  {t("forPrefix")} {platform.name}
                 </Typography>
               </Box>
 
               <Chip
-                label="Curând"
+                label={t("soonChip")}
                 size="small"
                 sx={{
                   backgroundColor: "rgba(255,111,0,0.12)",

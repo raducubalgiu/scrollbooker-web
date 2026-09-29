@@ -2,11 +2,15 @@
 
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { AppRoutes } from "@/utils/routes";
 import { LANDING_COLORS } from "../landing.constants";
 import LandingLogo from "../components/LandingLogo";
+import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
 
 export default function LandingFooter() {
+  const t = useTranslations("footer");
+
   return (
     <Box
       component="footer"
@@ -21,7 +25,7 @@ export default function LandingFooter() {
         >
           <LandingLogo height={20} />
 
-          <Stack direction="row" spacing={3}>
+          <Stack direction="row" spacing={3} alignItems="center">
             <Typography
               component={Link}
               href={AppRoutes.login()}
@@ -32,7 +36,7 @@ export default function LandingFooter() {
                 "&:hover": { color: LANDING_COLORS.textPrimary },
               }}
             >
-              Autentificare
+              {t("login")}
             </Typography>
             <Typography
               component={Link}
@@ -44,8 +48,9 @@ export default function LandingFooter() {
                 "&:hover": { color: LANDING_COLORS.textPrimary },
               }}
             >
-              Înregistrare business
+              {t("registerBusiness")}
             </Typography>
+            <LandingLanguageSwitcher />
           </Stack>
 
           <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.4)" }}>

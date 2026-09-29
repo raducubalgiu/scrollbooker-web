@@ -2,12 +2,15 @@
 
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { AppRoutes } from "@/utils/routes";
 import { LANDING_COLORS } from "../landing.constants";
 import PhoneMockup from "../components/PhoneMockup";
 
 export default function LandingHero() {
+  const t = useTranslations("hero");
+
   return (
     <Box
       component="section"
@@ -64,7 +67,7 @@ export default function LandingHero() {
                 variant="body2"
                 sx={{ color: LANDING_COLORS.textSecondary, fontWeight: 600 }}
               >
-                Prima platformă Video-First Booking pentru Beauty
+                {t("badge")}
               </Typography>
             </Box>
 
@@ -76,11 +79,11 @@ export default function LandingHero() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Descoperirea în stil{" "}
+              {t("titlePrefix")}{" "}
               <Box component="span" sx={{ color: LANDING_COLORS.primary }}>
-                TikTok
+                {t("titleHighlight")}
               </Box>
-              , rezervările în stil ScrollBooker
+              {t("titleSuffix")}
             </Typography>
 
             <Typography
@@ -92,11 +95,7 @@ export default function LandingHero() {
                 mb: 4,
               }}
             >
-              Clienții urmăresc afacerea ta, apreciază și distribuie
-              conținutul tău, comentează — și rezervă instant, direct din
-              videoclip, fără să iasă din feed. Tu primești, pe lângă
-              comunitatea care se formează în jurul tău, un calendar,
-              servicii, produse și angajați administrate complet.
+              {t("subtitle")}
             </Typography>
 
             <Stack
@@ -119,7 +118,7 @@ export default function LandingHero() {
                   whiteSpace: "nowrap",
                 }}
               >
-                Înregistrează-ți afacerea
+                {t("ctaPrimary")}
               </Button>
               <Button
                 component={Link}
@@ -138,7 +137,7 @@ export default function LandingHero() {
                   },
                 }}
               >
-                Vezi cum funcționează
+                {t("ctaSecondary")}
               </Button>
             </Stack>
           </Box>
@@ -146,7 +145,7 @@ export default function LandingHero() {
           <Box sx={{ flex: 1, width: "100%", position: "relative" }}>
             <PhoneMockup
               src="/landing/feed-screen.png"
-              alt="Feed-ul ScrollBooker — descoperire video, cu like-uri, comentarii și buton de rezervare instant"
+              alt={t("imageAlt")}
               priority
               sizes="(max-width: 900px) 80vw, 340px"
             />

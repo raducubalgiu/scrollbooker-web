@@ -3,30 +3,17 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { LANDING_COLORS } from "../landing.constants";
 
-const STEPS = [
-  {
-    number: "01",
-    title: "Te înregistrezi",
-    description:
-      "Completezi datele afacerii tale — durează câteva minute, direct din browser, fără instalare de aplicație.",
-  },
-  {
-    number: "02",
-    title: "Îți configurezi profilul",
-    description:
-      "Adaugi galerie foto, serviciile și produsele oferite, programul de lucru și, dacă e cazul, angajații tăi.",
-  },
-  {
-    number: "03",
-    title: "Primești programări",
-    description:
-      "După aprobare, profilul tău devine vizibil în aplicație — clienții te descoperă și rezervă direct.",
-  },
-];
+const STEP_NUMBERS = ["01", "02", "03"];
+
+type Step = { title: string; description: string };
 
 export default function LandingHowItWorks() {
+  const t = useTranslations("howItWorks");
+  const steps = t.raw("steps") as Step[];
+
   return (
     <Box
       id="cum-functioneaza"
@@ -44,16 +31,16 @@ export default function LandingHowItWorks() {
             variant="overline"
             sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
           >
-            Cum funcționează
+            {t("kicker")}
           </Typography>
           <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary }}>
-            De la înregistrare la prima programare
+            {t("title")}
           </Typography>
         </Stack>
 
         <Grid container spacing={4}>
-          {STEPS.map((step, index) => (
-            <Grid key={step.number} size={{ xs: 12, md: 4 }}>
+          {steps.map((step, index) => (
+            <Grid key={step.title} size={{ xs: 12, md: 4 }}>
               <Stack spacing={2}>
                 <Typography
                   sx={{
@@ -63,7 +50,7 @@ export default function LandingHowItWorks() {
                     lineHeight: 1,
                   }}
                 >
-                  {step.number}
+                  {STEP_NUMBERS[index]}
                 </Typography>
                 <Typography
                   variant="h6"
@@ -79,7 +66,7 @@ export default function LandingHowItWorks() {
                 </Typography>
               </Stack>
 
-              {index < STEPS.length - 1 && (
+              {index < steps.length - 1 && (
                 <Box
                   sx={{
                     display: { xs: "none", md: "block" },
@@ -99,10 +86,10 @@ export default function LandingHowItWorks() {
               variant="overline"
               sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
             >
-              Iar clienții tăi
+              {t("clientsKicker")}
             </Typography>
             <Typography variant="h3" sx={{ color: LANDING_COLORS.textPrimary }}>
-              Rezervă la fel de simplu — direct dintr-un videoclip
+              {t("clientsTitle")}
             </Typography>
           </Stack>
 
@@ -118,7 +105,7 @@ export default function LandingHowItWorks() {
           >
             <Image
               src="/landing/booking-flow.png"
-              alt="Flux de rezervare direct dintr-o postare video: vezi un look în feed, alegi serviciul, alegi ora, confirmi rezervarea"
+              alt={t("bookingFlowImageAlt")}
               fill
               sizes="(max-width: 1200px) 95vw, 1100px"
               style={{ objectFit: "contain" }}
