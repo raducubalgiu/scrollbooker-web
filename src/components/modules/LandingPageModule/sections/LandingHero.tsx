@@ -105,7 +105,7 @@ export default function LandingHero() {
             >
               <Button
                 component={Link}
-                href={AppRoutes.register()}
+                href={AppRoutes.getStarted()}
                 variant="contained"
                 size="large"
                 disableElevation

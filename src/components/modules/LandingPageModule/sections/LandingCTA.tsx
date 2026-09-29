@@ -39,7 +39,7 @@ export default function LandingCTA() {
             </Typography>
             <Button
               component={Link}
-              href={AppRoutes.register()}
+              href={AppRoutes.getStarted()}
               variant="contained"
               size="large"
               disableElevation

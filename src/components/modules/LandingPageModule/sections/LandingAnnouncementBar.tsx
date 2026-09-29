@@ -13,7 +13,7 @@ export default function LandingAnnouncementBar() {
   return (
     <Box
       component={Link}
-      href={AppRoutes.register()}
+      href={AppRoutes.getStarted()}
       sx={{
         display: "block",
         textDecoration: "none",

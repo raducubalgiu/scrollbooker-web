@@ -52,7 +52,7 @@ export default function LandingNav() {
             </Button>
             <Button
               component={Link}
-              href={AppRoutes.register()}
+              href={AppRoutes.getStarted()}
               variant="contained"
               disableElevation
               sx={{

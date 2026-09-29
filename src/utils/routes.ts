@@ -71,6 +71,7 @@ export const AppRoutes = {
   // Auth
   login: () => "/auth/signin",
   register: () => "/auth/register",
+  getStarted: () => "/auth/get-started",
 
   // My Business
   myBusiness: () => "/admin/my-business",

@@ -40,7 +40,7 @@ export default function LandingFooter() {
             </Typography>
             <Typography
               component={Link}
-              href={AppRoutes.register()}
+              href={AppRoutes.getStarted()}
               variant="body2"
               sx={{
                 color: LANDING_COLORS.textSecondary,
