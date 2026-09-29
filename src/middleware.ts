@@ -1,7 +1,11 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-const AUTH_ROUTES = ["/auth/signin", "/auth/register", "/auth/get-started"];
+const AUTH_ROUTES = [
+  "/auth/signin",
+  "/auth/register-business",
+  "/auth/get-started",
+];
 const PUBLIC_ERROR_ROUTES = ["/unauthorized", "/not-found", "/_not-found"];
 
 function isAuthRoute(pathname: string) {

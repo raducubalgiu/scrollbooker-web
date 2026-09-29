@@ -1,0 +1,21 @@
+{
+  "registerBusiness": {
+    "back": "Back",
+    "title": "Register your business",
+    "subtitle": "Create your ScrollBooker business account in a few minutes",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithApple": "Continue with Apple — coming soon",
+    "orWithEmail": "or with email",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Password",
+    "submit": "Create business account",
+    "haveAccount": "Already have an account?",
+    "login": "Login",
+    "genericError": "Registration error.",
+    "autoLoginError": "Account created, but automatic sign-in failed.",
+    "success": "Account created successfully!",
+    "googleFailed": "Google sign-in failed. Please try again.",
+    "notBusinessAccount": "This Google email is already linked to an existing non-business account. Use a different address, or register below with email and password."
+  }
+}

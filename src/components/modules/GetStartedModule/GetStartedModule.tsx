@@ -126,7 +126,7 @@ export default async function GetStartedModule() {
 
         <Button
           component={Link}
-          href={AppRoutes.register()}
+          href={AppRoutes.registerBusiness()}
           variant="contained"
           size="large"
           fullWidth

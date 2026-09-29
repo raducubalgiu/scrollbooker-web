@@ -1,4 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { AuthOptions, User } from "next-auth";
 import { LOG } from "@/utils/logger";
 import { SECOND } from "@/utils/date-utils";
@@ -8,10 +9,17 @@ import {
   fetchUserPermissions,
   loginWithCredentials,
   refreshAccessToken,
+  signInWithGoogle,
   verifyAccessToken,
 } from "@/controllers/auth/auth.service";
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60;
+
+// Singurul loc din app care oferă azi "Sign in with Google" — pagina de
+// înregistrare pentru business-uri (nu oferim încă register pentru clienți
+// obișnuiți), de aceea role_name e hardcodat "business" mai jos, nu citit
+// dintr-un query param dus prin round-trip-ul OAuth.
+const REGISTER_BUSINESS_PATH = "/auth/register-business";
 
 async function buildRefreshedJwt(refreshToken: string): Promise<JWT> {
   const refreshed = await refreshAccessToken(refreshToken);
@@ -79,6 +87,24 @@ export const authOptions: AuthOptions = {
         return user;
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      profile(profile) {
+        // Câmpurile de auth (accessToken/refreshToken/accessTokenExpires) sunt
+        // placeholder aici — signIn() de mai jos le suprascrie cu tokenurile
+        // noastre (nu ale Google) înainte ca jwt() să le citească.
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          username: profile.email,
+          accessToken: "",
+          refreshToken: "",
+          accessTokenExpires: 0,
+        };
+      },
+    }),
   ],
   secret: process.env.NEXTAUTH_SECRET as string,
   session: {
@@ -89,6 +115,39 @@ export const authOptions: AuthOptions = {
     maxAge: THIRTY_DAYS,
   },
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== "google") return true;
+
+      if (!account.id_token) {
+        return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
+      }
+
+      const auth = await signInWithGoogle(account.id_token, "business");
+      if (!auth) {
+        return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
+      }
+
+      const decoded = await verifyAccessToken(auth.access_token);
+      if (!decoded) {
+        return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
+      }
+
+      // Backend-ul loghează userul existent pe rolul lui curent și ignoră
+      // complet role_name atunci când email-ul/google_id-ul se potrivesc cu
+      // un cont deja existent (ex. un client care s-a înregistrat cu parolă) —
+      // nu putem preveni asta acolo, doar respingem sesiunea aici dacă rolul
+      // rezultat nu e "business", ca userul să nu ajungă logat, fără să știe,
+      // în alt cont decât cel pe care voia să-l creeze.
+      if (decoded.role !== "business") {
+        return `${REGISTER_BUSINESS_PATH}?error=not_business_account`;
+      }
+
+      user.accessToken = auth.access_token;
+      user.refreshToken = auth.refresh_token;
+      user.accessTokenExpires = decoded.exp * 1000;
+
+      return true;
+    },
     async jwt({ token, user, trigger, session }): Promise<JWT> {
       if (trigger === "update" && session) {
         try {

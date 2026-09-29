@@ -1,0 +1,21 @@
+{
+  "registerBusiness": {
+    "back": "Înapoi",
+    "title": "Înregistrează-ți afacerea",
+    "subtitle": "Creează contul de business ScrollBooker în câteva minute",
+    "continueWithGoogle": "Continuă cu Google",
+    "continueWithApple": "Continuă cu Apple — în curând",
+    "orWithEmail": "sau cu email",
+    "emailLabel": "Email",
+    "passwordLabel": "Parola",
+    "passwordPlaceholder": "Parolă",
+    "submit": "Creează cont business",
+    "haveAccount": "Ai deja un cont?",
+    "login": "Login",
+    "genericError": "Eroare la înregistrare.",
+    "autoLoginError": "Cont creat, dar autentificarea automată a eșuat.",
+    "success": "Cont creat cu succes!",
+    "googleFailed": "Autentificarea cu Google a eșuat. Încearcă din nou.",
+    "notBusinessAccount": "Acest email Google este deja asociat unui cont existent care nu e de tip business. Folosește altă adresă sau înregistrează-te mai jos cu email și parolă."
+  }
+}

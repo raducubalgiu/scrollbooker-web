@@ -107,7 +107,7 @@ export default function SignInPage() {
               </Typography>
               <Button
                 sx={{ textTransform: "none" }}
-                onClick={() => navigateTo(AppRoutes.register())}
+                onClick={() => navigateTo(AppRoutes.registerBusiness())}
               >
                 Înregistrare
               </Button>

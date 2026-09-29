@@ -70,7 +70,7 @@ export const AppRoutes = {
 
   // Auth
   login: () => "/auth/signin",
-  register: () => "/auth/register",
+  registerBusiness: () => "/auth/register-business",
   getStarted: () => "/auth/get-started",
 
   // My Business
