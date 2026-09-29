@@ -1,27 +1,26 @@
-import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
-import Input from "@/components/core/Input/Input";
-import InputCheckbox from "@/components/core/Input/InputCheckbox";
-import Modal from "@/components/core/Modal/Modal";
-import { useMutate } from "@/hooks/useHttp";
+import { useEffect } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { Stack } from "@mui/material";
 import {
   Filter,
   FilterCreateOrUpdate,
 } from "@/ts/models/nomenclatures/filter/FilterType";
 import { maxField, minField, required } from "@/utils/validation-rules";
-import { Stack } from "@mui/material";
-import React, { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import Modal from "@/components/core/Modal/Modal";
+import Input from "@/components/core/Input/Input";
+import InputCheckbox from "@/components/core/Input/InputCheckbox";
 
-type FilterModalProps = {
+type FiltersModalProps = {
   open: boolean;
   onClose: () => void;
   data: Filter | null;
-  onSuccess: () => void;
+  onSave: (data: FilterCreateOrUpdate) => void;
+  isSubmitting: boolean;
 };
 
 type FilterFormData = {
   name: string;
-  type: string;
   single_select: boolean;
   active: boolean;
 };
@@ -32,7 +31,13 @@ const DEFAULT_VALUES = {
   active: true,
 };
 
-const FiltersModal = ({ open, onClose, data, onSuccess }: FilterModalProps) => {
+const FiltersModal = ({
+  open,
+  onClose,
+  data,
+  onSave,
+  isSubmitting,
+}: FiltersModalProps) => {
   const isEditMode = !!data;
 
   const methods = useForm<FilterFormData>({
@@ -55,42 +60,13 @@ const FiltersModal = ({ open, onClose, data, onSuccess }: FilterModalProps) => {
     }
   }, [open, data, reset]);
 
-  const { mutate: handleCreate, isPending: isPendingCreate } = useMutate<
-    FilterCreateOrUpdate,
-    Filter
-  >({
-    key: ["create-filter"],
-    url: `/api/nomenclatures/filters`,
-    method: "POST",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const { mutate: handleUpdate, isPending: isPendingUpdate } = useMutate<
-    FilterCreateOrUpdate,
-    Filter
-  >({
-    key: ["update-filters", data?.id],
-    url: `/api/nomenclatures/filters/${data?.id}`,
-    method: "PUT",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const onSubmit = (data: FilterFormData) => {
+  const onSubmit = (formData: FilterFormData) => {
     const payload: FilterCreateOrUpdate = {
-      name: data.name,
-      single_select: data.single_select,
-      active: data.active,
+      name: formData.name,
+      single_select: formData.single_select,
+      active: formData.active,
     };
-
-    if (isEditMode) {
-      handleUpdate(payload);
-    } else {
-      handleCreate(payload);
-    }
+    onSave(payload);
   };
 
   const actions: ActionButtonType[] = [
@@ -98,8 +74,8 @@ const FiltersModal = ({ open, onClose, data, onSuccess }: FilterModalProps) => {
       title: isEditMode ? "Modifică" : "Adaugă",
       props: {
         onClick: handleSubmit(onSubmit),
-        loading: isPendingCreate || isPendingUpdate,
-        disabled: isPendingCreate || isPendingUpdate || !isDirty,
+        loading: isSubmitting,
+        disabled: isSubmitting || !isDirty,
       },
     },
   ];
@@ -107,7 +83,7 @@ const FiltersModal = ({ open, onClose, data, onSuccess }: FilterModalProps) => {
   return (
     <Modal
       title={
-        isEditMode ? `Editează filtrul cu ID: ${data.id}` : "Adaugă un filtru"
+        isEditMode ? `Editează filtrul cu ID: ${data?.id}` : "Adaugă un filtru"
       }
       open={open}
       handleClose={onClose}

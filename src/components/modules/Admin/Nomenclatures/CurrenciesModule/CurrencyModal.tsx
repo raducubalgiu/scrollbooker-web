@@ -1,29 +1,30 @@
-import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
-import Input from "@/components/core/Input/Input";
-import InputCheckbox from "@/components/core/Input/InputCheckbox";
-import Modal from "@/components/core/Modal/Modal";
-import { useMutate } from "@/hooks/useHttp";
+import { useEffect } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { Stack } from "@mui/material";
 import {
   Currency,
   CurrencyCreateOrUpdate,
 } from "@/ts/models/nomenclatures/currency/Currency";
 import { maxField, minField, required } from "@/utils/validation-rules";
-import { Stack } from "@mui/material";
-import React, { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import InputCheckbox from "@/components/core/Input/InputCheckbox";
+import Modal from "@/components/core/Modal/Modal";
+import Input from "@/components/core/Input/Input";
 
 type CurrencyModalProps = {
   open: boolean;
   data: Currency | null;
   onClose: () => void;
-  onSuccess: () => void;
+  onSave: (data: CurrencyCreateOrUpdate) => void;
+  isSubmitting: boolean;
 };
 
 const CurrencyModal = ({
   open,
   data,
   onClose,
-  onSuccess,
+  onSave,
+  isSubmitting,
 }: CurrencyModalProps) => {
   const isEditMode = !!data;
 
@@ -50,52 +51,20 @@ const CurrencyModal = ({
     }
   }, [open, data, reset]);
 
-  const { mutate: handleCreate, isPending: isPendingCreate } = useMutate<
-    CurrencyCreateOrUpdate,
-    Currency
-  >({
-    key: ["create-currency"],
-    url: `/api/nomenclatures/currencies`,
-    method: "POST",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const { mutate: handleUpdate, isPending: isPendingUpdate } = useMutate<
-    CurrencyCreateOrUpdate,
-    Currency
-  >({
-    key: ["update-currency", data?.id],
-    url: `/api/nomenclatures/currencies/${data?.id}`,
-    method: "PUT",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const onSubmit = (data: CurrencyCreateOrUpdate) => {
-    if (isEditMode) {
-      handleUpdate(data);
-    } else {
-      handleCreate(data);
-    }
-  };
-
   const actions: ActionButtonType[] = [
     {
       title: isEditMode ? "Modifică" : "Adaugă",
       props: {
-        onClick: handleSubmit(onSubmit),
-        loading: isPendingCreate || isPendingUpdate,
-        disabled: isPendingCreate || isPendingUpdate || !isDirty,
+        onClick: handleSubmit(onSave),
+        loading: isSubmitting,
+        disabled: isSubmitting || !isDirty,
       },
     },
   ];
 
   return (
     <Modal
-      title={isEditMode ? `Editează Moneda ID: ${data.id}` : "Adaugă o monedă"}
+      title={isEditMode ? `Editează Moneda ID: ${data?.id}` : "Adaugă o monedă"}
       open={open}
       handleClose={onClose}
       maxWidth="md"
