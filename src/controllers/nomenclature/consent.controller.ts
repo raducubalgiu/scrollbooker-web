@@ -12,6 +12,11 @@ type UpdateConsentParams = {
   data: ConsentCreateOrUpdate;
 };
 
+type GetConsentByNameParams = {
+  consentName: string;
+  isEnabled: boolean;
+};
+
 export const useAllConsents = () => {
   const doRequest = () =>
     axios.get<Consent[]>(CONSENT_PATH).then((response) => response.data);
@@ -22,7 +27,10 @@ export const useAllConsents = () => {
   });
 };
 
-export const useConsentByName = (consentName: string, enabled = true) => {
+export const useGetConsentByName = ({
+  consentName,
+  isEnabled,
+}: GetConsentByNameParams) => {
   const doRequest = () =>
     axios
       .get<Consent>(`${CONSENT_PATH}/${consentName}`)
@@ -31,7 +39,7 @@ export const useConsentByName = (consentName: string, enabled = true) => {
   return useQuery({
     queryKey: ["consents", "by-name", consentName],
     queryFn: doRequest,
-    enabled: !!consentName && enabled,
+    enabled: !!consentName && isEnabled,
   });
 };
 

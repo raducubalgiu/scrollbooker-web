@@ -1,6 +1,7 @@
 import { Metadata, Viewport } from "next";
 import { getTranslations } from "next-intl/server";
-import LandingPageModule from "@/components/modules/LandingPageModule/LandingPageModule";
+//import LandingPageModule from "@/components/modules/LandingPageModule/LandingPageModule";
+import UnderConstruction from "@/components/cutomized/UnderConstruction/UnderConstruction";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
@@ -24,5 +25,6 @@ export const viewport: Viewport = {
 };
 
 export default async function HomePage() {
-  return <LandingPageModule />;
+  //return <LandingPageModule />;
+  return <UnderConstruction />;
 }

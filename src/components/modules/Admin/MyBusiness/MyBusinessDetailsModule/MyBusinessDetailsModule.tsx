@@ -10,7 +10,7 @@ import BusinessDescriptionTab from "./BusinessDescriptionTab";
 import BusinessAddressTab from "./BusinessAddressTab";
 import BusinessGalleryTab from "./BusinessGalleryTab";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { useGetMyBusinessDetails } from "@/controllers/booking/business/business.controller";
+import { useGetMyBusinessDetails } from "@/controllers/booking/business.controller";
 
 const TABS: CustomTabType[] = [
   { key: 0, label: "Sumar" },

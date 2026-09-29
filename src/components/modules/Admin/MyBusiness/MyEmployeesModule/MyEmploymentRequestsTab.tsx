@@ -1,5 +1,4 @@
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { Close } from "@mui/icons-material";
 import { Avatar, Button, IconButton, Stack, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
@@ -14,14 +13,28 @@ import EmploymentRequestsModal from "./EmploymentRequestsModal/EmploymentRequest
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { EmploymentRequest } from "@/ts/models/booking/employmentRequest/EmploymentRequest";
 import { toast } from "react-toastify";
+import {
+  useCancelEmploymentRequest,
+  useGetUserEmploymentRequests,
+} from "@/controllers/booking/employment-request.controller";
+import { Session } from "next-auth";
 
 type OpenConfirmationState = {
   openModal: boolean;
   employment_request_id: null | number;
 };
 
-const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
+type MyEmploymentRequestsTabProps = {
+  session: Session;
+  isEnabled: boolean;
+};
+
+const MyEmploymentRequestsTab = ({
+  session,
+  isEnabled,
+}: MyEmploymentRequestsTabProps) => {
   const [open, setOpen] = useState(false);
+
   const [confirmation, setConfirmation] = useState<OpenConfirmationState>({
     openModal: false,
     employment_request_id: null,
@@ -31,13 +44,7 @@ const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
     data: employmentRequests,
     isLoading,
     refetch,
-  } = useCustomQuery<EmploymentRequest[]>({
-    key: ["get-employment-requests"],
-    url: "/api/booking/employment-requests",
-    options: {
-      enabled: isEnabled,
-    },
-  });
+  } = useGetUserEmploymentRequests({ userId: session.user_id, isEnabled });
 
   const memoizedData = useMemo(() => {
     return employmentRequests || [];
@@ -46,18 +53,8 @@ const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
   const handleCloseConfirmation = () =>
     setConfirmation({ openModal: false, employment_request_id: null });
 
-  const { mutate: handleCancel, isPending: isPendingCancel } = useMutate({
-    key: ["cancel-employment-request", confirmation.employment_request_id],
-    url: `/api/booking/employment-requests/${confirmation.employment_request_id}`,
-    method: "DELETE",
-    options: {
-      onSuccess: () => {
-        handleCloseConfirmation();
-        refetch();
-        toast.success("Cererea de angajare a fost ștearsă");
-      },
-    },
-  });
+  const { mutate: handleCancel, isPending: isPendingCancel } =
+    useCancelEmploymentRequest();
 
   const columns = useMemo<MRT_ColumnDef<EmploymentRequest>[]>(
     () => [
@@ -157,12 +154,20 @@ const MyEmploymentRequestsTab = ({ isEnabled }: { isEnabled: boolean }) => {
       <ConfirmationModal
         open={confirmation.openModal}
         onClose={handleCloseConfirmation}
-        onConfirm={() => handleCancel({})}
+        onConfirm={() =>
+          handleCancel(String(confirmation.employment_request_id), {
+            onSuccess() {
+              handleCloseConfirmation();
+              toast.success("Cererea de angajare a fost ștearsă");
+            },
+          })
+        }
         isLoading={isPendingCancel}
         title="Ești sigur?"
         message="Ești sigur că dorești să anulezi această cerere?"
       />
       <EmploymentRequestsModal
+        session={session}
         open={open}
         handleClose={() => {
           setOpen(false);

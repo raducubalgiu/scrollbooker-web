@@ -9,9 +9,7 @@ import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
 import MyEmploymentRequestsTab from "./MyEmploymentRequestsTab";
-import MyEmployeesTab from "./MyEmployeesTab";
-import { PaginatedData } from "@/components/core/Table/Table";
-import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
+import { Session } from "next-auth";
 
 const TABS: CustomTabType[] = [
   {
@@ -27,28 +25,24 @@ const TABS: CustomTabType[] = [
 ];
 
 type MyEmployeesModuleProps = {
-  initialData: PaginatedData<BusinessEmployee>;
-  pageSize: number;
+  session: Session;
 };
 
-export default function MyEmployeesModule({
-  initialData,
-  pageSize,
-}: MyEmployeesModuleProps) {
+export default function MyEmployeesModule({ session }: MyEmployeesModuleProps) {
   const [currentTab, setCurrentTab] = useState(0);
 
   const sections = useMemo(() => {
     switch (currentTab) {
       case 0:
+        //return <MyEmployeesTab isEnabled={currentTab === 0} />;
+        return <></>;
+      case 1:
         return (
-          <MyEmployeesTab
-            isEnabled={currentTab === 0}
-            initialData={initialData}
-            pageSize={pageSize}
+          <MyEmploymentRequestsTab
+            session={session}
+            isEnabled={currentTab === 1}
           />
         );
-      case 1:
-        return <MyEmploymentRequestsTab isEnabled={currentTab === 1} />;
       default:
         return null;
     }

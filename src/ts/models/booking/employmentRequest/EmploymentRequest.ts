@@ -12,6 +12,12 @@ export interface EmploymentRequest {
   created_at: string;
 }
 
+export interface EmploymentRequestCreate {
+  employee_id: number;
+  profession_id: number;
+  consent_id: number;
+}
+
 export interface EmploymentRequestRespond {
   status: EmploymentRequestStatusEnum;
 }

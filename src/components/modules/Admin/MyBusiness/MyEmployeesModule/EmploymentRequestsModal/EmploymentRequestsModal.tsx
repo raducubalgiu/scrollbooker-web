@@ -10,25 +10,29 @@ import { Box } from "@mui/material";
 import { isNull } from "lodash";
 import EmploymentRequestsStepOne from "./EmploymentRequestsStepOne";
 import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { useCustomQuery } from "@/hooks/useHttp";
 import EmploymentRequestsStepThree from "./EmploymentRequestsStepThree";
 import { ConsentEnum } from "@/ts/models/nomenclatures/consent/ConsentEnum";
 import { Profession } from "@/ts/models/nomenclatures/profession/ProfessionType";
-import { Consent } from "@/ts/models/nomenclatures/consent/Consent";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { useGetConsentByName } from "@/controllers/nomenclature/consent.controller";
+import { useCreateEmploymentRequest } from "@/controllers/booking/employment-request.controller";
+import { EmploymentRequestCreate } from "@/ts/models/booking/employmentRequest/EmploymentRequest";
+import { toast } from "react-toastify";
 
 const steps = ["Angajat", "Profesia", "Trimite"];
 
 type EmploymentRequestsModalProps = {
+  session: Session;
   open: boolean;
   handleClose: () => void;
 };
 
 export default function EmploymentRequestsModal({
+  session,
   open,
   handleClose,
 }: EmploymentRequestsModalProps) {
-  const { data: session } = useSession();
   const [acknowledged, setAcknowledged] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedProfessionId, setSelectedProfessionId] = useState<
@@ -54,15 +58,8 @@ export default function EmploymentRequestsModal({
   const isSecondStep = stepIndex === 1;
   const isThirdStep = stepIndex === 2;
 
-  const { mutate: createEmploymentRequest, isPending } = useMutate({
-    key: ["create-employment-request"],
-    url: "/api/booking/employment-requests",
-    options: {
-      onSuccess: () => {
-        handleResetAndClose();
-      },
-    },
-  });
+  const { mutate: createEmploymentRequest, isPending } =
+    useCreateEmploymentRequest();
 
   const { data: professions, isLoading: isLoadingProfessions } = useCustomQuery<
     Profession[]
@@ -72,12 +69,34 @@ export default function EmploymentRequestsModal({
     options: { enabled: isSecondStep && open },
   });
 
-  const { data: consent, isLoading: isLoadingConsent } =
-    useCustomQuery<Consent>({
-      key: ["get-consent"],
-      url: `/api/nomenclatures/consents/name/${ConsentEnum.EMPLOYMENT_REQUESTS_INITIATION}`,
-      options: { enabled: isThirdStep && open },
+  const { data: consent, isLoading: isLoadingConsent } = useGetConsentByName({
+    consentName: ConsentEnum.EMPLOYMENT_REQUESTS_INITIATION,
+    isEnabled: isThirdStep && open,
+  });
+
+  const handleSendRequest = () => {
+    if (!selectedUserId || !consent?.id || !selectedProfessionId) {
+      toast.warning("Te rugăm să introduci ID-ul angajatului.");
+      return;
+    }
+
+    const payload: EmploymentRequestCreate = {
+      employee_id: selectedUserId,
+      consent_id: consent?.id,
+      profession_id: selectedProfessionId,
+    };
+
+    createEmploymentRequest(payload, {
+      onSuccess: () => {
+        toast.success("Cererea de angajare a fost trimisă cu succes!");
+        handleResetAndClose();
+      },
+      onError: (error) => {
+        toast.error("A apărut o eroare la trimiterea cererii.");
+        console.error(error);
+      },
     });
+  };
 
   const disabledNextStep =
     (isNull(selectedUserId) && isFirstStep) ||
@@ -113,12 +132,7 @@ export default function EmploymentRequestsModal({
           {
             title: "Trimite cererea",
             props: {
-              onClick: () =>
-                createEmploymentRequest({
-                  employee_id: selectedUserId,
-                  consent_id: consent?.id,
-                  profession_id: selectedProfessionId,
-                }),
+              onClick: () => handleSendRequest,
               disabled: !acknowledged || isPending,
               loading: isPending,
             },
