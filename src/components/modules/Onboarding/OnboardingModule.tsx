@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import { Session } from "next-auth";
+import Link from "next/link";
 import {
   Box,
   Container,
@@ -10,12 +11,15 @@ import {
   Stepper,
   Grid2 as Grid,
   Typography,
+  useTheme,
 } from "@mui/material";
 
 import {
   displayStepLabel,
   RegistrationStepEnum,
 } from "@/ts/enums/RegistrationStepEnum";
+import { AppRoutes } from "@/utils/routes";
+import AppLogo from "@/components/core/Logo/AppLogo";
 
 import CollectEmailVerificationStep from "./shared/CollectEmailVerification";
 import CollectUsernameStep from "./shared/CollectUsernameStep";
@@ -34,6 +38,7 @@ type OnboardingModuleProps = {
 };
 
 export default function OnboardingModule({ session }: OnboardingModuleProps) {
+  const theme = useTheme();
   const step = session?.registration_step;
 
   const steps = [
@@ -79,47 +84,74 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
   }, [step]);
 
   return (
-    <Box sx={styles.container}>
-      <Container maxWidth="xl" sx={{ height: "100%" }}>
-        <Grid container sx={{ height: "100%" }} spacing={0}>
-          {shouldDisplayStepper && (
-            <Grid size={{ xs: 0, md: 3 }} sx={styles.leftColumnContainer}>
-              <Typography variant="h4" sx={{ mb: 6, fontWeight: 800 }}>
-                Configurare Business
-              </Typography>
+    <Box sx={styles.outer}>
+      <Box sx={styles.topBar}>
+        <Box
+          component={Link}
+          href={AppRoutes.home()}
+          sx={{ display: "inline-flex", lineHeight: 0 }}
+        >
+          <AppLogo height={18} color={theme.palette.text.primary} />
+        </Box>
+      </Box>
 
-              <Stepper
-                activeStep={activeStepIndex}
-                orientation="vertical"
-                sx={styles.stepper}
-              >
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel sx={styles.stepLabel}>
-                      {displayStepLabel(label)}
-                    </StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
+      <Box sx={styles.contentArea}>
+        <Container maxWidth="xl" sx={{ height: "100%" }}>
+          <Grid container sx={{ height: "100%" }} spacing={0}>
+            {shouldDisplayStepper && (
+              <Grid size={{ xs: 0, md: 3 }} sx={styles.leftColumnContainer}>
+                <Typography variant="h4" sx={{ mb: 6, fontWeight: 800 }}>
+                  Configurare Business
+                </Typography>
+
+                <Stepper
+                  activeStep={activeStepIndex}
+                  orientation="vertical"
+                  sx={styles.stepper}
+                >
+                  {steps.map((label) => (
+                    <Step key={label}>
+                      <StepLabel sx={styles.stepLabel}>
+                        {displayStepLabel(label)}
+                      </StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+              </Grid>
+            )}
+
+            <Grid
+              size={{ xs: 12, md: shouldDisplayStepper ? 8 : 13 }}
+              sx={styles.rightColumn}
+            >
+              {stepContent}
             </Grid>
-          )}
-
-          <Grid
-            size={{ xs: 12, md: shouldDisplayStepper ? 8 : 13 }}
-            sx={styles.rightColumn}
-          >
-            {stepContent}
           </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </Box>
     </Box>
   );
 }
 
 const styles = {
-  container: {
+  outer: {
     bgcolor: "background.default",
     height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+  },
+  topBar: {
+    flexShrink: 0,
+    height: 56,
+    display: "flex",
+    alignItems: "center",
+    px: { xs: 2, md: 4 },
+    borderBottom: "1px solid",
+    borderColor: "divider",
+  },
+  contentArea: {
+    flex: 1,
+    minHeight: 0,
     overflow: "hidden",
   },
   leftColumnContainer: {

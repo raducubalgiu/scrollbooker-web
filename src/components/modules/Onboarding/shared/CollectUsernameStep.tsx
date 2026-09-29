@@ -9,14 +9,14 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { useCustomQuery } from "@/hooks/useHttp";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { SearchUsername } from "@/ts/models/user/SearchUsername";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
+import { useCollectUsernameMutation } from "@/controllers/onboarding/onboarding.controller";
 
 const CollectUsernameStep = () => {
   const [username, setUsername] = useState("");
@@ -37,22 +37,8 @@ const CollectUsernameStep = () => {
     },
   });
 
-  const { mutate: handleSaveUsername, isPending: isLoadingSave } = useMutate({
-    key: ["collect-username"],
-    url: "/api/onboarding/collect-username",
-    method: "PATCH",
-    options: {
-      onSuccess: async (data: OnboardingResponse) => {
-        await update({
-          username: username,
-          is_validated: data.is_validated,
-          registration_step: data.registration_step,
-        });
-
-        router.refresh();
-      },
-    },
-  });
+  const { mutate: handleSaveUsername, isPending: isLoadingSave } =
+    useCollectUsernameMutation();
 
   const isLoadingSearch = isLoading || isFetching;
 
@@ -78,7 +64,7 @@ const CollectUsernameStep = () => {
     <Stack
       justifyContent="center"
       alignItems="center"
-      sx={{ minHeight: "100vh", bgcolor: "background.paper" }}
+      sx={{ minHeight: "100%", bgcolor: "background.paper" }}
     >
       <Container maxWidth="sm">
         <Stack mb={2} gap={0.5}>
@@ -119,7 +105,22 @@ const CollectUsernameStep = () => {
           fullWidth
           loading={isLoadingSave || isLoadingSearch}
           disabled={isLoadingSearch || !data?.available}
-          onClick={() => handleSaveUsername({ username })}
+          onClick={() =>
+            handleSaveUsername(
+              { username },
+              {
+                onSuccess: async (data) => {
+                  await update({
+                    username,
+                    is_validated: data.is_validated,
+                    registration_step: data.registration_step,
+                  });
+
+                  router.refresh();
+                },
+              }
+            )
+          }
           disableElevation
           sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
         >

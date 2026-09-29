@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout";
 import { Divider, FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import { useMutate } from "@/hooks/useHttp";
-import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useCollectBusinessHasEmployeesMutation } from "@/controllers/onboarding/onboarding.controller";
 
 const CollectBusinessHasEmployeesStep = () => {
   const { update } = useSession();
@@ -12,21 +11,8 @@ const CollectBusinessHasEmployeesStep = () => {
 
   const [hasEmployees, setHasEmployees] = useState(false);
 
-  const { mutate: handleSave, isPending: isLoadingSave } = useMutate({
-    key: ["collect-business-has-employees"],
-    url: "/api/onboarding/collect-business-has-employees",
-    method: "PATCH",
-    options: {
-      onSuccess: async (data: OnboardingResponse) => {
-        await update({
-          is_validated: data.is_validated,
-          registration_step: data.registration_step,
-        });
-
-        router.refresh();
-      },
-    },
-  });
+  const { mutate: handleSave, isPending: isLoadingSave } =
+    useCollectBusinessHasEmployeesMutation();
 
   return (
     <BusinessOnboardingSectionLayout
@@ -37,7 +23,21 @@ const CollectBusinessHasEmployeesStep = () => {
             calendar business."
       isLoading={isLoadingSave}
       isDisabled={isLoadingSave}
-      onClick={() => handleSave({ has_employees: hasEmployees })}
+      onClick={() =>
+        handleSave(
+          { has_employees: hasEmployees },
+          {
+            onSuccess: async (data) => {
+              await update({
+                is_validated: data.is_validated,
+                registration_step: data.registration_step,
+              });
+
+              router.refresh();
+            },
+          }
+        )
+      }
     >
       <Divider sx={{ mt: 5, mb: 2.5 }} />
 

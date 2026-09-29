@@ -1,12 +1,11 @@
 import InputSelect from "@/components/core/Input/InputSelect";
-import { useMutate } from "@/hooks/useHttp";
-import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { Button, Container, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useCollectBirthdateMutation } from "@/controllers/onboarding/onboarding.controller";
 
 type BirthdateForm = {
   day: string;
@@ -48,21 +47,19 @@ const CollectBirthdateStep = () => {
     defaultValues: { day: "", month: "", year: "" },
   });
 
-  const { mutate: updateBirthdate, isPending } = useMutate({
-    key: ["update-birthdate"],
-    url: "/api/onboarding/collect-birthdate",
-    method: "PATCH",
-    options: {
-      onSuccess: async (data: OnboardingResponse) => {
-        await update({
-          is_validated: data.is_validated,
-          registration_step: data.registration_step,
-        });
+  const { mutate: updateBirthdate, isPending } = useCollectBirthdateMutation();
 
-        router.refresh();
-      },
-    },
-  });
+  const handleBirthdateSuccess = async (data: {
+    is_validated: boolean;
+    registration_step: string | null;
+  }) => {
+    await update({
+      is_validated: data.is_validated,
+      registration_step: data.registration_step,
+    });
+
+    router.refresh();
+  };
 
   const onSubmit = (data: BirthdateForm) => {
     let formattedDate = null;
@@ -72,7 +69,10 @@ const CollectBirthdateStep = () => {
       formattedDate = dayjs(dateString).format("YYYY-MM-DD");
     }
 
-    updateBirthdate({ birthdate: formattedDate });
+    updateBirthdate(
+      { birthdate: formattedDate },
+      { onSuccess: handleBirthdateSuccess }
+    );
   };
 
   return (
@@ -80,7 +80,7 @@ const CollectBirthdateStep = () => {
       <Stack
         alignItems="center"
         justifyContent="center"
-        sx={{ minHeight: "100vh", bgcolor: "background.paper" }}
+        sx={{ minHeight: "100%", bgcolor: "background.paper" }}
       >
         <Container maxWidth="sm">
           <Stack spacing={3}>
@@ -125,7 +125,12 @@ const CollectBirthdateStep = () => {
             </Button>
 
             <Button
-              onClick={() => updateBirthdate({ birthdate: null })}
+              onClick={() =>
+                updateBirthdate(
+                  { birthdate: null },
+                  { onSuccess: handleBirthdateSuccess }
+                )
+              }
               disableElevation
               sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
               disabled={isPending}

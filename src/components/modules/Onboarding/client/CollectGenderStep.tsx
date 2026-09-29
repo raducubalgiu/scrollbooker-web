@@ -1,5 +1,4 @@
-import { useMutate } from "@/hooks/useHttp";
-import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
+import { useCollectGenderMutation } from "@/controllers/onboarding/onboarding.controller";
 import {
   Button,
   Container,
@@ -38,27 +37,13 @@ const CollectGenderStep = () => {
     setGender((event.target as HTMLInputElement).value);
   };
 
-  const { mutate: handleSaveGender, isPending } = useMutate({
-    key: ["collect-client-gender"],
-    url: "/api/onboarding/collect-gender",
-    method: "PATCH",
-    options: {
-      onSuccess: async (data: OnboardingResponse) => {
-        await update({
-          is_validated: data.is_validated,
-          registration_step: data.registration_step,
-        });
-
-        router.refresh();
-      },
-    },
-  });
+  const { mutate: handleSaveGender, isPending } = useCollectGenderMutation();
 
   return (
     <Stack
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: "100vh", bgcolor: "background.paper" }}
+      sx={{ minHeight: "100%", bgcolor: "background.paper" }}
     >
       <Container maxWidth="sm">
         <Stack spacing={3}>
@@ -103,7 +88,21 @@ const CollectGenderStep = () => {
             size="large"
             fullWidth
             loading={isPending}
-            onClick={() => handleSaveGender({ gender })}
+            onClick={() =>
+              handleSaveGender(
+                { gender },
+                {
+                  onSuccess: async (data) => {
+                    await update({
+                      is_validated: data.is_validated,
+                      registration_step: data.registration_step,
+                    });
+
+                    router.refresh();
+                  },
+                }
+              )
+            }
             disableElevation
             sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
           >

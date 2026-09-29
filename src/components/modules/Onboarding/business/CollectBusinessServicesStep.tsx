@@ -1,4 +1,4 @@
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { useCustomQuery } from "@/hooks/useHttp";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import { Paper } from "@mui/material";
 import React, {
@@ -13,8 +13,8 @@ import SelectedServiceItem from "../../Admin/MyBusiness/MyServicesModule/Selecte
 import Accordion from "@/components/core/Accordion/Accordion";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout";
+import { useCollectBusinessServicesMutation } from "@/controllers/onboarding/onboarding.controller";
 
 const CollectBusinessServicesStep = () => {
   const { data: session, update } = useSession();
@@ -61,23 +61,8 @@ const CollectBusinessServicesStep = () => {
     });
   }, []);
 
-  const { mutate: handleSave, isPending: isLoadingUpdate } = useMutate({
-    key: "collect-business-services",
-    url: "/api/onboarding/collect-business-services",
-    method: "PATCH",
-    options: {
-      onSuccess: async (data: OnboardingResponse) => {
-        await update({
-          is_validated: data.is_validated,
-          registration_step: data.registration_step,
-        });
-
-        startTransition(() => {
-          router.refresh();
-        });
-      },
-    },
-  });
+  const { mutate: handleSave, isPending: isLoadingUpdate } =
+    useCollectBusinessServicesMutation();
 
   return (
     <BusinessOnboardingSectionLayout
@@ -85,7 +70,20 @@ const CollectBusinessServicesStep = () => {
       description="Adauga serviciile pe care le desfasori la locatie"
       isLoading={isLoadingUpdate || isPending}
       isDisabled={isPending || isLoadingUpdate || selectedServices.size === 0}
-      onClick={() => handleSave(Array.from(selectedServices))}
+      onClick={() =>
+        handleSave(Array.from(selectedServices), {
+          onSuccess: async (data) => {
+            await update({
+              is_validated: data.is_validated,
+              registration_step: data.registration_step,
+            });
+
+            startTransition(() => {
+              router.refresh();
+            });
+          },
+        })
+      }
     >
       {isLoading && <MyServicesSkeleton />}
       <Paper>

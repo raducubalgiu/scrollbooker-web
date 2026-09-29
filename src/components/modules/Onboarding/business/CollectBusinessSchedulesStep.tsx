@@ -1,7 +1,7 @@
 import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout";
 import { FormProvider, useForm } from "react-hook-form";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { useCustomQuery } from "@/hooks/useHttp";
 import {
   Box,
   Skeleton,
@@ -15,8 +15,8 @@ import SchedulesSelectHours from "../../Admin/MyBusiness/MySchedulesModule/Sched
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { every } from "lodash";
+import { useCollectBusinessSchedulesMutation } from "@/controllers/onboarding/onboarding.controller";
 
 type SchedulesFormValues = {
   schedules: Schedule[];
@@ -57,21 +57,7 @@ const CollectBusinessSchedulesStep = () => {
   }, [data, reset]);
 
   const { mutate: handleUpdateSchedules, isPending: isLoadingUpdate } =
-    useMutate({
-      key: ["update-schedules"],
-      url: "/api/onboarding/collect-business-schedules",
-      method: "PATCH",
-      options: {
-        onSuccess: async (data: OnboardingResponse) => {
-          await update({
-            is_validated: data.is_validated,
-            registration_step: data.registration_step,
-          });
-
-          router.refresh();
-        },
-      },
-    });
+    useCollectBusinessSchedulesMutation();
 
   const handleSave = (new_data: { schedules: Schedule[] }) => {
     const updated_schedules = new_data.schedules.map((schedule) => {
@@ -84,7 +70,16 @@ const CollectBusinessSchedulesStep = () => {
       };
     });
 
-    handleUpdateSchedules(updated_schedules);
+    handleUpdateSchedules(updated_schedules, {
+      onSuccess: async (data) => {
+        await update({
+          is_validated: data.is_validated,
+          registration_step: data.registration_step,
+        });
+
+        router.refresh();
+      },
+    });
   };
 
   const isNextDisabled = every(schedules, { start_time: "closed" });

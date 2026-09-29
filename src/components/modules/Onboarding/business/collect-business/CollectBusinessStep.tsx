@@ -3,7 +3,6 @@
 import { Box } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import CollectBusinessLocationDescription from "./steps/CollectBusinessLocationDescription";
-import { useMutate } from "@/hooks/useHttp";
 import { BusinessCreate } from "@/ts/models/booking/business/Business";
 import CollectBusinessType from "./steps/CollectBusinessType";
 import CollectBusinessAddress from "./steps/CollectBusinessAddress";
@@ -11,7 +10,7 @@ import CollectBusinessFooter from "./CollectBusinessFooter";
 import CollectBusinessStepper from "./stepper/CollectBusinessStepper";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { OnboardingBusinessCreateResponse } from "@/ts/models/onboarding/Onboarding";
+import { useCollectBusinessMutation } from "@/controllers/onboarding/onboarding.controller";
 
 export enum BusinessStep {
   BUSINESS_TYPE,
@@ -30,23 +29,7 @@ const CollectBusinessStep = () => {
   const [businessDescription, setBusinessDescription] = useState("");
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
 
-  const { mutate: createBusiness, isPending } = useMutate({
-    key: ["create-business"],
-    url: "/api/onboarding/collect-business",
-    method: "POST",
-    options: {
-      onSuccess: async (data: OnboardingBusinessCreateResponse) => {
-        await update({
-          business_id: data.business_id,
-          business_type_id: data.business_type_id,
-          is_validated: data.onboarding_state.is_validated,
-          registration_step: data.onboarding_state.registration_step,
-        });
-
-        router.refresh();
-      },
-    },
-  });
+  const { mutate: createBusiness, isPending } = useCollectBusinessMutation();
 
   const isFirstStep = step === 0;
   const isLastStep = step === BusinessStep.BUSINESS_ADDRESS;
@@ -63,7 +46,18 @@ const CollectBusinessStep = () => {
         place_id: selectedPlaceId,
         business_type_id: businessTypeId,
       };
-      createBusiness(body);
+      createBusiness(body, {
+        onSuccess: async (data) => {
+          await update({
+            business_id: data.business_id,
+            business_type_id: data.business_type_id,
+            is_validated: data.onboarding_state.is_validated,
+            registration_step: data.onboarding_state.registration_step,
+          });
+
+          router.refresh();
+        },
+      });
     } else {
       setStep((prev) => prev + 1);
     }
@@ -74,6 +68,8 @@ const CollectBusinessStep = () => {
     ownerFullName,
     businessDescription,
     createBusiness,
+    update,
+    router,
   ]);
 
   const handleBackSubStep = useCallback(() => {

@@ -6,10 +6,9 @@ import { Box, Card, IconButton, Stack, Typography } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-toastify";
-import { useMutate } from "@/hooks/useHttp";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
+import { useCollectBusinessGalleryMutation } from "@/controllers/onboarding/onboarding.controller";
 
 type GalleryItem = {
   id: string;
@@ -44,31 +43,8 @@ const CollectBusinessGalleryStep = () => {
     };
   }, [items]);
 
-  const { mutate: handleUpload, isPending: isPendingGallery } = useMutate<
-    FormData,
-    OnboardingResponse
-  >({
-    key: ["business-gallery"],
-    url: "/api/onboarding/collect-business-gallery",
-    method: "POST",
-    options: {
-      onSuccess: async (data) => {
-        toast.success("Galeria a fost salvată.");
-        await update({
-          is_validated: data.is_validated,
-          registration_step: data.registration_step,
-        });
-
-        router.refresh();
-      },
-      onError: (err: any) => {
-        console.error("Upload failed:", err?.response?.data || err);
-        toast.error(
-          err?.response?.data?.detail || "Eroare la incarcarea imaginilor"
-        );
-      },
-    },
-  });
+  const { mutate: handleUpload, isPending: isPendingGallery } =
+    useCollectBusinessGalleryMutation();
 
   const onFileSelected = (index: number, file: File | null) => {
     if (!file) return;
@@ -112,12 +88,24 @@ const CollectBusinessGalleryStep = () => {
       return;
     }
 
-    const formData = new FormData();
-    filesToUpload.forEach((file) => {
-      formData.append("photos", file);
-    });
+    handleUpload(filesToUpload, {
+      onSuccess: async (data) => {
+        toast.success("Galeria a fost salvată.");
+        await update({
+          is_validated: data.is_validated,
+          registration_step: data.registration_step,
+        });
 
-    handleUpload(formData);
+        router.refresh();
+      },
+      onError: (err: unknown) => {
+        const axiosError = err as { response?: { data?: { detail?: string } } };
+        console.error("Upload failed:", axiosError?.response?.data || err);
+        toast.error(
+          axiosError?.response?.data?.detail || "Eroare la incarcarea imaginilor"
+        );
+      },
+    });
   };
 
   return (

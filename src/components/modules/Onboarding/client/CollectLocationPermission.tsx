@@ -1,35 +1,21 @@
-import { useMutate } from "@/hooks/useHttp";
-import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { Button, Container, Stack, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useCollectLocationPermissionMutation } from "@/controllers/onboarding/onboarding.controller";
 
 const CollectLocationPermission = () => {
   const { update } = useSession();
   const router = useRouter();
 
-  const { mutate: handleSaveLocation, isPending } = useMutate({
-    key: ["collect-location-permission"],
-    url: "/api/onboarding/collect-location-permission",
-    method: "PATCH",
-    options: {
-      onSuccess: async (data: OnboardingResponse) => {
-        await update({
-          is_validated: data.is_validated,
-          registration_step: data.registration_step,
-        });
-
-        router.refresh();
-      },
-    },
-  });
+  const { mutate: handleSaveLocation, isPending } =
+    useCollectLocationPermissionMutation();
 
   return (
     <Stack
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: "100vh", bgcolor: "background.paper" }}
+      sx={{ minHeight: "100%", bgcolor: "background.paper" }}
     >
       <Container maxWidth="sm">
         <Stack spacing={3}>
@@ -49,7 +35,18 @@ const CollectLocationPermission = () => {
             size="large"
             fullWidth
             loading={isPending}
-            onClick={() => handleSaveLocation({})}
+            onClick={() =>
+              handleSaveLocation(undefined, {
+                onSuccess: async (data) => {
+                  await update({
+                    is_validated: data.is_validated,
+                    registration_step: data.registration_step,
+                  });
+
+                  router.refresh();
+                },
+              })
+            }
             disableElevation
             sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
           >
