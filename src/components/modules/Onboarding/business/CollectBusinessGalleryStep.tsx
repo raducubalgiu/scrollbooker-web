@@ -146,7 +146,7 @@ const CollectBusinessGalleryStep = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  bgcolor: it.src ? "transparent" : "grey.50",
+                  bgcolor: it.src ? "transparent" : "action.hover",
                   cursor: "pointer",
                 }}
                 onClick={() => inputRefs.current[idx]?.click()}
@@ -168,9 +168,7 @@ const CollectBusinessGalleryStep = () => {
                     sx={{ color: "text.disabled" }}
                   >
                     <AddPhotoAlternateIcon fontSize="large" />
-                    <Typography variant="caption">
-                      {t("uploadHint")}
-                    </Typography>
+                    <Typography variant="caption">{t("uploadHint")}</Typography>
                   </Stack>
                 )}
 

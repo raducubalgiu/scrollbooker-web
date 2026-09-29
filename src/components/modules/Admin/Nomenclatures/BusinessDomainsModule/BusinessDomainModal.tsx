@@ -2,11 +2,7 @@ import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Input from "@/components/core/Input/Input";
 import InputCheckbox from "@/components/core/Input/InputCheckbox";
 import Modal from "@/components/core/Modal/Modal";
-import { useMutate } from "@/hooks/useHttp";
-import {
-  BusinessDomain,
-  BusinessDomainCreateOrUpdate,
-} from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import { maxField, minField, required } from "@/utils/validation-rules";
 import { Stack } from "@mui/material";
 import React, { useEffect } from "react";
@@ -16,7 +12,8 @@ type BusinessDomainModalProps = {
   data: BusinessDomain | null;
   open: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSave: (data: BusinessDomainFormData) => void;
+  isSubmitting: boolean;
 };
 
 type BusinessDomainFormData = {
@@ -29,7 +26,8 @@ const BusinessDomainModal = ({
   open,
   data,
   onClose,
-  onSuccess,
+  onSave,
+  isSubmitting,
 }: BusinessDomainModalProps) => {
   const isEditMode = !!data;
 
@@ -57,45 +55,13 @@ const BusinessDomainModal = ({
     }
   }, [open, data, reset]);
 
-  const { mutate: handleCreate, isPending: isPendingCreate } = useMutate<
-    BusinessDomainCreateOrUpdate,
-    BusinessDomain
-  >({
-    key: ["create-business-domain"],
-    url: `/api/nomenclatures/business-domains`,
-    method: "POST",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const { mutate: handleUpdate, isPending: isPendingUpdate } = useMutate<
-    BusinessDomainCreateOrUpdate,
-    BusinessDomain
-  >({
-    key: ["update-business-domain", data?.id],
-    url: `/api/nomenclatures/business-domains/${data?.id}`,
-    method: "PUT",
-    options: {
-      onSuccess,
-    },
-  });
-
-  const onSubmit = (data: BusinessDomainFormData) => {
-    if (isEditMode) {
-      handleUpdate(data);
-    } else {
-      handleCreate(data);
-    }
-  };
-
   const actions: ActionButtonType[] = [
     {
       title: isEditMode ? "Modifică" : "Adaugă",
       props: {
-        onClick: handleSubmit(onSubmit),
-        loading: isPendingCreate || isPendingUpdate,
-        disabled: isPendingCreate || isPendingUpdate || !isDirty,
+        onClick: handleSubmit(onSave),
+        loading: isSubmitting,
+        disabled: isSubmitting || !isDirty,
       },
     },
   ];
@@ -104,7 +70,7 @@ const BusinessDomainModal = ({
     <Modal
       title={
         isEditMode
-          ? `Editează Business Domain ID: ${data.id}`
+          ? `Editează Business Domain ID: ${data?.id}`
           : "Adaugă un Business Domain"
       }
       open={open}
@@ -127,7 +93,6 @@ const BusinessDomainModal = ({
             label="Nume scurt"
             rules={{ ...isRequired, ...minLengthName, ...maxLengthName }}
           />
-
           <InputCheckbox name="active" label="Activ" sx={{ fontSize: 30 }} />
         </Stack>
       </FormProvider>

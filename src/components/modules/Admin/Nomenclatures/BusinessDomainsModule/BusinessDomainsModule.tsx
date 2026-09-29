@@ -1,7 +1,10 @@
 "use client";
 
 import MainLayout from "../../../../cutomized/MainLayout/MainLayout";
-import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import {
+  BusinessDomain,
+  BusinessDomainCreateOrUpdate,
+} from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import { useCallback, useMemo, useState } from "react";
 import {
   MaterialReactTable,
@@ -12,11 +15,18 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import { Button, Switch } from "@mui/material";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { Delete, Edit } from "@mui/icons-material";
 import BusinessDomainModal from "./BusinessDomainModal";
 import BusinessDomainsServiceDomains from "./BusinessDomainsServiceDomains";
+import {
+  useCreateBusinessDomain,
+  useDeleteBusinessDomain,
+  useGetAllBusinessDomains,
+  useUpdateBusinessDomain,
+} from "@/controllers/nomenclature/business-domain.controller";
+import { toast } from "react-toastify";
+import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<BusinessDomain>;
@@ -29,38 +39,80 @@ type BusinessDomainModalState = {
   data: BusinessDomain | null;
 };
 
-type BusinessDomainsModuleProps = {
-  initialData: BusinessDomain[];
+type DeleteModalState = {
+  open: boolean;
+  id: string | null;
+  name: string;
 };
 
-export default function BusinessDomainsModule({
-  initialData,
-}: BusinessDomainsModuleProps) {
+export default function BusinessDomainsModule() {
   const [openModal, setOpenModal] = useState<BusinessDomainModalState>({
     open: false,
     data: null,
   });
 
-  const { data, isLoading, refetch } = useCustomQuery<BusinessDomain[]>({
-    key: ["businessDomains"],
-    url: `/api/nomenclatures/business-domains?all=true`,
-    options: {
-      initialData: initialData ?? [],
-    },
+  const [deleteModal, setDeleteModal] = useState<DeleteModalState>({
+    open: false,
+    id: null,
+    name: "",
   });
 
-  const { mutate: handleDelete, isPending: isPendingDelete } = useMutate({
-    key: ["delete-business-domain"],
-    url: "/api/nomenclatures/business-domains",
-    method: "DELETE",
-    options: {
-      onSuccess: () => refetch(),
-    },
-  });
+  const { data, isLoading } = useGetAllBusinessDomains({ all: true });
+
+  const { mutate: createDomain, isPending: isPendingCreate } =
+    useCreateBusinessDomain();
+  const { mutate: updateDomain, isPending: isPendingUpdate } =
+    useUpdateBusinessDomain();
+  const { mutate: deleteDomain, isPending: isPendingDelete } =
+    useDeleteBusinessDomain();
 
   const memoizedData = useMemo(() => {
     return data || [];
   }, [data]);
+
+  const handleCloseModal = () => setOpenModal({ open: false, data: null });
+
+  const handleCloseDeleteModal = () =>
+    setDeleteModal({ open: false, id: null, name: "" });
+
+  const handleConfirmDelete = () => {
+    if (!deleteModal.id) return;
+
+    deleteDomain(deleteModal.id, {
+      onSuccess: () => {
+        toast.success("Domeniul a fost șters cu succes!");
+        handleCloseDeleteModal();
+      },
+      onError: () => {
+        toast.error("A apărut o eroare la ștergere.");
+      },
+    });
+  };
+
+  const handleSaveDomain = (formData: BusinessDomainCreateOrUpdate) => {
+    const isEditMode = !!openModal.data;
+
+    if (isEditMode && openModal.data) {
+      updateDomain(
+        { id: String(openModal.data.id), data: formData },
+        {
+          onSuccess: () => {
+            toast.success("Domeniul a fost modificat cu succes!");
+            handleCloseModal();
+          },
+          onError: () => toast.error("Eroare la modificarea domeniului."),
+        }
+      );
+    } else {
+      createDomain(formData, {
+        onSuccess: () => {
+          toast.success("Domeniul a fost adăugat cu succes!");
+          handleCloseModal();
+        },
+        onError: () => toast.error("Eroare la adăugarea domeniului."),
+      });
+    }
+  };
 
   const renderRowActionMenuItems = useCallback(
     ({ row, table, closeMenu }: RenderRowActionMenuItemsProps) => [
@@ -69,11 +121,7 @@ export default function BusinessDomainsModule({
         label="Editeaza"
         icon={<Edit />}
         onClick={() => {
-          setOpenModal({
-            open: true,
-            data: row.original,
-          });
-
+          setOpenModal({ open: true, data: row.original });
           closeMenu();
         }}
         table={table}
@@ -83,8 +131,11 @@ export default function BusinessDomainsModule({
         label="Șterge"
         icon={<Delete />}
         onClick={() => {
-          handleDelete({ businessDomainId: row.original.id });
-
+          setDeleteModal({
+            open: true,
+            id: String(row.original.id),
+            name: row.original.name,
+          });
           closeMenu();
         }}
         table={table}
@@ -96,12 +147,7 @@ export default function BusinessDomainsModule({
   const renderTopToolbarCustomActions = useCallback(
     () => (
       <Button
-        onClick={() => {
-          setOpenModal({
-            open: true,
-            data: null,
-          });
-        }}
+        onClick={() => setOpenModal({ open: true, data: null })}
         variant="contained"
         disableElevation
       >
@@ -113,35 +159,16 @@ export default function BusinessDomainsModule({
 
   const columns = useMemo<MRT_ColumnDef<BusinessDomain>[]>(
     () => [
-      {
-        accessorKey: "id",
-        header: "ID",
-        size: 50,
-        enableEditing: false,
-      },
-      {
-        accessorKey: "name",
-        header: "Name",
-        size: 300,
-      },
-      {
-        accessorKey: "short_name",
-        header: "Short name",
-        size: 300,
-      },
+      { accessorKey: "id", header: "ID", size: 50, enableEditing: false },
+      { accessorKey: "name", header: "Name", size: 300 },
+      { accessorKey: "short_name", header: "Short name", size: 300 },
       {
         accessorKey: "active",
         header: "Active",
         size: 300,
-        Cell: ({ row }) => (
-          <Switch checked={row.original.active} disabled={true} />
-        ),
+        Cell: ({ row }) => <Switch checked={row.original.active} disabled />,
       },
-      {
-        accessorKey: "created_at",
-        header: "Created_at",
-        enableEditing: false,
-      },
+      { accessorKey: "created_at", header: "Created_at", enableEditing: false },
     ],
     []
   );
@@ -166,17 +193,11 @@ export default function BusinessDomainsModule({
     },
     muiTablePaperProps: {
       elevation: 0,
-      sx: {
-        borderRadius: 2.5,
-        border: "1px solid",
-        borderColor: "divider",
-      },
+      sx: { borderRadius: 2.5, border: "1px solid", borderColor: "divider" },
     },
-    renderDetailPanel: ({ row }) => {
-      return (
-        <BusinessDomainsServiceDomains data={row.original.service_domains} />
-      );
-    },
+    renderDetailPanel: ({ row }) => (
+      <BusinessDomainsServiceDomains data={row.original.service_domains} />
+    ),
   });
 
   return (
@@ -184,12 +205,21 @@ export default function BusinessDomainsModule({
       <BusinessDomainModal
         open={openModal.open}
         data={openModal.data}
-        onClose={() => setOpenModal({ open: false, data: null })}
-        onSuccess={() => {
-          refetch();
-          setOpenModal({ open: false, data: null });
-        }}
+        onClose={handleCloseModal}
+        onSave={handleSaveDomain}
+        isSubmitting={isPendingCreate || isPendingUpdate}
       />
+
+      <ConfirmationModal
+        title="Confirmă ștergerea"
+        primaryActionTitle="Șterge"
+        message={`Sigur dorești să ștergi domeniul de business "${deleteModal.name}"? Această acțiune este ireversibilă.`}
+        open={deleteModal.open}
+        isLoading={isPendingDelete}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+      />
+
       <MaterialReactTable table={table} />
     </MainLayout>
   );

@@ -77,11 +77,6 @@ declare module "@mui/material/SvgIcon" {
 }
 
 const defaultTheme = createTheme();
-
-// ---------------------------------------------------------------------------
-// Tipografie comuna (identica intre dark si light, cu o singura exceptie: h6)
-// ---------------------------------------------------------------------------
-
 type Mode = "dark" | "light";
 
 const commonTypography = {
@@ -176,15 +171,6 @@ const getComponents = (mode: Mode) => ({
         backgroundColor: theme.palette.background.default,
         backgroundImage: "none",
         borderRadius: 0,
-      }),
-    },
-  },
-
-  MuiDialog: {
-    styleOverrides: {
-      paper: ({ theme }: { theme: Theme }) => ({
-        backgroundColor: theme.palette.background.default,
-        backgroundImage: "none",
       }),
     },
   },
@@ -421,11 +407,6 @@ const getComponents = (mode: Mode) => ({
     },
   },
 });
-
-// ---------------------------------------------------------------------------
-// Teme: contin DOAR paleta de culori si tipografia specifica modului.
-// Toata logica de stilizare a componentelor traieste in getComponents().
-// ---------------------------------------------------------------------------
 
 export const darkTheme = createTheme({
   palette: {
