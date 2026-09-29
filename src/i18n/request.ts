@@ -28,8 +28,23 @@ export default getRequestConfig(async () => {
     locale = detectLocaleFromAcceptLanguage(headerStore.get("accept-language"));
   }
 
+  // Mesajele sunt despărțite pe arii (landing, getStarted, common, ...) ca
+  // niciun fișier să nu ajungă uriaș pe măsură ce traducem și restul
+  // aplicației — dar tot le unim aici într-un singur obiect, ca din
+  // perspectiva componentelor (useTranslations/getTranslations) nimic să nu
+  // se schimbe față de un singur fișier mare.
+  const [landing, getStarted, common] = await Promise.all([
+    import(`../../messages/${locale}/landing.json`),
+    import(`../../messages/${locale}/getStarted.json`),
+    import(`../../messages/${locale}/common.json`),
+  ]);
+
   return {
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    messages: {
+      ...landing.default,
+      ...getStarted.default,
+      ...common.default,
+    },
   };
 });

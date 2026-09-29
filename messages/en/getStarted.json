@@ -1,0 +1,29 @@
+{
+  "getStarted": {
+    "metaTitle": "How registration works — ScrollBooker",
+    "back": "Back",
+    "kicker": "Before you start",
+    "title": "Here's exactly what's next",
+    "subtitle": "The process takes about 10 minutes. You can stop anytime and pick up later — nothing gets lost.",
+    "steps": [
+      {
+        "title": "Create your account",
+        "description": "Email, password, and a username for your business."
+      },
+      {
+        "title": "Add your business details",
+        "description": "Profile, address, and a photo gallery — what a client sees when they discover you."
+      },
+      {
+        "title": "Set up your offering",
+        "description": "The services you offer, your working hours, and, if it applies, your staff."
+      },
+      {
+        "title": "Wait for approval",
+        "description": "We quickly review your profile, then you're visible in the app — ready for bookings."
+      }
+    ],
+    "approvalNote": "The last step needs a manual approval from the ScrollBooker team — usually quick, not instant.",
+    "cta": "Continue to registration"
+  }
+}

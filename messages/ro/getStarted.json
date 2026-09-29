@@ -1,0 +1,29 @@
+{
+  "getStarted": {
+    "metaTitle": "Cum funcționează înregistrarea — ScrollBooker",
+    "back": "Înapoi",
+    "kicker": "Înainte să începi",
+    "title": "Iată exact ce urmează",
+    "subtitle": "Procesul durează în jur de 10 minute. Poți întrerupe oricând și reveni mai târziu — nimic nu se pierde.",
+    "steps": [
+      {
+        "title": "Îți creezi contul",
+        "description": "Email, parolă și un username pentru afacerea ta."
+      },
+      {
+        "title": "Adaugi detaliile afacerii",
+        "description": "Profil, adresă și o galerie foto — ce vede un client când te descoperă."
+      },
+      {
+        "title": "Configurezi oferta",
+        "description": "Serviciile oferite, programul de lucru și, dacă e cazul, angajații tăi."
+      },
+      {
+        "title": "Aștepți aprobarea",
+        "description": "Verificăm rapid profilul, apoi devii vizibil în aplicație — gata de rezervări."
+      }
+    ],
+    "approvalNote": "Ultimul pas necesită o aprobare manuală din partea echipei ScrollBooker — de obicei rapid, nu instant.",
+    "cta": "Continuă spre înregistrare"
+  }
+}
