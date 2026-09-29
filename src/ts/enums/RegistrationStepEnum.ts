@@ -28,37 +28,44 @@ export function RegistrationStepfromKey(
     : null;
 }
 
-export const displayStepLabel = (step: RegistrationStepEnum) => {
+// `t` e legat la namespace-ul "onboarding" (vezi OnboardingModule.tsx) —
+// funcția rămâne în afara componentei ca să poată fi apelată dintr-un
+// switch simplu, dar depinde de un `t` transmis explicit, nu de
+// useTranslations() direct (asta ar cere să fie ea însăși un hook/componentă).
+export const displayStepLabel = (
+  step: RegistrationStepEnum,
+  t: (key: string) => string
+) => {
   switch (step) {
     // Shared
     case RegistrationStepEnum.COLLECT_USER_EMAIL_VALIDATION:
-      return "Validare Email";
+      return t("steps.emailValidation");
     case RegistrationStepEnum.COLLECT_USER_USERNAME:
-      return "Username";
+      return t("steps.username");
     case RegistrationStepEnum.COLLECT_USER_PHONE_HUMBER:
-      return "Phone Number";
+      return t("steps.phoneNumber");
 
     // Client
     case RegistrationStepEnum.COLLECT_CLIENT_BIRTHDATE:
-      return "Birthdate";
+      return t("steps.birthdate");
     case RegistrationStepEnum.COLLECT_CLIENT_GENDER:
-      return "Gender";
+      return t("steps.gender");
     case RegistrationStepEnum.COLLECT_CLIENT_LOCATION_PERMISSION:
-      return "Location Permission";
+      return t("steps.locationPermission");
 
     // Business
     case RegistrationStepEnum.COLLECT_BUSINESS:
-      return "Detalii locație";
+      return t("steps.business");
     case RegistrationStepEnum.COLLECT_BUSINESS_GALLERY:
-      return "Galerie foto";
+      return t("steps.businessGallery");
     case RegistrationStepEnum.COLLECT_BUSINESS_SERVICES:
-      return "Servicii";
+      return t("steps.businessServices");
     case RegistrationStepEnum.COLLECT_BUSINESS_SCHEDULES:
-      return "Programul locației";
+      return t("steps.businessSchedules");
     case RegistrationStepEnum.COLLECT_BUSINESS_HAS_EMPLOYEES:
-      return "Echipă";
+      return t("steps.businessHasEmployees");
     case RegistrationStepEnum.COLLECT_BUSINESS_VALIDATION:
-      return "Validare";
+      return t("steps.businessValidation");
     default:
       return null;
   }

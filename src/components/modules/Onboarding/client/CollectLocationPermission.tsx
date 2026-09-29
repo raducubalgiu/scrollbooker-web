@@ -3,8 +3,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useCollectLocationPermissionMutation } from "@/controllers/onboarding/onboarding.controller";
+import { useTranslations } from "next-intl";
 
 const CollectLocationPermission = () => {
+  const t = useTranslations("onboarding.locationPermission");
   const { update } = useSession();
   const router = useRouter();
 
@@ -21,13 +23,10 @@ const CollectLocationPermission = () => {
         <Stack spacing={3}>
           <Stack spacing={1}>
             <Typography variant="h4" fontWeight={700}>
-              Permisiunea locației
+              {t("title")}
             </Typography>
 
-            <Typography color="text.secondary">
-              Ne ajută să îți oferim servicii din apropiere și să îți
-              personalizăm experiența
-            </Typography>
+            <Typography color="text.secondary">{t("subtitle")}</Typography>
           </Stack>
 
           <Button
@@ -50,7 +49,7 @@ const CollectLocationPermission = () => {
             disableElevation
             sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
           >
-            Salvează
+            {t("save")}
           </Button>
         </Stack>
       </Container>

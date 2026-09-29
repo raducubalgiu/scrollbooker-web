@@ -1,5 +1,6 @@
 import { Button, Stack } from "@mui/material";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 type CollectBusinessFooterProps = {
   isFirstStep: boolean;
@@ -18,6 +19,8 @@ const CollectBusinessFooter = ({
   onHandleBack,
   onHandleNext,
 }: CollectBusinessFooterProps) => {
+  const t = useTranslations("onboarding.business.footer");
+
   return (
     <Stack
       flexDirection="row"
@@ -36,7 +39,7 @@ const CollectBusinessFooter = ({
         onClick={onHandleBack}
         size="large"
       >
-        Înapoi
+        {t("back")}
       </Button>
       <Button
         variant="contained"
@@ -46,7 +49,7 @@ const CollectBusinessFooter = ({
         disableElevation
         disabled={isDisabledNext}
       >
-        {isLastStep ? "Finalizează pasul" : "Continuă"}
+        {isLastStep ? t("finish") : t("continue")}
       </Button>
     </Stack>
   );

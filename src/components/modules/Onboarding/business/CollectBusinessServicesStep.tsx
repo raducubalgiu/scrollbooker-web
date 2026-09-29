@@ -15,8 +15,10 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout";
 import { useCollectBusinessServicesMutation } from "@/controllers/onboarding/onboarding.controller";
+import { useTranslations } from "next-intl";
 
 const CollectBusinessServicesStep = () => {
+  const t = useTranslations("onboarding.services");
   const { data: session, update } = useSession();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -66,8 +68,8 @@ const CollectBusinessServicesStep = () => {
 
   return (
     <BusinessOnboardingSectionLayout
-      title="Categorii de servicii"
-      description="Adauga serviciile pe care le desfasori la locatie"
+      title={t("title")}
+      description={t("subtitle")}
       isLoading={isLoadingUpdate || isPending}
       isDisabled={isPending || isLoadingUpdate || selectedServices.size === 0}
       onClick={() =>

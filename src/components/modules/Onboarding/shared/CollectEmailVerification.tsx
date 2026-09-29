@@ -13,8 +13,10 @@ import { useVerifyEmailMutation } from "@/controllers/auth/auth.controller";
 import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function CollectEmailVerificationStep() {
+  const t = useTranslations("onboarding.emailVerification");
   const router = useRouter();
   const { update } = useSession();
   const [code, setCode] = useState("");
@@ -46,12 +48,10 @@ export default function CollectEmailVerificationStep() {
         <Stack spacing={3}>
           <Stack spacing={1} textAlign="center">
             <Typography variant="h4" fontWeight={700}>
-              Verifică emailul
+              {t("title")}
             </Typography>
 
-            <Typography color="text.secondary">
-              Ți-am trimis un cod pe email. Introdu-l mai jos pentru a continua.
-            </Typography>
+            <Typography color="text.secondary">{t("subtitle")}</Typography>
           </Stack>
 
           <Box>
@@ -59,7 +59,7 @@ export default function CollectEmailVerificationStep() {
               fullWidth
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder="Introdu codul"
+              placeholder={t("codePlaceholder")}
               slotProps={{
                 htmlInput: {
                   maxLength: 6,
@@ -81,19 +81,17 @@ export default function CollectEmailVerificationStep() {
             disableElevation
             sx={{ py: 1.5, fontSize: 16, fontWeight: 600 }}
           >
-            Verifică
+            {t("verify")}
           </Button>
 
           <Stack alignItems="center" spacing={1}>
-            <Typography color="text.secondary">
-              Nu ai primit emailul?
-            </Typography>
+            <Typography color="text.secondary">{t("noEmail")}</Typography>
 
             <Button
               onClick={handleResend}
               sx={{ textTransform: "none", fontWeight: 600 }}
             >
-              Trimite din nou
+              {t("resend")}
             </Button>
           </Stack>
         </Stack>

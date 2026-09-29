@@ -20,6 +20,7 @@ import {
 } from "@/ts/enums/RegistrationStepEnum";
 import { AppRoutes } from "@/utils/routes";
 import AppLogo from "@/components/core/Logo/AppLogo";
+import { useTranslations } from "next-intl";
 
 import CollectEmailVerificationStep from "./shared/CollectEmailVerification";
 import CollectUsernameStep from "./shared/CollectUsernameStep";
@@ -39,6 +40,7 @@ type OnboardingModuleProps = {
 
 export default function OnboardingModule({ session }: OnboardingModuleProps) {
   const theme = useTheme();
+  const t = useTranslations("onboarding");
   const step = session?.registration_step;
 
   const steps = [
@@ -91,7 +93,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
           href={AppRoutes.home()}
           sx={{ display: "inline-flex", lineHeight: 0 }}
         >
-          <AppLogo height={18} color={theme.palette.text.primary} />
+          <AppLogo height={26} color={theme.palette.text.primary} />
         </Box>
       </Box>
 
@@ -101,7 +103,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
             {shouldDisplayStepper && (
               <Grid size={{ xs: 0, md: 3 }} sx={styles.leftColumnContainer}>
                 <Typography variant="h4" sx={{ mb: 6, fontWeight: 800 }}>
-                  Configurare Business
+                  {t("stepperTitle")}
                 </Typography>
 
                 <Stepper
@@ -112,7 +114,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
                   {steps.map((label) => (
                     <Step key={label}>
                       <StepLabel sx={styles.stepLabel}>
-                        {displayStepLabel(label)}
+                        {displayStepLabel(label, t)}
                       </StepLabel>
                     </Step>
                   ))}
@@ -142,7 +144,7 @@ const styles = {
   },
   topBar: {
     flexShrink: 0,
-    height: 56,
+    height: 68,
     display: "flex",
     alignItems: "center",
     px: { xs: 2, md: 4 },

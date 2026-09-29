@@ -12,26 +12,19 @@ import {
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
-
-const GENDERS = [
-  {
-    label: "Bărbați",
-    value: "male",
-  },
-  {
-    label: "Femei",
-    value: "female",
-  },
-  {
-    label: "Prefer să nu spun",
-    value: "other",
-  },
-];
+import { useTranslations } from "next-intl";
 
 const CollectGenderStep = () => {
+  const t = useTranslations("onboarding.gender");
   const { update } = useSession();
   const router = useRouter();
   const [gender, setGender] = React.useState("other");
+
+  const GENDERS = [
+    { label: t("male"), value: "male" },
+    { label: t("female"), value: "female" },
+    { label: t("preferNotToSay"), value: "other" },
+  ];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGender((event.target as HTMLInputElement).value);
@@ -49,12 +42,10 @@ const CollectGenderStep = () => {
         <Stack spacing={3}>
           <Stack spacing={1}>
             <Typography variant="h4" fontWeight={700}>
-              Alege genul tău
+              {t("title")}
             </Typography>
 
-            <Typography color="text.secondary">
-              Ne ajută să îți oferim servicii relevante pentru tine
-            </Typography>
+            <Typography color="text.secondary">{t("subtitle")}</Typography>
           </Stack>
 
           <FormControl>
@@ -106,7 +97,7 @@ const CollectGenderStep = () => {
             disableElevation
             sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
           >
-            Salvează
+            {t("save")}
           </Button>
         </Stack>
       </Container>

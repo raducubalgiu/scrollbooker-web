@@ -4,8 +4,10 @@ import { Divider, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCollectBusinessHasEmployeesMutation } from "@/controllers/onboarding/onboarding.controller";
+import { useTranslations } from "next-intl";
 
 const CollectBusinessHasEmployeesStep = () => {
+  const t = useTranslations("onboarding.hasEmployees");
   const { update } = useSession();
   const router = useRouter();
 
@@ -16,11 +18,8 @@ const CollectBusinessHasEmployeesStep = () => {
 
   return (
     <BusinessOnboardingSectionLayout
-      title="Echipa ta primește programări?"
-      description="Alege „Da” dacă ai colegi care lucrează în paralel. Fiecare va primi
-            un calendar individual pentru a-și gestiona propriile servicii și
-            clienți. Dacă lucrezi singur, totul va fi centralizat într-un singur
-            calendar business."
+      title={t("title")}
+      description={t("subtitle")}
       isLoading={isLoadingSave}
       isDisabled={isLoadingSave}
       onClick={() =>
@@ -49,7 +48,7 @@ const CollectBusinessHasEmployeesStep = () => {
         <FormControlLabel
           value="true"
           control={<Radio sx={{ "& .MuiSvgIcon-root": { fontSize: 32.5 } }} />}
-          label="DA, am angajați care primesc programari"
+          label={t("yes")}
           labelPlacement="start"
           sx={styles.formControl}
         />
@@ -57,7 +56,7 @@ const CollectBusinessHasEmployeesStep = () => {
         <FormControlLabel
           value="false"
           control={<Radio sx={{ "& .MuiSvgIcon-root": { fontSize: 32.5 } }} />}
-          label="NU am angajati care primesc programari"
+          label={t("no")}
           labelPlacement="start"
           sx={styles.formControl}
         />

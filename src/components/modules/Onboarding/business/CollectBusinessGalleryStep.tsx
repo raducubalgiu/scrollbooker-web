@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCollectBusinessGalleryMutation } from "@/controllers/onboarding/onboarding.controller";
+import { useTranslations } from "next-intl";
 
 type GalleryItem = {
   id: string;
@@ -19,6 +20,7 @@ type GalleryItem = {
 const MAX_IMAGES = 5;
 
 const CollectBusinessGalleryStep = () => {
+  const t = useTranslations("onboarding.gallery");
   const router = useRouter();
   const { update } = useSession();
 
@@ -49,7 +51,7 @@ const CollectBusinessGalleryStep = () => {
   const onFileSelected = (index: number, file: File | null) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      toast.error("Te rog selectează un fișier de tip imagine.");
+      toast.error(t("invalidFileType"));
       return;
     }
 
@@ -84,13 +86,13 @@ const CollectBusinessGalleryStep = () => {
       .map((it) => it.file as File);
 
     if (filesToUpload.length === 0) {
-      toast.warning("Te rugăm să încarci cel puțin o fotografie.");
+      toast.warning(t("minPhotosWarning"));
       return;
     }
 
     handleUpload(filesToUpload, {
       onSuccess: async (data) => {
-        toast.success("Galeria a fost salvată.");
+        toast.success(t("success"));
         await update({
           is_validated: data.is_validated,
           registration_step: data.registration_step,
@@ -101,17 +103,15 @@ const CollectBusinessGalleryStep = () => {
       onError: (err: unknown) => {
         const axiosError = err as { response?: { data?: { detail?: string } } };
         console.error("Upload failed:", axiosError?.response?.data || err);
-        toast.error(
-          axiosError?.response?.data?.detail || "Eroare la incarcarea imaginilor"
-        );
+        toast.error(axiosError?.response?.data?.detail || t("errorFallback"));
       },
     });
   };
 
   return (
     <BusinessOnboardingSectionLayout
-      title="Galerie foto"
-      description="Încarcă câteva fotografii prin care să le arăți clienților cum arată locația ta. Minim o fotografie."
+      title={t("title")}
+      description={t("subtitle")}
       isLoading={isPendingGallery}
       isDisabled={isPendingGallery || items.filter((it) => it.src).length === 0}
       onClick={onSave}
@@ -169,7 +169,7 @@ const CollectBusinessGalleryStep = () => {
                   >
                     <AddPhotoAlternateIcon fontSize="large" />
                     <Typography variant="caption">
-                      Apasă pentru a încărca
+                      {t("uploadHint")}
                     </Typography>
                   </Stack>
                 )}

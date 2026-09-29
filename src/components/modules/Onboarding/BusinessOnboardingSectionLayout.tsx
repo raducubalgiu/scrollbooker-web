@@ -1,5 +1,6 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 type BusinessOnboardingSectionLayoutProps = {
   title: string;
@@ -20,6 +21,8 @@ const BusinessOnboardingSectionLayout = ({
   isLoading,
   isDisabled,
 }: BusinessOnboardingSectionLayoutProps) => {
+  const t = useTranslations("onboarding");
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.content}>
@@ -47,7 +50,7 @@ const BusinessOnboardingSectionLayout = ({
             disableElevation
             sx={{ px: 6, py: 1.5, fontWeight: 700 }}
           >
-            Salvează și continuă
+            {t("saveAndContinue")}
           </Button>
         </Box>
       )}

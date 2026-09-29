@@ -17,8 +17,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCollectUsernameMutation } from "@/controllers/onboarding/onboarding.controller";
+import { useTranslations } from "next-intl";
 
 const CollectUsernameStep = () => {
+  const t = useTranslations("onboarding.username");
   const [username, setUsername] = useState("");
   const { update } = useSession();
   const router = useRouter();
@@ -64,18 +66,15 @@ const CollectUsernameStep = () => {
     <Stack
       justifyContent="center"
       alignItems="center"
-      sx={{ minHeight: "100%", bgcolor: "background.paper" }}
+      sx={{ minHeight: "100%" }}
     >
       <Container maxWidth="sm">
         <Stack mb={2} gap={0.5}>
           <Typography variant="h4" sx={{ fontWeight: 700 }}>
-            Nume de utilizator
+            {t("title")}
           </Typography>
 
-          <Typography color="text.secondary">
-            Alege un nume unic pentru profilul tău. Poți alege orice variantă
-            disponibilă
-          </Typography>
+          <Typography color="text.secondary">{t("subtitle")}</Typography>
         </Stack>
 
         <TextField
@@ -83,7 +82,7 @@ const CollectUsernameStep = () => {
           onChange={(e) => setUsername(e.target.value)}
           sx={{ mb: 1.5 }}
           size="medium"
-          placeholder="Username"
+          placeholder={t("placeholder")}
           fullWidth
           slotProps={{
             input: {
@@ -124,7 +123,7 @@ const CollectUsernameStep = () => {
           disableElevation
           sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
         >
-          Salvează
+          {t("save")}
         </Button>
       </Container>
     </Stack>

@@ -1,6 +1,7 @@
 import { TextField } from "@mui/material";
 import React, { memo } from "react";
 import BusinessOnboardingSectionLayout from "../../../BusinessOnboardingSectionLayout";
+import { useTranslations } from "next-intl";
 
 type CollectBusinessLocationDescriptionProps = {
   ownerFullName: string;
@@ -17,11 +18,12 @@ const CollectBusinessLocationDescription = ({
   businessDescription,
   onHandleBusinessDescription,
 }: CollectBusinessLocationDescriptionProps) => {
+  const t = useTranslations("onboarding.business.locationDescription");
+
   return (
     <BusinessOnboardingSectionLayout
-      title="Prezentarea locației"
-      description=" Spune-ne cum se numește business-ul tău și oferă cateva detalii despre
-          servicii, atmosferă sau orice crezi ca este important"
+      title={t("title")}
+      description={t("subtitle")}
       onClick={() => {}}
       isDisabled={false}
       isLoading={false}
@@ -31,7 +33,7 @@ const CollectBusinessLocationDescription = ({
         value={ownerFullName}
         onChange={onHandleOwnerFullName}
         autoFocus={false}
-        placeholder="Nume*"
+        placeholder={t("namePlaceholder")}
         variant="outlined"
         fullWidth
         sx={{ mb: 2.5 }}
@@ -41,7 +43,7 @@ const CollectBusinessLocationDescription = ({
         value={businessDescription}
         onChange={onHandleBusinessDescription}
         autoFocus={false}
-        placeholder="Descriere"
+        placeholder={t("descriptionPlaceholder")}
         variant="outlined"
         fullWidth
         multiline

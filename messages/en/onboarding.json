@@ -1,0 +1,147 @@
+{
+  "onboarding": {
+    "stepperTitle": "Business Setup",
+    "saveAndContinue": "Save and continue",
+    "steps": {
+      "emailValidation": "Email verification",
+      "username": "Username",
+      "phoneNumber": "Phone",
+      "birthdate": "Birthdate",
+      "gender": "Gender",
+      "locationPermission": "Location permission",
+      "business": "Location details",
+      "businessGallery": "Photo gallery",
+      "businessServices": "Services",
+      "businessSchedules": "Working hours",
+      "businessHasEmployees": "Team",
+      "businessValidation": "Validation"
+    },
+    "emailVerification": {
+      "title": "Verify your email",
+      "subtitle": "We've sent you a code by email. Enter it below to continue.",
+      "codePlaceholder": "Enter the code",
+      "verify": "Verify",
+      "noEmail": "Didn't get the email?",
+      "resend": "Resend"
+    },
+    "username": {
+      "title": "Username",
+      "subtitle": "Choose a unique name for your profile. Pick any available option",
+      "placeholder": "Username",
+      "save": "Save"
+    },
+    "birthdate": {
+      "title": "Date of birth",
+      "subtitle": "We only use this to personalize your experience",
+      "day": "Day",
+      "month": "Month",
+      "year": "Year",
+      "save": "Save",
+      "skip": "Prefer not to say",
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "gender": {
+      "title": "Choose your gender",
+      "subtitle": "This helps us show you more relevant services",
+      "male": "Male",
+      "female": "Female",
+      "preferNotToSay": "Prefer not to say",
+      "save": "Save"
+    },
+    "locationPermission": {
+      "title": "Location permission",
+      "subtitle": "This helps us show you nearby services and personalize your experience",
+      "save": "Save"
+    },
+    "business": {
+      "subSteps": {
+        "type": "Business type",
+        "details": "Details",
+        "address": "Address"
+      },
+      "type": {
+        "title": "What kind of business do you have?",
+        "subtitle": "Choose the category that best describes your business",
+        "search": "Search"
+      },
+      "locationDescription": {
+        "title": "Introduce your location",
+        "subtitle": "Tell us your business name and share a few details about your services, atmosphere, or anything else that matters",
+        "namePlaceholder": "Name*",
+        "descriptionPlaceholder": "Description"
+      },
+      "address": {
+        "title": "Location address",
+        "subtitle": "Add the address where you'll welcome clients",
+        "search": "Search"
+      },
+      "footer": {
+        "back": "Back",
+        "continue": "Continue",
+        "finish": "Finish step"
+      }
+    },
+    "gallery": {
+      "title": "Photo gallery",
+      "subtitle": "Upload a few photos to show clients what your location looks like. At least one photo.",
+      "uploadHint": "Tap to upload",
+      "invalidFileType": "Please select an image file.",
+      "minPhotosWarning": "Please upload at least one photo.",
+      "success": "Gallery saved.",
+      "errorFallback": "Error uploading photos"
+    },
+    "services": {
+      "title": "Service categories",
+      "subtitle": "Add the services you offer at this location"
+    },
+    "schedules": {
+      "title": "Working hours",
+      "subtitle": "Add the time slots when your location is open for clients",
+      "day": "Day",
+      "start": "Start",
+      "end": "End"
+    },
+    "hasEmployees": {
+      "title": "Does your team take bookings?",
+      "subtitle": "Choose \"Yes\" if you have colleagues working in parallel. Each of them gets their own calendar to manage their own services and clients. If you work alone, everything will be centralized in a single business calendar.",
+      "yes": "YES, I have employees who take bookings",
+      "no": "NO, I don't have employees who take bookings"
+    },
+    "validation": {
+      "title": "Congrats! You've finished the setup",
+      "subtitle": "We've received all the details about your business. Our team will review your application and let you know as soon as your account is approved.",
+      "responseTime": "We usually reply in under 15 minutes",
+      "nextTitle": "What happens next?",
+      "nextSubtitle": "Once your location is validated, you'll be able to add your team so they can take bookings. Here's how it works:",
+      "steps": {
+        "employeeAccount": {
+          "title": "Employee account",
+          "description": "Your colleague creates a simple user account in the app."
+        },
+        "invitation": {
+          "title": "Your invitation",
+          "description": "You send them a collaboration invite directly from your control panel."
+        },
+        "calendarActivation": {
+          "title": "Calendar activation",
+          "description": "Once accepted, they automatically get their own work calendar."
+        }
+      },
+      "helpTitle": "Don't worry, the process is very simple!",
+      "helpSubtitle": "You'll find a full video guide and step-by-step support in the app as soon as you log in."
+    }
+  }
+}

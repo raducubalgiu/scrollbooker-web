@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCollectBirthdateMutation } from "@/controllers/onboarding/onboarding.controller";
+import { useTranslations } from "next-intl";
 
 type BirthdateForm = {
   day: string;
@@ -18,21 +19,6 @@ const days = Array.from({ length: 31 }, (_, i) => ({
   name: (i + 1).toString(),
 }));
 
-const months = [
-  { value: "1", name: "Ianuarie" },
-  { value: "2", name: "Februarie" },
-  { value: "3", name: "Martie" },
-  { value: "4", name: "Aprilie" },
-  { value: "5", name: "Mai" },
-  { value: "6", name: "Iunie" },
-  { value: "7", name: "Iulie" },
-  { value: "8", name: "August" },
-  { value: "9", name: "Septembrie" },
-  { value: "10", name: "Octombrie" },
-  { value: "11", name: "Noiembrie" },
-  { value: "12", name: "Decembrie" },
-];
-
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 100 }, (_, i) => ({
   value: (currentYear - i).toString(),
@@ -40,6 +26,11 @@ const years = Array.from({ length: 100 }, (_, i) => ({
 }));
 
 const CollectBirthdateStep = () => {
+  const t = useTranslations("onboarding.birthdate");
+  const months = (t.raw("months") as string[]).map((name, i) => ({
+    value: (i + 1).toString(),
+    name,
+  }));
   const { update } = useSession();
   const router = useRouter();
 
@@ -86,26 +77,28 @@ const CollectBirthdateStep = () => {
           <Stack spacing={3}>
             <Stack spacing={1} textAlign="center">
               <Typography variant="h4" fontWeight={700}>
-                Data de naștere
+                {t("title")}
               </Typography>
 
-              <Typography color="text.secondary">
-                Folosim această informație doar pentru a-ți personaliza
-                experiența
-              </Typography>
+              <Typography color="text.secondary">{t("subtitle")}</Typography>
             </Stack>
 
             <Stack flexDirection="row" alignItems="center" gap={1}>
-              <InputSelect name="day" label="Zi" options={days} size="medium" />
+              <InputSelect
+                name="day"
+                label={t("day")}
+                options={days}
+                size="medium"
+              />
               <InputSelect
                 name="month"
-                label="Lună"
+                label={t("month")}
                 options={months}
                 size="medium"
               />
               <InputSelect
                 name="year"
-                label="An"
+                label={t("year")}
                 options={years}
                 size="medium"
               />
@@ -121,7 +114,7 @@ const CollectBirthdateStep = () => {
               disableElevation
               sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
             >
-              Salvează
+              {t("save")}
             </Button>
 
             <Button
@@ -135,7 +128,7 @@ const CollectBirthdateStep = () => {
               sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
               disabled={isPending}
             >
-              Prefer să nu spun
+              {t("skip")}
             </Button>
           </Stack>
         </Container>

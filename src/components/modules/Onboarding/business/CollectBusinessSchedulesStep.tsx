@@ -17,12 +17,14 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { every } from "lodash";
 import { useCollectBusinessSchedulesMutation } from "@/controllers/onboarding/onboarding.controller";
+import { useTranslations } from "next-intl";
 
 type SchedulesFormValues = {
   schedules: Schedule[];
 };
 
 const CollectBusinessSchedulesStep = () => {
+  const t = useTranslations("onboarding.schedules");
   const { update } = useSession();
   const router = useRouter();
 
@@ -86,8 +88,8 @@ const CollectBusinessSchedulesStep = () => {
 
   return (
     <BusinessOnboardingSectionLayout
-      title="Programul de lucru"
-      description="Adauga intervalele orare in care locatia ta este deschisa pentru clienti"
+      title={t("title")}
+      description={t("subtitle")}
       isLoading={isLoadingUpdate}
       isDisabled={isLoading || isLoadingUpdate || isNextDisabled}
       onClick={handleSubmit(handleSave)}
@@ -102,7 +104,7 @@ const CollectBusinessSchedulesStep = () => {
                   scope="col"
                   sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
                 >
-                  Ziua
+                  {t("day")}
                 </TableCell>
                 <TableCell
                   component="th"
@@ -110,7 +112,7 @@ const CollectBusinessSchedulesStep = () => {
                   align="center"
                   sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
                 >
-                  Start
+                  {t("start")}
                 </TableCell>
                 <TableCell
                   component="th"
@@ -118,7 +120,7 @@ const CollectBusinessSchedulesStep = () => {
                   align="center"
                   sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
                 >
-                  Sfârșit
+                  {t("end")}
                 </TableCell>
               </TableRow>
             </TableHead>

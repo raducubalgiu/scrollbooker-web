@@ -3,14 +3,16 @@ import React from "react";
 import { BusinessStep } from "../CollectBusinessStep";
 import CollectBusinessStepperProgress from "./CollectBusinessStepperProgress";
 import CollectBusinessStepperLabel from "./CollectBusinessStepperLabel";
+import { useTranslations } from "next-intl";
 
 type CollectBusinessStepperProps = {
   step: BusinessStep;
 };
 
-const subStepLabels = ["Tip Business", "Detalii", "Adresă"];
-
 const CollectBusinessStepper = ({ step }: CollectBusinessStepperProps) => {
+  const t = useTranslations("onboarding.business.subSteps");
+  const subStepLabels = [t("type"), t("details"), t("address")];
+
   return (
     <Box sx={styles.stepperContainer}>
       <Stack direction="row" justifyContent="space-between" mb={1.5}>

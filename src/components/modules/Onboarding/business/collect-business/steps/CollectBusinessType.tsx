@@ -15,6 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { memo } from "react";
 import { useCustomQuery } from "@/hooks/useHttp";
 import BusinessOnboardingSectionLayout from "../../../BusinessOnboardingSectionLayout";
+import { useTranslations } from "next-intl";
 
 type CollectBusinessTypeProps = {
   businessTypeId: number | null;
@@ -25,6 +26,7 @@ const CollectBusinessType = ({
   businessTypeId,
   onHandleBusinessTypeId,
 }: CollectBusinessTypeProps) => {
+  const t = useTranslations("onboarding.business.type");
   const { data: businessTypes, isLoading } = useCustomQuery<BusinessType[]>({
     key: ["business-types-onboarding"],
     url: "/api/nomenclatures/business-types",
@@ -32,8 +34,8 @@ const CollectBusinessType = ({
 
   return (
     <BusinessOnboardingSectionLayout
-      title="Ce business ai?"
-      description="Alege categoria care descrie cel mai bine activitatea ta"
+      title={t("title")}
+      description={t("subtitle")}
       onClick={() => {}}
       isLoading={false}
       isDisabled={false}
@@ -41,7 +43,7 @@ const CollectBusinessType = ({
     >
       <TextField
         autoFocus={false}
-        placeholder="Caută"
+        placeholder={t("search")}
         variant="outlined"
         fullWidth
         sx={{ ...styles.search, mb: 2 }}

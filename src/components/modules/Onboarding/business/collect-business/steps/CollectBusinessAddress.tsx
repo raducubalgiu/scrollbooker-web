@@ -15,6 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useCustomQuery } from "@/hooks/useHttp";
 import BusinessOnboardingSectionLayout from "../../../BusinessOnboardingSectionLayout";
+import { useTranslations } from "next-intl";
 
 export type BusinessAdress = {
   place_id: string;
@@ -34,6 +35,7 @@ const CollectBusinessAddress = ({
   selectedPlaceId,
   onSelectPlaceId,
 }: CollectBusinessAdressProps) => {
+  const t = useTranslations("onboarding.business.address");
   const debouncedValue = useDebouncedValue(addressQuery, 400);
 
   const {
@@ -56,8 +58,8 @@ const CollectBusinessAddress = ({
 
   return (
     <BusinessOnboardingSectionLayout
-      title="Adresa locației"
-      description="Adaugă adresa locației unde vei primi clienții"
+      title={t("title")}
+      description={t("subtitle")}
       onClick={() => {}}
       isDisabled={false}
       isLoading={false}
@@ -67,7 +69,7 @@ const CollectBusinessAddress = ({
         value={addressQuery}
         onChange={onSetQuery}
         autoFocus={false}
-        placeholder="Caută"
+        placeholder={t("search")}
         variant="outlined"
         fullWidth
         sx={{ ...styles.search, mb: 2 }}

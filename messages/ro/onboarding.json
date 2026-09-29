@@ -1,0 +1,147 @@
+{
+  "onboarding": {
+    "stepperTitle": "Configurare Business",
+    "saveAndContinue": "Salvează și continuă",
+    "steps": {
+      "emailValidation": "Validare Email",
+      "username": "Username",
+      "phoneNumber": "Telefon",
+      "birthdate": "Data nașterii",
+      "gender": "Gen",
+      "locationPermission": "Permisiune locație",
+      "business": "Detalii locație",
+      "businessGallery": "Galerie foto",
+      "businessServices": "Servicii",
+      "businessSchedules": "Programul locației",
+      "businessHasEmployees": "Echipă",
+      "businessValidation": "Validare"
+    },
+    "emailVerification": {
+      "title": "Verifică emailul",
+      "subtitle": "Ți-am trimis un cod pe email. Introdu-l mai jos pentru a continua.",
+      "codePlaceholder": "Introdu codul",
+      "verify": "Verifică",
+      "noEmail": "Nu ai primit emailul?",
+      "resend": "Trimite din nou"
+    },
+    "username": {
+      "title": "Nume de utilizator",
+      "subtitle": "Alege un nume unic pentru profilul tău. Poți alege orice variantă disponibilă",
+      "placeholder": "Username",
+      "save": "Salvează"
+    },
+    "birthdate": {
+      "title": "Data de naștere",
+      "subtitle": "Folosim această informație doar pentru a-ți personaliza experiența",
+      "day": "Zi",
+      "month": "Lună",
+      "year": "An",
+      "save": "Salvează",
+      "skip": "Prefer să nu spun",
+      "months": [
+        "Ianuarie",
+        "Februarie",
+        "Martie",
+        "Aprilie",
+        "Mai",
+        "Iunie",
+        "Iulie",
+        "August",
+        "Septembrie",
+        "Octombrie",
+        "Noiembrie",
+        "Decembrie"
+      ]
+    },
+    "gender": {
+      "title": "Alege genul tău",
+      "subtitle": "Ne ajută să îți oferim servicii relevante pentru tine",
+      "male": "Bărbați",
+      "female": "Femei",
+      "preferNotToSay": "Prefer să nu spun",
+      "save": "Salvează"
+    },
+    "locationPermission": {
+      "title": "Permisiunea locației",
+      "subtitle": "Ne ajută să îți oferim servicii din apropiere și să îți personalizăm experiența",
+      "save": "Salvează"
+    },
+    "business": {
+      "subSteps": {
+        "type": "Tip Business",
+        "details": "Detalii",
+        "address": "Adresă"
+      },
+      "type": {
+        "title": "Ce business ai?",
+        "subtitle": "Alege categoria care descrie cel mai bine activitatea ta",
+        "search": "Caută"
+      },
+      "locationDescription": {
+        "title": "Prezentarea locației",
+        "subtitle": "Spune-ne cum se numește business-ul tău și oferă câteva detalii despre servicii, atmosferă sau orice crezi că este important",
+        "namePlaceholder": "Nume*",
+        "descriptionPlaceholder": "Descriere"
+      },
+      "address": {
+        "title": "Adresa locației",
+        "subtitle": "Adaugă adresa locației unde vei primi clienții",
+        "search": "Caută"
+      },
+      "footer": {
+        "back": "Înapoi",
+        "continue": "Continuă",
+        "finish": "Finalizează pasul"
+      }
+    },
+    "gallery": {
+      "title": "Galerie foto",
+      "subtitle": "Încarcă câteva fotografii prin care să le arăți clienților cum arată locația ta. Minim o fotografie.",
+      "uploadHint": "Apasă pentru a încărca",
+      "invalidFileType": "Te rog selectează un fișier de tip imagine.",
+      "minPhotosWarning": "Te rugăm să încarci cel puțin o fotografie.",
+      "success": "Galeria a fost salvată.",
+      "errorFallback": "Eroare la încărcarea imaginilor"
+    },
+    "services": {
+      "title": "Categorii de servicii",
+      "subtitle": "Adaugă serviciile pe care le desfășori la locație"
+    },
+    "schedules": {
+      "title": "Programul de lucru",
+      "subtitle": "Adaugă intervalele orare în care locația ta este deschisă pentru clienți",
+      "day": "Ziua",
+      "start": "Start",
+      "end": "Sfârșit"
+    },
+    "hasEmployees": {
+      "title": "Echipa ta primește programări?",
+      "subtitle": "Alege „Da” dacă ai colegi care lucrează în paralel. Fiecare va primi un calendar individual pentru a-și gestiona propriile servicii și clienți. Dacă lucrezi singur, totul va fi centralizat într-un singur calendar business.",
+      "yes": "DA, am angajați care primesc programări",
+      "no": "NU am angajați care primesc programări"
+    },
+    "validation": {
+      "title": "Felicitări! Ai finalizat configurarea",
+      "subtitle": "Am primit toate detaliile despre business-ul tău. Echipa noastră va revizui aplicația și te vom anunța imediat ce contul este aprobat.",
+      "responseTime": "De obicei, răspundem în mai puțin de 15 minute",
+      "nextTitle": "Ce urmează să se întâmple?",
+      "nextSubtitle": "După validarea locației, vei putea să îți adaugi echipa pentru a primi programări. Iată cum funcționează procesul:",
+      "steps": {
+        "employeeAccount": {
+          "title": "Contul angajatului",
+          "description": "Colegul tău își creează un cont simplu de utilizator în aplicație."
+        },
+        "invitation": {
+          "title": "Invitația ta",
+          "description": "Îi trimiți o invitație de colaborare direct din panoul tău de control."
+        },
+        "calendarActivation": {
+          "title": "Activare calendar",
+          "description": "După acceptare, acesta primește automat propriul calendar de lucru."
+        }
+      },
+      "helpTitle": "Nu îți face griji, procesul este foarte simplu!",
+      "helpSubtitle": "Vei găsi un ghid video complet și suport pas cu pas în aplicație imediat ce te loghezi."
+    }
+  }
+}

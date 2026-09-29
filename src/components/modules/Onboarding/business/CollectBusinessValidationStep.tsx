@@ -14,26 +14,26 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import { useTranslations } from "next-intl";
 
 const CollectBusinessValidationStep = () => {
+  const t = useTranslations("onboarding.validation");
+
   const nextSteps = [
     {
       icon: <PersonAddOutlinedIcon color="primary" />,
-      title: "Contul angajatului",
-      description:
-        "Colegul tău își creează un cont simplu de utilizator în aplicație.",
+      title: t("steps.employeeAccount.title"),
+      description: t("steps.employeeAccount.description"),
     },
     {
       icon: <MailOutlineIcon color="primary" />,
-      title: "Invitația ta",
-      description:
-        "Îi trimiți o invitație de colaborare direct din panoul tău de control.",
+      title: t("steps.invitation.title"),
+      description: t("steps.invitation.description"),
     },
     {
       icon: <EventAvailableIcon color="primary" />,
-      title: "Activare calendar",
-      description:
-        "După acceptare, acesta primește automat propriul calendar de lucru.",
+      title: t("steps.calendarActivation.title"),
+      description: t("steps.calendarActivation.description"),
     },
   ];
 
@@ -42,11 +42,10 @@ const CollectBusinessValidationStep = () => {
       <Stack alignItems="center" spacing={2} mb={6}>
         <CheckCircleOutlineIcon sx={{ fontSize: 70, color: "success.main" }} />
         <Typography variant="h3" sx={{ fontWeight: 800 }}>
-          Felicitări! Ai finalizat configurarea
+          {t("title")}
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600 }}>
-          Am primit toate detaliile despre business-ul tău. Echipa noastră va
-          revizui aplicația și te vom anunța imediat ce contul este aprobat.
+          {t("subtitle")}
         </Typography>
 
         <Stack
@@ -56,9 +55,7 @@ const CollectBusinessValidationStep = () => {
           sx={{ color: "text.secondary" }}
         >
           <AccessTimeIcon fontSize="small" />
-          <Typography variant="body2">
-            De obicei, răspundem în mai puțin de 15 minute
-          </Typography>
+          <Typography variant="body2">{t("responseTime")}</Typography>
         </Stack>
       </Stack>
 
@@ -66,11 +63,10 @@ const CollectBusinessValidationStep = () => {
 
       <Box sx={{ textAlign: "left" }}>
         <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-          Ce urmează să se întâmple?
+          {t("nextTitle")}
         </Typography>
         <Typography color="text.secondary" sx={{ mb: 4 }}>
-          După validarea locației, vei putea să îți adaugi echipa pentru a primi
-          programări. Iată cum funcționează procesul:
+          {t("nextSubtitle")}
         </Typography>
 
         <Grid container spacing={3}>
@@ -120,12 +116,9 @@ const CollectBusinessValidationStep = () => {
         }}
       >
         <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-          Nu îți face griji, procesul este foarte simplu!
+          {t("helpTitle")}
         </Typography>
-        <Typography variant="body2">
-          Vei găsi un ghid video complet și suport pas cu pas în aplicație
-          imediat ce te loghezi.
-        </Typography>
+        <Typography variant="body2">{t("helpSubtitle")}</Typography>
       </Alert>
     </Box>
   );
