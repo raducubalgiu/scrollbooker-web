@@ -11,8 +11,7 @@ import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
 import { ExploreVideoPool } from "./ExploreVideoPool";
 import ExploreHeaderMenu, { ExploreTabEnum } from "./ExploreHeaderMenu";
 import ExploreSidebar from "@/components/cutomized/Post/sidebar/ExploreSidebar";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { Product } from "@/ts/models/booking/product/Product";
+import { useMutate } from "@/hooks/useHttp";
 import PostLinkedProductsSheet from "../../../cutomized/Post/sheets/PostLinkedProductsSheet";
 import PostCommentsSheet from "@/components/cutomized/Post/sheets/PostCommentsSheet";
 import PostReviewsSheet from "@/components/cutomized/Post/sheets/PostReviewsSheet";
@@ -28,6 +27,7 @@ import {
   useInfiniteExplorePosts,
   useInfiniteFollowingPosts,
 } from "@/controllers/social/post.controller";
+import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
 
 const PREFETCH_OFFSET = 2;
 
@@ -144,12 +144,9 @@ export default function ExploreModule() {
   });
 
   const { data: linkedProducts, isLoading: isLoadingLinkedProducts } =
-    useCustomQuery<Product[]>({
-      key: ["post-linked-products", currentPost?.id],
-      url: `/api/social/post/${currentPost?.id}/linked-products`,
-      options: {
-        enabled: !!currentPost?.id,
-      },
+    useGetLinkedProductsByPostId({
+      postId: currentPost?.id ?? null,
+      isEnabled: !!currentPost?.id,
     });
 
   const updateInfinitePostState = useCallback(
@@ -363,7 +360,7 @@ export default function ExploreModule() {
           </Box>
 
           <ExploreSidebar
-            linkedProducts={linkedProducts || []}
+            linkedProducts={linkedProducts}
             isLoadingLinkedProducts={isLoadingLinkedProducts}
             postId={currentPost?.id}
             isLoading={isLoading}
@@ -397,7 +394,7 @@ export default function ExploreModule() {
         <PostLinkedProductsSheet
           open={isProductsOpen}
           onClose={() => setIsProductsOpen(false)}
-          linkedProducts={linkedProducts || []}
+          linkedProducts={linkedProducts}
           isLoadingLinkedProducts={isLoadingLinkedProducts}
           isLoadingPosts={isLoading}
           onNavigateToBooking={handleNavigateToBooking}

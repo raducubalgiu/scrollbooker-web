@@ -9,17 +9,17 @@ import {
 } from "@mui/material";
 import React, { useMemo } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { Product } from "@/ts/models/booking/product/Product";
 import ProductCardSkeleton from "@/components/cutomized/ProductCard/ProductCardSkeleton";
 import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
 import { isEmpty } from "lodash";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
 
 type PostLinkedProductsSheetProps = {
   open: boolean;
   onClose: () => void;
-  linkedProducts: Product[];
+  linkedProducts: LinkedProducts | undefined;
   isLoadingLinkedProducts: boolean;
   isLoadingPosts: boolean;
   onNavigateToBooking: (prodId: number | null) => void;
@@ -79,7 +79,7 @@ const PostLinkedProductsSheet = ({
         {(isLoadingLinkedProducts || isLoadingPosts) && skeletons}
 
         {!isLoadingLinkedProducts &&
-          linkedProducts?.map((prod, i) => (
+          linkedProducts?.products.map((prod, i) => (
             <Box key={prod.id}>
               <ProductCard
                 product={prod}
@@ -92,7 +92,9 @@ const PostLinkedProductsSheet = ({
                 onAdd={() => {}}
               />
 
-              {i < linkedProducts?.length - 1 && <Divider sx={{ my: 1 }} />}
+              {i < linkedProducts.products.length - 1 && (
+                <Divider sx={{ my: 1 }} />
+              )}
             </Box>
           ))}
 
@@ -114,7 +116,7 @@ const PostLinkedProductsSheet = ({
           </Button>
         )}
 
-        {!isLoadingLinkedProducts && linkedProducts?.length === 0 && (
+        {!isLoadingLinkedProducts && linkedProducts?.products.length === 0 && (
           <NotFound
             title="Servicii"
             description="Nu există servicii momentan"

@@ -7,9 +7,10 @@ import { Box, Divider, Button, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { memo, useCallback, useMemo, useState } from "react";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
+import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
 
 type ExploreServicesTabProps = {
-  linkedProducts: Product[];
+  linkedProducts: LinkedProducts | undefined;
   isLoadingLinkedProducts: boolean;
   userId: number | undefined;
   isLoadingPosts: boolean;
@@ -70,7 +71,7 @@ const ExploreServicesTab = ({
         {(isLoadingLinkedProducts || isLoadingPosts) && skeletons}
 
         {!isLoadingLinkedProducts &&
-          linkedProducts?.map((prod, i) => (
+          linkedProducts?.products.map((prod, i) => (
             <Box key={prod.id}>
               <ProductCard
                 product={prod}
@@ -83,7 +84,9 @@ const ExploreServicesTab = ({
                 onAdd={() => {}}
               />
 
-              {i < linkedProducts?.length - 1 && <Divider sx={{ my: 1.5 }} />}
+              {i < linkedProducts?.products.length - 1 && (
+                <Divider sx={{ my: 1.5 }} />
+              )}
             </Box>
           ))}
 
@@ -98,7 +101,7 @@ const ExploreServicesTab = ({
           </Button>
         )}
 
-        {!isLoadingLinkedProducts && linkedProducts?.length === 0 && (
+        {!isLoadingLinkedProducts && linkedProducts?.products.length === 0 && (
           <Typography color="text.secondary">
             Nu există servicii momentan.
           </Typography>

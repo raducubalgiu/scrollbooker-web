@@ -6,7 +6,7 @@ import ExploreServicesTab from "./ExploreServicesTab";
 import PostComments from "@/components/modules/Marketplace/CommentsModule/PostComments";
 import VideoHeaderSkeleton from "../VideoHeaderSkeleton";
 import VideoHeader from "../VideoHeader";
-import { Product } from "@/ts/models/booking/product/Product";
+import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
 
 enum ExploreSidebarTab {
   SERVICES,
@@ -15,7 +15,7 @@ enum ExploreSidebarTab {
 }
 
 type ExploreSidebarProps = {
-  linkedProducts: Product[];
+  linkedProducts: LinkedProducts | undefined;
   isLoadingLinkedProducts: boolean;
   isLoading: boolean;
   commentsCount: number | undefined;
