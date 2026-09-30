@@ -28,12 +28,18 @@ export default withAuth(
     const isAuth = isAuthRoute(pathname);
     const isOnboarding = isOnboardingRoute(pathname);
     const isPublicOrError = isPublicOrErrorRoute(pathname);
+    // Landing page-ul ("/") — tratat separat de AUTH_ROUTES, nu inclus în el:
+    // dacă l-am pune acolo, un user validat care ajunge pe "/" ar lua
+    // ramura "isAuth || isOnboarding → redirect spre /" de mai jos și s-ar
+    // redirecționa către el însuși (buclă). Landing-ul trebuie vizibil doar
+    // pentru vizitatorii nelogați — un user logat nu mai are ce căuta pe el.
+    const isHome = pathname === "/";
 
     /**
      * 1. User nelogat
      */
     if (!token) {
-      if (isAuth) {
+      if (isAuth || isHome) {
         return NextResponse.next();
       }
 
@@ -63,10 +69,12 @@ export default withAuth(
 
     /**
      * 4. User logat și validat (is_validated === true)
+     * Landing page-ul nu mai are sens pentru el — îl trimitem direct spre
+     * /explore, la fel ca și când ar reveni pe o pagină de auth/onboarding.
      */
     if (token.is_validated === true) {
-      if (isAuth || isOnboarding) {
-        return NextResponse.redirect(new URL("/", req.url));
+      if (isAuth || isOnboarding || isHome) {
+        return NextResponse.redirect(new URL("/explore", req.url));
       }
       return NextResponse.next();
     }
@@ -86,6 +94,7 @@ export default withAuth(
 
 export const config = {
   matcher: [
+    "/",
     "/unauthorized",
     "/auth/:path*",
     "/onboarding/:path*",
