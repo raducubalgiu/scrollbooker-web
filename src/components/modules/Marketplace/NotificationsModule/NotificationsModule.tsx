@@ -4,10 +4,10 @@ import React from "react";
 import { Box, Typography, Divider, CircularProgress } from "@mui/material";
 import isEmpty from "lodash/isEmpty";
 import NotificationItem from "./NotificationItem";
-import { useInfiniteNotifications } from "@/hooks/infiniteQuery/useInfiniteNotifications";
 import NotificationSkeletons from "@/components/cutomized/Skeletons/NotificationSkeletons";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
+import { useInfiniteNotifications } from "@/controllers/user/notification.controller";
 
 type NotificationsModuleProps = {
   scrollRootRef?: React.RefObject<HTMLDivElement | null>;
