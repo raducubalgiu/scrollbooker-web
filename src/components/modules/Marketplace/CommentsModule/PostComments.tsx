@@ -9,8 +9,8 @@ import {
 import CommentComposer from "./CommentComposer";
 import CommentThread from "./CommentThread";
 import { PostComment, ReplyTarget } from "@/ts/models/social/PostComment";
-import { useInfiniteComments } from "@/hooks/infiniteQuery/useInfiniteComments";
 import { useMutate } from "@/hooks/useHttp";
+import { useInfiniteComments } from "@/controllers/social/comment.controller";
 
 type PostCommentsProps = {
   postId: number | undefined;

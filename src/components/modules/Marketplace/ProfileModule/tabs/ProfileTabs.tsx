@@ -33,7 +33,6 @@ type ProfileTabsProps = {
   isMyProfile?: boolean;
   userId: number;
   businessId: number | null;
-  username: string;
   businessOwnerId: number | undefined;
   tab?: string | null | undefined;
   profileHeaderContent?: React.ReactNode;
@@ -101,7 +100,6 @@ const ProfileTabs = ({
   isMyProfile = false,
   userId,
   businessId,
-  username,
   businessOwnerId,
   tab,
   profileHeaderContent,
@@ -145,7 +143,7 @@ const ProfileTabs = ({
       case ProfileTabEnum.EMPLOYEES:
         return <ProfileEmployeesTab businessOwnerId={businessOwnerId} />;
       case ProfileTabEnum.BOOKMARKS:
-        return <ProfileBookmarksTab username={username} />;
+        return <ProfileBookmarksTab userId={userId} />;
       case ProfileTabEnum.INFO:
         return <ProfileInfoTab userId={userId} />;
       default:

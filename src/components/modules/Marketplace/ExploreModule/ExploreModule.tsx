@@ -4,8 +4,6 @@ import { Alert, Box, Slide, Snackbar } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PostActions from "../../../cutomized/Post/actions/PostActions";
 import ExploreControls from "./ExploreControls";
-import { useInfiniteExplorePosts } from "@/hooks/infiniteQuery/useInfiniteExplorePosts";
-import { useInfiniteFollowingPosts } from "@/hooks/infiniteQuery/useInfiniteFollowingPosts";
 import ExploreDrawer from "./ExploreDrawer";
 import { useExplorePlayerPool } from "./useExplorePlayerPool";
 import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
@@ -26,6 +24,10 @@ import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { LOG } from "@/utils/logger";
 import { PaginatedData } from "@/components/core/Table/Table";
 import { Post } from "@/ts/models/social/Post";
+import {
+  useInfiniteExplorePosts,
+  useInfiniteFollowingPosts,
+} from "@/controllers/social/post.controller";
 
 const PREFETCH_OFFSET = 2;
 
@@ -159,29 +161,32 @@ export default function ExploreModule() {
       const counterKey = type === "is_liked" ? "like_count" : "bookmark_count";
       const change = action === "increment" ? 1 : -1;
 
-      queryClient.setQueryData(activeQueryKey, (oldData: InfiniteData<PaginatedData<Post>>) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page) => ({
-            ...page,
-            results: page.results.map((p) => {
-              if (p.id !== postId) return p;
-              return {
-                ...p,
-                counters: {
-                  ...p.counters,
-                  [counterKey]: Math.max(0, p.counters[counterKey] + change),
-                },
-                user_actions: {
-                  ...p.user_actions,
-                  [type]: action === "increment",
-                },
-              };
-            }),
-          })),
-        };
-      });
+      queryClient.setQueryData(
+        activeQueryKey,
+        (oldData: InfiniteData<PaginatedData<Post>>) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              results: page.results.map((p) => {
+                if (p.id !== postId) return p;
+                return {
+                  ...p,
+                  counters: {
+                    ...p.counters,
+                    [counterKey]: Math.max(0, p.counters[counterKey] + change),
+                  },
+                  user_actions: {
+                    ...p.user_actions,
+                    [type]: action === "increment",
+                  },
+                };
+              }),
+            })),
+          };
+        }
+      );
     },
     [queryClient, activeQueryKey]
   );
@@ -275,7 +280,9 @@ export default function ExploreModule() {
           return;
         }
         const msg = error instanceof Error ? error.message : String(error);
-        LOG.error(`Web Share API a eșuat sau a fost anulat: ${msg}. Trecem la clipboard.`);
+        LOG.error(
+          `Web Share API a eșuat sau a fost anulat: ${msg}. Trecem la clipboard.`
+        );
       }
     }
 
@@ -291,9 +298,15 @@ export default function ExploreModule() {
     }
 
     try {
-      window.prompt("Copierea automată nu este permisă de browser. Copiază link-ul de mai jos:", shareUrl);
+      window.prompt(
+        "Copierea automată nu este permisă de browser. Copiază link-ul de mai jos:",
+        shareUrl
+      );
     } catch (fallbackError: unknown) {
-      const msg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+      const msg =
+        fallbackError instanceof Error
+          ? fallbackError.message
+          : String(fallbackError);
       LOG.error(`Eșec total la orice metodă de partajare/copiere: ${msg}`);
     }
   };

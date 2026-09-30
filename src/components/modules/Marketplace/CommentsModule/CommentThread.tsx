@@ -9,7 +9,7 @@ import {
 import CommentComposer from "./CommentComposer";
 import CommentItem from "./CommentItem";
 import { PostComment, ReplyTarget } from "@/ts/models/social/PostComment";
-import { useInfiniteCommentReplies } from "@/hooks/infiniteQuery/useInfiniteCommentsReplies";
+import { useInfiniteCommentReplies } from "@/controllers/social/comment.controller";
 
 type CommentThreadProps = {
   postId: number;

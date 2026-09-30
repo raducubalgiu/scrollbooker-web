@@ -1,28 +1,39 @@
 import { PaginatedData } from "@/components/core/Table/Table";
 import { Post } from "@/ts/models/social/Post";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-type GetAllUserBookmarksParams = {
+const PAGE_LIMIT = 20;
+
+const fetchUserBookmarkedPosts = async ({
+  userId,
+  pageParam,
+}: {
   userId: number;
-  page: number;
-  limit: number;
+  pageParam: number;
+}) => {
+  const { data } = await axios.get<PaginatedData<Post>>(
+    `/api/protected/users/${userId}/bookmarks?page=${pageParam}&limit=${PAGE_LIMIT}`
+  );
+  return {
+    ...data,
+    page: pageParam,
+  };
 };
 
-export const useGetAllUserBookmarks = ({
+export const useInfiniteUserBookmarkedPosts = ({
   userId,
-  page,
-  limit,
-}: GetAllUserBookmarksParams) => {
-  const doRequest = () =>
-    axios
-      .get<
-        PaginatedData<Post>
-      >(`/api/protected/users/${userId}/bookmark-posts?page${page}&limit=${limit}`)
-      .then((response) => response.data);
-
-  return useQuery({
-    queryKey: ["user-bookmarks"],
-    queryFn: doRequest,
+}: {
+  userId: number;
+}) => {
+  return useInfiniteQuery({
+    queryKey: ["userBookmarkedPosts"],
+    queryFn: ({ pageParam = 1 }) =>
+      fetchUserBookmarkedPosts({ pageParam, userId }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      const totalFetched = pages.flatMap((p) => p.results).length;
+      return totalFetched < lastPage.count ? pages.length + 1 : undefined;
+    },
   });
 };
