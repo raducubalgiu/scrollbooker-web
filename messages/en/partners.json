@@ -1,0 +1,19 @@
+{
+  "partners": {
+    "back": "Back",
+    "title": "Register your business",
+    "subtitle": "For now, we're only onboarding salons in Bucharest. Fill in the form below and we'll get in touch to set up your business account.",
+    "fullnameLabel": "Full name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "businessNameLabel": "Business name",
+    "businessDomainLabel": "Business domain",
+    "businessDomainPlaceholder": "e.g. Barbershop, Nail salon, Clinic...",
+    "cityLabel": "City",
+    "submit": "Submit",
+    "consentNote": "By submitting this form, you agree to be contacted by the ScrollBooker team.",
+    "genericError": "Something went wrong. Please try again.",
+    "successTitle": "Thank you!",
+    "successSubtitle": "We've received your details. The ScrollBooker team will reach out soon."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "partners": {
+    "back": "Înapoi",
+    "title": "Înregistrează-ți afacerea",
+    "subtitle": "Pentru moment, ne adresăm exclusiv saloanelor din București. Completează formularul de mai jos și te contactăm noi pentru a-ți configura contul de business.",
+    "fullnameLabel": "Nume complet",
+    "emailLabel": "Email",
+    "phoneLabel": "Telefon",
+    "businessNameLabel": "Numele afacerii",
+    "businessDomainLabel": "Domeniul afacerii",
+    "businessDomainPlaceholder": "ex: Frizerie, Salon unghii, Clinică...",
+    "cityLabel": "Oraș",
+    "submit": "Trimite",
+    "consentNote": "Prin trimiterea formularului, ești de acord să fii contactat de echipa ScrollBooker.",
+    "genericError": "A apărut o eroare. Încearcă din nou.",
+    "successTitle": "Mulțumim!",
+    "successSubtitle": "Am primit datele tale. Echipa ScrollBooker te va contacta în curând."
+  }
+}

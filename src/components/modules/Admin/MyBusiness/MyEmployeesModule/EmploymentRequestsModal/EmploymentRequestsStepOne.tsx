@@ -1,8 +1,7 @@
 "use client";
 
 import UserListItemSkeletons from "@/components/cutomized/Skeletons/UserListItemSkeletons";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { UserMini } from "@/ts/models/user/UserMini";
+import { useSearchUsers } from "@/controllers/search/search.controller";
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { useCallback, useEffect } from "react";
@@ -28,14 +27,9 @@ export default function EmploymentRequestsStepOne({
   const [hasTypedAfterSelection, setHasTypedAfterSelection] =
     React.useState(false);
 
-  const { data: users, isLoading } = useCustomQuery<UserMini[]>({
-    key: ["search-users", debouncedSearch],
-    url: `/api/search/users?query=${search}&role_client=true`,
-    options: {
-      enabled: !!debouncedSearch,
-      staleTime: 1000 * 60,
-      retry: false,
-    },
+  const { data: users, isLoading } = useSearchUsers({
+    query: debouncedSearch,
+    roleClient: true,
   });
 
   useEffect(() => {

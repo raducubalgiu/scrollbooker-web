@@ -1,11 +1,11 @@
-import { UserMini } from "@/ts/models/user/UserMini";
+import { SearchUser } from "@/ts/models/search/SearchUser";
 import { Avatar, Box, ListItemButton, Stack, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React from "react";
 
 type SelectedEmployeeItemProps = {
   isSelected: boolean;
-  user: UserMini;
+  user: SearchUser;
   onClick: () => void;
 };
 

@@ -40,7 +40,7 @@ export default function LandingFooter() {
             </Typography>
             <Typography
               component={Link}
-              href={AppRoutes.getStarted()}
+              href={AppRoutes.partners()}
               variant="body2"
               sx={{
                 color: LANDING_COLORS.textSecondary,
@@ -49,6 +49,18 @@ export default function LandingFooter() {
               }}
             >
               {t("registerBusiness")}
+            </Typography>
+            <Typography
+              component="a"
+              href="mailto:office@scrollbooker.com"
+              variant="body2"
+              sx={{
+                color: LANDING_COLORS.textSecondary,
+                textDecoration: "none",
+                "&:hover": { color: LANDING_COLORS.textPrimary },
+              }}
+            >
+              office@scrollbooker.com
             </Typography>
             <LandingLanguageSwitcher />
           </Stack>

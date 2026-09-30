@@ -33,12 +33,13 @@ export default getRequestConfig(async () => {
   // aplicației — dar tot le unim aici într-un singur obiect, ca din
   // perspectiva componentelor (useTranslations/getTranslations) nimic să nu
   // se schimbe față de un singur fișier mare.
-  const [landing, getStarted, registerBusiness, onboarding, common] =
+  const [landing, getStarted, registerBusiness, onboarding, partners, common] =
     await Promise.all([
       import(`../../messages/${locale}/landing.json`),
       import(`../../messages/${locale}/getStarted.json`),
       import(`../../messages/${locale}/registerBusiness.json`),
       import(`../../messages/${locale}/onboarding.json`),
+      import(`../../messages/${locale}/partners.json`),
       import(`../../messages/${locale}/common.json`),
     ]);
 
@@ -49,6 +50,7 @@ export default getRequestConfig(async () => {
       ...getStarted.default,
       ...registerBusiness.default,
       ...onboarding.default,
+      ...partners.default,
       ...common.default,
     },
   };

@@ -73,6 +73,9 @@ export const AppRoutes = {
   registerBusiness: () => "/auth/register-business",
   getStarted: () => "/auth/get-started",
 
+  // Marketing
+  partners: () => "/partners",
+
   // My Business
   myBusiness: () => "/admin/my-business",
   myDashboard: () => "/admin/my-business/dashboard",
