@@ -1,36 +1,38 @@
 "use client";
 
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { useMutate } from "@/hooks/useHttp";
-import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import React, { useCallback, useEffect, useState, useMemo } from "react";
 import SelectedServiceItem from "./SelectedServiceItem";
-import { toast } from "react-toastify";
 import Accordion from "@/components/core/Accordion/Accordion";
 import ActionButton, {
   ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
 import { Stack } from "@mui/material";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import MyServicesSkeleton from "./MyServicesSkeleton";
+import { toast } from "react-toastify";
+import {
+  useGetMySelectedServices,
+  useUpdateMySelectedServices,
+} from "@/controllers/nomenclature/service.controller";
 
-type MyServicesModuleProps = {
-  initialServices: SelectedServiceDomainWithServices[];
+type MyServicesModule = {
+  session: Session;
 };
 
-export const MyServicesModule = ({
-  initialServices,
-}: MyServicesModuleProps) => {
-  const { data: session } = useSession();
-  const [services, setServices] = useState(initialServices);
+export const MyServicesModule = ({ session }: MyServicesModule) => {
+  const { data, isLoading } = useGetMySelectedServices({
+    businessId: String(session.user_id),
+  });
 
   const defaultServicesIds = useMemo(
     () =>
-      services?.flatMap((serviceDomain) =>
+      data?.flatMap((serviceDomain) =>
         serviceDomain.services
           .filter((service) => service.is_selected)
           .map((service) => service.id)
       ) || [],
-    [services]
+    [data]
   );
 
   const [selectedServices, setSelectedServices] = useState<Set<number>>(
@@ -40,19 +42,6 @@ export const MyServicesModule = ({
   useEffect(() => {
     setSelectedServices(new Set(defaultServicesIds));
   }, [defaultServicesIds]);
-
-  const defaultServicesSet = useMemo(
-    () => new Set(defaultServicesIds),
-    [defaultServicesIds]
-  );
-
-  const isSelectionUnchanged = useMemo(() => {
-    if (selectedServices.size !== defaultServicesSet.size) return false;
-    for (const id of selectedServices) {
-      if (!defaultServicesSet.has(id)) return false;
-    }
-    return true;
-  }, [selectedServices, defaultServicesSet]);
 
   const handleSetSelected = useCallback((serviceId: number) => {
     setSelectedServices((prev) => {
@@ -66,27 +55,31 @@ export const MyServicesModule = ({
     });
   }, []);
 
-  const { mutate, isPending: isLoadingUpdate } = useMutate<
-    number[],
-    SelectedServiceDomainWithServices[]
-  >({
-    key: "update-my-services",
-    url: `/api/businesses/${session?.business_id}/services`,
-    method: "PUT",
-    options: {
-      onSuccess: (updatedServices) => {
-        setServices(updatedServices);
-        toast.success("Serviciile au fost actualizate cu succes.");
-      },
-      onError: () => {
-        setSelectedServices(new Set(defaultServicesIds));
-        toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu");
-      },
-    },
-  });
+  const { mutate, isPending: isLoadingUpdate } = useUpdateMySelectedServices();
 
-  const isDisabled =
-    isLoadingUpdate || selectedServices.size === 0 || isSelectionUnchanged;
+  const handleUpdate = () => {
+    const payload = {
+      businessId: String(session.user_id),
+      data: {
+        service_ids: Array.from(selectedServices),
+      },
+    };
+
+    mutate(
+      {
+        businessId: payload.businessId,
+        data: payload.data,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Serviciile au fost salvate cu succes!");
+        },
+        onError: (err) => {
+          toast.error(`A apărut o eroare: ${err.message}`);
+        },
+      }
+    );
+  };
 
   const actions: ActionButtonType[] = [
     {
@@ -94,25 +87,22 @@ export const MyServicesModule = ({
       props: {
         variant: "outlined",
         color: "secondary",
-        disabled: isDisabled,
-        onClick: () => {
-          setSelectedServices(new Set(defaultServicesIds));
-        },
+        onClick: () => setSelectedServices(new Set(defaultServicesIds)),
       },
     },
     {
       title: "Salvează",
       props: {
-        onClick: () => mutate(Array.from(selectedServices)),
+        onClick: () => handleUpdate(),
         loading: isLoadingUpdate,
-        disabled: isDisabled,
       },
     },
   ];
 
   return (
     <MainLayout title="Categorii de servicii" showHeader={true} hideAction>
-      {services?.map((serviceDomain) => (
+      {isLoading && <MyServicesSkeleton />}
+      {data?.map((serviceDomain) => (
         <Accordion
           title={serviceDomain.name}
           key={serviceDomain.id}

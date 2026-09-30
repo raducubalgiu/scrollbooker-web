@@ -1,5 +1,3 @@
-import { useCustomQuery } from "@/hooks/useHttp";
-import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import { Paper } from "@mui/material";
 import React, {
   useCallback,
@@ -16,6 +14,7 @@ import { useSession } from "next-auth/react";
 import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout";
 import { useCollectBusinessServicesMutation } from "@/controllers/onboarding/onboarding.controller";
 import { useTranslations } from "next-intl";
+import { useGetMySelectedServices } from "@/controllers/nomenclature/service.controller";
 
 const CollectBusinessServicesStep = () => {
   const t = useTranslations("onboarding.services");
@@ -23,14 +22,8 @@ const CollectBusinessServicesStep = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const { data, isLoading } = useCustomQuery<
-    SelectedServiceDomainWithServices[]
-  >({
-    key: ["my-services", session?.business_id ?? undefined],
-    url: `/api/businesses/${session?.business_id}/services`,
-    options: {
-      enabled: !!session?.business_id,
-    },
+  const { data, isLoading } = useGetMySelectedServices({
+    businessId: String(session?.user_id),
   });
 
   const defaultServicesIds = useMemo(

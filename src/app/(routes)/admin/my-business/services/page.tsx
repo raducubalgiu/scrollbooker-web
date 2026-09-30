@@ -1,8 +1,6 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { MyServicesModule } from "@/components/modules/Admin/MyBusiness/MyServicesModule/MyServicesModule";
 import { authOptions } from "@/lib/auth/authOptions";
-import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
-import { get } from "@/utils/requests";
 import { getServerSession } from "next-auth";
 import { JSX } from "react";
 
@@ -15,17 +13,7 @@ async function Services(): Promise<JSX.Element> {
     );
   }
 
-  const response = await get<SelectedServiceDomainWithServices[]>({
-    url: `/businesses/${session.business_id}/service-domains`,
-  });
-
-  const businessServices = response?.data;
-
-  if (!businessServices) {
-    throw new Error("An error occured when fetching business services");
-  }
-
-  return <MyServicesModule initialServices={businessServices} />;
+  return <MyServicesModule session={session} />;
 }
 
 export default ProtectedPage(Services, "MY_SERVICES_VIEW");
