@@ -8,8 +8,6 @@ import { PostVideoPlayer } from "../../../cutomized/Post/PostVideoPlayer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ExploreSidebar from "@/components/cutomized/Post/sidebar/ExploreSidebar";
 import { useVideoDetail } from "./useVideoDetail";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { Product } from "@/ts/models/booking/product/Product";
 import PostLinkedProductsSheet from "../../../cutomized/Post/sheets/PostLinkedProductsSheet";
 import { useState } from "react";
 import PostCommentsSheet from "@/components/cutomized/Post/sheets/PostCommentsSheet";
@@ -18,6 +16,7 @@ import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
+import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -44,13 +43,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
   } = useVideoDetail(props);
 
   const { data: linkedProducts, isLoading: isLoadingLinkedProducts } =
-    useCustomQuery<Product[]>({
-      key: ["post-linked-products", post.id],
-      url: `/api/social/post/${post.id}/linked-products`,
-      options: {
-        enabled: !!post.id,
-      },
-    });
+    useGetLinkedProductsByPostId({ postId: post.id, isEnabled: !!post.id });
 
   const handleNavigateToBooking = (selectedProdId: number | null) => {
     const { user, business_id, business_owner } = post;
@@ -122,7 +115,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
         </Box>
 
         <ExploreSidebar
-          linkedProducts={linkedProducts || []}
+          linkedProducts={linkedProducts}
           isLoadingLinkedProducts={isLoadingLinkedProducts}
           isLoading={false}
           commentsCount={post.counters.comment_count}
@@ -138,7 +131,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
       <PostLinkedProductsSheet
         open={isProductsOpen}
         onClose={() => setIsProductsOpen(false)}
-        linkedProducts={linkedProducts || []}
+        linkedProducts={linkedProducts}
         isLoadingLinkedProducts={isLoadingLinkedProducts}
         isLoadingPosts={false}
         onNavigateToBooking={handleNavigateToBooking}
