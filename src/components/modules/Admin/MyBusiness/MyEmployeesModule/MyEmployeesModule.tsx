@@ -10,6 +10,7 @@ import CustomTabs, {
 } from "@/components/core/CustomTabs/CustomTabs";
 import MyEmploymentRequestsTab from "./MyEmploymentRequestsTab";
 import { Session } from "next-auth";
+import MyEmployeesTab from "./MyEmployeesTab";
 
 const TABS: CustomTabType[] = [
   {
@@ -34,8 +35,9 @@ export default function MyEmployeesModule({ session }: MyEmployeesModuleProps) {
   const sections = useMemo(() => {
     switch (currentTab) {
       case 0:
-        //return <MyEmployeesTab isEnabled={currentTab === 0} />;
-        return <></>;
+        return (
+          <MyEmployeesTab session={session} isEnabled={currentTab === 0} />
+        );
       case 1:
         return (
           <MyEmploymentRequestsTab

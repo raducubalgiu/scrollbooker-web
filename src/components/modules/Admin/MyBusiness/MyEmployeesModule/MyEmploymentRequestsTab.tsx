@@ -132,9 +132,6 @@ const MyEmploymentRequestsTab = ({
     renderRowActions,
     renderTopToolbarCustomActions: getToolbarCustomActions,
     positionActionsColumn: "last",
-    mrtTheme: (theme) => ({
-      baseBackgroundColor: theme.palette.background.paper,
-    }),
     localization: MRT_Localization_RO,
     state: {
       isLoading: isLoading || isPendingCancel,

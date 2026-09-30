@@ -2,55 +2,30 @@ import { Avatar, Button, Stack, Typography } from "@mui/material";
 import {
   MaterialReactTable,
   MRT_ColumnDef,
-  MRT_PaginationState,
   MRT_Row,
   useMaterialReactTable,
 } from "material-react-table";
 import GradeIcon from "@mui/icons-material/Grade";
-import React, { useMemo, useState } from "react";
-import { PaginatedData } from "@/components/core/Table/Table";
-import { useSession } from "next-auth/react";
+import React, { useMemo } from "react";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
-import { useCustomQuery } from "@/hooks/useHttp";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
+import { Session } from "next-auth";
+import { useGetAllEmployeesByOwner } from "@/controllers/booking/employee.controller";
 
 type MyEmployeesTabProps = {
+  session: Session;
   isEnabled: boolean;
-  initialData: PaginatedData<BusinessEmployee>;
-  pageSize: number;
 };
 
-const MyEmployeesTab = ({
-  isEnabled,
-  initialData,
-  pageSize,
-}: MyEmployeesTabProps) => {
-  const { data: session } = useSession();
-  const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize,
+const MyEmployeesTab = ({ session, isEnabled }: MyEmployeesTabProps) => {
+  if (!session.business_owner_id) return;
+
+  const { data, isLoading, isError } = useGetAllEmployeesByOwner({
+    businessOwnerId: session.business_owner_id,
+    isEnabled,
   });
 
-  const { data, isLoading, isError } = useCustomQuery<
-    PaginatedData<BusinessEmployee>
-  >({
-    key: ["business-employees", pagination.pageIndex, pagination.pageSize],
-    url: `/api/employees`,
-    params: {
-      page: pagination.pageIndex + 1,
-      limit: pagination.pageSize,
-      businessOwnerId: session?.user_id ?? undefined,
-    },
-    options: {
-      ...(pagination.pageIndex === 0 && pagination.pageSize === pageSize
-        ? { initialData }
-        : {}),
-      enabled: isEnabled,
-    },
-  });
-
-  const tableData = useMemo(() => data?.results || [], [data]);
-  const totalCount = useMemo(() => data?.count ?? 0, [data]);
+  const tableData = useMemo(() => data || [], [data]);
 
   const columns = useMemo<MRT_ColumnDef<BusinessEmployee>[]>(
     () => [
@@ -118,10 +93,8 @@ const MyEmployeesTab = ({
   const table = useMaterialReactTable({
     columns,
     data: tableData,
-    rowCount: totalCount,
-
     enablePagination: true,
-    manualPagination: true,
+    manualPagination: false,
 
     enableKeyboardShortcuts: false,
     enableColumnActions: false,
@@ -133,12 +106,10 @@ const MyEmployeesTab = ({
     positionActionsColumn: "last",
     localization: MRT_Localization_RO,
     state: {
-      pagination,
       isLoading,
       showAlertBanner: isError,
     },
 
-    onPaginationChange: setPagination,
     muiTablePaperProps: {
       elevation: 0,
       sx: {
