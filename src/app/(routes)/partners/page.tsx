@@ -6,6 +6,7 @@ import {
   Button,
   Container,
   Stack,
+  ThemeProvider,
   Typography,
 } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
@@ -16,11 +17,14 @@ import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { useTranslations } from "next-intl";
 
 import Input from "@/components/core/Input/Input";
-import { required } from "@/utils/validation-rules";
+import { emailField, phoneField, required } from "@/utils/validation-rules";
 import { AppRoutes } from "@/utils/routes";
 import LandingLogo from "@/components/modules/LandingPageModule/components/LandingLogo";
+import LandingForceDarkChrome from "@/components/modules/LandingPageModule/components/LandingForceDarkChrome";
+import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
 import { useSubmitBusinessLeadMutation } from "@/controllers/leads/leads.controller";
 import { BusinessLeadCreate } from "@/ts/models/leads/BusinessLead";
+import { lightTheme } from "../../../../theme/theme";
 
 type PartnersForm = {
   fullname: string;
@@ -47,6 +51,8 @@ export default function PartnersPage() {
   });
 
   const isRequired = required();
+  const emailRules = { ...required(), ...emailField() };
+  const phoneRules = { ...required(), ...phoneField() };
   const { mutate: submitLead, isPending } = useSubmitBusinessLeadMutation();
 
   const onSubmit = (data: PartnersForm) => {
@@ -63,7 +69,15 @@ export default function PartnersPage() {
   };
 
   return (
-    <Box sx={{ minHeight: "100dvh", py: { xs: 5, md: 8 } }}>
+    <Box
+      sx={{
+        minHeight: "100dvh",
+        py: { xs: 5, md: 8 },
+        backgroundColor: LANDING_COLORS.background,
+      }}
+    >
+      <LandingForceDarkChrome />
+
       <Container maxWidth="sm">
         <Stack
           component={Link}
@@ -71,7 +85,13 @@ export default function PartnersPage() {
           direction="row"
           spacing={1}
           alignItems="center"
-          sx={{ color: "text.primary", textDecoration: "none", mb: 5 }}
+          sx={{
+            color: LANDING_COLORS.textSecondary,
+            textDecoration: "none",
+            mb: 5,
+            width: "fit-content",
+            "&:hover": { color: LANDING_COLORS.textPrimary },
+          }}
         >
           <ArrowBackRoundedIcon fontSize="small" />
           <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -83,93 +103,96 @@ export default function PartnersPage() {
           <LandingLogo height={22} />
         </Box>
 
-        <Box
-          sx={{
-            borderRadius: 4,
-            p: { xs: 3, sm: 5 },
-            boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
-          }}
-        >
-          {submitted ? (
-            <Stack spacing={2} alignItems="center" sx={{ py: 4, textAlign: "center" }}>
-              <CheckCircleOutlineIcon color="success" sx={{ fontSize: 56 }} />
-              <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                {t("successTitle")}
-              </Typography>
-              <Typography color="text.secondary">
-                {t("successSubtitle")}
-              </Typography>
-            </Stack>
-          ) : (
-            <>
-              <Stack spacing={0.75} sx={{ mb: 4, textAlign: "center" }}>
-                <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                  {t("title")}
+        <ThemeProvider theme={lightTheme}>
+          <Box
+            sx={{
+              backgroundColor: "#FFFFFF",
+              borderRadius: 4,
+              p: { xs: 3, sm: 5 },
+              boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
+            }}
+          >
+            {submitted ? (
+              <Stack spacing={2} alignItems="center" sx={{ py: 4, textAlign: "center" }}>
+                <CheckCircleOutlineIcon color="success" sx={{ fontSize: 56 }} />
+                <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                  {t("successTitle")}
                 </Typography>
-                <Typography color="text.secondary">{t("subtitle")}</Typography>
+                <Typography color="text.secondary">
+                  {t("successSubtitle")}
+                </Typography>
               </Stack>
-
-              <FormProvider {...methods}>
-                <Stack spacing={1.5}>
-                  <Input
-                    label={t("fullnameLabel")}
-                    name="fullname"
-                    rules={isRequired}
-                    size="medium"
-                  />
-                  <Input
-                    label={t("emailLabel")}
-                    name="email"
-                    type="email"
-                    rules={isRequired}
-                    size="medium"
-                  />
-                  <Input
-                    label={t("phoneLabel")}
-                    name="phone"
-                    type="tel"
-                    rules={isRequired}
-                    size="medium"
-                  />
-                  <Input
-                    label={t("businessNameLabel")}
-                    name="business_name"
-                    rules={isRequired}
-                    size="medium"
-                  />
-                  <Input
-                    label={t("businessDomainLabel")}
-                    name="business_domain"
-                    placeholder={t("businessDomainPlaceholder")}
-                    rules={isRequired}
-                    size="medium"
-                  />
-                  <Input label={t("cityLabel")} name="city" size="medium" />
-
-                  <Button
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                    loading={isPending}
-                    onClick={methods.handleSubmit(onSubmit)}
-                    disableElevation
-                    sx={{ mt: 1, py: 1.5, fontWeight: 700 }}
-                  >
-                    {t("submit")}
-                  </Button>
-
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ textAlign: "center" }}
-                  >
-                    {t("consentNote")}
+            ) : (
+              <>
+                <Stack spacing={0.75} sx={{ mb: 4, textAlign: "center" }}>
+                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                    {t("title")}
                   </Typography>
+                  <Typography color="text.secondary">{t("subtitle")}</Typography>
                 </Stack>
-              </FormProvider>
-            </>
-          )}
-        </Box>
+
+                <FormProvider {...methods}>
+                  <Stack spacing={1.5}>
+                    <Input
+                      label={t("fullnameLabel")}
+                      name="fullname"
+                      rules={isRequired}
+                      size="medium"
+                    />
+                    <Input
+                      label={t("emailLabel")}
+                      name="email"
+                      type="email"
+                      rules={emailRules}
+                      size="medium"
+                    />
+                    <Input
+                      label={t("phoneLabel")}
+                      name="phone"
+                      type="tel"
+                      rules={phoneRules}
+                      size="medium"
+                    />
+                    <Input
+                      label={t("businessNameLabel")}
+                      name="business_name"
+                      rules={isRequired}
+                      size="medium"
+                    />
+                    <Input
+                      label={t("businessDomainLabel")}
+                      name="business_domain"
+                      placeholder={t("businessDomainPlaceholder")}
+                      rules={isRequired}
+                      size="medium"
+                    />
+                    <Input label={t("cityLabel")} name="city" size="medium" />
+
+                    <Button
+                      variant="contained"
+                      size="large"
+                      fullWidth
+                      loading={isPending}
+                      onClick={methods.handleSubmit(onSubmit)}
+                      disableElevation
+                      sx={{ mt: 1, py: 1.5, fontWeight: 700 }}
+                    >
+                      {t("submit")}
+                    </Button>
+
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ textAlign: "center" }}
+                    >
+                      {t("consentNote")}
+                    </Typography>
+                  </Stack>
+                </FormProvider>
+              </>
+            )}
+          </Box>
+        </ThemeProvider>
       </Container>
     </Box>
   );

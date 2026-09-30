@@ -5,8 +5,8 @@ type FieldRequiredType = {
 export const required = ({ isNumber }: FieldRequiredType = {}) => {
   if (isNumber) {
     return {
-      validate: (value: any) => {
-        const numericValue = parseFloat(value);
+      validate: (value: string | number) => {
+        const numericValue = parseFloat(String(value));
         if (isNaN(numericValue) || numericValue <= 0) {
           return "Acest câmp este obligatoriu";
         }
@@ -37,6 +37,27 @@ export const maxField = (value: number) => {
     maxLength: {
       value: value,
       message: `Acest câmp este limitat la ${value} de caractere`,
+    },
+  };
+};
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const RO_PHONE_PATTERN = /^(\+40|0)[0-9]{9}$/;
+
+export const emailField = () => {
+  return {
+    pattern: {
+      value: EMAIL_PATTERN,
+      message: "Adresa de email nu este validă",
+    },
+  };
+};
+
+export const phoneField = () => {
+  return {
+    pattern: {
+      value: RO_PHONE_PATTERN,
+      message: "Numărul de telefon nu este valid (ex: 07xxxxxxxx)",
     },
   };
 };
