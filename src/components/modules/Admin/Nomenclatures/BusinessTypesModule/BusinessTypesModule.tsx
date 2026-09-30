@@ -20,7 +20,7 @@ import {
 } from "@/ts/models/nomenclatures/businessType/BusinessType";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 import {
-  useAllBusinessTypes,
+  useGetAllBusinessTypesPaginated,
   useCreateBusinessType,
   useDeleteBusinessType,
   useUpdateBusinessType,
@@ -69,7 +69,7 @@ export default function BusinessTypesModule({
     name: "",
   });
 
-  const { data, isLoading, isError } = useAllBusinessTypes({
+  const { data, isLoading, isError } = useGetAllBusinessTypesPaginated({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
     all: true,

@@ -13,8 +13,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
-import { signIn, SignInResponse, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import AppleIcon from "@mui/icons-material/Apple";
 import { useTranslations } from "next-intl";
@@ -33,10 +32,6 @@ type RegisterForm = {
   email: string;
   password: string;
 };
-
-interface BackendError {
-  detail: string | Array<{ msg: string; loc: string[] }>;
-}
 
 export default function RegisterBusinessPage() {
   const t = useTranslations("registerBusiness");
@@ -84,15 +79,27 @@ export default function RegisterBusinessPage() {
     };
 
     try {
-      await registerWithCredentials(registerPayload);
+      const registerResult = await registerWithCredentials(registerPayload);
 
-      const result: SignInResponse | undefined = await signIn("credentials", {
+      if (!registerResult) {
+        toast.error(
+          t("registerError") ||
+            "Înregistrarea a eșuat. Email-ul poate fi deja folosit."
+        );
+        setLoading(false);
+        return;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      const result = await signIn("credentials", {
         redirect: false,
         username: data.email,
         password: data.password,
       });
 
       if (result?.error) {
+        console.error("NextAuth SignIn Error:", result.error);
         toast.error(t("autoLoginError"));
         navigateTo(AppRoutes.login());
         return;
@@ -103,23 +110,8 @@ export default function RegisterBusinessPage() {
       toast.success(t("success"));
       router.refresh();
     } catch (error: unknown) {
-      let message = t("genericError");
-
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError<BackendError>;
-        const detail = axiosError.response?.data?.detail;
-
-        if (typeof detail === "string") {
-          message = detail;
-        } else if (Array.isArray(detail)) {
-          message = detail[0]?.msg || message;
-        }
-      } else if (error instanceof Error) {
-        message = error.message;
-      }
-
-      toast.error(message);
-      console.error("Register error:", error);
+      console.error("Register crash:", error);
+      toast.error(t("genericError"));
     } finally {
       setLoading(false);
     }

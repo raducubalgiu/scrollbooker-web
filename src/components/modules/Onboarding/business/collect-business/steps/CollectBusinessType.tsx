@@ -1,4 +1,3 @@
-import { BusinessType } from "@/ts/models/nomenclatures/businessType/BusinessType";
 import {
   alpha,
   CircularProgress,
@@ -13,9 +12,9 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { memo } from "react";
-import { useCustomQuery } from "@/hooks/useHttp";
 import BusinessOnboardingSectionLayout from "../../../BusinessOnboardingSectionLayout";
 import { useTranslations } from "next-intl";
+import { useGetAllBusinessTypes } from "@/controllers/nomenclature/business-type.controller";
 
 type CollectBusinessTypeProps = {
   businessTypeId: number | null;
@@ -27,10 +26,7 @@ const CollectBusinessType = ({
   onHandleBusinessTypeId,
 }: CollectBusinessTypeProps) => {
   const t = useTranslations("onboarding.business.type");
-  const { data: businessTypes, isLoading } = useCustomQuery<BusinessType[]>({
-    key: ["business-types-onboarding"],
-    url: "/api/nomenclatures/business-types",
-  });
+  const { data: businessTypes, isLoading } = useGetAllBusinessTypes();
 
   return (
     <BusinessOnboardingSectionLayout

@@ -8,7 +8,7 @@ import axios from "axios";
 
 const BUSINESS_TYPE_PATH = "/api/protected/business-types";
 
-type GetAllBusinessTypesType = {
+type GetGetAllBusinessTypesTypePaginated = {
   page: number;
   limit: number;
   all: boolean;
@@ -19,11 +19,23 @@ type UpdateBusinessTypeParams = {
   data: BusinessTypeCreateOrUpdate;
 };
 
-export const useAllBusinessTypes = ({
+export const useGetAllBusinessTypes = () => {
+  const doRequest = () =>
+    axios
+      .get<BusinessType[]>(BUSINESS_TYPE_PATH)
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["business-types"],
+    queryFn: doRequest,
+  });
+};
+
+export const useGetAllBusinessTypesPaginated = ({
   page,
   limit,
   all,
-}: GetAllBusinessTypesType) => {
+}: GetGetAllBusinessTypesTypePaginated) => {
   const doRequest = () =>
     axios
       .get<
