@@ -28,10 +28,10 @@ const CollectBusinessFooter = ({
       justifyContent="flex-end"
       gap={1}
       sx={{
-        p: 3,
+        py: 3,
         borderTop: "1px solid",
         borderColor: "divider",
-        mx: 10,
+        mx: { xs: 2, md: 10 },
       }}
     >
       <Button

@@ -13,6 +13,7 @@
     "haveAccount": "Already have an account?",
     "login": "Login",
     "genericError": "Registration error.",
+    "registerError": "Registration failed. This email might already be in use.",
     "autoLoginError": "Account created, but automatic sign-in failed.",
     "success": "Account created successfully!",
     "googleFailed": "Google sign-in failed. Please try again.",

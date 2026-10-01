@@ -10,17 +10,12 @@ import {
   TextField,
   Theme,
 } from "@mui/material";
-import React, { ChangeEvent, memo } from "react";
+import React, { ChangeEvent, memo, useEffect, useMemo, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { useCustomQuery } from "@/hooks/useHttp";
+import { debounce } from "lodash";
+import { useSearchBusinessAddress } from "@/controllers/booking/business.controller";
 import BusinessOnboardingSectionLayout from "../../../BusinessOnboardingSectionLayout";
 import { useTranslations } from "next-intl";
-
-export type BusinessAdress = {
-  place_id: string;
-  description: string;
-};
 
 type CollectBusinessAdressProps = {
   addressQuery: string;
@@ -36,23 +31,23 @@ const CollectBusinessAddress = ({
   onSelectPlaceId,
 }: CollectBusinessAdressProps) => {
   const t = useTranslations("onboarding.business.address");
-  const debouncedValue = useDebouncedValue(addressQuery, 400);
+  const [debouncedValue, setDebouncedValue] = useState(addressQuery);
+
+  const debouncedSetValue = useMemo(
+    () => debounce((value: string) => setDebouncedValue(value), 400),
+    []
+  );
+
+  useEffect(() => {
+    debouncedSetValue(addressQuery);
+    return () => debouncedSetValue.cancel();
+  }, [addressQuery, debouncedSetValue]);
 
   const {
     data: addresses,
     isLoading,
     isFetching,
-  } = useCustomQuery<BusinessAdress[]>({
-    key: ["search-business-address", debouncedValue],
-    url: "/api/businesses/address",
-    params: {
-      query: debouncedValue,
-    },
-    options: {
-      enabled: debouncedValue.trim().length > 2,
-      staleTime: 10000 * 60,
-    },
-  });
+  } = useSearchBusinessAddress(debouncedValue);
 
   const loading = isLoading || isFetching;
 
@@ -104,7 +99,7 @@ const CollectBusinessAddress = ({
                   <Radio
                     sx={{
                       "& .MuiSvgIcon-root": {
-                        fontSize: 32.5,
+                        fontSize: 30,
                       },
                     }}
                   />

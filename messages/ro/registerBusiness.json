@@ -13,6 +13,7 @@
     "haveAccount": "Ai deja un cont?",
     "login": "Login",
     "genericError": "Eroare la înregistrare.",
+    "registerError": "Înregistrarea a eșuat. Email-ul poate fi deja folosit.",
     "autoLoginError": "Cont creat, dar autentificarea automată a eșuat.",
     "success": "Cont creat cu succes!",
     "googleFailed": "Autentificarea cu Google a eșuat. Încearcă din nou.",

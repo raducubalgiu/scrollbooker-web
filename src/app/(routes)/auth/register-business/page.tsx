@@ -82,10 +82,7 @@ export default function RegisterBusinessPage() {
       const registerResult = await registerWithCredentials(registerPayload);
 
       if (!registerResult) {
-        toast.error(
-          t("registerError") ||
-            "Înregistrarea a eșuat. Email-ul poate fi deja folosit."
-        );
+        toast.error(t("registerError"));
         setLoading(false);
         return;
       }

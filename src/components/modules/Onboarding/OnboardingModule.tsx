@@ -138,7 +138,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
 const styles = {
   outer: {
     bgcolor: "background.default",
-    height: "100vh",
+    height: "100dvh",
     display: "flex",
     flexDirection: "column",
   },
