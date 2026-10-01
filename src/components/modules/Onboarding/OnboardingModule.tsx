@@ -5,6 +5,7 @@ import { Session } from "next-auth";
 import Link from "next/link";
 import {
   Box,
+  Button,
   Container,
   Step,
   StepLabel,
@@ -13,6 +14,8 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { signOut } from "next-auth/react";
 
 import {
   displayStepLabel,
@@ -95,6 +98,16 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
         >
           <AppLogo height={26} color={theme.palette.text.primary} />
         </Box>
+
+        <Button
+          size="small"
+          color="inherit"
+          startIcon={<LogoutIcon fontSize="small" />}
+          onClick={() => signOut()}
+          sx={{ textTransform: "none", color: "text.secondary" }}
+        >
+          {t("logout")}
+        </Button>
       </Box>
 
       <Box sx={styles.contentArea}>
@@ -147,6 +160,7 @@ const styles = {
     height: 68,
     display: "flex",
     alignItems: "center",
+    justifyContent: "space-between",
     px: { xs: 2, md: 4 },
     borderBottom: "1px solid",
     borderColor: "divider",

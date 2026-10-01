@@ -2,6 +2,7 @@
   "onboarding": {
     "stepperTitle": "Configurare Business",
     "saveAndContinue": "Salvează și continuă",
+    "logout": "Delogare",
     "steps": {
       "emailValidation": "Validare Email",
       "username": "Username",

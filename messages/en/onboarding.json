@@ -2,6 +2,7 @@
   "onboarding": {
     "stepperTitle": "Business Setup",
     "saveAndContinue": "Save and continue",
+    "logout": "Log out",
     "steps": {
       "emailValidation": "Email verification",
       "username": "Username",
