@@ -1,9 +1,13 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import UnapprovedBusinessModule from "@/components/modules/Admin/UnapprovedBusinessModule/UnapprovedBusinessModule";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { JSX } from "react";
 
-async function ValidateBusiness(): Promise<JSX.Element> {
+async function UnapprovedBusinesses(): Promise<JSX.Element> {
   return <UnapprovedBusinessModule />;
 }
 
-export default ProtectedPage(ValidateBusiness, "NOMENCLATURES_VIEW");
+export default ProtectedPage(
+  UnapprovedBusinesses,
+  PermissionEnum.NOMENCLATURES_VIEW
+);

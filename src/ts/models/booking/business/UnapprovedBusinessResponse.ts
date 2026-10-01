@@ -1,23 +1,27 @@
-export interface UnapprovedResponse {
+export interface UnapprovedBusinessType {
   id: number;
-  username: string;
-  fullname: string;
-  avatar: string;
-  business: UnapprovedBusiness;
+  name: string;
+}
+
+export interface UnapprovedBusinessLocation {
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  address: string;
 }
 
 export interface UnapprovedBusiness {
   id: number;
   has_employees: boolean;
-  location: {
-    coordinates: {
-      lat: string;
-      lng: string;
-    };
-    address: string;
-  };
-  business_type: {
-    id: number;
-    name: string;
-  };
+  location: UnapprovedBusinessLocation;
+  business_type: UnapprovedBusinessType;
+}
+
+export interface UnapprovedBusinessResponse {
+  id: number;
+  fullname: string;
+  username: string;
+  avatar: string | null;
+  business: UnapprovedBusiness;
 }

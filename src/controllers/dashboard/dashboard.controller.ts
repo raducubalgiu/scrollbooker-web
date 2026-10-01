@@ -2,7 +2,7 @@ import { DashboardBooking } from "@/ts/models/dashboard/DashboardBooking";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const DASHBOARD_PATH = "/api/protected/dashboard";
+const DASHBOARD_PATH = "/api/protected/dashboard/bookings";
 
 export type GetDashboardBookingsParams = {
   startDate: string;

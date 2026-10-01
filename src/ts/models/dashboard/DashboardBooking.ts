@@ -22,4 +22,5 @@ export interface DashboardBooking {
   revenue_scroll_booker: number;
   channels: DashboardBookingChannel[];
   sources: DashboardBookingSource[];
+  business_short_domain: string | null;
 }

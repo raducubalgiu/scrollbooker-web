@@ -4,6 +4,8 @@ import React, { useMemo } from "react";
 import Grid from "@mui/material/Grid2";
 import { Box } from "@mui/material";
 
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
@@ -31,17 +33,29 @@ type MyBusinessModuleProps = {
 };
 
 const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
-  const {
-    has_employees: hasEmployees,
-    user_id,
-    business_owner_id,
-    permissions,
-  } = session;
+  const { has_employees: hasEmployees, is_employee: isEmployee, permissions } =
+    session;
 
   const { navigateTo } = useAppNavigation();
 
   const pages = useMemo<BusinessCardItem[]>(
     () => [
+      {
+        title: "Dashboard",
+        description:
+          "Vizualizează statisticile și performanța afacerii tale.",
+        icon: <DashboardOutlinedIcon />,
+        permission: PermissionEnum.MY_DASHBOARD_VIEW,
+        navigate: () => navigateTo(AppRoutes.myDashboard()),
+      },
+      {
+        title: "Afaceri în aprobare",
+        description:
+          "Analizează și aprobă afacerile noi care așteaptă validarea.",
+        icon: <ApartmentOutlinedIcon />,
+        permission: PermissionEnum.NOMENCLATURES_VIEW,
+        navigate: () => navigateTo(AppRoutes.approve()),
+      },
       {
         title: "Detalii afacere",
         description:
@@ -95,8 +109,6 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
   );
 
   const visiblePages = useMemo(() => {
-    const isEmployee = business_owner_id !== user_id;
-
     return pages.filter((page) => {
       if (
         page.permission === PermissionEnum.MY_EMPLOYEES_VIEW &&
@@ -107,12 +119,10 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
       if (page.permission === PermissionEnum.MY_SCHEDULES_VIEW && !isEmployee) {
         return false;
       }
-      const hasValidPermission =
-        page.permission && permissions?.includes(page.permission);
 
-      return hasValidPermission;
+      return page.permission && permissions?.includes(page.permission);
     });
-  }, [pages, hasEmployees]);
+  }, [pages, hasEmployees, isEmployee, permissions]);
 
   return (
     <MainLayout hideAction showHeader={false}>

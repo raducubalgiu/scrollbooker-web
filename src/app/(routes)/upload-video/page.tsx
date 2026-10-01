@@ -7,4 +7,4 @@ async function UploadVideoPage(): Promise<JSX.Element> {
   return <UploadVideoModule />;
 }
 
-export default ProtectedPage(UploadVideoPage, PermissionEnum.CREATE_POST);
+export default ProtectedPage(UploadVideoPage, PermissionEnum.POST_CREATE);

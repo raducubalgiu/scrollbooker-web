@@ -67,7 +67,7 @@ const ProfileMenuSheet = ({
         </Stack>
 
         <List sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Protected permission={PermissionEnum.CREATE_POST}>
+          <Protected permission={PermissionEnum.POST_CREATE}>
             <ListItem disablePadding>
               <ListItemButton
                 onClick={() => {}}

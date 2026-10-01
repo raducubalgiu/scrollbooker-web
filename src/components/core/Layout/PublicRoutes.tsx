@@ -135,7 +135,7 @@ const getPublicRoutes = ({
     label: "Upload",
     route: AppRoutes.uploadVideo(),
     icon: STATIC_ICONS.upload,
-    permission: PermissionEnum.CREATE_POST,
+    permission: PermissionEnum.POST_CREATE,
   },
   {
     label: "Mai mult",

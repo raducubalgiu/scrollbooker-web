@@ -1,151 +1,81 @@
 "use client";
 
-import { Box, Button, Stack } from "@mui/material";
-import Grid from "@mui/material/Grid2";
-import { DashboardSummary } from "@/ts/models/DashboardSummary";
-import { useDashboardReducer } from "@/hooks/useDashboardReducer";
-import Protected from "@/components/cutomized/Protected/Protected";
-import DashboardCalendarAvailability from "./DashboardCalendarAvailability";
-import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import DashboardCardSummary from "@/components/modules/Admin/MyBusiness/MyDashboardModule/DashboardCardSummary";
-import DashboardBarChart from "@/components/modules/Admin/MyBusiness/MyDashboardModule/DashboardBarChart";
+import { useState } from "react";
+import { Box, Button, CircularProgress, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { useTranslations } from "next-intl";
+import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
+import { useGetDashboardBookings } from "@/controllers/dashboard/dashboard.controller";
+import { useDashboardPeriod } from "@/hooks/useDashboardPeriod";
+import PeriodSelector from "./PeriodSelector";
+import DashboardBookingDetails from "./DashboardBookingDetails";
+import DashboardBookingSources from "./DashboardBookingSources";
 
-type DashboardModuleProps = {
-  userId: number | undefined;
-};
+enum DashboardTab {
+  BOOKINGS = "bookings",
+  POSTS = "posts",
+}
 
-const dummySummary: DashboardSummary[] = [
-  {
-    title: "Total rezervari",
-    amount: 250,
-    trend: "up",
-    percentage: "10%",
-    days_diff: 15,
-  },
-  {
-    title: "Clienti proprii",
-    amount: 0,
-    trend: "no_change",
-    percentage: "0%",
-    days_diff: 15,
-  },
-  {
-    title: "Clienti ScrollBooker",
-    amount: 0,
-    trend: "no_change",
-    percentage: "0%",
-    days_diff: 15,
-  },
-  {
-    title: "Incasari totale",
-    amount: 5250,
-    trend: "up",
-    percentage: "10%",
-    days_diff: 15,
-  },
-];
+export default function MyDashboardModule() {
+  const t = useTranslations("myDashboard");
+  const [tab, setTab] = useState<DashboardTab>(DashboardTab.BOOKINGS);
+  const { period, setPeriod, startDate, endDate, periodText } = useDashboardPeriod();
 
-export default function MyDashboardModule({ userId }: DashboardModuleProps) {
-  const { filters, handleDaily, handleMonthly, handleWeekly, PeriodEnum } =
-    useDashboardReducer();
-  // const { startDate, endDate } = filters;
-  // const [selectedEmployee, setSelectedEmployee] = useState({ id: userId });
-  //const { hasPermission } = usePermission({ permission: "EMPLOYEES_VIEW" });
-
-  // useEffect(() => {
-  //   if (hasPermission) setSelectedEmployee({ id: 0 });
-  // }, [hasPermission]);
-
-  // const { data: employeesData } = useCustomQuery<PaginatedData<UserMiniType>>({
-  // 	key: ["employees", hasPermission],
-  // 	url: "/api/employees",
-  // 	params: { page: 1, limit: 10 },
-  // 	options: { enabled: hasPermission },
-  // });
-
-  // const { data: dashboardData, isLoading } = useCustomQuery<
-  // 	DashboardSummaryType[]
-  // >({
-  // 	key: ["dashboard", startDate, endDate, selectedEmployee.id, userId],
-  // 	url: `/api/dashboard`,
-  // 	params: {
-  // 		startDate,
-  // 		endDate,
-  // 		allEmployees: selectedEmployee.id === 0,
-  // 		userId: selectedEmployee.id === 0 ? userId : selectedEmployee.id,
-  // 	},
-  // 	options: { enabled: !!userId },
-  // });
-
-  // const employeesOptions = [
-  // 	{ id: 0, username: "Toți angajații" },
-  // 	...(employeesData?.results ?? []),
-  // ];
-
-  const buttons = [
-    {
-      title: "Astăzi",
-      onClick: handleDaily,
-      selected: filters.type == PeriodEnum.DAILY,
-    },
-    {
-      title: "Ultimele 7 zile",
-      onClick: handleWeekly,
-      selected: filters.type == PeriodEnum.WEEKLY,
-    },
-    {
-      title: "Ultimele 30 de zile",
-      onClick: handleMonthly,
-      selected: filters.type == PeriodEnum.MONTHLY,
-    },
-  ];
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetDashboardBookings({ startDate, endDate });
 
   return (
-    <Box>
-      <Stack sx={{ mb: 2.5 }}>
-        <Stack>
-          {buttons.map((btn, i) => (
-            <Button
-              key={i}
-              onClick={btn.onClick}
-              variant="contained"
-              color={btn.selected ? "primary" : "inherit"}
-              disableElevation
-              size="large"
-              sx={{ fontWeight: "600", mr: 1.5 }}
-            >
-              {btn.title}
-            </Button>
-          ))}
+    <MainLayout
+      title={t("title")}
+      showHeader
+      hideAction
+      sx={{ bgcolor: "background.paper" }}
+    >
+      <Tabs
+        value={tab}
+        onChange={(_, value) => setTab(value)}
+        sx={{ mb: 2.5, borderBottom: "1px solid", borderColor: "divider" }}
+      >
+        <Tab label={t("tabBookings")} value={DashboardTab.BOOKINGS} />
+        <Tab label={t("tabPosts")} value={DashboardTab.POSTS} />
+      </Tabs>
+
+      {tab === DashboardTab.BOOKINGS && (
+        <Box>
+          <PeriodSelector selectedPeriod={period} onPeriodSelected={setPeriod} />
+
+          {isLoading && (
+            <Stack alignItems="center" sx={{ py: 8 }}>
+              <CircularProgress />
+            </Stack>
+          )}
+
+          {!isLoading && isError && (
+            <Stack alignItems="center" spacing={2} sx={{ py: 8 }}>
+              <Typography color="text.secondary">{t("errorMessage")}</Typography>
+              <Button variant="outlined" onClick={() => refetch()}>
+                {t("retry")}
+              </Button>
+            </Stack>
+          )}
+
+          {!isLoading && !isError && data && (
+            <Stack spacing={2.5}>
+              <DashboardBookingDetails data={data} periodText={periodText} />
+              <DashboardBookingSources sources={data.sources} />
+            </Stack>
+          )}
+        </Box>
+      )}
+
+      {tab === DashboardTab.POSTS && (
+        <Stack alignItems="center" sx={{ py: 8 }}>
+          <Typography color="text.secondary">{t("postsComingSoon")}</Typography>
         </Stack>
-        {/* <Protected permission={PermissionEnum.MY_EMPLOYEES_VIEW}>
-					<DashboardEmployeesSelect
-						options={employeesOptions}
-						selectedEmployeeId={selectedEmployee?.id}
-						onSetSelectedEmployee={e =>
-							setSelectedEmployee({
-								id: Number(e.target.value),
-							})
-						}
-					/>
-				</Protected> */}
-      </Stack>
-      <Grid container spacing={3} sx={{ mb: 2.5 }}>
-        {/* {isLoading && <DashboardCardSummarySkeleton />} */}
-        {dummySummary?.map((summary, i) => (
-          <DashboardCardSummary key={i} summary={summary} />
-        ))}
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid size={8}>
-          <DashboardBarChart isLoading={false} />
-        </Grid>
-        <Grid size={4}>
-          <Protected permission={PermissionEnum.MY_CALENDAR_VIEW}>
-            <DashboardCalendarAvailability userId={userId} />
-          </Protected>
-        </Grid>
-      </Grid>
-    </Box>
+      )}
+    </MainLayout>
   );
 }
