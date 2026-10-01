@@ -10,6 +10,15 @@ export interface PaymentCurrency {
   name: string;
 }
 
+export type CalendarEventSourceProvider = "internal" | "google_calendar";
+
+export interface CalendarEventsProduct {
+  product_name: string;
+  product_full_price: number;
+  product_price_with_discount: number;
+  product_discount: number;
+}
+
 export interface CalendarEventsGroupedAppointment {
   id: number;
   start_date: string;
@@ -23,13 +32,11 @@ export interface CalendarEventsGroupedAppointment {
   total_discount: number;
   total_duration: number;
   payment_currency: PaymentCurrency;
-}
-
-export interface CalendarEventsProduct {
-  product_name: string;
-  product_full_price: number;
-  product_price_with_discount: number;
-  product_discount: number;
+  products: CalendarEventsProduct[];
+  source_provider: CalendarEventSourceProvider;
+  is_external: boolean;
+  is_editable: boolean;
+  external_event_id: string | null;
 }
 
 export interface CalendarEventsInfo {
@@ -41,6 +48,11 @@ export interface CalendarEventsInfo {
   total_discount: number;
   total_duration: number;
   payment_currency: PaymentCurrency;
+  products: CalendarEventsProduct[];
+  source_provider: CalendarEventSourceProvider;
+  is_external: boolean;
+  is_editable: boolean;
+  external_event_id: string | null;
 }
 
 export interface CalendarEventsSlot {
@@ -64,8 +76,25 @@ export interface CalendarEventsDay {
 }
 
 export interface CalendarEventsResponse {
-  min_slot_time: string | null;
-  max_slot_time: string | null;
   business_short_domain: string;
   days: CalendarEventsDay[];
+}
+
+export interface CalendarEventsBusinessEmployee {
+  id: number;
+  fullname: string;
+  username: string;
+  avatar: string | null;
+  profession: string;
+  slots: CalendarEventsSlot[];
+}
+
+export interface CalendarEventsBusinessResponse {
+  business_short_domain: string;
+  employees: CalendarEventsBusinessEmployee[];
+}
+
+export interface EmployeeAvailabilityResponse {
+  employee_id: number;
+  has_availability: boolean;
 }

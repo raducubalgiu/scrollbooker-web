@@ -2,7 +2,8 @@
 
 import { useState, useMemo, useCallback } from "react";
 import dayjs from "dayjs";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
+import { useMutate } from "@/hooks/useHttp";
+import { useGetCalendarEvents } from "@/controllers/booking/availability.controller";
 import {
   AppointmentBlockCreate,
   AppointmentBlockSlot,
@@ -12,10 +13,7 @@ import {
 import { CreateAppointmentModalType } from "./WeeklyCalendar";
 import { getFrontendDays } from "../getFrontendDays";
 import { getScheduleBounds } from "../getScheduleBounds";
-import {
-  CalendarEventsResponse,
-  CalendarEventsSlot,
-} from "@/ts/models/booking/availability/CalendarEvents";
+import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { Session } from "next-auth";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { CreateOwnClientFormData } from "../CreateAppointmentModal/CreateOwnClient";
@@ -70,24 +68,12 @@ export const useWeeklyCalendar = ({
   const bounds = useMemo(() => getScheduleBounds(schedules), [schedules]);
 
   // 2. LOGICA API (QUERY & MUTATION)
-  const { data, isLoading, refetch } = useCustomQuery<CalendarEventsResponse>({
-    key: [
-      "weekly-calendar",
-      slotDuration,
-      session?.user_id,
-      startDateStr,
-      endDateStr,
-    ],
-    url: "/api/booking/availability/weekly-calendar",
-    options: {
-      enabled: !!session?.user_id,
-    },
-    params: {
-      start_date: startDateStr,
-      end_date: endDateStr,
-      user_id: session?.user_id,
-      slot_duration: slotDuration,
-    },
+  const { data, isLoading, refetch } = useGetCalendarEvents({
+    businessId: session?.business_id ?? undefined,
+    startDate: startDateStr,
+    endDate: endDateStr,
+    slotDuration,
+    employeeId: session?.is_employee ? session?.user_id : undefined,
   });
 
   const { mutate: handleBlock, isPending: isLoadingBlock } = useMutate({
