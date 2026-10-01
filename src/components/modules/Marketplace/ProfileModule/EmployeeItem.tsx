@@ -63,7 +63,7 @@ const EmployeeItem = ({ employee }: { employee: BusinessEmployee }) => {
 							>
 								<StarRoundedIcon
 									sx={{ fontSize: 18, mr: 0.5 }}
-									color="primary"
+									color="rating"
 								/>
 								<Typography sx={{ fontSize: 16, fontWeight: 600 }}>
 									{formatRating(employee.ratings_average)}

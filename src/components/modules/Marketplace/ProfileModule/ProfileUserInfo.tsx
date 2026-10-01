@@ -225,7 +225,7 @@ const ProfileUserInfo = ({
 
               {is_business_or_employee && (
                 <Stack flexDirection="row" alignItems="center">
-                  <GradeIcon color="primary" sx={styles.star} />
+                  <GradeIcon color="rating" sx={styles.star} />
                   <Typography variant="h6" sx={styles.rating}>
                     {formatRating(counters.ratings_average)}
                   </Typography>

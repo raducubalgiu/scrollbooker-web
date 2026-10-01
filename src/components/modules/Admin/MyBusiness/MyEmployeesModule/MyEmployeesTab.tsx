@@ -53,7 +53,7 @@ const MyEmployeesTab = ({ session, isEnabled }: MyEmployeesTabProps) => {
         header: "Rating",
         Cell: ({ row }) => (
           <Stack flexDirection="row" alignItems="center">
-            <GradeIcon color="primary" />
+            <GradeIcon color="rating" />
             <Typography sx={{ fontWeight: "600", ml: 1 }}>
               {row.original.ratings_average.toFixed(1)} (
               {row.original.ratings_count})

@@ -60,7 +60,7 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
           </Box>
 
           <Stack flexDirection="row" alignItems="center" gap={1}>
-            <StarIcon fontSize="small" color="primary" />
+            <StarIcon fontSize="small" color="rating" />
             <Typography
               variant="h6"
               fontWeight={600}

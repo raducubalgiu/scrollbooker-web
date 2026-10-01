@@ -23,7 +23,7 @@ const SpecialistItem = ({ specialist, isSelected }: SpecialistItemProps) => {
             justifyContent="center"
             sx={styles.badgeContent}
           >
-            <StarIcon sx={{ fontSize: 18, mr: 0.5 }} color="primary" />
+            <StarIcon sx={{ fontSize: 18, mr: 0.5 }} color="rating" />
             <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
               {formatRating(specialist.ratings_average)}
             </Typography>
