@@ -104,12 +104,17 @@ export const useCollectBusinessGalleryMutation = () => {
         throw new Error("Business ID lipsește din sesiune");
       }
 
+      // Pasul e opțional (ca pe iOS, CollectBusinessGalleryViewModel) — fără
+      // poze, nu blocăm trecerea la pasul următor, doar spunem backend-ului
+      // să sară peste actualizarea galeriei.
+      const skipUpdateGallery = photos.length === 0;
       const formData = new FormData();
       photos.forEach((photo) => formData.append("photos", photo));
 
       const response = await axios.patch<OnboardingResponse>(
         `/api/protected/onboarding/collect-business-gallery/${session.business_id}/update`,
-        formData
+        formData,
+        { params: { skip_update_gallery: skipUpdateGallery } }
       );
       return response.data;
     },

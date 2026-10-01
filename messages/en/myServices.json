@@ -1,0 +1,9 @@
+{
+  "myServices": {
+    "title": "Service categories",
+    "reset": "Reset",
+    "save": "Save",
+    "saveSuccess": "Services saved successfully!",
+    "saveError": "An error occurred: {message}"
+  }
+}

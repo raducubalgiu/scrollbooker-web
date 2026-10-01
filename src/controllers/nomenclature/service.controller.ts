@@ -19,8 +19,9 @@ export const useGetMySelectedServices = ({
       .then((response) => response.data);
 
   return useQuery({
-    queryKey: ["my-selected-services"],
+    queryKey: ["my-selected-services", businessId],
     queryFn: doRequest,
+    enabled: businessId !== "undefined" && businessId !== "null",
   });
 };
 

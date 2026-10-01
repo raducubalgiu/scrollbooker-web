@@ -1,0 +1,9 @@
+{
+  "myServices": {
+    "title": "Categorii de servicii",
+    "reset": "Reset",
+    "save": "Salvează",
+    "saveSuccess": "Serviciile au fost salvate cu succes!",
+    "saveError": "A apărut o eroare: {message}"
+  }
+}

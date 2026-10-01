@@ -1,20 +1,13 @@
-import { Paper } from "@mui/material";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useTransition,
-} from "react";
+import { Button, Stack } from "@mui/material";
+import React, { useTransition } from "react";
 import MyServicesSkeleton from "../../Admin/MyBusiness/MyServicesModule/MyServicesSkeleton";
-import SelectedServiceItem from "../../Admin/MyBusiness/MyServicesModule/SelectedServiceItem";
-import Accordion from "@/components/core/Accordion/Accordion";
+import SelectedServicesList from "../../Admin/MyBusiness/MyServicesModule/SelectedServicesList";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout";
 import { useCollectBusinessServicesMutation } from "@/controllers/onboarding/onboarding.controller";
 import { useTranslations } from "next-intl";
-import { useGetMySelectedServices } from "@/controllers/nomenclature/service.controller";
+import { useSelectedServicesSelection } from "@/hooks/useSelectedServicesSelection";
 
 const CollectBusinessServicesStep = () => {
   const t = useTranslations("onboarding.services");
@@ -22,49 +15,29 @@ const CollectBusinessServicesStep = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const { data, isLoading } = useGetMySelectedServices({
-    businessId: String(session?.user_id),
+  const {
+    serviceDomains,
+    isLoading,
+    selectedServices,
+    toggleService,
+    resetSelection,
+    isDirty,
+    hasSelection,
+  } = useSelectedServicesSelection({
+    businessId: String(session?.business_id),
   });
-
-  const defaultServicesIds = useMemo(
-    () =>
-      data?.flatMap((serviceDomain) =>
-        serviceDomain.services
-          .filter((service) => service.is_selected)
-          .map((service) => service.id)
-      ) || [],
-    [data]
-  );
-
-  const [selectedServices, setSelectedServices] = useState<Set<number>>(
-    () => new Set(defaultServicesIds)
-  );
-
-  useEffect(() => {
-    setSelectedServices(new Set(defaultServicesIds));
-  }, [defaultServicesIds]);
-
-  const handleSetSelected = useCallback((serviceId: number) => {
-    setSelectedServices((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(serviceId)) {
-        newSet.delete(serviceId);
-      } else {
-        newSet.add(serviceId);
-      }
-      return newSet;
-    });
-  }, []);
 
   const { mutate: handleSave, isPending: isLoadingUpdate } =
     useCollectBusinessServicesMutation();
+
+  const isSaving = isPending || isLoadingUpdate;
 
   return (
     <BusinessOnboardingSectionLayout
       title={t("title")}
       description={t("subtitle")}
-      isLoading={isLoadingUpdate || isPending}
-      isDisabled={isPending || isLoadingUpdate || selectedServices.size === 0}
+      isLoading={isSaving}
+      isDisabled={isSaving || !hasSelection}
       onClick={() =>
         handleSave(Array.from(selectedServices), {
           onSuccess: async (data) => {
@@ -81,24 +54,24 @@ const CollectBusinessServicesStep = () => {
       }
     >
       {isLoading && <MyServicesSkeleton />}
-      <Paper>
-        {data?.map((serviceDomain) => (
-          <Accordion
-            title={serviceDomain.name}
-            key={serviceDomain.id}
-            sx={{ mb: 1, boxShadow: "none" }}
+
+      {!isLoading && (
+        <Stack direction="row" justifyContent="flex-end" sx={{ mb: 1.5 }}>
+          <Button
+            size="small"
+            disabled={isSaving || !isDirty}
+            onClick={resetSelection}
           >
-            {serviceDomain?.services?.map((service) => (
-              <SelectedServiceItem
-                key={service.id}
-                service={service}
-                isSelected={selectedServices.has(service.id)}
-                onSetSelected={handleSetSelected}
-              />
-            ))}
-          </Accordion>
-        ))}
-      </Paper>
+            {t("reset")}
+          </Button>
+        </Stack>
+      )}
+
+      <SelectedServicesList
+        serviceDomains={serviceDomains}
+        selectedServices={selectedServices}
+        onToggleService={toggleService}
+      />
     </BusinessOnboardingSectionLayout>
   );
 };

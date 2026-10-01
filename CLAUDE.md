@@ -16,6 +16,20 @@ This applies regardless of how confident the change is or how trivial it
 seems; there is no "safe enough to commit" exception. (Same rule as the
 other three ScrollBooker repos — see the root `CLAUDE.md`.)
 
+## Code comments
+
+**Do not add code comments.** Default to zero comments in new/edited
+TypeScript/TSX code — no restating what a line does, no narrating the
+task/fix that produced it. Well-named components/functions/variables
+should make the WHAT self-evident; if they don't, fix the name instead of
+commenting it. The rare exception is a genuinely non-obvious WHY (a
+Next.js/MUI/React Query quirk, a workaround for a specific library bug, a
+constraint forced by the backend contract) that a future reader couldn't
+infer from the code itself — and even then, keep it to one line. This
+matches the same rule already written into the backend and iOS
+`CLAUDE.md` files — keep it consistent across all four repos rather than
+drifting per-codebase.
+
 ## Project Overview
 
 - **Name**: Scroll Booker Web — the business/employee back-office

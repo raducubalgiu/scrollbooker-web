@@ -96,16 +96,17 @@
     },
     "gallery": {
       "title": "Galerie foto",
-      "subtitle": "Încarcă câteva fotografii prin care să le arăți clienților cum arată locația ta. Minim o fotografie.",
+      "subtitle": "Încarcă câteva fotografii prin care să le arăți clienților cum arată locația ta.",
+      "skipHint": "Poți sări peste acest pas acum și adăugi imagini mai târziu din setările business-ului tău.",
       "uploadHint": "Apasă pentru a încărca",
       "invalidFileType": "Te rog selectează un fișier de tip imagine.",
-      "minPhotosWarning": "Te rugăm să încarci cel puțin o fotografie.",
       "success": "Galeria a fost salvată.",
       "errorFallback": "Eroare la încărcarea imaginilor"
     },
     "services": {
       "title": "Categorii de servicii",
-      "subtitle": "Adaugă serviciile pe care le desfășori la locație"
+      "subtitle": "Adaugă serviciile pe care le desfășori la locație",
+      "reset": "Resetează"
     },
     "schedules": {
       "title": "Programul de lucru",

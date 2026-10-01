@@ -96,16 +96,17 @@
     },
     "gallery": {
       "title": "Photo gallery",
-      "subtitle": "Upload a few photos to show clients what your location looks like. At least one photo.",
+      "subtitle": "Upload a few photos to show clients what your location looks like.",
+      "skipHint": "You can skip this step for now and add photos later from your business settings.",
       "uploadHint": "Tap to upload",
       "invalidFileType": "Please select an image file.",
-      "minPhotosWarning": "Please upload at least one photo.",
       "success": "Gallery saved.",
       "errorFallback": "Error uploading photos"
     },
     "services": {
       "title": "Service categories",
-      "subtitle": "Add the services you offer at this location"
+      "subtitle": "Add the services you offer at this location",
+      "reset": "Reset"
     },
     "schedules": {
       "title": "Working hours",

@@ -5,6 +5,7 @@ import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout"
 import { Box, Card, IconButton, Stack, Typography } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -80,19 +81,19 @@ const CollectBusinessGalleryStep = () => {
     });
   };
 
+  const hasPhotos = items.some((it) => it.src);
+
   const onSave = () => {
     const filesToUpload = items
       .filter((it) => it.file)
       .map((it) => it.file as File);
 
-    if (filesToUpload.length === 0) {
-      toast.warning(t("minPhotosWarning"));
-      return;
-    }
-
     handleUpload(filesToUpload, {
       onSuccess: async (data) => {
-        toast.success(t("success"));
+        if (filesToUpload.length > 0) {
+          toast.success(t("success"));
+        }
+
         await update({
           is_validated: data.is_validated,
           registration_step: data.registration_step,
@@ -113,9 +114,32 @@ const CollectBusinessGalleryStep = () => {
       title={t("title")}
       description={t("subtitle")}
       isLoading={isPendingGallery}
-      isDisabled={isPendingGallery || items.filter((it) => it.src).length === 0}
+      isDisabled={isPendingGallery}
       onClick={onSave}
     >
+      {!hasPhotos && (
+        <Stack
+          direction="row"
+          spacing={1.5}
+          sx={{
+            p: 2,
+            borderRadius: 2,
+            border: "1px solid",
+            borderColor: "divider",
+            bgcolor: "action.hover",
+            mb: 2.5,
+          }}
+        >
+          <InfoOutlinedIcon
+            fontSize="small"
+            sx={{ color: "text.secondary", mt: 0.2, flexShrink: 0 }}
+          />
+          <Typography variant="body2" color="text.secondary">
+            {t("skipHint")}
+          </Typography>
+        </Stack>
+      )}
+
       <Box
         sx={{
           display: "grid",
