@@ -1,8 +1,14 @@
 import { Box, Typography, CircularProgress } from "@mui/material";
-import React, { memo, useEffect, useRef } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { isEmpty } from "lodash";
+import { useQueryClient } from "@tanstack/react-query";
 import UserItem from "@/components/cutomized/UserItem/UserItem";
-import { useInfiniteFollowers } from "@/hooks/infiniteQuery/useInfiniteFollowers";
+import {
+  useFollow,
+  useInfiniteFollowers,
+  useUnfollow,
+} from "@/controllers/social/follow.controller";
+import { UserMini } from "@/ts/models/user/UserMini";
 
 type SocialFollowersTabProps = {
   userId: number | undefined;
@@ -19,6 +25,28 @@ const SocialFollowersTab = ({
 
   const followers = data?.pages.flatMap((p) => p.results) ?? [];
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const queryClient = useQueryClient();
+  const { mutate: follow } = useFollow();
+  const { mutate: unfollow } = useUnfollow();
+  const [pendingUserId, setPendingUserId] = useState<number | null>(null);
+
+  const handleToggleFollow = useCallback(
+    (user: UserMini) => {
+      setPendingUserId(user.id);
+      const mutate = user.is_follow ? unfollow : follow;
+
+      mutate(user.id, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["followers", userId] });
+        },
+        onSettled: () => {
+          setPendingUserId(null);
+        },
+      });
+    },
+    [follow, unfollow, queryClient, userId]
+  );
 
   useEffect(() => {
     const root = rootRef?.current ?? null;
@@ -47,7 +75,13 @@ const SocialFollowersTab = ({
       clearTimeout(initTimer);
       observer.disconnect();
     };
-  }, [rootRef, fetchNextPage, hasNextPage, isFetchingNextPage, disableInitialIgnore]);
+  }, [
+    rootRef,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    disableInitialIgnore,
+  ]);
 
   return (
     <>
@@ -70,8 +104,8 @@ const SocialFollowersTab = ({
           <UserItem
             key={follower.id}
             user={follower}
-            ownerId={userId}
-            type="followers"
+            onToggleFollow={handleToggleFollow}
+            isTogglingFollow={pendingUserId === follower.id}
           />
         ))}
 

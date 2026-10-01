@@ -56,3 +56,33 @@ export const useInfiniteFollowingPosts = ({
     enabled,
   });
 };
+
+const fetchUserPosts = async ({
+  pageParam,
+  userId,
+}: {
+  pageParam: number;
+  userId: number | undefined;
+}) => {
+  const { data } = await axios.get<PaginatedData<Post>>(
+    `/api/protected/users/${userId}/posts?page=${pageParam}&limit=10`
+  );
+  return {
+    ...data,
+    page: pageParam,
+  };
+};
+
+export const useInfiniteUserPosts = ({ userId }: { userId: number }) => {
+  return useInfiniteQuery({
+    queryKey: ["userPosts", userId],
+    queryFn: ({ pageParam = 1 }) => fetchUserPosts({ pageParam, userId }),
+    initialPageParam: 1,
+    enabled: !!userId,
+    staleTime: 2 * 60 * 1000,
+    getNextPageParam: (lastPage, pages) => {
+      const totalFetched = pages.flatMap((p) => p.results).length;
+      return totalFetched < lastPage.count ? pages.length + 1 : undefined;
+    },
+  });
+};

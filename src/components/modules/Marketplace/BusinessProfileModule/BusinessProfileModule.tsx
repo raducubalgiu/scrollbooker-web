@@ -7,7 +7,6 @@ import BusinessStickyCard from "./components/BusinessStickyCard";
 import NearbyBusinesses from "./components/NearbyBusinesses";
 import BusinessProfileHeader from "./components/BusinessProfileHeader";
 import BusinessProfileTabs from "./tabs/BusinessProfileTabs";
-import { useMutate } from "@/hooks/useHttp";
 import BusinessPhotosTab from "./tabs/BusinessPhotosTab";
 import BusinessServicesTab from "./tabs/BusinessServicesTab";
 import BusinessPostsTab from "./tabs/BusinessPostsTab";
@@ -36,10 +35,8 @@ const TAB_SECTIONS: BusinessProfileTabSection[] = [
 const BusinessProfileModule = ({
 	initialProfile,
 }: BusinessProfileModuleProps) => {
-	const { profile, handleFollow, handleShare } = useBusinessSocialActions(
-		initialProfile,
-		useMutate,
-	);
+	const { profile, handleFollow, handleShare } =
+		useBusinessSocialActions(initialProfile);
 
 	const {
 		tabsContainerRef,

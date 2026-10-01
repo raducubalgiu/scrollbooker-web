@@ -27,6 +27,7 @@ import {
   useInfiniteExplorePosts,
   useInfiniteFollowingPosts,
 } from "@/controllers/social/post.controller";
+import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
 
 const PREFETCH_OFFSET = 2;
@@ -236,6 +237,47 @@ export default function ExploreModule() {
     );
   }, [currentPost, apiBookmark, apiUnbookmark, updateInfinitePostState]);
 
+  const updateUserFollowState = useCallback(
+    (userId: number, isFollow: boolean) => {
+      const patchPosts = (oldData: InfiniteData<PaginatedData<Post>>) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            results: page.results.map((p) =>
+              p.user.id === userId
+                ? { ...p, user: { ...p.user, is_follow: isFollow } }
+                : p
+            ),
+          })),
+        };
+      };
+
+      queryClient.setQueryData(["explore-posts"], patchPosts);
+      queryClient.setQueryData(["following-posts"], patchPosts);
+    },
+    [queryClient]
+  );
+
+  const { mutate: follow, isPending: isFollowing } = useFollow();
+  const { mutate: unfollow, isPending: isUnfollowing } = useUnfollow();
+
+  const handleFollow = useCallback(() => {
+    if (!currentPost) return;
+    const { id: userId, is_follow: isFollow } = currentPost.user;
+
+    updateUserFollowState(userId, !isFollow);
+
+    const mutate = isFollow ? unfollow : follow;
+    mutate(userId, {
+      onError: () => updateUserFollowState(userId, isFollow),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["following-posts"] });
+      },
+    });
+  }, [currentPost, follow, unfollow, updateUserFollowState, queryClient]);
+
   const handleToggleDrawer = useCallback(() => {
     setShowDrawer((prev) => !prev);
   }, []);
@@ -369,6 +411,8 @@ export default function ExploreModule() {
             isVideoReview={currentPost?.is_video_review === true}
             businessLocation={currentPost?.business_location}
             onNavigateToBooking={handleNavigateToBooking}
+            onFollow={handleFollow}
+            isTogglingFollow={isFollowing || isUnfollowing}
           />
         </Box>
 

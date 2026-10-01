@@ -1,25 +1,8 @@
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
+import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { useState, useCallback } from "react";
 
-interface MutateConfig {
-  key: [string, string | number];
-  method: "POST" | "DELETE";
-  url: string;
-  options?: {
-    onError?: () => void;
-  };
-}
-
-interface MutateResult {
-  mutate: (variables?: Record<string, unknown>) => void;
-}
-
-type UseMutateFn = (config: MutateConfig) => MutateResult;
-
-export const useBusinessSocialActions = (
-  initialProfile: BusinessProfile,
-  useMutate: UseMutateFn
-) => {
+export const useBusinessSocialActions = (initialProfile: BusinessProfile) => {
   const [profile, setProfile] = useState<BusinessProfile>(initialProfile);
   const isCurrentlyFollowing = profile.owner.is_follow;
 
@@ -42,19 +25,8 @@ export const useBusinessSocialActions = (
     });
   }, []);
 
-  const { mutate: follow } = useMutate({
-    key: ["follow-business-profile", profile.owner.id],
-    method: "POST",
-    url: `/api/social/follow?followeeId=${profile.owner.id}`,
-    options: { onError: rollbackFollowState },
-  });
-
-  const { mutate: unfollow } = useMutate({
-    key: ["unfollow-business-profile", profile.owner.id],
-    method: "DELETE",
-    url: `/api/social/follow?followeeId=${profile.owner.id}`,
-    options: { onError: rollbackFollowState },
-  });
+  const { mutate: follow } = useFollow();
+  const { mutate: unfollow } = useUnfollow();
 
   const handleFollow = useCallback(() => {
     setProfile((prev) => {
@@ -74,12 +46,9 @@ export const useBusinessSocialActions = (
       };
     });
 
-    if (isCurrentlyFollowing) {
-      unfollow({});
-    } else {
-      follow({});
-    }
-  }, [isCurrentlyFollowing, follow, unfollow]);
+    const mutate = isCurrentlyFollowing ? unfollow : follow;
+    mutate(profile.owner.id, { onError: rollbackFollowState });
+  }, [isCurrentlyFollowing, follow, unfollow, profile.owner.id, rollbackFollowState]);
 
   const handleShare = useCallback(() => {
     if (navigator.share) {

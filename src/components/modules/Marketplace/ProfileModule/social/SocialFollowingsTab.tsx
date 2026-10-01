@@ -1,8 +1,14 @@
 import { Box, Typography, CircularProgress } from "@mui/material";
-import React, { memo, useEffect, useRef } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { isEmpty } from "lodash";
+import { useQueryClient } from "@tanstack/react-query";
 import UserItem from "@/components/cutomized/UserItem/UserItem";
-import { useInfiniteFollowings } from "@/hooks/infiniteQuery/useInfiniteFollowings";
+import {
+  useFollow,
+  useInfiniteFollowings,
+  useUnfollow,
+} from "@/controllers/social/follow.controller";
+import { UserMini } from "@/ts/models/user/UserMini";
 
 type SocialFollowingsTabProps = {
   userId: number | undefined;
@@ -20,6 +26,28 @@ const SocialFollowingsTab = ({
 
   const followings = data?.pages.flatMap((p) => p.results) ?? [];
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const queryClient = useQueryClient();
+  const { mutate: follow } = useFollow();
+  const { mutate: unfollow } = useUnfollow();
+  const [pendingUserId, setPendingUserId] = useState<number | null>(null);
+
+  const handleToggleFollow = useCallback(
+    (user: UserMini) => {
+      setPendingUserId(user.id);
+      const mutate = user.is_follow ? unfollow : follow;
+
+      mutate(user.id, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["followings", userId] });
+        },
+        onSettled: () => {
+          setPendingUserId(null);
+        },
+      });
+    },
+    [follow, unfollow, queryClient, userId]
+  );
 
   useEffect(() => {
     const root = rootRef?.current ?? null;
@@ -77,8 +105,8 @@ const SocialFollowingsTab = ({
           <UserItem
             key={following.id}
             user={following}
-            ownerId={userId}
-            type="followings"
+            onToggleFollow={handleToggleFollow}
+            isTogglingFollow={pendingUserId === following.id}
           />
         ))}
 

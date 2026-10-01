@@ -15,6 +15,8 @@ type VideoHeaderProps = {
 	businessLocation: PostBusinessLocation | null | undefined;
 	user: PostUser | undefined;
 	isVideoReview: boolean;
+	onFollow?: (() => void) | undefined;
+	isTogglingFollow?: boolean | undefined;
 };
 
 const VideoHeader = ({
@@ -23,6 +25,8 @@ const VideoHeader = ({
 	description,
 	businessLocation,
 	displayDescription = false,
+	onFollow,
+	isTogglingFollow = false,
 }: VideoHeaderProps) => {
 	const { avatar, fullname, username, profession, ratings_average, is_follow } =
 		user || {};
@@ -90,10 +94,16 @@ const VideoHeader = ({
 							</Typography>
 						</Box>
 
-						{!is_follow && (
+						{!is_follow && onFollow && (
 							<Button
 								variant="contained"
 								disableElevation
+								loading={isTogglingFollow}
+								disabled={isTogglingFollow}
+								onClick={e => {
+									e.stopPropagation();
+									onFollow();
+								}}
 								sx={{ textTransform: "none", flexShrink: 0 }}
 							>
 								Urmărește

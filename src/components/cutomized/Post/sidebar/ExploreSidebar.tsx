@@ -24,6 +24,8 @@ type ExploreSidebarProps = {
   isVideoReview: boolean;
   businessLocation: PostBusinessLocation | null | undefined;
   onNavigateToBooking: (selectedProductId: number | null) => void;
+  onFollow?: () => void;
+  isTogglingFollow?: boolean;
 };
 
 const ExploreSidebar = ({
@@ -36,6 +38,8 @@ const ExploreSidebar = ({
   businessLocation,
   isLoading,
   onNavigateToBooking,
+  onFollow,
+  isTogglingFollow,
 }: ExploreSidebarProps) => {
   const [activeTab, setActiveTab] = React.useState<ExploreSidebarTab>(
     ExploreSidebarTab.SERVICES
@@ -97,6 +101,8 @@ const ExploreSidebar = ({
             businessLocation={businessLocation}
             displayDescription={false}
             isVideoReview={isVideoReview}
+            onFollow={onFollow}
+            isTogglingFollow={isTogglingFollow}
           />
         )}
       </Box>

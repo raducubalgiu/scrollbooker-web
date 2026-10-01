@@ -25,12 +25,8 @@ import {
   RepostNotificationData,
 } from "@/ts/models/user/Notification";
 import { NotificationTypeEnum } from "@/ts/enums/NotificationTypeEnum";
-import {
-  useMutation,
-  useQueryClient,
-  InfiniteData,
-} from "@tanstack/react-query";
-import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
+import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import Badge from "@mui/material/Badge";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
@@ -48,11 +44,6 @@ type NotificationItemProps = {
   onNavigateToAppointmentDetails: (appointmentId: number) => void;
 } & ListItemProps;
 
-interface NotificationsQueryPage {
-  results: Notification[];
-  nextPage?: number;
-}
-
 export default function NotificationItem({
   notification,
   onNavigateToUserProfile,
@@ -63,73 +54,20 @@ export default function NotificationItem({
   const { type, sender, data, is_read } = notification || {};
   const queryClient = useQueryClient();
 
-  const { mutate: toggleFollow } = useMutation({
-    mutationFn: async ({
-      targetUserId,
-      isFollow,
-    }: {
-      targetUserId: number;
-      isFollow: boolean;
-    }) => {
-      const url = `/api/social/follow`;
-      const data = { followeeId: targetUserId };
-      return isFollow ? axios.delete(url, { data }) : axios.post(url, data);
-    },
-    onMutate: async ({ targetUserId }) => {
-      const queryKey = ["notifications"];
-      await queryClient.cancelQueries({ queryKey });
-
-      const previousData =
-        queryClient.getQueryData<InfiniteData<NotificationsQueryPage>>(
-          queryKey
-        );
-
-      queryClient.setQueryData<InfiniteData<NotificationsQueryPage>>(
-        queryKey,
-        (old) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page) => ({
-              ...page,
-              results: page.results.map((notif) => {
-                if (notif.sender?.id === targetUserId) {
-                  return {
-                    ...notif,
-                    sender: {
-                      ...notif.sender,
-                      is_follow: !notif.sender.is_follow,
-                    },
-                  };
-                }
-                return notif;
-              }),
-            })),
-          };
-        }
-      );
-
-      return { previousData };
-    },
-    onError: (_err, _variables, context) => {
-      if (context?.previousData) {
-        queryClient.setQueryData(["notifications"], context.previousData);
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
-    },
-  });
+  const { mutate: follow } = useFollow();
+  const { mutate: unfollow } = useUnfollow();
 
   const handleFollow = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    if (sender?.id) {
-      toggleFollow({
-        targetUserId: sender.id,
-        isFollow: !!sender.is_follow,
-      });
-    }
+    if (!sender?.id) return;
+
+    const mutate = sender.is_follow ? unfollow : follow;
+    mutate(sender.id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      },
+    });
   };
 
   const renderNotificationContent = () => {

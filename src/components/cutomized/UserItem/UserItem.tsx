@@ -12,19 +12,21 @@ import { useCallback, useMemo } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import { formatRating } from "@/utils/formatters";
 import { UserMini } from "@/ts/models/user/UserMini";
-import { useFollowMutation } from "@/hooks/mutations/useFollowMutation";
 import Link from "next/link";
 import { AppRoutes } from "@/utils/routes";
 
 type UserItemProps = {
   user: UserMini;
-  ownerId: number | undefined;
-  type: "followers" | "followings";
+  onToggleFollow: (user: UserMini) => void;
+  isTogglingFollow?: boolean;
 };
 
-const UserItem = ({ user, ownerId, type }: UserItemProps) => {
+const UserItem = ({
+  user,
+  onToggleFollow,
+  isTogglingFollow = false,
+}: UserItemProps) => {
   const {
-    id,
     is_business_or_employee,
     avatar,
     ratings_average,
@@ -63,14 +65,15 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
     );
   }, [is_business_or_employee, formattedRating, avatar]);
 
-  const { mutate: toggleFollow } = useFollowMutation(ownerId, type);
+  const handleFollowClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-  const handleFollowClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    toggleFollow({ targetUserId: id, isFollow: !!is_follow });
-  }, [id, is_follow, toggleFollow]);
+      onToggleFollow(user);
+    },
+    [user, onToggleFollow]
+  );
 
   const followButton = useMemo(
     () => (
@@ -80,11 +83,13 @@ const UserItem = ({ user, ownerId, type }: UserItemProps) => {
         onClick={handleFollowClick}
         size="medium"
         disableElevation
+        loading={isTogglingFollow}
+        disabled={isTogglingFollow}
       >
         {is_follow ? "Urmărești" : "Urmărește"}
       </Button>
     ),
-    [is_follow, handleFollowClick]
+    [is_follow, handleFollowClick, isTogglingFollow]
   );
 
   return (

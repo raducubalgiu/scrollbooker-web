@@ -37,6 +37,8 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
     handleClose,
     handleLike,
     handleBookmark,
+    handleFollow,
+    isTogglingFollow,
     handleDelete,
     isPendingDelete,
     goBack,
@@ -124,6 +126,8 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
           businessLocation={post?.business_location}
           onNavigateToBooking={goBack}
           isVideoReview={post.is_video_review}
+          onFollow={handleFollow}
+          isTogglingFollow={isTogglingFollow}
         />
       </Box>
 

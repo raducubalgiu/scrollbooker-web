@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
-import { useMutate } from "@/hooks/useHttp";
+import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
@@ -55,25 +55,8 @@ const UserProfileActions = ({
     intendedNewFollowRef.current = null;
   };
 
-  const { mutate: followMutate, isPending: isFollowing } = useMutate({
-    key: "follow_user",
-    url: "/api/follow",
-    method: "POST",
-    options: {
-      onError: onErrorHandler,
-      onSuccess: onSuccessHandler,
-    },
-  });
-
-  const { mutate: unfollowMutate, isPending: isUnfollowing } = useMutate({
-    key: "unfollow_user",
-    url: "/api/follow",
-    method: "DELETE",
-    options: {
-      onError: onErrorHandler,
-      onSuccess: onSuccessHandler,
-    },
-  });
+  const { mutate: followMutate, isPending: isFollowing } = useFollow();
+  const { mutate: unfollowMutate, isPending: isUnfollowing } = useUnfollow();
 
   const handleToggleFollow = () => {
     const previousLocal = localFollow;
@@ -102,13 +85,11 @@ const UserProfileActions = ({
       console.warn("onUpdateFollows threw an error", e);
     }
 
-    const payload = { followeeId: userId };
-
-    if (newFollow) {
-      followMutate(payload);
-    } else {
-      unfollowMutate(payload);
-    }
+    const mutate = newFollow ? followMutate : unfollowMutate;
+    mutate(userId, {
+      onError: onErrorHandler,
+      onSuccess: onSuccessHandler,
+    });
   };
 
   const buttonSx = {
