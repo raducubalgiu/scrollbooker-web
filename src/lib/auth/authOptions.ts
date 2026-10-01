@@ -15,11 +15,36 @@ import {
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60;
 
-// Singurul loc din app care oferă azi "Sign in with Google" — pagina de
-// înregistrare pentru business-uri (nu oferim încă register pentru clienți
-// obișnuiți), de aceea role_name e hardcodat "business" mai jos, nu citit
-// dintr-un query param dus prin round-trip-ul OAuth.
+// Două id-uri de provider Google distincte (nu unul singur) pentru că cele
+// două pagini au semantici diferite și signIn() de mai jos nu are acces la
+// pagina care a declanșat fluxul OAuth, doar la account.provider:
+// - register-business: cont nou → role_name "business" obligatoriu, și
+//   respingem dacă userul există deja cu alt rol decât "business".
+// - signin: niciun role_name (un user nou ar trebui să dea 400 pe backend,
+//   "role_name is required for new account registration" — intenționat,
+//   pagina de login nu creează conturi), niciun filtru de rol — orice cont
+//   existent poate intra.
+// Necesită AMBELE redirect URI înregistrate în Google Cloud Console:
+// /api/auth/callback/google-business și /api/auth/callback/google-signin
+// (pot folosi același client id/secret, Google nu are nevoie de provideri
+// separați, doar NextAuth îi diferențiază după acest id).
 const REGISTER_BUSINESS_PATH = "/auth/register-business";
+const LOGIN_PATH = "/auth/signin";
+
+function buildGoogleProfile(profile: { sub: string; name: string; email: string }) {
+  // Câmpurile de auth (accessToken/refreshToken/accessTokenExpires) sunt
+  // placeholder aici — signIn() de mai jos le suprascrie cu tokenurile
+  // noastre (nu ale Google) înainte ca jwt() să le citească.
+  return {
+    id: profile.sub,
+    name: profile.name,
+    email: profile.email,
+    username: profile.email,
+    accessToken: "",
+    refreshToken: "",
+    accessTokenExpires: 0,
+  };
+}
 
 async function buildRefreshedJwt(refreshToken: string): Promise<JWT> {
   const refreshed = await refreshAccessToken(refreshToken);
@@ -88,22 +113,16 @@ export const authOptions: AuthOptions = {
       },
     }),
     GoogleProvider({
+      id: "google-business",
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      profile(profile) {
-        // Câmpurile de auth (accessToken/refreshToken/accessTokenExpires) sunt
-        // placeholder aici — signIn() de mai jos le suprascrie cu tokenurile
-        // noastre (nu ale Google) înainte ca jwt() să le citească.
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          username: profile.email,
-          accessToken: "",
-          refreshToken: "",
-          accessTokenExpires: 0,
-        };
-      },
+      profile: buildGoogleProfile,
+    }),
+    GoogleProvider({
+      id: "google-signin",
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      profile: buildGoogleProfile,
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET as string,
@@ -116,35 +135,63 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider !== "google") return true;
+      if (account?.provider === "google-business") {
+        if (!account.id_token) {
+          return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
+        }
 
-      if (!account.id_token) {
-        return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
+        const auth = await signInWithGoogle(account.id_token, "business");
+        if (!auth) {
+          return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
+        }
+
+        const decoded = await verifyAccessToken(auth.access_token);
+        if (!decoded) {
+          return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
+        }
+
+        // Backend-ul loghează userul existent pe rolul lui curent și ignoră
+        // complet role_name atunci când email-ul/google_id-ul se potrivesc cu
+        // un cont deja existent (ex. un client care s-a înregistrat cu parolă) —
+        // nu putem preveni asta acolo, doar respingem sesiunea aici dacă rolul
+        // rezultat nu e "business", ca userul să nu ajungă logat, fără să știe,
+        // în alt cont decât cel pe care voia să-l creeze.
+        if (decoded.role !== "business") {
+          return `${REGISTER_BUSINESS_PATH}?error=not_business_account`;
+        }
+
+        user.accessToken = auth.access_token;
+        user.refreshToken = auth.refresh_token;
+        user.accessTokenExpires = decoded.exp * 1000;
+
+        return true;
       }
 
-      const auth = await signInWithGoogle(account.id_token, "business");
-      if (!auth) {
-        return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
-      }
+      if (account?.provider === "google-signin") {
+        if (!account.id_token) {
+          return `${LOGIN_PATH}?error=google_failed`;
+        }
 
-      const decoded = await verifyAccessToken(auth.access_token);
-      if (!decoded) {
-        return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
-      }
+        // Niciun role_name — un email fără cont existent dă 400 pe backend
+        // ("role_name is required for new account registration"),
+        // signInWithGoogle îl prinde și întoarce null; e exact comportamentul
+        // dorit aici, pagina de login nu trebuie să creeze conturi noi.
+        const auth = await signInWithGoogle(account.id_token);
+        if (!auth) {
+          return `${LOGIN_PATH}?error=google_failed`;
+        }
 
-      // Backend-ul loghează userul existent pe rolul lui curent și ignoră
-      // complet role_name atunci când email-ul/google_id-ul se potrivesc cu
-      // un cont deja existent (ex. un client care s-a înregistrat cu parolă) —
-      // nu putem preveni asta acolo, doar respingem sesiunea aici dacă rolul
-      // rezultat nu e "business", ca userul să nu ajungă logat, fără să știe,
-      // în alt cont decât cel pe care voia să-l creeze.
-      if (decoded.role !== "business") {
-        return `${REGISTER_BUSINESS_PATH}?error=not_business_account`;
-      }
+        const decoded = await verifyAccessToken(auth.access_token);
+        if (!decoded) {
+          return `${LOGIN_PATH}?error=google_failed`;
+        }
 
-      user.accessToken = auth.access_token;
-      user.refreshToken = auth.refresh_token;
-      user.accessTokenExpires = decoded.exp * 1000;
+        user.accessToken = auth.access_token;
+        user.refreshToken = auth.refresh_token;
+        user.accessTokenExpires = decoded.exp * 1000;
+
+        return true;
+      }
 
       return true;
     },

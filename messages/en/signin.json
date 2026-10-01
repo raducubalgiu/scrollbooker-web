@@ -1,0 +1,16 @@
+{
+  "signin": {
+    "title": "Log in",
+    "subtitle": "Log in to your ScrollBooker account",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithApple": "Continue with Apple — coming soon",
+    "orWithEmail": "or with email",
+    "usernameLabel": "Username or email",
+    "passwordLabel": "Password",
+    "submit": "Log in",
+    "noAccount": "Don't have an account yet?",
+    "register": "Register",
+    "credentialsError": "Incorrect username or password.",
+    "googleFailed": "Google sign-in failed. Check whether you already have an account with this email."
+  }
+}

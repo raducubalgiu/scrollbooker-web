@@ -1,0 +1,16 @@
+{
+  "signin": {
+    "title": "Conectare",
+    "subtitle": "Autentifică-te în contul tău ScrollBooker",
+    "continueWithGoogle": "Continuă cu Google",
+    "continueWithApple": "Continuă cu Apple — în curând",
+    "orWithEmail": "sau cu email",
+    "usernameLabel": "Username sau email",
+    "passwordLabel": "Parola",
+    "submit": "Conectare",
+    "noAccount": "Nu ai încă un cont?",
+    "register": "Înregistrare",
+    "credentialsError": "Username sau parolă greșită.",
+    "googleFailed": "Autentificarea cu Google a eșuat. Verifică dacă ai deja un cont creat cu acest email."
+  }
+}

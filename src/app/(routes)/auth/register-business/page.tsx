@@ -1,20 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Divider, Stack, Typography } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { toast } from "react-toastify";
 import { signIn, useSession } from "next-auth/react";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import AppleIcon from "@mui/icons-material/Apple";
 import { useTranslations } from "next-intl";
 
@@ -31,6 +22,17 @@ import { registerWithCredentials } from "@/controllers/auth/auth.service";
 type RegisterForm = {
   email: string;
   password: string;
+};
+
+const oauthButtonSx = {
+  borderColor: "divider",
+  color: "text.primary",
+  textTransform: "none" as const,
+  fontWeight: 600,
+  "&:hover": {
+    borderColor: "text.secondary",
+    backgroundColor: "action.hover",
+  },
 };
 
 export default function RegisterBusinessPage() {
@@ -66,7 +68,7 @@ export default function RegisterBusinessPage() {
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
-    await signIn("google", { callbackUrl: AppRoutes.home() });
+    await signIn("google-business", { callbackUrl: AppRoutes.home() });
   };
 
   const onSubmit = async (data: RegisterForm): Promise<void> => {
@@ -115,139 +117,107 @@ export default function RegisterBusinessPage() {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100dvh",
-        py: { xs: 5, md: 8 },
-      }}
-    >
-      <Container maxWidth="sm">
-        <Stack
-          component={Link}
-          href={AppRoutes.getStarted()}
-          direction="row"
-          spacing={1}
-          alignItems="center"
-          sx={{
-            color: "text.primary",
-            textDecoration: "none",
-            mb: 5,
-            width: "fit-content",
-          }}
-        >
-          <ArrowBackRoundedIcon fontSize="small" />
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-            {t("back")}
-          </Typography>
+    <Box sx={{ minHeight: "100dvh", py: { xs: 6, md: 10 } }}>
+      <Container maxWidth="xs">
+        <Stack alignItems="center" sx={{ mb: 5 }}>
+          <LandingLogo height={22} />
         </Stack>
 
-        <Box sx={{ mb: 4, display: "flex", justifyContent: "center" }}>
-          <LandingLogo height={22} />
-        </Box>
+        <Stack spacing={0.75} sx={{ mb: 5, textAlign: "center" }}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>
+            {t("title")}
+          </Typography>
+          <Typography color="text.secondary">{t("subtitle")}</Typography>
+        </Stack>
 
-        <Box
-          sx={{
-            borderRadius: 4,
-            p: { xs: 3, sm: 5 },
-            boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
-          }}
-        >
-          <Stack spacing={0.75} sx={{ mb: 4, textAlign: "center" }}>
-            <Typography variant="h4" sx={{ fontWeight: 700 }}>
-              {t("title")}
-            </Typography>
-            <Typography color="text.secondary">{t("subtitle")}</Typography>
-          </Stack>
-
-          <Stack spacing={1.5} sx={{ mb: 3 }}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="large"
-              fullWidth
-              loading={googleLoading}
-              onClick={handleGoogleSignIn}
-              startIcon={<GoogleIcon />}
-              disableElevation
-            >
-              {t("continueWithGoogle")}
-            </Button>
-
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="large"
-              fullWidth
-              startIcon={<AppleIcon />}
-              disableElevation
-            >
-              {t("continueWithApple")}
-            </Button>
-          </Stack>
-
-          <Divider sx={{ mb: 3 }}>
-            <Typography variant="body2" color="text.secondary">
-              {t("orWithEmail")}
-            </Typography>
-          </Divider>
-
-          <FormProvider {...methods}>
-            <Stack spacing={1.5}>
-              <Input
-                label={t("emailLabel")}
-                name="email"
-                rules={isRequired}
-                placeholder={t("emailLabel")}
-                size="medium"
-                type="email"
-              />
-
-              <Input
-                label={t("passwordLabel")}
-                name="password"
-                type="password"
-                rules={isRequired}
-                placeholder={t("passwordPlaceholder")}
-                size="medium"
-              />
-
-              <Button
-                variant="contained"
-                size="large"
-                fullWidth
-                loading={loading}
-                onClick={methods.handleSubmit(onSubmit)}
-                disableElevation
-                sx={{
-                  mt: 1,
-                  py: 1.5,
-                  fontWeight: 700,
-                  textTransform: "none",
-                  backgroundColor: LANDING_COLORS.primary,
-                  "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
-                }}
-              >
-                {t("submit")}
-              </Button>
-            </Stack>
-          </FormProvider>
-
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-            spacing={1}
-            sx={{ mt: 3 }}
+        <Stack spacing={1.5} sx={{ mb: 3 }}>
+          <Button
+            variant="outlined"
+            size="large"
+            fullWidth
+            loading={googleLoading}
+            onClick={handleGoogleSignIn}
+            startIcon={<GoogleIcon />}
+            disableElevation
+            sx={oauthButtonSx}
           >
-            <Typography color="text.secondary">{t("haveAccount")}</Typography>
+            {t("continueWithGoogle")}
+          </Button>
+
+          <Button
+            variant="outlined"
+            size="large"
+            fullWidth
+            startIcon={<AppleIcon />}
+            disableElevation
+            sx={oauthButtonSx}
+          >
+            {t("continueWithApple")}
+          </Button>
+        </Stack>
+
+        <Divider sx={{ mb: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            {t("orWithEmail")}
+          </Typography>
+        </Divider>
+
+        <FormProvider {...methods}>
+          <Stack spacing={1.5}>
+            <Input
+              label={t("emailLabel")}
+              name="email"
+              rules={isRequired}
+              placeholder={t("emailLabel")}
+              size="medium"
+              type="email"
+            />
+
+            <Input
+              label={t("passwordLabel")}
+              name="password"
+              type="password"
+              rules={isRequired}
+              placeholder={t("passwordPlaceholder")}
+              size="medium"
+            />
+
             <Button
-              sx={{ textTransform: "none", fontWeight: 600 }}
-              onClick={() => navigateTo(AppRoutes.login())}
+              variant="contained"
+              size="large"
+              fullWidth
+              loading={loading}
+              onClick={methods.handleSubmit(onSubmit)}
+              disableElevation
+              sx={{
+                mt: 1,
+                py: 1.5,
+                fontWeight: 700,
+                textTransform: "none",
+                backgroundColor: LANDING_COLORS.primary,
+                "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
+              }}
             >
-              {t("login")}
+              {t("submit")}
             </Button>
           </Stack>
-        </Box>
+        </FormProvider>
+
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+          spacing={1}
+          sx={{ mt: 4 }}
+        >
+          <Typography color="text.secondary">{t("haveAccount")}</Typography>
+          <Button
+            sx={{ textTransform: "none", fontWeight: 600 }}
+            onClick={() => navigateTo(AppRoutes.login())}
+          >
+            {t("login")}
+          </Button>
+        </Stack>
       </Container>
     </Box>
   );
