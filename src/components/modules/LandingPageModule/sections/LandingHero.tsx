@@ -1,15 +1,23 @@
 "use client";
 
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Button, Container, Stack, Typography, keyframes } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import { AppRoutes } from "@/utils/routes";
 import { LANDING_COLORS } from "../landing.constants";
 import PhoneMockup from "../components/PhoneMockup";
+import LandingEarlyAdopterModal from "../components/LandingEarlyAdopterModal";
+import { AppRoutes } from "@/utils/routes";
+
+const pulse = keyframes`
+  0% { box-shadow: 0 0 0 0 ${LANDING_COLORS.primary}66; }
+  70% { box-shadow: 0 0 0 12px ${LANDING_COLORS.primary}00; }
+  100% { box-shadow: 0 0 0 0 ${LANDING_COLORS.primary}00; }
+`;
 
 export default function LandingHero() {
   const t = useTranslations("hero");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <Box
@@ -104,42 +112,43 @@ export default function LandingHero() {
               alignItems={{ xs: "stretch", sm: "center", md: "flex-start" }}
             >
               <Button
-                component={Link}
-                href={AppRoutes.partners()}
                 variant="contained"
                 size="large"
                 disableElevation
-                endIcon={<ArrowForwardRoundedIcon />}
+                onClick={() => setIsModalOpen(true)}
                 sx={{
                   backgroundColor: LANDING_COLORS.primary,
                   "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
                   px: 3,
                   py: 1.5,
                   whiteSpace: "nowrap",
+                  fontWeight: 700,
+                  borderRadius: 50,
+                  animation: `${pulse} 2.2s infinite`,
                 }}
               >
-                {t("ctaPrimary")}
-              </Button>
-              <Button
-                component={Link}
-                href="#cum-functioneaza"
-                variant="outlined"
-                size="large"
-                sx={{
-                  color: LANDING_COLORS.textPrimary,
-                  borderColor: LANDING_COLORS.border,
-                  px: 3,
-                  py: 1.5,
-                  whiteSpace: "nowrap",
-                  "&:hover": {
-                    borderColor: "rgba(255,255,255,0.4)",
-                    backgroundColor: "rgba(255,255,255,0.04)",
-                  },
-                }}
-              >
-                {t("ctaSecondary")}
+                {t("ctaButton")}
               </Button>
             </Stack>
+
+            <Typography
+              variant="body2"
+              sx={{ color: LANDING_COLORS.textSecondary, mt: 3 }}
+            >
+              {t("forBusinessPrefix")}{" "}
+              <Box
+                component={Link}
+                href={AppRoutes.partners()}
+                sx={{
+                  color: LANDING_COLORS.primary,
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  "&:hover": { textDecoration: "underline" },
+                }}
+              >
+                {t("forBusinessLink")}
+              </Box>
+            </Typography>
           </Box>
 
           <Box sx={{ flex: 1, width: "100%", position: "relative" }}>
@@ -152,6 +161,11 @@ export default function LandingHero() {
           </Box>
         </Stack>
       </Container>
+
+      <LandingEarlyAdopterModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Box>
   );
 }

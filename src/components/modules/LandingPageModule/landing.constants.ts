@@ -15,4 +15,5 @@ export const LANDING_COLORS = {
   beauty: "#9B4A55",
   medical: "#5EDAD5",
   auto: "#6FA8FF",
+  error: "#F44336",
 } as const;

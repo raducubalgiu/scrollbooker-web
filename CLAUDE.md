@@ -30,6 +30,34 @@ matches the same rule already written into the backend and iOS
 `CLAUDE.md` files — keep it consistent across all four repos rather than
 drifting per-codebase.
 
+## Colors
+
+**Never define or inline a static/hardcoded color** (a raw hex, `rgb()`,
+`rgba()` literal, etc.) in a `sx` prop or style object. Always reference a
+dynamic value from the active MUI theme instead — either a semantic
+`theme.palette.*` slot already defined in `theme/theme.ts` (`primary`,
+`secondary`, `background.default`, `background.paper`, `text.primary`,
+`text.secondary`, `divider`, `rating`, `beauty`, `medical`, `auto`, etc.,
+referenced as a string like `bgcolor: "background.default"` or via
+`(theme) => theme.palette.background.default` in a callback `sx`), or add
+a new slot to `theme/theme.ts` if the one you need genuinely doesn't exist
+yet — never work around a missing token by inlining a literal. When in
+doubt about which token fits, `background.default` is the most common
+fallback for a plain surface. This was a real bug, not just a style nit:
+a hardcoded hex background paired with a theme-driven text color (or vice
+versa) silently breaks across light/dark mode — e.g. invisible dark-on-dark
+input text in a modal that hardcoded a dark surface while the input itself
+still inherited the theme's light-mode text color.
+
+**Exception: `LandingPageModule`** (the `/` marketing page and everything
+under `src/components/modules/LandingPageModule/`). It's deliberately
+exempt — see `landing.constants.ts`'s own comment: the landing page must
+always render dark regardless of the viewer's actual light/dark
+preference, which is precisely why it hardcodes `LANDING_COLORS` instead
+of reading `theme.ts`/`useTheme()` in the first place. Keep using
+`LANDING_COLORS` there; don't "fix" it onto the theme, and don't use this
+exception as precedent for hardcoding colors anywhere else.
+
 ## Project Overview
 
 - **Name**: Scroll Booker Web — the business/employee back-office

@@ -13,14 +13,27 @@
     "cta": "Claim your spot"
   },
   "hero": {
-    "badge": "The first Video-First Booking platform for Beauty · Bucharest",
-    "titlePrefix": "Discovery like",
-    "titleHighlight": "TikTok",
-    "titleSuffix": ", booking like ScrollBooker",
-    "subtitle": "Clients follow your business, like and share your content, comment — and book instantly, straight from the video, without leaving the feed. Alongside the community that builds around you, you get a fully managed calendar, services, products, and staff.",
-    "ctaPrimary": "Register your business",
-    "ctaSecondary": "See how it works",
-    "imageAlt": "The ScrollBooker feed — video discovery, with likes, comments, and an instant booking button"
+    "badge": "Launching soon · Bucharest",
+    "titlePrefix": "Booking becomes",
+    "titleHighlight": "social",
+    "titleSuffix": "",
+    "subtitle": "Follow the businesses you like, discover new content in your feed, watch real video reviews — and book instantly, straight from the video. ScrollBooker is launching soon.",
+    "ctaButton": "Notify me at launch",
+    "imageAlt": "The ScrollBooker feed — video discovery, with likes, comments, and an instant booking button",
+    "forBusinessPrefix": "Have a salon, clinic, or other business?",
+    "forBusinessLink": "Register your business"
+  },
+  "earlyAdopters": {
+    "modalTitle": "Be the first to know",
+    "modalDescription": "ScrollBooker is launching soon — the social network you book from: follow businesses, discover new content in your feed, watch real video reviews, and book instantly, straight from the video. Leave your details and we'll let you know as soon as the app is available.",
+    "firstNameLabel": "First name",
+    "lastNameLabel": "Last name",
+    "cityLabel": "City",
+    "emailLabel": "Email",
+    "submit": "Notify me at launch",
+    "successTitle": "You're on the list!",
+    "successSubtitle": "We'll email you as soon as ScrollBooker is available.",
+    "errorMessage": "Something went wrong. Please try again."
   },
   "socialContrast": {
     "kicker": "Why it's not just another booking app",

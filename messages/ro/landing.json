@@ -9,18 +9,31 @@
     "registerShort": "Înregistrare"
   },
   "announcementBar": {
-    "message": "Lansăm ScrollBooker în București — primele saloane înscrise au acces prioritar, înainte să se aglomereze piața.",
+    "message": "Lansăm ScrollBooker în București — primele saloane înscrise au acces prioritar.",
     "cta": "Rezervă-ți locul"
   },
   "hero": {
-    "badge": "Prima platformă Video-First Booking pentru Beauty · București",
-    "titlePrefix": "Descoperirea în stil",
-    "titleHighlight": "TikTok",
-    "titleSuffix": ", rezervările în stil ScrollBooker",
-    "subtitle": "Clienții urmăresc afacerea ta, apreciază și distribuie conținutul tău, comentează — și rezervă instant, direct din videoclip, fără să iasă din feed. Tu primești, pe lângă comunitatea care se formează în jurul tău, un calendar, servicii, produse și angajați administrate complet.",
-    "ctaPrimary": "Înregistrează-ți afacerea",
-    "ctaSecondary": "Vezi cum funcționează",
-    "imageAlt": "Feed-ul ScrollBooker — descoperire video, cu like-uri, comentarii și buton de rezervare instant"
+    "badge": "Lansăm în curând · București",
+    "titlePrefix": "Rezervările tale devin",
+    "titleHighlight": "sociale",
+    "titleSuffix": "",
+    "subtitle": "Urmărești afacerile care îți plac, descoperi conținut nou în feed, vezi recenzii video reale — și rezervi instant, direct din videoclip. ScrollBooker lansează în curând.",
+    "ctaButton": "Anunță-mă la lansare",
+    "imageAlt": "Feed-ul ScrollBooker — descoperire video, cu like-uri, comentarii și buton de rezervare instant",
+    "forBusinessPrefix": "Ai un salon, clinică sau alt business?",
+    "forBusinessLink": "Înregistrează-ți afacerea"
+  },
+  "earlyAdopters": {
+    "modalTitle": "Fii primul care află",
+    "modalDescription": "ScrollBooker lansează în curând — rețeaua socială din care rezervi: urmărești afaceri, descoperi conținut nou în feed, vezi recenzii video reale și rezervi instant, direct din videoclip. Lasă-ne datele tale și te anunțăm de îndată ce aplicația este disponibilă.",
+    "firstNameLabel": "Prenume",
+    "lastNameLabel": "Nume",
+    "cityLabel": "Oraș",
+    "emailLabel": "Email",
+    "submit": "Anunță-mă la lansare",
+    "successTitle": "Te-ai înscris!",
+    "successSubtitle": "Îți vom trimite un email de îndată ce ScrollBooker este disponibil.",
+    "errorMessage": "A apărut o eroare. Încearcă din nou."
   },
   "socialContrast": {
     "kicker": "De ce nu e doar o aplicație de programări",
@@ -140,11 +153,20 @@
     "kicker": "Pentru orice afacere din Beauty",
     "title": "De la coafură și barbershop, la unghii, gene și masaj",
     "items": [
-      { "label": "Păr & barbă", "alt": "Barbershop modern, cu clienți la tuns" },
+      {
+        "label": "Păr & barbă",
+        "alt": "Barbershop modern, cu clienți la tuns"
+      },
       { "label": "Make-up", "alt": "Make-up artist lucrând cu o clientă" },
-      { "label": "Sprâncene & gene", "alt": "Aplicare extensii de gene, în cabinet" },
+      {
+        "label": "Sprâncene & gene",
+        "alt": "Aplicare extensii de gene, în cabinet"
+      },
       { "label": "Unghii", "alt": "Manichiură, close-up pe unghii lucrate" },
-      { "label": "Cosmetică facială", "alt": "Tratament facial cosmetic, într-un salon" },
+      {
+        "label": "Cosmetică facială",
+        "alt": "Tratament facial cosmetic, într-un salon"
+      },
       { "label": "Masaj", "alt": "Masaj terapeutic, într-un salon spa" }
     ]
   },
