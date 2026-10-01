@@ -54,6 +54,11 @@
       "Instant booking, straight from the video, without leaving the app"
     ]
   },
+  "forBusinessDivider": {
+    "kicker": "From here on, for businesses",
+    "title": "Have a salon, clinic, or any other business? Here's what you get.",
+    "subtitle": "Everything below — profile, management, calendar — is built for you, as a business owner or employee."
+  },
   "features": {
     "kicker": "Why ScrollBooker",
     "title": "Everything you need to grow, in a single app",
@@ -78,7 +83,7 @@
   },
   "profileShowcase": {
     "kicker": "For your profile",
-    "title": "Your profile becomes a community, not just a list of services",
+    "title": "Your business profile becomes a community, not just a list of services",
     "subtitle": "Just like on any social network — except here you can also book directly, without switching apps.",
     "imageAlt": "A business profile on ScrollBooker, with followers, reviews, and a video portfolio",
     "items": [

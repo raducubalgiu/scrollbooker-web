@@ -5,6 +5,7 @@ import LandingAnnouncementBar from "./sections/LandingAnnouncementBar";
 import LandingNav from "./sections/LandingNav";
 import LandingHero from "./sections/LandingHero";
 import LandingSocialContrast from "./sections/LandingSocialContrast";
+import LandingForBusinessDivider from "./sections/LandingForBusinessDivider";
 import LandingFeatures from "./sections/LandingFeatures";
 import LandingProfileShowcase from "./sections/LandingProfileShowcase";
 import LandingHowItWorks from "./sections/LandingHowItWorks";
@@ -28,6 +29,7 @@ export default function LandingPageModule() {
       <LandingNav />
       <LandingHero />
       <LandingSocialContrast />
+      <LandingForBusinessDivider />
       <LandingFeatures />
       <LandingProfileShowcase />
       <LandingHowItWorks />

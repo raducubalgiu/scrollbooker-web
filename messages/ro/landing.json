@@ -54,6 +54,11 @@
       "Rezervare instant, direct din videoclip, fără să ieși din aplicație"
     ]
   },
+  "forBusinessDivider": {
+    "kicker": "De aici încolo, pentru afaceri",
+    "title": "Ai un salon, o clinică sau orice alt business? Iată ce primești.",
+    "subtitle": "Tot ce vezi mai jos — profil, administrare, calendar — e construit pentru tine, ca proprietar sau angajat al unei afaceri."
+  },
   "features": {
     "kicker": "De ce ScrollBooker",
     "title": "Tot ce îți trebuie ca să crești, într-o singură aplicație",
@@ -78,7 +83,7 @@
   },
   "profileShowcase": {
     "kicker": "Pentru profilul tău",
-    "title": "Profilul tău devine o comunitate, nu doar o listă de servicii",
+    "title": "Profilul afacerii tale devine o comunitate, nu doar o listă de servicii",
     "subtitle": "Ca pe orice rețea socială — doar că de aici se și rezervă direct, fără să schimbi aplicația.",
     "imageAlt": "Profil de business în ScrollBooker, cu urmăritori, recenzii și portofoliu video",
     "items": [
