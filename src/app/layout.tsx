@@ -9,6 +9,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 
 import MUIProvider from "../providers/MUIProvider";
+import { getSystemThemeGuess, getThemeMode } from "../providers/themeCookie";
+import { ThemeModeEnum } from "../providers/ThemeModeEnum";
 import QueryClientProvider from "../providers/QueryClientProvider";
 import SessionProvider from "../providers/SessionProvider";
 import ToastProvider from "@/providers/ToastProvider";
@@ -41,15 +43,25 @@ export default async function RootLayout({ children }: ChildrenType) {
   const session = await getServerSession(authOptions);
   const locale = await getLocale();
   const messages = await getMessages();
+  const themeMode = await getThemeMode();
+  const resolvedTheme =
+    themeMode === ThemeModeEnum.DARK || themeMode === ThemeModeEnum.LIGHT
+      ? themeMode
+      : await getSystemThemeGuess();
 
   return (
-    <html lang={locale}>
+    <html
+      lang={locale}
+      data-theme={resolvedTheme}
+      style={{ colorScheme: resolvedTheme }}
+      suppressHydrationWarning
+    >
       <AppRouterCacheProvider options={{ enableCssLayer: false }}>
         <body className={inter.className}>
           <NextIntlClientProvider locale={locale} messages={messages}>
             <SessionProvider session={session}>
               <AuthListener />
-              <MUIProvider>
+              <MUIProvider initialMode={themeMode} initialResolvedMode={resolvedTheme}>
                 <ToastProvider />
                 <QueryClientProvider>
                   <Layout>{children}</Layout>

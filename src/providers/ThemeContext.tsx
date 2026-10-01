@@ -4,6 +4,7 @@ import * as React from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { ThemeModeEnum } from "./ThemeModeEnum";
+import { setSystemThemeGuess, setThemeMode } from "./themeCookie";
 import { darkTheme, lightTheme } from "../../theme/theme";
 
 type Ctx = {
@@ -13,41 +14,41 @@ type Ctx = {
   toggle: () => void;
 };
 
-const STORAGE_KEY = "sb-ui-color-mode";
 const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
 
 const ThemeModeContext = React.createContext<Ctx | undefined>(undefined);
 
-export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = React.useState<ThemeModeEnum>(ThemeModeEnum.SYSTEM);
-  const [systemPrefersDarkMode, setSystemPrefersDarkMode] =
-    React.useState<boolean>(false);
-  const [isHydrated, setIsHydrated] = React.useState(false);
+type ThemeModeProviderProps = {
+  children: React.ReactNode;
+  initialMode: ThemeModeEnum;
+  initialResolvedMode: ThemeModeEnum;
+};
+
+export function ThemeModeProvider({
+  children,
+  initialMode,
+  initialResolvedMode,
+}: ThemeModeProviderProps) {
+  const [mode, setModeState] = React.useState<ThemeModeEnum>(initialMode);
+  const [systemPrefersDarkMode, setSystemPrefersDarkMode] = React.useState<boolean>(
+    initialResolvedMode === ThemeModeEnum.DARK
+  );
+  const [, startTransition] = React.useTransition();
 
   React.useEffect(() => {
-    const saved = window.localStorage.getItem(
-      STORAGE_KEY
-    ) as ThemeModeEnum | null;
-
-    const nextMode =
-      saved === ThemeModeEnum.SYSTEM ||
-      saved === ThemeModeEnum.LIGHT ||
-      saved === ThemeModeEnum.DARK
-        ? saved
-        : ThemeModeEnum.SYSTEM;
-
     const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY);
 
-    const syncSystemMode = (matches: boolean) => {
+    const syncSystemPreference = (matches: boolean) => {
       setSystemPrefersDarkMode(matches);
+      startTransition(() => {
+        setSystemThemeGuess(matches ? ThemeModeEnum.DARK : ThemeModeEnum.LIGHT);
+      });
     };
 
-    setMode(nextMode);
-    syncSystemMode(mediaQuery.matches);
-    setIsHydrated(true);
+    syncSystemPreference(mediaQuery.matches);
 
     const handleChange = (event: MediaQueryListEvent) => {
-      syncSystemMode(event.matches);
+      syncSystemPreference(event.matches);
     };
 
     mediaQuery.addEventListener("change", handleChange);
@@ -66,12 +67,6 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
   }, [mode, systemPrefersDarkMode]);
 
   React.useLayoutEffect(() => {
-    if (!isHydrated) return;
-
-    try {
-      window.localStorage.setItem(STORAGE_KEY, mode);
-    } catch {}
-
     const html = document.documentElement;
     html.setAttribute("data-theme", resolvedMode);
     html.style.colorScheme = resolvedMode;
@@ -84,7 +79,14 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
           : lightTheme.palette.primary.main;
       meta.setAttribute("content", color);
     }
-  }, [isHydrated, mode, resolvedMode]);
+  }, [resolvedMode]);
+
+  const setMode = React.useCallback((nextMode: ThemeModeEnum) => {
+    setModeState(nextMode);
+    startTransition(() => {
+      setThemeMode(nextMode);
+    });
+  }, []);
 
   const value = React.useMemo<Ctx>(
     () => ({
@@ -92,19 +94,13 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
       isSystemInDarkMode: resolvedMode === ThemeModeEnum.DARK,
       setMode,
       toggle: () =>
-        setMode((currentMode) => {
-          if (currentMode === ThemeModeEnum.SYSTEM) {
-            return systemPrefersDarkMode
-              ? ThemeModeEnum.LIGHT
-              : ThemeModeEnum.DARK;
-          }
-
-          return currentMode === ThemeModeEnum.LIGHT
-            ? ThemeModeEnum.DARK
-            : ThemeModeEnum.LIGHT;
-        }),
+        setMode(
+          resolvedMode === ThemeModeEnum.DARK
+            ? ThemeModeEnum.LIGHT
+            : ThemeModeEnum.DARK
+        ),
     }),
-    [mode, resolvedMode, systemPrefersDarkMode]
+    [mode, resolvedMode, setMode]
   );
 
   const theme = React.useMemo(

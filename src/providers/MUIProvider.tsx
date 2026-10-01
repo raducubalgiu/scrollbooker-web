@@ -2,11 +2,25 @@
 
 import React from "react";
 import { ThemeModeProvider } from "./ThemeContext";
+import { ThemeModeEnum } from "./ThemeModeEnum";
+
+type MUIProviderProps = {
+	children: React.ReactNode;
+	initialMode: ThemeModeEnum;
+	initialResolvedMode: ThemeModeEnum;
+};
 
 export default function MUIProvider({
 	children,
-}: {
-	children: React.ReactNode;
-}) {
-	return <ThemeModeProvider>{children}</ThemeModeProvider>;
+	initialMode,
+	initialResolvedMode,
+}: MUIProviderProps) {
+	return (
+		<ThemeModeProvider
+			initialMode={initialMode}
+			initialResolvedMode={initialResolvedMode}
+		>
+			{children}
+		</ThemeModeProvider>
+	);
 }
