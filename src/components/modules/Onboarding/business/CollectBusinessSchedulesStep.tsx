@@ -1,7 +1,7 @@
 import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout";
 import { FormProvider, useForm } from "react-hook-form";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
-import { useCustomQuery } from "@/hooks/useHttp";
+import { useGetSchedulesByUserId } from "@/controllers/booking/schedule.controller";
 import {
   Box,
   Skeleton,
@@ -25,13 +25,12 @@ type SchedulesFormValues = {
 
 const CollectBusinessSchedulesStep = () => {
   const t = useTranslations("onboarding.schedules");
-  const { update } = useSession();
+  const { data: session, update } = useSession();
   const router = useRouter();
 
-  const { data, isLoading } = useCustomQuery<Schedule[]>({
-    key: ["business-schedules"],
-    url: "/api/my-business/schedules",
-  });
+  const { data, isLoading } = useGetSchedulesByUserId(
+    String(session?.user_id)
+  );
 
   const methods = useForm<SchedulesFormValues>({
     defaultValues: {

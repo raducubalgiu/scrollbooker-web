@@ -1,0 +1,17 @@
+{
+  "mySchedules": {
+    "day": "Day",
+    "start": "Start",
+    "end": "End",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "saveSuccess": "Your schedule has been saved successfully!",
+    "saveError": "Something went wrong. Please try again later"
+  },
+  "scheduleModal": {
+    "title": "Working hours",
+    "loading": "Loading..."
+  }
+}

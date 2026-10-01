@@ -1,0 +1,17 @@
+{
+  "mySchedules": {
+    "day": "Ziua",
+    "start": "Start",
+    "end": "Sfârșit",
+    "edit": "Editează",
+    "cancel": "Renunță",
+    "save": "Salvează",
+    "saving": "Se salvează...",
+    "saveSuccess": "Ți-ai salvat cu succes programul!",
+    "saveError": "Ceva nu a mers cum trebuie. Încearcă mai târziu"
+  },
+  "scheduleModal": {
+    "title": "Programul de lucru",
+    "loading": "Se încarcă..."
+  }
+}

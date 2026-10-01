@@ -15,15 +15,14 @@ import ActionButton, {
   ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
 import { toast } from "react-toastify";
-import { useMutate } from "@/hooks/useHttp";
-import {
-  Schedule,
-  ScheduleUpdate,
-} from "@/ts/models/booking/schedule/Schedule";
+import { useTranslations } from "next-intl";
+import { useUpdateSchedules } from "@/controllers/booking/schedule.controller";
+import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 
 type SchedulesProps = { data: Schedule[] };
 
 export default function MySchedulesModule({ data }: SchedulesProps) {
+  const t = useTranslations("mySchedules");
   const [disabled, setDisabled] = useState(true);
 
   const methods = useForm({
@@ -46,23 +45,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
   } = methods;
   const { schedules } = watch();
 
-  const { mutate: handleUpdateSchedules, isPending } = useMutate<
-    ScheduleUpdate[]
-  >({
-    key: ["update-schedules"],
-    url: "/api/booking/schedule",
-    method: "PUT",
-    options: {
-      onSuccess: () => {
-        toast.success("Ți-ai salvat cu succes programul!");
-        setDisabled(true);
-      },
-      onError: () => {
-        reset();
-        toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu");
-      },
-    },
-  });
+  const { mutate: handleUpdateSchedules, isPending } = useUpdateSchedules();
 
   const handleSave = (new_data: { schedules: Schedule[] }) => {
     const updated_schedules = new_data.schedules.map((schedule) => {
@@ -75,13 +58,22 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
       };
     });
 
-    handleUpdateSchedules(updated_schedules);
+    handleUpdateSchedules(updated_schedules, {
+      onSuccess: () => {
+        toast.success(t("saveSuccess"));
+        setDisabled(true);
+      },
+      onError: () => {
+        reset();
+        toast.error(t("saveError"));
+      },
+    });
   };
 
   const actions: ActionButtonType[] = disabled
     ? [
         {
-          title: "Editează",
+          title: t("edit"),
           props: {
             onClick: () => setDisabled(false),
             disableElevation: true,
@@ -90,7 +82,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
       ]
     : [
         {
-          title: "Renunță",
+          title: t("cancel"),
           props: {
             variant: "outlined",
             color: "secondary",
@@ -102,7 +94,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
           },
         },
         {
-          title: isPending ? "Se salvează..." : "Salvează",
+          title: isPending ? t("saving") : t("save"),
           props: {
             onClick: handleSubmit(handleSave),
             loading: isPending,
@@ -126,7 +118,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
                 letterSpacing: 0.2,
               }}
             >
-              Ziua
+              {t("day")}
             </TableCell>
             <TableCell
               component="th"
@@ -138,7 +130,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
                 letterSpacing: 0.2,
               }}
             >
-              Start
+              {t("start")}
             </TableCell>
             <TableCell
               component="th"
@@ -150,7 +142,7 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
                 letterSpacing: 0.2,
               }}
             >
-              Sfârșit
+              {t("end")}
             </TableCell>
           </TableRow>
         </TableHead>

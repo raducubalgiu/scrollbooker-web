@@ -169,18 +169,61 @@ admin back-office funnel every backend call through **one factory**:
    the reference shape: `generateMetadata` and the page component both
    call the same `get()`, the page does a profession-slug redirect check,
    and injects a `LocalBusiness` JSON-LD `<script>` block).
-2. **`src/app/api/**/route.ts`** handlers (~90 of them, one folder tree
-   mirroring the backend's own route groups almost 1:1 —
-   `api/booking/availability/...`, `api/nomenclatures/business-domains/...`,
-   etc.) exist as a **same-origin proxy for client components** — a
-   browser-side React Query hook (`src/hooks/mutations/`,
-   `src/hooks/infiniteQuery/`) can't import `src/lib/instance.ts` directly
-   (it needs server-only session access and secrets), so it `fetch`es the
-   app's own `/api/...` route instead, which internally calls the exact
-   same `get`/`post` → `Instance()` chain. When adding a new
-   backend-backed feature that a **client component** needs, you add a new
-   `route.ts` here; a Server Component reading the same data doesn't need
-   one.
+2. **Client components** go through **one generic catch-all proxy**,
+   `src/app/api/protected/[[...slug]]/route.ts` (`src/lib/backendProxy.ts`
+   holds the actual forwarding logic) — not a per-endpoint `route.ts`.
+   A browser-side React Query hook can't import `src/lib/instance.ts`
+   directly (server-only session access/secrets), so it calls
+   `/api/protected/<the-real-backend-path>` instead; the proxy reads the
+   session itself, attaches the bearer token, and forwards verbatim
+   (including multipart, via a `fetch`-based branch — axios doesn't
+   compute multipart boundaries reliably in this runtime). This replaced
+   the old one-`route.ts`-per-endpoint pattern (~90 files at its peak);
+   **8 stragglers remain** today under `src/app/api/nomenclatures/
+   {roles,permissions,services}/` — not a pattern to copy for anything
+   new, just not yet migrated.
+
+### Controllers: client hooks vs. server-only functions
+
+Every backend-backed feature's data-access code lives under
+`src/controllers/<domain>/<feature>.{controller,service}.ts` — mirrors
+Android's `entity/<domain>/<feature>/` and iOS's
+`BusinessLogic/<Domain>/<Feature>/` for cross-platform consistency (see
+the root `CLAUDE.md`'s mapping table). Two file suffixes, two different
+execution contexts — never mix them in one file:
+
+- **`<feature>.controller.ts`** — client-side React Query hooks
+  (`useQuery`/`useMutation`), called from "use client" components. Calls
+  the backend through `/api/protected/<path>` (see above) — never
+  `src/lib/instance.ts` directly, since that needs server-only secrets.
+  See `src/controllers/auth/auth.controller.ts` (`useUserInfo`,
+  `useUpdateUserInfoMutation`) for the reference shape.
+- **`<feature>.service.ts`** — plain, non-hook `async` functions for
+  server-only callers that already have a session/token in hand and
+  structurally can't use a React hook: NextAuth's own callbacks
+  (`authOptions.ts`), a Server Component, or a route handler. These call
+  the backend **directly** (via `get`/`post`/etc. from
+  `src/utils/requests.ts`, or raw `axios` against
+  `NEXT_PUBLIC_BE_BASE_ENDPOINT` when there's no session yet, e.g.
+  registration) — never through the `/api/protected` proxy, since a
+  server-only caller already has everything the proxy would otherwise
+  fetch for it. See `src/controllers/auth/auth.service.ts`
+  (`loginWithCredentials`, `fetchUserInfo`, `verifyAccessToken`,
+  `refreshAccessToken`) — extracted specifically because `authOptions.ts`
+  runs inside NextAuth's callback machinery, outside any React tree, so
+  it structurally cannot call a hook.
+
+Only build a `.service.ts` file when a genuine server-only caller needs
+it — if nothing but a client hook consumes a feature's data, a bare
+`.controller.ts` is enough (most features so far: `onboarding.controller.ts`,
+`search.controller.ts`, `leads.controller.ts`, the `nomenclature/*`
+controllers, etc. have no `.service.ts` sibling at all). When a Server
+Component just needs a one-off read with no other server-only caller in
+sight, calling `get()`/`post()` directly inline (see point 1 above) is
+still fine — reach for a dedicated `.service.ts` once that logic needs to
+be shared by more than one server-only call site (see
+`src/app/(routes)/admin/my-business/schedules/page.tsx` pattern: extract
+once a second caller needs the same server-side fetch, not preemptively).
 
 Error handling in both paths is thin: route handlers largely catch, log via
 `LOG.error` (`src/utils/logger.ts`, plain `console.log` with a
