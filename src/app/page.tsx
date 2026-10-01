@@ -12,11 +12,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Landing page-ul rămâne mereu dark (aceeași logică ca BottomBar.isDarkPage
-// pentru "/"), deci forțăm și chrome-ul mobil (status bar iOS, bara Chrome
-// pe Android) să rămână negru, indiferent de light/dark mode-ul sistemului —
-// nu moștenește asta de la layout-ul rădăcină, ca să nu afecteze restul
-// aplicației (care respectă ThemeContext-ul real).
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,

@@ -26,7 +26,7 @@ export default function LandingFooter() {
           <LandingLogo height={20} />
 
           <Stack direction="row" spacing={3} alignItems="center">
-            <Typography
+            {/* <Typography
               component={Link}
               href={AppRoutes.login()}
               variant="body2"
@@ -37,7 +37,7 @@ export default function LandingFooter() {
               }}
             >
               {t("login")}
-            </Typography>
+            </Typography> */}
             <Typography
               component={Link}
               href={AppRoutes.partners()}

@@ -42,14 +42,14 @@ export default function LandingNav() {
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               <LandingLanguageSwitcher />
             </Box>
-            <Button
+            {/* <Button
               component={Link}
               href={AppRoutes.login()}
               variant="text"
               sx={{ color: "rgba(255,255,255,0.85)", px: { xs: 1.25, sm: 1.75 } }}
             >
               {t("login")}
-            </Button>
+            </Button> */}
             <Button
               component={Link}
               href={AppRoutes.partners()}
