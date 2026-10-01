@@ -1,7 +1,8 @@
-import { Box, Link, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Link, Stack, useTheme } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { SearchHeaderStateType } from "../../SearchModule/SearchHeader/search-header-types";
 import SearchHeader from "../../SearchModule/SearchHeader/SearchHeader";
+import AppLogo from "@/components/core/Logo/AppLogo";
 
 const BusinessProfileHeader = () => {
 	const theme = useTheme();
@@ -40,22 +41,12 @@ const BusinessProfileHeader = () => {
 				component={Link}
 				href="/"
 				sx={{
-					textDecoration: "none",
 					display: "block",
-					color: "inherit",
 					cursor: "pointer",
 					"&:hover .imageWrapper": { transform: "scale(1.05)" },
 				}}
 			>
-				<Typography
-					variant="h6"
-					noWrap
-					component="div"
-					fontWeight={600}
-					fontSize={32.5}
-				>
-					ScrollBooker
-				</Typography>
+				<AppLogo height={32} color={theme.palette.text.primary} />
 			</Box>
 
 			<SearchHeader
@@ -73,16 +64,9 @@ const BusinessProfileHeader = () => {
 				onSearch={handleSearch}
 			/>
 
-			<Typography
-				variant="h6"
-				noWrap
-				component="div"
-				fontWeight={700}
-				fontSize={30}
-				sx={{ color: "transparent" }}
-			>
-				ScrollBooker
-			</Typography>
+			<Box sx={{ visibility: "hidden" }}>
+				<AppLogo height={32} color={theme.palette.text.primary} />
+			</Box>
 		</Stack>
 	);
 };

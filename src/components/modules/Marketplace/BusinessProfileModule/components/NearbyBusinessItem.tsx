@@ -55,7 +55,7 @@ const NearbyBusinessItem = ({ business }: NearbyBusinessItemProps) => {
 
         <Typography color="text.secondary">{profession}</Typography>
 
-        <Typography color="text.secondary">
+        <Typography color="text.secondary" variant="body2">
           {location.formatted_address}
         </Typography>
       </Box>

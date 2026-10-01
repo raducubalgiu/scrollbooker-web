@@ -24,11 +24,7 @@ const BusinessPostsTab = ({ id, innerRef, posts }: BusinessPostsTabProps) => {
 				width: "100%",
 			}}
 		>
-			<Typography
-				variant="h4"
-				sx={{ fontSize: { xs: "1.75rem", md: "3rem" }, fontWeight: 600 }}
-				gutterBottom
-			>
+			<Typography variant="h3" gutterBottom>
 				Postări video
 			</Typography>
 

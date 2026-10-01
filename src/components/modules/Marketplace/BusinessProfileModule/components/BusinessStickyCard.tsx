@@ -18,6 +18,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
 import { formatRating } from "@/utils/formatters";
+import { AppRoutes } from "@/utils/routes";
+import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 
 type BusinessStickyCardProps = {
 	business: BusinessProfile;
@@ -114,7 +116,13 @@ export default function BusinessStickyCard({
 					}}
 					onClick={() =>
 						router.push(
-							`/booking/${business.id}?businessOwnerId=${business.owner.id}`,
+							AppRoutes.booking(
+								business.id,
+								business.owner.id,
+								business.owner.id,
+								BookingSourceEnum.SEARCH_BUSINESS_PROFILE,
+								null,
+							),
 						)
 					}
 				>

@@ -54,7 +54,8 @@ const BusinessProfileModule = ({
 				maxWidth="xl"
 				sx={{
 					px: { xs: 2, sm: 3, md: 5 },
-					py: 1,
+					pt: { xs: 0, md: 1 },
+					pb: 1,
 				}}
 			>
 				<BusinessProfileTabs
@@ -69,6 +70,7 @@ const BusinessProfileModule = ({
 					id="photos"
 					innerRef={sectionRefCallbacks.photos}
 					owner={profile.owner}
+					businessId={profile.id}
 					mediaFiles={profile?.media_files || []}
 					onFollow={handleFollow}
 					onShare={handleShare}
@@ -80,6 +82,9 @@ const BusinessProfileModule = ({
 							<BusinessServicesTab
 								id="services"
 								innerRef={sectionRefCallbacks.services}
+								userProducts={profile.user_products}
+								businessId={profile.id}
+								businessOwnerId={profile.owner.id}
 							/>
 							<BusinessPostsTab
 								id="social"

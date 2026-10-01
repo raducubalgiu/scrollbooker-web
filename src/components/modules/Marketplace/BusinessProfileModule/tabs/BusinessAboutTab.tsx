@@ -17,12 +17,7 @@ const BusinessAboutTab = ({ profile, id, innerRef }: BusinessAboutTabProps) => {
 
 	return (
 		<Box id={id} ref={innerRef} sx={{ minHeight: { xs: "auto", md: "500px" } }}>
-			<Typography
-				variant="h4"
-				sx={{ fontSize: { xs: "1.75rem", md: "3rem" }, fontWeight: 600 }}
-				gutterBottom
-				mb={2.5}
-			>
+			<Typography variant="h3" gutterBottom mb={2.5}>
 				Despre
 			</Typography>
 
@@ -74,12 +69,7 @@ const BusinessAboutTab = ({ profile, id, innerRef }: BusinessAboutTabProps) => {
 				{profile.location.formatted_address}
 			</Typography>
 
-			<Typography
-				variant="h5"
-				sx={{ fontSize: { xs: "1.25rem", md: "2.125rem" }, fontWeight: 600 }}
-				mt={{ xs: 3, md: 5 }}
-				mb={2.5}
-			>
+			<Typography variant="h5" mt={{ xs: 3, md: 5 }} mb={2.5}>
 				Programul de lucru
 			</Typography>
 

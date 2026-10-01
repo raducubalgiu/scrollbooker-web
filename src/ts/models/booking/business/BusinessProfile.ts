@@ -1,7 +1,6 @@
-import { Plan } from "../../nomenclatures/plan/Plan";
 import { PostMediaFile } from "../../social/Post";
 import { OpeningHours } from "../../user/UserProfile";
-import { Product } from "../product/Product";
+import { UserProducts } from "../product/Product";
 import { Schedule } from "../schedule/Schedule";
 import { BusinessCoordinates } from "./Business";
 import { BusinessMediaFile } from "./BusinessMediaFile";
@@ -11,11 +10,10 @@ export interface BusinessProfile {
   owner: BusinessOwnerProfile;
   opening_hours: OpeningHours;
   media_files: BusinessMediaFile[];
-  business_plan: Plan;
   location: BusinessLocation;
   distance_km: number | null;
   description: string | null;
-  products: Product[];
+  user_products: UserProducts;
   employees: BusinessProfileEmployee[];
   schedules: Schedule[];
   reviews: BusinessProfileReviews;
