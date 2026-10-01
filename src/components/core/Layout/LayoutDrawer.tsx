@@ -10,7 +10,7 @@ import {
   Skeleton,
   TextField,
   Theme,
-  Typography,
+  useTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
@@ -20,6 +20,8 @@ import { Session } from "next-auth";
 import DrawerPopper from "./DrawerPopper";
 import PublicRoutes from "./PublicRoutes";
 import AdminRoutes from "./AdminRoutes";
+import AppLogo from "@/components/core/Logo/AppLogo";
+import AppSymbol from "@/components/core/Logo/AppSymbol";
 import { AppRoutes, AppRouteValues } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import {
@@ -55,6 +57,7 @@ const LayoutDrawer = ({
 }: LayoutDrawerProps) => {
   const pathname = usePathname() || "/";
   const { navigateTo } = useAppNavigation();
+  const theme = useTheme();
 
   const pathnameRef = useRef(pathname);
   useEffect(() => {
@@ -129,20 +132,11 @@ const LayoutDrawer = ({
                   : styles.brandRowExpanded,
               ]}
             >
-              <Typography
-                variant="h3"
-                noWrap
-                component="div"
-                fontWeight={700}
-                sx={[
-                  styles.brandText,
-                  isCollapsed
-                    ? styles.brandTextCollapsed
-                    : styles.brandTextExpanded,
-                ]}
-              >
-                {isCollapsed ? "S" : "ScrollBooker"}
-              </Typography>
+              {isCollapsed ? (
+                <AppSymbol height={28} color={theme.palette.text.primary} />
+              ) : (
+                <AppLogo height={32} color={theme.palette.text.primary} />
+              )}
             </Box>
 
             <Box
@@ -299,21 +293,6 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-  },
-
-  brandText: {
-    lineHeight: 1.1,
-  },
-
-  brandTextExpanded: {
-    fontSize: 30,
-    textAlign: "left",
-  },
-
-  brandTextCollapsed: {
-    width: ICON_SLOT_SIZE,
-    textAlign: "center",
-    fontSize: 30,
   },
 
   searchRow: {

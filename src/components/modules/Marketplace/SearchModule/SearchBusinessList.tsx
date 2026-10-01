@@ -4,7 +4,7 @@ import StoreMallDirectoryOutlinedIcon from "@mui/icons-material/StoreMallDirecto
 import BusinessCardSkeletons from "./BusinessCard/BusinessCardSkeletons";
 import BusinessCard from "./BusinessCard/BusinessCard";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
-import { useInfiniteBusinessLocations } from "@/hooks/infiniteQuery/useInfiniteBusinessLocations";
+import { useGetBusinessLocations } from "@/controllers/booking/business.controller";
 import { SearchState } from "./SearchModule";
 
 interface SearchBusinessListProps {
@@ -23,7 +23,7 @@ const SearchBusinessList: React.FC<SearchBusinessListProps> = ({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteBusinessLocations(searchState);
+  } = useGetBusinessLocations(searchState);
 
   const locations = useMemo(() => {
     if (!data) return [];

@@ -1,6 +1,10 @@
 import { BusinessDetails } from "@/ts/models/booking/business/BusinessDetails";
 import { BusinessAddress } from "@/ts/models/booking/business/BusinessAddress";
 import { UnapprovedBusinessResponse } from "@/ts/models/booking/business/UnapprovedBusinessResponse";
+import { BusinessMarker } from "@/ts/models/booking/business/search/BusinessMarker";
+import { BusinessSheet } from "@/ts/models/booking/business/search/BusinessSheet";
+import { BusinessMapRequest } from "@/ts/models/booking/business/search/BusinessMapCombined";
+import type { SearchState } from "@/components/modules/Marketplace/SearchModule/SearchModule";
 import {
   useInfiniteQuery,
   useMutation,
@@ -11,11 +15,28 @@ import axios from "axios";
 
 const BUSINESS_PATH = "/api/protected/businesses";
 const UNAPPROVED_BUSINESSES_LIMIT = 20;
+const BUSINESS_LOCATIONS_LIMIT = 10;
 
 type PaginatedResponse<T> = {
   count: number;
   results: T[];
 };
+
+const buildMapRequest = (searchState: SearchState): BusinessMapRequest => ({
+  bbox: searchState.bbox!,
+  zoom: searchState.zoom ?? 12,
+  max_markers: 400,
+  business_domain_id: searchState.businessDomainId,
+  service_domain_id: searchState.serviceDomainId,
+  service_id: searchState.serviceId,
+  subfilter_ids: searchState.subfilterIds,
+  start_date: searchState.startDate,
+  start_time: searchState.startTime,
+  end_time: searchState.endTime,
+  has_discount: searchState.hasDiscount,
+  max_price: searchState.maxPrice,
+  sort: searchState.sort,
+});
 
 export const useGetMyBusinessDetails = () => {
   const doRequest = () =>
@@ -58,6 +79,60 @@ export const useApproveBusiness = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["unapproved-businesses"] });
     },
+  });
+};
+
+export const useGetBusinessMarkers = (searchState: SearchState) => {
+  return useQuery({
+    queryKey: [
+      "business-markers",
+      searchState.businessDomainId,
+      searchState.serviceDomainId,
+      searchState.serviceId,
+      searchState.subfilterIds.join(","),
+      searchState.startDate,
+      searchState.startTime,
+      searchState.endTime,
+      searchState.hasDiscount,
+      searchState.maxPrice,
+      searchState.zoom,
+      searchState.bbox?.min_lng,
+      searchState.bbox?.min_lat,
+      searchState.bbox?.max_lng,
+      searchState.bbox?.max_lat,
+      searchState.sort,
+    ],
+    queryFn: async () => {
+      const response = await axios.post<BusinessMarker[]>(
+        `${BUSINESS_PATH}/markers`,
+        buildMapRequest(searchState)
+      );
+      return response.data;
+    },
+    enabled: !!searchState.bbox,
+  });
+};
+
+export const useGetBusinessLocations = (searchState: SearchState) => {
+  return useInfiniteQuery({
+    queryKey: ["business-locations", searchState],
+    queryFn: async ({ pageParam }) => {
+      const response = await axios.post<PaginatedResponse<BusinessSheet>>(
+        `${BUSINESS_PATH}/locations`,
+        buildMapRequest(searchState),
+        { params: { page: pageParam, limit: BUSINESS_LOCATIONS_LIMIT } }
+      );
+      return { ...response.data, page: pageParam };
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      const totalFetched = pages.flatMap((page) => page.results).length;
+      return totalFetched < lastPage.count ? lastPage.page + 1 : undefined;
+    },
+    enabled: !!searchState.bbox,
+    staleTime: 30000,
+    gcTime: 5 * 60 * 1000,
+    retry: 1,
   });
 };
 

@@ -11,7 +11,7 @@ import {
 } from "./search-utils";
 import { useTheme } from "@mui/material/styles";
 import MapLoadingIndicator from "./SearchLoadingIndicator";
-import { useBusinessMarkers } from "@/hooks/useMarkers";
+import { useGetBusinessMarkers } from "@/controllers/booking/business.controller";
 import { SearchState } from "./SearchModule";
 
 type SearchMapProps = {
@@ -51,7 +51,7 @@ const SearchMap = ({
     data: markers,
     isLoading: isLoadingMarkers,
     isRefetching: isRefetchingMarkers,
-  } = useBusinessMarkers(searchState);
+  } = useGetBusinessMarkers(searchState);
 
   const mapContainerRef = React.useRef<HTMLDivElement | null>(null);
   const mapRef = React.useRef<mapboxgl.Map | null>(null);
