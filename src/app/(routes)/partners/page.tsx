@@ -24,7 +24,7 @@ import LandingForceDarkChrome from "@/components/modules/LandingPageModule/compo
 import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
 import { useSubmitBusinessLeadMutation } from "@/controllers/leads/leads.controller";
 import { BusinessLeadCreate } from "@/ts/models/leads/BusinessLead";
-import { lightTheme } from "../../../../theme/theme";
+import { darkTheme } from "../../../../theme/theme";
 
 type PartnersForm = {
   fullname: string;
@@ -103,10 +103,11 @@ export default function PartnersPage() {
           <LandingLogo height={22} />
         </Box>
 
-        <ThemeProvider theme={lightTheme}>
+        <ThemeProvider theme={darkTheme}>
           <Box
             sx={{
-              backgroundColor: "#FFFFFF",
+              backgroundColor: LANDING_COLORS.surface,
+              border: `1px solid ${LANDING_COLORS.border}`,
               borderRadius: 4,
               p: { xs: 3, sm: 5 },
               boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
@@ -114,21 +115,31 @@ export default function PartnersPage() {
           >
             {submitted ? (
               <Stack spacing={2} alignItems="center" sx={{ py: 4, textAlign: "center" }}>
-                <CheckCircleOutlineIcon color="success" sx={{ fontSize: 56 }} />
-                <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                <CheckCircleOutlineIcon
+                  sx={{ fontSize: 56, color: LANDING_COLORS.primary }}
+                />
+                <Typography
+                  variant="h5"
+                  sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 700 }}
+                >
                   {t("successTitle")}
                 </Typography>
-                <Typography color="text.secondary">
+                <Typography sx={{ color: LANDING_COLORS.textSecondary }}>
                   {t("successSubtitle")}
                 </Typography>
               </Stack>
             ) : (
               <>
                 <Stack spacing={0.75} sx={{ mb: 4, textAlign: "center" }}>
-                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                  <Typography
+                    variant="h4"
+                    sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 700 }}
+                  >
                     {t("title")}
                   </Typography>
-                  <Typography color="text.secondary">{t("subtitle")}</Typography>
+                  <Typography sx={{ color: LANDING_COLORS.textSecondary }}>
+                    {t("subtitle")}
+                  </Typography>
                 </Stack>
 
                 <FormProvider {...methods}>
@@ -175,15 +186,24 @@ export default function PartnersPage() {
                       loading={isPending}
                       onClick={methods.handleSubmit(onSubmit)}
                       disableElevation
-                      sx={{ mt: 1, py: 1.5, fontWeight: 700 }}
+                      sx={{
+                        mt: 1,
+                        py: 1.5,
+                        fontWeight: 700,
+                        textTransform: "none",
+                        backgroundColor: LANDING_COLORS.primary,
+                        "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
+                      }}
                     >
                       {t("submit")}
                     </Button>
 
                     <Typography
                       variant="caption"
-                      color="text.secondary"
-                      sx={{ textAlign: "center" }}
+                      sx={{
+                        textAlign: "center",
+                        color: LANDING_COLORS.textSecondary,
+                      }}
                     >
                       {t("consentNote")}
                     </Typography>
