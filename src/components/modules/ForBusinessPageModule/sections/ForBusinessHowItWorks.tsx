@@ -2,16 +2,15 @@
 
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
 
 const STEP_NUMBERS = ["01", "02", "03"];
 
 type Step = { title: string; description: string };
 
-export default function LandingHowItWorks() {
-  const t = useTranslations("howItWorks");
+export default function ForBusinessHowItWorks() {
+  const t = useTranslations("forBusinessHowItWorks");
   const steps = t.raw("steps") as Step[];
 
   return (
@@ -52,10 +51,7 @@ export default function LandingHowItWorks() {
                 >
                   {STEP_NUMBERS[index]}
                 </Typography>
-                <Typography
-                  variant="h6"
-                  sx={{ color: LANDING_COLORS.textPrimary }}
-                >
+                <Typography variant="h6" sx={{ color: LANDING_COLORS.textPrimary }}>
                   {step.title}
                 </Typography>
                 <Typography
@@ -79,39 +75,6 @@ export default function LandingHowItWorks() {
             </Grid>
           ))}
         </Grid>
-
-        <Box sx={{ mt: { xs: 8, md: 10 } }}>
-          <Stack spacing={1.5} sx={{ mb: 4, maxWidth: 640 }}>
-            <Typography
-              variant="overline"
-              sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
-            >
-              {t("clientsKicker")}
-            </Typography>
-            <Typography variant="h3" sx={{ color: LANDING_COLORS.textPrimary }}>
-              {t("clientsTitle")}
-            </Typography>
-          </Stack>
-
-          <Box
-            sx={{
-              position: "relative",
-              width: "100%",
-              aspectRatio: "3840 / 2160",
-              borderRadius: 3,
-              overflow: "hidden",
-              border: `1px solid ${LANDING_COLORS.border}`,
-            }}
-          >
-            <Image
-              src="/landing/booking-flow.png"
-              alt={t("bookingFlowImageAlt")}
-              fill
-              sizes="(max-width: 1200px) 95vw, 1100px"
-              style={{ objectFit: "contain" }}
-            />
-          </Box>
-        </Box>
       </Container>
     </Box>
   );

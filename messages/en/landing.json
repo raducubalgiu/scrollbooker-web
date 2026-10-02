@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "ScrollBooker — Video-First Booking for Beauty",
-    "description": "ScrollBooker is the social network you book from: video feed, follows, likes, comments, video reviews — plus calendar, services, products, and staff, fully managed in one place."
+    "description": "ScrollBooker is the social network you book from: video feed, follows, likes, comments, video reviews — plus calendar, services, and staff, fully managed in one place."
   },
   "nav": {
     "login": "Log in",
@@ -54,11 +54,6 @@
       "Instant booking, straight from the video, without leaving the app"
     ]
   },
-  "forBusinessDivider": {
-    "kicker": "From here on, for businesses",
-    "title": "Have a salon, clinic, or any other business? Here's what you get.",
-    "subtitle": "Everything below — profile, management, calendar — is built for you, as a business owner or employee."
-  },
   "features": {
     "kicker": "Why ScrollBooker",
     "title": "Everything you need to grow, in a single app",
@@ -73,7 +68,7 @@
       },
       {
         "title": "Complete management",
-        "description": "Calendar, services, products, working hours, and staff — all in one panel, whether you work solo or with a team."
+        "description": "Calendar, services, working hours, and staff — all in one panel, whether you work solo or with a team."
       },
       {
         "title": "Video reviews = free advertising",
@@ -105,26 +100,10 @@
       }
     ]
   },
-  "howItWorks": {
-    "kicker": "How it works",
-    "title": "From sign-up to your first booking",
-    "clientsKicker": "And your clients",
-    "clientsTitle": "Book just as easily — straight from a video",
-    "bookingFlowImageAlt": "Booking flow straight from a video post: see a look in the feed, pick the service, pick the time, confirm the booking",
-    "steps": [
-      {
-        "title": "You sign up",
-        "description": "Fill in your business details — it takes a few minutes, straight from the browser, no app install needed."
-      },
-      {
-        "title": "You set up your profile",
-        "description": "Add a photo gallery, your services and products, your working hours, and, if it applies, your staff."
-      },
-      {
-        "title": "You get bookings",
-        "description": "Once approved, your profile becomes visible in the app — clients discover you and book directly."
-      }
-    ]
+  "bookingDemo": {
+    "kicker": "How your clients book",
+    "title": "Booking is just as easy — straight from a video",
+    "bookingFlowImageAlt": "Booking flow straight from a video post: see a look in the feed, pick the service, pick the time, confirm the booking"
   },
   "adminShowcase": {
     "kicker": "For your team",
@@ -139,10 +118,6 @@
       {
         "title": "Services & hours",
         "description": "Set your services, their duration, and your working hours."
-      },
-      {
-        "title": "Products",
-        "description": "Manage the products/packages you sell to clients."
       },
       {
         "title": "Staff",

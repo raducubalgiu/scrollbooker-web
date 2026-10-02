@@ -23,7 +23,9 @@ export default function LandingFooter() {
           alignItems={{ xs: "flex-start", sm: "center" }}
           justifyContent="space-between"
         >
-          <LandingLogo height={20} />
+          <Box component={Link} href={AppRoutes.home()} sx={{ lineHeight: 0 }}>
+            <LandingLogo height={20} />
+          </Box>
 
           <Stack direction="row" spacing={3} alignItems="center">
             {/* <Typography

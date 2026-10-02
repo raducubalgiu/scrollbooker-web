@@ -4,12 +4,10 @@ import LandingForceDarkChrome from "./components/LandingForceDarkChrome";
 import LandingAnnouncementBar from "./sections/LandingAnnouncementBar";
 import LandingNav from "./sections/LandingNav";
 import LandingHero from "./sections/LandingHero";
+import LandingForBusinessTeaser from "./sections/LandingForBusinessTeaser";
 import LandingSocialContrast from "./sections/LandingSocialContrast";
-import LandingForBusinessDivider from "./sections/LandingForBusinessDivider";
-import LandingFeatures from "./sections/LandingFeatures";
 import LandingProfileShowcase from "./sections/LandingProfileShowcase";
-import LandingHowItWorks from "./sections/LandingHowItWorks";
-import LandingAdminShowcase from "./sections/LandingAdminShowcase";
+import LandingBookingDemo from "./sections/LandingBookingDemo";
 import LandingGallery from "./sections/LandingGallery";
 import LandingMobileApps from "./sections/LandingMobileApps";
 import LandingCTA from "./sections/LandingCTA";
@@ -28,12 +26,10 @@ export default function LandingPageModule() {
       <LandingAnnouncementBar />
       <LandingNav />
       <LandingHero />
+      <LandingForBusinessTeaser />
       <LandingSocialContrast />
-      <LandingForBusinessDivider />
-      <LandingFeatures />
       <LandingProfileShowcase />
-      <LandingHowItWorks />
-      <LandingAdminShowcase />
+      <LandingBookingDemo />
       <LandingGallery />
       <LandingMobileApps />
       <LandingCTA />

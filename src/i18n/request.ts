@@ -35,6 +35,7 @@ export default getRequestConfig(async () => {
   // se schimbe față de un singur fișier mare.
   const [
     landing,
+    forBusiness,
     getStarted,
     registerBusiness,
     signin,
@@ -46,6 +47,7 @@ export default getRequestConfig(async () => {
     common,
   ] = await Promise.all([
     import(`../../messages/${locale}/landing.json`),
+    import(`../../messages/${locale}/forBusiness.json`),
     import(`../../messages/${locale}/getStarted.json`),
     import(`../../messages/${locale}/registerBusiness.json`),
     import(`../../messages/${locale}/signin.json`),
@@ -61,6 +63,7 @@ export default getRequestConfig(async () => {
     locale,
     messages: {
       ...landing.default,
+      ...forBusiness.default,
       ...getStarted.default,
       ...registerBusiness.default,
       ...signin.default,

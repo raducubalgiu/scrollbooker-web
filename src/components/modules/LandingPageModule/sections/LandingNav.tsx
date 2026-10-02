@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { AppRoutes } from "@/utils/routes";
 import { LANDING_COLORS } from "../landing.constants";
 import LandingLogo from "../components/LandingLogo";
-import LandingSymbol from "../components/LandingSymbol";
 import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
 
 export default function LandingNav() {
@@ -31,11 +30,12 @@ export default function LandingNav() {
           justifyContent="space-between"
           sx={{ py: { xs: 1.5, md: 2 } }}
         >
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box
+            component={Link}
+            href={AppRoutes.home()}
+            sx={{ lineHeight: 0 }}
+          >
             <LandingLogo height={26} />
-          </Box>
-          <Box sx={{ display: { xs: "block", sm: "none" } }}>
-            <LandingSymbol height={20} />
           </Box>
 
           <Stack direction="row" spacing={{ xs: 0.75, sm: 1.25 }} alignItems="center">
@@ -56,18 +56,14 @@ export default function LandingNav() {
               variant="contained"
               disableElevation
               sx={{
+                display: { xs: "none", sm: "inline-flex" },
                 backgroundColor: LANDING_COLORS.primary,
                 "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
-                px: { xs: 1.25, sm: 1.75 },
+                px: 1.75,
                 whiteSpace: "nowrap",
               }}
             >
-              <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
-                {t("registerFull")}
-              </Box>
-              <Box component="span" sx={{ display: { xs: "inline", sm: "none" } }}>
-                {t("registerShort")}
-              </Box>
+              {t("registerFull")}
             </Button>
           </Stack>
         </Stack>

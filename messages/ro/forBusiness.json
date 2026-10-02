@@ -1,0 +1,102 @@
+{
+  "forBusinessMetadata": {
+    "title": "ScrollBooker pentru afaceri — Calendar online și clienți noi, fără cost",
+    "description": "Calendar online sincronizat, administrare completă pentru echipa ta și recenzii video care îți aduc clienți noi, gratuit. Înregistrează-ți salonul, clinica sau cabinetul pe ScrollBooker."
+  },
+  "forBusinessTeaser": {
+    "kicker": "Ai un salon, o clinică sau alt business?",
+    "title": "Calendar online, administrare completă și clienți noi din feed — fără cost de pornire",
+    "items": [
+      "Calendar online, sincronizat în timp real",
+      "Administrare completă: servicii și angajați",
+      "Recenzii video care îți aduc clienți noi, gratuit"
+    ],
+    "button": "Vezi mai mult"
+  },
+  "forBusinessHero": {
+    "badge": "Lansăm în curând · București · locuri limitate",
+    "titlePrefix": "Platforma completă de rezervări,",
+    "titleHighlight": "pentru afacerea ta",
+    "titleSuffix": "",
+    "subtitle": "Postezi conținut video care îți aduce clienți noi și primești programări direct din el — iar pentru administrarea afacerii ai la dispoziție calendar online, servicii și angajați, toate într-un singur loc.",
+    "primaryButton": "Înregistrează-ți afacerea",
+    "secondaryButton": "Vezi cum funcționează",
+    "imageAlt": "Profil de business ScrollBooker, cu conținut video, recenzii și rezervare instant"
+  },
+  "forBusinessPainPoints": {
+    "kicker": "Problema pe care o rezolvăm",
+    "title": "Cât timp mai pierzi cu programări pe telefon și WhatsApp?",
+    "oldWayLabel": "Fără ScrollBooker",
+    "newWayLabel": "Cu ScrollBooker",
+    "oldWay": [
+      "Telefoane și mesaje pentru fiecare programare, inclusiv în afara programului",
+      "Suprapuneri și erori de agendă ținută manual",
+      "Zero prezență online — clienții noi nu te găsesc dacă nu te cunosc deja",
+      "Recenziile, dacă există, rămân ascunse pe alte platforme"
+    ],
+    "newWay": [
+      "Clienții rezervă singuri, online, 24/7 — fără niciun telefon",
+      "Calendar sincronizat automat, pe fiecare angajat în parte",
+      "Profil vizibil în feed-ul aplicației — descoperit organic de clienți noi",
+      "Recenziile video circulă ca reclamă gratuită, direct către clienți noi"
+    ]
+  },
+  "forBusinessCalendar": {
+    "kicker": "Calendar inteligent",
+    "title": "Agenda ta, mereu la zi, fără niciun efort",
+    "subtitle": "Fiecare angajat are propriul calendar, actualizat automat la fiecare rezervare — tu vezi mereu disponibilitatea reală, fără să ții evidența manual.",
+    "imageAlt": "Calendar inteligent ScrollBooker, cu programări sincronizate automat",
+    "items": [
+      {
+        "title": "Disponibilitate în timp real",
+        "description": "Clienții văd doar orele cu adevărat libere — niciun risc de suprapunere."
+      },
+      {
+        "title": "Un calendar per angajat",
+        "description": "Fiecare membru al echipei își administrează propriul program, sincronizat automat cu agenda generală a afacerii."
+      },
+      {
+        "title": "Actualizare automată",
+        "description": "Orice rezervare nouă, anulare sau modificare se reflectă instant, fără refresh sau muncă manuală."
+      }
+    ]
+  },
+  "forBusinessDiscovery": {
+    "kicker": "Nu ești obligat să postezi conținut video",
+    "title": "Clienții te pot găsi și altfel, direct din aplicație",
+    "subtitle": "Conținutul video te ajută să crești mai rapid, dar nu este obligatoriu — profilul tău rămâne complet funcțional și găsibil prin celelalte canale din aplicație.",
+    "imageAlt": "Ecranul de căutare ScrollBooker, cu hartă și filtre pentru găsirea afacerilor",
+    "channels": [
+      {
+        "title": "Căutare pe hartă & filtre",
+        "description": "Clienții caută direct pe hartă și filtrează după serviciu, locație sau program — te găsesc activ, chiar fără să te urmărească deja."
+      },
+      {
+        "title": "Profilul afacerii",
+        "description": "Rămâne complet, cu servicii, program și buton de rezervare, indiferent dacă postezi conținut video sau nu."
+      },
+      {
+        "title": "Recenziile clienților",
+        "description": "Scorul și recenziile apar direct pe profil și îți cresc vizibilitatea în căutare, independent de conținutul postat."
+      }
+    ]
+  },
+  "forBusinessHowItWorks": {
+    "kicker": "Cum funcționează",
+    "title": "De la înregistrare la prima programare",
+    "steps": [
+      {
+        "title": "Te înregistrezi",
+        "description": "Completezi datele afacerii tale — durează câteva minute, direct din browser, fără instalare de aplicație."
+      },
+      {
+        "title": "Îți configurezi profilul",
+        "description": "Adaugi galerie foto, serviciile oferite, programul de lucru și, dacă e cazul, angajații tăi."
+      },
+      {
+        "title": "Primești programări",
+        "description": "După aprobare, profilul tău devine vizibil în aplicație — clienții te descoperă și rezervă direct."
+      }
+    ]
+  }
+}

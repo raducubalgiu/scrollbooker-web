@@ -3,24 +3,18 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
-import ContentCutRoundedIcon from "@mui/icons-material/ContentCutRounded";
-import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
-import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
+import SyncRoundedIcon from "@mui/icons-material/SyncRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
 
-const ICONS = [
-  CalendarMonthRoundedIcon,
-  ContentCutRoundedIcon,
-  GroupsRoundedIcon,
-  QueryStatsRoundedIcon,
-];
+const ICONS = [CalendarMonthRoundedIcon, PersonRoundedIcon, SyncRoundedIcon];
 
-type AdminItem = { title: string; description: string };
+type CalendarItem = { title: string; description: string };
 
-export default function LandingAdminShowcase() {
-  const t = useTranslations("adminShowcase");
-  const items = t.raw("items") as AdminItem[];
+export default function ForBusinessCalendarShowcase() {
+  const t = useTranslations("forBusinessCalendar");
+  const items = t.raw("items") as CalendarItem[];
 
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 12 } }}>
@@ -39,11 +33,10 @@ export default function LandingAdminShowcase() {
               overflow: "hidden",
               border: `1px solid ${LANDING_COLORS.border}`,
               aspectRatio: "4 / 3",
-              order: { xs: 1, md: 0 },
             }}
           >
             <Image
-              src="/landing/full-administration.png"
+              src="/landing/calendar.png"
               alt={t("imageAlt")}
               fill
               sizes="(max-width: 900px) 90vw, 560px"
@@ -76,36 +69,36 @@ export default function LandingAdminShowcase() {
                 const Icon = ICONS[index]!;
 
                 return (
-                <Stack key={item.title} direction="row" spacing={2}>
-                  <Box
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 2,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: "rgba(255,255,255,0.06)",
-                      color: LANDING_COLORS.primary,
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Icon fontSize="small" />
-                  </Box>
-                  <Box>
-                    <Typography
-                      sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 600 }}
+                  <Stack key={item.title} direction="row" spacing={2}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(255,255,255,0.06)",
+                        color: LANDING_COLORS.primary,
+                        flexShrink: 0,
+                      }}
                     >
-                      {item.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: LANDING_COLORS.textSecondary }}
-                    >
-                      {item.description}
-                    </Typography>
-                  </Box>
-                </Stack>
+                      <Icon fontSize="small" />
+                    </Box>
+                    <Box>
+                      <Typography
+                        sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 600 }}
+                      >
+                        {item.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: LANDING_COLORS.textSecondary }}
+                      >
+                        {item.description}
+                      </Typography>
+                    </Box>
+                  </Stack>
                 );
               })}
             </Stack>

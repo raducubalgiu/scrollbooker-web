@@ -1,0 +1,102 @@
+{
+  "forBusinessMetadata": {
+    "title": "ScrollBooker for Business — Online Calendar & New Clients, at No Cost",
+    "description": "A synced online calendar, complete management for your team, and video reviews that bring you new clients for free. Register your salon, clinic, or practice on ScrollBooker."
+  },
+  "forBusinessTeaser": {
+    "kicker": "Have a salon, clinic, or other business?",
+    "title": "An online calendar, complete management, and new clients from the feed — at no starting cost",
+    "items": [
+      "An online calendar, synced in real time",
+      "Complete management: services and staff",
+      "Video reviews that bring you new clients, for free"
+    ],
+    "button": "Learn more"
+  },
+  "forBusinessHero": {
+    "badge": "Launching soon · Bucharest · limited spots",
+    "titlePrefix": "The complete booking platform,",
+    "titleHighlight": "for your business",
+    "titleSuffix": "",
+    "subtitle": "You post video content that brings in new clients and get bookings straight from it — and for running the business, you get an online calendar, services, and staff, all in one place.",
+    "primaryButton": "Register your business",
+    "secondaryButton": "See how it works",
+    "imageAlt": "A ScrollBooker business profile, with video content, reviews, and instant booking"
+  },
+  "forBusinessPainPoints": {
+    "kicker": "The problem we solve",
+    "title": "How much time are you still losing to phone and WhatsApp bookings?",
+    "oldWayLabel": "Without ScrollBooker",
+    "newWayLabel": "With ScrollBooker",
+    "oldWay": [
+      "Phone calls and messages for every booking, even outside working hours",
+      "Overlaps and mistakes in a manually kept schedule",
+      "Zero online presence — new clients can't find you unless they already know you",
+      "Reviews, if they exist, stay hidden on other platforms"
+    ],
+    "newWay": [
+      "Clients book themselves, online, 24/7 — no phone calls needed",
+      "A calendar automatically synced, for each staff member",
+      "A profile visible in the app's feed — discovered organically by new clients",
+      "Video reviews circulate as free advertising, straight to new clients"
+    ]
+  },
+  "forBusinessCalendar": {
+    "kicker": "Smart calendar",
+    "title": "Your schedule, always up to date, with zero effort",
+    "subtitle": "Each staff member has their own calendar, automatically updated with every booking — you always see real availability, with no manual tracking.",
+    "imageAlt": "ScrollBooker smart calendar, with automatically synced bookings",
+    "items": [
+      {
+        "title": "Real-time availability",
+        "description": "Clients only see the slots that are genuinely free — no risk of overlap."
+      },
+      {
+        "title": "One calendar per staff member",
+        "description": "Each team member manages their own schedule, automatically synced with the business's overall calendar."
+      },
+      {
+        "title": "Automatic updates",
+        "description": "Any new booking, cancellation, or change is reflected instantly, with no refresh or manual work."
+      }
+    ]
+  },
+  "forBusinessDiscovery": {
+    "kicker": "You don't have to post video content",
+    "title": "Clients can find you other ways too, right in the app",
+    "subtitle": "Video content helps you grow faster, but it isn't required — your profile stays fully functional and discoverable through the app's other channels.",
+    "imageAlt": "The ScrollBooker search screen, with a map and filters for finding businesses",
+    "channels": [
+      {
+        "title": "Map search & filters",
+        "description": "Clients search directly on the map and filter by service, location, or hours — they find you actively, even before they follow you."
+      },
+      {
+        "title": "Your business profile",
+        "description": "Stays complete, with services, hours, and a booking button, whether you post video content or not."
+      },
+      {
+        "title": "Client reviews",
+        "description": "Your score and reviews show up right on your profile and boost your visibility in search, independent of any content you post."
+      }
+    ]
+  },
+  "forBusinessHowItWorks": {
+    "kicker": "How it works",
+    "title": "From sign-up to your first booking",
+    "steps": [
+      {
+        "title": "You sign up",
+        "description": "Fill in your business details — it takes a few minutes, straight from the browser, no app install needed."
+      },
+      {
+        "title": "You set up your profile",
+        "description": "Add a photo gallery, your services, your working hours, and, if it applies, your staff."
+      },
+      {
+        "title": "You get bookings",
+        "description": "Once approved, your profile becomes visible in the app — clients discover you and book directly."
+      }
+    ]
+  }
+}

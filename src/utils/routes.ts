@@ -75,6 +75,7 @@ export const AppRoutes = {
 
   // Marketing
   partners: () => "/partners",
+  forBusiness: () => "/for-business",
 
   // My Business
   myBusiness: () => "/admin/my-business",

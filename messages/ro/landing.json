@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "ScrollBooker — Video-First Booking pentru Beauty",
-    "description": "ScrollBooker e rețeaua socială din care se rezervă: feed video, follow, like, comentarii, recenzii video — plus calendar, servicii, produse și angajați administrate complet, într-un singur loc."
+    "description": "ScrollBooker e rețeaua socială din care se rezervă: feed video, follow, like, comentarii, recenzii video — plus calendar, servicii și angajați administrate complet, într-un singur loc."
   },
   "nav": {
     "login": "Autentificare",
@@ -54,11 +54,6 @@
       "Rezervare instant, direct din videoclip, fără să ieși din aplicație"
     ]
   },
-  "forBusinessDivider": {
-    "kicker": "De aici încolo, pentru afaceri",
-    "title": "Ai un salon, o clinică sau orice alt business? Iată ce primești.",
-    "subtitle": "Tot ce vezi mai jos — profil, administrare, calendar — e construit pentru tine, ca proprietar sau angajat al unei afaceri."
-  },
   "features": {
     "kicker": "De ce ScrollBooker",
     "title": "Tot ce îți trebuie ca să crești, într-o singură aplicație",
@@ -73,7 +68,7 @@
       },
       {
         "title": "Administrare completă",
-        "description": "Calendar, servicii, produse, program de lucru și angajați — toate într-un singur panou, indiferent dacă lucrezi singur sau cu o echipă."
+        "description": "Calendar, servicii, program de lucru și angajați — toate într-un singur panou, indiferent dacă lucrezi singur sau cu o echipă."
       },
       {
         "title": "Recenzii video = reclamă gratuită",
@@ -105,26 +100,10 @@
       }
     ]
   },
-  "howItWorks": {
-    "kicker": "Cum funcționează",
-    "title": "De la înregistrare la prima programare",
-    "clientsKicker": "Iar clienții tăi",
-    "clientsTitle": "Rezervă la fel de simplu — direct dintr-un videoclip",
-    "bookingFlowImageAlt": "Flux de rezervare direct dintr-o postare video: vezi un look în feed, alegi serviciul, alegi ora, confirmi rezervarea",
-    "steps": [
-      {
-        "title": "Te înregistrezi",
-        "description": "Completezi datele afacerii tale — durează câteva minute, direct din browser, fără instalare de aplicație."
-      },
-      {
-        "title": "Îți configurezi profilul",
-        "description": "Adaugi galerie foto, serviciile și produsele oferite, programul de lucru și, dacă e cazul, angajații tăi."
-      },
-      {
-        "title": "Primești programări",
-        "description": "După aprobare, profilul tău devine vizibil în aplicație — clienții te descoperă și rezervă direct."
-      }
-    ]
+  "bookingDemo": {
+    "kicker": "Cum rezervă clienții tăi",
+    "title": "Rezervă la fel de simplu — direct dintr-un videoclip",
+    "bookingFlowImageAlt": "Flux de rezervare direct dintr-o postare video: vezi un look în feed, alegi serviciul, alegi ora, confirmi rezervarea"
   },
   "adminShowcase": {
     "kicker": "Pentru echipa ta",
@@ -139,10 +118,6 @@
       {
         "title": "Servicii & program",
         "description": "Definești serviciile oferite, durata și orele de funcționare."
-      },
-      {
-        "title": "Produse",
-        "description": "Administrezi produsele/pachetele pe care le vinzi clienților."
       },
       {
         "title": "Angajați",
