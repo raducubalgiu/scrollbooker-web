@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import Image from "next/image";
-import { LANDING_COLORS } from "../landing.constants";
+import { LANDING_COLORS_DARK } from "../landing.constants";
 
 type PhoneMockupProps = {
   src: string;
@@ -59,7 +59,7 @@ export default function PhoneMockup({
           height: 22,
           borderRadius: "20px",
           backgroundColor: "#0d0d0d",
-          border: `1px solid ${LANDING_COLORS.border}`,
+          border: `1px solid ${LANDING_COLORS_DARK.border}`,
         }}
       />
     </Box>

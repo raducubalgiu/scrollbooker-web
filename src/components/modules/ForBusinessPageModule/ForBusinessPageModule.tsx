@@ -1,6 +1,8 @@
+"use client";
+
 import { Box } from "@mui/material";
-import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
-import LandingSyncChromeColor from "@/components/modules/LandingPageModule/components/LandingSyncChromeColor";
+import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
+import { AppRoutes } from "@/utils/routes";
 import LandingNav from "@/components/modules/LandingPageModule/sections/LandingNav";
 import LandingFeatures from "@/components/modules/LandingPageModule/sections/LandingFeatures";
 import LandingProfileShowcase from "@/components/modules/LandingPageModule/sections/LandingProfileShowcase";
@@ -15,6 +17,8 @@ import ForBusinessDiscoveryChannels from "./sections/ForBusinessDiscoveryChannel
 import ForBusinessHowItWorks from "./sections/ForBusinessHowItWorks";
 
 export default function ForBusinessPageModule() {
+  const LANDING_COLORS = useLandingColors();
+
   return (
     <Box
       sx={{
@@ -23,8 +27,7 @@ export default function ForBusinessPageModule() {
         overflowX: "hidden",
       }}
     >
-      <LandingSyncChromeColor />
-      <LandingNav />
+      <LandingNav registerHref={AppRoutes.partners()} />
       <ForBusinessHero />
       <ForBusinessPainPoints />
       <LandingAdminShowcase />
@@ -34,8 +37,8 @@ export default function ForBusinessPageModule() {
       <ForBusinessDiscoveryChannels />
       <ForBusinessHowItWorks />
       <LandingGallery />
-      <LandingCTA />
-      <LandingFooter />
+      <LandingCTA href={AppRoutes.partners()} />
+      <LandingFooter registerHref={AppRoutes.partners()} />
     </Box>
   );
 }

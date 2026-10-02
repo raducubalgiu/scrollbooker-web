@@ -6,7 +6,12 @@
   "nav": {
     "login": "Log in",
     "registerFull": "Register your business",
-    "registerShort": "Register"
+    "registerShort": "Register",
+    "forBusiness": "Learn more"
+  },
+  "themeToggle": {
+    "switchToDark": "View in dark mode",
+    "switchToLight": "View in light mode"
   },
   "announcementBar": {
     "message": "We're launching ScrollBooker in Bucharest — the first salons to sign up get priority access, before the market fills up.",
@@ -21,7 +26,7 @@
     "ctaButton": "Notify me at launch",
     "imageAlt": "The ScrollBooker feed — video discovery, with likes, comments, and an instant booking button",
     "forBusinessPrefix": "Have a salon, clinic, or other business?",
-    "forBusinessLink": "Register your business"
+    "forBusinessLink": "Learn more"
   },
   "earlyAdopters": {
     "modalTitle": "Be the first to know",
@@ -151,10 +156,12 @@
   "cta": {
     "title": "The first businesses to sign up get in front of clients first",
     "subtitle": "Set up your profile now and be visible from day one of launch — signing up takes a few minutes and costs nothing.",
-    "button": "Register your business"
+    "button": "Register your business",
+    "buttonForBusiness": "Learn more"
   },
   "footer": {
     "login": "Log in",
-    "registerBusiness": "Register your business"
+    "registerBusiness": "Register your business",
+    "forBusiness": "Learn more"
   }
 }

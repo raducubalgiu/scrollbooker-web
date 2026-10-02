@@ -7,7 +7,7 @@ import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
 import ReviewsRoundedIcon from "@mui/icons-material/ReviewsRounded";
 import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
 const ICONS = [
   PeopleAltRoundedIcon,
@@ -20,6 +20,7 @@ type ProfileItem = { title: string; description: string };
 
 export default function LandingProfileShowcase() {
   const t = useTranslations("profileShowcase");
+  const LANDING_COLORS = useLandingColors();
   const items = t.raw("items") as ProfileItem[];
 
   return (

@@ -7,7 +7,7 @@ import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
+import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
 
 const ICONS = [TravelExploreRoundedIcon, BadgeRoundedIcon, StarRoundedIcon];
 
@@ -15,6 +15,7 @@ type ChannelItem = { title: string; description: string };
 
 export default function ForBusinessDiscoveryChannels() {
   const t = useTranslations("forBusinessDiscovery");
+  const LANDING_COLORS = useLandingColors();
   const channels = t.raw("channels") as ChannelItem[];
 
   return (

@@ -4,7 +4,7 @@ import { alpha, Box, Chip, Container, Stack, Typography } from "@mui/material";
 import AppleIcon from "@mui/icons-material/Apple";
 import AndroidRoundedIcon from "@mui/icons-material/AndroidRounded";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
 const PLATFORMS = [
   {
@@ -21,6 +21,7 @@ const PLATFORMS = [
 
 export default function LandingMobileApps() {
   const t = useTranslations("mobileApps");
+  const LANDING_COLORS = useLandingColors();
 
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 12 }, position: "relative", overflow: "hidden" }}>

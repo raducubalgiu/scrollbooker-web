@@ -4,12 +4,20 @@ import { alpha, Box, Button, Container, Stack } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { AppRoutes } from "@/utils/routes";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 import LandingLogo from "../components/LandingLogo";
 import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
 
-export default function LandingNav() {
+type LandingNavProps = {
+  // Pe "/" trimitem orice intenție de business către pagina de prezentare
+  // (/for-business) înainte de formularul de lead — pe /for-business
+  // însuși, unde contextul e deja dat, trimitem direct către /partners.
+  registerHref?: string;
+};
+
+export default function LandingNav({ registerHref }: LandingNavProps) {
   const t = useTranslations("nav");
+  const LANDING_COLORS = useLandingColors();
 
   return (
     <Box
@@ -52,7 +60,7 @@ export default function LandingNav() {
             </Button> */}
             <Button
               component={Link}
-              href={AppRoutes.partners()}
+              href={registerHref ?? AppRoutes.forBusiness()}
               variant="contained"
               disableElevation
               sx={{
@@ -63,7 +71,7 @@ export default function LandingNav() {
                 whiteSpace: "nowrap",
               }}
             >
-              {t("registerFull")}
+              {registerHref ? t("registerFull") : t("forBusiness")}
             </Button>
           </Stack>
         </Stack>

@@ -4,7 +4,7 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
 const IMAGE_SOURCES = [
   "https://images.unsplash.com/photo-1641318175316-795cd2db99f8?fm=jpg&q=80&w=900&auto=format&fit=crop",
@@ -19,6 +19,7 @@ type GalleryItem = { label: string; alt: string };
 
 export default function LandingGallery() {
   const t = useTranslations("gallery");
+  const LANDING_COLORS = useLandingColors();
   const items = t.raw("items") as GalleryItem[];
 
   return (

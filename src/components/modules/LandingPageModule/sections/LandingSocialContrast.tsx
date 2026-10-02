@@ -5,10 +5,11 @@ import Grid from "@mui/material/Grid2";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
 export default function LandingSocialContrast() {
   const t = useTranslations("socialContrast");
+  const LANDING_COLORS = useLandingColors();
   const oldWay = t.raw("oldWay") as string[];
   const newWay = t.raw("newWay") as string[];
 

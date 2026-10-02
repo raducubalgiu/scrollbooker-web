@@ -3,7 +3,7 @@
 import { alpha, Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
+import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
 
 const STEP_NUMBERS = ["01", "02", "03"];
 
@@ -11,6 +11,7 @@ type Step = { title: string; description: string };
 
 export default function ForBusinessHowItWorks() {
   const t = useTranslations("forBusinessHowItWorks");
+  const LANDING_COLORS = useLandingColors();
   const steps = t.raw("steps") as Step[];
 
   return (

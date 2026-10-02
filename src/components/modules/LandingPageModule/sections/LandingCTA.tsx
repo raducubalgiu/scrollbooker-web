@@ -5,10 +5,15 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { AppRoutes } from "@/utils/routes";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
-export default function LandingCTA() {
+type LandingCTAProps = {
+  href?: string;
+};
+
+export default function LandingCTA({ href }: LandingCTAProps) {
   const t = useTranslations("cta");
+  const LANDING_COLORS = useLandingColors();
 
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 10 } }}>
@@ -40,7 +45,7 @@ export default function LandingCTA() {
             </Typography>
             <Button
               component={Link}
-              href={AppRoutes.partners()}
+              href={href ?? AppRoutes.forBusiness()}
               variant="contained"
               size="large"
               disableElevation
@@ -54,7 +59,7 @@ export default function LandingCTA() {
                 "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
               }}
             >
-              {t("button")}
+              {href ? t("button") : t("buttonForBusiness")}
             </Button>
           </Stack>
         </Box>

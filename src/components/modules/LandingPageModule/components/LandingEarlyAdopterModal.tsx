@@ -18,8 +18,8 @@ import { toast } from "react-toastify";
 import Input from "@/components/core/Input/Input";
 import { emailField, required } from "@/utils/validation-rules";
 import { useCreateEarlyAdopterMutation } from "@/controllers/earlyAdopters/earlyAdopters.controller";
-import { LANDING_COLORS } from "../landing.constants";
-import { lightTheme } from "../../../../../theme/theme";
+import { useLandingTheme } from "../LandingThemeContext";
+import { lightTheme, darkTheme } from "../../../../../theme/theme";
 
 type EarlyAdopterForm = {
   firstName: string;
@@ -38,6 +38,7 @@ export default function LandingEarlyAdopterModal({
   onClose,
 }: LandingEarlyAdopterModalProps) {
   const t = useTranslations("earlyAdopters");
+  const { mode, colors: LANDING_COLORS } = useLandingTheme();
   const [submitted, setSubmitted] = useState(false);
   const isRequired = required();
   const isEmail = emailField();
@@ -68,7 +69,7 @@ export default function LandingEarlyAdopterModal({
   };
 
   return (
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={mode === "dark" ? darkTheme : lightTheme}>
       <Dialog
         open={open}
         onClose={onClose}

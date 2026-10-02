@@ -6,7 +6,7 @@ import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import SyncRoundedIcon from "@mui/icons-material/SyncRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
+import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
 
 const ICONS = [CalendarMonthRoundedIcon, PersonRoundedIcon, SyncRoundedIcon];
 
@@ -14,6 +14,7 @@ type CalendarItem = { title: string; description: string };
 
 export default function ForBusinessCalendarShowcase() {
   const t = useTranslations("forBusinessCalendar");
+  const LANDING_COLORS = useLandingColors();
   const items = t.raw("items") as CalendarItem[];
 
   return (

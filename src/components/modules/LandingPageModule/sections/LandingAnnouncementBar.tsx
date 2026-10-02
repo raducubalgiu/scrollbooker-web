@@ -5,15 +5,16 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { AppRoutes } from "@/utils/routes";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
 export default function LandingAnnouncementBar() {
   const t = useTranslations("announcementBar");
+  const LANDING_COLORS = useLandingColors();
 
   return (
     <Box
       component={Link}
-      href={AppRoutes.partners()}
+      href={AppRoutes.forBusiness()}
       sx={{
         display: "block",
         textDecoration: "none",

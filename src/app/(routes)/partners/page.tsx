@@ -20,11 +20,11 @@ import Input from "@/components/core/Input/Input";
 import { emailField, phoneField, required } from "@/utils/validation-rules";
 import { AppRoutes } from "@/utils/routes";
 import LandingLogo from "@/components/modules/LandingPageModule/components/LandingLogo";
-import LandingSyncChromeColor from "@/components/modules/LandingPageModule/components/LandingSyncChromeColor";
-import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
+import LandingThemeToggle from "@/components/modules/LandingPageModule/components/LandingThemeToggle";
+import { useLandingTheme } from "@/components/modules/LandingPageModule/LandingThemeContext";
 import { useSubmitBusinessLeadMutation } from "@/controllers/leads/leads.controller";
 import { BusinessLeadCreate } from "@/ts/models/leads/BusinessLead";
-import { lightTheme } from "../../../../theme/theme";
+import { lightTheme, darkTheme } from "../../../../theme/theme";
 
 type PartnersForm = {
   fullname: string;
@@ -37,6 +37,7 @@ type PartnersForm = {
 
 export default function PartnersPage() {
   const t = useTranslations("partners");
+  const { mode, colors: LANDING_COLORS } = useLandingTheme();
   const [submitted, setSubmitted] = useState(false);
 
   const methods = useForm<PartnersForm>({
@@ -76,34 +77,40 @@ export default function PartnersPage() {
         backgroundColor: LANDING_COLORS.background,
       }}
     >
-      <LandingSyncChromeColor />
-
       <Container maxWidth="sm">
         <Stack
-          component={Link}
-          href={AppRoutes.home()}
           direction="row"
-          spacing={1}
           alignItems="center"
-          sx={{
-            color: LANDING_COLORS.textSecondary,
-            textDecoration: "none",
-            mb: 5,
-            width: "fit-content",
-            "&:hover": { color: LANDING_COLORS.textPrimary },
-          }}
+          justifyContent="space-between"
+          sx={{ mb: 5 }}
         >
-          <ArrowBackRoundedIcon fontSize="small" />
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-            {t("back")}
-          </Typography>
+          <Stack
+            component={Link}
+            href={AppRoutes.home()}
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{
+              color: LANDING_COLORS.textSecondary,
+              textDecoration: "none",
+              width: "fit-content",
+              "&:hover": { color: LANDING_COLORS.textPrimary },
+            }}
+          >
+            <ArrowBackRoundedIcon fontSize="small" />
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              {t("back")}
+            </Typography>
+          </Stack>
+
+          <LandingThemeToggle />
         </Stack>
 
         <Box sx={{ mb: 4, display: "flex", justifyContent: "center" }}>
           <LandingLogo height={22} />
         </Box>
 
-        <ThemeProvider theme={lightTheme}>
+        <ThemeProvider theme={mode === "dark" ? darkTheme : lightTheme}>
           <Box
             sx={{
               backgroundColor: LANDING_COLORS.surface,

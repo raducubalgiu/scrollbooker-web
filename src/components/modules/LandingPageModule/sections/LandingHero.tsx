@@ -4,19 +4,25 @@ import { useState } from "react";
 import { alpha, Box, Button, Container, Stack, Typography, keyframes } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { LANDING_COLORS_LIGHT } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 import PhoneMockup from "../components/PhoneMockup";
 import LandingEarlyAdopterModal from "../components/LandingEarlyAdopterModal";
+import LandingThemeToggle from "../components/LandingThemeToggle";
 import { AppRoutes } from "@/utils/routes";
 
+// `primary` e identic în LANDING_COLORS_LIGHT/DARK (culoare de brand, nu
+// urmează toggle-ul) — sigur de referențiat static într-un keyframes de
+// modul, care nu poate citi un hook.
 const pulse = keyframes`
-  0% { box-shadow: 0 0 0 0 ${LANDING_COLORS.primary}66; }
-  70% { box-shadow: 0 0 0 12px ${LANDING_COLORS.primary}00; }
-  100% { box-shadow: 0 0 0 0 ${LANDING_COLORS.primary}00; }
+  0% { box-shadow: 0 0 0 0 ${LANDING_COLORS_LIGHT.primary}66; }
+  70% { box-shadow: 0 0 0 12px ${LANDING_COLORS_LIGHT.primary}00; }
+  100% { box-shadow: 0 0 0 0 ${LANDING_COLORS_LIGHT.primary}00; }
 `;
 
 export default function LandingHero() {
   const t = useTranslations("hero");
+  const LANDING_COLORS = useLandingColors();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -131,6 +137,10 @@ export default function LandingHero() {
               </Button>
             </Stack>
 
+            <Box sx={{ mt: 2 }}>
+              <LandingThemeToggle />
+            </Box>
+
             <Typography
               variant="body2"
               sx={{ color: LANDING_COLORS.textSecondary, mt: 3 }}
@@ -138,7 +148,7 @@ export default function LandingHero() {
               {t("forBusinessPrefix")}{" "}
               <Box
                 component={Link}
-                href={AppRoutes.partners()}
+                href={AppRoutes.forBusiness()}
                 sx={{
                   color: LANDING_COLORS.primary,
                   fontWeight: 600,

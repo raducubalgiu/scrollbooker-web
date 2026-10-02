@@ -6,7 +6,12 @@
   "nav": {
     "login": "Autentificare",
     "registerFull": "Înregistrează-ți afacerea",
-    "registerShort": "Înregistrare"
+    "registerShort": "Înregistrare",
+    "forBusiness": "Vezi mai mult"
+  },
+  "themeToggle": {
+    "switchToDark": "Vezi în dark mode",
+    "switchToLight": "Vezi în light mode"
   },
   "announcementBar": {
     "message": "Lansăm ScrollBooker în București — primele saloane înscrise au acces prioritar.",
@@ -21,7 +26,7 @@
     "ctaButton": "Anunță-mă la lansare",
     "imageAlt": "Feed-ul ScrollBooker — descoperire video, cu like-uri, comentarii și buton de rezervare instant",
     "forBusinessPrefix": "Ai un salon, clinică sau alt business?",
-    "forBusinessLink": "Înregistrează-ți afacerea"
+    "forBusinessLink": "Vezi mai mult"
   },
   "earlyAdopters": {
     "modalTitle": "Fii primul care află",
@@ -160,10 +165,12 @@
   "cta": {
     "title": "Primele afaceri înscrise ajung primele în fața clienților",
     "subtitle": "Configurează-ți profilul acum și fii vizibil chiar din prima zi de lansare — înregistrarea durează câteva minute și nu costă nimic.",
-    "button": "Înregistrează-ți afacerea"
+    "button": "Înregistrează-ți afacerea",
+    "buttonForBusiness": "Vezi mai mult"
   },
   "footer": {
     "login": "Autentificare",
-    "registerBusiness": "Înregistrare business"
+    "registerBusiness": "Înregistrare business",
+    "forBusiness": "Vezi mai mult"
   }
 }

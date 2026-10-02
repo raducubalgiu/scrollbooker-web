@@ -7,7 +7,7 @@ import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import DashboardCustomizeRoundedIcon from "@mui/icons-material/DashboardCustomizeRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
 const ICONS = [
   GroupsRoundedIcon,
@@ -20,6 +20,7 @@ type FeatureItem = { title: string; description: string };
 
 export default function LandingFeatures() {
   const t = useTranslations("features");
+  const LANDING_COLORS = useLandingColors();
   const items = t.raw("items") as FeatureItem[];
 
   return (

@@ -1,19 +1,21 @@
+"use client";
+
 import { Box } from "@mui/material";
-import { LANDING_COLORS } from "./landing.constants";
-import LandingSyncChromeColor from "./components/LandingSyncChromeColor";
+import { useLandingColors } from "./LandingThemeContext";
 import LandingAnnouncementBar from "./sections/LandingAnnouncementBar";
 import LandingNav from "./sections/LandingNav";
 import LandingHero from "./sections/LandingHero";
-import LandingForBusinessTeaser from "./sections/LandingForBusinessTeaser";
 import LandingSocialContrast from "./sections/LandingSocialContrast";
-import LandingProfileShowcase from "./sections/LandingProfileShowcase";
 import LandingBookingDemo from "./sections/LandingBookingDemo";
+import LandingForBusinessTeaser from "./sections/LandingForBusinessTeaser";
 import LandingGallery from "./sections/LandingGallery";
 import LandingMobileApps from "./sections/LandingMobileApps";
 import LandingCTA from "./sections/LandingCTA";
 import LandingFooter from "./sections/LandingFooter";
 
 export default function LandingPageModule() {
+  const LANDING_COLORS = useLandingColors();
+
   return (
     <Box
       sx={{
@@ -22,16 +24,14 @@ export default function LandingPageModule() {
         overflowX: "hidden",
       }}
     >
-      <LandingSyncChromeColor />
       <LandingAnnouncementBar />
       <LandingNav />
       <LandingHero />
-      <LandingForBusinessTeaser />
       <LandingSocialContrast />
-      <LandingProfileShowcase />
       <LandingBookingDemo />
       <LandingGallery />
       <LandingMobileApps />
+      <LandingForBusinessTeaser />
       <LandingCTA />
       <LandingFooter />
     </Box>

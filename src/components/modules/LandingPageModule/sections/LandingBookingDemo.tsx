@@ -3,10 +3,11 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
 export default function LandingBookingDemo() {
   const t = useTranslations("bookingDemo");
+  const LANDING_COLORS = useLandingColors();
 
   return (
     <Box

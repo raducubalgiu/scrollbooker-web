@@ -7,7 +7,7 @@ import ContentCutRoundedIcon from "@mui/icons-material/ContentCutRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
 import { useTranslations } from "next-intl";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
 const ICONS = [
   CalendarMonthRoundedIcon,
@@ -20,6 +20,7 @@ type AdminItem = { title: string; description: string };
 
 export default function LandingAdminShowcase() {
   const t = useTranslations("adminShowcase");
+  const LANDING_COLORS = useLandingColors();
   const items = t.raw("items") as AdminItem[];
 
   return (

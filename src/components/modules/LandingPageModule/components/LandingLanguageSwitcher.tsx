@@ -5,11 +5,12 @@ import { Box, Typography } from "@mui/material";
 import { useLocale, useTranslations } from "next-intl";
 import { setUserLocale } from "@/i18n/locale";
 import { locales, type Locale } from "@/i18n/config";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 
 export default function LandingLanguageSwitcher() {
   const locale = useLocale();
   const t = useTranslations("languageSwitcher");
+  const LANDING_COLORS = useLandingColors();
   const [isPending, startTransition] = useTransition();
 
   const handleChange = (next: Locale) => {

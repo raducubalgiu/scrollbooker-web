@@ -4,12 +4,17 @@ import { alpha, Box, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { AppRoutes } from "@/utils/routes";
-import { LANDING_COLORS } from "../landing.constants";
+import { useLandingColors } from "../LandingThemeContext";
 import LandingLogo from "../components/LandingLogo";
 import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
 
-export default function LandingFooter() {
+type LandingFooterProps = {
+  registerHref?: string;
+};
+
+export default function LandingFooter({ registerHref }: LandingFooterProps) {
   const t = useTranslations("footer");
+  const LANDING_COLORS = useLandingColors();
 
   return (
     <Box
@@ -42,7 +47,7 @@ export default function LandingFooter() {
             </Typography> */}
             <Typography
               component={Link}
-              href={AppRoutes.partners()}
+              href={registerHref ?? AppRoutes.forBusiness()}
               variant="body2"
               sx={{
                 color: LANDING_COLORS.textSecondary,
@@ -50,7 +55,7 @@ export default function LandingFooter() {
                 "&:hover": { color: LANDING_COLORS.textPrimary },
               }}
             >
-              {t("registerBusiness")}
+              {registerHref ? t("registerBusiness") : t("forBusiness")}
             </Typography>
             <Typography
               component="a"

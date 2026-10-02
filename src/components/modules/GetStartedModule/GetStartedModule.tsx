@@ -43,7 +43,7 @@ export default async function GetStartedModule() {
         </Stack>
 
         <Box sx={{ mb: 5 }}>
-          <LandingLogo height={24} />
+          <LandingLogo height={24} color={LANDING_COLORS.textPrimary} />
         </Box>
 
         <Typography
