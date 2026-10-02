@@ -1,262 +1,162 @@
-import React, { useRef, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Box } from "@mui/material";
-import { PoolItem } from "./useExplorePlayerPool";
+import { Post } from "@/ts/models/social/Post";
 import { PostVideoPlayer } from "@/components/cutomized/Post/PostVideoPlayer";
 import {
   PostActionCallbacks,
   PostActionLoaders,
 } from "@/components/cutomized/Post/actions/postActionTypes";
 
+const PRELOAD_RADIUS = 1;
+const ACTIVE_RATIO_THRESHOLD = 0.6;
+const PROGRAMMATIC_SCROLL_GUARD_MS = 500;
+
 type ExploreVideoPoolProps = {
-  items: PoolItem[];
+  posts: Post[];
+  currentIndex: number;
   loaders: PostActionLoaders;
   callbacks: PostActionCallbacks;
-  slideOffset: number;
-  isAnimating: boolean;
-  onNext: () => void;
-  onPrev: () => void;
+  onIndexChange: (index: number) => void;
   onOpenLinkedProducts: () => void;
 };
 
-const ANIMATION_DURATION_MS = 280;
-const SWIPE_PERCENT_THRESHOLD = 0.2;
-const DRAG_CLICK_THRESHOLD = 5;
-const VELOCITY_THRESHOLD = 0.45;
-
 export function ExploreVideoPool({
-  items,
+  posts,
+  currentIndex,
   loaders,
   callbacks,
-  slideOffset,
-  isAnimating,
-  onNext,
-  onPrev,
+  onIndexChange,
   onOpenLinkedProducts,
 }: ExploreVideoPoolProps) {
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const dragStartY = useRef<number | undefined>(undefined);
-  const dragStartTimeRef = useRef<number>(0);
-  const isDragging = useRef(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const lastSettledIndexRef = useRef(currentIndex);
+  const isProgrammaticScrollRef = useRef(false);
+  const programmaticScrollTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
 
-  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const isAnimatingRef = useRef(isAnimating);
-  const onNextRef = useRef(onNext);
-  const onPrevRef = useRef(onPrev);
-
+  const onIndexChangeRef = useRef(onIndexChange);
   useEffect(() => {
-    isAnimatingRef.current = isAnimating;
-  }, [isAnimating]);
-  useEffect(() => {
-    onNextRef.current = onNext;
-  }, [onNext]);
-  useEffect(() => {
-    onPrevRef.current = onPrev;
-  }, [onPrev]);
+    onIndexChangeRef.current = onIndexChange;
+  }, [onIndexChange]);
 
+  const setItemRef = useCallback(
+    (index: number, el: HTMLDivElement | null) => {
+      if (el) itemRefs.current.set(index, el);
+      else itemRefs.current.delete(index);
+    },
+    []
+  );
+
+  // Browser-ul decide singur fizica swipe-ului (scroll-snap) — noi doar
+  // ascultăm ce index a devenit "principal" vizual, via IntersectionObserver.
+  // Recreat la fiecare schimbare a numărului de postări (pagination), ca să
+  // observe și elementele nou apărute.
   useEffect(() => {
-    const el = rootRef.current;
-    if (!el) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-    el.style.setProperty("--slide-offset", `${slideOffset * 100}%`);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isProgrammaticScrollRef.current) return;
 
-    if (isAnimating) {
-      el.style.setProperty("--drag-offset", "0px");
-      el.classList.add("is-animating");
-    } else {
-      el.classList.remove("is-animating");
+        let bestEntry: IntersectionObserverEntry | null = null;
+        for (const entry of entries) {
+          if (
+            !bestEntry ||
+            entry.intersectionRatio > bestEntry.intersectionRatio
+          ) {
+            bestEntry = entry;
+          }
+        }
+
+        if (!bestEntry || bestEntry.intersectionRatio < ACTIVE_RATIO_THRESHOLD) {
+          return;
+        }
+
+        const indexAttr = bestEntry.target.getAttribute("data-index");
+        const index = indexAttr ? Number(indexAttr) : NaN;
+
+        if (!Number.isNaN(index) && index !== lastSettledIndexRef.current) {
+          lastSettledIndexRef.current = index;
+          onIndexChangeRef.current(index);
+        }
+      },
+      { root: container, threshold: [0, ACTIVE_RATIO_THRESHOLD, 1] }
+    );
+
+    itemRefs.current.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [posts.length]);
+
+  // currentIndex schimbat din exterior (butoanele de pe desktop) — scroll
+  // programatic către el. Dacă schimbarea vine chiar din swipe-ul userului
+  // (IntersectionObserver-ul de mai sus a raportat-o deja), nu mai facem
+  // nimic — containerul e deja acolo.
+  useEffect(() => {
+    if (currentIndex === lastSettledIndexRef.current) return;
+
+    const target = itemRefs.current.get(currentIndex);
+    if (!target) return;
+
+    isProgrammaticScrollRef.current = true;
+    lastSettledIndexRef.current = currentIndex;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    if (programmaticScrollTimeoutRef.current) {
+      clearTimeout(programmaticScrollTimeoutRef.current);
     }
-  }, [slideOffset, isAnimating]);
+    programmaticScrollTimeoutRef.current = setTimeout(() => {
+      isProgrammaticScrollRef.current = false;
+    }, PROGRAMMATIC_SCROLL_GUARD_MS);
+  }, [currentIndex]);
 
   useEffect(() => {
-    const el = rootRef.current;
-    if (!el) return;
-
-    const playVideoInSlot = (slot: "prev" | "next") => {
-      const video = el.querySelector<HTMLVideoElement>(
-        `[data-slot="${slot}"] video`
-      );
-      video?.play().catch(() => {});
-    };
-
-    const resetDrag = () => {
-      // Curățăm orice timer activ anterior pentru a preveni scoaterea bruscă a clasei CSS
-      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-
-      dragStartY.current = undefined;
-      isDragging.current = false;
-
-      el.classList.add("is-animating");
-      el.style.setProperty("--drag-offset", "0px");
-
-      resetTimerRef.current = setTimeout(() => {
-        el.classList.remove("is-animating");
-      }, ANIMATION_DURATION_MS);
-    };
-
-    const commitDrag = (delta: number) => {
-      dragStartY.current = undefined;
-
-      if (!isDragging.current) {
-        resetDrag();
-        return;
-      }
-
-      const timeElapsed = performance.now() - dragStartTimeRef.current;
-      const velocity = Math.abs(delta) / (timeElapsed || 1);
-
-      const containerHeight = el.clientHeight || window.innerHeight;
-      const dragDistanceRatio = Math.abs(delta) / containerHeight;
-
-      if (
-        velocity <= VELOCITY_THRESHOLD &&
-        dragDistanceRatio < SWIPE_PERCENT_THRESHOLD
-      ) {
-        resetDrag();
-        return;
-      }
-
-      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-      el.classList.add("is-animating");
-      el.style.setProperty("--drag-offset", "0px");
-
-      if (delta > 0) {
-        playVideoInSlot("next");
-        onNextRef.current();
-      } else {
-        playVideoInSlot("prev");
-        onPrevRef.current();
-      }
-
-      isDragging.current = false;
-    };
-
-    const onTouchStart = (e: TouchEvent) => {
-      if (isAnimatingRef.current) return;
-
-      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-      el.classList.remove("is-animating");
-
-      const touchY = e.touches[0]?.clientY;
-      if (touchY === undefined) return;
-
-      dragStartY.current = touchY;
-      dragStartTimeRef.current = performance.now();
-      isDragging.current = false;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (dragStartY.current === undefined || isAnimatingRef.current) return;
-
-      const touchY = e.touches[0]?.clientY;
-      if (touchY === undefined) return;
-
-      // preventDefault pe fiecare mișcare din secvență, nu doar după ce
-      // trecem de threshold — altfel browserul are o fereastră (primele
-      // <5px) în care poate începe propriul scroll/bounce nativ, care apoi
-      // se luptă cu swipe-ul nostru custom (exact senzația de "agață").
-      if (e.cancelable) e.preventDefault();
-
-      const delta = dragStartY.current - touchY;
-
-      if (!isDragging.current && Math.abs(delta) > DRAG_CLICK_THRESHOLD) {
-        isDragging.current = true;
-      }
-
-      if (isDragging.current) {
-        el.style.setProperty("--drag-offset", `${-delta}px`);
-      }
-    };
-
-    const onTouchEnd = (e: TouchEvent) => {
-      if (dragStartY.current === undefined) return;
-
-      const touchY = e.changedTouches[0]?.clientY;
-      if (touchY === undefined) {
-        resetDrag();
-        return;
-      }
-
-      const delta = dragStartY.current - touchY;
-      commitDrag(delta);
-    };
-
-    const onMouseDown = (e: MouseEvent) => {
-      if (isAnimatingRef.current) return;
-
-      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-      el.classList.remove("is-animating");
-
-      dragStartY.current = e.clientY;
-      dragStartTimeRef.current = performance.now();
-      isDragging.current = false;
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (dragStartY.current === undefined || isAnimatingRef.current) return;
-
-      if (e.buttons === 0) {
-        resetDrag();
-        return;
-      }
-
-      const delta = dragStartY.current - e.clientY;
-
-      if (!isDragging.current && Math.abs(delta) > DRAG_CLICK_THRESHOLD) {
-        isDragging.current = true;
-      }
-
-      if (isDragging.current) {
-        el.style.setProperty("--drag-offset", `${-delta}px`);
-      }
-    };
-
-    const onMouseUp = (e: MouseEvent) => {
-      if (dragStartY.current === undefined) return;
-      commitDrag(dragStartY.current - e.clientY);
-    };
-
-    el.addEventListener("touchstart", onTouchStart, { passive: true });
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
-    el.addEventListener("touchend", onTouchEnd, { passive: true });
-    el.addEventListener("mousedown", onMouseDown);
-    el.addEventListener("mousemove", onMouseMove);
-    el.addEventListener("mouseup", onMouseUp);
-    el.addEventListener("mouseleave", resetDrag);
-
     return () => {
-      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-      el.removeEventListener("touchstart", onTouchStart);
-      el.removeEventListener("touchmove", onTouchMove);
-      el.removeEventListener("touchend", onTouchEnd);
-      el.removeEventListener("mousedown", onMouseDown);
-      el.removeEventListener("mousemove", onMouseMove);
-      el.removeEventListener("mouseup", onMouseUp);
-      el.removeEventListener("mouseleave", resetDrag);
+      if (programmaticScrollTimeoutRef.current) {
+        clearTimeout(programmaticScrollTimeoutRef.current);
+      }
     };
   }, []);
 
   return (
-    <Box ref={rootRef} sx={styles.root}>
-      {items.map((item) => {
-        const isCurrent = item.slot === "current";
+    <Box ref={containerRef} sx={styles.root}>
+      {posts.map((post, index) => {
+        const isActive = index === currentIndex;
+        const shouldLoad = Math.abs(index - currentIndex) <= PRELOAD_RADIUS;
+        const thumbnailUrl = post.media_files?.[0]?.thumbnail_url;
+
         return (
           <Box
-            key={item.post?.id ?? item.slot}
-            data-slot={item.slot}
-            sx={{ ...styles.playerLayer, zIndex: isCurrent ? 2 : 1 }}
+            key={post.id}
+            data-index={index}
+            ref={(el: HTMLDivElement | null) => setItemRef(index, el)}
+            sx={styles.item}
           >
-            <PostVideoPlayer
-              post={item.post ?? null}
-              loaders={loaders}
-              callbacks={callbacks}
-              src={item.src ?? ""}
-              isActive={item.isActive}
-              isLoading={loaders.isLoading && isCurrent}
-              preload={item.shouldPreload ? "auto" : "none"}
-              resetOnInactive={false}
-              onOpenLinkedProducts={onOpenLinkedProducts}
-            />
+            {shouldLoad ? (
+              <PostVideoPlayer
+                post={post}
+                loaders={loaders}
+                callbacks={callbacks}
+                src={post.media_files?.[0]?.url ?? ""}
+                isActive={isActive}
+                isLoading={loaders.isLoading && isActive}
+                preload="auto"
+                resetOnInactive={false}
+                onOpenLinkedProducts={onOpenLinkedProducts}
+              />
+            ) : (
+              <Box
+                sx={{
+                  ...styles.placeholder,
+                  backgroundImage: thumbnailUrl
+                    ? `url(${thumbnailUrl})`
+                    : undefined,
+                }}
+              />
+            )}
           </Box>
         );
       })}
@@ -269,38 +169,28 @@ const styles = {
     position: "relative",
     width: "100%",
     height: "100%",
-    overflow: "hidden",
-    userSelect: "none",
-    WebkitUserSelect: "none",
-    touchAction: "none",
-    overscrollBehavior: "none",
-    "--slide-offset": "0%",
-    "--drag-offset": "0px",
-
-    "& [data-slot='prev']": {
-      transform:
-        "translate3d(0, calc(-100% + var(--slide-offset) + var(--drag-offset)), 0)",
-    },
-    "& [data-slot='current']": {
-      transform:
-        "translate3d(0, calc(0% + var(--slide-offset) + var(--drag-offset)), 0)",
-    },
-    "& [data-slot='next']": {
-      transform:
-        "translate3d(0, calc(100% + var(--slide-offset) + var(--drag-offset)), 0)",
-    },
-
-    "&.is-animating [data-slot]": {
-      transition: `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.25, 1, 0.5, 1) !important`,
-    },
+    overflowY: "scroll",
+    overflowX: "hidden",
+    scrollSnapType: "y mandatory",
+    overscrollBehaviorY: "contain",
+    touchAction: "pan-y",
+    WebkitOverflowScrolling: "touch",
+    "&::-webkit-scrollbar": { display: "none" },
+    scrollbarWidth: "none",
   },
-  playerLayer: {
-    position: "absolute",
-    inset: 0,
+  item: {
+    position: "relative",
     width: "100%",
     height: "100%",
-    willChange: "transform",
-    backfaceVisibility: "hidden",
-    transformStyle: "flat",
+    flexShrink: 0,
+    scrollSnapAlign: "start",
+    scrollSnapStop: "always",
+  },
+  placeholder: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "black",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
   },
 } as const;

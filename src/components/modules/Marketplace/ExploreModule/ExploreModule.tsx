@@ -5,9 +5,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PostActions from "../../../cutomized/Post/actions/PostActions";
 import ExploreControls from "./ExploreControls";
 import ExploreDrawer from "./ExploreDrawer";
-import { useExplorePlayerPool } from "./useExplorePlayerPool";
 import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
-import { useVideoNeighborsPreload } from "./useVideoNeighborsPreload";
 import { ExploreVideoPool } from "./ExploreVideoPool";
 import ExploreHeaderMenu, { ExploreTabEnum } from "./ExploreHeaderMenu";
 import ExploreSidebar from "@/components/cutomized/Post/sidebar/ExploreSidebar";
@@ -75,17 +73,7 @@ export default function ExploreModule() {
     setCurrentIndex(0);
   }, []);
 
-  const {
-    prevPost,
-    currentPost,
-    nextPost,
-    poolItems,
-    slideOffset,
-    isAnimating,
-  } = useExplorePlayerPool({
-    posts,
-    currentIndex,
-  });
+  const currentPost = posts[currentIndex] ?? null;
 
   useExplorePaginationPrefetch({
     currentIndex,
@@ -95,11 +83,6 @@ export default function ExploreModule() {
     isFetchingNextPage,
     fetchNextPage,
     prefetchOffset: PREFETCH_OFFSET,
-  });
-
-  useVideoNeighborsPreload({
-    prevSrc: prevPost?.media_files?.[0]?.url ?? "",
-    nextSrc: nextPost?.media_files?.[0]?.url ?? "",
   });
 
   useEffect(() => {
@@ -117,6 +100,10 @@ export default function ExploreModule() {
 
   const goToPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  }, []);
+
+  const handleIndexChange = useCallback((index: number) => {
+    setCurrentIndex(index);
   }, []);
 
   const { user_actions, counters } = currentPost ?? {};
@@ -384,14 +371,12 @@ export default function ExploreModule() {
           <Box sx={styles.leftSection}>
             <Box sx={styles.videoContainer}>
               <ExploreVideoPool
-                items={poolItems}
+                posts={posts}
+                currentIndex={currentIndex}
                 loaders={loaders}
                 callbacks={callbacks}
-                slideOffset={slideOffset}
-                isAnimating={isAnimating}
+                onIndexChange={handleIndexChange}
                 onOpenLinkedProducts={() => setIsProductsOpen(true)}
-                onNext={goToNext}
-                onPrev={goToPrev}
               />
 
               <ExploreHeaderMenu
