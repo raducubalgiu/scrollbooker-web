@@ -124,7 +124,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
           postId={post.id}
           user={post.user}
           businessLocation={post?.business_location}
-          onNavigateToBooking={goBack}
+          onNavigateToBooking={() => goBack()}
           isVideoReview={post.is_video_review}
           onFollow={handleFollow}
           isTogglingFollow={isTogglingFollow}

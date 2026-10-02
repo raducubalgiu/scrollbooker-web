@@ -58,7 +58,7 @@ export const useVideoDetail = ({
 		key: ["delete-post", post.id],
 		url: `/api/social/post/${post.id}`,
 		method: "DELETE",
-		options: { onSuccess: goBack },
+		options: { onSuccess: () => goBack() },
 	});
 
 	const { mutate: follow, isPending: isFollowing } = useFollow();

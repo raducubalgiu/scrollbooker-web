@@ -15,7 +15,7 @@ import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import { UserProfile } from "@/ts/models/user/UserProfile";
-import { formatRating } from "@/utils/formatters";
+import { formatOpeningStatus, formatRating } from "@/utils/formatters";
 import { useRouter } from "next/navigation";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 import { LOG } from "@/utils/logger";
@@ -49,39 +49,10 @@ const ProfileUserInfo = ({
     opening_hours,
   } = profile || {};
 
-  const openingStatus = useMemo(() => {
-    if (!opening_hours) return null;
-
-    const daysMap: Record<string, string> = {
-      Monday: "Luni",
-      Tuesday: "Marți",
-      Wednesday: "Miercuri",
-      Thursday: "Joi",
-      Friday: "Vineri",
-      Saturday: "Sâmbătă",
-      Sunday: "Duminică",
-    };
-
-    const localizeDay = (dayEn: string | null) => {
-      if (!dayEn) return null;
-      return daysMap[dayEn] ?? dayEn;
-    };
-
-    if (opening_hours.open_now) {
-      if (opening_hours.closing_time) {
-        return `Închide la ${opening_hours.closing_time}`;
-      }
-      return `Deschis`;
-    }
-
-    const nextDay = localizeDay(opening_hours.next_open_day);
-    const nextTime = opening_hours.next_open_time;
-    if (nextDay && nextTime) {
-      return `Deschide ${nextDay.toLowerCase()} la ${nextTime}`;
-    }
-
-    return `Închis`;
-  }, [opening_hours]);
+  const openingStatus = useMemo(
+    () => formatOpeningStatus(opening_hours),
+    [opening_hours]
+  );
 
   const handleBookNow = () => {
     router.push(

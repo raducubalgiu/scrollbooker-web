@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import React from "react";
+import React, { useState } from "react";
 import Protected from "../Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingModule/BookingModule";
@@ -22,7 +22,12 @@ type ProductCardProps = {
   isSelected: boolean;
   showIcon: boolean;
   showDescription?: boolean;
-  onOpenDetail: () => void;
+  // Când e true, cardul e un "lead" către booking (profil/business profile)
+  // — click pe card doar expandează descrierea, nu navighează nicăieri;
+  // singura acțiune e butonul "Rezervă". Când e false (flow-ul de booking
+  // propriu-zis), click pe card deschide ProductDetailModal via onOpenDetail.
+  expandDescriptionOnClick?: boolean;
+  onOpenDetail?: () => void;
   onAdd: (item: SelectedBookingItem) => void;
   onNavigateToBooking: (product: Product) => void;
   sx?: SxProps<Theme>;
@@ -33,6 +38,7 @@ const ProductCard = ({
   isSelected,
   showIcon,
   showDescription = true,
+  expandDescriptionOnClick = false,
   onOpenDetail,
   onAdd,
   onNavigateToBooking,
@@ -40,6 +46,15 @@ const ProductCard = ({
 }: ProductCardProps) => {
   const { name, description, starting_offering, has_different_prices } =
     product;
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+
+  const handleCardClick = () => {
+    if (expandDescriptionOnClick) {
+      setIsDescriptionExpanded((prev) => !prev);
+      return;
+    }
+    onOpenDetail?.();
+  };
 
   const filtersText = ProductUtils.getFiltersSummary(product);
 
@@ -57,7 +72,7 @@ const ProductCard = ({
 
     const variants = product.variants || [];
     if (variants.length > 1) {
-      onOpenDetail();
+      onOpenDetail?.();
       return;
     }
 
@@ -92,7 +107,7 @@ const ProductCard = ({
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-      onClick={onOpenDetail}
+      onClick={handleCardClick}
     >
       <Stack
         flexDirection="row"
@@ -172,14 +187,23 @@ const ProductCard = ({
           variant="body2"
           color="text.secondary"
           mt={1}
-          sx={{
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            maxWidth: 200,
-          }}
+          sx={
+            expandDescriptionOnClick
+              ? {
+                  whiteSpace: "pre-line",
+                  overflow: "hidden",
+                  maxHeight: isDescriptionExpanded ? 1000 : 45,
+                  transition: "max-height 0.3s ease",
+                }
+              : {
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: 200,
+                }
+          }
         >
           {description}
         </Typography>

@@ -87,7 +87,7 @@ const BusinessServicesTab = ({
 								product={product}
 								isSelected={false}
 								showIcon={false}
-								onOpenDetail={() => handleNavigateToBooking(product)}
+								expandDescriptionOnClick
 								onAdd={() => {}}
 								onNavigateToBooking={() => handleNavigateToBooking(product)}
 							/>

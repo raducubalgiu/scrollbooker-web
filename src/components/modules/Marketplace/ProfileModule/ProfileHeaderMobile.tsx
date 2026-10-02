@@ -24,7 +24,7 @@ const ProfileHeaderMobile = ({
       justifyContent="space-between"
       sx={styles.container}
     >
-      <IconButton onClick={goBack} disabled={isOwnProfile}>
+      <IconButton onClick={() => goBack()} disabled={isOwnProfile}>
         <ArrowBackIcon
           sx={{
             fontSize: 27.5,

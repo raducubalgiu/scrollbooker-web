@@ -29,6 +29,9 @@ type BusinessPhotosTabProps = {
 };
 
 const overlayIconButtonSx = {
+  width: 38,
+  height: 38,
+  padding: 0,
   bgcolor: (theme: import("@mui/material").Theme) =>
     alpha(theme.palette.background.paper, 0.7),
   backdropFilter: "blur(6px)",
@@ -219,7 +222,7 @@ const BusinessPhotosTab = ({
             zIndex: 2,
           }}
         >
-          <IconButton onClick={goBack} sx={overlayIconButtonSx}>
+          <IconButton onClick={() => goBack()} sx={overlayIconButtonSx}>
             <ArrowBackIosNewRoundedIcon sx={{ fontSize: 18 }} />
           </IconButton>
           <IconButton onClick={onShare} sx={overlayIconButtonSx}>
