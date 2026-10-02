@@ -94,6 +94,15 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
 
   const isSeekingRef = useRef(false);
   const sliderProgressRef = useRef(0);
+  const isActiveRef = useRef(isActive);
+  const userPausedRef = useRef(false);
+  const resumeRetryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  useEffect(() => {
+    isActiveRef.current = isActive;
+  }, [isActive]);
 
   const hasValidSource = Boolean(src?.trim());
 
@@ -173,6 +182,11 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     }
   }, [hasError, hasValidSource, isActive]);
 
+  const tryPlayRef = useRef(tryPlay);
+  useEffect(() => {
+    tryPlayRef.current = tryPlay;
+  }, [tryPlay]);
+
   // ✅ ZERO re-renders în timpul redării — progresul merge direct în CSS
   const handleTimeUpdateNativ = useCallback(() => {
     const video = videoRef.current;
@@ -199,7 +213,32 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     if (!video) return;
 
     const onPlay = () => setIsPlaying(true);
-    const onPause = () => setIsPlaying(false);
+    // Un pause "extern" (nu din acțiunea userului) pe videoul activ —
+    // de ex. un pause() rămas în urma unei curse cu play() în timpul
+    // settle-ului de scroll-snap — nu ar trebui să blocheze redarea la
+    // nesfârșit, pentru că nimic altceva nu mai retrimite play() după
+    // asta dacă isActive nu se mai schimbă. Reîncercăm o singură dată.
+    const onPause = () => {
+      setIsPlaying(false);
+      if (resumeRetryTimeoutRef.current) {
+        clearTimeout(resumeRetryTimeoutRef.current);
+        resumeRetryTimeoutRef.current = null;
+      }
+      if (!isActiveRef.current || userPausedRef.current) return;
+      resumeRetryTimeoutRef.current = setTimeout(() => {
+        resumeRetryTimeoutRef.current = null;
+        const current = videoRef.current;
+        if (
+          !current ||
+          current.ended ||
+          !isActiveRef.current ||
+          userPausedRef.current
+        ) {
+          return;
+        }
+        void tryPlayRef.current();
+      }, 200);
+    };
     const onWaiting = () => {
       if (!isSeekingRef.current) setIsBuffering(true); // ✅ Ref în loc de state
     };
@@ -221,6 +260,10 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     video.addEventListener("timeupdate", handleTimeUpdateNativ);
 
     return () => {
+      if (resumeRetryTimeoutRef.current) {
+        clearTimeout(resumeRetryTimeoutRef.current);
+        resumeRetryTimeoutRef.current = null;
+      }
       video.removeEventListener("play", onPlay);
       video.removeEventListener("pause", onPause);
       video.removeEventListener("waiting", onWaiting);
@@ -347,6 +390,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     if (!video || !hasValidSource || hasError) return;
 
     if (isActive) {
+      userPausedRef.current = false;
       void tryPlay();
       return;
     }
@@ -442,6 +486,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     if (!video || !isReady || hasError || !hasValidSource) return;
 
     if (isEnded || video.ended) {
+      userPausedRef.current = false;
       video.currentTime = 0;
       setIsEnded(false);
       setIsBuffering(true);
@@ -454,6 +499,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     }
 
     if (video.paused) {
+      userPausedRef.current = false;
       setIsBuffering(true);
       try {
         await video.play();
@@ -462,6 +508,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         return;
       }
     } else {
+      userPausedRef.current = true;
       video.pause();
     }
   }, [hasError, hasValidSource, isEnded, isReady]);
