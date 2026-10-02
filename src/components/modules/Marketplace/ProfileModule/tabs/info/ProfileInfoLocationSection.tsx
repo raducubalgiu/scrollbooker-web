@@ -3,17 +3,17 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
-import { LocationInfo } from "@/ts/models/user/UserProfileAbout";
+import { BusinessLocation } from "@/ts/models/booking/business/BusinessProfile";
 import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
 
 type ProfileInfoLocationSectionProps = {
-  location: LocationInfo;
+  location: BusinessLocation;
 };
 
 const ProfileInfoLocationSection = ({
   location,
 }: ProfileInfoLocationSectionProps) => {
-  const mapsUrl = getGoogleMapsDirectionsUrl(location?.coordinates);
+  const mapsUrl = getGoogleMapsDirectionsUrl(location.coordinates);
 
   return (
     <Box>
@@ -29,8 +29,8 @@ const ProfileInfoLocationSection = ({
         <Paper elevation={0} sx={styles.paper}>
           <Box sx={styles.imageContainer}>
             <Image
-              src={location?.map_url ?? ""}
-              alt={`Harta locației din ${location?.formatted_address}`}
+              src={location.map_url ?? ""}
+              alt={`Harta locației din ${location.formatted_address}`}
               fill
               style={{ objectFit: "cover" }}
               priority
@@ -39,7 +39,7 @@ const ProfileInfoLocationSection = ({
           <Box sx={styles.addressContainer}>
             <FmdGoodOutlinedIcon />
             <Typography fontWeight="500">
-              {location?.formatted_address}
+              {location.formatted_address}
             </Typography>
           </Box>
         </Paper>

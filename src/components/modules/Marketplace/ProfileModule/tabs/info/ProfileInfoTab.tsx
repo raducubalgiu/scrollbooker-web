@@ -1,8 +1,7 @@
-import { useCustomQuery } from "@/hooks/useHttp";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import React, { memo } from "react";
-import { UserProfileAbout } from "@/ts/models/user/UserProfileAbout";
+import { useGetUserProfileAbout } from "@/controllers/user/userProfile.controller";
 import ProfileInfoRightColumn from "./ProfileInfoRightColumn";
 import ProfileInfoLeftColumn from "./ProfileInfoLeftColumn";
 
@@ -11,13 +10,7 @@ type ProfileInfoTabProps = {
 };
 
 const ProfileInfoTab = ({ userId }: ProfileInfoTabProps) => {
-  const { data, isLoading } = useCustomQuery<UserProfileAbout>({
-    key: ["profile-info"],
-    url: `/api/profile/info?userId=${userId}`,
-    options: {
-      enabled: !!userId,
-    },
-  });
+  const { data, isLoading } = useGetUserProfileAbout(userId);
 
   return (
     <>

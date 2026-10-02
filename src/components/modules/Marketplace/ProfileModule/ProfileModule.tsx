@@ -99,6 +99,7 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
+        px: { xs: 0, lg: 5 },
       }}
     >
       <ProfileHeaderMobile

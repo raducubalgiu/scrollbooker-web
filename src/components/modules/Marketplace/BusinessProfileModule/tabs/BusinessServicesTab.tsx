@@ -5,8 +5,9 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { memo } from "react";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
+import ServiceCategoryTabs from "@/components/cutomized/ProductCard/ServiceCategoryTabs";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
-import { UserProducts } from "@/ts/models/booking/product/Product";
+import { Product, ProductUtils, UserProducts } from "@/ts/models/booking/product/Product";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
@@ -40,14 +41,18 @@ const BusinessServicesTab = ({
 		serviceGroups.find((group) => group.service.id === activeServiceId) ??
 		serviceGroups[0];
 
-	const handleNavigateToBooking = (productId: number | null) => {
+	const handleNavigateToBooking = (product: Product | null) => {
+		const targetUserId = product
+			? ProductUtils.getTargetUserId(product)
+			: businessOwnerId;
+
 		navigateTo(
 			AppRoutes.booking(
 				businessId,
 				businessOwnerId,
-				businessOwnerId,
+				targetUserId,
 				BookingSourceEnum.SEARCH_BUSINESS_PROFILE,
-				productId
+				product?.id ?? null
 			)
 		);
 	};
@@ -69,37 +74,11 @@ const BusinessServicesTab = ({
 				/>
 			) : (
 				<>
-					<Stack
-						direction="row"
-						spacing={1}
-						sx={{
-							overflowX: "auto",
-							pb: 1,
-							"&::-webkit-scrollbar": { display: "none" },
-						}}
-					>
-						{serviceGroups.map((group) => (
-							<Button
-								key={group.service.id}
-								variant={
-									activeGroup.service.id === group.service.id
-										? "contained"
-										: "outlined"
-								}
-								color={
-									activeGroup.service.id === group.service.id
-										? "primary"
-										: "secondary"
-								}
-								size="small"
-								disableElevation
-								onClick={() => setActiveServiceId(group.service.id)}
-								sx={{ flexShrink: 0, borderRadius: 50 }}
-							>
-								{group.service.short_name}
-							</Button>
-						))}
-					</Stack>
+					<ServiceCategoryTabs
+						serviceGroups={serviceGroups}
+						activeServiceId={activeGroup.service.id}
+						onSelect={setActiveServiceId}
+					/>
 
 					<Stack spacing={2} mt={2.5}>
 						{activeGroup.products.map((product) => (
@@ -108,9 +87,9 @@ const BusinessServicesTab = ({
 								product={product}
 								isSelected={false}
 								showIcon={false}
-								onOpenDetail={() => handleNavigateToBooking(product.id)}
+								onOpenDetail={() => handleNavigateToBooking(product)}
 								onAdd={() => {}}
-								onNavigateToBooking={() => handleNavigateToBooking(product.id)}
+								onNavigateToBooking={() => handleNavigateToBooking(product)}
 							/>
 						))}
 					</Stack>

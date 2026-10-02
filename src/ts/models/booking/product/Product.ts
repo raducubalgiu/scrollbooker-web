@@ -88,6 +88,17 @@ export const ProductUtils = {
 
     return filterParts.join(" \u2022 ");
   },
+
+  getTargetUserId(product: Product): number {
+    const allUserIds = product.variants.flatMap((variant) =>
+      variant.offerings.map((offering) => offering.user.id)
+    );
+    const uniqueUserIds = Array.from(new Set(allUserIds));
+
+    return uniqueUserIds.length === 1
+      ? uniqueUserIds[0]!
+      : product.business_owner_id;
+  },
 };
 
 export interface BusinessServicesWithProducts {

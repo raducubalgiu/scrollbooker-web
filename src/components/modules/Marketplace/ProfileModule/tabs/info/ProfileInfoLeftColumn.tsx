@@ -1,13 +1,13 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import { LocationInfo } from "@/ts/models/user/UserProfileAbout";
+import { BusinessLocation } from "@/ts/models/booking/business/BusinessProfile";
 import { BusinessMediaFile } from "@/ts/models/booking/business/BusinessMediaFile";
 import ProfileInfoLocationSection from "./ProfileInfoLocationSection";
 import ProfileInfoGallery from "./ProfileInfoGallery";
 
 type ProfileInfoLeftColumnProps = {
   description: string | null;
-  location: LocationInfo;
+  location: BusinessLocation | null;
   businessMedia: BusinessMediaFile[];
 };
 
@@ -36,7 +36,7 @@ const ProfileInfoLeftColumn = ({
         </Typography>
       </Box>
 
-      <ProfileInfoLocationSection location={location} />
+      {location && <ProfileInfoLocationSection location={location} />}
       <ProfileInfoGallery businessMedia={businessMedia} />
     </Box>
   );

@@ -139,7 +139,13 @@ const ProfileTabs = ({
       case ProfileTabEnum.POSTS:
         return <ProfilePostsTab userId={userId} />;
       case ProfileTabEnum.PRODUCTS:
-        return <ProfileProductsTab businessId={businessId} userId={userId} />;
+        return (
+          <ProfileProductsTab
+            businessId={businessId}
+            userId={userId}
+            businessOwnerId={businessOwnerId}
+          />
+        );
       case ProfileTabEnum.EMPLOYEES:
         return (
           <ProfileEmployeesTab
