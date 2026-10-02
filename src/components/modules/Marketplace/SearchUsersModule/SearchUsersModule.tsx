@@ -7,15 +7,12 @@ import {
   Stack,
   CircularProgress,
   Box,
-  IconButton,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState } from "react";
 import { useSearchUsers } from "@/controllers/search/search.controller";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { SearchUserItem } from "./SearchUserItem";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 type SearchUsersModuleProps = {
   onNavigateToUserProfile: (username: string, profession: string) => void;
@@ -28,7 +25,6 @@ const SearchUsersModule = ({
 }: SearchUsersModuleProps) => {
   const [value, setValue] = useState("");
   const debouncedValue = useDebouncedValue(value, 400);
-  const { goBack } = useAppNavigation();
 
   const {
     data: users = [],
@@ -65,32 +61,26 @@ const SearchUsersModule = ({
           </Typography>
         )}
 
-        <Stack flexDirection="row" alignItems="center" gap={1}>
-          <IconButton onClick={() => goBack()}>
-            <ArrowBackIcon />
-          </IconButton>
-
-          <TextField
-            autoFocus={true}
-            placeholder="Caută utilizatori, afaceri, specialisti"
-            variant="outlined"
-            fullWidth
-            focused
-            onFocus={() => {}}
-            onBlur={() => {}}
-            onChange={(e) => setValue(e.target.value)}
-            sx={styles.search}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-        </Stack>
+        <TextField
+          autoFocus={true}
+          placeholder="Caută utilizatori, afaceri, specialisti"
+          variant="outlined"
+          fullWidth
+          focused
+          onFocus={() => {}}
+          onBlur={() => {}}
+          onChange={(e) => setValue(e.target.value)}
+          sx={styles.search}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "text.secondary", ml: 1 }} />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
       </Box>
 
       {loading && (

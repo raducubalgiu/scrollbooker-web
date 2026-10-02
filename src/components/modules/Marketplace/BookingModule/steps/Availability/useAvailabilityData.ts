@@ -1,8 +1,10 @@
 import { Dayjs } from "dayjs";
 import dayjs from "@/lib/dayjs";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { AvailableTimeslotsResponse } from "@/ts/models/booking/availability/AvailableTimeSlot";
 import { useMemo } from "react";
+import {
+  useGetAvailableDays,
+  useGetDailyTimeslots,
+} from "@/controllers/booking/availability.controller";
 
 export const useAvailabilityData = (
   businessId: number,
@@ -15,14 +17,21 @@ export const useAvailabilityData = (
   const todayStr = dayjs().format("YYYY-MM-DD");
   const maxDateStr = maxDate.format("YYYY-MM-DD");
 
-  const timeslotsQuery = useCustomQuery<AvailableTimeslotsResponse>({
-    key: ["available-timeslots", day, businessId],
-    url: `/api/booking/availability/${businessId}/timeslots?day=${day}&employeeId=${selectedEmployeeId}&slotDuration=${slotDuration}`,
+  const timeslotsQuery = useGetDailyTimeslots({
+    businessId,
+    day,
+    slotDuration,
+    employeeId: selectedEmployeeId ?? undefined,
+    enabled: slotDuration > 0,
   });
 
-  const availableDaysQuery = useCustomQuery<string[]>({
-    key: ["user-available-days", businessId],
-    url: `/api/booking/availability/${businessId}/available-days?employeeId=${selectedEmployeeId}&startDate=${todayStr}&endDate=${maxDateStr}`,
+  const availableDaysQuery = useGetAvailableDays({
+    businessId,
+    startDate: todayStr,
+    endDate: maxDateStr,
+    slotDuration,
+    employeeId: selectedEmployeeId ?? undefined,
+    enabled: slotDuration > 0,
   });
 
   const availableDaysSet = useMemo(

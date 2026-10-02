@@ -15,8 +15,8 @@ import {
 } from "@mui/material";
 import React from "react";
 import Link from "next/link";
-import CustomAvatar from "@/components/cutomized/Avatar/CustomAvatar";
 import { AppRoutes } from "@/utils/routes";
+import AvatarWithRating from "@/components/cutomized/Avatar/AvatarWithRating";
 
 type AppointmentDetailsHeaderProps = {
   status: AppointmentStatusEnum;
@@ -104,7 +104,7 @@ const AppointmentDetailsHeader = ({
       >
         <Stack flexDirection="row" alignItems="center" gap={2} my={5}>
           {isCustomer ? (
-            <CustomAvatar
+            <AvatarWithRating
               avatar={user.avatar}
               ratingsAverage={user.ratings_average}
             />

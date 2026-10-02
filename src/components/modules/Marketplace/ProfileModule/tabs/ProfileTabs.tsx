@@ -141,7 +141,12 @@ const ProfileTabs = ({
       case ProfileTabEnum.PRODUCTS:
         return <ProfileProductsTab businessId={businessId} userId={userId} />;
       case ProfileTabEnum.EMPLOYEES:
-        return <ProfileEmployeesTab businessOwnerId={businessOwnerId} />;
+        return (
+          <ProfileEmployeesTab
+            businessId={businessId}
+            businessOwnerId={businessOwnerId}
+          />
+        );
       case ProfileTabEnum.BOOKMARKS:
         return <ProfileBookmarksTab userId={userId} />;
       case ProfileTabEnum.INFO:

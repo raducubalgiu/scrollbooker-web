@@ -45,7 +45,7 @@ export default async function BookingPage({
   const employeeId = businessOwnerId !== userId ? userId : null;
 
   const response = await get<BookingFlow>({
-    url: `/businesses/${businessId}/booking${employeeId ? `?employeeId=${employeeId}` : ""}`,
+    url: `/businesses/${businessId}/booking${employeeId ? `?employee_id=${employeeId}` : ""}`,
   });
 
   return (

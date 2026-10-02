@@ -13,7 +13,7 @@ const fetchUserBookmarkedPosts = async ({
   pageParam: number;
 }) => {
   const { data } = await axios.get<PaginatedData<Post>>(
-    `/api/protected/users/${userId}/bookmarks?page=${pageParam}&limit=${PAGE_LIMIT}`
+    `/api/protected/users/${userId}/bookmark-posts?page=${pageParam}&limit=${PAGE_LIMIT}`
   );
   return {
     ...data,

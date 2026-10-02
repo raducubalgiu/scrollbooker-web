@@ -20,6 +20,7 @@ type AvailabilityTimeSlotsProps = {
   isLoading: boolean;
   selectedTimeSlot: AvailableTimeSlot | null;
   onSelectTimeSlot: (slot: AvailableTimeSlot) => void;
+  onGoToNextAvailableDay?: (() => void) | undefined;
 };
 
 const AvailabilityTimeSlots = ({
@@ -27,6 +28,7 @@ const AvailabilityTimeSlots = ({
   isLoading,
   selectedTimeSlot,
   onSelectTimeSlot,
+  onGoToNextAvailableDay,
 }: AvailabilityTimeSlotsProps) => {
   const { is_closed, available_slots } = data || {};
 
@@ -62,9 +64,16 @@ const AvailabilityTimeSlots = ({
             Nu au fost găsite locuri libere
           </Typography>
 
-          <Button variant="outlined" color="secondary" size="large">
-            Mergi la următoarea zi disponibilă
-          </Button>
+          {onGoToNextAvailableDay && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              onClick={onGoToNextAvailableDay}
+            >
+              Mergi la următoarea zi disponibilă
+            </Button>
+          )}
         </Stack>
       )}
 

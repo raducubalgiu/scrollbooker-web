@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import "dayjs/locale/ro";
 import { Box, Typography } from "@mui/material";
 import dayjs from "@/lib/dayjs";
@@ -47,6 +47,18 @@ const AvailabilityStep = ({
       maxDate
     );
 
+  const activeDateStr = activeDate.format("YYYY-MM-DD");
+
+  const nextAvailableDateStr = useMemo(() => {
+    return Array.from(availableDaysSet)
+      .filter((day) => day > activeDateStr)
+      .sort()[0];
+  }, [availableDaysSet, activeDateStr]);
+
+  const handleGoToNextAvailableDay = nextAvailableDateStr
+    ? () => setActiveDate(dayjs(nextAvailableDateStr))
+    : undefined;
+
   return (
     <Box sx={{ width: "100%" }}>
       <Typography fontWeight={800} fontSize={47.5} mt={3}>
@@ -77,6 +89,7 @@ const AvailabilityStep = ({
         isLoading={isLoadingSlots}
         selectedTimeSlot={selectedTimeSlot}
         onSelectTimeSlot={onSelectTimeSlot}
+        onGoToNextAvailableDay={handleGoToNextAvailableDay}
       />
     </Box>
   );

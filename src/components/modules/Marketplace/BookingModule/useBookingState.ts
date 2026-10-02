@@ -62,7 +62,7 @@ export const useBookingState = ({
     Appointment
   >({
     key: ["create-scrollbooker-appointment"],
-    url: "/api/appointments",
+    url: "/api/protected/appointments/create-scrollbooker-appointment",
     method: "POST",
     options: {
       onSuccess: (appointment: Appointment) => {

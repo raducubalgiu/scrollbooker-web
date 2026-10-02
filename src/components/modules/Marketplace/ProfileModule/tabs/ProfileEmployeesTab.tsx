@@ -2,16 +2,20 @@ import React, { memo, useMemo } from "react";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import EmployeeItem from "../EmployeeItem";
 import { isEmpty } from "lodash";
-import { useInfiniteEmployees } from "@/hooks/infiniteQuery/useInfiniteEmployees";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
+import { useInfiniteEmployees } from "@/controllers/booking/employee.controller";
 
 type ProfileEmployeesTabProps = {
+  businessId: number | null;
   businessOwnerId: number | undefined;
 };
 
-const ProfileEmployeesTab = ({ businessOwnerId }: ProfileEmployeesTabProps) => {
+const ProfileEmployeesTab = ({
+  businessId,
+  businessOwnerId,
+}: ProfileEmployeesTabProps) => {
   const { data, isLoading, isError } = useInfiniteEmployees(businessOwnerId);
 
   const employees = useMemo(() => {
@@ -32,7 +36,12 @@ const ProfileEmployeesTab = ({ businessOwnerId }: ProfileEmployeesTabProps) => {
       <Box sx={{ maxWidth: "md" }}>
         {!isLoading &&
           employees.map((employee) => (
-            <EmployeeItem key={employee.id} employee={employee} />
+            <EmployeeItem
+              key={employee.id}
+              employee={employee}
+              businessId={businessId}
+              businessOwnerId={businessOwnerId}
+            />
           ))}
       </Box>
       {!isLoading && isEmpty(employees) && !isError && (
