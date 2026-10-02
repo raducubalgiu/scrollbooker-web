@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Container, Stack } from "@mui/material";
+import { alpha, Box, Button, Container, Stack } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { AppRoutes } from "@/utils/routes";
@@ -20,7 +20,7 @@ export default function LandingNav() {
         zIndex: 10,
         borderBottom: `1px solid ${LANDING_COLORS.border}`,
         backdropFilter: "blur(12px)",
-        backgroundColor: "rgba(0,0,0,0.72)",
+        backgroundColor: alpha(LANDING_COLORS.background, 0.72),
       }}
     >
       <Container maxWidth="lg">

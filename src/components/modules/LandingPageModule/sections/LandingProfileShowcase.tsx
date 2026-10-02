@@ -1,13 +1,13 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography } from "@mui/material";
+import Image from "next/image";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
 import ReviewsRoundedIcon from "@mui/icons-material/ReviewsRounded";
 import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
 import { useTranslations } from "next-intl";
 import { LANDING_COLORS } from "../landing.constants";
-import PhoneMockup from "../components/PhoneMockup";
 
 const ICONS = [
   PeopleAltRoundedIcon,
@@ -64,7 +64,7 @@ export default function LandingProfileShowcase() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      backgroundColor: "rgba(255,255,255,0.06)",
+                      backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.06),
                       color: LANDING_COLORS.primary,
                       flexShrink: 0,
                     }}
@@ -90,10 +90,24 @@ export default function LandingProfileShowcase() {
             </Stack>
           </Box>
 
-          <Box sx={{ flex: 1, width: "100%" }}>
-            <PhoneMockup
+          <Box
+            sx={{
+              flex: 1,
+              width: "100%",
+              position: "relative",
+              borderRadius: 4,
+              overflow: "hidden",
+              border: `1px solid ${LANDING_COLORS.border}`,
+              backgroundColor: LANDING_COLORS.surface,
+              aspectRatio: "2400 / 2120",
+            }}
+          >
+            <Image
               src="/landing/profile-screen.png"
               alt={t("imageAlt")}
+              fill
+              sizes="(max-width: 900px) 90vw, 560px"
+              style={{ objectFit: "contain" }}
             />
           </Box>
         </Stack>

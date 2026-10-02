@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
-import LandingForceDarkChrome from "@/components/modules/LandingPageModule/components/LandingForceDarkChrome";
+import LandingSyncChromeColor from "@/components/modules/LandingPageModule/components/LandingSyncChromeColor";
 import LandingNav from "@/components/modules/LandingPageModule/sections/LandingNav";
 import LandingFeatures from "@/components/modules/LandingPageModule/sections/LandingFeatures";
 import LandingProfileShowcase from "@/components/modules/LandingPageModule/sections/LandingProfileShowcase";
@@ -23,7 +23,7 @@ export default function ForBusinessPageModule() {
         overflowX: "hidden",
       }}
     >
-      <LandingForceDarkChrome />
+      <LandingSyncChromeColor />
       <LandingNav />
       <ForBusinessHero />
       <ForBusinessPainPoints />

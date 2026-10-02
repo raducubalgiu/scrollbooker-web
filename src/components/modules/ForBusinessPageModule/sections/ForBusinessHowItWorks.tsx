@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useTranslations } from "next-intl";
 import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
@@ -45,7 +45,7 @@ export default function ForBusinessHowItWorks() {
                   sx={{
                     fontSize: "2.75rem",
                     fontWeight: 800,
-                    color: "rgba(255,255,255,0.12)",
+                    color: alpha(LANDING_COLORS.textPrimary, 0.12),
                     lineHeight: 1,
                   }}
                 >

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { AppRoutes } from "@/utils/routes";
@@ -67,7 +67,10 @@ export default function LandingFooter() {
             <LandingLanguageSwitcher />
           </Stack>
 
-          <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.4)" }}>
+          <Typography
+            variant="body2"
+            sx={{ color: alpha(LANDING_COLORS.textPrimary, 0.4) }}
+          >
             © {new Date().getFullYear()} ScrollBooker
           </Typography>
         </Stack>

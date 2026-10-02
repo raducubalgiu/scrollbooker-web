@@ -21,19 +21,20 @@ export default function LandingCTA() {
             px: { xs: 4, md: 8 },
             py: { xs: 6, md: 8 },
             textAlign: "center",
-            background: `linear-gradient(135deg, ${LANDING_COLORS.primaryDark} 0%, ${LANDING_COLORS.primary} 100%)`,
+            border: `1px solid ${LANDING_COLORS.border}`,
+            background: `radial-gradient(circle at 50% 0%, ${LANDING_COLORS.primary}26 0%, ${LANDING_COLORS.surface} 65%)`,
           }}
         >
-          <Stack spacing={3} alignItems="center">
+          <Stack spacing={3} alignItems="center" sx={{ position: "relative" }}>
             <Typography
               variant="h2"
-              sx={{ color: "#000", maxWidth: 640, letterSpacing: "-0.01em" }}
+              sx={{ color: LANDING_COLORS.textPrimary, maxWidth: 640, letterSpacing: "-0.01em" }}
             >
               {t("title")}
             </Typography>
             <Typography
               variant="body1"
-              sx={{ color: "rgba(0,0,0,0.75)", maxWidth: 520, fontWeight: 500 }}
+              sx={{ color: LANDING_COLORS.textSecondary, maxWidth: 520, fontWeight: 500 }}
             >
               {t("subtitle")}
             </Typography>
@@ -45,11 +46,12 @@ export default function LandingCTA() {
               disableElevation
               endIcon={<ArrowForwardRoundedIcon />}
               sx={{
-                backgroundColor: "#000",
+                backgroundColor: LANDING_COLORS.primary,
                 color: "#fff",
                 px: 4,
                 py: 1.5,
-                "&:hover": { backgroundColor: "#1a1a1a" },
+                fontWeight: 700,
+                "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
               }}
             >
               {t("button")}

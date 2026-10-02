@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import SyncRoundedIcon from "@mui/icons-material/SyncRounded";
@@ -78,7 +78,7 @@ export default function ForBusinessCalendarShowcase() {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        backgroundColor: "rgba(255,255,255,0.06)",
+                        backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.06),
                         color: LANDING_COLORS.primary,
                         flexShrink: 0,
                       }}

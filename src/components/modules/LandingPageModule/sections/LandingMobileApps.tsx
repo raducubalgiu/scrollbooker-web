@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Chip, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Chip, Container, Stack, Typography } from "@mui/material";
 import AppleIcon from "@mui/icons-material/Apple";
 import AndroidRoundedIcon from "@mui/icons-material/AndroidRounded";
 import { useTranslations } from "next-intl";
@@ -89,7 +89,7 @@ export default function LandingMobileApps() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: "rgba(255,255,255,0.06)",
+                  backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.06),
                   color: LANDING_COLORS.textPrimary,
                   flexShrink: 0,
                 }}

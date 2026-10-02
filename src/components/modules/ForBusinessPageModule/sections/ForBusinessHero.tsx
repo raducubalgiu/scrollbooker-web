@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Button, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -51,7 +51,7 @@ export default function ForBusinessHero() {
                 py: 0.75,
                 borderRadius: 50,
                 border: `1px solid ${LANDING_COLORS.border}`,
-                backgroundColor: "rgba(255,255,255,0.04)",
+                backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.04),
                 mb: 3,
               }}
             >

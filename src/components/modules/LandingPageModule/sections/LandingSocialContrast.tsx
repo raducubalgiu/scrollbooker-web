@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
@@ -48,7 +48,7 @@ export default function LandingSocialContrast() {
             >
               <Typography
                 sx={{
-                  color: "rgba(255,255,255,0.45)",
+                  color: alpha(LANDING_COLORS.textPrimary, 0.45),
                   fontWeight: 700,
                   fontSize: "0.95rem",
                 }}
@@ -60,11 +60,11 @@ export default function LandingSocialContrast() {
                 <Stack key={item} direction="row" spacing={1.5}>
                   <CloseRoundedIcon
                     fontSize="small"
-                    sx={{ color: "rgba(255,255,255,0.3)", mt: 0.2, flexShrink: 0 }}
+                    sx={{ color: alpha(LANDING_COLORS.textPrimary, 0.3), mt: 0.2, flexShrink: 0 }}
                   />
                   <Typography
                     variant="body2"
-                    sx={{ color: "rgba(255,255,255,0.45)", lineHeight: 1.6 }}
+                    sx={{ color: alpha(LANDING_COLORS.textPrimary, 0.45), lineHeight: 1.6 }}
                   >
                     {item}
                   </Typography>

@@ -19,7 +19,7 @@ import Input from "@/components/core/Input/Input";
 import { emailField, required } from "@/utils/validation-rules";
 import { useCreateEarlyAdopterMutation } from "@/controllers/earlyAdopters/earlyAdopters.controller";
 import { LANDING_COLORS } from "../landing.constants";
-import { darkTheme } from "../../../../../theme/theme";
+import { lightTheme } from "../../../../../theme/theme";
 
 type EarlyAdopterForm = {
   firstName: string;
@@ -68,7 +68,7 @@ export default function LandingEarlyAdopterModal({
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={lightTheme}>
       <Dialog
         open={open}
         onClose={onClose}

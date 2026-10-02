@@ -20,11 +20,11 @@ import Input from "@/components/core/Input/Input";
 import { emailField, phoneField, required } from "@/utils/validation-rules";
 import { AppRoutes } from "@/utils/routes";
 import LandingLogo from "@/components/modules/LandingPageModule/components/LandingLogo";
-import LandingForceDarkChrome from "@/components/modules/LandingPageModule/components/LandingForceDarkChrome";
+import LandingSyncChromeColor from "@/components/modules/LandingPageModule/components/LandingSyncChromeColor";
 import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
 import { useSubmitBusinessLeadMutation } from "@/controllers/leads/leads.controller";
 import { BusinessLeadCreate } from "@/ts/models/leads/BusinessLead";
-import { darkTheme } from "../../../../theme/theme";
+import { lightTheme } from "../../../../theme/theme";
 
 type PartnersForm = {
   fullname: string;
@@ -76,7 +76,7 @@ export default function PartnersPage() {
         backgroundColor: LANDING_COLORS.background,
       }}
     >
-      <LandingForceDarkChrome />
+      <LandingSyncChromeColor />
 
       <Container maxWidth="sm">
         <Stack
@@ -103,7 +103,7 @@ export default function PartnersPage() {
           <LandingLogo height={22} />
         </Box>
 
-        <ThemeProvider theme={darkTheme}>
+        <ThemeProvider theme={lightTheme}>
           <Box
             sx={{
               backgroundColor: LANDING_COLORS.surface,

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
@@ -19,7 +19,7 @@ export default function LandingAnnouncementBar() {
         textDecoration: "none",
         borderBottom: `1px solid ${LANDING_COLORS.border}`,
         transition: "background-color 0.15s",
-        "&:hover": { backgroundColor: "rgba(255,255,255,0.03)" },
+        "&:hover": { backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.03) },
       }}
     >
       <Container maxWidth="lg">

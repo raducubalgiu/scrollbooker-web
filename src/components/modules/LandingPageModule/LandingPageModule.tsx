@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { LANDING_COLORS } from "./landing.constants";
-import LandingForceDarkChrome from "./components/LandingForceDarkChrome";
+import LandingSyncChromeColor from "./components/LandingSyncChromeColor";
 import LandingAnnouncementBar from "./sections/LandingAnnouncementBar";
 import LandingNav from "./sections/LandingNav";
 import LandingHero from "./sections/LandingHero";
@@ -22,7 +22,7 @@ export default function LandingPageModule() {
         overflowX: "hidden",
       }}
     >
-      <LandingForceDarkChrome />
+      <LandingSyncChromeColor />
       <LandingAnnouncementBar />
       <LandingNav />
       <LandingHero />

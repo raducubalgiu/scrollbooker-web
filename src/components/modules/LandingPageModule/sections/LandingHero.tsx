@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Button, Container, Stack, Typography, keyframes } from "@mui/material";
+import { alpha, Box, Button, Container, Stack, Typography, keyframes } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { LANDING_COLORS } from "../landing.constants";
@@ -59,7 +59,7 @@ export default function LandingHero() {
                 py: 0.75,
                 borderRadius: 50,
                 border: `1px solid ${LANDING_COLORS.border}`,
-                backgroundColor: "rgba(255,255,255,0.04)",
+                backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.04),
                 mb: 3,
               }}
             >
