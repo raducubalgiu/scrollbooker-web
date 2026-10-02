@@ -1,5 +1,6 @@
 import {
   PostCounters,
+  PostServiceDomain,
   PostUser,
   PostUserActions,
 } from "@/ts/models/social/Post";
@@ -27,6 +28,7 @@ export type PostActionsProps = {
   userActions: PostUserActions | null;
   isOwnPost: boolean;
   isVideoReview?: boolean;
+  serviceDomain?: PostServiceDomain | null;
   loaders: PostActionLoaders;
   callbacks: PostActionCallbacks;
 };

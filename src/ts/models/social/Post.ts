@@ -1,5 +1,3 @@
-import { Plan } from "../nomenclatures/plan/Plan";
-
 export interface Post {
   id: number;
   description: string | null;
@@ -9,15 +7,13 @@ export interface Post {
   employee: PostEmployee | null;
   counters: PostCounters;
   user_actions: PostUserActions;
-  plan: Plan;
   media_files: PostMediaFile[];
-  hashtags: string[];
+  hashtags: PostHashtag[] | null;
   is_video_review: boolean;
   is_own_post: boolean;
-  rating: number | null;
-  bookable: boolean;
   business_id: number | null;
-  last_minute: PostLastMinute | null;
+  review: PostReview | null;
+  service_domain: PostServiceDomain | null;
   created_at: string;
 }
 
@@ -30,7 +26,7 @@ export interface PostBusinessLocation {
   address: string;
   formatted_address: string;
   coordinates: PostBusinessLocationCoordinates;
-  map_url: string;
+  map_url: string | null;
   place_id: string;
 }
 
@@ -39,22 +35,31 @@ export interface PostMediaFile {
   url: string;
   type: string;
   thumbnail_url: string;
+  custom_cover_url: string | null;
   duration: number | null;
   post_id: number;
   order_index: number;
+  status: string;
+  ready_to_stream: boolean;
 }
 
-export interface FixedSlot {
-  start_time: string;
-  end_time: string;
-  is_booked: boolean;
+export interface PostHashtag {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string | null;
 }
 
-export interface PostLastMinute {
-  is_last_minute: boolean;
-  last_minute_end: string | null;
-  has_fixed_slots: boolean;
-  fixed_slots: FixedSlot[] | null;
+export interface PostReview {
+  id: number;
+  review: string | null;
+  rating: number;
+  created_at: string;
+}
+
+export interface PostServiceDomain {
+  id: number;
+  name: string;
 }
 
 export interface PostUserActions {
@@ -68,6 +73,7 @@ export interface PostCounters {
   like_count: number;
   bookmark_count: number;
   repost_count: number;
+  share_count: number;
   bookings_count: number;
   views_count: number;
 }
@@ -75,14 +81,21 @@ export interface PostCounters {
 export interface PostEmployee {
   id: number;
   fullname: string;
+  username: string;
+  profession: string;
   avatar: string | null;
+  ratings_average: number;
+  ratings_count: number;
 }
 
 export interface PostBusinessOwner {
   id: number;
   fullname: string;
+  username: string;
+  profession: string;
   avatar: string | null;
   ratings_average: number;
+  ratings_count: number;
 }
 
 export interface PostUser {

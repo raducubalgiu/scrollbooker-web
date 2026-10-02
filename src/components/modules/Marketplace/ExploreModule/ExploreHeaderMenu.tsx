@@ -1,4 +1,4 @@
-import { alpha, Box, Button, IconButton, Stack, Theme } from "@mui/material";
+import { Box, IconButton, Stack, Theme, Typography } from "@mui/material";
 import React from "react";
 
 import SearchIcon from "@/assets/icons/ic_search.svg";
@@ -33,12 +33,8 @@ const ExploreHeaderMenu = ({
   return (
     <Box sx={styles.container}>
       <Box sx={styles.containerMenu}>
-        <Stack
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Stack flexDirection="row" alignItems="center">
+        <Box sx={styles.grid}>
+          <Box sx={{ justifySelf: "start" }}>
             <IconButton size="large" onClick={onHandleToggleDrawer}>
               <CustomSvg
                 src={BurgerIcon}
@@ -46,42 +42,67 @@ const ExploreHeaderMenu = ({
                 sx={{ backgroundColor: "common.white" }}
               />
             </IconButton>
+          </Box>
 
+          <Stack
+            direction="row"
+            spacing={3}
+            alignItems="center"
+            sx={{ justifySelf: "center" }}
+          >
             {TABS.map(({ key, label }) => {
               const isActive = activeTab === key;
               return (
-                <Button
+                <Box
                   key={key}
-                  variant={isActive ? "contained" : "text"}
-                  disableElevation
+                  component="button"
+                  type="button"
                   onClick={() => onTabChange(key)}
-                  sx={{
-                    mr: 1,
-                    color: "common.white",
-                    ...(isActive && {
-                      bgcolor: (theme: Theme) =>
-                        alpha(theme.palette.primary.main, 0.7),
-                    }),
-                  }}
+                  sx={styles.tabButton}
                 >
-                  {label}
-                </Button>
+                  <Typography
+                    sx={{
+                      fontSize: 17,
+                      fontWeight: isActive ? 700 : 600,
+                      color: isActive
+                        ? "common.white"
+                        : "rgba(255,255,255,0.7)",
+                      textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
+                      transition: "color 0.2s ease",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {label}
+                  </Typography>
+
+                  <Box sx={styles.underlineTrack}>
+                    <Box
+                      sx={{
+                        ...styles.underline,
+                        opacity: isActive ? 1 : 0,
+                        transform: `scaleX(${isActive ? 1 : 0})`,
+                      }}
+                    />
+                  </Box>
+                </Box>
               );
             })}
           </Stack>
 
-          <IconButton
-            onClick={() => navigateTo(AppRoutes.searchUsers())}
-            size="large"
-            sx={{ display: { xs: "block", lg: "none" } }}
-          >
-            <CustomSvg
-              src={SearchIcon}
-              size={30}
-              sx={{ backgroundColor: "common.white" }}
-            />
-          </IconButton>
-        </Stack>
+          <Box sx={{ justifySelf: "end" }}>
+            <IconButton
+              onClick={() => navigateTo(AppRoutes.searchUsers())}
+              size="large"
+              sx={{ display: { xs: "block", lg: "none" } }}
+            >
+              <CustomSvg
+                src={SearchIcon}
+                size={30}
+                sx={{ backgroundColor: "common.white" }}
+              />
+            </IconButton>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
@@ -109,5 +130,37 @@ const styles = {
     top: (theme: Theme) => theme.spacing(1),
     zIndex: 11,
     pointerEvents: "auto",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "1fr auto 1fr",
+    alignItems: "center",
+    width: "100%",
+    px: 1,
+  },
+  tabButton: {
+    border: "none",
+    background: "none",
+    padding: 0,
+    cursor: "pointer",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 0.75,
+  },
+  underlineTrack: {
+    width: 18,
+    height: 2.5,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  underline: {
+    width: 18,
+    height: 2.5,
+    borderRadius: 50,
+    backgroundColor: "common.white",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.5)",
+    transition: "opacity 0.25s ease, transform 0.25s ease",
   },
 } as const;

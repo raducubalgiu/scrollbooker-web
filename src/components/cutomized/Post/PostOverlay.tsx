@@ -20,7 +20,8 @@ const PostOverlay = ({
   onOpenLinkedProducts,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { user, counters, userActions, isOwnPost, isVideoReview } = actions;
+  const { user, counters, userActions, isOwnPost, isVideoReview, serviceDomain } =
+    actions;
 
   const handleToggleDescription = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -39,12 +40,32 @@ const PostOverlay = ({
           sx={{ pointerEvents: "auto", mb: { xs: 1, lg: 0 } }}
         >
           <Stack spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-            {isVideoReview && (
-              <Box sx={styles.videoReview}>
-                <Typography variant="body2" fontWeight={700}>
-                  Recenzie Video
-                </Typography>
-              </Box>
+            {(isVideoReview || serviceDomain) && (
+              <Stack spacing={0.75} sx={{ width: "fit-content" }}>
+                {isVideoReview && (
+                  <Box sx={{ ...styles.badge, bgcolor: "rgba(255,255,255,0.9)" }}>
+                    <Typography
+                      variant="caption"
+                      fontWeight={600}
+                      sx={{ color: "common.black", lineHeight: 1.2 }}
+                    >
+                      Recenzie Video
+                    </Typography>
+                  </Box>
+                )}
+
+                {serviceDomain && (
+                  <Box sx={{ ...styles.badge, bgcolor: "beauty.main" }}>
+                    <Typography
+                      variant="caption"
+                      fontWeight={600}
+                      sx={{ color: "common.white", lineHeight: 1.2 }}
+                    >
+                      {serviceDomain.name}
+                    </Typography>
+                  </Box>
+                )}
+              </Stack>
             )}
 
             <Box onClick={(e) => e.stopPropagation()}>
@@ -154,12 +175,11 @@ const styles = {
     color: "common.white",
     pointerEvents: "none",
   },
-  videoReview: {
-    bgcolor: "rgba(255,255,255,0.15)",
-    px: 1.5,
-    py: 1,
+  badge: {
+    px: 1,
+    py: 0.25,
     width: "fit-content",
-    borderRadius: 50,
-    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: 1.5,
+    lineHeight: 1,
   },
 };

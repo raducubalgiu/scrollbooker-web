@@ -624,6 +624,8 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
               userActions: post?.user_actions ?? null,
               counters: post?.counters ?? null,
               isOwnPost: post?.is_own_post ?? false,
+              isVideoReview: post?.is_video_review ?? false,
+              serviceDomain: post?.service_domain ?? null,
               loaders,
               callbacks,
             }}
