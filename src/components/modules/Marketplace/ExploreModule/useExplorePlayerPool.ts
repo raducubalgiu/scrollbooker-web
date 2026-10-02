@@ -84,7 +84,7 @@ export function useExplorePlayerPool({
         slot: "current",
         post: currentPost,
         src: currentPost?.media_files?.[0]?.url ?? "",
-        isActive: !isAnimating,
+        isActive: true,
         shouldPreload: true,
       },
       {
@@ -95,7 +95,7 @@ export function useExplorePlayerPool({
         shouldPreload: !!nextPost,
       },
     ],
-    [prevPost, currentPost, nextPost, isAnimating]
+    [prevPost, currentPost, nextPost]
   );
 
   return {

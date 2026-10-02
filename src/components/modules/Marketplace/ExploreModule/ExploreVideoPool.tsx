@@ -151,6 +151,12 @@ export function ExploreVideoPool({
       const touchY = e.touches[0]?.clientY;
       if (touchY === undefined) return;
 
+      // preventDefault pe fiecare mișcare din secvență, nu doar după ce
+      // trecem de threshold — altfel browserul are o fereastră (primele
+      // <5px) în care poate începe propriul scroll/bounce nativ, care apoi
+      // se luptă cu swipe-ul nostru custom (exact senzația de "agață").
+      if (e.cancelable) e.preventDefault();
+
       const delta = dragStartY.current - touchY;
 
       if (!isDragging.current && Math.abs(delta) > DRAG_CLICK_THRESHOLD) {
@@ -158,7 +164,6 @@ export function ExploreVideoPool({
       }
 
       if (isDragging.current) {
-        if (e.cancelable) e.preventDefault();
         el.style.setProperty("--drag-offset", `${-delta}px`);
       }
     };
@@ -268,6 +273,7 @@ const styles = {
     userSelect: "none",
     WebkitUserSelect: "none",
     touchAction: "none",
+    overscrollBehavior: "none",
     "--slide-offset": "0%",
     "--drag-offset": "0px",
 

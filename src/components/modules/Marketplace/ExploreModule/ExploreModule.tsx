@@ -369,7 +369,15 @@ export default function ExploreModule() {
   };
 
   return (
-    <Box p={{ xs: 0, lg: 2.5, width: "100%", height: "100%" }}>
+    <Box
+      sx={{
+        p: { xs: 0, lg: 2.5 },
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+        overscrollBehavior: "none",
+      }}
+    >
       <ForceDarkChrome />
       <Box sx={styles.container}>
         <Box sx={styles.mainContent}>
