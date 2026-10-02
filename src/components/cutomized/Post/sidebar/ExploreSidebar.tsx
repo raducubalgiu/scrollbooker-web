@@ -1,5 +1,5 @@
-import { Box, Tab, Tabs } from "@mui/material";
-import React, { memo, useCallback, useMemo } from "react";
+import { Box, Typography } from "@mui/material";
+import React, { memo, useMemo } from "react";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import ReviewsTab from "./ReviewsTab";
 import ExploreServicesTab from "./ExploreServicesTab";
@@ -82,13 +82,6 @@ const ExploreSidebar = ({
     }
   };
 
-  const handleTabChange = useCallback(
-    (_: React.SyntheticEvent, newValue: ExploreSidebarTab) => {
-      setActiveTab(newValue);
-    },
-    []
-  );
-
   return (
     <Box sx={styles.container}>
       <Box p={3}>
@@ -108,20 +101,39 @@ const ExploreSidebar = ({
       </Box>
 
       <Box sx={styles.tabsContainer}>
-        <Tabs
-          value={activeTab}
-          onChange={handleTabChange}
-          sx={{ borderBottom: 1, borderColor: "divider" }}
-        >
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.value}
-              label={tab.label}
-              value={tab.value}
-              sx={styles.tab}
-            />
-          ))}
-        </Tabs>
+        <Box sx={styles.tabsRow}>
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab.value;
+            return (
+              <Box
+                key={tab.value}
+                component="button"
+                type="button"
+                onClick={() => setActiveTab(tab.value)}
+                sx={styles.tabButton}
+              >
+                <Typography
+                  noWrap
+                  sx={{
+                    fontSize: 14.5,
+                    fontWeight: isActive ? 700 : 500,
+                    color: isActive ? "text.primary" : "text.secondary",
+                    transition: "color 0.15s ease, font-weight 0.15s ease",
+                  }}
+                >
+                  {tab.label}
+                </Typography>
+
+                <Box
+                  sx={{
+                    ...styles.underline,
+                    transform: `scaleX(${isActive ? 1 : 0})`,
+                  }}
+                />
+              </Box>
+            );
+          })}
+        </Box>
 
         <Box sx={styles.tabsContent}>{renderTabContent()}</Box>
       </Box>
@@ -154,12 +166,31 @@ const styles = {
     flexDirection: "column",
     minHeight: 0,
   },
-  tab: {
-    fontWeight: 600,
-    textTransform: "none",
-    fontSize: 17,
-    p: 2.5,
-    minWidth: 120,
+  tabsRow: {
+    display: "flex",
+    borderBottom: 1,
+    borderColor: "divider",
+  },
+  tabButton: {
+    flex: 1,
+    minWidth: 0,
+    border: "none",
+    background: "none",
+    cursor: "pointer",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 1,
+    px: 1,
+    py: 2,
+  },
+  underline: {
+    width: "100%",
+    height: 2.5,
+    borderRadius: 50,
+    backgroundColor: "primary.main",
+    transformOrigin: "center",
+    transition: "transform 0.2s ease",
   },
   tabsContent: {
     flex: 1,

@@ -2,6 +2,7 @@
 
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import Link from "next/link";
 import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
@@ -30,6 +31,7 @@ const VideoHeader = ({
 }: VideoHeaderProps) => {
   const { avatar, fullname, username, profession, ratings_average, is_follow } =
     user || {};
+  const isBusinessOrEmployee = !isVideoReview;
   const mapsUrl = getGoogleMapsDirectionsUrl(businessLocation?.coordinates);
   const { navigateTo } = useAppNavigation();
 
@@ -45,58 +47,32 @@ const VideoHeader = ({
             : undefined
         }
         sx={{ cursor: "pointer", minWidth: 0 }}
-        gap={0.5}
       >
         <AvatarWithRating
           avatar={avatar ?? null}
           ratingsAverage={ratings_average ?? null}
-          isBusinessOrEmployee={!isVideoReview}
+          isBusinessOrEmployee={isBusinessOrEmployee}
         />
 
-        <Box flex={1} sx={{ minWidth: 0 }}>
+        <Box sx={{ minWidth: 0, flex: 1 }}>
           <Stack
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            sx={{ width: "100%", minWidth: 0 }}
-            gap={3}
+            gap={2}
           >
-            <Box sx={{ minWidth: 0, flex: 1 }}>
-              <Stack
-                direction="row"
-                alignItems="center"
-                gap={1.5}
-                sx={{ minWidth: 0 }}
-              >
-                <Typography
-                  variant="h5"
-                  fontWeight={700}
-                  sx={{ ...styles.ellipsisText, flexShrink: 1 }}
-                >
-                  {fullname ?? "-"}
-                </Typography>
-
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ ...styles.ellipsisText, flexShrink: 1 }}
-                >
-                  @{username}
-                </Typography>
-              </Stack>
-
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={styles.ellipsisText}
-              >
-                {user?.profession}
-              </Typography>
-            </Box>
+            <Typography
+              variant="subtitle1"
+              fontWeight={700}
+              sx={styles.ellipsisText}
+            >
+              {fullname ?? "-"}
+            </Typography>
 
             {!is_follow && onFollow && (
               <Button
                 variant="contained"
+                size="small"
                 disableElevation
                 loading={isTogglingFollow}
                 disabled={isTogglingFollow}
@@ -111,23 +87,42 @@ const VideoHeader = ({
             )}
           </Stack>
 
-          <Link
-            href={mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="card-container"
-            style={{ textDecoration: "none" }}
-            prefetch={false}
-            onClick={(e) => e.stopPropagation()}
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ ...styles.ellipsisText, mt: 0.25 }}
           >
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={styles.formattedAddress}
+            {isBusinessOrEmployee ? profession : `@${username}`}
+          </Typography>
+
+          {businessLocation?.formatted_address && (
+            <Link
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+              prefetch={false}
+              onClick={(e) => e.stopPropagation()}
             >
-              {businessLocation?.formatted_address}
-            </Typography>
-          </Link>
+              <Stack
+                direction="row"
+                alignItems="center"
+                gap={0.5}
+                sx={{ mt: 0.75, minWidth: 0 }}
+              >
+                <LocationOnOutlinedIcon
+                  sx={{ fontSize: 16, color: "text.secondary", flexShrink: 0 }}
+                />
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={styles.ellipsisText}
+                >
+                  {businessLocation.formatted_address}
+                </Typography>
+              </Stack>
+            </Link>
+          )}
         </Box>
       </Stack>
 
@@ -143,39 +138,10 @@ const VideoHeader = ({
 export default VideoHeader;
 
 const styles = {
-  badge: {
-    flexShrink: 0,
-    "& .MuiBadge-badge": {
-      right: "auto",
-      left: "50%",
-      transform: `translate(-50%, 100%)`,
-    },
-  },
-  badgeContent: {
-    backgroundColor: "background.paper",
-    px: 1.5,
-    py: 0.5,
-    borderRadius: 50,
-    boxShadow: 1,
-  },
-  avatar: {
-    width: 70,
-    height: 70,
-    border: 1,
-    borderColor: "divider",
-  },
   ellipsisText: {
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     minWidth: 0,
-  },
-  formattedAddress: {
-    display: "-webkit-box",
-    WebkitLineClamp: 1,
-    WebkitBoxOrient: "vertical",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    wordBreak: "break-word",
   },
 };

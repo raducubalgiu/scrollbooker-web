@@ -1,7 +1,7 @@
 import { IconButton, Stack } from "@mui/material";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import React from "react";
+import ChevronIcon from "@/assets/icons/ic_arrow-chevron_down_outline.svg";
+import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
 
 type ExploreControlsProps = {
   isDisabledPrev: boolean;
@@ -9,6 +9,14 @@ type ExploreControlsProps = {
   onGoToPrev: () => void;
   onGoToNext: () => void;
 };
+
+const getButtonStyles = (isDisabled: boolean) => ({
+  width: 60,
+  height: 60,
+  borderRadius: "50%",
+  bgcolor: "background.paper",
+  opacity: isDisabled ? 0.4 : 1,
+});
 
 const ExploreControls = ({
   isDisabledPrev,
@@ -28,16 +36,26 @@ const ExploreControls = ({
       <IconButton
         onClick={onGoToPrev}
         disabled={isDisabledPrev}
-        sx={{ width: 70, height: 70, bgcolor: "secondary.main" }}
+        disableRipple
+        sx={getButtonStyles(isDisabledPrev)}
       >
-        <ArrowUpwardIcon fontSize="large" />
+        <CustomSvg
+          src={ChevronIcon}
+          size={26}
+          sx={{ backgroundColor: "text.primary", transform: "rotate(180deg)" }}
+        />
       </IconButton>
       <IconButton
         onClick={onGoToNext}
         disabled={isDisabledNext}
-        sx={{ width: 70, height: 70, bgcolor: "secondary.main" }}
+        disableRipple
+        sx={getButtonStyles(isDisabledNext)}
       >
-        <ArrowDownwardIcon fontSize="large" />
+        <CustomSvg
+          src={ChevronIcon}
+          size={26}
+          sx={{ backgroundColor: "text.primary" }}
+        />
       </IconButton>
     </Stack>
   );
