@@ -10,22 +10,26 @@ import StarIcon from "@mui/icons-material/Star";
 import { StaticImageData } from "next/image";
 
 import LikeIconSolid from "@/assets/icons/ic_heart_solid.svg";
-import ClipboardIconSolid from "@/assets/icons/ic_clipboard_solid.svg";
-import CommentIconSolid from "@/assets/icons/ic_comment_solid.svg";
+import LikeIconOutline from "@/assets/icons/ic_heart_outlined.svg";
+import ClipboardIconOutline from "@/assets/icons/ic_clipboard_check_outline.svg";
+import CommentIconOutline from "@/assets/icons/ic_comment_outline.svg";
 import BookmarkIconSolid from "@/assets/icons/ic_bookmark_solid.svg";
-import ShareIcon from "@/assets/icons/ic_share.svg";
+import BookmarkIconOutline from "@/assets/icons/ic_bookmark_outline.svg";
+import ShareIcon from "@/assets/icons/ic_share_new.svg";
 import { PostActionKey, usePostActions } from "./usePostActions";
 
 import { formatRating } from "@/utils/formatters";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
 import { PostActionsProps } from "./postActionTypes";
 
-const MOBILE_ICONS: Partial<Record<PostActionKey, StaticImageData>> = {
-  like: LikeIconSolid,
-  clipboard: ClipboardIconSolid,
-  comment: CommentIconSolid,
-  bookmark: BookmarkIconSolid,
-  share: ShareIcon,
+type MobileIconSet = { active?: StaticImageData; inactive: StaticImageData };
+
+const MOBILE_ICONS: Partial<Record<PostActionKey, MobileIconSet>> = {
+  like: { active: LikeIconSolid, inactive: LikeIconOutline },
+  clipboard: { inactive: ClipboardIconOutline },
+  comment: { inactive: CommentIconOutline },
+  bookmark: { active: BookmarkIconSolid, inactive: BookmarkIconOutline },
+  share: { inactive: ShareIcon },
 };
 
 const MOBILE_KEYS: PostActionKey[] = [
@@ -119,8 +123,10 @@ export default function PostActionsMobile({
       >
         {mobileActions.map(
           ({ key, count, disabled, isActive, activeColor, onClick }) => {
-            const icon = MOBILE_ICONS[key];
-            if (!icon) return null;
+            const iconSet = MOBILE_ICONS[key];
+            if (!iconSet) return null;
+            const icon =
+              isActive && iconSet.active ? iconSet.active : iconSet.inactive;
 
             return (
               <Stack key={key} alignItems="center">

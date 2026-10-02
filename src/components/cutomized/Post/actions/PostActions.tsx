@@ -3,21 +3,25 @@ import { Box, IconButton, Skeleton, Typography } from "@mui/material";
 import { StaticImageData } from "next/image";
 
 import LikeIconSolid from "@/assets/icons/ic_heart_solid.svg";
-import CommentIconSolid from "@/assets/icons/ic_comment_solid.svg";
+import LikeIconOutline from "@/assets/icons/ic_heart_outlined.svg";
+import CommentIconOutline from "@/assets/icons/ic_comment_outline.svg";
 import BookmarkIconSolid from "@/assets/icons/ic_bookmark_solid.svg";
+import BookmarkIconOutline from "@/assets/icons/ic_bookmark_outline.svg";
 import MoreIcon from "@/assets/icons/ic_elipsis-horizontal.svg";
-import ShareIcon from "@/assets/icons/ic_share.svg";
+import ShareIcon from "@/assets/icons/ic_share_new.svg";
 
 import { PostActionKey, usePostActions } from "./usePostActions";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
 import { PostActionsProps } from "./postActionTypes";
 
-const POST_ICONS: Partial<Record<PostActionKey, StaticImageData>> = {
-  like: LikeIconSolid,
-  comment: CommentIconSolid,
-  bookmark: BookmarkIconSolid,
-  share: ShareIcon,
-  options: MoreIcon,
+type PostIconSet = { active?: StaticImageData; inactive: StaticImageData };
+
+const POST_ICONS: Partial<Record<PostActionKey, PostIconSet>> = {
+  like: { active: LikeIconSolid, inactive: LikeIconOutline },
+  comment: { inactive: CommentIconOutline },
+  bookmark: { active: BookmarkIconSolid, inactive: BookmarkIconOutline },
+  share: { inactive: ShareIcon },
+  options: { inactive: MoreIcon },
 };
 
 const DESKTOP_KEYS: PostActionKey[] = [
@@ -94,8 +98,10 @@ const PostActions = ({
   return (
     <Box sx={styles.root}>
       {desktopActions.map(({ key, count, isActive, activeColor, onClick }) => {
-        const icon = POST_ICONS[key];
-        if (!icon) return null;
+        const iconSet = POST_ICONS[key];
+        if (!iconSet) return null;
+        const icon =
+          isActive && iconSet.active ? iconSet.active : iconSet.inactive;
 
         return (
           <Box key={key} sx={styles.actionItem}>
