@@ -152,9 +152,14 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     video.load();
   }, []);
 
+  // Nu condiționăm de isReady — browser-ul gestionează nativ cazul "nu
+  // sunt încă suficiente date": play() rămâne în așteptare și pornește
+  // singur de îndată ce poate, fără să mai fie nevoie să noi reîncercăm.
+  // Condiționarea de isReady aici era exact ce întârzia (sau rata complet)
+  // pornirea redării la fiecare swipe pe o rețea mai lentă.
   const tryPlay = useCallback(async () => {
     const video = videoRef.current;
-    if (!video || !isActive || !isReady || hasError || !hasValidSource) return;
+    if (!video || !isActive || hasError || !hasValidSource) return;
     try {
       await video.play();
     } catch (error) {
@@ -166,7 +171,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         console.error("Unexpected play() error:", error);
       }
     }
-  }, [hasError, hasValidSource, isActive, isReady]);
+  }, [hasError, hasValidSource, isActive]);
 
   // ✅ ZERO re-renders în timpul redării — progresul merge direct în CSS
   const handleTimeUpdateNativ = useCallback(() => {
@@ -342,7 +347,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     if (!video || !hasValidSource || hasError) return;
 
     if (isActive) {
-      if (isReady) void tryPlay();
+      void tryPlay();
       return;
     }
 
@@ -357,7 +362,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     hasError,
     hasValidSource,
     isActive,
-    isReady,
     resetOnInactive,
     resetPlaybackState,
     tryPlay,
@@ -370,14 +374,14 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       if (!video) return;
       if (document.hidden) {
         video.pause();
-      } else if (isActive && isReady && !hasError) {
+      } else if (isActive && !hasError) {
         void tryPlay();
       }
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () =>
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, [hasError, isActive, isReady, tryPlay]);
+  }, [hasError, isActive, tryPlay]);
 
   const handleRetry = useCallback(async () => {
     const video = videoRef.current;
