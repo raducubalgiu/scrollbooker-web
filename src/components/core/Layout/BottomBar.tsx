@@ -51,7 +51,8 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
   const isDarkPage = pathname === "/";
   const isDarkMode = theme.palette.mode === "dark";
   const isAnyVideoPage =
-    pathname.startsWith("/user") && pathname.includes("/post/");
+    (pathname.startsWith("/user") && pathname.includes("/post/")) ||
+    pathname.startsWith("/explore");
 
   const isDarkThemeRequired = isDarkPage || isDarkMode || isAnyVideoPage;
 

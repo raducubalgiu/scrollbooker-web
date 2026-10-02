@@ -17,6 +17,7 @@ import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
 import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
+import ForceDarkChrome from "@/components/core/ForceDarkChrome";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -82,6 +83,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
 
   return (
     <Box sx={styles.container}>
+      <ForceDarkChrome />
       <IconButton
         onClick={(e) => {
           e.stopPropagation();

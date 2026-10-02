@@ -29,6 +29,7 @@ import {
 } from "@/controllers/social/post.controller";
 import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
+import ForceDarkChrome from "@/components/core/ForceDarkChrome";
 
 const PREFETCH_OFFSET = 2;
 
@@ -369,6 +370,7 @@ export default function ExploreModule() {
 
   return (
     <Box p={{ xs: 0, lg: 2.5, width: "100%", height: "100%" }}>
+      <ForceDarkChrome />
       <Box sx={styles.container}>
         <Box sx={styles.mainContent}>
           <Box sx={styles.leftSection}>

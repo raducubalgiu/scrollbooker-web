@@ -38,6 +38,11 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  // Valoare de bază — ThemeModeProvider își sincronizează același tag
+  // reactiv la fiecare schimbare de temă (light/dark folosesc amândouă
+  // același primary.main, deci practic rămâne mereu această culoare),
+  // iar ForceDarkChrome îl suprascrie temporar pe ecranele cu video.
+  themeColor: "#FF6F00",
 };
 
 export default async function RootLayout({ children }: ChildrenType) {
