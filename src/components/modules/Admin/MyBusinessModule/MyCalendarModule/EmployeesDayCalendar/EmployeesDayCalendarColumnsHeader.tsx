@@ -5,13 +5,16 @@ import { EMPLOYEE_COLUMN_MIN_WIDTH } from "./employeesDayCalendarConstants";
 
 type EmployeesDayCalendarColumnsHeaderProps = {
   employees: CalendarEventsBusinessEmployee[];
+  scrollRef: React.Ref<HTMLDivElement>;
 };
 
 const EmployeesDayCalendarColumnsHeaderComponent = ({
   employees,
+  scrollRef,
 }: EmployeesDayCalendarColumnsHeaderProps) => {
   return (
     <Box
+      ref={scrollRef}
       sx={{
         ...styles.container,
         gridTemplateColumns: `90px repeat(${employees.length}, minmax(${EMPLOYEE_COLUMN_MIN_WIDTH}px, 1fr))`,
@@ -54,6 +57,7 @@ const styles = {
     position: "sticky",
     top: 0,
     zIndex: 10,
+    overflowX: "hidden",
   },
   grid: {
     gridColumn: 1,

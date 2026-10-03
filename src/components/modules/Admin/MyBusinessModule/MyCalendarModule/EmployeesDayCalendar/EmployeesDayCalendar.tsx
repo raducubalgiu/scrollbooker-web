@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useRef } from "react";
 import { Box, Theme, Typography } from "@mui/material";
 import { EmployeesDayCalendarHeader } from "./EmployeesDayCalendarHeader";
 import CreateAppointmentModal from "../CreateAppointmentModal/CreateAppointmentModal";
@@ -48,6 +49,15 @@ export const EmployeesDayCalendar = () => {
     handleLastMinutePayload,
     handleOwnClientPayload,
   } = useEmployeesDayCalendar();
+
+  const headerScrollRef = useRef<HTMLDivElement>(null);
+  const bodyScrollRef = useRef<HTMLDivElement>(null);
+
+  const handleBodyScroll = useCallback(() => {
+    if (headerScrollRef.current && bodyScrollRef.current) {
+      headerScrollRef.current.scrollLeft = bodyScrollRef.current.scrollLeft;
+    }
+  }, []);
 
   if (employees.length === 0 && !isLoading) {
     return (
@@ -130,9 +140,16 @@ export const EmployeesDayCalendar = () => {
           onAddAppointment={() => handleOpenCreateModal(null, null)}
         />
 
-        <Box sx={{ overflowX: "auto" }}>
-          <EmployeesDayCalendarColumnsHeader employees={employees} />
+        <EmployeesDayCalendarColumnsHeader
+          employees={employees}
+          scrollRef={headerScrollRef}
+        />
 
+        <Box
+          ref={bodyScrollRef}
+          onScroll={handleBodyScroll}
+          sx={{ overflowX: "auto" }}
+        >
           <Box
             sx={{
               display: "grid",
