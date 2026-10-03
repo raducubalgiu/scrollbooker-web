@@ -4,6 +4,7 @@ import { alpha, Box, Button, Container, Stack } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { AppRoutes } from "@/utils/routes";
+import { trackRegisterCtaClick } from "@/utils/analytics";
 import { useLandingColors } from "../LandingThemeContext";
 import LandingLogo from "../components/LandingLogo";
 import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
@@ -65,6 +66,12 @@ export default function LandingNav({ registerHref, logo }: LandingNavProps) {
             <Button
               component={Link}
               href={registerHref ?? AppRoutes.forBusiness()}
+              onClick={() =>
+                trackRegisterCtaClick(
+                  "nav",
+                  registerHref ?? AppRoutes.forBusiness()
+                )
+              }
               variant="contained"
               disableElevation
               sx={{

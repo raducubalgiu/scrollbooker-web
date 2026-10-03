@@ -23,6 +23,10 @@ import LandingLogo from "@/components/modules/LandingPageModule/components/Landi
 import { useLandingTheme } from "@/components/modules/LandingPageModule/LandingThemeContext";
 import { useSubmitBusinessLeadMutation } from "@/controllers/leads/leads.controller";
 import { BusinessLeadCreate } from "@/ts/models/leads/BusinessLead";
+import {
+  trackBusinessLeadSubmitted,
+  trackBusinessLeadError,
+} from "@/utils/analytics";
 import { lightTheme, darkTheme } from "../../../../theme/theme";
 
 type PartnersForm = {
@@ -63,20 +67,42 @@ export default function PartnersPage() {
     };
 
     submitLead(payload, {
-      onSuccess: () => setSubmitted(true),
-      onError: () => toast.error(t("genericError")),
+      onSuccess: () => {
+        trackBusinessLeadSubmitted(data.business_domain, Boolean(city));
+        setSubmitted(true);
+      },
+      onError: () => {
+        trackBusinessLeadError();
+        toast.error(t("genericError"));
+      },
     });
   };
 
   return (
     <Box
       sx={{
+        position: "relative",
+        overflow: "hidden",
         minHeight: "100dvh",
         py: { xs: 5, md: 8 },
         backgroundColor: LANDING_COLORS.background,
       }}
     >
-      <Container maxWidth="sm">
+      <Box
+        sx={{
+          position: "absolute",
+          top: "-20%",
+          right: "-10%",
+          width: 560,
+          height: 560,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${LANDING_COLORS.primary}33 0%, transparent 70%)`,
+          filter: "blur(10px)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <Container maxWidth="sm" sx={{ position: "relative" }}>
         <Stack
           component={Link}
           href={AppRoutes.home()}

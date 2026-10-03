@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { AppRoutes } from "@/utils/routes";
+import { trackRegisterCtaClick } from "@/utils/analytics";
 import { useLandingColors } from "../LandingThemeContext";
 
 type LandingCTAProps = {
@@ -46,6 +47,9 @@ export default function LandingCTA({ href }: LandingCTAProps) {
             <Button
               component={Link}
               href={href ?? AppRoutes.forBusiness()}
+              onClick={() =>
+                trackRegisterCtaClick("cta", href ?? AppRoutes.forBusiness())
+              }
               variant="contained"
               size="large"
               disableElevation

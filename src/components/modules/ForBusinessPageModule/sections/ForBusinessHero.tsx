@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
 import { AppRoutes } from "@/utils/routes";
+import { trackRegisterCtaClick } from "@/utils/analytics";
 
 export default function ForBusinessHero() {
   const t = useTranslations("forBusinessHero");
@@ -107,6 +108,9 @@ export default function ForBusinessHero() {
               <Button
                 component={Link}
                 href={AppRoutes.partners()}
+                onClick={() =>
+                  trackRegisterCtaClick("for_business_hero", AppRoutes.partners())
+                }
                 variant="contained"
                 size="large"
                 disableElevation
