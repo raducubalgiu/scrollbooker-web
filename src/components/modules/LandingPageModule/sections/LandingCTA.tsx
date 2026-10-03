@@ -34,13 +34,21 @@ export default function LandingCTA({ href }: LandingCTAProps) {
           <Stack spacing={3} alignItems="center" sx={{ position: "relative" }}>
             <Typography
               variant="h2"
-              sx={{ color: LANDING_COLORS.textPrimary, maxWidth: 640, letterSpacing: "-0.01em" }}
+              sx={{
+                color: LANDING_COLORS.textPrimary,
+                maxWidth: 640,
+                letterSpacing: "-0.01em",
+              }}
             >
               {t("title")}
             </Typography>
             <Typography
               variant="body1"
-              sx={{ color: LANDING_COLORS.textSecondary, maxWidth: 520, fontWeight: 500 }}
+              sx={{
+                color: LANDING_COLORS.textSecondary,
+                maxWidth: 520,
+                fontWeight: 500,
+              }}
             >
               {t("subtitle")}
             </Typography>
@@ -51,14 +59,11 @@ export default function LandingCTA({ href }: LandingCTAProps) {
                 trackRegisterCtaClick("cta", href ?? AppRoutes.forBusiness())
               }
               variant="contained"
-              size="large"
               disableElevation
               endIcon={<ArrowForwardRoundedIcon />}
               sx={{
                 backgroundColor: LANDING_COLORS.primary,
                 color: "#fff",
-                px: 4,
-                py: 1.5,
                 fontWeight: 700,
                 "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
               }}

@@ -11,7 +11,7 @@
   },
   "announcementBar": {
     "message": "We're launching ScrollBooker in Bucharest — the first salons to sign up get priority access, before the market fills up.",
-    "cta": "Claim your spot"
+    "cta": "See more"
   },
   "hero": {
     "badge": "Launching soon · Bucharest",
@@ -134,11 +134,20 @@
     "kicker": "For any Beauty business",
     "title": "From hairdressers and barbershops, to nails, lashes, and massage",
     "items": [
-      { "label": "Hair & beard", "alt": "A modern barbershop, with clients getting a haircut" },
+      {
+        "label": "Hair & beard",
+        "alt": "A modern barbershop, with clients getting a haircut"
+      },
       { "label": "Make-up", "alt": "A make-up artist working with a client" },
-      { "label": "Brows & lashes", "alt": "Lash extensions being applied, in a treatment room" },
+      {
+        "label": "Brows & lashes",
+        "alt": "Lash extensions being applied, in a treatment room"
+      },
       { "label": "Nails", "alt": "A manicure, close-up on finished nails" },
-      { "label": "Facial care", "alt": "A cosmetic facial treatment, at a salon" },
+      {
+        "label": "Facial care",
+        "alt": "A cosmetic facial treatment, at a salon"
+      },
       { "label": "Massage", "alt": "A therapeutic massage, at a spa salon" }
     ]
   },

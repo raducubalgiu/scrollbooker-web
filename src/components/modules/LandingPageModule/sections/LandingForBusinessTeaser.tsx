@@ -62,7 +62,11 @@ export default function LandingForBusinessTeaser() {
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Typography
               variant="overline"
-              sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
+              sx={{
+                color: LANDING_COLORS.primary,
+                fontWeight: 700,
+                letterSpacing: 1.5,
+              }}
             >
               {t("kicker")}
             </Typography>
@@ -78,7 +82,12 @@ export default function LandingForBusinessTeaser() {
                 const Icon = ICONS[index]!;
 
                 return (
-                  <Stack key={item} direction="row" spacing={1.5} alignItems="center">
+                  <Stack
+                    key={item}
+                    direction="row"
+                    spacing={1.5}
+                    alignItems="center"
+                  >
                     <Box
                       sx={{
                         width: 36,
@@ -96,7 +105,10 @@ export default function LandingForBusinessTeaser() {
                     </Box>
                     <Typography
                       variant="body2"
-                      sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.5 }}
+                      sx={{
+                        color: LANDING_COLORS.textSecondary,
+                        lineHeight: 1.5,
+                      }}
                     >
                       {item}
                     </Typography>
@@ -109,13 +121,10 @@ export default function LandingForBusinessTeaser() {
               component={Link}
               href={AppRoutes.forBusiness()}
               variant="outlined"
-              size="large"
               endIcon={<ArrowForwardRoundedIcon />}
               sx={{
                 borderColor: LANDING_COLORS.border,
                 color: LANDING_COLORS.textPrimary,
-                px: 3,
-                py: 1.25,
                 fontWeight: 700,
                 "&:hover": {
                   borderColor: LANDING_COLORS.primary,

@@ -48,7 +48,11 @@ export default async function GetStartedModule() {
 
         <Typography
           variant="overline"
-          sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
+          sx={{
+            color: LANDING_COLORS.primary,
+            fontWeight: 700,
+            letterSpacing: 1.5,
+          }}
         >
           {t("kicker")}
         </Typography>
@@ -128,7 +132,6 @@ export default async function GetStartedModule() {
           component={Link}
           href={AppRoutes.registerBusiness()}
           variant="contained"
-          size="large"
           fullWidth
           disableElevation
           endIcon={<ArrowForwardRoundedIcon />}

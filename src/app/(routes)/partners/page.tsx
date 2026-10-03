@@ -138,7 +138,11 @@ export default function PartnersPage() {
             }}
           >
             {submitted ? (
-              <Stack spacing={2} alignItems="center" sx={{ py: 4, textAlign: "center" }}>
+              <Stack
+                spacing={2}
+                alignItems="center"
+                sx={{ py: 4, textAlign: "center" }}
+              >
                 <CheckCircleOutlineIcon
                   sx={{ fontSize: 56, color: LANDING_COLORS.primary }}
                 />
@@ -205,18 +209,17 @@ export default function PartnersPage() {
 
                     <Button
                       variant="contained"
-                      size="large"
                       fullWidth
                       loading={isPending}
                       onClick={methods.handleSubmit(onSubmit)}
                       disableElevation
                       sx={{
-                        mt: 1,
-                        py: 1.5,
                         fontWeight: 700,
                         textTransform: "none",
                         backgroundColor: LANDING_COLORS.primary,
-                        "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
+                        "&:hover": {
+                          backgroundColor: LANDING_COLORS.primaryDark,
+                        },
                       }}
                     >
                       {t("submit")}

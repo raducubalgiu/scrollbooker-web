@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Button, Container, Divider, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { signIn } from "next-auth/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -102,7 +109,6 @@ export default function SignInPage() {
         <Stack spacing={1.5} sx={{ mb: 3 }}>
           <Button
             variant="outlined"
-            size="large"
             fullWidth
             loading={googleLoading}
             onClick={handleGoogleSignIn}
@@ -115,7 +121,6 @@ export default function SignInPage() {
 
           <Button
             variant="outlined"
-            size="large"
             fullWidth
             startIcon={<AppleIcon />}
             disableElevation
@@ -152,12 +157,11 @@ export default function SignInPage() {
 
             <Button
               variant="contained"
-              size="large"
               fullWidth
               loading={loading}
               onClick={methods.handleSubmit(handleLogin)}
               disableElevation
-              sx={{ mt: 1, py: 1.5, fontWeight: 700, textTransform: "none" }}
+              sx={{ mt: 1, fontWeight: 700, textTransform: "none" }}
             >
               {t("submit")}
             </Button>

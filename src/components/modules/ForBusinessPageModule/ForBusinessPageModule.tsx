@@ -28,10 +28,7 @@ export default function ForBusinessPageModule() {
         overflowX: "hidden",
       }}
     >
-      <LandingNav
-        registerHref={AppRoutes.partners()}
-        logo={<ForBusinessLogo height={18} />}
-      />
+      <LandingNav logo={<ForBusinessLogo height={18} />} />
       <ForBusinessHero />
       <ForBusinessPainPoints />
       <LandingProfileShowcase />

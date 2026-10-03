@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { alpha, Box, Button, Container, Stack, Typography, keyframes } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography,
+  keyframes,
+} from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { LANDING_COLORS_LIGHT } from "../landing.constants";
@@ -118,14 +126,12 @@ export default function LandingHero() {
             >
               <Button
                 variant="contained"
-                size="large"
                 disableElevation
                 onClick={() => setIsModalOpen(true)}
+                size="large"
                 sx={{
                   backgroundColor: LANDING_COLORS.primary,
                   "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
-                  px: 3,
-                  py: 1.5,
                   whiteSpace: "nowrap",
                   fontWeight: 700,
                   borderRadius: 50,

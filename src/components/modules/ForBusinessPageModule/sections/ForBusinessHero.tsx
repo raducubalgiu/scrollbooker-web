@@ -1,10 +1,18 @@
 "use client";
 
-import { alpha, Box, Button, Container, Stack, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import LocalOfferRoundedIcon from "@mui/icons-material/LocalOfferRounded";
 import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
 import { AppRoutes } from "@/utils/routes";
 import { trackRegisterCtaClick } from "@/utils/analytics";
@@ -101,6 +109,31 @@ export default function ForBusinessHero() {
             </Typography>
 
             <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              sx={{
+                display: "inline-flex",
+                px: 2,
+                py: 1,
+                borderRadius: 50,
+                backgroundColor: alpha(LANDING_COLORS.primary, 0.1),
+                border: `1px solid ${alpha(LANDING_COLORS.primary, 0.3)}`,
+                mb: 4,
+              }}
+            >
+              <LocalOfferRoundedIcon
+                sx={{ fontSize: 18, color: LANDING_COLORS.primary }}
+              />
+              <Typography
+                variant="body2"
+                sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 700 }}
+              >
+                {t("launchOffer")}
+              </Typography>
+            </Stack>
+
+            <Stack
               direction={{ xs: "column", sm: "row" }}
               spacing={1.5}
               alignItems={{ xs: "stretch", sm: "center" }}
@@ -109,7 +142,10 @@ export default function ForBusinessHero() {
                 component={Link}
                 href={AppRoutes.partners()}
                 onClick={() =>
-                  trackRegisterCtaClick("for_business_hero", AppRoutes.partners())
+                  trackRegisterCtaClick(
+                    "for_business_hero",
+                    AppRoutes.partners()
+                  )
                 }
                 variant="contained"
                 size="large"
@@ -117,8 +153,6 @@ export default function ForBusinessHero() {
                 sx={{
                   backgroundColor: LANDING_COLORS.primary,
                   "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
-                  px: 3,
-                  py: 1.5,
                   whiteSpace: "nowrap",
                   fontWeight: 700,
                   borderRadius: 50,
@@ -135,8 +169,6 @@ export default function ForBusinessHero() {
                 endIcon={<ArrowForwardRoundedIcon />}
                 sx={{
                   color: LANDING_COLORS.textPrimary,
-                  px: 2,
-                  py: 1.5,
                   whiteSpace: "nowrap",
                   fontWeight: 600,
                 }}

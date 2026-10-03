@@ -233,26 +233,26 @@ const getComponents = (mode: Mode) => ({
         },
       }),
       sizeSmall: ({ theme }: { theme: Theme }) => ({
-        padding: theme.spacing(1.25, 1.25),
+        padding: theme.spacing(1.5, 1.25),
         fontSize: "0.75rem",
         [defaultTheme.breakpoints.up("md")]: {
-          padding: theme.spacing(1.25, 1.5),
+          padding: theme.spacing(1.5, 1.5),
           fontSize: "0.8125rem",
         },
       }),
       sizeMedium: ({ theme }: { theme: Theme }) => ({
-        padding: theme.spacing(1.5, 1.75),
+        padding: theme.spacing(2, 2.2),
         fontSize: "0.8125rem",
         [defaultTheme.breakpoints.up("md")]: {
-          padding: theme.spacing(1.5, 2),
+          padding: theme.spacing(2, 3),
           fontSize: "0.875rem",
         },
       }),
       sizeLarge: ({ theme }: { theme: Theme }) => ({
-        padding: theme.spacing(2, 2.5),
+        padding: theme.spacing(2.5, 3),
         fontSize: "0.875rem",
         [defaultTheme.breakpoints.up("md")]: {
-          padding: theme.spacing(2, 2.5),
+          padding: theme.spacing(2.5, 3),
           fontSize: "0.9375rem",
         },
       }),
