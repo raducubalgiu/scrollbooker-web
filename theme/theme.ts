@@ -141,13 +141,6 @@ const commonTypography = {
     fontSize: "0.875rem",
     lineHeight: 1.6,
   },
-  // Nivel pentru conținut emfazat, lângă titlul unei secțiuni dar nu la
-  // nivel de heading: numere de statistici, rating-uri, etichete secundare.
-  // Deliberat mai mare decât body1 (1rem) — un rând de tipul
-  // "4.8 ★★★★★ (123 recenzii)" trebuie să aibă prezență vizuală proprie,
-  // ca pe Instagram/TikTok, nu să se confunde cu textul obișnuit. Aceeași
-  // dimensiune pentru cifră și etichetă, diferențiate prin fontWeight la
-  // locul de folosire.
   subtitle1: {
     fontSize: "1.125rem",
     fontWeight: 600,

@@ -4,7 +4,7 @@ import React from "react";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 type HeaderMobileProps = {
-  title?: string;
+  title?: string | undefined;
 };
 
 const HeaderMobile = ({ title }: HeaderMobileProps) => {

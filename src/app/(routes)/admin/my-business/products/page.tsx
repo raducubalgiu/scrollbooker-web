@@ -1,4 +1,4 @@
-import MyProductsModule from "@/components/modules/Admin/MyBusiness/MyProductsModule/MyProductsModule";
+import MyProductsModule from "@/components/modules/Admin/MyBusinessModule/MyProductsModule/MyProductsModule";
 import React, { JSX } from "react";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";

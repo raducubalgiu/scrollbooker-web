@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import { MyServicesModule } from "@/components/modules/Admin/MyBusiness/MyServicesModule/MyServicesModule";
+import { MyServicesModule } from "@/components/modules/Admin/MyBusinessModule/MyServicesModule/MyServicesModule";
 import { authOptions } from "@/lib/auth/authOptions";
 import { getServerSession } from "next-auth";
 import { JSX } from "react";

@@ -33,8 +33,11 @@ type MyBusinessModuleProps = {
 };
 
 const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
-  const { has_employees: hasEmployees, is_employee: isEmployee, permissions } =
-    session;
+  const {
+    has_employees: hasEmployees,
+    is_employee: isEmployee,
+    permissions,
+  } = session;
 
   const { navigateTo } = useAppNavigation();
 
@@ -42,64 +45,56 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
     () => [
       {
         title: "Dashboard",
-        description:
-          "Vizualizează statisticile și performanța afacerii tale.",
+        description: "Statistici despre rezervări și postări",
         icon: <DashboardOutlinedIcon />,
         permission: PermissionEnum.MY_DASHBOARD_VIEW,
         navigate: () => navigateTo(AppRoutes.myDashboard()),
       },
       {
         title: "Afaceri în aprobare",
-        description:
-          "Analizează și aprobă afacerile noi care așteaptă validarea.",
+        description: "Lista de afaceri ce urmează a fi revizuite",
         icon: <ApartmentOutlinedIcon />,
         permission: PermissionEnum.NOMENCLATURES_VIEW,
         navigate: () => navigateTo(AppRoutes.approve()),
       },
       {
         title: "Detalii afacere",
-        description:
-          "Vizualizează și editează locația, datele de contact și informațiile generale ale companiei.",
+        description: "Detalii despre afacerea mea",
         icon: <LocationOnOutlinedIcon />,
         permission: PermissionEnum.MY_BUSINESS_LOCATION_VIEW,
         navigate: () => navigateTo(AppRoutes.myBusinessDetails()),
       },
       {
         title: "Program de lucru",
-        description:
-          "Setează și gestionează intervalele orare de activitate și zilele libere.",
+        description: "Detalii despre programul meu",
         icon: <ScheduleOutlinedIcon />,
         permission: PermissionEnum.MY_SCHEDULES_VIEW,
         navigate: () => navigateTo(AppRoutes.mySchedules()),
       },
       {
         title: "Categorii",
-        description:
-          "Organizează serviciile oferite în categorii personalizate pentru o structură clară.",
+        description: "Detalii despre categoriile mele de servicii",
         icon: <BookOutlinedIcon />,
         permission: PermissionEnum.MY_SERVICES_VIEW,
         navigate: () => navigateTo(AppRoutes.myServices()),
       },
       {
         title: "Servicii",
-        description:
-          "Adaugă, editează sau șterge serviciile disposable pentru programare.",
+        description: "Detalii despre serviciile mele",
         icon: <ShoppingBagOutlinedIcon />,
         permission: PermissionEnum.MY_PRODUCTS_VIEW,
         navigate: () => navigateTo(AppRoutes.myProducts()),
       },
       {
         title: "Calendar",
-        description:
-          "Gestionează rezervările primite și organizează activitățile zilnice.",
+        description: "Calendarul meu de programări",
         icon: <CalendarTodayOutlinedIcon />,
         navigate: () => navigateTo(AppRoutes.calendar()),
         permission: PermissionEnum.MY_CALENDAR_VIEW,
       },
       {
         title: "Angajați",
-        description:
-          "Administrează echipa de specialiști și cererile de angajare active.",
+        description: "Angajați și cereri de angajare",
         icon: <PeopleOutlineOutlinedIcon />,
         navigate: () => navigateTo(AppRoutes.myEmployees()),
         permission: PermissionEnum.MY_EMPLOYEES_VIEW,

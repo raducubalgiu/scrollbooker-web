@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import Accordion from "@/components/core/Accordion/Accordion";
@@ -16,7 +16,7 @@ const SelectedServicesList = ({
   onToggleService,
 }: SelectedServicesListProps) => {
   return (
-    <Paper>
+    <Box>
       {serviceDomains?.map((domain) => (
         <Accordion
           title={domain.name}
@@ -33,7 +33,7 @@ const SelectedServicesList = ({
           ))}
         </Accordion>
       ))}
-    </Paper>
+    </Box>
   );
 };
 

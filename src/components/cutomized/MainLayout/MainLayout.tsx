@@ -23,23 +23,10 @@ export default function MainLayout({
   sx = {},
 }: MainLayoutProps) {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
-    >
+    <Box sx={styles.container}>
       <HeaderMobile />
-      <Box
-        sx={{
-          flexGrow: 1,
-          overflowY: "auto",
-          WebkitOverflowScrolling: "touch",
-          overscrollBehaviorY: "contain",
-        }}
-      >
+
+      <Box sx={styles.main}>
         <Box sx={{ p: 2.5, ...sx }}>
           {showHeader && (
             <Stack
@@ -75,3 +62,18 @@ export default function MainLayout({
     </Box>
   );
 }
+
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    width: "100%",
+  },
+  main: {
+    flexGrow: 1,
+    overflowY: "auto",
+    WebkitOverflowScrolling: "touch",
+    overscrollBehaviorY: "contain",
+  },
+};

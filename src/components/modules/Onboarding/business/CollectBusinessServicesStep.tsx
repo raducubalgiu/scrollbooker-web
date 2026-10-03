@@ -1,7 +1,7 @@
 import { Button, Stack } from "@mui/material";
 import React, { useTransition } from "react";
-import MyServicesSkeleton from "../../Admin/MyBusiness/MyServicesModule/MyServicesSkeleton";
-import SelectedServicesList from "../../Admin/MyBusiness/MyServicesModule/SelectedServicesList";
+import MyServicesSkeleton from "../../Admin/MyBusinessModule/MyServicesModule/MyServicesSkeleton";
+import SelectedServicesList from "../../Admin/MyBusinessModule/MyServicesModule/SelectedServicesList";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import BusinessOnboardingSectionLayout from "../BusinessOnboardingSectionLayout";

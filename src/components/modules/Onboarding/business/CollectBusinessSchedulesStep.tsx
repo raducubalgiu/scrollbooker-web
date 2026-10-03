@@ -11,7 +11,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import SchedulesSelectHours from "../../Admin/MyBusiness/MySchedulesModule/SchedulesSelectHours";
+import SchedulesSelectHours from "../../Admin/MyBusinessModule/MySchedulesModule/SchedulesSelectHours";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -28,9 +28,7 @@ const CollectBusinessSchedulesStep = () => {
   const { data: session, update } = useSession();
   const router = useRouter();
 
-  const { data, isLoading } = useGetSchedulesByUserId(
-    String(session?.user_id)
-  );
+  const { data, isLoading } = useGetSchedulesByUserId(String(session?.user_id));
 
   const methods = useForm<SchedulesFormValues>({
     defaultValues: {

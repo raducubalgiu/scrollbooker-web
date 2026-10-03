@@ -71,7 +71,12 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
   ];
 
   return (
-    <MainLayout title={t("title")} showHeader={true} hideAction>
+    <MainLayout
+      title={t("title")}
+      showHeader={true}
+      hideAction
+      sx={{ bgcolor: "background.paper" }}
+    >
       {isLoading && <MyServicesSkeleton />}
 
       {!isLoading && (

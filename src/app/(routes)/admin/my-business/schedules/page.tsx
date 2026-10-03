@@ -1,7 +1,7 @@
 import React, { JSX } from "react";
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import MySchedulesModule from "@/components/modules/Admin/MyBusiness/MySchedulesModule/MySchedulesModule";
+import MySchedulesModule from "@/components/modules/Admin/MyBusinessModule/MySchedulesModule/MySchedulesModule";
 import { getSchedulesByUserId } from "@/controllers/booking/schedule.service";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
