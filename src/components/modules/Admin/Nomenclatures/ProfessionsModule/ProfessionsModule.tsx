@@ -24,7 +24,7 @@ import {
   useCreateProfession,
   useDeleteProfession,
   useUpdateProfession,
-} from "@/controllers/nomenclature/professions.controller";
+} from "@/controllers/nomenclature/profession.controller";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import ProfessionModal from "./ProfessionModal";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";

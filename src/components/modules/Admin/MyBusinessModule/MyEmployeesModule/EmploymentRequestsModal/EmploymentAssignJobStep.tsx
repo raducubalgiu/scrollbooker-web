@@ -1,7 +1,7 @@
 "use client";
 
 import ProfessionListItemSkeletons from "@/components/cutomized/Skeletons/ProfessionListItemSkeletons";
-import { useGetProfessionsByBusinessType } from "@/controllers/nomenclature/professions.controller";
+import { useGetProfessionsByBusinessType } from "@/controllers/nomenclature/profession.controller";
 import { Box, Button, List, Stack, Typography } from "@mui/material";
 import React from "react";
 import SelectedProfessionItem from "./SelectedProfessionItem";
