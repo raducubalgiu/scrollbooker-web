@@ -1,6 +1,6 @@
 import { alpha, Box, Theme } from "@mui/material";
 import React from "react";
-import MapLoadingIndicator from "../../Marketplace/SearchModule/SearchLoadingIndicator";
+import MapLoadingIndicator from "@/components/modules/Marketplace/SearchModule/SearchLoadingIndicator";
 
 const CalendarLoadingOverlay = () => {
   return (

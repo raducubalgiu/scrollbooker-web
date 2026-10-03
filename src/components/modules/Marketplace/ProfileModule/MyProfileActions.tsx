@@ -1,71 +1,48 @@
-import { Button } from "@mui/material";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import React from "react";
 import { AppRoutes } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
+import ProfileActionButton from "./ProfileActionButton";
 
-type OwnProfileActionsProps = {
+type MyProfileActionsProps = {
   is_business_or_employee: boolean;
   onOpenEditModal: () => void;
   onShare: () => void;
 };
 
-const OwnProfileActions = ({
+const MyProfileActions = ({
   is_business_or_employee,
   onOpenEditModal,
   onShare,
-}: OwnProfileActionsProps) => {
+}: MyProfileActionsProps) => {
   const { navigateTo } = useAppNavigation();
-
-  const buttonSx = {
-    textTransform: "none",
-    flex: { xs: 1, sm: "none" },
-    whiteSpace: "nowrap",
-    minWidth: "max-content",
-    color: "text.primary",
-  };
 
   return (
     <>
-      <Button
-        variant="contained"
+      <ProfileActionButton
         color="secondary"
+        title="Editează"
         onClick={onOpenEditModal}
-        size="large"
-        sx={buttonSx}
-        disableElevation
-      >
-        Editează
-      </Button>
+      />
 
       {is_business_or_employee ? (
-        <Button
-          variant="contained"
+        <ProfileActionButton
           color="secondary"
+          title="Calendar"
           onClick={() => navigateTo(AppRoutes.calendar())}
-          size="large"
           startIcon={<DateRangeOutlinedIcon />}
-          sx={buttonSx}
-          disableElevation
-        >
-          Calendar
-        </Button>
+        />
       ) : (
-        <Button
-          variant="contained"
+        <ProfileActionButton
           color="secondary"
+          title="Distribuie"
           onClick={onShare}
-          size="large"
           startIcon={<IosShareIcon />}
-          sx={buttonSx}
-          disableElevation
-        >
-          Distribuie
-        </Button>
+        />
       )}
     </>
   );
 };
 
-export default OwnProfileActions;
+export default MyProfileActions;

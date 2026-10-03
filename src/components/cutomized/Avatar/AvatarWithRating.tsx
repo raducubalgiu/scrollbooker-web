@@ -4,9 +4,9 @@ import React from "react";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 
 type AvatarWithRatingProps = {
-  avatar: string | null;
+  avatar: string | null | undefined;
   ratingsAverage: number | null;
-  isBusinessOrEmployee?: Boolean;
+  isBusinessOrEmployee?: boolean;
 };
 
 const AvatarWithRating = ({
@@ -14,31 +14,31 @@ const AvatarWithRating = ({
   ratingsAverage,
   isBusinessOrEmployee = false,
 }: AvatarWithRatingProps) => {
+  if (!isBusinessOrEmployee) {
+    return <Avatar sx={styles.avatar} src={avatar ?? ""} />;
+  }
+
   return (
-    <Stack flexDirection="row" alignItems="center">
-      <Badge
-        overlap="circular"
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        badgeContent={
-          isBusinessOrEmployee && (
-            <Stack
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="center"
-              sx={styles.badgeContent}
-            >
-              <StarRoundedIcon sx={{ fontSize: 18, mr: 0.5 }} color="rating" />
-              <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-                {formatRating(ratingsAverage)}
-              </Typography>
-            </Stack>
-          )
-        }
-        sx={styles.badge}
-      >
-        <Avatar sx={styles.avatar} src={avatar ?? ""} />
-      </Badge>
-    </Stack>
+    <Badge
+      overlap="circular"
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      badgeContent={
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="center"
+          sx={styles.badgeContent}
+        >
+          <StarRoundedIcon sx={styles.ratingIcon} color="rating" />
+          <Typography sx={styles.ratingsAverage}>
+            {formatRating(ratingsAverage)}
+          </Typography>
+        </Stack>
+      }
+      sx={styles.badge}
+    >
+      <Avatar sx={styles.avatar} src={avatar ?? ""} />
+    </Badge>
   );
 };
 
@@ -60,6 +60,12 @@ const styles = {
     borderRadius: 50,
     boxShadow: 1,
   }),
+  ratingIcon: { fontSize: { xs: 16, md: 18 }, mr: 0.5 },
+  ratingsAverage: {
+    fontSize: { xs: 13, md: 16 },
+    fontWeight: 600,
+    color: "text.primary",
+  },
   avatar: {
     width: { xs: 55, md: 70 },
     height: { xs: 55, md: 70 },

@@ -1,6 +1,4 @@
 import {
-  Avatar,
-  Badge,
   Box,
   Button,
   ListItem,
@@ -9,11 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useCallback, useMemo } from "react";
-import StarIcon from "@mui/icons-material/Star";
-import { formatRating } from "@/utils/formatters";
 import { UserMini } from "@/ts/models/user/UserMini";
 import Link from "next/link";
 import { AppRoutes } from "@/utils/routes";
+import AvatarWithRating from "../Avatar/AvatarWithRating";
 
 type UserItemProps = {
   user: UserMini;
@@ -35,35 +32,6 @@ const UserItem = ({
     username,
     profession,
   } = user;
-
-  const formattedRating = formatRating(ratings_average);
-
-  const user_avatar = useMemo(() => {
-    if (!is_business_or_employee) return <Avatar sx={styles.avatar} />;
-
-    return (
-      <Badge
-        overlap="circular"
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        badgeContent={
-          <Stack
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="center"
-            sx={styles.badgeContent}
-          >
-            <StarIcon sx={{ fontSize: 20, mr: 0.5, color: "rating.main" }} />
-            <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-              {formattedRating}
-            </Typography>
-          </Stack>
-        }
-        sx={styles.badge}
-      >
-        <Avatar sx={styles.avatar} src={avatar ?? ""} />
-      </Badge>
-    );
-  }, [is_business_or_employee, formattedRating, avatar]);
 
   const handleFollowClick = useCallback(
     (e: React.MouseEvent) => {
@@ -106,7 +74,10 @@ const UserItem = ({
           flex={1}
         >
           <Stack flexDirection="row" alignItems="center" gap={2}>
-            {user_avatar}
+            <AvatarWithRating
+              avatar={avatar}
+              ratingsAverage={ratings_average}
+            />
 
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -126,26 +97,3 @@ const UserItem = ({
 };
 
 export default UserItem;
-
-const styles = {
-  badge: {
-    "& .MuiBadge-badge": {
-      right: "auto",
-      left: "50%",
-      transform: `translate(-50%, 100%)`,
-    },
-  },
-  badgeContent: {
-    backgroundColor: "background.default",
-    px: { xs: 1, lg: 1.5 },
-    py: { xs: 0.2, lg: 0.5 },
-    borderRadius: 50,
-    boxShadow: 1,
-  },
-  avatar: {
-    width: { xs: 50, lg: 70 },
-    height: { xs: 50, lg: 70 },
-    border: 1,
-    borderColor: "divider",
-  },
-};

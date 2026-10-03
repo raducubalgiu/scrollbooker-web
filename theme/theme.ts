@@ -154,6 +154,7 @@ const commonTypography = {
   button: {
     textTransform: "none" as const,
     fontWeight: 600,
+    lineHeight: 1.2,
   },
 };
 
@@ -227,30 +228,47 @@ const getComponents = (mode: Mode) => ({
         fontWeight: theme.palette.mode === "dark" ? "bold" : 600,
         borderRadius: 50,
         textTransform: "none",
-        padding: "6px 14px",
-        fontSize: "0.8125rem",
-        [defaultTheme.breakpoints.up("md")]: {
-          padding: "10px 18px",
-          fontSize: "0.875rem",
-        },
         "&.Mui-disabled": {
           pointerEvents: "auto",
         },
       }),
-      sizeSmall: {
-        padding: "4px 10px",
+      sizeSmall: ({ theme }: { theme: Theme }) => ({
+        padding: theme.spacing(1.25, 1.25),
         fontSize: "0.75rem",
         [defaultTheme.breakpoints.up("md")]: {
-          padding: "6px 14px",
+          padding: theme.spacing(1.25, 1.5),
           fontSize: "0.8125rem",
         },
-      },
-      sizeLarge: {
-        padding: "8px 18px",
+      }),
+      sizeMedium: ({ theme }: { theme: Theme }) => ({
+        padding: theme.spacing(1.5, 1.75),
+        fontSize: "0.8125rem",
+        [defaultTheme.breakpoints.up("md")]: {
+          padding: theme.spacing(1.5, 2),
+          fontSize: "0.875rem",
+        },
+      }),
+      sizeLarge: ({ theme }: { theme: Theme }) => ({
+        padding: theme.spacing(2, 2.5),
         fontSize: "0.875rem",
         [defaultTheme.breakpoints.up("md")]: {
-          padding: "12px 28px",
-          fontSize: "1rem",
+          padding: theme.spacing(2, 2.5),
+          fontSize: "0.9375rem",
+        },
+      }),
+      iconSizeSmall: {
+        "& > *:nth-of-type(1)": {
+          fontSize: 16,
+        },
+      },
+      iconSizeMedium: {
+        "& > *:nth-of-type(1)": {
+          fontSize: 18,
+        },
+      },
+      iconSizeLarge: {
+        "& > *:nth-of-type(1)": {
+          fontSize: 18,
         },
       },
       containedPrimary: ({ theme }: { theme: Theme }) => ({

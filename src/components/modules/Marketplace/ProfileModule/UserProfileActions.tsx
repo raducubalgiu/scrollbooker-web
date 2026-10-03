@@ -1,10 +1,10 @@
-import { Button } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
+import IosShareIcon from "@mui/icons-material/IosShare";
 import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import IosShareIcon from "@mui/icons-material/IosShare";
+import ProfileActionButton from "./ProfileActionButton";
 
 type UserProfileActionsProps = {
   userId: number;
@@ -92,66 +92,26 @@ const UserProfileActions = ({
     });
   };
 
-  const buttonSx = {
-    textTransform: "none",
-    flex: { xs: 1, sm: "none" },
-    whiteSpace: "nowrap",
-    minWidth: "max-content",
-    py: { xs: 1, lg: 1.5 },
-    px: { xs: 2.5, lg: 2 },
-  };
-
   return (
     <>
       {is_business_or_employee && (
         <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-          <Button
-            variant="contained"
-            onClick={onBookNow}
-            size="large"
-            disableElevation
-            sx={buttonSx}
-          >
-            Rezervă acum
-          </Button>
+          <ProfileActionButton title="Rezervă acum" onClick={onBookNow} />
         </Protected>
       )}
-      <Button
+      <ProfileActionButton
+        title={localFollow ? "Urmărești" : "Urmărește"}
         variant={localFollow ? "outlined" : "contained"}
         color="secondary"
         onClick={handleToggleFollow}
-        size="large"
-        disableElevation
-        sx={{
-          ...buttonSx,
-          textTransform: "capitalize",
-          color: "text.primary",
-          "&.Mui-disabled": {
-            opacity: 1,
-            color: "inherit",
-            backgroundColor: "transparent",
-            boxShadow: "none",
-            borderColor: "secondary",
-          },
-        }}
         disabled={isFollowing || isUnfollowing}
-      >
-        {localFollow ? "Urmărești" : "Urmărește"}
-      </Button>
-
-      {!is_business_or_employee && (
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={onShare}
-          size="large"
-          startIcon={<IosShareIcon />}
-          sx={buttonSx}
-          disableElevation
-        >
-          Distribuie
-        </Button>
-      )}
+      />
+      <ProfileActionButton
+        color="secondary"
+        title="Distribuie"
+        onClick={onShare}
+        startIcon={<IosShareIcon />}
+      />
     </>
   );
 };

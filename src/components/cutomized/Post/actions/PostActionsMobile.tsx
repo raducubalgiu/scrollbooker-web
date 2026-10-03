@@ -1,12 +1,5 @@
-import {
-  Avatar,
-  Badge,
-  Box,
-  ButtonBase,
-  Stack,
-  Typography,
-} from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
+import { Box, ButtonBase, Stack, Typography } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import { StaticImageData } from "next/image";
 
 import LikeIconSolid from "@/assets/icons/ic_heart_solid.svg";
@@ -18,9 +11,10 @@ import BookmarkIconOutline from "@/assets/icons/ic_bookmark_outline.svg";
 import ShareIcon from "@/assets/icons/ic_share_new.svg";
 import { PostActionKey, usePostActions } from "./usePostActions";
 
-import { formatRating } from "@/utils/formatters";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
+import AvatarWithRating from "../../Avatar/AvatarWithRating";
 import { PostActionsProps } from "./postActionTypes";
+import { lightTheme } from "../../../../../theme/theme";
 
 type MobileIconSet = { active?: StaticImageData; inactive: StaticImageData };
 
@@ -82,37 +76,15 @@ export default function PostActionsMobile({
           e.stopPropagation();
           onNavigateToUser();
         }}
-        sx={{
-          cursor: "pointer",
-          position: "relative",
-          mb: isVideoReview ? 1.5 : 3.5,
-        }}
+        sx={styles.avatarWrapper(isVideoReview)}
       >
-        <Badge
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          badgeContent={
-            !isVideoReview && (
-              <Stack
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="center"
-                sx={styles.badgeContent}
-                gap={0.25}
-              >
-                <StarIcon sx={{ fontSize: 18, color: "rating.main" }} />
-                <Typography
-                  sx={{ fontSize: 15, fontWeight: 600, color: "common.black" }}
-                >
-                  {formatRating(user?.ratings_average)}
-                </Typography>
-              </Stack>
-            )
-          }
-          sx={styles.badge}
-        >
-          <Avatar sx={styles.avatar} src={user?.avatar ?? ""} />
-        </Badge>
+        <ThemeProvider theme={lightTheme}>
+          <AvatarWithRating
+            avatar={user?.avatar ?? null}
+            ratingsAverage={user?.ratings_average ?? null}
+            isBusinessOrEmployee={!isVideoReview}
+          />
+        </ThemeProvider>
       </Box>
 
       <Stack
@@ -169,24 +141,9 @@ const styles = {
     color: "#fff",
     transition: "all 0.15ms ease",
   },
-  badge: {
-    "& .MuiBadge-badge": {
-      right: "auto",
-      left: "50%",
-      transform: `translate(-50%, 100%)`,
-    },
-  },
-  badgeContent: {
-    backgroundColor: "common.white",
-    px: 0.75,
-    py: 0.25,
-    borderRadius: 50,
-    boxShadow: 1,
-  },
-  avatar: {
-    width: 55,
-    height: 55,
-    border: 1,
-    borderColor: "divider",
-  },
+  avatarWrapper: (isVideoReview: boolean | undefined) => ({
+    cursor: "pointer",
+    position: "relative",
+    mb: isVideoReview ? 1.5 : 3.5,
+  }),
 };

@@ -122,7 +122,7 @@ export default function Modal({
       {...others}
       sx={{
         "& .MuiDialog-paper": {
-          borderRadius: fullScreen ? 0 : 10,
+          borderRadius: fullScreen ? 0 : { xs: 4, lg: 10 },
           transition: "border-radius 0.2s ease-in-out",
           display: "flex",
           flexDirection: "column",

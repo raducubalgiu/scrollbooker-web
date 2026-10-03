@@ -5,6 +5,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { ProfileTabEnum } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
 import PostActionsMobile from "./actions/PostActionsMobile";
+import PostBadge from "./PostBadge";
 import { AppRoutes } from "@/utils/routes";
 import { PostActionsProps } from "./actions/postActionTypes";
 
@@ -20,8 +21,14 @@ const PostOverlay = ({
   onOpenLinkedProducts,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { user, counters, userActions, isOwnPost, isVideoReview, serviceDomain } =
-    actions;
+  const {
+    user,
+    counters,
+    userActions,
+    isOwnPost,
+    isVideoReview,
+    serviceDomain,
+  } = actions;
 
   const handleToggleDescription = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,33 +44,25 @@ const PostOverlay = ({
           direction="row"
           alignItems="flex-end"
           spacing={2}
-          sx={{ pointerEvents: "auto", mb: { xs: 1, lg: 0 } }}
+          sx={styles.contentRow}
         >
-          <Stack spacing={2} sx={{ flex: 1, minWidth: 0 }}>
+          <Stack spacing={1.25} sx={styles.textColumn}>
             {(isVideoReview || serviceDomain) && (
-              <Stack spacing={0.75} sx={{ width: "fit-content" }}>
+              <Stack spacing={0.75} sx={styles.badgesStack}>
                 {isVideoReview && (
-                  <Box sx={{ ...styles.badge, bgcolor: "rgba(255,255,255,0.9)" }}>
-                    <Typography
-                      variant="caption"
-                      fontWeight={600}
-                      sx={{ color: "common.black", lineHeight: 1.2 }}
-                    >
-                      Recenzie Video
-                    </Typography>
-                  </Box>
+                  <PostBadge
+                    label="Recenzie video"
+                    bgcolor="rgba(255,255,255,0.9)"
+                    color="common.black"
+                  />
                 )}
 
                 {serviceDomain && (
-                  <Box sx={{ ...styles.badge, bgcolor: "beauty.main" }}>
-                    <Typography
-                      variant="caption"
-                      fontWeight={600}
-                      sx={{ color: "common.white", lineHeight: 1.2 }}
-                    >
-                      {serviceDomain.name}
-                    </Typography>
-                  </Box>
+                  <PostBadge
+                    label={serviceDomain.name}
+                    bgcolor="beauty.main"
+                    color="common.white"
+                  />
                 )}
               </Stack>
             )}
@@ -82,16 +81,16 @@ const PostOverlay = ({
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Typography
-                  variant="subtitle1"
+                  variant="body1"
                   fontWeight={800}
-                  sx={{ lineHeight: 1.2, mb: 0.5 }}
+                  sx={styles.fullName}
                 >
                   {user?.fullname}
                 </Typography>
                 <Typography
-                  variant="body2"
+                  variant="caption"
                   color="primary"
-                  sx={{ fontWeight: 600 }}
+                  sx={styles.profession}
                 >
                   {user?.profession}
                 </Typography>
@@ -99,18 +98,17 @@ const PostOverlay = ({
             </Box>
 
             {description && description.length > 0 && (
-              <Box onClick={handleToggleDescription} sx={{ cursor: "pointer" }}>
+              <Box
+                onClick={handleToggleDescription}
+                sx={styles.descriptionWrapper}
+              >
                 <Typography
                   variant="body2"
-                  sx={{
-                    opacity: 0.95,
-                    lineHeight: 1.4,
-                    display: "-webkit-box",
-                    WebkitBoxOrient: "vertical",
-                    WebkitLineClamp: isExpanded ? "unset" : 2,
-                    overflow: isExpanded ? "unset" : "hidden",
-                    transition: "all 0.2s ease-in-out",
-                  }}
+                  sx={
+                    isExpanded
+                      ? styles.descriptionExpanded
+                      : styles.descriptionCollapsed
+                  }
                 >
                   {description}
                 </Typography>
@@ -124,16 +122,14 @@ const PostOverlay = ({
               }}
               variant="contained"
               fullWidth
-              size="large"
-              sx={{
-                display: { xs: "flex", lg: "none" },
-              }}
+              size="medium"
+              sx={styles.bookButton}
             >
               Rezervă acum
             </Button>
           </Stack>
 
-          <Box sx={{ display: { xs: "block", md: "none" } }}>
+          <Box sx={styles.actionsMobileWrapper}>
             {user && counters && userActions && (
               <PostActionsMobile
                 user={user}
@@ -175,11 +171,49 @@ const styles = {
     color: "common.white",
     pointerEvents: "none",
   },
-  badge: {
-    px: 1,
-    py: 0.25,
+  contentRow: {
+    pointerEvents: "auto",
+    mb: { xs: 1, lg: 0 },
+  },
+  textColumn: {
+    flex: 1,
+    minWidth: 0,
+  },
+  badgesStack: {
     width: "fit-content",
-    borderRadius: 1.5,
-    lineHeight: 1,
+  },
+  fullName: {
+    lineHeight: 1.2,
+    mb: 0.5,
+  },
+  profession: {
+    fontWeight: 600,
+  },
+  descriptionWrapper: {
+    cursor: "pointer",
+  },
+  descriptionCollapsed: {
+    opacity: 0.95,
+    lineHeight: 1.4,
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: 2,
+    overflow: "hidden",
+    transition: "all 0.2s ease-in-out",
+  },
+  descriptionExpanded: {
+    opacity: 0.95,
+    lineHeight: 1.4,
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: "unset",
+    overflow: "unset",
+    transition: "all 0.2s ease-in-out",
+  },
+  bookButton: {
+    display: { xs: "flex", lg: "none" },
+  },
+  actionsMobileWrapper: {
+    display: { xs: "block", md: "none" },
   },
 };

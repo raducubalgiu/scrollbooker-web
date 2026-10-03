@@ -4,6 +4,7 @@ export interface UserProfile {
   fullname: string;
   avatar: string | null;
   gender: string;
+  date_of_birth: string | null;
   bio: string | null;
   public_email: string | null;
   website: string | null;
@@ -20,6 +21,8 @@ export interface UserProfile {
   business_owner: BusinessOwner | null;
   is_own_profile: boolean;
   is_business_or_employee: boolean;
+  distance_km: number | null;
+  address: string | null;
 }
 
 export interface UserCounter {
@@ -43,8 +46,8 @@ export interface BusinessOwner {
   id: number;
   fullname: string;
   username: string;
+  profession: string;
   avatar: string | null;
-  is_follow: boolean;
 }
 
 export interface UserProfileUpdateResponse {

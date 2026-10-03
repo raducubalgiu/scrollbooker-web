@@ -11,7 +11,6 @@ import GradeIcon from "@mui/icons-material/Grade";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import React, { useMemo, useState } from "react";
-import OwnProfileActions from "./OwnProfileActions";
 import UserProfileActions from "./UserProfileActions";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import { UserProfile } from "@/ts/models/user/UserProfile";
@@ -19,6 +18,8 @@ import { formatOpeningStatus, formatRating } from "@/utils/formatters";
 import { useRouter } from "next/navigation";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 import { LOG } from "@/utils/logger";
+import MyProfileActions from "./MyProfileActions";
+import ProfileAddress from "./ProfileAddress";
 
 type ProfileUserInfoProps = {
   profile: UserProfile;
@@ -47,6 +48,7 @@ const ProfileUserInfo = ({
     is_follow,
     counters,
     opening_hours,
+    address,
   } = profile || {};
 
   const openingStatus = useMemo(
@@ -107,7 +109,7 @@ const ProfileUserInfo = ({
   const actions = useMemo(() => {
     if (is_own_profile) {
       return (
-        <OwnProfileActions
+        <MyProfileActions
           is_business_or_employee={is_business_or_employee}
           onOpenEditModal={onOpenEditModal}
           onShare={handleShare}
@@ -128,12 +130,12 @@ const ProfileUserInfo = ({
   }, [is_business_or_employee, is_own_profile, is_follow, id, onUpdateFollows]);
 
   return (
-    <Box sx={{ px: { xs: 2, lg: 0 }, pb: { xs: 2, lg: 0 } }}>
+    <Box sx={styles.root}>
       <Stack
         flexDirection="row"
         alignItems="center"
-        sx={{ width: "100%", minWidth: 0 }}
         gap={{ xs: 2, lg: 3 }}
+        sx={styles.headerRow}
       >
         <UserAvatar
           isBusinessOrEmployee={is_business_or_employee}
@@ -142,120 +144,48 @@ const ProfileUserInfo = ({
           size={{ xs: "lg", md: "xxl" }}
         />
 
-        <Box sx={{ width: "100%", minWidth: 0 }}>
-          <Stack
-            flexDirection="row"
-            alignItems="center"
-            sx={{ width: "100%", minWidth: 0 }}
-          >
-            <Typography
-              variant="h5"
-              sx={{
-                ...styles.fullName,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                flexShrink: 1,
-                minWidth: 0,
-              }}
-            >
+        <Box sx={styles.infoWrapper}>
+          <Stack flexDirection="row" alignItems="center" sx={styles.nameRow}>
+            <Typography variant="h5" sx={styles.fullName}>
               {fullname}
             </Typography>
 
-            <Typography
-              sx={{
-                ml: 1.5,
-                color: "text.secondary",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                flexShrink: 2,
-                minWidth: 0,
-                fontSize: { xs: "0.875rem", sm: "1rem" },
-                display: { xs: "none", lg: "block" },
-              }}
-            >
-              @{username}
-            </Typography>
+            <Typography sx={styles.username}>@{username}</Typography>
           </Stack>
 
-          <Stack
-            flexDirection={{ xs: "column", sm: "row" }}
-            alignItems={{ xs: "flex-start", sm: "center" }}
-          >
-            <Stack flexDirection="row" alignItems="center" gap={1}>
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  color: "text.secondary",
-                  fontSize: { xs: "0.875rem", sm: "1rem" },
-                }}
-              >
-                {profession}
-              </Typography>
-
-              {is_business_or_employee && (
-                <Stack flexDirection="row" alignItems="center">
-                  <GradeIcon color="rating" sx={styles.star} />
-                  <Typography variant="h6" sx={styles.rating}>
-                    {formatRating(counters.ratings_average)}
-                  </Typography>
-                </Stack>
-              )}
-            </Stack>
+          <Stack flexDirection="row" alignItems="center" gap={1} mt={0.5}>
+            <Typography variant="subtitle1" sx={styles.profession}>
+              {profession}
+            </Typography>
 
             {is_business_or_employee && (
-              <>
-                <Typography
-                  sx={{
-                    mx: 1.5,
-                    fontSize: 25,
-                    color: "text.secondary",
-                    display: { xs: "none", sm: "block" },
-                  }}
-                >
-                  &#x2022;
+              <Stack flexDirection="row" alignItems="center">
+                <GradeIcon color="rating" sx={styles.star} />
+                <Typography variant="h6" sx={styles.rating}>
+                  {formatRating(counters.ratings_average)}
                 </Typography>
-
-                <ButtonBase
-                  sx={{
-                    borderRadius: 5,
-                  }}
-                  onClick={onOpenScheduleModal}
-                >
-                  <Stack flexDirection="row" alignItems="center" gap={0.5}>
-                    <QueryBuilderOutlinedIcon
-                      color="action"
-                      sx={{ fontSize: { xs: 20, lg: 25 } }}
-                    />
-                    <Typography
-                      sx={{
-                        ml: 0.5,
-                        color: "text.secondary",
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      }}
-                    >
-                      {openingStatus}
-                    </Typography>
-                    <ExpandMoreOutlinedIcon
-                      color="action"
-                      sx={{ fontSize: { xs: 20, lg: 25 } }}
-                    />
-                  </Stack>
-                </ButtonBase>
-              </>
+              </Stack>
             )}
           </Stack>
 
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Box
-              sx={{
-                maxWidth: "sm",
-                mt: 1.5,
-              }}
-            >
-              {bio}
+          {is_business_or_employee && (
+            <ButtonBase sx={styles.scheduleButton} onClick={onOpenScheduleModal}>
+              <Stack flexDirection="row" alignItems="center" gap={0.5}>
+                <QueryBuilderOutlinedIcon color="action" sx={styles.scheduleIcon} />
+                <Typography sx={styles.scheduleText}>{openingStatus}</Typography>
+                <ExpandMoreOutlinedIcon color="action" sx={styles.scheduleIcon} />
+              </Stack>
+            </ButtonBase>
+          )}
+
+          {address && (
+            <Box sx={styles.addressRow}>
+              <ProfileAddress address={address} />
             </Box>
+          )}
+
+          <Box sx={styles.bioDesktopWrapper}>
+            <Box sx={styles.bioBox}>{bio}</Box>
 
             <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
               {actions}
@@ -264,26 +194,18 @@ const ProfileUserInfo = ({
         </Box>
       </Stack>
 
-      <Box sx={{ display: { xs: "block", sm: "none" } }}>
+      <Box sx={styles.mobileWrapper}>
         <Stack
           flexDirection="row"
           alignItems="center"
           gap={1}
-          mt={1.5}
-          sx={{ width: "100%", mt: 1.5 }}
+          sx={styles.actionsRowMobile}
         >
           {actions}
         </Stack>
 
-        <Box sx={{ maxWidth: "sm", mt: 2.5, mx: 5 }}>
-          <Typography
-            sx={{
-              textAlign: "center",
-              fontSize: { xs: "0.875rem", sm: "1rem" },
-            }}
-          >
-            {bio}
-          </Typography>
+        <Box sx={styles.bioMobileBox}>
+          <Typography sx={styles.bioMobileText}>{bio}</Typography>
         </Box>
       </Box>
 
@@ -304,8 +226,29 @@ const ProfileUserInfo = ({
 export default ProfileUserInfo;
 
 const styles = {
+  root: {
+    px: { xs: 2, lg: 0 },
+    pb: { xs: 2, lg: 0 },
+  },
+  headerRow: {
+    width: "100%",
+    minWidth: 0,
+  },
+  infoWrapper: {
+    width: "100%",
+    minWidth: 0,
+  },
+  nameRow: {
+    width: "100%",
+    minWidth: 0,
+  },
   fullName: {
     fontWeight: 600,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    flexShrink: 1,
+    minWidth: 0,
     fontSize: {
       xs: 17,
       sm: 18,
@@ -313,6 +256,21 @@ const styles = {
       lg: 30,
       xl: 32,
     },
+  },
+  username: {
+    ml: 1.5,
+    color: "text.secondary",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    flexShrink: 2,
+    minWidth: 0,
+    fontSize: { xs: "0.875rem", sm: "1rem" },
+    display: { xs: "none", lg: "block" },
+  },
+  profession: {
+    color: "text.secondary",
+    fontSize: { xs: "0.875rem", sm: "1rem" },
   },
   star: {
     mr: 0.5,
@@ -332,5 +290,43 @@ const styles = {
       lg: 25,
       xl: 28,
     },
+  },
+  scheduleButton: {
+    borderRadius: 5,
+    mt: 1,
+  },
+  scheduleIcon: {
+    fontSize: { xs: 20, lg: 25 },
+  },
+  scheduleText: {
+    mx: 0.5,
+    color: "text.secondary",
+    fontSize: { xs: "0.875rem", sm: "1rem" },
+  },
+  addressRow: {
+    mt: 1,
+  },
+  bioDesktopWrapper: {
+    display: { xs: "none", sm: "block" },
+  },
+  bioBox: {
+    maxWidth: "sm",
+    mt: 1.5,
+  },
+  mobileWrapper: {
+    display: { xs: "block", sm: "none" },
+  },
+  actionsRowMobile: {
+    width: "100%",
+    mt: 1.5,
+  },
+  bioMobileBox: {
+    maxWidth: "sm",
+    mt: 2.5,
+    mx: 5,
+  },
+  bioMobileText: {
+    textAlign: "center",
+    fontSize: { xs: "0.875rem", sm: "1rem" },
   },
 };

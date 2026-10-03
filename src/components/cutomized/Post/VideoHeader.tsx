@@ -2,14 +2,11 @@
 
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
-import Link from "next/link";
-import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
 import { AppRoutes } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import AvatarWithRating from "../Avatar/AvatarWithRating";
-import { formatDistance } from "@/utils/formatters";
+import ProfileAddress from "@/components/modules/Marketplace/ProfileModule/ProfileAddress";
 
 type VideoHeaderProps = {
   displayDescription: boolean;
@@ -35,14 +32,8 @@ const VideoHeader = ({
   const { avatar, fullname, username, profession, ratings_average, is_follow } =
     user || {};
   const isBusinessOrEmployee = !isVideoReview;
-  const mapsUrl = getGoogleMapsDirectionsUrl(businessLocation?.coordinates);
+  const showFollowButton = !is_follow && !!onFollow;
   const { navigateTo } = useAppNavigation();
-  const locationSummary = [
-    formatDistance(distanceKm),
-    businessLocation?.formatted_address,
-  ]
-    .filter((part): part is string => Boolean(part))
-    .join(" • ");
 
   return (
     <Box>
@@ -63,25 +54,19 @@ const VideoHeader = ({
           isBusinessOrEmployee={isBusinessOrEmployee}
         />
 
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            gap={2}
-          >
+        <Stack spacing={0.5} sx={styles.infoColumn}>
+          <Box sx={styles.nameRow}>
             <Typography
               variant="subtitle1"
               fontWeight={700}
-              sx={styles.ellipsisText}
+              sx={showFollowButton ? styles.nameTextWithButton : styles.ellipsisText}
             >
               {fullname ?? "-"}
             </Typography>
 
-            {!is_follow && onFollow && (
+            {showFollowButton && onFollow && (
               <Button
                 variant="contained"
-                size="small"
                 disableElevation
                 loading={isTogglingFollow}
                 disabled={isTogglingFollow}
@@ -89,50 +74,28 @@ const VideoHeader = ({
                   e.stopPropagation();
                   onFollow();
                 }}
-                sx={{ textTransform: "none", flexShrink: 0 }}
+                sx={styles.followButton}
               >
                 Urmărește
               </Button>
             )}
-          </Stack>
+          </Box>
 
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ ...styles.ellipsisText, mt: 0.25 }}
-          >
+          <Typography variant="body2" color="text.secondary" sx={styles.ellipsisText}>
             {isBusinessOrEmployee ? profession : `@${username}`}
           </Typography>
 
-          {locationSummary && (
-            <Link
-              href={mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: "none" }}
-              prefetch={false}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Stack
-                direction="row"
-                alignItems="center"
-                gap={0.5}
-                sx={{ mt: 0.75, minWidth: 0 }}
-              >
-                <LocationOnOutlinedIcon
-                  sx={{ fontSize: 16, color: "text.secondary", flexShrink: 0 }}
-                />
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={styles.ellipsisText}
-                >
-                  {locationSummary}
-                </Typography>
-              </Stack>
-            </Link>
+          {businessLocation?.formatted_address && (
+            <Box sx={styles.addressRow} onClick={(e) => e.stopPropagation()}>
+              <ProfileAddress
+                address={businessLocation.formatted_address}
+                distanceKm={distanceKm}
+                variant="body2"
+                icon
+              />
+            </Box>
           )}
-        </Box>
+        </Stack>
       </Stack>
 
       {displayDescription && (
@@ -147,10 +110,35 @@ const VideoHeader = ({
 export default VideoHeader;
 
 const styles = {
+  infoColumn: {
+    minWidth: 0,
+    flex: 1,
+  },
+  addressRow: {
+    minWidth: 0,
+  },
+  nameRow: {
+    position: "relative",
+    minWidth: 0,
+  },
   ellipsisText: {
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     minWidth: 0,
+  },
+  nameTextWithButton: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    minWidth: 0,
+    pr: 13,
+  },
+  followButton: {
+    position: "absolute",
+    top: "50%",
+    right: 0,
+    transform: "translateY(-50%)",
+    textTransform: "none",
   },
 };

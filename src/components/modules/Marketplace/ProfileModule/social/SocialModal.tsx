@@ -77,8 +77,8 @@ const SocialModal = ({
     (_: React.SyntheticEvent, newValue: SocialTabEnum) => {
       const root = scrollRootRef.current;
       if (root) {
-          positionsRef.current[String(currentTab)] = root.scrollTop;
-        }
+        positionsRef.current[String(currentTab)] = root.scrollTop;
+      }
 
       setCurrentTab(newValue);
     },
@@ -169,7 +169,6 @@ const SocialModal = ({
           display: "flex",
           flexDirection: "column",
           height: { xs: "100vh", lg: "80vh" },
-          px: { xs: 0, lg: 2 },
         }}
       >
         <Box sx={styles.container}>
