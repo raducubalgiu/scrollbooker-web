@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { AppRoutes } from "@/utils/routes";
 import { useLandingColors } from "../LandingThemeContext";
+import { trackNavigateToForBusinessFromAnouncement } from "@/utils/analytics";
 
 export default function LandingAnnouncementBar() {
   const t = useTranslations("announcementBar");
@@ -15,6 +16,7 @@ export default function LandingAnnouncementBar() {
     <Box
       component={Link}
       href={AppRoutes.forBusiness()}
+      onClick={trackNavigateToForBusinessFromAnouncement}
       sx={{
         display: "block",
         textDecoration: "none",
@@ -42,7 +44,11 @@ export default function LandingAnnouncementBar() {
             direction="row"
             spacing={0.25}
             alignItems="center"
-            sx={{ color: LANDING_COLORS.primary, fontWeight: 600, flexShrink: 0 }}
+            sx={{
+              color: LANDING_COLORS.primary,
+              fontWeight: 600,
+              flexShrink: 0,
+            }}
           >
             <Typography variant="body2" sx={{ fontWeight: 600 }}>
               {t("cta")}
