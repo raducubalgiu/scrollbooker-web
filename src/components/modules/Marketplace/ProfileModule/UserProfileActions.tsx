@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import IosShareIcon from "@mui/icons-material/IosShare";
 import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import Protected from "@/components/cutomized/Protected/Protected";
@@ -12,7 +11,6 @@ type UserProfileActionsProps = {
   is_follow: boolean;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
   onBookNow: () => void;
-  onShare: () => void;
 };
 
 const UserProfileActions = ({
@@ -21,7 +19,6 @@ const UserProfileActions = ({
   is_follow,
   onUpdateFollows,
   onBookNow,
-  onShare,
 }: UserProfileActionsProps) => {
   const [localFollow, setLocalFollow] = useState<boolean>(is_follow);
   const previousLocalRef = useRef<boolean>(is_follow);
@@ -105,12 +102,6 @@ const UserProfileActions = ({
         color="secondary"
         onClick={handleToggleFollow}
         disabled={isFollowing || isUnfollowing}
-      />
-      <ProfileActionButton
-        color="secondary"
-        title="Distribuie"
-        onClick={onShare}
-        startIcon={<IosShareIcon />}
       />
     </>
   );

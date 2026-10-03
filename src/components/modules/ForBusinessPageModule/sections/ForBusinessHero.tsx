@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
-import LandingThemeToggle from "@/components/modules/LandingPageModule/components/LandingThemeToggle";
 import { AppRoutes } from "@/utils/routes";
 
 export default function ForBusinessHero() {
@@ -141,10 +140,6 @@ export default function ForBusinessHero() {
                 {t("secondaryButton")}
               </Button>
             </Stack>
-
-            <Box sx={{ mt: 2 }}>
-              <LandingThemeToggle />
-            </Box>
           </Box>
 
           <Box

@@ -13,7 +13,6 @@ import {
 type LandingThemeValue = {
   mode: LandingMode;
   colors: LandingColors;
-  toggleMode: () => void;
 };
 
 // Landing/for-business/partners nu mai au propriul sistem de temă — folosesc
@@ -22,7 +21,7 @@ type LandingThemeValue = {
 // restul aplicației. Hook-ul de aici doar traduce rezultatul în paleta
 // LANDING_COLORS_LIGHT/DARK folosită de secțiunile acestor pagini.
 export function useLandingTheme(): LandingThemeValue {
-  const { mode, isSystemInDarkMode, toggle } = useThemeMode();
+  const { mode, isSystemInDarkMode } = useThemeMode();
 
   const resolvedMode: LandingMode =
     mode === ThemeModeEnum.SYSTEM
@@ -36,7 +35,7 @@ export function useLandingTheme(): LandingThemeValue {
     [resolvedMode]
   );
 
-  return { mode: resolvedMode, colors, toggleMode: toggle };
+  return { mode: resolvedMode, colors };
 }
 
 export function useLandingColors(): LandingColors {

@@ -8,7 +8,6 @@ import { LANDING_COLORS_LIGHT } from "../landing.constants";
 import { useLandingColors } from "../LandingThemeContext";
 import PhoneMockup from "../components/PhoneMockup";
 import LandingEarlyAdopterModal from "../components/LandingEarlyAdopterModal";
-import LandingThemeToggle from "../components/LandingThemeToggle";
 import { AppRoutes } from "@/utils/routes";
 
 // `primary` e identic în LANDING_COLORS_LIGHT/DARK (culoare de brand, nu
@@ -136,10 +135,6 @@ export default function LandingHero() {
                 {t("ctaButton")}
               </Button>
             </Stack>
-
-            <Box sx={{ mt: 2 }}>
-              <LandingThemeToggle />
-            </Box>
 
             <Typography
               variant="body2"

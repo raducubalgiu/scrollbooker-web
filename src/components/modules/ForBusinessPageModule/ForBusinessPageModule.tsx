@@ -30,11 +30,11 @@ export default function ForBusinessPageModule() {
       <LandingNav registerHref={AppRoutes.partners()} />
       <ForBusinessHero />
       <ForBusinessPainPoints />
-      <LandingAdminShowcase />
-      <LandingFeatures />
       <LandingProfileShowcase />
-      <ForBusinessCalendarShowcase />
       <ForBusinessDiscoveryChannels />
+      <LandingFeatures />
+      <ForBusinessCalendarShowcase />
+      <LandingAdminShowcase />
       <ForBusinessHowItWorks />
       <LandingGallery />
       <LandingCTA href={AppRoutes.partners()} />

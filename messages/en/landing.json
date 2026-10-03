@@ -9,10 +9,6 @@
     "registerShort": "Register",
     "forBusiness": "Learn more"
   },
-  "themeToggle": {
-    "switchToDark": "View in dark mode",
-    "switchToLight": "View in light mode"
-  },
   "announcementBar": {
     "message": "We're launching ScrollBooker in Bucharest — the first salons to sign up get priority access, before the market fills up.",
     "cta": "Claim your spot"

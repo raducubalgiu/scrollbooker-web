@@ -9,10 +9,6 @@
     "registerShort": "Înregistrare",
     "forBusiness": "Vezi mai mult"
   },
-  "themeToggle": {
-    "switchToDark": "Vezi în dark mode",
-    "switchToLight": "Vezi în light mode"
-  },
   "announcementBar": {
     "message": "Lansăm ScrollBooker în București — primele saloane înscrise au acces prioritar.",
     "cta": "Rezervă-ți locul"

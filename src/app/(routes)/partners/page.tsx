@@ -20,7 +20,6 @@ import Input from "@/components/core/Input/Input";
 import { emailField, phoneField, required } from "@/utils/validation-rules";
 import { AppRoutes } from "@/utils/routes";
 import LandingLogo from "@/components/modules/LandingPageModule/components/LandingLogo";
-import LandingThemeToggle from "@/components/modules/LandingPageModule/components/LandingThemeToggle";
 import { useLandingTheme } from "@/components/modules/LandingPageModule/LandingThemeContext";
 import { useSubmitBusinessLeadMutation } from "@/controllers/leads/leads.controller";
 import { BusinessLeadCreate } from "@/ts/models/leads/BusinessLead";
@@ -79,31 +78,23 @@ export default function PartnersPage() {
     >
       <Container maxWidth="sm">
         <Stack
+          component={Link}
+          href={AppRoutes.home()}
           direction="row"
+          spacing={1}
           alignItems="center"
-          justifyContent="space-between"
-          sx={{ mb: 5 }}
+          sx={{
+            color: LANDING_COLORS.textSecondary,
+            textDecoration: "none",
+            width: "fit-content",
+            mb: 5,
+            "&:hover": { color: LANDING_COLORS.textPrimary },
+          }}
         >
-          <Stack
-            component={Link}
-            href={AppRoutes.home()}
-            direction="row"
-            spacing={1}
-            alignItems="center"
-            sx={{
-              color: LANDING_COLORS.textSecondary,
-              textDecoration: "none",
-              width: "fit-content",
-              "&:hover": { color: LANDING_COLORS.textPrimary },
-            }}
-          >
-            <ArrowBackRoundedIcon fontSize="small" />
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              {t("back")}
-            </Typography>
-          </Stack>
-
-          <LandingThemeToggle />
+          <ArrowBackRoundedIcon fontSize="small" />
+          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+            {t("back")}
+          </Typography>
         </Stack>
 
         <Box sx={{ mb: 4, display: "flex", justifyContent: "center" }}>

@@ -124,7 +124,6 @@ const ProfileUserInfo = ({
         is_follow={is_follow}
         onUpdateFollows={onUpdateFollows}
         onBookNow={handleBookNow}
-        onShare={handleShare}
       />
     );
   }, [is_business_or_employee, is_own_profile, is_follow, id, onUpdateFollows]);
@@ -169,11 +168,22 @@ const ProfileUserInfo = ({
           </Stack>
 
           {is_business_or_employee && (
-            <ButtonBase sx={styles.scheduleButton} onClick={onOpenScheduleModal}>
+            <ButtonBase
+              sx={styles.scheduleButton}
+              onClick={onOpenScheduleModal}
+            >
               <Stack flexDirection="row" alignItems="center" gap={0.5}>
-                <QueryBuilderOutlinedIcon color="action" sx={styles.scheduleIcon} />
-                <Typography sx={styles.scheduleText}>{openingStatus}</Typography>
-                <ExpandMoreOutlinedIcon color="action" sx={styles.scheduleIcon} />
+                <QueryBuilderOutlinedIcon
+                  color="action"
+                  sx={styles.scheduleIcon}
+                />
+                <Typography sx={styles.scheduleText}>
+                  {openingStatus}
+                </Typography>
+                <ExpandMoreOutlinedIcon
+                  color="action"
+                  sx={styles.scheduleIcon}
+                />
               </Stack>
             </ButtonBase>
           )}
