@@ -37,6 +37,29 @@ export const useAllProfessions = ({
   });
 };
 
+type GetProfessionsByBusinessTypeParams = {
+  businessTypeId: number | null | undefined;
+  isEnabled: boolean;
+};
+
+export const useGetProfessionsByBusinessType = ({
+  businessTypeId,
+  isEnabled,
+}: GetProfessionsByBusinessTypeParams) => {
+  const doRequest = () =>
+    axios
+      .get<
+        Profession[]
+      >(`/api/protected/business-types/${businessTypeId}/professions`)
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["professions-by-business-type", businessTypeId],
+    queryFn: doRequest,
+    enabled: isEnabled && !!businessTypeId,
+  });
+};
+
 export const useCreateProfession = () => {
   const queryClient = useQueryClient();
 

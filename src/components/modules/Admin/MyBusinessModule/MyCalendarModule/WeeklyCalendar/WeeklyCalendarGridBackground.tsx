@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Box, Theme } from "@mui/material";
+import { alpha, Box, Theme } from "@mui/material";
 import dayjs from "dayjs";
 import {
   CalendarEventsDay,
@@ -74,7 +74,7 @@ export const WeeklyCalendarGridBackground = memo(
 
 const styles = {
   unavailable: (theme: Theme) => {
-    const strokeColor = theme.palette.text.secondary;
+    const strokeColor = alpha(theme.palette.text.secondary, 0.22);
     return {
       width: "100%",
       height: "100%",
@@ -85,8 +85,6 @@ const styles = {
         ${strokeColor} 5px,
         ${strokeColor} 6px
       )`,
-      mixBlendMode: theme.palette.mode === "light" ? "multiply" : "screen",
-      opacity: 0.22,
     };
   },
 };

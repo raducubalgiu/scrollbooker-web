@@ -69,7 +69,7 @@ export const EmployeesDayCalendarGridBackground = memo(
 
 const styles = {
   unavailable: (theme: Theme) => {
-    const strokeColor = theme.palette.text.secondary;
+    const strokeColor = alpha(theme.palette.text.secondary, 0.22);
     return {
       width: "100%",
       height: "100%",
@@ -80,8 +80,6 @@ const styles = {
         ${strokeColor} 5px,
         ${strokeColor} 6px
       )`,
-      mixBlendMode: theme.palette.mode === "light" ? "multiply" : "screen",
-      opacity: 0.22,
     };
   },
 };

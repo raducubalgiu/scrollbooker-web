@@ -3,19 +3,19 @@
 import ConsentLayout from "@/components/cutomized/MainLayout/ConsentLayout";
 import { Consent } from "@/ts/models/nomenclatures/consent/Consent";
 
-type EmploymentRequestsStepThreeProps = {
+type EmploymentAcceptTermsStepProps = {
   consent: Consent | undefined;
   isLoading: boolean;
   acknowledged: boolean;
   setAcknowledged: (e: boolean) => void;
 };
 
-export default function EmploymentRequestsStepThree({
+export default function EmploymentAcceptTermsStep({
   consent,
   isLoading,
   acknowledged,
   setAcknowledged,
-}: EmploymentRequestsStepThreeProps) {
+}: EmploymentAcceptTermsStepProps) {
   const sections = consent?.text?.split(/\n(?=\d+\. )/);
 
   return (

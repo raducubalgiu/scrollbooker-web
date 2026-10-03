@@ -8,12 +8,10 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { isNull } from "lodash";
-import EmploymentRequestsStepOne from "./EmploymentRequestsStepOne";
-import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
-import { useCustomQuery } from "@/hooks/useHttp";
-import EmploymentRequestsStepThree from "./EmploymentRequestsStepThree";
+import EmploymentSelectEmployeeStep from "./EmploymentSelectEmployeeStep";
+import EmploymentAssignJobStep from "./EmploymentAssignJobStep";
+import EmploymentAcceptTermsStep from "./EmploymentAcceptTermsStep";
 import { ConsentEnum } from "@/ts/models/nomenclatures/consent/ConsentEnum";
-import { Profession } from "@/ts/models/nomenclatures/profession/ProfessionType";
 import { Session } from "next-auth";
 import { useGetConsentByName } from "@/controllers/nomenclature/consent.controller";
 import { useCreateEmploymentRequest } from "@/controllers/booking/employment-request.controller";
@@ -41,17 +39,11 @@ export default function EmploymentRequestsModal({
   >(null);
   const [stepIndex, setStepIndex] = useState<number>(0);
 
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-
   const handleResetAndClose = () => {
     setStepIndex(0);
     setSelectedUserId(null);
     setSelectedProfessionId(null);
     setAcknowledged(false);
-
-    setSearch("");
-    setDebouncedSearch("");
     handleClose();
   };
 
@@ -62,14 +54,6 @@ export default function EmploymentRequestsModal({
   const { mutate: createEmploymentRequest, isPending } =
     useCreateEmploymentRequest();
 
-  const { data: professions, isLoading: isLoadingProfessions } = useCustomQuery<
-    Profession[]
-  >({
-    key: ["get-professions-by-business-type"],
-    url: `/api/nomenclatures/business-types/${session?.business_type_id}/professions`,
-    options: { enabled: isSecondStep && open },
-  });
-
   const { data: consent, isLoading: isLoadingConsent } = useGetConsentByName({
     consentName: ConsentEnum.EMPLOYMENT_REQUESTS_INITIATION,
     isEnabled: isThirdStep && open,
@@ -77,7 +61,7 @@ export default function EmploymentRequestsModal({
 
   const handleSendRequest = () => {
     if (!selectedUserId || !consent?.id || !selectedProfessionId) {
-      toast.warning("Te rugăm să introduci ID-ul angajatului.");
+      toast.warning("Te rugăm să selectezi un angajat și o profesie.");
       return;
     }
 
@@ -133,7 +117,7 @@ export default function EmploymentRequestsModal({
           {
             title: "Trimite cererea",
             props: {
-              onClick: () => handleSendRequest,
+              onClick: handleSendRequest,
               disabled: !acknowledged || isPending,
               loading: isPending,
             },
@@ -146,27 +130,22 @@ export default function EmploymentRequestsModal({
     switch (stepIndex) {
       case 0:
         return (
-          <EmploymentRequestsStepOne
+          <EmploymentSelectEmployeeStep
             selectedUserId={selectedUserId}
             onSelectUserId={setSelectedUserId}
-            search={search}
-            setSearch={setSearch}
-            debouncedSearch={debouncedSearch}
-            setDebouncedSearch={setDebouncedSearch}
           />
         );
       case 1:
         return (
-          <EmploymentRequestsStepTwo
+          <EmploymentAssignJobStep
+            businessTypeId={session?.business_type_id}
             selectedProfessionId={selectedProfessionId}
             onSelectProfessionId={setSelectedProfessionId}
-            professions={professions}
-            isLoading={isLoadingProfessions}
           />
         );
       case 2:
         return (
-          <EmploymentRequestsStepThree
+          <EmploymentAcceptTermsStep
             consent={consent}
             isLoading={isLoadingConsent}
             acknowledged={acknowledged}
@@ -180,13 +159,10 @@ export default function EmploymentRequestsModal({
     stepIndex,
     selectedUserId,
     selectedProfessionId,
-    professions,
-    isLoadingProfessions,
+    session?.business_type_id,
     consent,
     isLoadingConsent,
     acknowledged,
-    search,
-    debouncedSearch,
   ]);
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -199,7 +175,7 @@ export default function EmploymentRequestsModal({
       actions={actions}
       fullScreen={isMobile}
     >
-      <Box sx={{ minWidth: 700, py: 2 }}>
+      <Box sx={styles.content}>
         <Stepper activeStep={stepIndex} alternativeLabel sx={styles.stepper}>
           {steps.map((label) => (
             <Step key={label}>
@@ -215,6 +191,10 @@ export default function EmploymentRequestsModal({
 }
 
 const styles = {
+  content: {
+    width: { xs: "100%", sm: 700 },
+    py: 2,
+  },
   stepper: {
     "& .MuiStepIcon-root": {
       fontSize: "2rem",
