@@ -13,9 +13,13 @@ type LandingNavProps = {
   // (/for-business) înainte de formularul de lead — pe /for-business
   // însuși, unde contextul e deja dat, trimitem direct către /partners.
   registerHref?: string;
+  // Permite /for-business să-și afișeze propriul logo (wordmark pe două
+  // rânduri) în loc de LandingLogo-ul generic — opțional, ca "/" să rămână
+  // neschimbat.
+  logo?: React.ReactNode;
 };
 
-export default function LandingNav({ registerHref }: LandingNavProps) {
+export default function LandingNav({ registerHref, logo }: LandingNavProps) {
   const t = useTranslations("nav");
   const LANDING_COLORS = useLandingColors();
 
@@ -43,7 +47,7 @@ export default function LandingNav({ registerHref }: LandingNavProps) {
             href={AppRoutes.home()}
             sx={{ lineHeight: 0 }}
           >
-            <LandingLogo height={26} />
+            {logo ?? <LandingLogo height={26} />}
           </Box>
 
           <Stack direction="row" spacing={{ xs: 0.75, sm: 1.25 }} alignItems="center">

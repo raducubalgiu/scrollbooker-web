@@ -11,6 +11,7 @@ import LandingGallery from "@/components/modules/LandingPageModule/sections/Land
 import LandingCTA from "@/components/modules/LandingPageModule/sections/LandingCTA";
 import LandingFooter from "@/components/modules/LandingPageModule/sections/LandingFooter";
 import ForBusinessHero from "./sections/ForBusinessHero";
+import ForBusinessLogo from "./components/ForBusinessLogo";
 import ForBusinessPainPoints from "./sections/ForBusinessPainPoints";
 import ForBusinessCalendarShowcase from "./sections/ForBusinessCalendarShowcase";
 import ForBusinessDiscoveryChannels from "./sections/ForBusinessDiscoveryChannels";
@@ -27,7 +28,10 @@ export default function ForBusinessPageModule() {
         overflowX: "hidden",
       }}
     >
-      <LandingNav registerHref={AppRoutes.partners()} />
+      <LandingNav
+        registerHref={AppRoutes.partners()}
+        logo={<ForBusinessLogo height={20} />}
+      />
       <ForBusinessHero />
       <ForBusinessPainPoints />
       <LandingProfileShowcase />
