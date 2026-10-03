@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { Avatar, Box, Typography } from "@mui/material";
 import { CalendarEventsBusinessEmployee } from "@/ts/models/booking/availability/CalendarEvents";
 import { EMPLOYEE_COLUMN_MIN_WIDTH } from "./employeesDayCalendarConstants";
+import { getCalendarTableBg } from "../calendarSurfaceColors";
 
 type EmployeesDayCalendarColumnsHeaderProps = {
   employees: CalendarEventsBusinessEmployee[];
@@ -47,7 +48,7 @@ const styles = {
   container: {
     display: "grid",
     gridTemplateRows: `100px`,
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderTop: "1px solid",
@@ -62,15 +63,18 @@ const styles = {
   grid: {
     gridColumn: 1,
     gridRow: 1,
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderBottom: "1px solid",
     borderColor: "divider",
+    position: "sticky",
+    left: 0,
+    zIndex: 8,
   },
   employee: {
     gridRow: 1,
     p: 1,
     textAlign: "center",
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderBottom: "1px solid",
     borderLeft: "1px solid",
     borderColor: "divider",

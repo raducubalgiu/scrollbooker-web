@@ -1,16 +1,20 @@
 import React, { memo } from "react";
 import { Box, Theme, Typography } from "@mui/material";
 import dayjs from "dayjs";
+import { getCalendarTableBg } from "../calendarSurfaceColors";
+import { FrontendDayResult } from "../getFrontendDays";
 
 type WeeklyCalendarDaysHeaderProps = {
-  frontendDays: any[];
+  frontendDays: FrontendDayResult[];
+  scrollRef: React.Ref<HTMLDivElement>;
 };
 
 const WeeklyCalendarDaysHeaderComponent = ({
   frontendDays,
+  scrollRef,
 }: WeeklyCalendarDaysHeaderProps) => {
   return (
-    <Box sx={styles.container}>
+    <Box ref={scrollRef} sx={styles.container}>
       <Box sx={styles.grid} />
       {frontendDays?.map((dayData, index) => {
         const isToday = dayjs().format("YYYY-MM-DD") === dayData.dateStr;
@@ -51,7 +55,7 @@ const styles = {
     display: "grid",
     gridTemplateColumns: `90px repeat(7, minmax(130px, 1fr))`,
     gridTemplateRows: `100px`,
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderTop: "1px solid",
@@ -61,19 +65,23 @@ const styles = {
     position: "sticky",
     top: 0,
     zIndex: 10,
+    overflowX: "hidden",
   },
   grid: {
     gridColumn: 1,
     gridRow: 1,
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderBottom: "1px solid",
     borderColor: "divider",
+    position: "sticky",
+    left: 0,
+    zIndex: 8,
   },
   day: {
     gridRow: 1,
     p: 1,
     textAlign: "center",
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderBottom: "1px solid",
     borderLeft: "1px solid",
     borderColor: "divider",

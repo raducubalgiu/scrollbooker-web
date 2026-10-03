@@ -1,6 +1,10 @@
 import React, { memo } from "react";
-import { Box, Theme } from "@mui/material";
-import { CalendarEventsBusinessEmployee } from "@/ts/models/booking/availability/CalendarEvents";
+import { alpha, Box, Theme } from "@mui/material";
+import dayjs from "dayjs";
+import {
+  CalendarEventsBusinessEmployee,
+  CalendarEventsSlot,
+} from "@/ts/models/booking/availability/CalendarEvents";
 
 type EmployeesDayCalendarGridBackgroundProps = {
   employees: CalendarEventsBusinessEmployee[];
@@ -17,18 +21,22 @@ const EmployeesDayCalendarGridBackgroundComponent = ({
     <>
       {employees.map((employee, employeeIndex) => {
         const colIndex = employeeIndex + 2;
-        const firstSlot = employee.slots[0];
-        const lastSlot = employee.slots[employee.slots.length - 1];
-        const empStart = firstSlot?.start_date_locale.split("T")[1];
-        const empEnd = lastSlot?.end_date_locale.split("T")[1];
+        const slotsByTime: Record<string, CalendarEventsSlot> = {};
+        employee.slots.forEach((slot) => {
+          slotsByTime[slot.start_date_locale.split("T")[1] ?? ""] = slot;
+        });
 
         return timeStrings.map((time) => {
           const baseRow = rowMap[time];
           if (baseRow === undefined) return null;
           const currentRow = baseRow - 1;
 
-          const isOutsideSchedule =
-            !empStart || !empEnd || time < empStart || time >= empEnd;
+          const slot = slotsByTime[time];
+          const isUnavailable =
+            !slot ||
+            (!slot.is_booked &&
+              !slot.is_blocked &&
+              dayjs().isAfter(dayjs(slot.start_date_locale)));
 
           return (
             <Box
@@ -41,12 +49,12 @@ const EmployeesDayCalendarGridBackgroundComponent = ({
                 borderColor: "divider",
                 position: "relative",
                 boxSizing: "border-box",
-                backgroundColor: isOutsideSchedule
-                  ? "background.paper"
+                backgroundColor: isUnavailable
+                  ? "action.disabledBackground"
                   : "transparent",
               }}
             >
-              {isOutsideSchedule && <Box sx={styles.outsideSchedule} />}
+              {isUnavailable && <Box sx={styles.unavailable} />}
             </Box>
           );
         });
@@ -60,7 +68,7 @@ export const EmployeesDayCalendarGridBackground = memo(
 );
 
 const styles = {
-  outsideSchedule: (theme: Theme) => {
+  unavailable: (theme: Theme) => {
     const strokeColor = theme.palette.text.secondary;
     return {
       width: "100%",
@@ -73,7 +81,7 @@ const styles = {
         ${strokeColor} 6px
       )`,
       mixBlendMode: theme.palette.mode === "light" ? "multiply" : "screen",
-      opacity: 0.15,
+      opacity: 0.22,
     };
   },
 };

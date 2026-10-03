@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import React, { memo, useMemo } from "react";
 import { SlotTimeRange } from "./SlotTimeRange";
+import { getCalendarPageBg } from "../calendarSurfaceColors";
 
 type CalendarAvailableSlotProps = {
   slot: CalendarEventsSlot;
@@ -109,7 +110,7 @@ const styles = {
       backgroundColor: isBlocking
         ? isSelected
           ? "rgba(211, 47, 47, 0.04)"
-          : "background.paper"
+          : getCalendarPageBg(theme)
         : "transparent",
 
       border: "1px dashed",

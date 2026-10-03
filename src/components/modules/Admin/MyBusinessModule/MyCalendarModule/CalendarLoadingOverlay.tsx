@@ -1,6 +1,7 @@
 import { alpha, Box, Theme } from "@mui/material";
 import React from "react";
 import MapLoadingIndicator from "@/components/modules/Marketplace/SearchModule/SearchLoadingIndicator";
+import { getCalendarTableBg } from "./calendarSurfaceColors";
 
 const CalendarLoadingOverlay = () => {
   return (
@@ -24,7 +25,7 @@ const styles = {
     zIndex: 20,
     display: "flex",
     justifyContent: "center",
-    backgroundColor: alpha(theme.palette.background.default, 0.6),
+    backgroundColor: alpha(getCalendarTableBg(theme), 0.6),
     backdropFilter: "blur(1px)",
     transition: "opacity 0.2s ease",
   }),

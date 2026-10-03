@@ -35,8 +35,8 @@ const styles = {
   container: (theme: Theme) => ({
     backgroundColor:
       theme.palette.mode === "light"
-        ? `color-mix(in srgb, ${theme.palette.error.main} 12%, #ffffff)`
-        : `color-mix(in srgb, ${theme.palette.error.main} 5%, #1e1e1e)`,
+        ? `color-mix(in srgb, ${theme.palette.error.main} 22%, #ffffff)`
+        : `color-mix(in srgb, ${theme.palette.error.main} 18%, #1e1e1e)`,
     color: theme.palette.error.dark,
     p: 1,
     borderRadius: 1,

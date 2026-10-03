@@ -94,8 +94,8 @@ const styles = {
 
       return {
         backgroundColor: isLight
-          ? `color-mix(in srgb, ${baseBrandColor} 12%, #ffffff)`
-          : `color-mix(in srgb, ${baseBrandColor} 8%, #1c1c1e)`,
+          ? `color-mix(in srgb, ${baseBrandColor} 22%, #ffffff)`
+          : `color-mix(in srgb, ${baseBrandColor} 18%, #1c1c1e)`,
         color: theme.palette.text.primary,
         p: 1,
         borderRadius: 1,

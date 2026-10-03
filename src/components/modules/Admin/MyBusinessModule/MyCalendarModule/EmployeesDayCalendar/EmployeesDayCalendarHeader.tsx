@@ -20,6 +20,7 @@ import RowHeightControl from "../CalendarSettings/RowHeightControl";
 import CalendarSettingsModal from "../CalendarSettings/CalendarSettingsModal";
 import ExpandCalendarButton from "../CalendarSettings/ExpandCalendarButton";
 import { RowHeightLevel } from "../CalendarSettings/rowHeightLevels";
+import { getCalendarTableBg } from "../calendarSurfaceColors";
 
 interface EmployeesDayCalendarHeaderProps {
   currentDay: dayjs.Dayjs;
@@ -89,7 +90,7 @@ export const EmployeesDayCalendarHeader = ({
               fontSize: "15px",
               fontWeight: 700,
               borderWidth: "1px",
-              backgroundColor: "background.default",
+              backgroundColor: getCalendarTableBg,
               border: 1,
               borderColor: "divider",
               pointerEvents: isDisabled ? "none" : "auto",
@@ -122,7 +123,7 @@ export const EmployeesDayCalendarHeader = ({
           size="large"
           sx={{
             color: "text.primary",
-            backgroundColor: "background.default",
+            backgroundColor: getCalendarTableBg,
             border: 1,
             borderColor: "divider",
             pointerEvents: isDisabled ? "none" : "auto",
@@ -150,7 +151,7 @@ export const EmployeesDayCalendarHeader = ({
           size="large"
           onClick={isDisabled ? undefined : onToday}
           sx={{
-            backgroundColor: "background.default",
+            backgroundColor: getCalendarTableBg,
             border: 1,
             borderColor: "divider",
             color: "text.primary",
@@ -179,7 +180,7 @@ export const EmployeesDayCalendarHeader = ({
             size="large"
             sx={{
               color: "text.primary",
-              backgroundColor: "background.default",
+              backgroundColor: getCalendarTableBg,
               border: 1,
               borderColor: "divider",
               pointerEvents: isDisabled ? "none" : "auto",
@@ -193,7 +194,7 @@ export const EmployeesDayCalendarHeader = ({
             size="large"
             sx={{
               color: "text.primary",
-              backgroundColor: "background.default",
+              backgroundColor: getCalendarTableBg,
               border: 1,
               borderColor: "divider",
               pointerEvents: isDisabled ? "none" : "auto",

@@ -14,7 +14,10 @@ import {
   AppointmentLastMinuteCreate,
   AppointmentOwnClientCreate,
 } from "@/ts/models/booking/appointment/Appointment";
-import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
+import {
+  CalendarEventsBusinessEmployee,
+  CalendarEventsSlot,
+} from "@/ts/models/booking/availability/CalendarEvents";
 import { CreateOwnClientFormData } from "../CreateAppointmentModal/CreateOwnClient";
 import {
   ROW_HEIGHT_LEVELS,
@@ -81,12 +84,15 @@ export const useEmployeesDayCalendar = () => {
   });
 
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  const [employees, setEmployees] = useState<CalendarEventsBusinessEmployee[]>(
+    []
+  );
 
   useEffect(() => {
-    if (data && !hasLoadedOnce) setHasLoadedOnce(true);
+    if (!data) return;
+    if (!hasLoadedOnce) setHasLoadedOnce(true);
+    setEmployees(data.employees);
   }, [data, hasLoadedOnce]);
-
-  const employees = data?.employees ?? [];
 
   const { mutate: handleBlock, isPending: isLoadingBlock } = useMutate({
     key: ["block-appointments"],

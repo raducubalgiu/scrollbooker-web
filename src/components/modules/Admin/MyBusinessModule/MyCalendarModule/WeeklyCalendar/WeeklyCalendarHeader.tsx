@@ -20,6 +20,7 @@ import RowHeightControl from "../CalendarSettings/RowHeightControl";
 import CalendarSettingsModal from "../CalendarSettings/CalendarSettingsModal";
 import ExpandCalendarButton from "../CalendarSettings/ExpandCalendarButton";
 import { RowHeightLevel } from "../CalendarSettings/rowHeightLevels";
+import { getCalendarTableBg } from "../calendarSurfaceColors";
 
 interface WeeklyCalendarHeaderProps {
   currentWeekDate: dayjs.Dayjs;
@@ -92,7 +93,7 @@ export const WeeklyCalendarHeader = ({
               fontSize: "15px",
               fontWeight: 700,
               borderWidth: "1px",
-              backgroundColor: "background.default",
+              backgroundColor: getCalendarTableBg,
               border: 1,
               borderColor: "divider",
               pointerEvents: isDisabled ? "none" : "auto",
@@ -125,7 +126,7 @@ export const WeeklyCalendarHeader = ({
           size="large"
           sx={{
             color: "text.primary",
-            backgroundColor: "background.default",
+            backgroundColor: getCalendarTableBg,
             border: 1,
             borderColor: "divider",
             pointerEvents: isDisabled ? "none" : "auto",
@@ -153,7 +154,7 @@ export const WeeklyCalendarHeader = ({
           size="large"
           onClick={isDisabled ? undefined : onToday}
           sx={{
-            backgroundColor: "background.default",
+            backgroundColor: getCalendarTableBg,
             border: 1,
             borderColor: "divider",
             color: "text.primary",
@@ -182,7 +183,7 @@ export const WeeklyCalendarHeader = ({
             size="large"
             sx={{
               color: "text.primary",
-              backgroundColor: "background.default",
+              backgroundColor: getCalendarTableBg,
               border: 1,
               borderColor: "divider",
               pointerEvents: isDisabled ? "none" : "auto",
@@ -196,7 +197,7 @@ export const WeeklyCalendarHeader = ({
             size="large"
             sx={{
               color: "text.primary",
-              backgroundColor: "background.default",
+              backgroundColor: getCalendarTableBg,
               border: 1,
               borderColor: "divider",
               pointerEvents: isDisabled ? "none" : "auto",

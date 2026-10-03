@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Skeleton } from "@mui/material";
 import { EMPLOYEE_COLUMN_MIN_WIDTH } from "./employeesDayCalendarConstants";
+import { getCalendarTableBg } from "../calendarSurfaceColors";
 
 const SKELETON_EMPLOYEES = 4;
 const SKELETON_ROWS = 8;
@@ -60,7 +61,7 @@ const styles = {
   columnsHeader: {
     display: "grid",
     gridTemplateRows: "100px",
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderTop: "1px solid",
@@ -70,13 +71,13 @@ const styles = {
   },
   axisHeaderCell: {
     gridColumn: 1,
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderBottom: "1px solid",
     borderColor: "divider",
   },
   employeeHeaderCell: {
     p: 1,
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderBottom: "1px solid",
     borderLeft: "1px solid",
     borderColor: "divider",
@@ -88,7 +89,7 @@ const styles = {
   },
   grid: {
     display: "grid",
-    backgroundColor: "background.default",
+    backgroundColor: getCalendarTableBg,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     borderLeft: "1px solid",

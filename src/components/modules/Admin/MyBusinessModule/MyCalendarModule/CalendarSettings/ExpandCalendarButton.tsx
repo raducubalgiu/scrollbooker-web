@@ -2,6 +2,7 @@ import React from "react";
 import { IconButton } from "@mui/material";
 import FullscreenRoundedIcon from "@mui/icons-material/FullscreenRounded";
 import FullscreenExitRoundedIcon from "@mui/icons-material/FullscreenExitRounded";
+import { getCalendarTableBg } from "../calendarSurfaceColors";
 
 type ExpandCalendarButtonProps = {
   isExpanded: boolean;
@@ -20,7 +21,7 @@ const ExpandCalendarButton = ({
       size="large"
       sx={{
         color: "text.primary",
-        backgroundColor: "background.default",
+        backgroundColor: getCalendarTableBg,
         border: 1,
         borderColor: "divider",
         pointerEvents: disabled ? "none" : "auto",

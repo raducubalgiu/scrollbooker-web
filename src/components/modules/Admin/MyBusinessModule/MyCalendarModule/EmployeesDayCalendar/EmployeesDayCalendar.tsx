@@ -13,6 +13,7 @@ import { useEmployeesDayCalendar } from "./useEmployeesDayCalendar";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { EMPLOYEE_COLUMN_MIN_WIDTH } from "./employeesDayCalendarConstants";
 import { EmployeesDayCalendarSkeleton } from "./EmployeesDayCalendarSkeleton";
+import { getCalendarPageBg, getCalendarTableBg } from "../calendarSurfaceColors";
 
 export const EmployeesDayCalendar = () => {
   const {
@@ -66,7 +67,7 @@ export const EmployeesDayCalendar = () => {
       <MainLayout
         hideAction
         showHeader={false}
-        sx={{ bgcolor: "background.paper" }}
+        sx={{ bgcolor: getCalendarPageBg }}
       >
         <Box sx={{ width: "100%", boxSizing: "border-box" }}>
           <EmployeesDayCalendarHeader
@@ -130,7 +131,7 @@ export const EmployeesDayCalendar = () => {
   }
 
   return (
-    <MainLayout hideAction showHeader={false} sx={{ bgcolor: "background.paper" }}>
+    <MainLayout hideAction showHeader={false} sx={{ bgcolor: getCalendarPageBg }}>
       <Box
         sx={{
           width: "100%",
@@ -141,7 +142,7 @@ export const EmployeesDayCalendar = () => {
             position: "fixed",
             inset: 0,
             zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
-            bgcolor: "background.paper",
+            bgcolor: getCalendarPageBg,
             overflow: "auto",
             p: 2.5,
           }),
@@ -189,7 +190,7 @@ export const EmployeesDayCalendar = () => {
               display: "grid",
               gridTemplateColumns: `90px repeat(${employees.length}, minmax(${EMPLOYEE_COLUMN_MIN_WIDTH}px, 1fr))`,
               gridTemplateRows: `repeat(${totalRows - 1}, ${currentRowHeight}px)`,
-              backgroundColor: "background.default",
+              backgroundColor: getCalendarTableBg,
               borderBottomLeftRadius: 20,
               borderBottomRightRadius: 20,
               borderLeft: "1px solid",
@@ -216,10 +217,13 @@ export const EmployeesDayCalendar = () => {
                     pr: 2,
                     borderBottom: "1px solid",
                     borderColor: "divider",
-                    backgroundColor: "background.default",
+                    backgroundColor: getCalendarTableBg,
                     display: "flex",
                     alignItems: "flex-start",
                     justifyContent: "flex-end",
+                    position: "sticky",
+                    left: 0,
+                    zIndex: 8,
                   }}
                 >
                   <Typography

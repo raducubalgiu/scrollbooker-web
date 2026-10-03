@@ -1,14 +1,22 @@
 import React, { memo } from "react";
 import { Box, Theme } from "@mui/material";
+import dayjs from "dayjs";
+import {
+  CalendarEventsDay,
+  CalendarEventsSlot,
+} from "@/ts/models/booking/availability/CalendarEvents";
+import { FrontendDayResult } from "../getFrontendDays";
 
 type WeeklyCalendarGridBackgroundProps = {
-  frontendDays: any[];
+  frontendDays: FrontendDayResult[];
+  daysBackend: CalendarEventsDay[] | undefined;
   timeStrings: string[];
   rowMap: Record<string, number>;
 };
 
 const WeeklyCalendarGridBackgroundComponent = ({
   frontendDays,
+  daysBackend,
   timeStrings,
   rowMap,
 }: WeeklyCalendarGridBackgroundProps) => {
@@ -16,26 +24,24 @@ const WeeklyCalendarGridBackgroundComponent = ({
     <>
       {frontendDays.map((dayData, dayIndex) => {
         const colIndex = dayIndex + 2;
+        const dayBackend = daysBackend?.find((d) => d.day === dayData.dateStr);
+
+        const slotsByTime: Record<string, CalendarEventsSlot> = {};
+        dayBackend?.slots.forEach((slot) => {
+          slotsByTime[slot.start_date_locale.split("T")[1] ?? ""] = slot;
+        });
 
         return timeStrings.map((time) => {
           const baseRow = rowMap[time];
           if (baseRow === undefined) return null;
           const currentRow = baseRow - 1;
 
-          let isOutsideSchedule = true;
-
-          if (
-            dayData.schedule &&
-            dayData.schedule.start_time &&
-            dayData.schedule.end_time
-          ) {
-            const startWorkStr = dayData.schedule.start_time;
-            const endWorkStr = dayData.schedule.end_time;
-            const currentCellStr = time;
-            if (currentCellStr >= startWorkStr && currentCellStr < endWorkStr) {
-              isOutsideSchedule = false;
-            }
-          }
+          const slot = slotsByTime[time];
+          const isUnavailable =
+            !slot ||
+            (!slot.is_booked &&
+              !slot.is_blocked &&
+              dayjs().isAfter(dayjs(slot.start_date_locale)));
 
           return (
             <Box
@@ -48,12 +54,12 @@ const WeeklyCalendarGridBackgroundComponent = ({
                 borderColor: "divider",
                 position: "relative",
                 boxSizing: "border-box",
-                backgroundColor: isOutsideSchedule
-                  ? "background.paper"
+                backgroundColor: isUnavailable
+                  ? "action.disabledBackground"
                   : "transparent",
               }}
             >
-              {isOutsideSchedule && <Box sx={styles.outsideSchedule} />}
+              {isUnavailable && <Box sx={styles.unavailable} />}
             </Box>
           );
         });
@@ -67,20 +73,20 @@ export const WeeklyCalendarGridBackground = memo(
 );
 
 const styles = {
-  outsideSchedule: (theme: Theme) => {
+  unavailable: (theme: Theme) => {
     const strokeColor = theme.palette.text.secondary;
     return {
       width: "100%",
       height: "100%",
       backgroundImage: `repeating-linear-gradient(
-        45deg, 
-        transparent, 
-        transparent 5px, 
-        ${strokeColor} 5px, 
+        45deg,
+        transparent,
+        transparent 5px,
+        ${strokeColor} 5px,
         ${strokeColor} 6px
       )`,
       mixBlendMode: theme.palette.mode === "light" ? "multiply" : "screen",
-      opacity: 0.15,
+      opacity: 0.22,
     };
   },
 };

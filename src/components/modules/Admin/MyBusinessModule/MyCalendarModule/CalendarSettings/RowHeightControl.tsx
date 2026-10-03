@@ -7,6 +7,7 @@ import {
   ROW_HEIGHT_LEVEL_ORDER,
   RowHeightLevel,
 } from "./rowHeightLevels";
+import { getCalendarTableBg } from "../calendarSurfaceColors";
 
 type RowHeightControlProps = {
   value: RowHeightLevel;
@@ -28,7 +29,7 @@ const RowHeightControl = ({
         size="large"
         sx={{
           color: "text.primary",
-          backgroundColor: "background.default",
+          backgroundColor: getCalendarTableBg,
           border: 1,
           borderColor: "divider",
           pointerEvents: disabled ? "none" : "auto",

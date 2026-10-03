@@ -1,5 +1,5 @@
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
-import { Box, Button, Stack, SxProps, Typography } from "@mui/material";
+import { Box, Button, Stack, SxProps, Theme, Typography } from "@mui/material";
 
 type MainLayoutProps = {
   title?: string;
@@ -9,7 +9,7 @@ type MainLayoutProps = {
   showHeader?: boolean;
   hideAction?: boolean;
   onOpenModal?: () => void;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 };
 
 export default function MainLayout({
