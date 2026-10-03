@@ -85,6 +85,12 @@ export const useWeeklyCalendar = ({
     employeeId: session?.is_employee ? session?.user_id : undefined,
   });
 
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+  useEffect(() => {
+    if (data && !hasLoadedOnce) setHasLoadedOnce(true);
+  }, [data, hasLoadedOnce]);
+
   const { mutate: handleBlock, isPending: isLoadingBlock } = useMutate({
     key: ["block-appointments"],
     url: "/api/appointments/block",
@@ -277,6 +283,7 @@ export const useWeeklyCalendar = ({
     rowMap,
     totalRows,
     isLoading: isLoading,
+    isInitialLoading: !hasLoadedOnce && isLoading,
     isLoadingBlock,
     isLoadingLastMinute,
     isLoadingOwnClient,

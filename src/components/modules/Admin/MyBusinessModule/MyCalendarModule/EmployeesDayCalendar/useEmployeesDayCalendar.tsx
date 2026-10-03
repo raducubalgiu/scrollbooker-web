@@ -62,7 +62,8 @@ export const useEmployeesDayCalendar = () => {
     [currentDay]
   );
 
-  const { data: scheduleBounds } = useGetScheduleBounds();
+  const { data: scheduleBounds, isLoading: isBoundsLoading } =
+    useGetScheduleBounds();
 
   const bounds = useMemo(() => {
     if (!scheduleBounds?.min_start_time || !scheduleBounds?.max_end_time) {
@@ -78,6 +79,12 @@ export const useEmployeesDayCalendar = () => {
     day: dayStr,
     slotDuration,
   });
+
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+  useEffect(() => {
+    if (data && !hasLoadedOnce) setHasLoadedOnce(true);
+  }, [data, hasLoadedOnce]);
 
   const employees = data?.employees ?? [];
 
@@ -261,6 +268,7 @@ export const useEmployeesDayCalendar = () => {
     rowMap,
     totalRows,
     isLoading,
+    isInitialLoading: isBoundsLoading || (!hasLoadedOnce && isLoading),
     isLoadingBlock,
     isLoadingLastMinute,
     isLoadingOwnClient,

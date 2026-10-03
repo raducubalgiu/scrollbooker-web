@@ -12,6 +12,7 @@ import CalendarLoadingOverlay from "../CalendarLoadingOverlay";
 import { useEmployeesDayCalendar } from "./useEmployeesDayCalendar";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { EMPLOYEE_COLUMN_MIN_WIDTH } from "./employeesDayCalendarConstants";
+import { EmployeesDayCalendarSkeleton } from "./EmployeesDayCalendarSkeleton";
 
 export const EmployeesDayCalendar = () => {
   const {
@@ -32,6 +33,7 @@ export const EmployeesDayCalendar = () => {
     rowMap,
     totalRows,
     isLoading,
+    isInitialLoading,
     isLoadingBlock,
     isLoadingLastMinute,
     isLoadingOwnClient,
@@ -59,7 +61,39 @@ export const EmployeesDayCalendar = () => {
     }
   }, []);
 
-  if (employees.length === 0 && !isLoading) {
+  if (isInitialLoading) {
+    return (
+      <MainLayout
+        hideAction
+        showHeader={false}
+        sx={{ bgcolor: "background.paper" }}
+      >
+        <Box sx={{ width: "100%", boxSizing: "border-box" }}>
+          <EmployeesDayCalendarHeader
+            currentDay={currentDay}
+            isBlocking={isBlocking}
+            isLoading={isLoading}
+            onPrevDay={handlePrevDay}
+            onNextDay={handleNextDay}
+            onToday={handleToday}
+            slotDuration={slotDuration}
+            onSlotDurationChange={(duration) => setSlotDuration(duration)}
+            rowHeightLevel={rowHeightLevel}
+            onRowHeightChange={setRowHeightLevel}
+            isExpanded={isExpanded}
+            onToggleExpanded={() => setIsExpanded(!isExpanded)}
+            userId={userId}
+            onBlockSlots={handleToggleBlocking}
+            onAddAppointment={() => handleOpenCreateModal(null, null)}
+          />
+
+          <EmployeesDayCalendarSkeleton />
+        </Box>
+      </MainLayout>
+    );
+  }
+
+  if (employees.length === 0) {
     return (
       <Box
         sx={{

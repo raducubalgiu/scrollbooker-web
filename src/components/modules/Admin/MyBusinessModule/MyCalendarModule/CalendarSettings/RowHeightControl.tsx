@@ -24,14 +24,14 @@ const RowHeightControl = ({
   return (
     <>
       <IconButton
-        onClick={(e) => setAnchorEl(e.currentTarget)}
-        disabled={disabled}
+        onClick={disabled ? undefined : (e) => setAnchorEl(e.currentTarget)}
         size="large"
         sx={{
           color: "text.primary",
           backgroundColor: "background.default",
           border: 1,
           borderColor: "divider",
+          pointerEvents: disabled ? "none" : "auto",
         }}
       >
         <DensityMediumRoundedIcon sx={{ fontSize: 22 }} />

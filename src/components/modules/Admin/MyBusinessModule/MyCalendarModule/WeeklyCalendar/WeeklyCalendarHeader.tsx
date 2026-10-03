@@ -63,6 +63,7 @@ export const WeeklyCalendarHeader = ({
   const formattedRange = `${startOfWeek.format("DD")} - ${endOfWeek.format("DD")} ${endOfWeek.format("MMMM YYYY")}`;
 
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
+    if (isDisabled) return;
     onSlotDurationChange(Number(event.target.value));
   };
 
@@ -85,7 +86,6 @@ export const WeeklyCalendarHeader = ({
           <Select
             value={slotDuration}
             onChange={handleSelectChange}
-            disabled={isDisabled}
             sx={{
               borderRadius: 10,
               height: 50,
@@ -95,6 +95,7 @@ export const WeeklyCalendarHeader = ({
               backgroundColor: "background.default",
               border: 1,
               borderColor: "divider",
+              pointerEvents: isDisabled ? "none" : "auto",
               "& .MuiSelect-select": { display: "flex", alignItems: "center" },
             }}
           >
@@ -120,14 +121,14 @@ export const WeeklyCalendarHeader = ({
         />
 
         <IconButton
-          onClick={() => setIsSettingsOpen(true)}
-          disabled={isDisabled}
+          onClick={isDisabled ? undefined : () => setIsSettingsOpen(true)}
           size="large"
           sx={{
             color: "text.primary",
             backgroundColor: "background.default",
             border: 1,
             borderColor: "divider",
+            pointerEvents: isDisabled ? "none" : "auto",
           }}
         >
           <SettingsOutlinedIcon sx={{ fontSize: 22 }} />
@@ -150,13 +151,13 @@ export const WeeklyCalendarHeader = ({
           variant="contained"
           color="inherit"
           size="large"
-          onClick={onToday}
-          disabled={isDisabled}
+          onClick={isDisabled ? undefined : onToday}
           sx={{
             backgroundColor: "background.default",
             border: 1,
             borderColor: "divider",
             color: "text.primary",
+            pointerEvents: isDisabled ? "none" : "auto",
             "&:hover": {
               backgroundColor: (theme) =>
                 alpha(theme.palette.action.hover, 0.04),
@@ -177,28 +178,28 @@ export const WeeklyCalendarHeader = ({
           gap={1}
         >
           <IconButton
-            onClick={onPrevWeek}
-            disabled={isDisabled}
+            onClick={isDisabled ? undefined : onPrevWeek}
             size="large"
             sx={{
               color: "text.primary",
               backgroundColor: "background.default",
               border: 1,
               borderColor: "divider",
+              pointerEvents: isDisabled ? "none" : "auto",
             }}
           >
             <ChevronLeftIcon sx={{ fontSize: 25 }} />
           </IconButton>
 
           <IconButton
-            onClick={onNextWeek}
-            disabled={isDisabled}
+            onClick={isDisabled ? undefined : onNextWeek}
             size="large"
             sx={{
               color: "text.primary",
               backgroundColor: "background.default",
               border: 1,
               borderColor: "divider",
+              pointerEvents: isDisabled ? "none" : "auto",
             }}
           >
             <ChevronRightIcon sx={{ fontSize: 25 }} />
@@ -221,9 +222,8 @@ export const WeeklyCalendarHeader = ({
           color="inherit"
           size="large"
           startIcon={<BlockIcon sx={{ fontSize: 20 }} />}
-          onClick={onBlockSlots}
+          onClick={isLoading ? undefined : onBlockSlots}
           disableElevation
-          disabled={isLoading}
           sx={{
             textTransform: "none",
             fontWeight: 700,
@@ -236,6 +236,7 @@ export const WeeklyCalendarHeader = ({
             backgroundColor: (theme) =>
               theme.palette.mode === "light" ? "#f8fafc" : "action.selected",
             color: "error.main",
+            pointerEvents: isLoading ? "none" : "auto",
             "&:hover": {
               backgroundColor: (theme) => alpha(theme.palette.error.main, 0.04),
             },
@@ -249,9 +250,8 @@ export const WeeklyCalendarHeader = ({
           color="primary"
           size="large"
           startIcon={<AddIcon sx={{ fontSize: 22 }} />}
-          onClick={onAddAppointment}
+          onClick={isDisabled ? undefined : onAddAppointment}
           disableElevation
-          disabled={isDisabled}
           sx={{
             textTransform: "none",
             fontWeight: 700,
@@ -260,6 +260,7 @@ export const WeeklyCalendarHeader = ({
             height: 48,
             width: { xs: "100%", sm: "auto" },
             boxShadow: "none",
+            pointerEvents: isDisabled ? "none" : "auto",
           }}
         >
           Adaugă o programare

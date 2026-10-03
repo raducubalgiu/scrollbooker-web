@@ -16,14 +16,14 @@ const ExpandCalendarButton = ({
 }: ExpandCalendarButtonProps) => {
   return (
     <IconButton
-      onClick={onToggle}
-      disabled={disabled}
+      onClick={disabled ? undefined : onToggle}
       size="large"
       sx={{
         color: "text.primary",
         backgroundColor: "background.default",
         border: 1,
         borderColor: "divider",
+        pointerEvents: disabled ? "none" : "auto",
       }}
     >
       {isExpanded ? (

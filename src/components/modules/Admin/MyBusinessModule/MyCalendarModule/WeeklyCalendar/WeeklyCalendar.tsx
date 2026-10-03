@@ -13,6 +13,7 @@ import { WeeklyCalendarEventsLayer } from "./WeeklyCalendarEventsLayer";
 import CalendarLoadingOverlay from "../CalendarLoadingOverlay";
 import { useWeeklyCalendar } from "./useWeeklyCalendar";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
+import { WeeklyCalendarSkeleton } from "./WeeklyCalendarSkeleton";
 
 type WeeklyCalendarProps = {
   session: Session;
@@ -42,6 +43,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     rowMap,
     totalRows,
     isLoading,
+    isInitialLoading,
     isLoadingBlock,
     isLoadingLastMinute,
     isLoadingOwnClient,
@@ -75,6 +77,38 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
           Acest angajat nu are un program de lucru configurat.
         </Typography>
       </Box>
+    );
+  }
+
+  if (isInitialLoading) {
+    return (
+      <MainLayout
+        hideAction
+        showHeader={false}
+        sx={{ bgcolor: "background.paper" }}
+      >
+        <Box sx={{ width: "100%", boxSizing: "border-box" }}>
+          <WeeklyCalendarHeader
+            currentWeekDate={currentWeekDate}
+            isBlocking={isBlocking}
+            isLoading={isLoading}
+            onPrevWeek={handlePrevWeek}
+            onNextWeek={handleNextWeek}
+            onToday={handleToday}
+            slotDuration={slotDuration}
+            onSlotDurationChange={(duration) => setSlotDuration(duration)}
+            rowHeightLevel={rowHeightLevel}
+            onRowHeightChange={setRowHeightLevel}
+            isExpanded={isExpanded}
+            onToggleExpanded={() => setIsExpanded(!isExpanded)}
+            userId={session?.user_id}
+            onBlockSlots={handleToggleBlocking}
+            onAddAppointment={() => handleOpenCreateModal(null)}
+          />
+
+          <WeeklyCalendarSkeleton />
+        </Box>
+      </MainLayout>
     );
   }
 

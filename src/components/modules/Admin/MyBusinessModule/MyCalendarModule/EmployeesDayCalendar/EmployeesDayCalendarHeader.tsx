@@ -60,6 +60,7 @@ export const EmployeesDayCalendarHeader = ({
   const formattedDay = currentDay.format("dddd, DD MMMM YYYY");
 
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
+    if (isDisabled) return;
     onSlotDurationChange(Number(event.target.value));
   };
 
@@ -82,7 +83,6 @@ export const EmployeesDayCalendarHeader = ({
           <Select
             value={slotDuration}
             onChange={handleSelectChange}
-            disabled={isDisabled}
             sx={{
               borderRadius: 10,
               height: 50,
@@ -92,6 +92,7 @@ export const EmployeesDayCalendarHeader = ({
               backgroundColor: "background.default",
               border: 1,
               borderColor: "divider",
+              pointerEvents: isDisabled ? "none" : "auto",
               "& .MuiSelect-select": { display: "flex", alignItems: "center" },
             }}
           >
@@ -117,14 +118,14 @@ export const EmployeesDayCalendarHeader = ({
         />
 
         <IconButton
-          onClick={() => setIsSettingsOpen(true)}
-          disabled={isDisabled}
+          onClick={isDisabled ? undefined : () => setIsSettingsOpen(true)}
           size="large"
           sx={{
             color: "text.primary",
             backgroundColor: "background.default",
             border: 1,
             borderColor: "divider",
+            pointerEvents: isDisabled ? "none" : "auto",
           }}
         >
           <SettingsOutlinedIcon sx={{ fontSize: 22 }} />
@@ -147,13 +148,13 @@ export const EmployeesDayCalendarHeader = ({
           variant="contained"
           color="inherit"
           size="large"
-          onClick={onToday}
-          disabled={isDisabled}
+          onClick={isDisabled ? undefined : onToday}
           sx={{
             backgroundColor: "background.default",
             border: 1,
             borderColor: "divider",
             color: "text.primary",
+            pointerEvents: isDisabled ? "none" : "auto",
             "&:hover": {
               backgroundColor: (theme) =>
                 alpha(theme.palette.action.hover, 0.04),
@@ -174,28 +175,28 @@ export const EmployeesDayCalendarHeader = ({
           gap={1}
         >
           <IconButton
-            onClick={onPrevDay}
-            disabled={isDisabled}
+            onClick={isDisabled ? undefined : onPrevDay}
             size="large"
             sx={{
               color: "text.primary",
               backgroundColor: "background.default",
               border: 1,
               borderColor: "divider",
+              pointerEvents: isDisabled ? "none" : "auto",
             }}
           >
             <ChevronLeftIcon sx={{ fontSize: 25 }} />
           </IconButton>
 
           <IconButton
-            onClick={onNextDay}
-            disabled={isDisabled}
+            onClick={isDisabled ? undefined : onNextDay}
             size="large"
             sx={{
               color: "text.primary",
               backgroundColor: "background.default",
               border: 1,
               borderColor: "divider",
+              pointerEvents: isDisabled ? "none" : "auto",
             }}
           >
             <ChevronRightIcon sx={{ fontSize: 25 }} />
@@ -218,9 +219,8 @@ export const EmployeesDayCalendarHeader = ({
           color="inherit"
           size="large"
           startIcon={<BlockIcon sx={{ fontSize: 20 }} />}
-          onClick={onBlockSlots}
+          onClick={isLoading ? undefined : onBlockSlots}
           disableElevation
-          disabled={isLoading}
           sx={{
             textTransform: "none",
             fontWeight: 700,
@@ -233,6 +233,7 @@ export const EmployeesDayCalendarHeader = ({
             backgroundColor: (theme) =>
               theme.palette.mode === "light" ? "#f8fafc" : "action.selected",
             color: "error.main",
+            pointerEvents: isLoading ? "none" : "auto",
             "&:hover": {
               backgroundColor: (theme) => alpha(theme.palette.error.main, 0.04),
             },
@@ -246,9 +247,8 @@ export const EmployeesDayCalendarHeader = ({
           color="primary"
           size="large"
           startIcon={<AddIcon sx={{ fontSize: 22 }} />}
-          onClick={onAddAppointment}
+          onClick={isDisabled ? undefined : onAddAppointment}
           disableElevation
-          disabled={isDisabled}
           sx={{
             textTransform: "none",
             fontWeight: 700,
@@ -257,6 +257,7 @@ export const EmployeesDayCalendarHeader = ({
             height: 48,
             width: { xs: "100%", sm: "auto" },
             boxShadow: "none",
+            pointerEvents: isDisabled ? "none" : "auto",
           }}
         >
           Adaugă o programare
