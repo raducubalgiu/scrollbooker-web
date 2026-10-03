@@ -18,6 +18,8 @@ import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
 import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
 import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
 import ForceDarkChrome from "@/components/core/ForceDarkChrome";
+import { useUserLocation } from "@/hooks/useUserLocation";
+import { getDistanceKm } from "@/utils/formatters";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -47,6 +49,13 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
 
   const { data: linkedProducts, isLoading: isLoadingLinkedProducts } =
     useGetLinkedProductsByPostId({ postId: post.id, isEnabled: !!post.id });
+
+  const { location: userLocation } = useUserLocation();
+  const businessCoordinates = post.business_location?.coordinates ?? null;
+  const distanceKm = React.useMemo(() => {
+    if (!userLocation || !businessCoordinates) return null;
+    return getDistanceKm(userLocation, businessCoordinates);
+  }, [userLocation, businessCoordinates]);
 
   const handleNavigateToBooking = (selectedProdId: number | null) => {
     const { user, business_id, business_owner } = post;
@@ -126,6 +135,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
           postId={post.id}
           user={post.user}
           businessLocation={post?.business_location}
+          distanceKm={distanceKm}
           onNavigateToBooking={() => goBack()}
           isVideoReview={post.is_video_review}
           onFollow={handleFollow}

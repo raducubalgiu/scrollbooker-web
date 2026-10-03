@@ -28,6 +28,8 @@ import {
 import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
 import ForceDarkChrome from "@/components/core/ForceDarkChrome";
+import { useUserLocation } from "@/hooks/useUserLocation";
+import { getDistanceKm } from "@/utils/formatters";
 
 const PREFETCH_OFFSET = 2;
 
@@ -74,6 +76,13 @@ export default function ExploreModule() {
   }, []);
 
   const currentPost = posts[currentIndex] ?? null;
+
+  const { location: userLocation } = useUserLocation();
+  const businessCoordinates = currentPost?.business_location?.coordinates ?? null;
+  const distanceKm = useMemo(() => {
+    if (!userLocation || !businessCoordinates) return null;
+    return getDistanceKm(userLocation, businessCoordinates);
+  }, [userLocation, businessCoordinates]);
 
   useExplorePaginationPrefetch({
     currentIndex,
@@ -405,6 +414,7 @@ export default function ExploreModule() {
             user={currentPost?.user}
             isVideoReview={currentPost?.is_video_review === true}
             businessLocation={currentPost?.business_location}
+            distanceKm={distanceKm}
             onNavigateToBooking={handleNavigateToBooking}
             onFollow={handleFollow}
             isTogglingFollow={isFollowing || isUnfollowing}

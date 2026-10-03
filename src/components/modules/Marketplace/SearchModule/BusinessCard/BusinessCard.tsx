@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React, { memo } from "react";
 import Image from "next/image";
-import { formatRating } from "@/utils/formatters";
+import { formatDistance, formatRating } from "@/utils/formatters";
 import StarIcon from "@mui/icons-material/Star";
 import BusinessProductCard from "./BusinessProductCard";
 import { BusinessSheet } from "@/ts/models/booking/business/search/BusinessSheet";
@@ -11,10 +11,13 @@ import { makeProfessionSlug } from "@/utils/make-profession-slug";
 type BusinessCardProps = { business: BusinessSheet };
 
 const BusinessCard = ({ business }: BusinessCardProps) => {
-  const { owner, media_files, address, products } = business;
+  const { owner, media_files, address, products, distance } = business;
   const { fullname, ratings_average, ratings_count, profession } = owner;
 
   const professionSlug = makeProfessionSlug(profession);
+  const locationSummary = [formatDistance(distance), address]
+    .filter((part): part is string => Boolean(part))
+    .join(" • ");
 
   return (
     <Box sx={{ overflow: "hidden", borderRadius: 2 }}>
@@ -94,7 +97,7 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
           mb={{ xs: 1.5, sm: 2.5 }}
           sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
         >
-          {address}
+          {locationSummary}
         </Typography>
       </Box>
 

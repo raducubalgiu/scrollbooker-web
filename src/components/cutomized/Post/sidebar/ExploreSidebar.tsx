@@ -23,6 +23,7 @@ type ExploreSidebarProps = {
   user: PostUser | undefined;
   isVideoReview: boolean;
   businessLocation: PostBusinessLocation | null | undefined;
+  distanceKm: number | null;
   onNavigateToBooking: (selectedProductId: number | null) => void;
   onFollow?: () => void;
   isTogglingFollow?: boolean;
@@ -36,6 +37,7 @@ const ExploreSidebar = ({
   user,
   isVideoReview,
   businessLocation,
+  distanceKm,
   isLoading,
   onNavigateToBooking,
   onFollow,
@@ -92,6 +94,7 @@ const ExploreSidebar = ({
             description={null}
             user={user}
             businessLocation={businessLocation}
+            distanceKm={distanceKm}
             displayDescription={false}
             isVideoReview={isVideoReview}
             onFollow={onFollow}

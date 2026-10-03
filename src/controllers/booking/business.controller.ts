@@ -36,6 +36,7 @@ const buildMapRequest = (searchState: SearchState): BusinessMapRequest => ({
   has_discount: searchState.hasDiscount,
   max_price: searchState.maxPrice,
   sort: searchState.sort,
+  user_location: searchState.userLocation,
 });
 
 export const useGetMyBusinessDetails = () => {
@@ -101,6 +102,8 @@ export const useGetBusinessMarkers = (searchState: SearchState) => {
       searchState.bbox?.max_lng,
       searchState.bbox?.max_lat,
       searchState.sort,
+      searchState.userLocation?.lat,
+      searchState.userLocation?.lng,
     ],
     queryFn: async () => {
       const response = await axios.post<BusinessMarker[]>(

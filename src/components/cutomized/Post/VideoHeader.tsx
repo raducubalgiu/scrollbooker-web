@@ -9,11 +9,13 @@ import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
 import { AppRoutes } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import AvatarWithRating from "../Avatar/AvatarWithRating";
+import { formatDistance } from "@/utils/formatters";
 
 type VideoHeaderProps = {
   displayDescription: boolean;
   description: string | null;
   businessLocation: PostBusinessLocation | null | undefined;
+  distanceKm?: number | null;
   user: PostUser | undefined;
   isVideoReview: boolean;
   onFollow?: (() => void) | undefined;
@@ -25,6 +27,7 @@ const VideoHeader = ({
   isVideoReview,
   description,
   businessLocation,
+  distanceKm = null,
   displayDescription = false,
   onFollow,
   isTogglingFollow = false,
@@ -34,6 +37,12 @@ const VideoHeader = ({
   const isBusinessOrEmployee = !isVideoReview;
   const mapsUrl = getGoogleMapsDirectionsUrl(businessLocation?.coordinates);
   const { navigateTo } = useAppNavigation();
+  const locationSummary = [
+    formatDistance(distanceKm),
+    businessLocation?.formatted_address,
+  ]
+    .filter((part): part is string => Boolean(part))
+    .join(" • ");
 
   return (
     <Box>
@@ -95,7 +104,7 @@ const VideoHeader = ({
             {isBusinessOrEmployee ? profession : `@${username}`}
           </Typography>
 
-          {businessLocation?.formatted_address && (
+          {locationSummary && (
             <Link
               href={mapsUrl}
               target="_blank"
@@ -118,7 +127,7 @@ const VideoHeader = ({
                   color="text.secondary"
                   sx={styles.ellipsisText}
                 >
-                  {businessLocation.formatted_address}
+                  {locationSummary}
                 </Typography>
               </Stack>
             </Link>

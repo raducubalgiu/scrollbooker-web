@@ -8,6 +8,7 @@ import SearchMap from "./SearchMap";
 import { useTheme } from "@mui/material/styles";
 import {
   BoundingBox,
+  LocationLatLng,
   SearchSortEnum,
 } from "@/ts/models/booking/business/search/BusinessMapCombined";
 import { useRouter } from "next/navigation";
@@ -18,6 +19,7 @@ import SearchBusinessList from "./SearchBusinessList";
 import SearchHeaderMobile from "./SearchHeaderMobile";
 import { useCustomQuery } from "@/hooks/useHttp";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { useUserLocation } from "@/hooks/useUserLocation";
 
 const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 type SearchPageProps = {
@@ -37,6 +39,7 @@ export type SearchState = {
   hasDiscount: boolean;
   maxPrice: number | null;
   sort: SearchSortEnum | null;
+  userLocation: LocationLatLng | null;
 };
 
 export default function SearchModule({ searchParams }: SearchPageProps) {
@@ -107,7 +110,20 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     )
       ? (searchParams.sort as SearchSortEnum)
       : SearchSortEnum.RECOMMENDED,
+    userLocation: null,
   }));
+
+  const { location: userLocation } = useUserLocation();
+
+  React.useEffect(() => {
+    if (!userLocation) return;
+    setSearchState((prev) =>
+      prev.userLocation?.lat === userLocation.lat &&
+      prev.userLocation?.lng === userLocation.lng
+        ? prev
+        : { ...prev, userLocation }
+    );
+  }, [userLocation]);
 
   const buildUrlParams = React.useCallback((state: SearchState) => {
     const params = new URLSearchParams();
