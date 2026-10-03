@@ -127,9 +127,15 @@ export default function ForBusinessHero() {
               />
               <Typography
                 variant="body2"
-                sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 700 }}
+                sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 500 }}
               >
-                {t("launchOffer")}
+                {t.rich("launchOffer", {
+                  b: (chunks) => (
+                    <Box component="span" sx={{ fontWeight: 800 }}>
+                      {chunks}
+                    </Box>
+                  ),
+                })}
               </Typography>
             </Stack>
 
