@@ -24,7 +24,7 @@ const styles = {
     zIndex: 20,
     display: "flex",
     justifyContent: "center",
-    backgroundColor: alpha(theme.palette.background.paper, 0.6),
+    backgroundColor: alpha(theme.palette.background.default, 0.6),
     backdropFilter: "blur(1px)",
     transition: "opacity 0.2s ease",
   }),

@@ -1,10 +1,10 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { WeeklyCalendar } from "@/components/modules/Admin/MyBusinessModule/MyCalendarModule/WeeklyCalendar/WeeklyCalendar";
+import { EmployeesDayCalendar } from "@/components/modules/Admin/MyBusinessModule/MyCalendarModule/EmployeesDayCalendar/EmployeesDayCalendar";
 import { authOptions } from "@/lib/auth/authOptions";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { get } from "@/utils/requests";
-import { Box } from "@mui/material";
 import { getServerSession } from "next-auth";
 import { JSX } from "react";
 
@@ -30,11 +30,7 @@ async function Calendar(): Promise<JSX.Element> {
     return <WeeklyCalendar session={session} schedules={schedules} />;
   }
 
-  return (
-    <Box>
-      Multi-Calendar pentru role business cu angajati inca nu este implementat
-    </Box>
-  );
+  return <EmployeesDayCalendar />;
 }
 
 export default ProtectedPage(Calendar, PermissionEnum.MY_CALENDAR_VIEW);

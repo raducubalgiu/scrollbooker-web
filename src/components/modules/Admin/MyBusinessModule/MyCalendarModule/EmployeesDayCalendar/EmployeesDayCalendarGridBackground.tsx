@@ -1,45 +1,38 @@
 import React, { memo } from "react";
 import { Box, Theme } from "@mui/material";
+import { CalendarEventsBusinessEmployee } from "@/ts/models/booking/availability/CalendarEvents";
 
-type WeeklyCalendarGridBackgroundProps = {
-  frontendDays: any[];
+type EmployeesDayCalendarGridBackgroundProps = {
+  employees: CalendarEventsBusinessEmployee[];
   timeStrings: string[];
   rowMap: Record<string, number>;
 };
 
-const WeeklyCalendarGridBackgroundComponent = ({
-  frontendDays,
+const EmployeesDayCalendarGridBackgroundComponent = ({
+  employees,
   timeStrings,
   rowMap,
-}: WeeklyCalendarGridBackgroundProps) => {
+}: EmployeesDayCalendarGridBackgroundProps) => {
   return (
     <>
-      {frontendDays.map((dayData, dayIndex) => {
-        const colIndex = dayIndex + 2;
+      {employees.map((employee, employeeIndex) => {
+        const colIndex = employeeIndex + 2;
+        const firstSlot = employee.slots[0];
+        const lastSlot = employee.slots[employee.slots.length - 1];
+        const empStart = firstSlot?.start_date_locale.split("T")[1];
+        const empEnd = lastSlot?.end_date_locale.split("T")[1];
 
         return timeStrings.map((time) => {
           const baseRow = rowMap[time];
           if (baseRow === undefined) return null;
           const currentRow = baseRow - 1;
 
-          let isOutsideSchedule = true;
-
-          if (
-            dayData.schedule &&
-            dayData.schedule.start_time &&
-            dayData.schedule.end_time
-          ) {
-            const startWorkStr = dayData.schedule.start_time;
-            const endWorkStr = dayData.schedule.end_time;
-            const currentCellStr = time;
-            if (currentCellStr >= startWorkStr && currentCellStr < endWorkStr) {
-              isOutsideSchedule = false;
-            }
-          }
+          const isOutsideSchedule =
+            !empStart || !empEnd || time < empStart || time >= empEnd;
 
           return (
             <Box
-              key={`bg-${dayData.dateStr}-${time}`}
+              key={`bg-${employee.id}-${time}`}
               sx={{
                 gridColumn: colIndex,
                 gridRow: currentRow,
@@ -62,8 +55,8 @@ const WeeklyCalendarGridBackgroundComponent = ({
   );
 };
 
-export const WeeklyCalendarGridBackground = memo(
-  WeeklyCalendarGridBackgroundComponent
+export const EmployeesDayCalendarGridBackground = memo(
+  EmployeesDayCalendarGridBackgroundComponent
 );
 
 const styles = {
@@ -73,10 +66,10 @@ const styles = {
       width: "100%",
       height: "100%",
       backgroundImage: `repeating-linear-gradient(
-        45deg, 
-        transparent, 
-        transparent 5px, 
-        ${strokeColor} 5px, 
+        45deg,
+        transparent,
+        transparent 5px,
+        ${strokeColor} 5px,
         ${strokeColor} 6px
       )`,
       mixBlendMode: theme.palette.mode === "light" ? "multiply" : "screen",

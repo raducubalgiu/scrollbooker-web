@@ -1,7 +1,7 @@
 "use client";
 
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
-import { Box, Typography } from "@mui/material";
+import { Box, Theme, Typography } from "@mui/material";
 import { Session } from "next-auth";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { WeeklyCalendarHeader } from "./WeeklyCalendarHeader";
@@ -31,6 +31,10 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     createModal,
     slotDuration,
     setSlotDuration,
+    rowHeightLevel,
+    setRowHeightLevel,
+    isExpanded,
+    setIsExpanded,
     currentWeekDate,
     currentRowHeight,
     frontendDays,
@@ -75,13 +79,21 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
   }
 
   return (
-    <MainLayout hideAction showHeader={false}>
+    <MainLayout hideAction showHeader={false} sx={{ bgcolor: "background.paper" }}>
       <Box
         sx={{
           width: "100%",
           boxSizing: "border-box",
           pb: isBlocking ? "120px" : 0,
           transition: "padding-bottom 0.2s ease",
+          ...(isExpanded && {
+            position: "fixed",
+            inset: 0,
+            zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
+            bgcolor: "background.paper",
+            overflow: "auto",
+            p: 2.5,
+          }),
         }}
       >
         <CreateAppointmentModal
@@ -102,6 +114,11 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
           onToday={handleToday}
           slotDuration={slotDuration}
           onSlotDurationChange={(duration) => setSlotDuration(duration)}
+          rowHeightLevel={rowHeightLevel}
+          onRowHeightChange={setRowHeightLevel}
+          isExpanded={isExpanded}
+          onToggleExpanded={() => setIsExpanded(!isExpanded)}
+          userId={session?.user_id}
           onBlockSlots={handleToggleBlocking}
           onAddAppointment={() => handleOpenCreateModal(null)}
         />
@@ -120,7 +137,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
             gridTemplateColumns: `90px repeat(7, minmax(130px, 1fr))`,
             gridTemplateRows: `repeat(${totalRows - 1}, ${currentRowHeight}px)`,
             //overflow: "hidden",
-            backgroundColor: "background.paper",
+            backgroundColor: "background.default",
             borderBottomLeftRadius: 20,
             borderBottomRightRadius: 20,
             borderLeft: "1px solid",
@@ -150,7 +167,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
                   pr: 2,
                   borderBottom: "1px solid",
                   borderColor: "divider",
-                  backgroundColor: "background.paper",
+                  backgroundColor: "background.default",
                   display: "flex",
                   alignItems: "flex-start",
                   justifyContent: "flex-end",

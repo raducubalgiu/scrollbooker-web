@@ -2,50 +2,47 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import dayjs from "dayjs";
+import { useSession } from "next-auth/react";
 import { useMutate } from "@/hooks/useHttp";
-import { useGetCalendarEvents } from "@/controllers/booking/availability.controller";
+import { useGetBusinessCalendarEventsByDay } from "@/controllers/booking/availability.controller";
+import { useGetScheduleBounds } from "@/controllers/booking/schedule.controller";
 import { useGetCalendarSettings } from "@/controllers/booking/calendarSettings.controller";
+import { createTimeRowMap } from "../createTimeRowMap";
 import {
   AppointmentBlockCreate,
   AppointmentBlockSlot,
   AppointmentLastMinuteCreate,
   AppointmentOwnClientCreate,
 } from "@/ts/models/booking/appointment/Appointment";
-import { CreateAppointmentModalType } from "./WeeklyCalendar";
-import { getFrontendDays } from "../getFrontendDays";
-import { getScheduleBounds } from "../getScheduleBounds";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
-import { Session } from "next-auth";
-import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { CreateOwnClientFormData } from "../CreateAppointmentModal/CreateOwnClient";
 import {
   ROW_HEIGHT_LEVELS,
   RowHeightLevel,
 } from "../CalendarSettings/rowHeightLevels";
 
-interface UseWeeklyCalendarProps {
-  session: Session;
-  schedules: Schedule[];
-}
+export type EmployeesCreateAppointmentModalType = {
+  open: boolean;
+  slot: CalendarEventsSlot | null;
+  employeeId: number | null;
+};
 
-export const useWeeklyCalendar = ({
-  session,
-  schedules,
-}: UseWeeklyCalendarProps) => {
+export const useEmployeesDayCalendar = () => {
+  const { data: session } = useSession();
   const [isBlocking, setIsBlocking] = useState(false);
   const [selectedSlotsToBlock, setSelectedSlotsToBlock] = useState<
     AppointmentBlockSlot[]
   >([]);
-  const [createModal, setCreateModal] = useState<CreateAppointmentModalType>({
-    open: false,
-    slot: null,
-  });
+  const [createModal, setCreateModal] =
+    useState<EmployeesCreateAppointmentModalType>({
+      open: false,
+      slot: null,
+      employeeId: null,
+    });
   const [slotDuration, setSlotDuration] = useState(60);
   const [rowHeightLevel, setRowHeightLevel] = useState<RowHeightLevel>("medium");
   const [isExpanded, setIsExpanded] = useState(false);
-  const [currentWeekDate, setCurrentWeekDate] = useState<dayjs.Dayjs>(() =>
-    dayjs()
-  );
+  const [currentDay, setCurrentDay] = useState<dayjs.Dayjs>(() => dayjs());
 
   const { data: calendarSettings } = useGetCalendarSettings(session?.user_id);
   const hasAppliedDefaultDurationRef = useRef(false);
@@ -56,34 +53,33 @@ export const useWeeklyCalendar = ({
     setSlotDuration(calendarSettings.slot_duration_minutes);
   }, [calendarSettings]);
 
-  // 1. MEMOIZARE VALORI ȘI PARAMETRI STATICI
   const currentRowHeight = useMemo(() => {
     return ROW_HEIGHT_LEVELS[rowHeightLevel];
   }, [rowHeightLevel]);
 
-  const frontendDays = useMemo(() => {
-    return getFrontendDays(currentWeekDate, schedules);
-  }, [currentWeekDate, schedules]);
-
-  const startDateStr = useMemo(
-    () => currentWeekDate.startOf("week").format("YYYY-MM-DD"),
-    [currentWeekDate]
-  );
-  const endDateStr = useMemo(
-    () => currentWeekDate.endOf("week").format("YYYY-MM-DD"),
-    [currentWeekDate]
+  const dayStr = useMemo(
+    () => currentDay.format("YYYY-MM-DD"),
+    [currentDay]
   );
 
-  const bounds = useMemo(() => getScheduleBounds(schedules), [schedules]);
+  const { data: scheduleBounds } = useGetScheduleBounds();
 
-  // 2. LOGICA API (QUERY & MUTATION)
-  const { data, isLoading, refetch } = useGetCalendarEvents({
-    businessId: session?.business_id ?? undefined,
-    startDate: startDateStr,
-    endDate: endDateStr,
+  const bounds = useMemo(() => {
+    if (!scheduleBounds?.min_start_time || !scheduleBounds?.max_end_time) {
+      return null;
+    }
+    return {
+      minTime: scheduleBounds.min_start_time,
+      maxTime: scheduleBounds.max_end_time,
+    };
+  }, [scheduleBounds]);
+
+  const { data, isLoading, refetch } = useGetBusinessCalendarEventsByDay({
+    day: dayStr,
     slotDuration,
-    employeeId: session?.is_employee ? session?.user_id : undefined,
   });
+
+  const employees = data?.employees ?? [];
 
   const { mutate: handleBlock, isPending: isLoadingBlock } = useMutate({
     key: ["block-appointments"],
@@ -103,7 +99,7 @@ export const useWeeklyCalendar = ({
       options: {
         onSuccess: async () => {
           refetch();
-          setCreateModal({ open: false, slot: null });
+          setCreateModal({ open: false, slot: null, employeeId: null });
         },
       },
     });
@@ -114,71 +110,53 @@ export const useWeeklyCalendar = ({
     options: {
       onSuccess: async () => {
         refetch();
-        setCreateModal({ open: false, slot: null });
+        setCreateModal({ open: false, slot: null, employeeId: null });
       },
     },
   });
 
-  // 3. CALCULUL COMPLEX DE REȚEA ORARĂ (MEMOIZAT AGRESIV)
   const { timeStrings, rowMap, totalRows } = useMemo(() => {
     if (!bounds) {
       return { timeStrings: [], rowMap: {}, totalRows: 0 };
     }
 
-    let current = dayjs(`2026-01-01T${bounds.minTime}`);
-    const end = dayjs(`2026-01-01T${bounds.maxTime}`);
-
-    const strings: string[] = [];
-    const map: Record<string, number> = {};
-    let rowIndex = 2;
-
-    while (current.isBefore(end)) {
-      const timeFormatted = current.format("HH:mm:ss");
-      strings.push(timeFormatted);
-      map[timeFormatted] = rowIndex;
-
-      current = current.add(slotDuration, "minute");
-      rowIndex++;
-    }
-
-    const finalTimeFormatted = end.format("HH:mm:ss");
-    map[finalTimeFormatted] = rowIndex;
-
-    return { timeStrings: strings, rowMap: map, totalRows: rowIndex - 1 };
+    return createTimeRowMap(bounds.minTime, bounds.maxTime, slotDuration);
   }, [bounds, slotDuration]);
 
-  // 4. MEMOIZARE CALLBACKS (Împiedică recrearea referințelor de funcții transmise către sub-componente memoizate)
-  const handlePrevWeek = useCallback(() => {
-    setCurrentWeekDate((prev) => prev.subtract(1, "week"));
+  const handlePrevDay = useCallback(() => {
+    setCurrentDay((prev) => prev.subtract(1, "day"));
   }, []);
 
-  const handleNextWeek = useCallback(() => {
-    setCurrentWeekDate((prev) => prev.add(1, "week"));
+  const handleNextDay = useCallback(() => {
+    setCurrentDay((prev) => prev.add(1, "day"));
   }, []);
 
   const handleToday = useCallback(() => {
-    setCurrentWeekDate(dayjs());
+    setCurrentDay(dayjs());
   }, []);
 
-  const handleToggleSelectSlot = useCallback((slot: CalendarEventsSlot) => {
-    setSelectedSlotsToBlock((prev) => {
-      const isAlreadySelected = prev.some(
-        (item) => item.start_date === slot.start_date_utc
-      );
+  const handleToggleSelectSlot = useCallback(
+    (employeeId: number, slot: CalendarEventsSlot) => {
+      setSelectedSlotsToBlock((prev) => {
+        const isAlreadySelected = prev.some(
+          (item) => item.start_date === slot.start_date_utc
+        );
 
-      if (isAlreadySelected) {
-        return prev.filter((item) => item.start_date !== slot.start_date_utc);
-      }
+        if (isAlreadySelected) {
+          return prev.filter((item) => item.start_date !== slot.start_date_utc);
+        }
 
-      const newBlockItem: AppointmentBlockSlot = {
-        start_date: slot.start_date_utc,
-        end_date: slot.end_date_utc,
-        user_id: session?.user_id,
-      };
+        const newBlockItem: AppointmentBlockSlot = {
+          start_date: slot.start_date_utc,
+          end_date: slot.end_date_utc,
+          user_id: employeeId,
+        };
 
-      return [...prev, newBlockItem];
-    });
-  }, []);
+        return [...prev, newBlockItem];
+      });
+    },
+    []
+  );
 
   const handleCloseBlocking = useCallback(() => {
     setIsBlocking(false);
@@ -196,14 +174,15 @@ export const useWeeklyCalendar = ({
   }, []);
 
   const handleCloseCreateModal = useCallback(() => {
-    setCreateModal({ open: false, slot: null });
+    setCreateModal({ open: false, slot: null, employeeId: null });
   }, []);
 
   const handleOpenCreateModal = useCallback(
-    (slot: CalendarEventsSlot | null) => {
+    (employeeId: number | null, slot: CalendarEventsSlot | null) => {
       setCreateModal({
         open: true,
         slot,
+        employeeId,
       });
     },
     []
@@ -221,28 +200,32 @@ export const useWeeklyCalendar = ({
       })),
     };
     handleBlock(payload);
-  }, [selectedSlotsToBlock, session?.user_id, handleBlock]);
+  }, [selectedSlotsToBlock, handleBlock]);
 
   const handleLastMinutePayload = useCallback(
     (discount: number, slot: CalendarEventsSlot) => {
+      if (!createModal.employeeId) return;
+
       const payload: AppointmentLastMinuteCreate = {
         discount,
         start_date: slot.start_date_utc,
         end_date: slot.end_date_utc,
-        user_id: session?.user_id,
+        user_id: createModal.employeeId,
       };
 
       handleLastMinute(payload);
     },
-    []
+    [createModal.employeeId, handleLastMinute]
   );
 
   const handleOwnClientPayload = useCallback(
     (data: CreateOwnClientFormData, slot: CalendarEventsSlot) => {
+      if (!createModal.employeeId) return;
+
       const payload: AppointmentOwnClientCreate = {
         start_date: slot.start_date_utc,
         end_date: slot.end_date_utc,
-        user_id: session?.user_id,
+        user_id: createModal.employeeId,
         customer_fullname: data.customerFullname,
 
         custom_product: {
@@ -257,10 +240,11 @@ export const useWeeklyCalendar = ({
 
       handleOwnClient(payload);
     },
-    []
+    [createModal.employeeId, handleOwnClient]
   );
 
   return {
+    userId: session?.user_id,
     isBlocking,
     selectedSlotsToBlock,
     createModal,
@@ -270,20 +254,20 @@ export const useWeeklyCalendar = ({
     setRowHeightLevel,
     isExpanded,
     setIsExpanded,
-    currentWeekDate,
+    currentDay,
     currentRowHeight,
-    frontendDays,
+    employees,
     timeStrings,
     rowMap,
     totalRows,
-    isLoading: isLoading,
+    isLoading,
     isLoadingBlock,
     isLoadingLastMinute,
     isLoadingOwnClient,
     bounds,
     data,
-    handlePrevWeek,
-    handleNextWeek,
+    handlePrevDay,
+    handleNextDay,
     handleToday,
     handleToggleSelectSlot,
     handleToggleBlocking,

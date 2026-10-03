@@ -13,3 +13,8 @@ export interface ScheduleUpdate {
   start_time: string | null;
   end_time: string | null;
 }
+
+export interface ScheduleBounds {
+  min_start_time: string | null;
+  max_end_time: string | null;
+}

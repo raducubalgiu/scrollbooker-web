@@ -1,0 +1,1 @@
+export const EMPLOYEE_COLUMN_MIN_WIDTH = 220;

@@ -21,8 +21,8 @@ import CalendarSettingsModal from "../CalendarSettings/CalendarSettingsModal";
 import ExpandCalendarButton from "../CalendarSettings/ExpandCalendarButton";
 import { RowHeightLevel } from "../CalendarSettings/rowHeightLevels";
 
-interface WeeklyCalendarHeaderProps {
-  currentWeekDate: dayjs.Dayjs;
+interface EmployeesDayCalendarHeaderProps {
+  currentDay: dayjs.Dayjs;
   isLoading: boolean;
   isBlocking: boolean;
   slotDuration: number;
@@ -32,15 +32,15 @@ interface WeeklyCalendarHeaderProps {
   isExpanded: boolean;
   onToggleExpanded: () => void;
   userId: number | undefined;
-  onPrevWeek: () => void;
-  onNextWeek: () => void;
+  onPrevDay: () => void;
+  onNextDay: () => void;
   onToday: () => void;
   onBlockSlots: () => void;
   onAddAppointment: () => void;
 }
 
-export const WeeklyCalendarHeader = ({
-  currentWeekDate,
+export const EmployeesDayCalendarHeader = ({
+  currentDay,
   isLoading,
   isBlocking,
   slotDuration,
@@ -50,17 +50,14 @@ export const WeeklyCalendarHeader = ({
   isExpanded,
   onToggleExpanded,
   userId,
-  onPrevWeek,
-  onNextWeek,
+  onPrevDay,
+  onNextDay,
   onToday,
   onBlockSlots,
   onAddAppointment,
-}: WeeklyCalendarHeaderProps) => {
+}: EmployeesDayCalendarHeaderProps) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const startOfWeek = currentWeekDate.startOf("week");
-  const endOfWeek = currentWeekDate.endOf("week");
-
-  const formattedRange = `${startOfWeek.format("DD")} - ${endOfWeek.format("DD")} ${endOfWeek.format("MMMM YYYY")}`;
+  const formattedDay = currentDay.format("dddd, DD MMMM YYYY");
 
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
     onSlotDurationChange(Number(event.target.value));
@@ -143,7 +140,7 @@ export const WeeklyCalendarHeader = ({
           open={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           userId={userId}
-          canSetAppointmentGap
+          canSetAppointmentGap={false}
         />
 
         <Button
@@ -177,7 +174,7 @@ export const WeeklyCalendarHeader = ({
           gap={1}
         >
           <IconButton
-            onClick={onPrevWeek}
+            onClick={onPrevDay}
             disabled={isDisabled}
             size="large"
             sx={{
@@ -191,7 +188,7 @@ export const WeeklyCalendarHeader = ({
           </IconButton>
 
           <IconButton
-            onClick={onNextWeek}
+            onClick={onNextDay}
             disabled={isDisabled}
             size="large"
             sx={{
@@ -205,7 +202,7 @@ export const WeeklyCalendarHeader = ({
           </IconButton>
 
           <Typography sx={{ fontWeight: 500, fontSize: 25, ml: 1 }}>
-            {formattedRange}
+            {formattedDay}
           </Typography>
         </Stack>
       </Stack>
