@@ -30,7 +30,7 @@ export default function ForBusinessPageModule() {
     >
       <LandingNav
         registerHref={AppRoutes.partners()}
-        logo={<ForBusinessLogo height={20} />}
+        logo={<ForBusinessLogo height={18} />}
       />
       <ForBusinessHero />
       <ForBusinessPainPoints />
