@@ -25,7 +25,7 @@ import {
   useCreateServiceDomain,
   useDeleteServiceDomain,
   useUpdateServiceDomain,
-} from "@/controllers/nomenclature/service-domains.controller";
+} from "@/controllers/nomenclature/service-domain.controller";
 import { toast } from "react-toastify";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 
