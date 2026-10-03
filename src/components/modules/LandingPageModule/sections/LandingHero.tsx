@@ -17,6 +17,7 @@ import { useLandingColors } from "../LandingThemeContext";
 import PhoneMockup from "../components/PhoneMockup";
 import LandingEarlyAdopterModal from "../components/LandingEarlyAdopterModal";
 import { AppRoutes } from "@/utils/routes";
+import { trackUserSubscribeToLaunch } from "@/utils/analytics";
 
 const pulse = keyframes`
   0% { box-shadow: 0 0 0 0 ${LANDING_COLORS_LIGHT.primary}66; }
@@ -124,7 +125,10 @@ export default function LandingHero() {
               <Button
                 variant="contained"
                 disableElevation
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {
+                  trackUserSubscribeToLaunch();
+                  setIsModalOpen(true);
+                }}
                 size="large"
                 sx={{
                   backgroundColor: LANDING_COLORS.primary,
