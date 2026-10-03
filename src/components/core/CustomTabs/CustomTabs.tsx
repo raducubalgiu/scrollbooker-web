@@ -56,7 +56,7 @@ const styles = {
   tab: {
     textTransform: "none",
     px: { xs: 1.75, md: 2.25 },
-    py: { xs: 1.5, md: 2 },
+    py: { xs: 1.5, md: 1.75 },
     fontSize: { xs: "0.8125rem", md: "0.875rem" },
     minHeight: "unset",
     display: "inline-flex",

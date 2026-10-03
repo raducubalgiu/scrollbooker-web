@@ -23,7 +23,7 @@ const SelectedEmployeeItem = ({
         flex={1}
       >
         <Stack flexDirection="row" alignItems="center" gap={2}>
-          <Avatar src={user.avatar ?? ""} sx={{ width: 60, height: 60 }} />
+          <Avatar src={user.avatar ?? ""} sx={{ width: 55, height: 55 }} />
           <Box>
             <Typography fontWeight={600} fontSize={18}>
               {user.fullname}

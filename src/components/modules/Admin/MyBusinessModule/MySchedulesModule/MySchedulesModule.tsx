@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Paper,
   Stack,
   Table,
   TableBody,
@@ -18,6 +19,7 @@ import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
 import { useUpdateSchedules } from "@/controllers/booking/schedule.controller";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
+import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 
 type SchedulesProps = { data: Schedule[] };
 
@@ -105,61 +107,69 @@ export default function MySchedulesModule({ data }: SchedulesProps) {
       ];
 
   return (
-    <FormProvider {...methods}>
-      <Table size="medium">
-        <TableHead>
-          <TableRow>
-            <TableCell
-              component="th"
-              scope="col"
-              sx={{
-                fontWeight: 700,
-                fontSize: "1rem",
-                letterSpacing: 0.2,
-              }}
-            >
-              {t("day")}
-            </TableCell>
-            <TableCell
-              component="th"
-              scope="col"
-              align="center"
-              sx={{
-                fontWeight: 700,
-                fontSize: "1rem",
-                letterSpacing: 0.2,
-              }}
-            >
-              {t("start")}
-            </TableCell>
-            <TableCell
-              component="th"
-              scope="col"
-              align="center"
-              sx={{
-                fontWeight: 700,
-                fontSize: "1rem",
-                letterSpacing: 0.2,
-              }}
-            >
-              {t("end")}
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {schedules?.map((schedule, i) => (
-            <SchedulesSelectHours
-              key={i}
-              schedule={schedule}
-              namePath={`schedules.${i}`}
-              disabled={disabled}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      <Stack alignItems="flex-end" sx={{ p: 1.5 }}>
-        <ActionButton actions={actions} />
-      </Stack>
-    </FormProvider>
+    <MainLayout
+      title="Programul de lucru"
+      hideAction
+      sx={{ bgcolor: "background.paper", height: "100%" }}
+    >
+      <Paper>
+        <FormProvider {...methods}>
+          <Table size="medium">
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  component="th"
+                  scope="col"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    letterSpacing: 0.2,
+                  }}
+                >
+                  {t("day")}
+                </TableCell>
+                <TableCell
+                  component="th"
+                  scope="col"
+                  align="center"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    letterSpacing: 0.2,
+                  }}
+                >
+                  {t("start")}
+                </TableCell>
+                <TableCell
+                  component="th"
+                  scope="col"
+                  align="center"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    letterSpacing: 0.2,
+                  }}
+                >
+                  {t("end")}
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {schedules?.map((schedule, i) => (
+                <SchedulesSelectHours
+                  key={i}
+                  schedule={schedule}
+                  namePath={`schedules.${i}`}
+                  disabled={disabled}
+                />
+              ))}
+            </TableBody>
+          </Table>
+          <Stack alignItems="flex-end" sx={{ p: 1.5 }}>
+            <ActionButton actions={actions} />
+          </Stack>
+        </FormProvider>
+      </Paper>
+    </MainLayout>
   );
 }

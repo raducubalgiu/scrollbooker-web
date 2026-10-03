@@ -108,12 +108,7 @@ const MyEmploymentRequestsTab = ({
 
   const getToolbarCustomActions = React.useCallback(() => {
     return (
-      <Button
-        variant="outlined"
-        size="large"
-        disableElevation
-        onClick={() => setOpen(true)}
-      >
+      <Button variant="outlined" onClick={() => setOpen(true)}>
         Trimite o cerere
       </Button>
     );
@@ -122,13 +117,19 @@ const MyEmploymentRequestsTab = ({
   const table = useMaterialReactTable({
     columns,
     data: memoizedData,
+    enableSorting: false,
+    enableFilters: false,
+    enableDensityToggle: false,
+    enableGlobalFilter: false,
+    enableHiding: false,
+    enableFullScreenToggle: false,
+    enableTopToolbar: true,
+
     enableKeyboardShortcuts: false,
     enableColumnActions: false,
     enableColumnFilters: false,
     enablePagination: false,
-    enableSorting: false,
     enableRowActions: true,
-    enableTopToolbar: true,
     renderRowActions,
     renderTopToolbarCustomActions: getToolbarCustomActions,
     positionActionsColumn: "last",

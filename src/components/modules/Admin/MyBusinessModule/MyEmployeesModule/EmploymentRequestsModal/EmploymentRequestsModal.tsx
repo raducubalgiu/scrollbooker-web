@@ -6,7 +6,7 @@ import React, { useMemo, useState } from "react";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { isNull } from "lodash";
 import EmploymentRequestsStepOne from "./EmploymentRequestsStepOne";
 import EmploymentRequestsStepTwo from "./EmploymentRequestsStepTwo";
@@ -33,6 +33,7 @@ export default function EmploymentRequestsModal({
   open,
   handleClose,
 }: EmploymentRequestsModalProps) {
+  const theme = useTheme();
   const [acknowledged, setAcknowledged] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedProfessionId, setSelectedProfessionId] = useState<
@@ -188,12 +189,15 @@ export default function EmploymentRequestsModal({
     debouncedSearch,
   ]);
 
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Modal
       title="Trimite o cerere de angajare"
       open={open}
       handleClose={handleResetAndClose}
       actions={actions}
+      fullScreen={isMobile}
     >
       <Box sx={{ minWidth: 700, py: 2 }}>
         <Stepper activeStep={stepIndex} alternativeLabel sx={styles.stepper}>

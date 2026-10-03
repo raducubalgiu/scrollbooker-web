@@ -96,12 +96,18 @@ const MyEmployeesTab = ({ session, isEnabled }: MyEmployeesTabProps) => {
     enablePagination: true,
     manualPagination: false,
 
+    enableSorting: false,
+    enableFilters: false,
+    enableDensityToggle: false,
+    enableGlobalFilter: false,
+    enableHiding: false,
+    enableFullScreenToggle: false,
+    enableTopToolbar: false,
+
     enableKeyboardShortcuts: false,
     enableColumnActions: false,
     enableColumnFilters: false,
-    enableSorting: false,
     enableRowActions: true,
-    enableTopToolbar: true,
     renderRowActions,
     positionActionsColumn: "last",
     localization: MRT_Localization_RO,
@@ -109,7 +115,6 @@ const MyEmployeesTab = ({ session, isEnabled }: MyEmployeesTabProps) => {
       isLoading,
       showAlertBanner: isError,
     },
-
     muiTablePaperProps: {
       elevation: 0,
       sx: {
