@@ -1,17 +1,24 @@
 "use client";
 
-import { alpha, Box, Container, Stack } from "@mui/material";
+import { alpha, Box, Button, Container, Stack } from "@mui/material";
 import Link from "next/link";
 import { AppRoutes } from "@/utils/routes";
 import { useLandingColors } from "../LandingThemeContext";
 import LandingLogo from "../components/LandingLogo";
 import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
+import { useTranslations } from "next-intl";
+import { trackRegisterCtaClick } from "@/utils/analytics";
 
 type LandingNavProps = {
+  displayCta?: boolean;
   logo?: React.ReactNode;
 };
 
-export default function LandingNav({ logo }: LandingNavProps) {
+export default function LandingNav({
+  displayCta = false,
+  logo,
+}: LandingNavProps) {
+  const t = useTranslations("forBusinessHero");
   const LANDING_COLORS = useLandingColors();
 
   return (
@@ -53,6 +60,23 @@ export default function LandingNav({ logo }: LandingNavProps) {
             >
               {t("login")}
             </Button> */}
+            {displayCta && (
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => {
+                  trackRegisterCtaClick(
+                    "for_business_hero",
+                    AppRoutes.partners()
+                  );
+                }}
+                sx={{
+                  display: { xs: "none", md: "block" },
+                }}
+              >
+                {t("primaryButton")}
+              </Button>
+            )}
           </Stack>
         </Stack>
       </Container>

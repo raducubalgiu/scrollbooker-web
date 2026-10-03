@@ -78,7 +78,8 @@ export default function ExploreModule() {
   const currentPost = posts[currentIndex] ?? null;
 
   const { location: userLocation } = useUserLocation();
-  const businessCoordinates = currentPost?.business_location?.coordinates ?? null;
+  const businessCoordinates =
+    currentPost?.business_location?.coordinates ?? null;
   const distanceKm = useMemo(() => {
     if (!userLocation || !businessCoordinates) return null;
     return getDistanceKm(userLocation, businessCoordinates);
@@ -528,7 +529,7 @@ const styles = {
     borderRadius: { xs: 0, md: 4 },
     overflow: "hidden",
     flexShrink: 0,
-    backgroundColor: "black",
+    backgroundColor: "background.paper",
   },
   drawerContainer: {
     position: "absolute",

@@ -28,7 +28,7 @@ export default function ForBusinessPageModule() {
         overflowX: "hidden",
       }}
     >
-      <LandingNav logo={<ForBusinessLogo height={18} />} />
+      <LandingNav logo={<ForBusinessLogo height={18} />} displayCta />
       <ForBusinessHero />
       <ForBusinessPainPoints />
       <LandingProfileShowcase />

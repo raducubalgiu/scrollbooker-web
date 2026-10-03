@@ -1,10 +1,5 @@
-import {
-  getProductTypeLabel,
-  ProductTypeEnum,
-} from "@/ts/enums/ProductTypeEnum";
-import { Product } from "@/ts/models/booking/product/Product";
+import { Product, UserProducts } from "@/ts/models/booking/product/Product";
 import { Delete, Edit } from "@mui/icons-material";
-import { Checkbox, Stack, Typography } from "@mui/material";
 import {
   MaterialReactTable,
   MRT_ActionMenuItem,
@@ -14,16 +9,9 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
-import React, { memo, useCallback } from "react";
-import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
-import { formatPrice } from "@/utils/formatPrice";
-import EmployeeButton from "@/components/modules/Admin/AppointmentsModule/EmployeeButton";
-import ProductTypeButton from "../../ProductTypeButton";
-import ServiceButton from "../../ServiceButton";
-import MyProductVariants from "./MyProductVariants";
+import React, { memo, useCallback, useMemo } from "react";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
-import { Session } from "next-auth";
+import Protected from "@/components/cutomized/Protected/Protected";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<Product>;
@@ -32,46 +20,30 @@ type RenderRowActionMenuItemsProps = {
 };
 
 type MyProductsDisplayTableProps = {
-  session: Session | null;
-  employees: BusinessEmployee[];
-  allProducts: Product[] | undefined;
+  userProducts: UserProducts | undefined;
   isLoading: boolean;
   onDelete: (productId: number) => void;
-  productType: ProductTypeEnum | null;
-  setProductType: (type: ProductTypeEnum | null) => void;
-  isEmployee: boolean | null | undefined;
-  employeeId: number | null;
-  setEmployeeId: (e: number | null) => void;
-  serviceId: number | null;
-  setServiceId: (s: number | null) => void;
-  serviceDomainServices: SelectedServiceDomainWithServices[];
 };
 
 const MyProductsDisplayTable = ({
-  session,
-  employees,
-  allProducts,
+  userProducts,
   isLoading,
   onDelete,
-  productType,
-  setProductType,
-  isEmployee,
-  employeeId,
-  setEmployeeId,
-  serviceId,
-  setServiceId,
-  serviceDomainServices,
 }: MyProductsDisplayTableProps) => {
-  const authUserId = session?.user_id;
-  const canEditOrDelete = Boolean(
-    session?.permissions?.includes(PermissionEnum.PRODUCT_EDIT)
+  // const canEditOrDelete = Boolean(
+  //   session?.permissions?.includes(PermissionEnum.PRODUCT_EDIT)
+  // );
+
+  const products: Product[] = useMemo(
+    () => userProducts?.data.flatMap((item) => item.products) ?? [],
+    [userProducts]
   );
 
   const columns = React.useMemo<MRT_ColumnDef<Product>[]>(
     () => [
       {
         accessorKey: "name",
-        header: "Nume",
+        header: "Serviciu",
       },
       {
         accessorKey: "description",
@@ -87,112 +59,42 @@ const MyProductsDisplayTable = ({
           </span>
         ),
       },
-      {
-        accessorKey: "type",
-        header: "Tip serviciu",
-        size: 100,
-        Cell: ({ row }) => (
-          <span>{getProductTypeLabel(row.original.type)}</span>
-        ),
-      },
-      {
-        accessorKey: "sessions_count",
-        header: "Sedințe",
-        size: 100,
-        Cell: ({ row }) => <span>{row.original.sessions_count ?? "N/A"}</span>,
-      },
-      {
-        accessorKey: "validity_days",
-        header: "Valabilitate (Nr zile)",
-        size: 200,
-        Cell: ({ row }) => <span>{row.original.validity_days ?? "N/A"}</span>,
-      },
-      {
-        accessorKey: "can_be_booked",
-        header: "Poate fi rezervat?",
-        size: 50,
-        Cell: ({ row }) => (
-          <Checkbox checked={row.original.can_be_booked} disabled={true} />
-        ),
-      },
-      {
-        accessorKey: "starting_price",
-        header: "Preț",
-        size: 150,
-        Cell: ({ row }) => {
-          const hasDifferentPrice = row.original.has_different_prices;
-          const startingOffering = row.original.starting_offering;
-
-          return (
-            <Typography>
-              {hasDifferentPrice && "de la"}{" "}
-              <span style={{ fontWeight: 600 }}>
-                {formatPrice(startingOffering.price_with_discount)} lei
-              </span>
-            </Typography>
-          );
-        },
-      },
     ],
     []
   );
 
-  const renderTopToolbarCustomActions = React.useCallback(() => {
-    return (
-      <Stack direction="row" alignItems="center" spacing={1}>
-        {!isEmployee && (
-          <EmployeeButton
-            employees={employees}
-            employee={employeeId}
-            onSetEmployee={(id) => setEmployeeId(id)}
-          />
-        )}
-        <ProductTypeButton type={productType} onSetType={setProductType} />
-        <ServiceButton
-          serviceDomainServices={serviceDomainServices}
-          serviceId={serviceId}
-          onSetService={setServiceId}
-        />
-      </Stack>
-    );
-  }, [
-    isEmployee,
-    employees,
-    employeeId,
-    productType,
-    serviceId,
-    serviceDomainServices,
-  ]);
-
   const renderRowActionMenuItems = useCallback(
     ({ row, table, closeMenu }: RenderRowActionMenuItemsProps) => [
-      <MRT_ActionMenuItem
-        key="edit"
-        label="Editează"
-        icon={<Edit />}
-        onClick={() => {
-          console.log("ROW ID", row.original.id);
-          closeMenu();
-        }}
-        table={table}
-      />,
-      <MRT_ActionMenuItem
-        key="delete"
-        label="Șterge"
-        icon={<Delete />}
-        onClick={() => {
-          closeMenu();
-          onDelete(row.original.id);
-        }}
-        table={table}
-      />,
+      <Protected key="edit" permission={PermissionEnum.PRODUCT_EDIT}>
+        <MRT_ActionMenuItem
+          label="Editează"
+          icon={<Edit />}
+          onClick={() => {
+            console.log("ROW ID", row.original.id);
+            closeMenu();
+          }}
+          table={table}
+        />
+      </Protected>,
+      <Protected key="delete" permission={PermissionEnum.PRODUCT_DELETE}>
+        <MRT_ActionMenuItem
+          label="Șterge"
+          icon={<Delete />}
+          onClick={() => {
+            closeMenu();
+            onDelete(row.original.id);
+          }}
+          table={table}
+        />
+        ,
+      </Protected>,
     ],
     [onDelete]
   );
 
   const table = useMaterialReactTable({
     columns,
-    data: allProducts ?? [],
+    data: products,
 
     enablePagination: true,
     manualPagination: false,
@@ -207,13 +109,9 @@ const MyProductsDisplayTable = ({
     enableKeyboardShortcuts: false,
     enableColumnActions: false,
     enableSorting: false,
-    enableRowActions: canEditOrDelete,
+    enableRowActions: true,
     renderRowActionMenuItems,
-    renderTopToolbarCustomActions,
     positionActionsColumn: "last",
-    mrtTheme: (theme) => ({
-      baseBackgroundColor: theme.palette.background.paper,
-    }),
     localization: MRT_Localization_RO,
     state: {
       isLoading,
@@ -227,14 +125,14 @@ const MyProductsDisplayTable = ({
         borderColor: "divider",
       },
     },
-    renderDetailPanel: ({ row }) => {
-      return (
-        <MyProductVariants
-          product={row.original}
-          authUserId={authUserId ?? null}
-        />
-      );
-    },
+    // renderDetailPanel: ({ row }) => {
+    //   return (
+    //     <MyProductVariants
+    //       product={row.original}
+    //       authUserId={authUserId ?? null}
+    //     />
+    //   );
+    // },
   });
 
   return <MaterialReactTable table={table} />;

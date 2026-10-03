@@ -5,7 +5,7 @@ import React from "react";
 import ActionButton, {
   ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
-import { Stack } from "@mui/material";
+import { Stack, useTheme } from "@mui/material";
 import { Session } from "next-auth";
 import MyServicesSkeleton from "./MyServicesSkeleton";
 import SelectedServicesList from "./SelectedServicesList";
@@ -21,6 +21,7 @@ type MyServicesModule = {
 export const MyServicesModule = ({ session }: MyServicesModule) => {
   const t = useTranslations("myServices");
   const businessId = String(session.business_id);
+  const theme = useTheme();
 
   const {
     serviceDomains,
@@ -75,7 +76,13 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
       title={t("title")}
       showHeader={true}
       hideAction
-      sx={{ bgcolor: "background.paper" }}
+      sx={{
+        bgcolor:
+          theme.palette.mode === "light"
+            ? "background.paper"
+            : "background.default",
+        height: "100%",
+      }}
     >
       {isLoading && <MyServicesSkeleton />}
 

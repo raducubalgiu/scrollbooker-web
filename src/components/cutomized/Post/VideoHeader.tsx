@@ -59,7 +59,11 @@ const VideoHeader = ({
             <Typography
               variant="subtitle1"
               fontWeight={700}
-              sx={showFollowButton ? styles.nameTextWithButton : styles.ellipsisText}
+              sx={
+                showFollowButton
+                  ? styles.nameTextWithButton
+                  : styles.ellipsisText
+              }
             >
               {fullname ?? "-"}
             </Typography>
@@ -67,6 +71,7 @@ const VideoHeader = ({
             {showFollowButton && onFollow && (
               <Button
                 variant="contained"
+                size="small"
                 disableElevation
                 loading={isTogglingFollow}
                 disabled={isTogglingFollow}
@@ -81,7 +86,11 @@ const VideoHeader = ({
             )}
           </Box>
 
-          <Typography variant="body2" color="text.secondary" sx={styles.ellipsisText}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={styles.ellipsisText}
+          >
             {isBusinessOrEmployee ? profession : `@${username}`}
           </Typography>
 

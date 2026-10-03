@@ -18,9 +18,6 @@ import PhoneMockup from "../components/PhoneMockup";
 import LandingEarlyAdopterModal from "../components/LandingEarlyAdopterModal";
 import { AppRoutes } from "@/utils/routes";
 
-// `primary` e identic în LANDING_COLORS_LIGHT/DARK (culoare de brand, nu
-// urmează toggle-ul) — sigur de referențiat static într-un keyframes de
-// modul, care nu poate citi un hook.
 const pulse = keyframes`
   0% { box-shadow: 0 0 0 0 ${LANDING_COLORS_LIGHT.primary}66; }
   70% { box-shadow: 0 0 0 12px ${LANDING_COLORS_LIGHT.primary}00; }

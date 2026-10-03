@@ -83,6 +83,6 @@ export const useGetProductsByBusinessAndEmployee = ({
       productsLimitPerService,
     ],
     queryFn: doRequest,
-    enabled: Boolean(businessId),
+    enabled: !!businessId,
   });
 };
