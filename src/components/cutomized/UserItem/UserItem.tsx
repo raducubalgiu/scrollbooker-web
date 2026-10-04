@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { UserMini } from "@/ts/models/user/UserMini";
 import Link from "next/link";
 import { AppRoutes } from "@/utils/routes";
@@ -43,23 +43,6 @@ const UserItem = ({
     [user, onToggleFollow]
   );
 
-  const followButton = useMemo(
-    () => (
-      <Button
-        variant={!is_follow ? "contained" : "outlined"}
-        color={is_follow ? "secondary" : "primary"}
-        onClick={handleFollowClick}
-        size="medium"
-        disableElevation
-        loading={isTogglingFollow}
-        disabled={isTogglingFollow}
-      >
-        {is_follow ? "Urmărești" : "Urmărește"}
-      </Button>
-    ),
-    [is_follow, handleFollowClick, isTogglingFollow]
-  );
-
   return (
     <ListItem disablePadding>
       <ListItemButton
@@ -89,7 +72,17 @@ const UserItem = ({
             </Box>
           </Stack>
 
-          {followButton}
+          <Button
+            variant={!is_follow ? "contained" : "outlined"}
+            color={is_follow ? "secondary" : "primary"}
+            onClick={handleFollowClick}
+            size="small"
+            disableElevation
+            loading={isTogglingFollow}
+            disabled={isTogglingFollow}
+          >
+            {is_follow ? "Urmărești" : "Urmărește"}
+          </Button>
         </Stack>
       </ListItemButton>
     </ListItem>

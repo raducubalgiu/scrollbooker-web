@@ -33,6 +33,5 @@ const styles = {
     flex: { xs: 1, sm: "none" },
     whiteSpace: "nowrap",
     minWidth: "max-content",
-    color: "text.primary",
   },
 };

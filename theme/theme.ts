@@ -227,55 +227,65 @@ const getComponents = (mode: Mode) => ({
       root: ({ theme }: { theme: Theme }) => ({
         fontWeight: theme.palette.mode === "dark" ? "bold" : 600,
         borderRadius: 50,
-        textTransform: "none",
+        textTransform: "none" as const,
+        boxSizing: "border-box" as const,
+        lineHeight: 1.25,
+        letterSpacing: 0,
+        whiteSpace: "nowrap" as const,
         "&.Mui-disabled": {
-          pointerEvents: "auto",
+          pointerEvents: "auto" as const,
         },
       }),
       sizeSmall: ({ theme }: { theme: Theme }) => ({
-        padding: theme.spacing(1.25, 1.4),
-        fontSize: "0.75rem",
+        minHeight: 36,
+        padding: theme.spacing(0.75, 2),
+        fontSize: "0.875rem",
         [defaultTheme.breakpoints.up("md")]: {
-          padding: theme.spacing(1.5, 1.5),
-          fontSize: "0.8125rem",
-        },
-      }),
-      sizeMedium: ({ theme }: { theme: Theme }) => ({
-        padding: theme.spacing(1.5, 2),
-        fontSize: "0.8125rem",
-        [defaultTheme.breakpoints.up("md")]: {
-          padding: theme.spacing(2, 3),
+          minHeight: 38,
+          padding: theme.spacing(0.75, 2.5),
           fontSize: "0.875rem",
         },
       }),
-      sizeLarge: ({ theme }: { theme: Theme }) => ({
-        padding: theme.spacing(2.5, 3),
-        fontSize: "0.875rem",
+      sizeMedium: ({ theme }: { theme: Theme }) => ({
+        minHeight: 44,
+        padding: theme.spacing(1.25, 3),
+        fontSize: "0.9375rem",
         [defaultTheme.breakpoints.up("md")]: {
-          padding: theme.spacing(2.5, 3),
+          minHeight: 48,
+          padding: theme.spacing(1.75, 3.5),
           fontSize: "0.9375rem",
+        },
+      }),
+      sizeLarge: ({ theme }: { theme: Theme }) => ({
+        minHeight: 52,
+        padding: theme.spacing(1.5, 4),
+        fontSize: "1rem",
+        [defaultTheme.breakpoints.up("md")]: {
+          minHeight: 56,
+          padding: theme.spacing(1.75, 5),
+          fontSize: "1rem",
         },
       }),
       iconSizeSmall: {
         "& > *:nth-of-type(1)": {
-          fontSize: 16,
+          fontSize: 18,
         },
       },
       iconSizeMedium: {
         "& > *:nth-of-type(1)": {
-          fontSize: 18,
+          fontSize: 20,
         },
       },
       iconSizeLarge: {
         "& > *:nth-of-type(1)": {
-          fontSize: 18,
+          fontSize: 22,
         },
       },
       containedPrimary: ({ theme }: { theme: Theme }) => ({
         color: theme.palette.common.white,
       }),
       containedSecondary: ({ theme }: { theme: Theme }) => ({
-        color: theme.palette.text.secondary,
+        color: theme.palette.text.primary,
       }),
       outlinedPrimary: ({ theme }: { theme: Theme }) => ({
         color: theme.palette.text.primary,
