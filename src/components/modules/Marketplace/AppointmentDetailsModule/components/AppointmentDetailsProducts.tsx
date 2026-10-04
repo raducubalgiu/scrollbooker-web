@@ -32,7 +32,7 @@ const AppointmentDetailsProducts = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="body2" color="text.secondary">
                 {name}
               </Typography>
 
@@ -42,13 +42,14 @@ const AppointmentDetailsProducts = ({
                 justifyContent="flex-end"
                 alignItems="baseline"
               >
-                <Typography fontWeight={600}>
+                <Typography variant="body2">
                   {formatPrice(price_with_discount)} RON
                 </Typography>
 
                 {discount > 0 && (
                   <>
                     <Typography
+                      variant="body2"
                       sx={{
                         textDecoration: "line-through",
                         color: "text.disabled",
@@ -56,7 +57,7 @@ const AppointmentDetailsProducts = ({
                     >
                       {formatPrice(price)}
                     </Typography>
-                    <Typography sx={{ color: "error.main", fontWeight: 600 }}>
+                    <Typography variant="body2" sx={{ color: "error.main" }}>
                       (-{Number(discount).toFixed(2)}%)
                     </Typography>
                   </>

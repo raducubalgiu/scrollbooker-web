@@ -8,12 +8,10 @@ import {
   ListItem,
   ListItemButton,
 } from "@mui/material";
-import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import {
   Appointment,
   AppointmentUtils,
 } from "@/ts/models/booking/appointment/Appointment";
-import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 import AppointmentCardDate from "./AppointmentCardDate";
 import AppointmentCardInfo from "./AppointmentCardInfo";
 import dayjs from "@/lib/dayjs";
@@ -70,7 +68,7 @@ export default function AppointmentCard({
 
           <Box sx={{ height: 16 }} />
 
-          {appointment.status === AppointmentStatusEnum.FINISHED &&
+          {/* {appointment.status === AppointmentStatusEnum.FINISHED &&
             appointment.is_customer && (
               <Stack
                 direction="row"
@@ -93,7 +91,7 @@ export default function AppointmentCard({
                   Poți adăuga o recenzie video
                 </Typography>
               </Stack>
-            )}
+            )} */}
         </Stack>
       </ListItemButton>
     </ListItem>
