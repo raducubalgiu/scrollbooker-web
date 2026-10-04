@@ -95,7 +95,6 @@ const VideoReviewCTA = ({
 
         <Box sx={{ flex: 1 }}>
           <Typography
-            variant="subtitle1"
             fontWeight={700}
             sx={{ color: textColor, lineHeight: 1.2 }}
           >

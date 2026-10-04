@@ -14,7 +14,6 @@ import AppointmentDetailsMap from "./components/AppointmentDetailsMap";
 import AppointmentDetailsReview from "./components/AppointmentDetailsReview";
 import CancelAppointmentModal from "./CancelAppointmentModal";
 import CreateWrittenReviewModal from "./CreateWrittenReviewModal";
-import { useMutate } from "@/hooks/useHttp";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 import {
   Review,
@@ -24,6 +23,12 @@ import {
 import { isEmpty } from "lodash";
 import { useSession } from "next-auth/react";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
+import {
+  useCreateReview,
+  useDeleteReview,
+  useUpdateReview,
+} from "@/controllers/booking/review.controller";
+import { useCancelAppointment } from "@/controllers/booking/appointments.controller";
 
 type AppointmentDetailsModuleProps = {
   appointment: Appointment;
@@ -47,73 +52,15 @@ const AppointmentDetailsModule = ({
     appointment.written_review?.rating ?? null
   );
 
-  const {
-    id,
-    start_date,
-    user,
-    customer,
-    is_customer,
-    total_duration,
-    products,
-    total_price_with_discount,
-    total_price,
-    total_discount,
-    business,
-    has_video_review,
-  } = appointment;
   const isFinished = status === AppointmentStatusEnum.FINISHED;
 
-  const { mutate: handleCancel, isPending: isLoadingCancel } = useMutate({
-    key: ["cancel-appointment", id],
-    url: `/api/appointments/${id}/cancel`,
-    method: "PUT",
-    options: {
-      onSuccess: (response: Appointment) => {
-        setOpenCancel(false);
-        setStatus(AppointmentStatusEnum.CANCELED);
-        setCanceledReason(response.canceled_reason);
-      },
-    },
-  });
-
+  const { mutate: handleCancel, isPending: isLoadingCancel } =
+    useCancelAppointment();
   const { mutate: handleCreateReview, isPending: isPendingCreateReview } =
-    useMutate({
-      key: ["create-written-review"],
-      url: `/api/appointments/${id}/create-review`,
-      options: {
-        onSuccess: (review: Review) => {
-          setWrittenReview(review);
-          setDraftRating(review.rating);
-          setOpenReview(false);
-        },
-      },
-    });
-
-  const { mutate: handleDeleteReview } = useMutate({
-    key: ["create-written-review"],
-    url: `/api/booking/review/${writtenReview?.id}`,
-    method: "DELETE",
-    options: {
-      onSuccess: () => {
-        setWrittenReview(null);
-        setDraftRating(null);
-      },
-    },
-  });
-
+    useCreateReview(appointment.id);
   const { mutate: handleUpdateReview, isPending: isPendingUpdateReview } =
-    useMutate({
-      key: ["update-written-review"],
-      url: `/api/booking/review/${writtenReview?.id}`,
-      method: "PUT",
-      options: {
-        onSuccess: (review: Review) => {
-          setWrittenReview(review);
-          setDraftRating(review.rating);
-          setOpenReview(false);
-        },
-      },
-    });
+    useUpdateReview();
+  const { mutate: handleDeleteReview } = useDeleteReview();
 
   const onHandleCancelAppointment = (canceledReason: string) => {
     const authUserId = session?.user_id;
@@ -123,7 +70,20 @@ const AppointmentDetailsModule = ({
       canceled_reason: canceledReason,
       canceled_by_user_id: authUserId,
     };
-    handleCancel(body);
+
+    handleCancel(
+      {
+        appointmentId: appointment.id,
+        payload: body,
+      },
+      {
+        onSuccess: (response: Appointment) => {
+          setOpenCancel(false);
+          setStatus(AppointmentStatusEnum.CANCELED);
+          setCanceledReason(response.canceled_reason);
+        },
+      }
+    );
   };
 
   const onHandleSaveReview = (reviewText: string, finalRating: number) => {
@@ -144,9 +104,27 @@ const AppointmentDetailsModule = ({
     };
 
     if (writtenReview?.id) {
-      handleUpdateReview(updateBody);
+      handleUpdateReview(
+        {
+          reviewId: writtenReview.id,
+          payload: updateBody,
+        },
+        {
+          onSuccess: (review: Review) => {
+            setWrittenReview(review);
+            setDraftRating(review.rating);
+            setOpenReview(false);
+          },
+        }
+      );
     } else {
-      handleCreateReview(createBody);
+      handleCreateReview(createBody, {
+        onSuccess: (review: Review) => {
+          setWrittenReview(review);
+          setDraftRating(review.rating);
+          setOpenReview(false);
+        },
+      });
     }
   };
 
@@ -159,9 +137,17 @@ const AppointmentDetailsModule = ({
     setOpenReview(true);
   }, []);
 
-  const onHandleDeleteReview = useCallback(() => {
-    handleDeleteReview({});
-  }, [handleDeleteReview]);
+  const onHandleDeleteReview = useCallback(
+    (reviewId: number) => {
+      handleDeleteReview(reviewId, {
+        onSuccess: () => {
+          setWrittenReview(null);
+          setDraftRating(null);
+        },
+      });
+    },
+    [handleDeleteReview]
+  );
 
   return (
     <MainLayout showHeader={false}>
@@ -185,22 +171,22 @@ const AppointmentDetailsModule = ({
         <Box sx={{ minWidth: 0 }}>
           <AppointmentDetailsHeader
             status={status}
-            startDate={start_date}
-            totalDuration={total_duration}
-            user={user}
-            isCustomer={is_customer}
-            customer={customer}
+            startDate={appointment.start_date}
+            totalDuration={appointment.total_duration}
+            user={appointment.user}
+            isCustomer={appointment.is_customer}
+            customer={appointment.customer}
             canceledReason={canceledReason}
           />
 
           <AppointmentDetailsProducts
-            products={products}
-            totalPriceWithDiscount={total_price_with_discount}
-            totalPrice={total_price}
-            totalDiscount={total_discount}
+            products={appointment.products}
+            totalPriceWithDiscount={appointment.total_price_with_discount}
+            totalPrice={appointment.total_price}
+            totalDiscount={appointment.total_discount}
           />
 
-          {products.length > 0 && (
+          {appointment.products.length > 0 && (
             <AppointmentDetailsActions
               startDate={appointment.start_date}
               status={status}
@@ -209,13 +195,13 @@ const AppointmentDetailsModule = ({
             />
           )}
 
-          {!isEmpty(products) && isFinished && (
+          {!isEmpty(appointment.products) && isFinished && (
             <AppointmentDetailsReview
               writtenReview={writtenReview}
-              hasVideoReview={has_video_review}
-              isCustomer={is_customer}
+              hasVideoReview={appointment.has_video_review}
+              isCustomer={appointment.is_customer}
               status={status}
-              customerAvatar={customer.avatar}
+              customerAvatar={appointment.customer.avatar}
               onRatingClick={onHandleRatingClick}
               onEditReview={onHandleEditReview}
               onDeleteReview={onHandleDeleteReview}
@@ -223,7 +209,7 @@ const AppointmentDetailsModule = ({
           )}
         </Box>
 
-        <AppointmentDetailsMap business={business} />
+        <AppointmentDetailsMap business={appointment.business} />
       </Box>
     </MainLayout>
   );

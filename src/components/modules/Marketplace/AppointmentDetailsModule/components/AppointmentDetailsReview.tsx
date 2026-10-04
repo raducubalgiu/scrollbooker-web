@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import React from "react";
-import VideoReviewCTA from "./VideoReviewCTA";
 import { AppointmentStatusEnum } from "@/ts/models/booking/appointment/AppointmentStatusEnum";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -28,21 +27,17 @@ type AppointmentDetailsReviewProps = {
   status: AppointmentStatusEnum;
   onRatingClick: (rating: number) => void;
   onEditReview: () => void;
-  onDeleteReview: () => void;
+  onDeleteReview: (reviewId: number) => void;
 };
 
 const AppointmentDetailsReview = ({
   writtenReview,
   customerAvatar,
-  hasVideoReview,
   isCustomer,
-  status,
   onRatingClick,
   onEditReview,
   onDeleteReview,
 }: AppointmentDetailsReviewProps) => {
-  const isFinished = status === AppointmentStatusEnum.FINISHED;
-
   return (
     <Box mt={5}>
       {writtenReview?.id && (
@@ -72,7 +67,7 @@ const AppointmentDetailsReview = ({
             {isCustomer && (
               <ReviewMenu
                 onEditReview={onEditReview}
-                onDeleteReview={onDeleteReview}
+                onDeleteReview={() => onDeleteReview(writtenReview.id)}
               />
             )}
           </Stack>
@@ -85,8 +80,8 @@ const AppointmentDetailsReview = ({
         <Stack
           justifyContent="center"
           alignItems="center"
-          sx={{ bgcolor: "background.default" }}
-          p={5}
+          sx={{ bgcolor: "background.paper" }}
+          p={2.5}
           mt={2.5}
           borderRadius={5}
           spacing={4}
@@ -98,7 +93,7 @@ const AppointmentDetailsReview = ({
           <Rating
             name="custom-size-rating"
             sx={{
-              fontSize: "3rem",
+              fontSize: "2.5rem",
               "& .MuiRating-icon": {
                 marginRight: "8px",
               },
@@ -106,10 +101,6 @@ const AppointmentDetailsReview = ({
             onChange={(_, r) => r && onRatingClick(r)}
           />
         </Stack>
-      )}
-
-      {!hasVideoReview && isFinished && isCustomer && (
-        <VideoReviewCTA onNavigateToCamera={() => {}} />
       )}
     </Box>
   );

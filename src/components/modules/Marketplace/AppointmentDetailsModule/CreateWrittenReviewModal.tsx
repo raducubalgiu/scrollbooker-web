@@ -93,7 +93,7 @@ const CreateWrittenReviewModal = ({
                 name="custom-size-rating"
                 precision={1}
                 sx={{
-                  fontSize: "3rem",
+                  fontSize: "2.5rem",
                   "& .MuiRating-icon": {
                     marginRight: "8px",
                   },
