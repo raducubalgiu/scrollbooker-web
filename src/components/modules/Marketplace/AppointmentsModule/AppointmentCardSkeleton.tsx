@@ -48,7 +48,7 @@ const AppointmentCardSkeleton = () => {
 
                 <Skeleton
                   variant="rounded"
-                  width={80}
+                  width={75}
                   height={90}
                   sx={{ borderRadius: 5 }}
                 />

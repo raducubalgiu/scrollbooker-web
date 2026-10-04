@@ -233,7 +233,7 @@ const getComponents = (mode: Mode) => ({
         },
       }),
       sizeSmall: ({ theme }: { theme: Theme }) => ({
-        padding: theme.spacing(1.5, 1.25),
+        padding: theme.spacing(1.25, 1.4),
         fontSize: "0.75rem",
         [defaultTheme.breakpoints.up("md")]: {
           padding: theme.spacing(1.5, 1.5),

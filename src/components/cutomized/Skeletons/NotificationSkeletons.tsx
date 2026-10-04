@@ -31,7 +31,7 @@ export default function NotificationSkeletons() {
 
             <Skeleton
               variant="rounded"
-              sx={{ width: 90, height: 40, borderRadius: 50 }}
+              sx={{ width: 80, height: 30, borderRadius: 50 }}
             />
           </Stack>
         </ListItem>

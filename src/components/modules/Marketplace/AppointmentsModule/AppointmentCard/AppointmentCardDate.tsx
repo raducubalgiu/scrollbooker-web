@@ -12,8 +12,15 @@ export default function AppointmentCardDate({
   startTime,
 }: AppointmentCardDateProps) {
   return (
-    <Stack alignItems="center" justifyContent="center" sx={styles.container}>
-      <Typography sx={styles.day}>{day}</Typography>
+    <Stack
+      alignItems="center"
+      justifyContent="center"
+      sx={styles.container}
+      spacing={0.5}
+    >
+      <Typography variant="h4" sx={styles.day}>
+        {day}
+      </Typography>
       <Typography sx={styles.month}>{month}</Typography>
       <Typography sx={styles.startTime}>{startTime}</Typography>
     </Stack>
@@ -30,18 +37,14 @@ const styles = {
     borderColor: "divider",
   },
   day: {
-    fontSize: 24,
     fontWeight: 700,
     lineHeight: 1,
   },
   month: {
-    fontSize: 13,
     color: "text.secondary",
     textTransform: "capitalize",
   },
   startTime: {
-    mt: 0.75,
-    fontSize: 17,
     fontWeight: 600,
     color: "text.primary",
   },

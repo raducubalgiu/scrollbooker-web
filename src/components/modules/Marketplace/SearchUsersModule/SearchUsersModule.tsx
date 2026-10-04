@@ -116,16 +116,25 @@ const styles = {
         borderColor: "action.disabled",
       },
       "&.Mui-focused": {
-        bgcolor: "background.paper",
+        bgcolor: "background.default",
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
       },
+
       "& input": {
         fontSize: "18px",
+        "@media (max-width: 899px)": {
+          fontSize: "16px",
+        },
       },
+
       "& input::placeholder": {
         fontSize: "18px",
         opacity: 0.8,
         color: (theme: Theme) => alpha(theme.palette.text.disabled, 0.5),
+
+        "@media (max-width: 899px)": {
+          fontSize: "14px",
+        },
       },
     },
     mb: 1.5,

@@ -72,7 +72,6 @@ export default function NotificationItem({
 
   const renderNotificationContent = () => {
     switch (type) {
-      // Implemented
       case NotificationTypeEnum.FOLLOW:
         return {
           text: "a început să te urmărească",
@@ -84,6 +83,7 @@ export default function NotificationItem({
               onClick={handleFollow}
               onMouseDown={(e) => e.stopPropagation()}
               sx={styles.actionButton}
+              size="small"
             >
               {sender?.is_follow ? "Urmărești" : "Urmărește"}
             </Button>
@@ -123,7 +123,6 @@ export default function NotificationItem({
           text: "te-a menționat într-o postare",
         };
 
-      // Implemented
       case NotificationTypeEnum.APPOINTMENT_BOOKED: {
         const appointmentData = data as AppointmentBookedNotificationData;
         const formattedDate = dayjs(appointmentData.start_date).format(
@@ -140,14 +139,14 @@ export default function NotificationItem({
               variant="contained"
               sx={styles.actionButton}
               disableElevation
+              size="small"
             >
-              Detalii
+              Vezi Detalii
             </Button>
           ),
         };
       }
 
-      // Implemented
       case NotificationTypeEnum.APPOINTMENT_CANCELED: {
         const cancelData = data as AppointmentCanceledNotificationData;
         return {
@@ -161,14 +160,14 @@ export default function NotificationItem({
               variant="contained"
               disableElevation
               sx={styles.actionButton}
+              size="small"
             >
-              Detalii
+              Vezi Detalii
             </Button>
           ),
         };
       }
 
-      // Implemented
       case NotificationTypeEnum.APPOINTMENT_RESCHEDULED: {
         const rescheduleData = data as AppointmentRescheduledNotificationData;
         return {
@@ -182,6 +181,7 @@ export default function NotificationItem({
               variant="outlined"
               sx={styles.actionButton}
               disableElevation
+              size="small"
             >
               Verifică
             </Button>
@@ -189,11 +189,9 @@ export default function NotificationItem({
         };
       }
 
-      // Implemented
       case NotificationTypeEnum.APPOINTMENT_REMINDER:
         return { text: "Memento: Ai o programare stabilită în curând." };
 
-      // Implemented
       case NotificationTypeEnum.APPOINTMENT_REVIEWED: {
         const reviewData = data as AppointmentReviewedNotificationData;
         return {
@@ -207,14 +205,14 @@ export default function NotificationItem({
               variant="contained"
               disableElevation
               sx={styles.actionButton}
+              size="small"
             >
-              Detalii
+              Vezi Detalii
             </Button>
           ),
         };
       }
 
-      // Implemented
       case NotificationTypeEnum.EMPLOYMENT_REQUEST: {
         const empRequest = data as EmploymentRequestNotificationData;
 
@@ -242,17 +240,14 @@ export default function NotificationItem({
         };
       }
 
-      // Implemented
       case NotificationTypeEnum.EMPLOYMENT_REQUEST_ACCEPTED:
         return {
           text: "a acceptat cererea ta de angajare.",
         };
 
-      // Implemented
       case NotificationTypeEnum.EMPLOYMENT_REQUEST_DENIED:
         return { text: "a respins cererea ta de angajare." };
 
-      // Implemented
       case NotificationTypeEnum.BUSINESS_VALIDATION: {
         const validation = data as BusinessValidationNotificationData;
         return {
@@ -446,8 +441,6 @@ export default function NotificationItem({
 const styles = {
   avatar: { width: 55, height: 55, border: 1, borderColor: "divider" },
   actionButton: {
-    py: { xs: 0.5, lg: 0.75 },
-    px: { xs: 1.25, lg: 2 },
     fontSize: { xs: "0.8125rem", sm: "0.875rem" },
     textTransform: "none",
     whiteSpace: "nowrap",
