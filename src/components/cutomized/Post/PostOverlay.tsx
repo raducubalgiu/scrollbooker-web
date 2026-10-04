@@ -122,7 +122,7 @@ const PostOverlay = ({
               }}
               variant="contained"
               fullWidth
-              size="medium"
+              size="small"
               sx={styles.bookButton}
             >
               Rezervă acum
