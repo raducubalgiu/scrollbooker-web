@@ -3,11 +3,11 @@
 import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import React from "react";
 import AppointmentCard from "./AppointmentCard/AppointmentCard";
-import { useInfiniteAppointments } from "@/hooks/infiniteQuery/useInfiniteAppointments";
 import { isEmpty } from "lodash";
 import AppointmentCardSkeleton from "./AppointmentCardSkeleton";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import { useInfiniteAppointments } from "@/controllers/booking/appointments.controller";
 
 type AppointmentsModuleProps = {
   scrollRootRef?: React.RefObject<HTMLDivElement | null>;

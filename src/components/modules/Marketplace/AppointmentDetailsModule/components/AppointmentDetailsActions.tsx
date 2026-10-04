@@ -25,7 +25,6 @@ const AppointmentDetailsActions = ({
           variant="contained"
           fullWidth
           disableElevation
-          size="large"
           sx={{ mt: 4 }}
           onClick={onBookAgain}
         >
@@ -39,7 +38,6 @@ const AppointmentDetailsActions = ({
           color="error"
           fullWidth
           disableElevation
-          size="large"
           sx={{ mt: 4 }}
           onClick={onCancel}
         >
