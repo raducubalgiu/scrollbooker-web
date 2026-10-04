@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import { useState } from "react";
 import { BusinessGalleryManager, GalleryItem } from "./BusinessGalleryManager";
 import { toast } from "react-toastify";
@@ -60,7 +60,7 @@ export const BusinessGalleryTab = ({
   };
 
   return (
-    <Box>
+    <Paper sx={{ p: 2.5 }}>
       <BusinessGalleryManager
         isMandatory={true}
         initialImages={initialThumbnailUrls}
@@ -79,7 +79,7 @@ export const BusinessGalleryTab = ({
       >
         {isPending ? "Se salvează..." : "Salvează Galeria"}
       </Button>
-    </Box>
+    </Paper>
   );
 };
 

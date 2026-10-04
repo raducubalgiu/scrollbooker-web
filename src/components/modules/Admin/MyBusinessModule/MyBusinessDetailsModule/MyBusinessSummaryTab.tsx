@@ -1,7 +1,15 @@
 "use client";
 
 import React from "react";
-import { Box, Stack, Typography, Divider, Avatar, Rating } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Divider,
+  Avatar,
+  Rating,
+  Paper,
+} from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonIcon from "@mui/icons-material/Person";
 import { BusinessDetails } from "@/ts/models/booking/business/BusinessDetails";
@@ -17,7 +25,7 @@ const MyBusinessSummaryTab = ({
   const { owner } = businessDetails || {};
 
   return (
-    <Stack direction="column">
+    <Paper>
       <Box
         sx={{
           borderRadius: 3,
@@ -109,7 +117,7 @@ const MyBusinessSummaryTab = ({
           </Stack>
         </Stack>
       </Box>
-    </Stack>
+    </Paper>
   );
 };
 

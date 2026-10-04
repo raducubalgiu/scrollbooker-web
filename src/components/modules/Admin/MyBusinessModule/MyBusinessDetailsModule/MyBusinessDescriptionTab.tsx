@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import ActionButton, {
   ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
@@ -113,7 +113,7 @@ export default function MyBusinessDescriptionTab({
       ];
 
   return (
-    <Box>
+    <Paper sx={{ p: 2.5 }}>
       <Typography variant="h6" sx={{ mb: 2.5 }}>
         Descriere locație
       </Typography>
@@ -132,6 +132,6 @@ export default function MyBusinessDescriptionTab({
           <ActionButton actions={actions} />
         </Box>
       </FormProvider>
-    </Box>
+    </Paper>
   );
 }

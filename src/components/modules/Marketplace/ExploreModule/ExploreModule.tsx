@@ -529,7 +529,10 @@ const styles = {
     borderRadius: { xs: 0, md: 4 },
     overflow: "hidden",
     flexShrink: 0,
-    backgroundColor: "background.paper",
+    backgroundColor: {
+      xs: "#262626",
+      md: "background.paper",
+    },
   },
   drawerContainer: {
     position: "absolute",

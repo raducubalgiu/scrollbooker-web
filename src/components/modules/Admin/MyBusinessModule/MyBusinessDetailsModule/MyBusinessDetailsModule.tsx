@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, CircularProgress, Paper, useTheme } from "@mui/material";
-import MySchedulesModule from "../MySchedulesModule/MySchedulesModule";
+import { Box, CircularProgress, useTheme } from "@mui/material";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
@@ -11,6 +10,7 @@ import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { useGetMyBusinessDetails } from "@/controllers/booking/business.controller";
 import MyBusinessSummaryTab from "./MyBusinessSummaryTab";
 import MyBusinessDescriptionTab from "./MyBusinessDescriptionTab";
+import { SchedulesForm } from "../MySchedulesModule/SchedulesForm";
 
 const TABS: CustomTabType[] = [
   { key: 0, label: "Sumar" },
@@ -59,7 +59,7 @@ export default function MyBusinessDetailsModule() {
           />
         );
       case 3:
-        return <MySchedulesModule data={schedules} />;
+        return <SchedulesForm initialSchedules={schedules} />;
       default:
         return null;
     }
@@ -82,7 +82,7 @@ export default function MyBusinessDetailsModule() {
         setValue={setCurrentTab}
         tabs={TABS}
       />
-      <Paper sx={{ mt: 3, p: 3 }}>{renderTabContent()}</Paper>
+      <Box mt={2.5}>{renderTabContent()}</Box>
     </MainLayout>
   );
 }
