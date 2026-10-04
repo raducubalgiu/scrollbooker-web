@@ -74,9 +74,10 @@ export const BusinessGalleryTab = ({
         variant="contained"
         onClick={handleUpdate}
         disabled={!isGalleryValid || isPending}
+        disableElevation
         sx={{ mt: 3 }}
       >
-        {isPending ? "Se salvează..." : "Salvează Galerie Obligatorie"}
+        {isPending ? "Se salvează..." : "Salvează Galeria"}
       </Button>
     </Box>
   );
