@@ -35,11 +35,9 @@ const ProfileInfoGallery = ({ businessMedia }: ProfileInfoGalleryProps) => {
             </Grid>
           ))
         ) : (
-          <Box sx={styles.notFoundContainer}>
-            <Typography variant="body2" color="text.secondary">
-              Momentan nu există imagini în galeria acestui business.
-            </Typography>
-          </Box>
+          <Typography>
+            Această afacere încă nu a adăugat o galerie foto
+          </Typography>
         )}
       </Grid>
     </Box>

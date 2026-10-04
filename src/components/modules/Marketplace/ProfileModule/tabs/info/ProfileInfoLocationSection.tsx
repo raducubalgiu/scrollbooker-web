@@ -1,8 +1,7 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import { BusinessLocation } from "@/ts/models/booking/business/BusinessProfile";
 import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
 
@@ -16,35 +15,22 @@ const ProfileInfoLocationSection = ({
   const mapsUrl = getGoogleMapsDirectionsUrl(location.coordinates);
 
   return (
-    <Box>
-      <Typography variant="h6" fontWeight="800" mb={2}>
-        Locație și Adresă
-      </Typography>
-      <Link
-        href={mapsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
-        <Paper elevation={0} sx={styles.paper}>
-          <Box sx={styles.imageContainer}>
-            <Image
-              src={location.map_url ?? ""}
-              alt={`Harta locației din ${location.formatted_address}`}
-              fill
-              style={{ objectFit: "cover" }}
-              priority
-            />
-          </Box>
-          <Box sx={styles.addressContainer}>
-            <FmdGoodOutlinedIcon />
-            <Typography fontWeight="500">
-              {location.formatted_address}
-            </Typography>
-          </Box>
-        </Paper>
-      </Link>
-    </Box>
+    <Link
+      href={mapsUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ textDecoration: "none", color: "inherit" }}
+    >
+      <Box sx={styles.imageContainer}>
+        <Image
+          src={location.map_url ?? ""}
+          alt={`Harta locației din ${location.formatted_address}`}
+          fill
+          style={{ objectFit: "cover" }}
+          priority
+        />
+      </Box>
+    </Link>
   );
 };
 

@@ -2,11 +2,11 @@ import React, { memo, useMemo } from "react";
 import PostGridContainer from "@/components/cutomized/PostGrid/PostGridContainer";
 import PostGrid from "@/components/cutomized/PostGrid/PostGrid";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
-import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import { isEmpty } from "lodash";
 import { CircularProgress, Stack } from "@mui/material";
 import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
 import { useInfiniteUserBookmarkedPosts } from "@/controllers/social/bookmark.controller";
+import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 
 type ProfileBookmarksTabProps = {
   userId: number;
@@ -45,7 +45,7 @@ const ProfileBookmarksTab = ({ userId }: ProfileBookmarksTabProps) => {
         <NotFound
           title="Nu există postări salvate"
           description="Salvează postările tale preferate pentru a le viziona mai târziu"
-          icon={<VideoLibraryIcon sx={{ fontSize: 50 }} />}
+          icon={<VideoLibraryOutlinedIcon />}
         />
       )}
 

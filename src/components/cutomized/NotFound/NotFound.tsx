@@ -1,15 +1,30 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
 import React from "react";
+import {
+  Container,
+  Stack,
+  Box,
+  Typography,
+  SxProps,
+  Theme,
+} from "@mui/material";
 
 type NotFoundProps = {
   title: string;
   description?: string;
-  icon: React.ReactNode;
+  icon: React.ReactElement;
+  action?: React.ReactNode;
+  sx?: SxProps<Theme>;
 };
 
-const NotFound = ({ title, description, icon }: NotFoundProps) => {
+const NotFound = ({
+  title,
+  description,
+  icon,
+  action,
+  sx = {},
+}: NotFoundProps) => {
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="xs" sx={sx}>
       <Stack
         alignItems="center"
         justifyContent="center"
@@ -23,19 +38,29 @@ const NotFound = ({ title, description, icon }: NotFoundProps) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: 70,
-            height: 70,
+            width: { xs: 55, lg: 80 },
+            height: { xs: 55, lg: 80 },
+            "& svg": {
+              fontSize: { xs: 28, lg: 40 },
+              color: "text.primary",
+            },
           }}
         >
           {icon}
         </Box>
 
-        <Stack justifyContent="center" alignItems="center" spacing={0.5}>
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          spacing={0.5}
+          sx={{ width: "100%" }}
+        >
           <Typography
             sx={{
               color: "text.primary",
               fontWeight: 600,
-              fontSize: { xs: 18, lg: 25 },
+              fontSize: { xs: 18, lg: 22 },
+              textAlign: "center",
             }}
           >
             {title}
@@ -46,13 +71,15 @@ const NotFound = ({ title, description, icon }: NotFoundProps) => {
               sx={{
                 color: "text.secondary",
                 textAlign: "center",
-                fontSize: { xs: 14, lg: 16 },
+                fontSize: { xs: 14, lg: 15 },
               }}
             >
               {description}
             </Typography>
           )}
         </Stack>
+
+        {action && <Box sx={{ mt: 1 }}>{action}</Box>}
       </Stack>
     </Container>
   );

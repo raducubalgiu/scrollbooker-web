@@ -434,6 +434,15 @@ const getComponents = (mode: Mode) => ({
       }),
     },
   },
+
+  MuiCircularProgress: {
+    defaultProps: {
+      sx: {
+        width: { xs: "28px !important", md: "40px !important" },
+        height: { xs: "28px !important", md: "40px !important" },
+      },
+    },
+  },
 });
 
 export const darkTheme = createTheme({

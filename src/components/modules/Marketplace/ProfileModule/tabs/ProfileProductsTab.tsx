@@ -31,22 +31,20 @@ const ProfileProductsTab = ({
   const [activeServiceId, setActiveServiceId] = useState<number | null>(null);
 
   const employeeId =
-    businessOwnerId !== undefined && businessOwnerId !== userId
-      ? userId
-      : null;
+    businessOwnerId !== undefined && businessOwnerId !== userId ? userId : null;
 
-  const { data: userProducts, isLoading, isError } =
-    useGetProductsByBusinessAndEmployee({
-      businessId: businessId ?? 0,
-      employeeId,
-      onlyServicesWithProducts: true,
-      productsLimitPerService: PRODUCTS_LIMIT_PER_SERVICE,
-    });
+  const {
+    data: userProducts,
+    isLoading,
+    isError,
+  } = useGetProductsByBusinessAndEmployee({
+    businessId: businessId ?? 0,
+    employeeId,
+    onlyServicesWithProducts: true,
+    productsLimitPerService: PRODUCTS_LIMIT_PER_SERVICE,
+  });
 
-  const serviceGroups = useMemo(
-    () => userProducts?.data ?? [],
-    [userProducts]
-  );
+  const serviceGroups = useMemo(() => userProducts?.data ?? [], [userProducts]);
 
   const activeGroup =
     serviceGroups.find((group) => group.service.id === activeServiceId) ??
@@ -94,7 +92,7 @@ const ProfileProductsTab = ({
     <Box sx={{ px: { xs: 2.5, lg: 0 } }}>
       {!userProducts || userProducts.total_count === 0 || !activeGroup ? (
         <NotFound
-          icon={<ShoppingBagOutlinedIcon sx={{ fontSize: 50 }} />}
+          icon={<ShoppingBagOutlinedIcon />}
           title="Servicii"
           description="Nu au fost găsite servicii"
         />

@@ -1,7 +1,6 @@
 import React, { memo, useMemo } from "react";
 import PostGrid from "@/components/cutomized/PostGrid/PostGrid";
 import PostGridContainer from "@/components/cutomized/PostGrid/PostGridContainer";
-import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import { isEmpty } from "lodash";
 import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
@@ -9,6 +8,7 @@ import { AppRoutes } from "@/utils/routes";
 import { ProfileTabEnum } from "./profileTabsHelper";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { useInfiniteUserPosts } from "@/controllers/social/post.controller";
+import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 
 type ProfilePostsTabProps = {
   userId: number;
@@ -50,7 +50,7 @@ const ProfilePostsTab = ({ userId }: ProfilePostsTabProps) => {
         <NotFound
           title="Nu au fost găsite postări"
           description="Acest utilizator nu a postat niciun videoclip încă."
-          icon={<VideoLibraryIcon sx={{ fontSize: { xs: 30, lg: 50 } }} />}
+          icon={<VideoLibraryOutlinedIcon />}
         />
       )}
       {!isLoading && isError && <ErrorMessage resource="postări" />}

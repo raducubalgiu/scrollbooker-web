@@ -48,7 +48,7 @@ const ProfileEmployeesTab = ({
         <NotFound
           title="Nu au fost găsiți specialiști"
           description="Acest business nu și-a adăugat încă specialiștii"
-          icon={<PeopleAltOutlinedIcon sx={{ fontSize: 50 }} />}
+          icon={<PeopleAltOutlinedIcon />}
         />
       )}
 

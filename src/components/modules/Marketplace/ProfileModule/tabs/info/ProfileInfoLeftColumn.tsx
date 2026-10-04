@@ -1,9 +1,10 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import { BusinessLocation } from "@/ts/models/booking/business/BusinessProfile";
 import { BusinessMediaFile } from "@/ts/models/booking/business/BusinessMediaFile";
 import ProfileInfoLocationSection from "./ProfileInfoLocationSection";
 import ProfileInfoGallery from "./ProfileInfoGallery";
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 type ProfileInfoLeftColumnProps = {
   description: string | null;
@@ -18,26 +19,33 @@ const ProfileInfoLeftColumn = ({
 }: ProfileInfoLeftColumnProps) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-      <Box>
-        <Typography variant="h6" fontWeight="800" mb={2}>
-          Despre Business
-        </Typography>
-        <Typography
-          variant="body1"
-          color="text.secondary"
-          sx={{
-            lineHeight: 1.8,
-            fontSize: "1.1rem",
-            whiteSpace: "pre-line",
-          }}
-        >
-          {description ||
-            "Nu există o descriere disponibilă pentru acest profil."}
-        </Typography>
-      </Box>
+      <Stack spacing={2}>
+        <Box>
+          <Typography variant="h6" fontWeight="800" mb={2}>
+            Adresa
+          </Typography>
 
-      {location && <ProfileInfoLocationSection location={location} />}
-      <ProfileInfoGallery businessMedia={businessMedia} />
+          <Stack flexDirection="row" alignItems="center" gap={1}>
+            <FmdGoodOutlinedIcon />
+            <Typography>{location?.address}</Typography>
+          </Stack>
+        </Box>
+
+        <Box>
+          <Typography variant="h6" fontWeight="800" mb={2}>
+            Descriere
+          </Typography>
+
+          <Typography>
+            {description ||
+              "Nu există o descriere disponibilă pentru acest profil."}
+          </Typography>
+        </Box>
+
+        {location && <ProfileInfoLocationSection location={location} />}
+
+        <ProfileInfoGallery businessMedia={businessMedia} />
+      </Stack>
     </Box>
   );
 };

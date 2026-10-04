@@ -1,7 +1,7 @@
 import SchedulesSection from "@/components/cutomized/SchedulesSection/SchedulesSection";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
-import { AccessTime, Person } from "@mui/icons-material";
-import { Box, Card, CardContent, Divider, Typography } from "@mui/material";
+import { AccessTime } from "@mui/icons-material";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import React from "react";
 import { UserProfileAboutOwner } from "@/ts/models/user/UserProfileAbout";
 import ProfileInfoOwnerSection from "./ProfileInfoOwnerSection";
@@ -26,36 +26,6 @@ const ProfileInfoRightColumn = ({
             Program de lucru
           </Typography>
           <SchedulesSection schedules={schedules} />
-        </CardContent>
-      </Card>
-
-      <Card
-        elevation={0}
-        sx={{
-          borderRadius: 4,
-          bgcolor: "grey.900",
-          color: "common.white",
-        }}
-      >
-        <CardContent sx={{ p: 3 }}>
-          <Box sx={styles.contactContainer}>
-            <Box sx={styles.contactIcon}>
-              <Person />
-            </Box>
-            <Box>
-              <Typography variant="caption" sx={styles.contactName}>
-                Owner / Manager
-              </Typography>
-              <Typography variant="h6" fontWeight="700">
-                {owner.fullname}
-              </Typography>
-            </Box>
-          </Box>
-          <Divider sx={{ borderColor: "rgba(255,255,255,0.1)", mb: 2 }} />
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            Pentru întrebări suplimentare legate de acest business, contactați
-            echipa administrativă.
-          </Typography>
         </CardContent>
       </Card>
     </Box>
