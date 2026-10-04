@@ -146,13 +146,10 @@ const BusinessPhotosTab = ({
               <Button
                 onClick={handleNavigateToBooking}
                 variant="contained"
-                size="large"
                 disableElevation
                 sx={{
                   display: { xs: "inline-flex", md: "none" },
                   flexGrow: 1,
-                  py: 1.2,
-                  fontSize: 14,
                   textTransform: "none",
                   fontWeight: 600,
                   whiteSpace: "nowrap",
@@ -165,12 +162,9 @@ const BusinessPhotosTab = ({
                 onClick={onFollow}
                 variant={is_follow ? "outlined" : "contained"}
                 color="secondary"
-                size="large"
                 disableElevation
                 sx={{
                   flexGrow: { xs: 1, md: 0 },
-                  py: { xs: 1.2, md: 1.5 },
-                  fontSize: { xs: 14, md: 16 },
                   textTransform: "none",
                   fontWeight: 600,
                   whiteSpace: "nowrap",
@@ -191,12 +185,9 @@ const BusinessPhotosTab = ({
                 }
                 variant="outlined"
                 color="secondary"
-                size="large"
                 sx={{
                   display: { xs: "none", md: "inline-flex" },
                   flexGrow: { xs: 1, md: 0 },
-                  py: { xs: 1.2, md: 1.5 },
-                  fontSize: { xs: 14, md: 16 },
                   textTransform: "none",
                   fontWeight: 600,
                   whiteSpace: "nowrap",

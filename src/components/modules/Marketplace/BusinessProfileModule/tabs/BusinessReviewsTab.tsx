@@ -111,7 +111,7 @@ const BusinessReviewsTab = ({
                   <Rating
                     readOnly
                     value={r.rating}
-                    size="medium"
+                    size="small"
                     precision={0.5}
                   />
                   <Typography variant="body2" color="text.secondary">

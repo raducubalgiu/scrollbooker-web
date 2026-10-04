@@ -31,7 +31,11 @@ const THIRTY_DAYS = 30 * 24 * 60 * 60;
 const REGISTER_BUSINESS_PATH = "/auth/register-business";
 const LOGIN_PATH = "/auth/signin";
 
-function buildGoogleProfile(profile: { sub: string; name: string; email: string }) {
+function buildGoogleProfile(profile: {
+  sub: string;
+  name: string;
+  email: string;
+}) {
   // Câmpurile de auth (accessToken/refreshToken/accessTokenExpires) sunt
   // placeholder aici — signIn() de mai jos le suprascrie cu tokenurile
   // noastre (nu ale Google) înainte ca jwt() să le citească.
@@ -284,6 +288,9 @@ export const authOptions: AuthOptions = {
       );
       LOG.info(`Session was checked and updated with accessToken.`);
       return session;
+    },
+    async redirect({ baseUrl }) {
+      return baseUrl;
     },
   },
   pages: {

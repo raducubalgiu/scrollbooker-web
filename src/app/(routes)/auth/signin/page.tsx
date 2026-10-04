@@ -53,7 +53,7 @@ export default function SignInPage() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
+  //const [googleLoading, setGoogleLoading] = useState(false);
   const isRequired = required();
 
   const callbackUrl = searchParams.get("callbackUrl") || "/";
@@ -67,7 +67,7 @@ export default function SignInPage() {
   }, [searchParams, router, t]);
 
   const handleGoogleSignIn = async () => {
-    setGoogleLoading(true);
+    //setGoogleLoading(true);
     await signIn("google-signin", { callbackUrl });
   };
 
@@ -110,7 +110,6 @@ export default function SignInPage() {
           <Button
             variant="outlined"
             fullWidth
-            loading={googleLoading}
             onClick={handleGoogleSignIn}
             startIcon={<GoogleIcon />}
             disableElevation
