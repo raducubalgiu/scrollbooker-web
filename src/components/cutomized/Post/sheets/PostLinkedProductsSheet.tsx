@@ -15,6 +15,7 @@ import { isEmpty } from "lodash";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
+import LinkedProductsUserInfo from "./LinkedProductsUserInfo";
 
 type PostLinkedProductsSheetProps = {
   open: boolean;
@@ -33,6 +34,8 @@ const PostLinkedProductsSheet = ({
   isLoadingPosts,
   onNavigateToBooking,
 }: PostLinkedProductsSheetProps) => {
+  const { business } = linkedProducts || {};
+
   const skeletons = useMemo(
     () =>
       Array.from({ length: 5 }).map((_, index) => {
@@ -74,6 +77,16 @@ const PostLinkedProductsSheet = ({
           </IconButton>
         </Stack>
       </Box>
+
+      {business && (
+        <LinkedProductsUserInfo
+          avatar={business.avatar ?? ""}
+          fullname={business.fullname}
+          ratingsAverage={business.ratings_average}
+          ratingsCount={business.ratings_count}
+          address={business.address ?? ""}
+        />
+      )}
 
       <Box sx={styles.listContainer}>
         {(isLoadingLinkedProducts || isLoadingPosts) && skeletons}

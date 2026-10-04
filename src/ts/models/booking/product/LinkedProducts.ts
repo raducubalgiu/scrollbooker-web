@@ -2,13 +2,13 @@ import { Product } from "./Product";
 
 export interface LinkedProductsBusinessSummary {
   id: number;
-  fullName: string;
+  fullname: string;
   username: string;
   profession: string;
   avatar: string | null;
-  ratingsAverage: number;
-  ratingsCount: number;
-  distanceKm: number | null;
+  ratings_average: number;
+  ratings_count: number;
+  distance_km: number | null;
   address: string | null;
 }
 

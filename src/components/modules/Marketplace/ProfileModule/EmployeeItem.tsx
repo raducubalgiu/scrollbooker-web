@@ -62,10 +62,9 @@ const EmployeeItem = ({
 
       <Button
         variant="contained"
+        disableElevation
+        size="small"
         onClick={handleChooseEmployee}
-        sx={{
-          px: { xs: 1.5, sm: 2.5 },
-        }}
       >
         Alege
       </Button>

@@ -231,12 +231,21 @@ const styles = {
     boxShadow: (theme: Theme) => `0 1px 0 ${theme.palette.divider}`,
   },
   tabs: {
-    "& .MuiTabs-indicator": { height: 3, borderRadius: 2, width: "100%" },
+    "& .MuiTabs-indicator": {
+      height: 3,
+      borderRadius: 2,
+      width: "100%",
+      backgroundColor: "text.primary",
+    },
     "& .MuiTab-root": {
       textTransform: "none",
       minHeight: 40,
       minWidth: { xs: 75, md: 150, lg: 150, xl: 200 },
-      px: { xs: 1, sm: 2 },
+      //px: { xs: 1, sm: 2 },
+      color: "text.secondary",
+      "&.Mui-selected": {
+        color: "text.primary",
+      },
     },
     "& .MuiTab-icon": { fontSize: { xs: 22.5, md: 25, lg: 30 } },
   },
