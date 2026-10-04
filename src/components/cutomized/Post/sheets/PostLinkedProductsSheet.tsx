@@ -102,14 +102,8 @@ const PostLinkedProductsSheet = ({
           <Button
             variant="outlined"
             color="secondary"
-            size="large"
-            sx={{
-              ml: 1.5,
-              mt: 1.5,
-              mb: 2.5,
-              px: 2.5,
-              fontSize: { xs: 14, lg: 16 },
-            }}
+            size="small"
+            sx={{ m: 1.5 }}
             onClick={() => onNavigateToBooking(null)}
           >
             Vezi toate serviciile
@@ -140,10 +134,7 @@ const styles = {
   },
   container: {
     width: "100%",
-    pt: 2,
-    pb: 1.5,
-    borderBottom: 1,
-    borderColor: "divider",
+    py: 1,
     flexShrink: 0,
   },
   iconBack: {

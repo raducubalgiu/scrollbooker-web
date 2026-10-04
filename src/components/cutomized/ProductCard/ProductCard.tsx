@@ -22,10 +22,6 @@ type ProductCardProps = {
   isSelected: boolean;
   showIcon: boolean;
   showDescription?: boolean;
-  // Când e true, cardul e un "lead" către booking (profil/business profile)
-  // — click pe card doar expandează descrierea, nu navighează nicăieri;
-  // singura acțiune e butonul "Rezervă". Când e false (flow-ul de booking
-  // propriu-zis), click pe card deschide ProductDetailModal via onOpenDetail.
   expandDescriptionOnClick?: boolean;
   onOpenDetail?: () => void;
   onAdd: (item: SelectedBookingItem) => void;
@@ -117,8 +113,7 @@ const ProductCard = ({
       >
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography
-            variant="h5"
-            fontWeight={600}
+            fontWeight={700}
             noWrap
             sx={{
               overflow: "hidden",
@@ -170,6 +165,7 @@ const ProductCard = ({
             <Button
               variant="outlined"
               color="secondary"
+              size="small"
               disableElevation
               onClick={(e) => {
                 e.stopPropagation();
