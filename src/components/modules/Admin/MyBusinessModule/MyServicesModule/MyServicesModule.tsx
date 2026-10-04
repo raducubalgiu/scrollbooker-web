@@ -78,10 +78,10 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
       hideAction
       sx={{
         bgcolor:
-          theme.palette.mode === "light"
-            ? "background.paper"
-            : "background.default",
-        height: "100%",
+          theme.palette.mode === "dark"
+            ? "background.default"
+            : "background.paper",
+        minHeight: "100%",
       }}
     >
       {isLoading && <MyServicesSkeleton />}

@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, CircularProgress, Paper } from "@mui/material";
+import { Box, CircularProgress, Paper, useTheme } from "@mui/material";
 import MySchedulesModule from "../MySchedulesModule/MySchedulesModule";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
-import BusinessDescriptionTab from "./BusinessDescriptionTab";
-import BusinessAddressTab from "./BusinessAddressTab";
 import BusinessGalleryTab from "./BusinessGalleryTab";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { useGetMyBusinessDetails } from "@/controllers/booking/business.controller";
+import MyBusinessSummaryTab from "./MyBusinessSummaryTab";
+import MyBusinessDescriptionTab from "./MyBusinessDescriptionTab";
 
 const TABS: CustomTabType[] = [
   { key: 0, label: "Sumar" },
@@ -20,6 +20,7 @@ const TABS: CustomTabType[] = [
 ];
 
 export default function MyBusinessDetailsModule() {
+  const theme = useTheme();
   const { data: myBusinessDetails, isLoading } = useGetMyBusinessDetails();
   const [currentTab, setCurrentTab] = useState(0);
 
@@ -40,21 +41,15 @@ export default function MyBusinessDetailsModule() {
     );
   }
 
-  const { id, location, has_employees, schedules } = myBusinessDetails || {};
+  const { id, schedules } = myBusinessDetails || {};
 
   const renderTabContent = () => {
     switch (currentTab) {
       case 0:
-        return (
-          <BusinessAddressTab
-            address={location?.formatted_address ?? ""}
-            map_url={location?.map_url ?? ""}
-            has_employees={has_employees ?? false}
-          />
-        );
+        return <MyBusinessSummaryTab businessDetails={myBusinessDetails} />;
       case 1:
         return (
-          <BusinessDescriptionTab businessId={id} defaultDescription={""} />
+          <MyBusinessDescriptionTab businessId={id} defaultDescription={""} />
         );
       case 2:
         return <BusinessGalleryTab businessId={id} initialImages={[]} />;
@@ -66,7 +61,17 @@ export default function MyBusinessDetailsModule() {
   };
 
   return (
-    <MainLayout hideAction title="Detalii Business">
+    <MainLayout
+      hideAction
+      title="Detalii Business"
+      sx={{
+        bgcolor:
+          theme.palette.mode === "dark"
+            ? "background.default"
+            : "background.paper",
+        minHeight: "100%",
+      }}
+    >
       <CustomTabs
         currentTab={currentTab}
         setValue={setCurrentTab}

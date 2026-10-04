@@ -17,7 +17,6 @@ const ActionButton = ({ actions, sx }: ActionButtonProps) => {
         <Button
           key={index}
           variant="contained"
-          size="large"
           disableElevation
           sx={{
             ml: 1,

@@ -11,7 +11,7 @@ import { useMutate } from "@/hooks/useHttp";
 import { toast } from "react-toastify";
 import { maxField, minField } from "@/utils/validation-rules";
 
-type BusinessDescriptionTabProps = {
+type MyBusinessDescriptionTabProps = {
   businessId: number;
   defaultDescription: string | null;
 };
@@ -20,10 +20,10 @@ type FormValues = {
   description: string;
 };
 
-export default function BusinessDescriptionTab({
+export default function MyBusinessDescriptionTab({
   businessId,
   defaultDescription,
-}: BusinessDescriptionTabProps) {
+}: MyBusinessDescriptionTabProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [savedDescription, setSavedDescription] = useState(
     defaultDescription ?? ""
