@@ -18,11 +18,7 @@ const SelectedServicesList = ({
   return (
     <Box>
       {serviceDomains?.map((domain) => (
-        <Accordion
-          title={domain.name}
-          key={domain.id}
-          sx={{ mb: 1, boxShadow: "none" }}
-        >
+        <Accordion title={domain.name} key={domain.id} sx={{ mb: 1 }}>
           {domain.services.map((service) => (
             <SelectedServiceItem
               key={service.id}

@@ -52,7 +52,12 @@ export default function MyBusinessDetailsModule() {
           <MyBusinessDescriptionTab businessId={id} defaultDescription={""} />
         );
       case 2:
-        return <BusinessGalleryTab businessId={id} initialImages={[]} />;
+        return (
+          <BusinessGalleryTab
+            businessId={id}
+            mediaFiles={myBusinessDetails.media_files}
+          />
+        );
       case 3:
         return <MySchedulesModule data={schedules} />;
       default:

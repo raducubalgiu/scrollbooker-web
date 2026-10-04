@@ -34,18 +34,13 @@ const CollectBusinessFooter = ({
         mx: { xs: 2, md: 10 },
       }}
     >
-      <Button
-        disabled={isFirstStep || isLoading}
-        onClick={onHandleBack}
-        size="large"
-      >
+      <Button disabled={isFirstStep || isLoading} onClick={onHandleBack}>
         {t("back")}
       </Button>
       <Button
         variant="contained"
         onClick={onHandleNext}
         loading={isLoading}
-        size="large"
         disableElevation
         disabled={isDisabledNext}
       >

@@ -43,12 +43,11 @@ const BusinessOnboardingSectionLayout = ({
         <Box sx={styles.buttonContainer}>
           <Button
             variant="contained"
-            size="large"
             loading={isLoading}
             disabled={isDisabled}
             onClick={onClick}
             disableElevation
-            sx={{ px: 6, py: 1.5, fontWeight: 700 }}
+            sx={{ fontWeight: 700 }}
           >
             {t("saveAndContinue")}
           </Button>

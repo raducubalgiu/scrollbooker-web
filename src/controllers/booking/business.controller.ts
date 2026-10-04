@@ -139,10 +139,6 @@ export const useGetBusinessLocations = (searchState: SearchState) => {
   });
 };
 
-// Oglindește searchBusinessAddress din iOS (BusinessApiService) — backend-ul
-// e endpoint-ul Google Places (/places, min_length=2 pe query), nu unul sub
-// /businesses, dar îl ținem aici ca și pe iOS: e folosit doar din fluxul de
-// colectare a adresei unui business, nu dintr-un context de căutare generică.
 export const useSearchBusinessAddress = (query: string) => {
   const trimmed = query.trim();
 
@@ -157,5 +153,35 @@ export const useSearchBusinessAddress = (query: string) => {
     },
     enabled: trimmed.length >= 2,
     staleTime: 10000 * 60,
+  });
+};
+
+interface UpdateBusinessGalleryParams {
+  businessId: string | number;
+  photos: File[];
+  existingThumbnailUrls: string[];
+}
+
+export const useUpdateBusinessGalleryMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      businessId,
+      photos,
+      existingThumbnailUrls,
+    }: UpdateBusinessGalleryParams): Promise<void> => {
+      if (!businessId) throw new Error("Business ID este obligatoriu.");
+
+      const formData = new FormData();
+      photos.forEach((photo) => formData.append("photos", photo));
+
+      formData.append("existing_urls", JSON.stringify(existingThumbnailUrls));
+
+      await axios.patch(`${BUSINESS_PATH}/${businessId}/gallery`, formData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-business-details"] });
+    },
   });
 };
