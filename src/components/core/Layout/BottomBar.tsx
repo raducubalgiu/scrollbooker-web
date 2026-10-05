@@ -1,18 +1,19 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Badge,
   BottomNavigation,
   BottomNavigationAction,
   Box,
+  useTheme,
 } from "@mui/material";
-import { Theme, useTheme } from "@mui/material/styles";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { StaticImageData } from "next/image";
+import type { Theme } from "@mui/material/styles";
+import type { StaticImageData } from "next/image";
 import { AppRoutes } from "@/utils/routes";
-
+import CustomSvg from "../CustomSvg/CustomSvg";
 import HomeIconOutlined from "@/assets/icons/ic_home_outline.svg";
 import HomeIconSolid from "@/assets/icons/ic_home_solid.svg";
 
@@ -26,7 +27,6 @@ import AppointmentsSolidOutlined from "@/assets/icons/ic_clipboard_solid.svg";
 
 import PersonIconOutlined from "@/assets/icons/ic_person_outline.svg";
 import PersonIconSolid from "@/assets/icons/ic_person_solid.svg";
-import CustomSvg from "../CustomSvg/CustomSvg";
 
 type BottomBarProps = {
   username: string | undefined;
@@ -104,63 +104,41 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
     [username, profession]
   );
 
-  const currentIndex = React.useMemo(() => {
-    return actions.findIndex((a) => {
-      const routePath = a.route.split("?")[0];
-      if (routePath === "/") return pathname === "/";
-      return pathname === routePath || pathname.startsWith(routePath + "/");
-    });
-  }, [pathname, actions]);
+  const currentIndex = React.useMemo(
+    () =>
+      actions.findIndex((a) => {
+        const routePath = a.route.split("?")[0];
+        if (routePath === "/") return pathname === "/";
+        return pathname === routePath || pathname.startsWith(routePath + "/");
+      }),
+    [pathname, actions]
+  );
+
+  const containerSx = { ...styles.container, backgroundColor: bgColor };
+  const navigationSx = {
+    ...styles.navigation,
+    backgroundColor: bgColor,
+    "& .MuiBottomNavigationAction-root": {
+      ...styles.action,
+      color: inactiveColor,
+      "&.Mui-selected": {
+        ...styles.actionSelected,
+        color: activeColor,
+        "& .MuiBottomNavigationAction-label": {
+          ...styles.actionSelectedLabel,
+          color: activeColor,
+        },
+      },
+    },
+  };
 
   return (
-    <Box
-      sx={{
-        ...styles.container,
-        backgroundColor: bgColor,
-      }}
-    >
+    <Box sx={containerSx}>
       <BottomNavigation
         showLabels
         value={currentIndex}
         onChange={() => {}}
-        sx={{
-          height: "65px",
-          pb: "safe-area-inset-bottom",
-          backgroundColor: bgColor,
-          transition:
-            "background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease",
-
-          "& .MuiBottomNavigationAction-root": {
-            minWidth: 0,
-            color: inactiveColor,
-            transition: "color 0.3s ease",
-            padding: "10px 0",
-            textDecoration: "none",
-
-            "& svg, & img": {
-              transition: "fill 0.3s ease, stroke 0.3s ease, color 0.3s ease",
-              fill: "currentColor",
-            },
-
-            "& .MuiBottomNavigationAction-label": {
-              fontSize: "0.75rem",
-              transition: "color 0.3s ease",
-            },
-
-            "&.Mui-selected": {
-              color: activeColor,
-              paddingTop: "10px",
-
-              "& .MuiBottomNavigationAction-label": {
-                fontSize: "0.75rem !important",
-                color: activeColor,
-              },
-              "& svg, & img": {
-                fill: "currentColor",
-              },
-            },
-          },
-        }}
+        sx={navigationSx}
       >
         {actions.map((a, index) => {
           const baseIcon =
@@ -174,10 +152,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
               href={a.route}
               icon={
                 <Badge badgeContent={a.badge} color="error" sx={styles.badge}>
-                  <CustomSvg
-                    src={baseIcon}
-                    sx={{ color: "inherit", fill: "currentColor" }}
-                  />
+                  <CustomSvg src={baseIcon} sx={styles.icon} />
                 </Badge>
               }
             />
@@ -199,6 +174,42 @@ const styles = {
       theme.palette.mode === "dark" ? "transparent" : "divider",
     marginTop: "-1px",
     transition: "background-color 0.3s ease, border-color 0.3s ease",
+  },
+  navigation: {
+    height: "65px",
+    pb: "safe-area-inset-bottom",
+    transition:
+      "background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease",
+  },
+  action: {
+    minWidth: 0,
+    transition: "color 0.3s ease",
+    padding: "10px 0",
+    textDecoration: "none",
+
+    "& svg, & img": {
+      transition: "fill 0.3s ease, stroke 0.3s ease, color 0.3s ease",
+      fill: "currentColor",
+    },
+
+    "& .MuiBottomNavigationAction-label": {
+      fontSize: "0.75rem",
+      transition: "color 0.3s ease",
+    },
+  },
+  actionSelected: {
+    paddingTop: "10px",
+
+    "& svg, & img": {
+      fill: "currentColor",
+    },
+  },
+  actionSelectedLabel: {
+    fontSize: "0.75rem !important",
+  },
+  icon: {
+    color: "inherit",
+    fill: "currentColor",
   },
   badge: {
     "& .MuiBadge-badge": {
