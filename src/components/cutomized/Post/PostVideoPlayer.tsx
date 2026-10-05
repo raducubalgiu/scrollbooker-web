@@ -680,6 +680,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
               loaders,
               callbacks,
             }}
+            businessLocation={post?.business_location ?? null}
             description={post?.description ?? null}
             onOpenLinkedProducts={onOpenLinkedProducts}
           />

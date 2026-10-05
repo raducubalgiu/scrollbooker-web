@@ -20,6 +20,7 @@ import LinkedProductsUserInfo from "./LinkedProductsUserInfo";
 type PostLinkedProductsSheetProps = {
   open: boolean;
   onClose: () => void;
+  distanceKm: number | null;
   linkedProducts: LinkedProducts | undefined;
   isLoadingLinkedProducts: boolean;
   isLoadingPosts: boolean;
@@ -29,6 +30,7 @@ type PostLinkedProductsSheetProps = {
 const PostLinkedProductsSheet = ({
   open,
   onClose,
+  distanceKm,
   linkedProducts,
   isLoadingLinkedProducts,
   isLoadingPosts,
@@ -85,6 +87,7 @@ const PostLinkedProductsSheet = ({
           ratingsAverage={business.ratings_average}
           ratingsCount={business.ratings_count}
           address={business.address ?? ""}
+          distanceKm={distanceKm}
         />
       )}
 

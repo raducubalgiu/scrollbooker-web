@@ -10,6 +10,7 @@ type LinkedProductsUserInfoProps = {
   ratingsAverage: number;
   ratingsCount: number;
   address: string;
+  distanceKm: number | null;
 };
 
 const LinkedProductsUserInfo = ({
@@ -18,6 +19,7 @@ const LinkedProductsUserInfo = ({
   ratingsAverage,
   ratingsCount,
   address,
+  distanceKm,
 }: LinkedProductsUserInfoProps) => {
   return (
     <Stack direction="row" alignItems="center" gap={2} m={2.5}>
@@ -46,7 +48,7 @@ const LinkedProductsUserInfo = ({
 
           <ProfileAddress
             address={address}
-            distanceKm={null}
+            distanceKm={distanceKm}
             variant="body2"
             icon
           />

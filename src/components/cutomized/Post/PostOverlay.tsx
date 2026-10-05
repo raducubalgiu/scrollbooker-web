@@ -1,39 +1,52 @@
 "use client";
 
-import React, { memo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import Link from "next/link";
-import { ProfileTabEnum } from "@/components/modules/Marketplace/ProfileModule/tabs/profileTabsHelper";
 import PostActionsMobile from "./actions/PostActionsMobile";
 import PostBadge from "./PostBadge";
-import { AppRoutes } from "@/utils/routes";
 import { PostActionsProps } from "./actions/postActionTypes";
+import { useUserLocation } from "@/hooks/useUserLocation";
+import { formatDistance } from "@/utils/formatters";
+import { PostBusinessLocation } from "@/ts/models/social/Post";
+import PostOverlayUser from "./PostOverlayUser";
+import { calculateDistance } from "@/utils/calculateDistance";
 
 type PostOverlayProps = {
   actions: PostActionsProps;
   description: string | null;
+  businessLocation: PostBusinessLocation | null;
   onOpenLinkedProducts: () => void;
 };
 
 const PostOverlay = ({
   actions,
   description,
+  businessLocation,
   onOpenLinkedProducts,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const {
-    user,
-    counters,
-    userActions,
-    isOwnPost,
-    isVideoReview,
-    serviceDomain,
-  } = actions;
+  const { user, counters, userActions, isOwnPost } = actions;
+  const { isVideoReview, serviceDomain } = actions;
 
   const handleToggleDescription = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsExpanded((prev) => !prev);
   };
+
+  const { location: userLocation } = useUserLocation();
+  const businessCoordinates = businessLocation?.coordinates ?? null;
+
+  const distanceKm = useMemo(() => {
+    if (!userLocation || !businessCoordinates) return null;
+    return calculateDistance(userLocation, businessCoordinates);
+  }, [userLocation, businessCoordinates]);
+
+  const professionWithDistance = [
+    user?.profession,
+    distanceKm != null ? formatDistance(distanceKm) : null,
+  ]
+    .filter(Boolean)
+    .join(" • ");
 
   return (
     <>
@@ -67,35 +80,10 @@ const PostOverlay = ({
               </Stack>
             )}
 
-            <Box onClick={(e) => e.stopPropagation()}>
-              <Link
-                href={
-                  user
-                    ? AppRoutes.profile(
-                        user?.username,
-                        user?.profession,
-                        ProfileTabEnum.POSTS
-                      )
-                    : ""
-                }
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <Typography
-                  variant="body1"
-                  fontWeight={800}
-                  sx={styles.fullName}
-                >
-                  {user?.fullname}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  color="primary"
-                  sx={styles.profession}
-                >
-                  {user?.profession}
-                </Typography>
-              </Link>
-            </Box>
+            <PostOverlayUser
+              user={user}
+              professionWithDistance={professionWithDistance}
+            />
 
             {description && description.length > 0 && (
               <Box
@@ -181,13 +169,6 @@ const styles = {
   },
   badgesStack: {
     width: "fit-content",
-  },
-  fullName: {
-    lineHeight: 1.2,
-    mb: 0.5,
-  },
-  profession: {
-    fontWeight: 600,
   },
   descriptionWrapper: {
     cursor: "pointer",

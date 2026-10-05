@@ -29,7 +29,7 @@ import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
 import ForceDarkChrome from "@/components/core/ForceDarkChrome";
 import { useUserLocation } from "@/hooks/useUserLocation";
-import { getDistanceKm } from "@/utils/formatters";
+import { calculateDistance } from "@/utils/calculateDistance";
 
 const PREFETCH_OFFSET = 2;
 
@@ -80,9 +80,10 @@ export default function ExploreModule() {
   const { location: userLocation } = useUserLocation();
   const businessCoordinates =
     currentPost?.business_location?.coordinates ?? null;
+
   const distanceKm = useMemo(() => {
     if (!userLocation || !businessCoordinates) return null;
-    return getDistanceKm(userLocation, businessCoordinates);
+    return calculateDistance(userLocation, businessCoordinates);
   }, [userLocation, businessCoordinates]);
 
   useExplorePaginationPrefetch({
@@ -444,6 +445,7 @@ export default function ExploreModule() {
         <PostLinkedProductsSheet
           open={isProductsOpen}
           onClose={() => setIsProductsOpen(false)}
+          distanceKm={distanceKm}
           linkedProducts={linkedProducts}
           isLoadingLinkedProducts={isLoadingLinkedProducts}
           isLoadingPosts={isLoading}
