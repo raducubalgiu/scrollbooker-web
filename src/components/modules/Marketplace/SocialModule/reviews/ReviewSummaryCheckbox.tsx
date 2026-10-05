@@ -7,7 +7,7 @@ import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 
 type ReviewSummaryCheckboxProps = {
   rating: number;
-  progress: number; // 0..1
+  progress: number;
   count: number;
   isEnabled: boolean;
   isChecked: boolean;

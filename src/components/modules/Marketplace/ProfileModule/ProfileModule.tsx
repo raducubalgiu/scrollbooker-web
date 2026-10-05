@@ -5,8 +5,6 @@ import React, { useState, useCallback } from "react";
 import ProfileCounters from "./ProfileCounters";
 import ProfileUserInfo from "./ProfileUserInfo";
 import ProfileTabs from "./tabs/ProfileTabs";
-import SocialModal from "./social/SocialModal";
-import { SocialTabEnum } from "./social/SocialTabEnum";
 import ScheduleModal from "./ScheduleModal";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import {
@@ -17,6 +15,8 @@ import {
 import EditProfileModal from "./edit/EditProfileModal";
 import ProfileHeaderMobile from "./ProfileHeaderMobile";
 import ProfileMenuSheet from "./ProfileMenuSheet";
+import { SocialTabEnum } from "../SocialModule/SocialTabEnum";
+import SocialModal from "../SocialModule/SocialModal";
 
 export type ProfileModuleProps = {
   profile: UserProfile | null;

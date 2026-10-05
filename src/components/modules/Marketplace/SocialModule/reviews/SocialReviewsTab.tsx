@@ -3,10 +3,10 @@ import React, { useCallback, useMemo, useState } from "react";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
-import VideoReviewsTab from "./VideoReviewsTab";
-import WrittenReviewsTab from "./WrittenReviewsTab";
 import { useGetReviewsSummary } from "@/controllers/booking/review.controller";
 import ReviewsSummarySection from "./ReviewsSummarySection";
+import WrittenReviewsTab from "./WrittenReviewsTab";
+import VideoReviewsTab from "./VideoReviewsTab";
 
 type SocialReviewsTabProps = {
   businessId: number;

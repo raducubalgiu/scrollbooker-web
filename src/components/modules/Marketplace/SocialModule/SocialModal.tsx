@@ -14,12 +14,12 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import SocialReviewsTab from "./SocialReviewsTab";
-import SocialFollowersTab from "./SocialFollowersTab";
-import SocialFollowingsTab from "./SocialFollowingsTab";
+import SocialFollowersTab from "./followers/SocialFollowersTab";
+import SocialFollowingsTab from "./followings/SocialFollowingsTab";
 import { SocialTabEnum } from "./SocialTabEnum";
-import { SocialModalProps } from "../ProfileModule";
 import { UserCounter } from "@/ts/models/user/UserProfile";
+import { SocialModalProps } from "../ProfileModule/ProfileModule";
+import SocialReviewsTab from "./reviews/SocialReviewsTab";
 
 type ProfileSocialModalProps = {
   open: boolean;

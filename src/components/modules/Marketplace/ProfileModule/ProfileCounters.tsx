@@ -1,7 +1,7 @@
 import { Divider, ListItemButton, Stack, Typography } from "@mui/material";
 import React from "react";
-import { SocialTabEnum } from "./social/SocialTabEnum";
 import { UserCounter } from "@/ts/models/user/UserProfile";
+import { SocialTabEnum } from "../SocialModule/SocialTabEnum";
 
 type ProfileCountersProps = {
   counters: UserCounter;
@@ -10,36 +10,6 @@ type ProfileCountersProps = {
 
 const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
   const { ratings_count, followers_count, followings_count } = counters;
-
-  const styles = {
-    button: {
-      flex: 1,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      px: 1.5,
-      py: 1.5,
-      minHeight: "auto",
-      textAlign: "center",
-      maxWidth: { xs: 100, sm: 150, md: 200 },
-      borderRadius: 2,
-    },
-    title: {
-      color: "text.secondary",
-      fontSize: { xs: 14, md: 16, lg: 18, xl: 20 },
-      fontWeight: 500,
-    },
-    counter: {
-      fontWeight: 700,
-      fontSize: { xs: 18, sm: 20, md: 25, lg: 30, xl: 35 },
-    },
-    divider: {
-      height: { xs: 22.5, lg: 30 },
-      alignSelf: "center",
-      opacity: 0.6,
-    },
-  };
 
   return (
     <Stack
@@ -90,3 +60,33 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
 };
 
 export default ProfileCounters;
+
+const styles = {
+  button: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    px: 1.5,
+    py: 1.5,
+    minHeight: "auto",
+    textAlign: "center",
+    maxWidth: { xs: 100, sm: 150, md: 200 },
+    borderRadius: 2,
+  },
+  title: {
+    color: "text.secondary",
+    fontSize: { xs: 14, md: 16, lg: 18, xl: 20 },
+    fontWeight: 500,
+  },
+  counter: {
+    fontWeight: 700,
+    fontSize: { xs: 18, sm: 20, md: 25, lg: 30, xl: 35 },
+  },
+  divider: {
+    height: { xs: 22.5, lg: 30 },
+    alignSelf: "center",
+    opacity: 0.6,
+  },
+};

@@ -1,4 +1,4 @@
-import ReviewCard from "@/components/modules/Marketplace/ProfileModule/social/ReviewCard";
+import ReviewCard from "@/components/modules/Marketplace/SocialModule/reviews/ReviewCard";
 import { useInfiniteReviews } from "@/controllers/booking/review.controller";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import React, { memo } from "react";
