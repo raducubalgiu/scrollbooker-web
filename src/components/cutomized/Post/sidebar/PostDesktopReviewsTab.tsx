@@ -1,14 +1,15 @@
 import ReviewCard from "@/components/modules/Marketplace/ProfileModule/social/ReviewCard";
-import { useInfiniteReviews } from "@/hooks/infiniteQuery/useInfiniteReviews";
+import { useInfiniteReviews } from "@/controllers/booking/review.controller";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import React, { memo } from "react";
 
 type ReviewsTabProps = {
-  userId: number | undefined;
+  businessId: number;
+  employeeId: number | null;
 };
 
-const PostDesktopReviewsTab = ({ userId }: ReviewsTabProps) => {
-  const { data, isLoading } = useInfiniteReviews(userId);
+const PostDesktopReviewsTab = ({ businessId, employeeId }: ReviewsTabProps) => {
+  const { data, isLoading } = useInfiniteReviews({ businessId, employeeId });
   const reviews = data?.pages.flatMap((p) => p.results) ?? [];
 
   return (
@@ -20,7 +21,14 @@ const PostDesktopReviewsTab = ({ userId }: ReviewsTabProps) => {
       )}
       {!isLoading &&
         reviews.length > 0 &&
-        reviews.map((review) => <ReviewCard key={review.id} review={review} />)}
+        reviews.map((review) => (
+          <ReviewCard
+            key={review.id}
+            review={review}
+            onLike={() => {}}
+            onNavigateToVideoReview={() => {}}
+          />
+        ))}
 
       {!isLoading && reviews.length === 0 && (
         <Typography>Nu există recenzii.</Typography>

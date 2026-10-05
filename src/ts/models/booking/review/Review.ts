@@ -1,15 +1,8 @@
-export interface Review {
+import { PostMediaFile } from "../../social/Post";
+
+export interface ReviewVideoReview {
   id: number;
-  rating: number;
-  review: string;
-  product_business_owner: ReviewProductBusinessOwner;
-  customer: ReviewCustomer;
-  service: ReviewService;
-  product: ReviewProduct;
-  like_count: number;
-  is_liked: boolean;
-  is_liked_by_product_owner: boolean;
-  created_at: string;
+  media_files: PostMediaFile[];
 }
 
 export interface ReviewProductBusinessOwner {
@@ -34,6 +27,21 @@ export interface ReviewService {
 export interface ReviewProduct {
   id: number;
   name: string;
+}
+
+export interface Review {
+  id: number;
+  rating: number;
+  review: string;
+  product_business_owner: ReviewProductBusinessOwner;
+  customer: ReviewCustomer;
+  service: ReviewService;
+  product: ReviewProduct;
+  like_count: number;
+  is_liked: boolean;
+  is_liked_by_product_owner: boolean;
+  video_review: ReviewVideoReview | null;
+  created_at: string;
 }
 
 export interface ReviewCreate {

@@ -1,14 +1,16 @@
+import { useInfiniteReviews } from "@/controllers/booking/review.controller";
 import React, { memo, useEffect, useRef } from "react";
-import { useInfiniteReviews } from "@/hooks/infiniteQuery/useInfiniteReviews";
 
 type VideoReviewsTabProps = {
-  userId?: number | undefined;
+  businessId: number;
+  employeeId?: number | null;
   rootRef?: React.RefObject<HTMLDivElement | null> | undefined;
   disableInitialIgnore?: boolean | undefined;
 };
 
 const VideoReviewsTab = ({
-  userId,
+  businessId,
+  employeeId,
   rootRef,
   disableInitialIgnore,
 }: VideoReviewsTabProps) => {
@@ -17,7 +19,7 @@ const VideoReviewsTab = ({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteReviews(userId, new Set<number>());
+  } = useInfiniteReviews({ businessId, employeeId: employeeId ?? null });
 
   const reviews = videoReviews?.pages.flatMap((p) => p.results) ?? [];
   const sentinelRef = useRef<HTMLDivElement | null>(null);

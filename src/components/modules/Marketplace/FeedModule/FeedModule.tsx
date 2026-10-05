@@ -408,6 +408,7 @@ export default function FeedModule() {
           </Box>
 
           <PostDesktopSidebar
+            post={currentPost ?? null}
             linkedProducts={linkedProducts}
             isLoadingLinkedProducts={isLoadingLinkedProducts}
             postId={currentPost?.id}

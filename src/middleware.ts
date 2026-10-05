@@ -70,11 +70,11 @@ export default withAuth(
     /**
      * 4. User logat și validat (is_validated === true)
      * Landing page-ul nu mai are sens pentru el — îl trimitem direct spre
-     * /explore, la fel ca și când ar reveni pe o pagină de auth/onboarding.
+     * /feed, la fel ca și când ar reveni pe o pagină de auth/onboarding.
      */
     if (token.is_validated === true) {
       if (isAuth || isOnboarding || isHome) {
-        return NextResponse.redirect(new URL("/explore", req.url));
+        return NextResponse.redirect(new URL("/feed", req.url));
       }
       return NextResponse.next();
     }
@@ -98,7 +98,7 @@ export const config = {
     "/unauthorized",
     "/auth/:path*",
     "/onboarding/:path*",
-    "/explore/:path*",
+    "/feed/:path*",
     "/search/:path*",
     "/search-users/:path*",
     "/notifications/:path*",

@@ -71,7 +71,7 @@ const SocialModal = ({
   useEffect(() => {
     if (!open) return;
     positionsRef.current = {};
-  }, [open, socialModal?.userId]);
+  }, [open, socialModal?.businessId]);
 
   const handleTabChange = useCallback(
     (_: React.SyntheticEvent, newValue: SocialTabEnum) => {
@@ -121,11 +121,16 @@ const SocialModal = ({
     switch (currentTab) {
       case SocialTabEnum.REVIEWS:
         return (
-          <SocialReviewsTab
-            userId={socialModal?.userId}
-            rootRef={scrollRootRef}
-            disableInitialIgnore={allowImmediateIntersection}
-          />
+          <>
+            {socialModal?.businessId && (
+              <SocialReviewsTab
+                businessId={socialModal?.businessId}
+                employeeId={socialModal?.employeeId ?? null}
+                rootRef={scrollRootRef}
+                disableInitialIgnore={allowImmediateIntersection}
+              />
+            )}
+          </>
         );
       case SocialTabEnum.FOLLOWERS:
         return (

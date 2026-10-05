@@ -1,142 +1,129 @@
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import React, { memo, useCallback, useMemo, useState } from "react";
-import RatingsDistribution from "@/components/cutomized/RatingsDistribution/RatingsDistribution";
+import React, { useCallback, useMemo, useState } from "react";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
-import { useCustomQuery } from "@/hooks/useHttp";
 import VideoReviewsTab from "./VideoReviewsTab";
 import WrittenReviewsTab from "./WrittenReviewsTab";
-import ReviewsSummaryHeader from "./ReviewsSummaryHeader";
-import { ReviewsSummary } from "@/ts/models/booking/review/ReviewsSummaryType";
+import { useGetReviewsSummary } from "@/controllers/booking/review.controller";
+import ReviewsSummarySection from "./ReviewsSummarySection";
 
 type SocialReviewsTabProps = {
-  userId: number | undefined;
+  businessId: number;
+  employeeId: number | null;
   rootRef?: React.RefObject<HTMLDivElement | null>;
   disableInitialIgnore?: boolean;
 };
 
+const TABS: CustomTabType[] = [
+  { label: "Scrise", key: 0 },
+  { label: "Video", key: 1 },
+];
+
 const SocialReviewsTab = ({
-  userId,
+  businessId,
+  employeeId,
   rootRef,
   disableInitialIgnore,
 }: SocialReviewsTabProps) => {
   const [selectedRatings, setSelectedRatings] = useState<Set<number>>(
-    new Set()
+    () => new Set()
   );
-
-  const { data, isLoading } = useCustomQuery<ReviewsSummary>({
-    url: `/api/social/reviews/summary?userId=${userId}`,
-    key: ["reviewsSummary", userId],
-    options: { enabled: !!userId },
-  });
-
-  const { ratings_average, ratings_count } = data || {};
   const [currentTab, setCurrentTab] = useState(0);
+  const { data, isLoading } = useGetReviewsSummary({ businessId, employeeId });
 
-  const tabs: CustomTabType[] = useMemo(
-    () => [
-      { label: "Scrise", key: 0 },
-      { label: "Video", key: 1 },
-    ],
-    []
+  const summary = useMemo(
+    () =>
+      data
+        ? {
+            ratingsAverage: Number(data.ratings_average) || 0,
+            ratingsCount: Number(data.ratings_count) || 0,
+            breakdown: data.breakdown.map((item) => ({
+              rating: Number(item.rating),
+              count: Number(item.count) || 0,
+            })),
+          }
+        : null,
+    [data]
   );
-
-  const tabsContent = useMemo(() => {
-    switch (currentTab) {
-      case 0:
-        return (
-          <WrittenReviewsTab
-            userId={userId}
-            selectedRatings={selectedRatings}
-            isLoadingSummary={isLoading}
-            rootRef={rootRef}
-            disableInitialIgnore={disableInitialIgnore}
-          />
-        );
-      case 1:
-        return (
-          <VideoReviewsTab
-            userId={userId}
-            rootRef={rootRef}
-            disableInitialIgnore={disableInitialIgnore}
-          />
-        );
-      default:
-        return null;
-    }
-  }, [userId, selectedRatings, isLoading, rootRef, disableInitialIgnore]);
 
   const handleRatingClick = useCallback((rating: number) => {
     setSelectedRatings((prev) => {
-      if (prev.has(rating)) {
-        prev.delete(rating);
-      } else {
-        prev.add(rating);
-      }
-      return new Set(prev);
+      const next = new Set(prev);
+      if (next.has(rating)) next.delete(rating);
+      else next.add(rating);
+      return next;
     });
   }, []);
 
+  if (isLoading) {
+    return (
+      <Stack
+        alignItems="center"
+        justifyContent="center"
+        width="100%"
+        height="100%"
+      >
+        <CircularProgress />
+      </Stack>
+    );
+  }
+
+  if (!summary || summary.ratingsCount === 0) {
+    return (
+      <Box sx={{ p: 2.5 }}>
+        <Typography sx={{ textAlign: "center" }} color="text.secondary">
+          Nu au fost găsite rezultate
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
-    <>
-      {isLoading && (
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          width={"100%"}
-          height={"100%"}
-        >
-          <CircularProgress />
-        </Stack>
+    <Box sx={{ mx: 2 }}>
+      <ReviewsSummarySection
+        summary={summary}
+        selectedRatings={selectedRatings}
+        onRatingClick={handleRatingClick}
+      />
+
+      <Box sx={styles.tabsContainer}>
+        <CustomTabs
+          currentTab={currentTab}
+          tabs={TABS}
+          setValue={setCurrentTab}
+        />
+      </Box>
+
+      {currentTab === 0 ? (
+        <WrittenReviewsTab
+          businessId={businessId}
+          employeeId={employeeId}
+          selectedRatings={selectedRatings}
+          isLoadingSummary={isLoading}
+          rootRef={rootRef}
+          disableInitialIgnore={disableInitialIgnore}
+        />
+      ) : (
+        <VideoReviewsTab
+          businessId={businessId}
+          employeeId={employeeId}
+          rootRef={rootRef}
+          disableInitialIgnore={disableInitialIgnore}
+        />
       )}
-
-      {!isLoading && ratings_count === 0 && (
-        <Box sx={{ p: 2.5 }}>
-          <Typography sx={{ textAlign: "center" }} color="text.secondary">
-            Nu au fost găsite rezultate
-          </Typography>
-        </Box>
-      )}
-
-      {!isLoading && (ratings_count ?? 0) > 0 && (
-        <Box sx={{ mx: 2 }}>
-          {ratings_average !== undefined && ratings_count !== undefined && (
-            <ReviewsSummaryHeader
-              ratings_average={ratings_average}
-              ratings_count={ratings_count}
-            />
-          )}
-
-          <RatingsDistribution
-            summary={data}
-            selectedRatings={selectedRatings}
-            onRatingClick={handleRatingClick}
-          />
-
-          <Box sx={styles.tabsContainer}>
-            <CustomTabs
-              currentTab={currentTab}
-              tabs={tabs}
-              setValue={setCurrentTab}
-            />
-          </Box>
-
-          {tabsContent}
-        </Box>
-      )}
-    </>
+    </Box>
   );
 };
 
-export default memo(SocialReviewsTab);
+export default SocialReviewsTab;
 
 const styles = {
   tabsContainer: {
     position: "sticky",
     top: 0,
     zIndex: 8,
-    backgroundColor: "background.paper",
+    backgroundColor: "background.default",
     py: 1,
     borderTop: "1px solid transparent",
     display: "flex",

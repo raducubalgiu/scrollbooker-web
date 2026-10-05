@@ -25,6 +25,8 @@ export type ProfileModuleProps = {
 
 export type SocialModalProps = {
   selectedTab: SocialTabEnum;
+  businessId: number;
+  employeeId: number | null;
   userId: number;
   username: string;
 };
@@ -117,16 +119,25 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
         tab={tab}
         profileHeaderContent={
           <>
-            <ProfileCounters
-              onClick={(tab) => {
-                setOpenSocialModal({
-                  selectedTab: tab,
-                  userId: localProfile.id,
-                  username: localProfile.username,
-                });
-              }}
-              counters={localProfile?.counters ?? emptyCounters}
-            />
+            {localProfile.business_id && (
+              <ProfileCounters
+                onClick={(tab) => {
+                  if (!localProfile.business_id) return;
+
+                  setOpenSocialModal({
+                    selectedTab: tab,
+                    businessId: localProfile.business_id,
+                    employeeId:
+                      localProfile.business_owner?.id === localProfile.id
+                        ? null
+                        : localProfile.id,
+                    userId: localProfile.id,
+                    username: localProfile.username,
+                  });
+                }}
+                counters={localProfile?.counters ?? emptyCounters}
+              />
+            )}
 
             <ProfileUserInfo
               profile={localProfile}

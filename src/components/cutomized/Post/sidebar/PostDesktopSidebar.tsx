@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import React, { memo, useState } from "react";
-import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
+import { Post, PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import PostComments from "@/components/modules/Marketplace/CommentsModule/PostComments";
 import VideoHeaderSkeleton from "../VideoHeaderSkeleton";
 import VideoHeader from "../VideoHeader";
@@ -15,6 +15,7 @@ type TabValue = "services" | "comments" | "reviews";
 const TAB_ORDER: readonly TabValue[] = ["services", "comments", "reviews"];
 
 type PostDesktopSidebarProps = {
+  post: Post | null;
   linkedProducts: LinkedProducts | undefined;
   isLoadingLinkedProducts: boolean;
   isLoading: boolean;
@@ -58,6 +59,7 @@ const TabButton = memo(
 TabButton.displayName = "TabButton";
 
 const PostDesktopSidebar = ({
+  post,
   linkedProducts,
   isLoadingLinkedProducts,
   commentsCount,
@@ -94,7 +96,16 @@ const PostDesktopSidebar = ({
       case "comments":
         return <PostComments postId={postId} postAuthorAvatar={null} />;
       case "reviews":
-        return <PostDesktopReviewsTab userId={user?.id} />;
+        return (
+          <>
+            {post?.business_id && (
+              <PostDesktopReviewsTab
+                businessId={post?.business_id}
+                employeeId={post?.employee?.id ?? null}
+              />
+            )}
+          </>
+        );
     }
   };
 

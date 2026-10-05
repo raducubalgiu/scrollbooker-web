@@ -1,10 +1,11 @@
-import { useInfiniteReviews } from "@/hooks/infiniteQuery/useInfiniteReviews";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import React, { memo, useEffect, useRef } from "react";
 import ReviewCard from "./ReviewCard";
+import { useInfiniteReviews } from "@/controllers/booking/review.controller";
 
 type WrittenReviewsTabProps = {
-  userId: number | undefined;
+  businessId: number;
+  employeeId: number | null;
   selectedRatings: Set<number>;
   isLoadingSummary: boolean;
   rootRef?: React.RefObject<HTMLDivElement | null> | undefined;
@@ -12,7 +13,8 @@ type WrittenReviewsTabProps = {
 };
 
 const WrittenReviewsTab = ({
-  userId,
+  businessId,
+  employeeId,
   selectedRatings,
   isLoadingSummary,
   rootRef,
@@ -25,7 +27,7 @@ const WrittenReviewsTab = ({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteReviews(userId, selectedRatings);
+  } = useInfiniteReviews({ businessId, employeeId, selectedRatings });
 
   const reviews = writtenReviews?.pages.flatMap((p) => p.results) ?? [];
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -76,7 +78,14 @@ const WrittenReviewsTab = ({
       {!isLoadingWrittenReviews &&
         !isLoadingSummary &&
         !isRefetching &&
-        reviews.map((review) => <ReviewCard key={review.id} review={review} />)}
+        reviews.map((review) => (
+          <ReviewCard
+            key={review.id}
+            review={review}
+            onLike={() => {}}
+            onNavigateToVideoReview={() => {}}
+          />
+        ))}
 
       <div ref={sentinelRef} aria-hidden style={{ height: 1 }} />
 
