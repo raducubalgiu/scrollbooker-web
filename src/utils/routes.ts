@@ -10,7 +10,7 @@ export type AppRouteValues = ReturnType<
 
 export const AppRoutes = {
   home: () => "/",
-  explore: () => "/explore",
+  feed: () => "/feed",
   notifications: () => "/notifications",
   search: () => "/search",
   searchUsers: () => "/search-users",

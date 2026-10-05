@@ -67,7 +67,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
     () => [
       {
         label: "Acasă",
-        route: AppRoutes.explore(),
+        route: AppRoutes.feed(),
         activeIcon: HomeIconSolid,
         inactiveIcon: HomeIconOutlined,
       },
