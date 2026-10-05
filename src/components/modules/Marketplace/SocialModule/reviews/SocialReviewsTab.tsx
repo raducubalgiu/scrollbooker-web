@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import CustomTabs, {
   CustomTabType,
@@ -7,6 +7,8 @@ import { useGetReviewsSummary } from "@/controllers/booking/review.controller";
 import ReviewsSummarySection from "./ReviewsSummarySection";
 import WrittenReviewsTab from "./WrittenReviewsTab";
 import VideoReviewsTab from "./VideoReviewsTab";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 
 type SocialReviewsTabProps = {
   businessId: number;
@@ -71,11 +73,11 @@ const SocialReviewsTab = ({
 
   if (!summary || summary.ratingsCount === 0) {
     return (
-      <Box sx={{ p: 2.5 }}>
-        <Typography sx={{ textAlign: "center" }} color="text.secondary">
-          Nu au fost găsite rezultate
-        </Typography>
-      </Box>
+      <NotFound
+        title="Recenzii"
+        description="Nu au fost găsite recenzii"
+        icon={<ReviewsOutlinedIcon />}
+      />
     );
   }
 

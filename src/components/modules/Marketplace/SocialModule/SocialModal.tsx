@@ -16,10 +16,12 @@ import React, {
 } from "react";
 import SocialFollowersTab from "./followers/SocialFollowersTab";
 import SocialFollowingsTab from "./followings/SocialFollowingsTab";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
 import { SocialTabEnum } from "./SocialTabEnum";
 import { UserCounter } from "@/ts/models/user/UserProfile";
 import { SocialModalProps } from "../ProfileModule/ProfileModule";
 import SocialReviewsTab from "./reviews/SocialReviewsTab";
+import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 
 type ProfileSocialModalProps = {
   open: boolean;
@@ -122,12 +124,18 @@ const SocialModal = ({
       case SocialTabEnum.REVIEWS:
         return (
           <>
-            {socialModal?.businessId && (
+            {socialModal?.businessId ? (
               <SocialReviewsTab
                 businessId={socialModal?.businessId}
                 employeeId={socialModal?.employeeId ?? null}
                 rootRef={scrollRootRef}
                 disableInitialIgnore={allowImmediateIntersection}
+              />
+            ) : (
+              <NotFound
+                title="Recenzii"
+                description="Nu au fost găsite recenzii"
+                icon={<ReviewsOutlinedIcon />}
               />
             )}
           </>

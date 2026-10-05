@@ -1,4 +1,4 @@
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { isEmpty } from "lodash";
 import { useQueryClient } from "@tanstack/react-query";
@@ -9,6 +9,8 @@ import {
   useUnfollow,
 } from "@/controllers/social/follow.controller";
 import { UserMini } from "@/ts/models/user/UserMini";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 
 type SocialFollowersTabProps = {
   userId: number | undefined;
@@ -118,11 +120,11 @@ const SocialFollowersTab = ({
       )}
 
       {!isLoading && isEmpty(followers) && (
-        <Box sx={{ p: 2.5 }}>
-          <Typography sx={{ textAlign: "center" }} color="text.secondary">
-            Nu au fost găsite rezultate
-          </Typography>
-        </Box>
+        <NotFound
+          title="Urmăritori"
+          description="Acest cont nu este urmărit de nimeni"
+          icon={<PeopleAltOutlinedIcon />}
+        />
       )}
     </>
   );
