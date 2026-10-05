@@ -3,12 +3,11 @@
 import { Alert, Box, Slide, Snackbar } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PostActions from "../../../cutomized/Post/actions/PostActions";
-import ExploreControls from "./ExploreControls";
+import ExploreControls from "../../../cutomized/Post/ExploreControls";
 import ExploreDrawer from "./ExploreDrawer";
 import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
 import { ExploreVideoPool } from "./ExploreVideoPool";
 import ExploreHeaderMenu, { ExploreTabEnum } from "./ExploreHeaderMenu";
-import ExploreSidebar from "@/components/cutomized/Post/sidebar/ExploreSidebar";
 import { useMutate } from "@/hooks/useHttp";
 import PostLinkedProductsSheet from "../../../cutomized/Post/sheets/PostLinkedProductsSheet";
 import PostCommentsSheet from "@/components/cutomized/Post/sheets/PostCommentsSheet";
@@ -30,6 +29,7 @@ import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.cont
 import ForceDarkChrome from "@/components/core/ForceDarkChrome";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import { calculateDistance } from "@/utils/calculateDistance";
+import PostDesktopSidebar from "@/components/cutomized/Post/sidebar/PostDesktopSidebar";
 
 const PREFETCH_OFFSET = 2;
 
@@ -407,7 +407,7 @@ export default function ExploreModule() {
             />
           </Box>
 
-          <ExploreSidebar
+          <PostDesktopSidebar
             linkedProducts={linkedProducts}
             isLoadingLinkedProducts={isLoadingLinkedProducts}
             postId={currentPost?.id}

@@ -9,7 +9,7 @@ import React, { memo, useCallback, useMemo, useState } from "react";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
 import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
 
-type ExploreServicesTabProps = {
+type PostDesktopServicesTabProps = {
   linkedProducts: LinkedProducts | undefined;
   isLoadingLinkedProducts: boolean;
   userId: number | undefined;
@@ -22,12 +22,12 @@ export type SelectedProductType = {
   open: boolean;
 };
 
-const ExploreServicesTab = ({
+const PostDesktopServicesTab = ({
   linkedProducts,
   isLoadingLinkedProducts,
   isLoadingPosts,
   onNavigateToBooking,
-}: ExploreServicesTabProps) => {
+}: PostDesktopServicesTabProps) => {
   const [selectedProduct, setSelectedProduct] = useState<SelectedProductType>({
     product: null,
     open: false,
@@ -112,7 +112,7 @@ const ExploreServicesTab = ({
   );
 };
 
-export default memo(ExploreServicesTab);
+export default memo(PostDesktopServicesTab);
 
 const styles = {
   listContainer: {

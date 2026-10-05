@@ -11,7 +11,7 @@ import {
   BusinessServicesWithProducts,
   Product,
 } from "@/ts/models/booking/product/Product";
-import { SelectedProductType } from "@/components/cutomized/Post/sidebar/ExploreServicesTab";
+import { SelectedProductType } from "@/components/cutomized/Post/sidebar/PostDesktopServicesTab";
 import { AppRoutes } from "@/utils/routes";
 import { BookingFlow } from "@/ts/models/booking/booking/BookingFlow";
 import { useAppNavigation } from "@/hooks/useAppNavigation";

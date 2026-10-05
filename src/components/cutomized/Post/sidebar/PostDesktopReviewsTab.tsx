@@ -7,7 +7,7 @@ type ReviewsTabProps = {
   userId: number | undefined;
 };
 
-const ReviewsTab = ({ userId }: ReviewsTabProps) => {
+const PostDesktopReviewsTab = ({ userId }: ReviewsTabProps) => {
   const { data, isLoading } = useInfiniteReviews(userId);
   const reviews = data?.pages.flatMap((p) => p.results) ?? [];
 
@@ -29,4 +29,4 @@ const ReviewsTab = ({ userId }: ReviewsTabProps) => {
   );
 };
 
-export default memo(ReviewsTab);
+export default memo(PostDesktopReviewsTab);

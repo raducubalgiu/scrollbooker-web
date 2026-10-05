@@ -6,7 +6,7 @@ import { Post } from "@/ts/models/social/Post";
 import PostActions from "../../../cutomized/Post/actions/PostActions";
 import { PostVideoPlayer } from "../../../cutomized/Post/PostVideoPlayer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ExploreSidebar from "@/components/cutomized/Post/sidebar/ExploreSidebar";
+import ExploreSidebar from "@/components/cutomized/Post/sidebar/PostDesktopSidebar";
 import { useVideoDetail } from "./useVideoDetail";
 import PostLinkedProductsSheet from "../../../cutomized/Post/sheets/PostLinkedProductsSheet";
 import { useState } from "react";
@@ -19,7 +19,7 @@ import PostMoreSheet from "@/components/cutomized/Post/sheets/PostMoreSheet";
 import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
 import ForceDarkChrome from "@/components/core/ForceDarkChrome";
 import { useUserLocation } from "@/hooks/useUserLocation";
-import { getDistanceKm } from "@/utils/formatters";
+import { calculateDistance } from "@/utils/calculateDistance";
 
 type ProfileVideoDetailPageProps = {
   username: string;
@@ -52,9 +52,10 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
 
   const { location: userLocation } = useUserLocation();
   const businessCoordinates = post.business_location?.coordinates ?? null;
+
   const distanceKm = React.useMemo(() => {
     if (!userLocation || !businessCoordinates) return null;
-    return getDistanceKm(userLocation, businessCoordinates);
+    return calculateDistance(userLocation, businessCoordinates);
   }, [userLocation, businessCoordinates]);
 
   const handleNavigateToBooking = (selectedProdId: number | null) => {
@@ -143,10 +144,10 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
         />
       </Box>
 
-      {/* Sheets */}
       <PostLinkedProductsSheet
         open={isProductsOpen}
         onClose={() => setIsProductsOpen(false)}
+        distanceKm={distanceKm}
         linkedProducts={linkedProducts}
         isLoadingLinkedProducts={isLoadingLinkedProducts}
         isLoadingPosts={false}
