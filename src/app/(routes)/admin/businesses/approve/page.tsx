@@ -1,5 +1,5 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import UnapprovedBusinessModule from "@/components/modules/Admin/UnapprovedBusinessModule/UnapprovedBusinessModule";
+import UnapprovedBusinessModule from "@/components/modules/Admin/Nomenclatures/UnapprovedBusinessModule/UnapprovedBusinessModule";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { JSX } from "react";
 
