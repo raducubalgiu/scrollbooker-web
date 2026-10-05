@@ -52,7 +52,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
   const isDarkMode = theme.palette.mode === "dark";
   const isAnyVideoPage =
     (pathname.startsWith("/user") && pathname.includes("/post/")) ||
-    pathname.startsWith("/explore");
+    pathname.startsWith("/feed");
 
   const isDarkThemeRequired = isDarkPage || isDarkMode || isAnyVideoPage;
 
