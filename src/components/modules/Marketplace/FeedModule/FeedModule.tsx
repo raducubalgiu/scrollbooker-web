@@ -4,10 +4,8 @@ import { Alert, Box, Slide, Snackbar } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PostActions from "../../../cutomized/Post/actions/PostActions";
 import ExploreControls from "../../../cutomized/Post/ExploreControls";
-import ExploreDrawer from "./ExploreDrawer";
-import { useExplorePaginationPrefetch } from "./useExplorePaginationPrefetch";
-import { ExploreVideoPool } from "./ExploreVideoPool";
-import ExploreHeaderMenu, { ExploreTabEnum } from "./ExploreHeaderMenu";
+import { useFeedPaginationPrefetch } from "./useFeedPaginationPrefetch";
+import FeedTabs, { FeedTabEnum } from "./FeedTabs";
 import { useMutate } from "@/hooks/useHttp";
 import PostLinkedProductsSheet from "../../../cutomized/Post/sheets/PostLinkedProductsSheet";
 import PostCommentsSheet from "@/components/cutomized/Post/sheets/PostCommentsSheet";
@@ -30,13 +28,15 @@ import ForceDarkChrome from "@/components/core/ForceDarkChrome";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import { calculateDistance } from "@/utils/calculateDistance";
 import PostDesktopSidebar from "@/components/cutomized/Post/sidebar/PostDesktopSidebar";
+import FeedDrawer from "./FeedDrawer";
+import { FeedVideoPool } from "./FeedVideoPool";
 
 const PREFETCH_OFFSET = 2;
 
-export default function ExploreModule() {
+export default function FeedModule() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [currentTab, setCurrentTab] = useState<ExploreTabEnum>(
-    ExploreTabEnum.EXPLORE
+  const [currentTab, setCurrentTab] = useState<FeedTabEnum>(
+    FeedTabEnum.EXPLORE
   );
   const { navigateTo } = useAppNavigation();
   const queryClient = useQueryClient();
@@ -52,14 +52,14 @@ export default function ExploreModule() {
 
   const activeQueryKey = useMemo(
     () =>
-      currentTab === ExploreTabEnum.EXPLORE
+      currentTab === FeedTabEnum.EXPLORE
         ? ["explore-posts"]
         : ["following-posts"],
     [currentTab]
   );
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-    currentTab === ExploreTabEnum.EXPLORE ? explorePosts : followingPosts;
+    currentTab === FeedTabEnum.EXPLORE ? explorePosts : followingPosts;
 
   const posts = useMemo(
     () => data?.pages.flatMap((page) => page.results) ?? [],
@@ -70,7 +70,7 @@ export default function ExploreModule() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handleTabChange = useCallback((tab: ExploreTabEnum) => {
+  const handleTabChange = useCallback((tab: FeedTabEnum) => {
     setCurrentTab(tab);
     setCurrentIndex(0);
   }, []);
@@ -86,7 +86,7 @@ export default function ExploreModule() {
     return calculateDistance(userLocation, businessCoordinates);
   }, [userLocation, businessCoordinates]);
 
-  useExplorePaginationPrefetch({
+  useFeedPaginationPrefetch({
     currentIndex,
     postsLength: posts.length,
     postsCount,
@@ -381,7 +381,7 @@ export default function ExploreModule() {
         <Box sx={styles.mainContent}>
           <Box sx={styles.leftSection}>
             <Box sx={styles.videoContainer}>
-              <ExploreVideoPool
+              <FeedVideoPool
                 posts={posts}
                 currentIndex={currentIndex}
                 loaders={loaders}
@@ -390,7 +390,7 @@ export default function ExploreModule() {
                 onOpenLinkedProducts={() => setIsProductsOpen(true)}
               />
 
-              <ExploreHeaderMenu
+              <FeedTabs
                 activeTab={currentTab}
                 onHandleToggleDrawer={handleToggleDrawer}
                 onTabChange={handleTabChange}
@@ -438,7 +438,7 @@ export default function ExploreModule() {
 
         <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
           <Box sx={styles.drawerContainer}>
-            <ExploreDrawer onCloseDrawer={() => setShowDrawer(false)} />
+            <FeedDrawer onCloseDrawer={() => setShowDrawer(false)} />
           </Box>
         </Slide>
 

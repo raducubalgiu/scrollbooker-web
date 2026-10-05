@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack, Theme, Typography } from "@mui/material";
+import { Box, IconButton, Stack, Theme } from "@mui/material";
 import React from "react";
 
 import SearchIcon from "@/assets/icons/ic_search.svg";
@@ -6,28 +6,29 @@ import BurgerIcon from "@/assets/icons/ic_menu_solid.svg";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
+import FeedTab from "./FeedTab";
 
-export enum ExploreTabEnum {
+export enum FeedTabEnum {
   EXPLORE,
   FOLLOWING,
 }
 
-type ExploreHeaderMenuProps = {
-  activeTab: ExploreTabEnum;
+type FeedTabsProps = {
+  activeTab: FeedTabEnum;
   onHandleToggleDrawer: () => void;
-  onTabChange: (tab: ExploreTabEnum) => void;
+  onTabChange: (tab: FeedTabEnum) => void;
 };
 
-const TABS: { key: ExploreTabEnum; label: string }[] = [
-  { key: ExploreTabEnum.EXPLORE, label: "Explorează" },
-  { key: ExploreTabEnum.FOLLOWING, label: "Urmărești" },
+const TABS: { key: FeedTabEnum; label: string }[] = [
+  { key: FeedTabEnum.EXPLORE, label: "Explorează" },
+  { key: FeedTabEnum.FOLLOWING, label: "Urmărești" },
 ];
 
-const ExploreHeaderMenu = ({
+const FeedTabs = ({
   activeTab,
   onHandleToggleDrawer,
   onTabChange,
-}: ExploreHeaderMenuProps) => {
+}: FeedTabsProps) => {
   const { navigateTo } = useAppNavigation();
 
   return (
@@ -53,38 +54,12 @@ const ExploreHeaderMenu = ({
             {TABS.map(({ key, label }) => {
               const isActive = activeTab === key;
               return (
-                <Box
+                <FeedTab
                   key={key}
-                  component="button"
-                  type="button"
+                  label={label}
+                  isActive={isActive}
                   onClick={() => onTabChange(key)}
-                  sx={styles.tabButton}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: 17,
-                      fontWeight: isActive ? 700 : 600,
-                      color: isActive
-                        ? "common.white"
-                        : "rgba(255,255,255,0.7)",
-                      textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
-                      transition: "color 0.2s ease",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {label}
-                  </Typography>
-
-                  <Box sx={styles.underlineTrack}>
-                    <Box
-                      sx={{
-                        ...styles.underline,
-                        opacity: isActive ? 1 : 0,
-                        transform: `scaleX(${isActive ? 1 : 0})`,
-                      }}
-                    />
-                  </Box>
-                </Box>
+                />
               );
             })}
           </Stack>
@@ -108,7 +83,7 @@ const ExploreHeaderMenu = ({
   );
 };
 
-export default ExploreHeaderMenu;
+export default FeedTabs;
 
 const styles = {
   container: {
@@ -137,30 +112,5 @@ const styles = {
     alignItems: "center",
     width: "100%",
     px: 1,
-  },
-  tabButton: {
-    border: "none",
-    background: "none",
-    padding: 0,
-    cursor: "pointer",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 0.75,
-  },
-  underlineTrack: {
-    width: 18,
-    height: 2.5,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  underline: {
-    width: 18,
-    height: 2.5,
-    borderRadius: 50,
-    backgroundColor: "common.white",
-    boxShadow: "0 1px 2px rgba(0,0,0,0.5)",
-    transition: "opacity 0.25s ease, transform 0.25s ease",
   },
 } as const;

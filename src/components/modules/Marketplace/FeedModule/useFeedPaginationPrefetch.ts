@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-type UseExplorePaginationPrefetchParams = {
+type UseFeedPaginationPrefetchParams = {
   currentIndex: number;
   postsLength: number;
   postsCount: number;
@@ -10,7 +10,7 @@ type UseExplorePaginationPrefetchParams = {
   prefetchOffset?: number;
 };
 
-export function useExplorePaginationPrefetch({
+export function useFeedPaginationPrefetch({
   currentIndex,
   postsLength,
   postsCount,
@@ -18,7 +18,7 @@ export function useExplorePaginationPrefetch({
   isFetchingNextPage,
   fetchNextPage,
   prefetchOffset = 2,
-}: UseExplorePaginationPrefetchParams) {
+}: UseFeedPaginationPrefetchParams) {
   const lastPrefetchTriggerRef = useRef<number | null>(null);
 
   useEffect(() => {

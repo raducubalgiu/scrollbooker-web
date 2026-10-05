@@ -9,11 +9,11 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-type ExploreDrawerProps = {
+type FeedDrawerProps = {
   onCloseDrawer: () => void;
 };
 
-const ExploreDrawer = ({ onCloseDrawer }: ExploreDrawerProps) => {
+const FeedDrawer = ({ onCloseDrawer }: FeedDrawerProps) => {
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -147,4 +147,4 @@ const ExploreDrawer = ({ onCloseDrawer }: ExploreDrawerProps) => {
   );
 };
 
-export default ExploreDrawer;
+export default FeedDrawer;

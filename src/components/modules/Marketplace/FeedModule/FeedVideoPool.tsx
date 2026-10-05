@@ -11,7 +11,7 @@ const PRELOAD_RADIUS = 1;
 const ACTIVE_RATIO_THRESHOLD = 0.6;
 const PROGRAMMATIC_SCROLL_GUARD_MS = 500;
 
-type ExploreVideoPoolProps = {
+type FeedVideoPoolProps = {
   posts: Post[];
   currentIndex: number;
   loaders: PostActionLoaders;
@@ -20,14 +20,14 @@ type ExploreVideoPoolProps = {
   onOpenLinkedProducts: () => void;
 };
 
-export function ExploreVideoPool({
+export function FeedVideoPool({
   posts,
   currentIndex,
   loaders,
   callbacks,
   onIndexChange,
   onOpenLinkedProducts,
-}: ExploreVideoPoolProps) {
+}: FeedVideoPoolProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const lastSettledIndexRef = useRef(currentIndex);
@@ -41,13 +41,10 @@ export function ExploreVideoPool({
     onIndexChangeRef.current = onIndexChange;
   }, [onIndexChange]);
 
-  const setItemRef = useCallback(
-    (index: number, el: HTMLDivElement | null) => {
-      if (el) itemRefs.current.set(index, el);
-      else itemRefs.current.delete(index);
-    },
-    []
-  );
+  const setItemRef = useCallback((index: number, el: HTMLDivElement | null) => {
+    if (el) itemRefs.current.set(index, el);
+    else itemRefs.current.delete(index);
+  }, []);
 
   // Browser-ul decide singur fizica swipe-ului (scroll-snap) — noi doar
   // ascultăm ce index a devenit "principal" vizual, via IntersectionObserver.
@@ -71,7 +68,10 @@ export function ExploreVideoPool({
           }
         }
 
-        if (!bestEntry || bestEntry.intersectionRatio < ACTIVE_RATIO_THRESHOLD) {
+        if (
+          !bestEntry ||
+          bestEntry.intersectionRatio < ACTIVE_RATIO_THRESHOLD
+        ) {
           return;
         }
 
