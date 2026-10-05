@@ -6,7 +6,7 @@ import { Post } from "@/ts/models/social/Post";
 import PostActions from "../../../cutomized/Post/actions/PostActions";
 import { PostVideoPlayer } from "../../../cutomized/Post/PostVideoPlayer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ExploreSidebar from "@/components/cutomized/Post/sidebar/PostDesktopSidebar";
+import PostDesktopSidebar from "@/components/cutomized/Post/sidebar/PostDesktopSidebar";
 import { useVideoDetail } from "./useVideoDetail";
 import PostLinkedProductsSheet from "../../../cutomized/Post/sheets/PostLinkedProductsSheet";
 import { useState } from "react";
@@ -128,7 +128,8 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
           />
         </Box>
 
-        <ExploreSidebar
+        <PostDesktopSidebar
+          post={post}
           linkedProducts={linkedProducts}
           isLoadingLinkedProducts={isLoadingLinkedProducts}
           isLoading={false}

@@ -67,7 +67,7 @@ exception as precedent for hardcoding colors anywhere else.
   mobile apps do natively. Not just an admin panel — `src/app/(routes)`
   has both an `admin/*` tree (schedules, employees, products, calendar,
   nomenclature CRUD — internal/back-office) and a public tree (`business/
-  [profession]/[ownerUsername]`, `booking/*`, `user/[username]/*`,
+[profession]/[ownerUsername]`, `booking/*`, `user/[username]/*`,
   `search`, `appointments/*`) that's SEO-relevant (`generateMetadata`,
   JSON-LD `LocalBusiness` structured data, canonical URLs).
 - **Stack**: Next.js 15 (App Router, React 19), TypeScript (strict mode +
@@ -84,7 +84,7 @@ exception as precedent for hardcoding colors anywhere else.
 - **Deployment**: hosted on Vercel already. No `vercel.json`/`.vercel/` in
   the repo (project-level config lives in the Vercel dashboard, not
   version-controlled here). `Dockerfile` exists but its `CMD` runs `npm run
-  dev` under `NODE_ENV=development` — it builds a **dev-mode** container,
+dev` under `NODE_ENV=development` — it builds a **dev-mode** container,
   not a production one; don't treat it as the deploy artifact Vercel
   actually uses (Vercel builds directly from the repo, not this
   Dockerfile) and don't assume it's safe to `docker run` this in anything
@@ -105,7 +105,7 @@ exception as precedent for hardcoding colors anywhere else.
   extends `next/core-web-vitals` + `next/typescript` and hard-errors on
   `@typescript-eslint/no-explicit-any` and on `Object`/`String`/`Number`/
   `Boolean` (the boxed types) — use the lowercase primitives / `Record<
-  string, unknown>` instead, consistent with the rest of the codebase.
+string, unknown>` instead, consistent with the rest of the codebase.
   `next.config.ts` sets `eslint: { ignoreDuringBuilds: true }` though, so
   `npm run build` will **not** fail on lint errors — only the pre-commit
   hook and `npm run lint` actually enforce it.
@@ -162,7 +162,7 @@ staging/prod Vercel deployment of this app can reach the backend at all.
 If it turns out staging needs the prefix, the fix is one line in
 `src/lib/instance.ts` (`baseURL: `${BASE_URL}/api/v1``), not a
 per-route change — all ~90 route handlers and all server-component
-`get()`/`post()` calls funnel through that one `Instance()` factory.
+`get()`/`post()`calls funnel through that one`Instance()` factory.
 
 ## Architecture: two consumers, one data-access layer
 
@@ -183,9 +183,9 @@ admin back-office funnel every backend call through **one factory**:
   all, as a defense-in-depth backstop behind `middleware.ts`.
 - `src/utils/requests.ts` — thin `get`/`post`/`put`/`patch`/`deleteRequest`
   wrappers, each calling `Instance()` fresh (so every call picks up the
-  session's *current* access token, important since `authOptions.ts`
+  session's _current_ access token, important since `authOptions.ts`
   rotates it on refresh) and typed generically (`get<T>({url}):
-  Promise<AxiosResponse<T>>`).
+Promise<AxiosResponse<T>>`).
 
 **Two very different call sites use this same pair of helpers:**
 
@@ -208,7 +208,7 @@ admin back-office funnel every backend call through **one factory**:
    compute multipart boundaries reliably in this runtime). This replaced
    the old one-`route.ts`-per-endpoint pattern (~90 files at its peak);
    **8 stragglers remain** today under `src/app/api/nomenclatures/
-   {roles,permissions,services}/` — not a pattern to copy for anything
+{roles,permissions,services}/` — not a pattern to copy for anything
    new, just not yet migrated.
 
 ### Controllers: client hooks vs. server-only functions
@@ -270,7 +270,7 @@ string today, not just the two mobile ones.
   backend's access token locally (`jsonwebtoken`, `JWT_SECRET` must match
   the backend's signing key) and separately fetches
   `GET /auth/user-info` + `GET /auth/user-permissions` to build the
-  session. The `jwt` callback re-fetches both on every token refresh *and*
+  session. The `jwt` callback re-fetches both on every token refresh _and_
   supports an explicit client-triggered `trigger === "update"` path (used
   after a profile edit, to force the session to pick up fresh
   `user-info`/`permissions` without waiting for natural token expiry).
@@ -315,13 +315,13 @@ src/
       Admin/             # back-office feature modules (CalendarModule, MyBusiness/*, Nomenclatures/*,
                         # PermissionsModule, RolesModule, UnapprovedBusinessModule, ...)
       Marketplace/        # public-facing feature modules (BusinessProfileModule, BookingModule,
-                        # ExploreModule, ProfileModule, SearchModule, VideoDetailModule, ...) —
+                        # FeedModule, ProfileModule, SearchModule, VideoDetailModule, ...) —
                         # closest analogue to the mobile apps' entity/<domain>/<feature> screens
       Onboarding/         # client + business onboarding flows, mirrors the mobile onboarding steps
   hooks/
     mutations/           # React Query useMutation hooks (small — only 2 today:
                         # useFollowMutation, useUpdateProfile)
-    infiniteQuery/       # React Query useInfiniteQuery hooks (13 — feed/explore, comments,
+    infiniteQuery/       # React Query useInfiniteQuery hooks (13 — feed/feed, comments,
                         # followers/followings, notifications, reviews, bookmarks, employees, ...)
                         # — the primary pagination pattern for lists in this app, no separate
                         # PaginatedResponse wrapper type the way Android/iOS have one
@@ -389,7 +389,7 @@ scope — the same diff-the-two-route-trees method (`find
 api/v1/endpoints -iname "*.py"` on the backend vs. `find src/app/api -name
 route.ts` here) is worth re-running once more of the backend is audited
 module-by-module, since a route existing on both sides doesn't guarantee
-its *shape* (request/response fields) still matches — the git log's
+its _shape_ (request/response fields) still matches — the git log's
 already-fixed path renames are evidence that drift isn't limited to
 "missing" endpoints, some just moved.
 
