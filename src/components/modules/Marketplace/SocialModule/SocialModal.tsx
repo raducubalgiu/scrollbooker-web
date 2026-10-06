@@ -7,13 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-  useEffect,
-  useRef,
-} from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import SocialFollowersTab from "./followers/SocialFollowersTab";
 import SocialFollowingsTab from "./followings/SocialFollowingsTab";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
@@ -32,9 +26,27 @@ type ProfileSocialModalProps = {
 
 type TabDef = {
   route: SocialTabEnum;
-  key: keyof UserCounter;
+  counterKey: keyof UserCounter;
   label: string;
 };
+
+const TABS: TabDef[] = [
+  {
+    route: SocialTabEnum.REVIEWS,
+    counterKey: "ratings_count",
+    label: "Recenzii",
+  },
+  {
+    route: SocialTabEnum.FOLLOWERS,
+    counterKey: "followers_count",
+    label: "Urmăritori",
+  },
+  {
+    route: SocialTabEnum.FOLLOWINGS,
+    counterKey: "followings_count",
+    label: "Urmărești",
+  },
+];
 
 const SocialModal = ({
   open,
@@ -42,27 +54,6 @@ const SocialModal = ({
   socialModal,
   handleClose,
 }: ProfileSocialModalProps) => {
-  const tabs = useMemo<TabDef[]>(
-    () => [
-      {
-        route: SocialTabEnum.REVIEWS,
-        key: "ratings_count",
-        label: "Recenzii",
-      },
-      {
-        route: SocialTabEnum.FOLLOWERS,
-        key: "followers_count",
-        label: "Urmaritori",
-      },
-      {
-        route: SocialTabEnum.FOLLOWINGS,
-        key: "followings_count",
-        label: "Urmaresti",
-      },
-    ],
-    []
-  );
-
   const [currentTab, setCurrentTab] = useState<SocialTabEnum>(
     socialModal?.selectedTab ?? SocialTabEnum.REVIEWS
   );
@@ -71,21 +62,15 @@ const SocialModal = ({
   const positionsRef = useRef<Record<string, number>>({});
 
   useEffect(() => {
-    if (!open) return;
-    positionsRef.current = {};
+    if (open) positionsRef.current = {};
   }, [open, socialModal?.businessId]);
 
-  const handleTabChange = useCallback(
-    (_: React.SyntheticEvent, newValue: SocialTabEnum) => {
-      const root = scrollRootRef.current;
-      if (root) {
-        positionsRef.current[String(currentTab)] = root.scrollTop;
-      }
-
-      setCurrentTab(newValue);
-    },
-    [currentTab]
-  );
+  useEffect(() => {
+    const selectedTab = socialModal?.selectedTab;
+    if (selectedTab != null && TABS.some((t) => t.route === selectedTab)) {
+      setCurrentTab(selectedTab);
+    }
+  }, [socialModal]);
 
   useEffect(() => {
     const root = scrollRootRef.current;
@@ -96,56 +81,41 @@ const SocialModal = ({
     });
   }, [currentTab]);
 
-  useEffect(() => {
-    const available = tabs.map((t) => t.route);
-    if (
-      socialModal?.selectedTab !== null &&
-      socialModal?.selectedTab !== undefined &&
-      available.includes(socialModal?.selectedTab)
-    ) {
-      setCurrentTab(socialModal?.selectedTab);
-    }
-  }, [socialModal, tabs]);
+  const handleTabChange = useCallback(
+    (_: React.SyntheticEvent, newValue: SocialTabEnum) => {
+      const root = scrollRootRef.current;
+      if (root) positionsRef.current[String(currentTab)] = root.scrollTop;
+      setCurrentTab(newValue);
+    },
+    [currentTab]
+  );
 
-  useEffect(() => {
-    const available = tabs.map((t) => t.route);
-    if (!available.includes(currentTab)) {
-      setCurrentTab(SocialTabEnum.REVIEWS);
-    }
-  }, [currentTab, tabs]);
-
-  const handleChange = handleTabChange;
-
-  const tabsContent = () => {
+  const renderTabContent = () => {
     const saved = positionsRef.current[String(currentTab)];
-    const allowImmediateIntersection = typeof saved === "number" && saved > 0;
+    const disableInitialIgnore = typeof saved === "number" && saved > 0;
 
     switch (currentTab) {
       case SocialTabEnum.REVIEWS:
-        return (
-          <>
-            {socialModal?.businessId ? (
-              <SocialReviewsTab
-                businessId={socialModal?.businessId}
-                employeeId={socialModal?.employeeId ?? null}
-                rootRef={scrollRootRef}
-                disableInitialIgnore={allowImmediateIntersection}
-              />
-            ) : (
-              <NotFound
-                title="Recenzii"
-                description="Nu au fost găsite recenzii"
-                icon={<ReviewsOutlinedIcon />}
-              />
-            )}
-          </>
+        return socialModal?.businessId ? (
+          <SocialReviewsTab
+            businessId={socialModal.businessId}
+            employeeId={socialModal.employeeId ?? null}
+            rootRef={scrollRootRef}
+            disableInitialIgnore={disableInitialIgnore}
+          />
+        ) : (
+          <NotFound
+            title="Recenzii"
+            description="Nu au fost găsite recenzii"
+            icon={<ReviewsOutlinedIcon />}
+          />
         );
       case SocialTabEnum.FOLLOWERS:
         return (
           <SocialFollowersTab
             userId={socialModal?.userId}
             rootRef={scrollRootRef}
-            disableInitialIgnore={allowImmediateIntersection}
+            disableInitialIgnore={disableInitialIgnore}
           />
         );
       case SocialTabEnum.FOLLOWINGS:
@@ -153,18 +123,21 @@ const SocialModal = ({
           <SocialFollowingsTab
             userId={socialModal?.userId}
             rootRef={scrollRootRef}
-            disableInitialIgnore={allowImmediateIntersection}
+            disableInitialIgnore={disableInitialIgnore}
           />
         );
-      default:
-        return null;
     }
   };
 
-  const theme = useTheme();
   const isReviewsStep = currentTab === SocialTabEnum.REVIEWS;
+  const username = socialModal?.username;
+
+  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { username } = socialModal || {};
+  const isDark = theme.palette.mode === "dark";
+
+  const surfaceColor =
+    !isMobile && isDark ? "background.paper" : "background.default";
 
   return (
     <Modal
@@ -176,42 +149,35 @@ const SocialModal = ({
       fullScreen={isMobile}
       {...(isReviewsStep && !isMobile && { maxWidth: "md" })}
       fullWidth={isReviewsStep || isMobile}
+      slotProps={{ paper: { sx: { bgcolor: surfaceColor } } }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: { xs: "100vh", lg: "80vh" },
-        }}
-      >
-        <Box sx={styles.container}>
+      <Box sx={styles.root}>
+        <Box sx={{ ...styles.container, backgroundColor: surfaceColor }}>
           <Tabs
             value={currentTab}
-            onChange={handleChange}
+            onChange={handleTabChange}
             sx={styles.tabs}
             variant="scrollable"
             scrollButtons="auto"
             allowScrollButtonsMobile
           >
-            {tabs.map((tab) => {
-              return (
-                <Tab
-                  key={tab.route}
-                  value={tab.route}
-                  label={
-                    <Typography sx={styles.label}>
-                      {tab.label} {counters[tab.key]}
-                    </Typography>
-                  }
-                  sx={{ minWidth: { xs: 50, lg: 200 } }}
-                />
-              );
-            })}
+            {TABS.map(({ route, label, counterKey }) => (
+              <Tab
+                key={route}
+                value={route}
+                sx={styles.tab}
+                label={
+                  <Typography sx={styles.label}>
+                    {label} {counters[counterKey]}
+                  </Typography>
+                }
+              />
+            ))}
           </Tabs>
         </Box>
 
         <Box sx={styles.tabsContent} ref={scrollRootRef}>
-          {tabsContent()}
+          {renderTabContent()}
         </Box>
       </Box>
     </Modal>
@@ -229,19 +195,35 @@ const styles = {
     position: "sticky",
     top: 0,
     zIndex: 10,
-    backgroundColor: "background.default",
+  },
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    height: { xs: "100dvh", lg: "80vh" },
   },
   tabs: {
     "& .MuiTabs-indicator": {
       height: 3,
       borderRadius: 2,
+      backgroundColor: "text.primary",
     },
     "& .MuiTab-root": {
       textTransform: "none",
       minHeight: 56,
+      color: "text.secondary",
+      "&.Mui-selected": {
+        color: "text.primary",
+      },
     },
   },
-  label: { fontSize: { xs: 16, lg: 20 }, fontWeight: 600 },
+  tab: {
+    minWidth: { xs: 50, lg: 200 },
+  },
+  label: {
+    fontSize: { xs: 16, lg: 20 },
+    fontWeight: 600,
+    color: "inherit",
+  },
   tabsContent: {
     mx: { xs: 0, lg: 1 },
     flex: 1,
