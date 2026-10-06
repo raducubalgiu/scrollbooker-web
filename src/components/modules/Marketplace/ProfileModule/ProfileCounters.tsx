@@ -18,7 +18,7 @@ const ProfileCounters = ({ counters, onClick }: ProfileCountersProps) => {
       justifyContent="center"
       sx={{
         width: "100%",
-        py: { xs: 3, sm: 4, md: 0 },
+        py: { xs: 3, sm: 4, md: 2.5 },
         px: { xs: 2, sm: 4, md: 0 },
       }}
     >

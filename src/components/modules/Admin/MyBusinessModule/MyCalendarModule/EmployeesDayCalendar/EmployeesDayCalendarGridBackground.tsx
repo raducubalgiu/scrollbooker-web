@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { alpha, Box, Theme } from "@mui/material";
+import { Box } from "@mui/material";
 import dayjs from "dayjs";
 import {
   CalendarEventsBusinessEmployee,
@@ -50,12 +50,10 @@ const EmployeesDayCalendarGridBackgroundComponent = ({
                 position: "relative",
                 boxSizing: "border-box",
                 backgroundColor: isUnavailable
-                  ? "action.disabledBackground"
+                  ? "background.paper"
                   : "transparent",
               }}
-            >
-              {isUnavailable && <Box sx={styles.unavailable} />}
-            </Box>
+            />
           );
         });
       })}
@@ -66,20 +64,3 @@ const EmployeesDayCalendarGridBackgroundComponent = ({
 export const EmployeesDayCalendarGridBackground = memo(
   EmployeesDayCalendarGridBackgroundComponent
 );
-
-const styles = {
-  unavailable: (theme: Theme) => {
-    const strokeColor = alpha(theme.palette.text.secondary, 0.22);
-    return {
-      width: "100%",
-      height: "100%",
-      backgroundImage: `repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 5px,
-        ${strokeColor} 5px,
-        ${strokeColor} 6px
-      )`,
-    };
-  },
-};

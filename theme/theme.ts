@@ -262,7 +262,7 @@ const getComponents = (mode: Mode) => ({
         fontSize: "1rem",
         [defaultTheme.breakpoints.up("md")]: {
           minHeight: 56,
-          padding: theme.spacing(1.75, 5),
+          padding: theme.spacing(1.75, 3.5),
           fontSize: "1rem",
         },
       }),

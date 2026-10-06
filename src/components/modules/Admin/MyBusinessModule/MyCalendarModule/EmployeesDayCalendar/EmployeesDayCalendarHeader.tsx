@@ -120,7 +120,6 @@ export const EmployeesDayCalendarHeader = ({
 
         <IconButton
           onClick={isDisabled ? undefined : () => setIsSettingsOpen(true)}
-          size="large"
           sx={{
             color: "text.primary",
             backgroundColor: getCalendarTableBg,
@@ -148,7 +147,6 @@ export const EmployeesDayCalendarHeader = ({
         <Button
           variant="contained"
           color="inherit"
-          size="large"
           onClick={isDisabled ? undefined : onToday}
           sx={{
             backgroundColor: getCalendarTableBg,
@@ -218,7 +216,6 @@ export const EmployeesDayCalendarHeader = ({
         <Button
           variant="contained"
           color="inherit"
-          size="large"
           startIcon={<BlockIcon sx={{ fontSize: 20 }} />}
           onClick={isLoading ? undefined : onBlockSlots}
           disableElevation
@@ -226,9 +223,6 @@ export const EmployeesDayCalendarHeader = ({
             textTransform: "none",
             fontWeight: 700,
             fontSize: "15px",
-            px: 3,
-            height: 48,
-            width: { xs: "100%", sm: "auto" },
             border: "1px solid",
             borderColor: "divider",
             backgroundColor: (theme) =>
@@ -246,7 +240,6 @@ export const EmployeesDayCalendarHeader = ({
         <Button
           variant="contained"
           color="primary"
-          size="large"
           startIcon={<AddIcon sx={{ fontSize: 22 }} />}
           onClick={isDisabled ? undefined : onAddAppointment}
           disableElevation
@@ -254,9 +247,6 @@ export const EmployeesDayCalendarHeader = ({
             textTransform: "none",
             fontWeight: 700,
             fontSize: "15px",
-            px: 3.5,
-            height: 48,
-            width: { xs: "100%", sm: "auto" },
             boxShadow: "none",
             pointerEvents: isDisabled ? "none" : "auto",
           }}
