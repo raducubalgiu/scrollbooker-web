@@ -157,7 +157,7 @@ const SocialModal = ({
             value={currentTab}
             onChange={handleTabChange}
             sx={styles.tabs}
-            variant="scrollable"
+            variant={isMobile ? "fullWidth" : "scrollable"}
             scrollButtons="auto"
             allowScrollButtonsMobile
           >
@@ -220,7 +220,7 @@ const styles = {
     minWidth: { xs: 50, lg: 200 },
   },
   label: {
-    fontSize: { xs: 16, lg: 20 },
+    fontSize: { xs: 15, lg: 20 },
     fontWeight: 600,
     color: "inherit",
   },
