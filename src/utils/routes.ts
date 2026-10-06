@@ -86,8 +86,10 @@ export const AppRoutes = {
   myProducts: () => "/admin/my-business/products",
   myEmployees: () => "/admin/my-business/employees",
   calendar: () => "/admin/calendar",
-
   approve: () => "/admin/businesses/approve",
+
+  // Settings
+  display: () => "/display",
 
   // Nomenclatures
   rolesAndPermissions: () => "/admin/nomenclatures/roles-and-permissions",

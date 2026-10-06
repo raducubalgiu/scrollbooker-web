@@ -14,8 +14,11 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import React from "react";
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
 import { signOut } from "next-auth/react";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 const SettingsModule = () => {
+  const { navigateTo } = useAppNavigation();
+
   return (
     <Box
       sx={{
@@ -28,7 +31,7 @@ const SettingsModule = () => {
       <HeaderMobile title="Setări" />
 
       <List component="nav" aria-labelledby="nested-list-subheader">
-        <ListItemButton>
+        <ListItemButton onClick={() => navigateTo("/display")}>
           <ListItemIcon>
             <BedtimeOutlinedIcon />
           </ListItemIcon>
