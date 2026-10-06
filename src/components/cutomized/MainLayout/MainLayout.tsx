@@ -50,6 +50,7 @@ export default function MainLayout({
                   onClick={onOpenModal}
                   variant="contained"
                   color="primary"
+                  disableElevation
                 >
                   {!!actionTitle ? actionTitle : "Adaugă"}
                 </Button>
