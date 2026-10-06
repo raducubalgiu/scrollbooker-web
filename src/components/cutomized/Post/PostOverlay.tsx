@@ -6,7 +6,6 @@ import PostActionsMobile from "./actions/PostActionsMobile";
 import PostBadge from "./PostBadge";
 import { PostActionsProps } from "./actions/postActionTypes";
 import { useUserLocation } from "@/hooks/useUserLocation";
-import { formatDistance } from "@/utils/formatters";
 import { PostBusinessLocation } from "@/ts/models/social/Post";
 import PostOverlayUser from "./PostOverlayUser";
 import { calculateDistance } from "@/utils/calculateDistance";
@@ -40,13 +39,6 @@ const PostOverlay = ({
     if (!userLocation || !businessCoordinates) return null;
     return calculateDistance(userLocation, businessCoordinates);
   }, [userLocation, businessCoordinates]);
-
-  const professionWithDistance = [
-    user?.profession,
-    distanceKm != null ? formatDistance(distanceKm) : null,
-  ]
-    .filter(Boolean)
-    .join(" • ");
 
   return (
     <>
@@ -82,7 +74,8 @@ const PostOverlay = ({
 
             <PostOverlayUser
               user={user}
-              professionWithDistance={professionWithDistance}
+              profession={user?.profession}
+              distance={distanceKm}
             />
 
             {description && description.length > 0 && (

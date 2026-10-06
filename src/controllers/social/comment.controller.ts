@@ -50,7 +50,7 @@ const fetchCommentReplies = async ({
   parentId,
 }: FetchCommentRepliesParams) => {
   const { data } = await axios.get<PaginatedData<PostComment>>(
-    `/api/posts/${postId}/comments/${parentId}/replies?page=${pageParam}&limit=10`
+    `/api/protected/posts/${postId}/comments/${parentId}/replies?page=${pageParam}&limit=10`
   );
 
   return {
