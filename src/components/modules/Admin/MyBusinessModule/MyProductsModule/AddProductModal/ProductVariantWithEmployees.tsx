@@ -47,7 +47,7 @@ const ProductVariantWithEmployees = ({
                 display: "flex",
                 alignItems: "center",
                 gap: 3,
-                bgcolor: isOffering ? "background.paper" : "action.hover",
+                bgcolor: isOffering ? "background.default" : "action.hover",
                 opacity: isOffering ? 1 : 0.6,
                 transition: "all 0.2s",
               }}

@@ -23,13 +23,13 @@ const ProductVariantsHeader = ({ onAdd }: ProductVariantsHeaderProps) => {
     >
       <Box>
         <Typography variant="h6" fontWeight="700">
-          Variante și Prețuri
+          Opțiuni și Prețuri
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Gestionează duratele și prețurile angajaților.
         </Typography>
       </Box>
-      <Tooltip title="Adaugă o varianta">
+      <Tooltip title="Adaugă o opțiune">
         <IconButton
           onClick={onAdd}
           size="large"

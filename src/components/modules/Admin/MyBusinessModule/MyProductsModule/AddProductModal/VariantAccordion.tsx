@@ -59,7 +59,7 @@ const VariantAccordion = ({
             <Alarm color="primary" fontSize="medium" />
 
             <Typography fontWeight="700">
-              {variantName || `Varianta #${index + 1}`}
+              {variantName || `Opțiunea #${index + 1}`}
             </Typography>
 
             <Typography color="text.secondary" sx={{ mx: 0.5 }}>
@@ -93,7 +93,7 @@ const VariantAccordion = ({
 
       <AccordionDetails
         sx={{
-          bgcolor: "background.paper",
+          bgcolor: "background.default",
           p: 3,
           borderTop: "1px solid",
           borderColor: "divider",
@@ -103,7 +103,10 @@ const VariantAccordion = ({
           direction={{ xs: "column", md: "row" }}
           spacing={2}
           alignItems="flex-start"
-          sx={{ mb: hasEmployees ? 4 : 0, width: "100%" }}
+          sx={{
+            mb: hasEmployees ? 4 : 0,
+            width: "100%",
+          }}
         >
           <Box
             sx={{
@@ -114,7 +117,7 @@ const VariantAccordion = ({
           >
             <Input
               name={`variants.${index}.name`}
-              label="Nume Variantă"
+              label="Nume Opțiune"
               placeholder="ex: Masaj de relaxare"
               rules={required()}
             />

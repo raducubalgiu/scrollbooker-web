@@ -73,7 +73,7 @@ export default AddProductHeader;
 const styles = {
   container: {
     position: "relative",
-    bgcolor: "background.paper",
+    bgcolor: "background.default",
     color: "text.primary",
     boxShadow: 1,
   },

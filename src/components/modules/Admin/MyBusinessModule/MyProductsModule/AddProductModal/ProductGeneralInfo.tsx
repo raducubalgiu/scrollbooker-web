@@ -1,17 +1,15 @@
 import Input from "@/components/core/Input/Input";
 import InputSelect from "@/components/core/Input/InputSelect";
-import {
-  getProductTypeLabel,
-  ProductTypeEnum,
-} from "@/ts/enums/ProductTypeEnum";
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
 import { maxField, minField, required } from "@/utils/validation-rules";
-import { Box, Checkbox, Divider, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { useFormContext } from "react-hook-form";
+import { useGetFiltersByService } from "@/controllers/nomenclature/filter.controller";
+import { FormProductFilter } from "./AddProductModal";
 
 type ProductGeneralInfoProps = {
-  open: boolean;
   selectedDomainId: string;
   serviceDomainServices: SelectedServiceDomainWithServices[];
 };
@@ -20,37 +18,30 @@ const ProductGeneralInfo = ({
   selectedDomainId,
   serviceDomainServices,
 }: ProductGeneralInfoProps) => {
-  // const { setValue, watch } = useFormContext();
-  // const selectedServiceId = watch("serviceId");
+  const { setValue, watch } = useFormContext();
+  const selectedServiceId = watch("serviceId");
 
   const isRequired = required();
   const nameMinLength = minField(3);
   const nameMaxLength = maxField(100);
 
-  // const { data: filters } = useCustomQuery<Filter[]>({
-  //   key: ["filters-by-service-id", selectedServiceId],
-  //   url: `/api/nomenclatures/services/${selectedServiceId}/filters`,
-  //   options: {
-  //     enabled: open && !!selectedServiceId,
-  //     staleTime: 5 * 60 * 1000,
-  //   },
-  // });
+  const { data: filters } = useGetFiltersByService({
+    serviceId: selectedServiceId,
+    isEnabled: !!selectedServiceId,
+  });
 
-  // useEffect(() => {
-  //   if (filters) {
-  //     const initialFormFilters: FormProductFilter[] = filters.map((f) => ({
-  //       filter_id: f.id,
-  //       type: filterTypefromKey(f.type) || FilterTypeEnum.OPTIONS,
-  //       value: f.single_select ? "" : [],
-  //       minim: null,
-  //       maxim: null,
-  //     }));
+  useEffect(() => {
+    if (filters) {
+      const initialFormFilters: FormProductFilter[] = filters.map((f) => ({
+        filter_id: f.id,
+        value: f.single_select ? "" : [],
+      }));
 
-  //     setValue("filters", initialFormFilters);
-  //   } else {
-  //     setValue("filters", []);
-  //   }
-  // }, [filters, setValue]);
+      setValue("filters", initialFormFilters);
+    } else {
+      setValue("filters", []);
+    }
+  }, [filters, setValue]);
 
   const validDomains = useMemo(() => {
     if (!serviceDomainServices) return [];
@@ -92,15 +83,6 @@ const ProductGeneralInfo = ({
 
       <Stack spacing={2.5}>
         <InputSelect
-          name="type"
-          label="Tip serviciu"
-          options={ProductTypeEnum.all.map((type) => ({
-            value: type,
-            name: getProductTypeLabel(type),
-          }))}
-          rules={isRequired}
-        />
-        <InputSelect
           name="serviceDomainId"
           label="Categoria"
           options={domainOptions}
@@ -122,92 +104,28 @@ const ProductGeneralInfo = ({
 
         <Input name="description" label="Descriere" multiline rows={3} />
 
-        {/* {!isEmpty(filters) && (
+        {!!filters?.length && (
           <Box sx={{ py: 2 }}>
             <Typography variant="h6" mb={3} fontWeight="600">
               Filtre pentru acest serviciu
             </Typography>
 
             <Stack spacing={2.5}>
-              {filters?.map((filter, fIndex) => {
-                const currentType = filterTypefromKey(filter.type);
-                const subFilterOptions = filter.sub_filters.map((sf) => ({
-                  value: sf.id.toString(),
-                  name: sf.name,
-                }));
-
-                if (currentType === FilterTypeEnum.OPTIONS) {
-                  return (
-                    <InputSelect
-                      key={filter.id}
-                      name={`filters.${fIndex}.value`}
-                      label={filter.name}
-                      options={subFilterOptions}
-                      multiple={!filter.single_select}
-                    />
-                  );
-                }
-
-                if (currentType === FilterTypeEnum.NUMERIC) {
-                  return (
-                    <Input
-                      key={filter.id}
-                      type="number"
-                      name={`filters.${fIndex}.minim`}
-                      label={`${filter.name} (Valoare)`}
-                    />
-                  );
-                }
-
-                if (currentType === FilterTypeEnum.RANGE) {
-                  return (
-                    <Stack
-                      key={filter.id}
-                      direction="row"
-                      spacing={2}
-                      alignItems="center"
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{ minWidth: 80, fontWeight: "600" }}
-                      >
-                        {filter.name}:
-                      </Typography>
-                      <Input
-                        type="number"
-                        size="small"
-                        name={`filters.${fIndex}.minim`}
-                        label="Minim"
-                      />
-                      <Input
-                        type="number"
-                        size="small"
-                        name={`filters.${fIndex}.maxim`}
-                        label="Maxim"
-                      />
-                    </Stack>
-                  );
-                }
-
-                return null;
-              })}
+              {filters.map((filter, fIndex) => (
+                <InputSelect
+                  key={filter.id}
+                  name={`filters.${fIndex}.value`}
+                  label={filter.name}
+                  options={filter.sub_filters.map((sf) => ({
+                    value: sf.id.toString(),
+                    name: sf.name,
+                  }))}
+                  multiple={!filter.single_select}
+                />
+              ))}
             </Stack>
           </Box>
-        )} */}
-
-        <Divider sx={{ my: 1 }} />
-
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="subtitle2" fontWeight="700">
-              Rezervabil online
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Permite clienților să programeze instant.
-            </Typography>
-          </Box>
-          <Checkbox checked />
-        </Box>
+        )}
       </Stack>
     </Grid>
   );
@@ -222,6 +140,6 @@ const styles = {
     height: "100%",
     overflowY: "auto",
     p: 4,
-    bgcolor: "background.paper",
+    bgcolor: "background.default",
   },
 };

@@ -172,10 +172,7 @@ const ProductCard = ({
               <IconButton size="large" onClick={onSelectProduct}>
                 {isSelected ? (
                   <Tooltip title="Elimină">
-                    <CheckCircleRoundedIcon
-                      fontSize="large"
-                      color="primary"
-                    />
+                    <CheckCircleRoundedIcon fontSize="large" color="primary" />
                   </Tooltip>
                 ) : (
                   <Tooltip title="Adaugă">

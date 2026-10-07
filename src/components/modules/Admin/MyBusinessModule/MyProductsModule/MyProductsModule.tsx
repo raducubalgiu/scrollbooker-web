@@ -24,6 +24,7 @@ import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
+import AddProductModal from "./AddProductModal/AddProductModal";
 import { toast } from "react-toastify";
 
 const HEADER_HEIGHT = 88;
@@ -46,6 +47,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
     open: false,
     productId: null,
   });
+  const [isAddProductOpen, setIsAddProductOpen] = useState(false);
 
   const isEmployee = session?.business_owner_id !== session?.user_id;
 
@@ -101,6 +103,12 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
           onConfirm={handleConfirmDelete}
         />
 
+        <AddProductModal
+          session={session}
+          open={isAddProductOpen}
+          handleClose={() => setIsAddProductOpen(false)}
+        />
+
         <Stack
           flexDirection="row"
           alignItems="center"
@@ -118,9 +126,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
             variant="contained"
             color="primary"
             disableElevation
-            onClick={() =>
-              toast.info("Adăugarea de servicii va fi disponibilă în curând")
-            }
+            onClick={() => setIsAddProductOpen(true)}
           >
             Adaugă serviciu
           </Button>

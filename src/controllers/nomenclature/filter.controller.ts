@@ -30,6 +30,27 @@ export const useAllFilters = ({ page, limit }: GetAllFiltersType) => {
   });
 };
 
+type GetFiltersByServiceParams = {
+  serviceId: string;
+  isEnabled: boolean;
+};
+
+export const useGetFiltersByService = ({
+  serviceId,
+  isEnabled,
+}: GetFiltersByServiceParams) => {
+  const doRequest = () =>
+    axios
+      .get<Filter[]>(`/api/nomenclatures/services/${serviceId}/filters`)
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["filters-by-service", serviceId],
+    queryFn: doRequest,
+    enabled: isEnabled && !!serviceId,
+  });
+};
+
 export const useCreateFilter = () => {
   const queryClient = useQueryClient();
 

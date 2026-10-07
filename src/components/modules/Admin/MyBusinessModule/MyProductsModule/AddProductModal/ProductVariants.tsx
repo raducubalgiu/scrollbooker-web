@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
-import { Stack } from "@mui/material";
+import { Alert, Stack } from "@mui/material";
 import { Control, useFieldArray, UseFormWatch } from "react-hook-form";
 import VariantAccordion from "./VariantAccordion";
 import { ProductFormValues } from "./AddProductModal";
@@ -20,6 +20,8 @@ const ProductVariants = ({
   control,
   watch,
 }: ProductVariantsProps) => {
+  const [isInfoVisible, setIsInfoVisible] = useState(true);
+
   const {
     fields: variantFields,
     append,
@@ -46,6 +48,19 @@ const ProductVariants = ({
   return (
     <Grid size={{ xs: 12, md: 8 }} sx={styles.container}>
       <ProductVariantsHeader onAdd={onAddVariant} />
+
+      {isInfoVisible && (
+        <Alert
+          severity="info"
+          onClose={() => setIsInfoVisible(false)}
+          sx={{ mb: 2 }}
+        >
+          O opțiune reprezintă un mod în care poate fi rezervat acest
+          serviciu, cu propriul nume, durată și preț. De exemplu, pentru un
+          „Masaj Deep Tissue” poți adăuga opțiuni precum „30 minute” și
+          „60 minute”, fiecare cu propriul preț.
+        </Alert>
+      )}
 
       <Stack spacing={2}>
         {variantFields.map((field, index) => (

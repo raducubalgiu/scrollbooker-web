@@ -1,5 +1,9 @@
 import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
-import { UserProducts } from "@/ts/models/booking/product/Product";
+import {
+  Product,
+  ProductWithFiltersCreate,
+  UserProducts,
+} from "@/ts/models/booking/product/Product";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -84,6 +88,26 @@ export const useGetProductsByBusinessAndEmployee = ({
     ],
     queryFn: doRequest,
     enabled: !!businessId,
+  });
+};
+
+export const useCreateProduct = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = (
+    payload: ProductWithFiltersCreate
+  ): Promise<Product> =>
+    axios
+      .post("/api/protected/products", payload)
+      .then((res) => res.data);
+
+  return useMutation<Product, Error, ProductWithFiltersCreate>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["business-employee-products"],
+      });
+    },
   });
 };
 
