@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { Dialog } from "@mui/material";
+import { Dialog, useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { FormProvider, useForm } from "react-hook-form";
 import { Session } from "next-auth";
 import { toast } from "react-toastify";
 import AddProductHeader from "./AddProductHeader";
 import ProductGeneralInfo from "./ProductGeneralInfo";
-import ProductVariants, { buildDefaultOfferings } from "./ProductVariants";
+import ProductVariants from "./ProductVariants";
+import { buildDefaultOfferings } from "./buildDefaultOfferings";
 import { useGetAllEmployeesByOwner } from "@/controllers/booking/employee.controller";
 import { useGetMySelectedServices } from "@/controllers/nomenclature/service.controller";
 import { useCreateProduct } from "@/controllers/booking/product.controller";
@@ -66,6 +67,9 @@ const AddProductModal = ({
   open,
   handleClose,
 }: AddProductModalProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const hasEmployees = session?.has_employees ?? false;
 
   const { data: serviceDomainServices } = useGetMySelectedServices({
@@ -104,6 +108,7 @@ const AddProductModal = ({
       hasSeededFirstOptionRef.current = false;
       return;
     }
+    if (isMobile) return;
     if (hasSeededFirstOptionRef.current) return;
     if (hasEmployees && !employees) return;
 
@@ -119,7 +124,15 @@ const AddProductModal = ({
       },
     ]);
     hasSeededFirstOptionRef.current = true;
-  }, [open, hasEmployees, employees, ownerUserId, productName, setValue]);
+  }, [
+    open,
+    isMobile,
+    hasEmployees,
+    employees,
+    ownerUserId,
+    productName,
+    setValue,
+  ]);
 
   useEffect(() => {
     if (!open) return;
@@ -203,7 +216,13 @@ const AddProductModal = ({
           onSaveProduct={handleSubmit(onSubmit)}
         />
 
-        <Grid container sx={{ height: "100vh", overflow: "hidden" }}>
+        <Grid
+          container
+          sx={{
+            height: { xs: "auto", md: "100vh" },
+            overflow: { xs: "auto", md: "hidden" },
+          }}
+        >
           <ProductGeneralInfo
             serviceDomainServices={serviceDomainServices || []}
             selectedDomainId={selectedDomainId}

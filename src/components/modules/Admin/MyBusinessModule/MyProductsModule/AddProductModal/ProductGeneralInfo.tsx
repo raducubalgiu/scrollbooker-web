@@ -81,7 +81,7 @@ const ProductGeneralInfo = ({
         Informații Generale
       </Typography>
 
-      <Stack spacing={2.5}>
+      <Stack spacing={1.5}>
         <InputSelect
           name="serviceDomainId"
           label="Categoria"
@@ -102,7 +102,7 @@ const ProductGeneralInfo = ({
           rules={{ ...isRequired, ...nameMinLength, ...nameMaxLength }}
         />
 
-        <Input name="description" label="Descriere" multiline rows={3} />
+        <Input name="description" label="Descriere" multiline rows={2} />
 
         {!!filters?.length && (
           <Box sx={{ py: 2 }}>
@@ -135,11 +135,12 @@ export default ProductGeneralInfo;
 
 const styles = {
   container: {
-    borderRight: "1px solid",
+    borderRight: { md: "1px solid" },
     borderColor: "divider",
-    height: "100%",
-    overflowY: "auto",
-    p: 4,
+    height: { xs: "auto", md: "100%" },
+    overflowY: { xs: "visible", md: "auto" },
+    p: { xs: 2.5, md: 4 },
+    pb: { xs: 2, md: 4 },
     bgcolor: "background.default",
   },
 };

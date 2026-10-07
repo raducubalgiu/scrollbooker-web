@@ -64,7 +64,10 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
   const headerOffset = isDesktopHeader ? HEADER_HEIGHT : 0;
   const scrollOffset = headerOffset + TABS_HEIGHT + SCROLL_GAP;
 
-  const sync = useScrollSync(data ?? { total_count: 0, data: [] }, scrollOffset);
+  const sync = useScrollSync(
+    data ?? { total_count: 0, data: [] },
+    scrollOffset
+  );
 
   const pageBgcolor =
     theme.palette.mode === "light" ? "background.paper" : "background.default";
@@ -90,7 +93,10 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
 
   return (
     <Box sx={styles.container}>
-      <HeaderMobile title="Serviciile mele" />
+      <HeaderMobile
+        title="Serviciile mele"
+        onAction={() => setIsAddProductOpen(true)}
+      />
 
       <Box sx={[styles.scrollArea, { bgcolor: pageBgcolor }]}>
         <ConfirmationModal
@@ -147,11 +153,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
 
           {!isLoading && !isError && !!data && data.total_count > 0 && (
             <Box sx={{ minWidth: 0 }}>
-              <MyProductsTabs
-                top={headerOffset}
-                sync={sync}
-                products={data}
-              />
+              <MyProductsTabs top={headerOffset} sync={sync} products={data} />
 
               <Box>
                 {data.data.map((group, index) => (

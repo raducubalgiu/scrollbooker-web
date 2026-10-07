@@ -5,9 +5,10 @@ import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 type HeaderMobileProps = {
   title?: string | undefined;
+  onAction?: () => void;
 };
 
-const HeaderMobile = ({ title }: HeaderMobileProps) => {
+const HeaderMobile = ({ title, onAction }: HeaderMobileProps) => {
   const { goBack } = useAppNavigation();
 
   return (
@@ -30,8 +31,8 @@ const HeaderMobile = ({ title }: HeaderMobileProps) => {
         >
           {title}
         </Typography>
-        <IconButton onClick={() => {}} disabled>
-          <ArrowBackIcon sx={{ color: "transparent" }} />
+        <IconButton onClick={onAction}>
+          <ArrowBackIcon />
         </IconButton>
       </Stack>
       <Divider />
