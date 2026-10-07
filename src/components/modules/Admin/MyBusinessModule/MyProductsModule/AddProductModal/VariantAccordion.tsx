@@ -46,7 +46,7 @@ const VariantAccordion = ({
   });
 
   return (
-    <Accordion sx={styles.container}>
+    <Accordion defaultExpanded sx={styles.container}>
       <AccordionSummary
         expandIcon={<ExpandMore />}
         component="div"
