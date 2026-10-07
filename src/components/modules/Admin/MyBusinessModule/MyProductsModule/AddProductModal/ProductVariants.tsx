@@ -3,13 +3,37 @@ import Grid from "@mui/material/Grid2";
 import { Alert, Stack } from "@mui/material";
 import { Control, useFieldArray, UseFormWatch } from "react-hook-form";
 import VariantAccordion from "./VariantAccordion";
-import { ProductFormValues } from "./AddProductModal";
+import { FormProductOffering, ProductFormValues } from "./AddProductModal";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import ProductVariantsHeader from "./ProductVariantsHeader";
+
+export const buildDefaultOfferings = (
+  hasEmployees: boolean,
+  employees: BusinessEmployee[],
+  ownerUserId: number
+): FormProductOffering[] =>
+  hasEmployees
+    ? employees.map((emp) => ({
+        user_id: emp.id,
+        price: 0,
+        price_with_discount: 0,
+        discount: 0,
+        is_offering: true,
+      }))
+    : [
+        {
+          user_id: ownerUserId,
+          price: 0,
+          price_with_discount: 0,
+          discount: 0,
+          is_offering: true,
+        },
+      ];
 
 type ProductVariantsProps = {
   hasEmployees: boolean;
   employees: BusinessEmployee[];
+  ownerUserId: number;
   control: Control<ProductFormValues>;
   watch: UseFormWatch<ProductFormValues>;
 };
@@ -17,6 +41,7 @@ type ProductVariantsProps = {
 const ProductVariants = ({
   hasEmployees,
   employees,
+  ownerUserId,
   control,
   watch,
 }: ProductVariantsProps) => {
@@ -35,13 +60,7 @@ const ProductVariants = ({
     append({
       name: "",
       duration: 0,
-      offerings: employees.map((emp) => ({
-        user_id: emp.id,
-        price: 0,
-        price_with_discount: 0,
-        discount: 0,
-        is_offering: true,
-      })),
+      offerings: buildDefaultOfferings(hasEmployees, employees, ownerUserId),
     });
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Dialog } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { FormProvider, useForm } from "react-hook-form";
@@ -8,7 +8,7 @@ import { Session } from "next-auth";
 import { toast } from "react-toastify";
 import AddProductHeader from "./AddProductHeader";
 import ProductGeneralInfo from "./ProductGeneralInfo";
-import ProductVariants from "./ProductVariants";
+import ProductVariants, { buildDefaultOfferings } from "./ProductVariants";
 import { useGetAllEmployeesByOwner } from "@/controllers/booking/employee.controller";
 import { useGetMySelectedServices } from "@/controllers/nomenclature/service.controller";
 import { useCreateProduct } from "@/controllers/booking/product.controller";
@@ -72,8 +72,10 @@ const AddProductModal = ({
     businessId: String(session?.business_id ?? ""),
   });
 
+  const ownerUserId = session?.business_owner_id ?? 0;
+
   const { data: employees } = useGetAllEmployeesByOwner({
-    businessOwnerId: session?.business_owner_id ?? 0,
+    businessOwnerId: ownerUserId,
     isEnabled: hasEmployees,
   });
 
@@ -84,14 +86,48 @@ const AddProductModal = ({
     defaultValues: getCleanDefaultValues(),
   });
 
-  const { control, handleSubmit, reset, watch } = methods;
+  const { control, handleSubmit, reset, watch, setValue, formState } =
+    methods;
   const selectedDomainId = watch("serviceDomainId");
+  const productName = watch("name");
 
   useEffect(() => {
     if (open) {
       reset(getCleanDefaultValues());
     }
   }, [open, reset]);
+
+  const hasSeededFirstOptionRef = useRef(false);
+
+  useEffect(() => {
+    if (!open) {
+      hasSeededFirstOptionRef.current = false;
+      return;
+    }
+    if (hasSeededFirstOptionRef.current) return;
+    if (hasEmployees && !employees) return;
+
+    setValue("variants", [
+      {
+        name: productName,
+        duration: 0,
+        offerings: buildDefaultOfferings(
+          hasEmployees,
+          employees || [],
+          ownerUserId
+        ),
+      },
+    ]);
+    hasSeededFirstOptionRef.current = true;
+  }, [open, hasEmployees, employees, ownerUserId, productName, setValue]);
+
+  useEffect(() => {
+    if (!open) return;
+    if (!hasSeededFirstOptionRef.current) return;
+    if (formState.dirtyFields.variants?.[0]?.name) return;
+
+    setValue("variants.0.name", productName, { shouldDirty: false });
+  }, [productName, open, formState.dirtyFields, setValue]);
 
   const handleResetAndClose = () => {
     reset(getCleanDefaultValues());
@@ -175,6 +211,7 @@ const AddProductModal = ({
           <ProductVariants
             hasEmployees={hasEmployees}
             employees={employees || []}
+            ownerUserId={ownerUserId}
             control={control}
             watch={watch}
           />

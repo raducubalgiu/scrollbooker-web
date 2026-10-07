@@ -4,9 +4,12 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  alpha,
   Box,
   IconButton,
   Stack,
+  Theme,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -44,50 +47,45 @@ const VariantAccordion = ({
 
   return (
     <Accordion sx={styles.container}>
-      <AccordionSummary expandIcon={<ExpandMore />} component="div">
+      <AccordionSummary
+        expandIcon={<ExpandMore />}
+        component="div"
+        sx={styles.summary}
+      >
         <Stack
           flexDirection="row"
           alignItems="center"
           justifyContent="space-between"
-          sx={{
-            width: "100%",
-            pr: 1,
-            cursor: "pointer",
-          }}
+          sx={{ width: "100%", pr: 1 }}
         >
-          <Stack flexDirection="row" alignItems="center" gap={1.5}>
-            <Alarm color="primary" fontSize="medium" />
+          <Stack flexDirection="row" alignItems="center" gap={1.5} minWidth={0}>
+            <Box sx={styles.iconBadge}>
+              <Alarm fontSize="small" />
+            </Box>
 
-            <Typography fontWeight="700">
-              {variantName || `Opțiunea #${index + 1}`}
-            </Typography>
-
-            <Typography color="text.secondary" sx={{ mx: 0.5 }}>
-              •
-            </Typography>
-
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ ml: "auto", mr: 2 }}
-            >
-              {variantDuration ? `${variantDuration} min` : "-- min"}
-            </Typography>
+            <Box minWidth={0}>
+              <Typography fontWeight="700" noWrap>
+                {variantName || `Opțiunea #${index + 1}`}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {variantDuration ? `${variantDuration} min` : "Fără durată setată"}
+              </Typography>
+            </Box>
           </Stack>
 
-          <IconButton
-            size="small"
-            color="error"
-            onClick={(e) => {
-              e.stopPropagation();
-              remove();
-            }}
-            sx={{
-              "&:hover": { bgcolor: "error.lighter" },
-            }}
-          >
-            <DeleteOutline fontSize="small" />
-          </IconButton>
+          <Tooltip title="Șterge opțiunea">
+            <IconButton
+              size="small"
+              color="error"
+              onClick={(e) => {
+                e.stopPropagation();
+                remove();
+              }}
+              sx={styles.deleteButton}
+            >
+              <DeleteOutline fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Stack>
       </AccordionSummary>
 
@@ -166,5 +164,28 @@ const styles = {
     borderColor: "divider",
     "&:before": { display: "none" },
     boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+  },
+  summary: {
+    py: 0.5,
+    "& .MuiAccordionSummary-content": {
+      alignItems: "center",
+      minWidth: 0,
+    },
+  },
+  iconBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: "50%",
+    flexShrink: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    bgcolor: (theme: Theme) => alpha(theme.palette.primary.main, 0.12),
+    color: "primary.main",
+  },
+  deleteButton: {
+    "&:hover": {
+      bgcolor: (theme: Theme) => alpha(theme.palette.error.main, 0.08),
+    },
   },
 };
