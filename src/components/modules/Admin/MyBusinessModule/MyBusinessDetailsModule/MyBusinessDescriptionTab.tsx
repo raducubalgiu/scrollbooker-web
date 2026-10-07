@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { Box, Paper, Typography } from "@mui/material";
+import { toast } from "react-toastify";
 import ActionButton, {
   ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
 import Input from "@/components/core/Input/Input";
-import { useMutate } from "@/hooks/useHttp";
-import { toast } from "react-toastify";
 import { maxField, minField } from "@/utils/validation-rules";
+import { useUpdateBusinessDescription } from "@/controllers/booking/business.controller";
 
 type MyBusinessDescriptionTabProps = {
   businessId: number;
@@ -20,68 +20,46 @@ type FormValues = {
   description: string;
 };
 
+const DESCRIPTION_RULES = { ...minField(5), ...maxField(2500) };
+
 export default function MyBusinessDescriptionTab({
   businessId,
   defaultDescription,
 }: MyBusinessDescriptionTabProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [savedDescription, setSavedDescription] = useState(
-    defaultDescription ?? ""
-  );
-  const minLength = minField(5);
-  const maxLength = maxField(2500);
+  const { mutate, isPending } = useUpdateBusinessDescription();
 
   const methods = useForm<FormValues>({
-    defaultValues: {
-      description: defaultDescription ?? "",
-    },
+    values: { description: defaultDescription ?? "" },
     mode: "onBlur",
   });
 
-  const { handleSubmit, reset, watch } = methods;
-  const currentDescription = watch("description");
-
-  useEffect(() => {
-    const nextValue = defaultDescription ?? "";
-    setSavedDescription(nextValue);
-    reset({ description: nextValue });
-    setIsEditing(false);
-  }, [defaultDescription, reset]);
-
-  const { mutate: updateDescription, isPending } = useMutate({
-    key: ["update-business-description", businessId],
-    url: `/api/businesses/${businessId}/description`,
-    method: "PUT",
-    options: {
-      onSuccess: (_response: unknown, variables: FormValues) => {
-        const nextValue = variables.description ?? "";
-        setSavedDescription(nextValue);
-        reset({ description: nextValue });
-        setIsEditing(false);
-        toast.success("Descrierea a fost salvată cu succes.");
-      },
-      onError: () => {
-        reset({ description: savedDescription });
-        setIsEditing(false);
-        toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu.");
-      },
-    },
-  });
+  const {
+    handleSubmit,
+    reset,
+    formState: { isDirty },
+  } = methods;
 
   const onSubmit = (data: FormValues) => {
-    updateDescription(data);
-  };
-
-  const handleEdit = () => {
-    setIsEditing(true);
+    mutate(
+      { businessId, data },
+      {
+        onSuccess: () => {
+          reset(data);
+          setIsEditing(false);
+          toast.success("Descrierea a fost salvată cu succes.");
+        },
+        onError: () => {
+          toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu.");
+        },
+      }
+    );
   };
 
   const handleCancel = () => {
-    reset({ description: savedDescription });
+    reset();
     setIsEditing(false);
   };
-
-  const hasChanges = currentDescription !== savedDescription;
 
   const actions: ActionButtonType[] = isEditing
     ? [
@@ -98,19 +76,12 @@ export default function MyBusinessDescriptionTab({
           title: "Salvează",
           props: {
             onClick: handleSubmit(onSubmit),
-            disabled: isPending || !hasChanges,
+            disabled: isPending || !isDirty,
             loading: isPending,
           },
         },
       ]
-    : [
-        {
-          title: "Editează",
-          props: {
-            onClick: handleEdit,
-          },
-        },
-      ];
+    : [{ title: "Editează", props: { onClick: () => setIsEditing(true) } }];
 
   return (
     <Paper sx={{ p: 2.5 }}>
@@ -126,9 +97,8 @@ export default function MyBusinessDescriptionTab({
             minRows={5}
             placeholder="Adaugă o descriere..."
             disabled={!isEditing || isPending}
-            rules={{ ...minLength, ...maxLength }}
+            rules={DESCRIPTION_RULES}
           />
-
           <ActionButton actions={actions} />
         </Box>
       </FormProvider>

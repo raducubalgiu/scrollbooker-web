@@ -7,6 +7,7 @@ export interface BusinessDetails {
   id: number;
   owner: BusinessOwner;
   location: BusinessLocation;
+  description: string | null;
   has_employees: boolean;
   media_files: BusinessMediaFile[];
   schedules: Schedule[];

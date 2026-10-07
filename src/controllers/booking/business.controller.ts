@@ -12,6 +12,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
+import { BusinessDescriptionUpdate } from "@/ts/models/booking/business/Business";
 
 const BUSINESS_PATH = "/api/protected/businesses";
 const UNAPPROVED_BUSINESSES_LIMIT = 20;
@@ -180,6 +181,30 @@ export const useUpdateBusinessGalleryMutation = () => {
 
       await axios.patch(`${BUSINESS_PATH}/${businessId}/gallery`, formData);
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-business-details"] });
+    },
+  });
+};
+
+type UpdateBusinessDescriptionParams = {
+  businessId: number;
+  data: BusinessDescriptionUpdate;
+};
+
+export const useUpdateBusinessDescription = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    businessId,
+    data,
+  }: UpdateBusinessDescriptionParams): Promise<void> =>
+    axios
+      .put(`${BUSINESS_PATH}/${businessId}/description`, data)
+      .then((res) => res.data);
+
+  return useMutation<void, Error, UpdateBusinessDescriptionParams>({
+    mutationFn: doRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-business-details"] });
     },

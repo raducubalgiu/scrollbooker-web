@@ -39,3 +39,7 @@ export interface BusinessBookingOwner {
   ratings_average: number;
   ratings_count: number;
 }
+
+export interface BusinessDescriptionUpdate {
+  description: string;
+}

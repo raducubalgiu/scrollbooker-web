@@ -41,7 +41,7 @@ export default function MyBusinessDetailsModule() {
     );
   }
 
-  const { id, schedules } = myBusinessDetails || {};
+  const { id, schedules, description } = myBusinessDetails || {};
 
   const renderTabContent = () => {
     switch (currentTab) {
@@ -49,7 +49,10 @@ export default function MyBusinessDetailsModule() {
         return <MyBusinessSummaryTab businessDetails={myBusinessDetails} />;
       case 1:
         return (
-          <MyBusinessDescriptionTab businessId={id} defaultDescription={""} />
+          <MyBusinessDescriptionTab
+            businessId={id}
+            defaultDescription={description}
+          />
         );
       case 2:
         return (

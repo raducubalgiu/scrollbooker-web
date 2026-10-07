@@ -11,11 +11,6 @@ type AllGetBusinessDomainsParams = {
   all: boolean;
 };
 
-type UpdateBusinessDomainsParams = {
-  id: string;
-  data: BusinessDomainCreateOrUpdate;
-};
-
 export const useGetAllBusinessDomains = ({
   all,
 }: AllGetBusinessDomainsParams) => {
@@ -44,6 +39,11 @@ export const useCreateBusinessDomain = () => {
       queryClient.invalidateQueries({ queryKey: ["business-domains"] });
     },
   });
+};
+
+type UpdateBusinessDomainsParams = {
+  id: string;
+  data: BusinessDomainCreateOrUpdate;
 };
 
 export const useUpdateBusinessDomain = () => {
