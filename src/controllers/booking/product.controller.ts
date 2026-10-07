@@ -1,6 +1,6 @@
 import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
 import { UserProducts } from "@/ts/models/booking/product/Product";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export type GetLinkedProductsParams = {
@@ -84,5 +84,23 @@ export const useGetProductsByBusinessAndEmployee = ({
     ],
     queryFn: doRequest,
     enabled: !!businessId,
+  });
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = (productId: number): Promise<void> =>
+    axios
+      .delete(`/api/protected/products/${productId}`)
+      .then((res) => res.data);
+
+  return useMutation<void, Error, number>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["business-employee-products"],
+      });
+    },
   });
 };

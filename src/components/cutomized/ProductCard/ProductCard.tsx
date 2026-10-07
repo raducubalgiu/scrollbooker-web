@@ -3,6 +3,10 @@ import {
   Box,
   Button,
   IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Stack,
   SxProps,
   Theme,
@@ -11,6 +15,9 @@ import {
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import React, { useState } from "react";
 import Protected from "../Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
@@ -23,9 +30,13 @@ type ProductCardProps = {
   showIcon: boolean;
   showDescription?: boolean;
   expandDescriptionOnClick?: boolean;
+  displayEditableActions?: boolean;
+  isLoadingDelete?: boolean;
   onOpenDetail?: () => void;
   onAdd: (item: SelectedBookingItem) => void;
   onNavigateToBooking: (product: Product) => void;
+  onEditProduct?: (productId: number) => void;
+  onDeleteProduct?: (productId: number) => void;
   sx?: SxProps<Theme>;
 };
 
@@ -35,14 +46,21 @@ const ProductCard = ({
   showIcon,
   showDescription = true,
   expandDescriptionOnClick = false,
+  displayEditableActions = false,
+  isLoadingDelete = false,
   onOpenDetail,
   onAdd,
   onNavigateToBooking,
+  onEditProduct,
+  onDeleteProduct,
   sx = {},
 }: ProductCardProps) => {
   const { name, description, starting_offering, has_different_prices } =
     product;
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [actionsAnchorEl, setActionsAnchorEl] = useState<HTMLElement | null>(
+    null
+  );
 
   const handleCardClick = () => {
     if (expandDescriptionOnClick) {
@@ -148,34 +166,91 @@ const ProductCard = ({
           </Stack>
         </Box>
 
-        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-          {showIcon ? (
-            <IconButton size="large" onClick={onSelectProduct}>
-              {isSelected ? (
-                <Tooltip title="Elimină">
-                  <CheckCircleRoundedIcon fontSize="large" color="primary" />
-                </Tooltip>
-              ) : (
-                <Tooltip title="Adaugă">
-                  <AddRoundedIcon fontSize="large" />
-                </Tooltip>
-              )}
-            </IconButton>
-          ) : (
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="small"
-              disableElevation
+        {!displayEditableActions && (
+          <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+            {showIcon ? (
+              <IconButton size="large" onClick={onSelectProduct}>
+                {isSelected ? (
+                  <Tooltip title="Elimină">
+                    <CheckCircleRoundedIcon
+                      fontSize="large"
+                      color="primary"
+                    />
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Adaugă">
+                    <AddRoundedIcon fontSize="large" />
+                  </Tooltip>
+                )}
+              </IconButton>
+            ) : (
+              <Button
+                variant="outlined"
+                color="secondary"
+                size="small"
+                disableElevation
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNavigateToBooking(product);
+                }}
+              >
+                Rezervă
+              </Button>
+            )}
+          </Protected>
+        )}
+
+        {displayEditableActions && (
+          <>
+            <IconButton
+              size="large"
               onClick={(e) => {
                 e.stopPropagation();
-                onNavigateToBooking(product);
+                setActionsAnchorEl(e.currentTarget);
               }}
             >
-              Rezervă
-            </Button>
-          )}
-        </Protected>
+              <MoreVertIcon />
+            </IconButton>
+
+            <Menu
+              anchorEl={actionsAnchorEl}
+              open={!!actionsAnchorEl}
+              onClose={() => setActionsAnchorEl(null)}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Protected permission={PermissionEnum.PRODUCT_EDIT}>
+                <MenuItem
+                  onClick={() => {
+                    setActionsAnchorEl(null);
+                    onEditProduct?.(product.id);
+                  }}
+                >
+                  <ListItemIcon>
+                    <EditOutlinedIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Editează</ListItemText>
+                </MenuItem>
+              </Protected>
+
+              <Protected permission={PermissionEnum.PRODUCT_DELETE}>
+                <MenuItem
+                  disabled={isLoadingDelete}
+                  onClick={() => {
+                    setActionsAnchorEl(null);
+                    onDeleteProduct?.(product.id);
+                  }}
+                >
+                  <ListItemIcon>
+                    <DeleteOutlineIcon fontSize="small" color="error" />
+                  </ListItemIcon>
+                  <ListItemText sx={{ color: "error.main" }}>
+                    Șterge
+                  </ListItemText>
+                </MenuItem>
+              </Protected>
+            </Menu>
+          </>
+        )}
       </Stack>
 
       {description && showDescription && (

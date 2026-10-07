@@ -27,7 +27,7 @@ export default function MainLayout({
       <HeaderMobile />
 
       <Box sx={styles.main}>
-        <Box sx={{ p: 2.5, ...sx }}>
+        <Box sx={[{ p: 2.5 }, ...(Array.isArray(sx) ? sx : [sx])]}>
           {showHeader && (
             <Stack
               flexDirection="row"

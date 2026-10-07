@@ -26,6 +26,18 @@ export interface ScrollSyncResult {
   checkTabsOverflow: () => void;
 }
 
+const getScrollParent = (
+  el: HTMLElement | null
+): HTMLElement | (Window & typeof globalThis) => {
+  let node = el?.parentElement ?? null;
+  while (node) {
+    const { overflowY } = window.getComputedStyle(node);
+    if (overflowY === "auto" || overflowY === "scroll") return node;
+    node = node.parentElement;
+  }
+  return window;
+};
+
 export const useScrollSync = (
   products: UserProducts,
   offset: number
@@ -91,9 +103,21 @@ export const useScrollSync = (
       isClickScrolling.current = true;
       setCurrentTab(index);
 
-      const y =
-        target.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top: y, behavior: "smooth" });
+      const scrollParent = getScrollParent(target);
+
+      if (scrollParent === window) {
+        const y =
+          target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      } else {
+        const parentEl = scrollParent as HTMLElement;
+        const y =
+          target.getBoundingClientRect().top -
+          parentEl.getBoundingClientRect().top +
+          parentEl.scrollTop -
+          offset;
+        parentEl.scrollTo({ top: y, behavior: "smooth" });
+      }
 
       if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
       scrollTimeoutRef.current = setTimeout(() => {
