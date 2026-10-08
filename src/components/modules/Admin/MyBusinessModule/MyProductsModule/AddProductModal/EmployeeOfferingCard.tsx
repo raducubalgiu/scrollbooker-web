@@ -2,7 +2,6 @@ import Input from "@/components/core/Input/Input";
 import { max, min, required } from "@/utils/validation-rules";
 import { formatPrice } from "@/utils/formatPrice";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
-import { Check } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
@@ -14,6 +13,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import OfferingToggle from "./OfferingToggle";
 
 type EmployeeOfferingCardProps = {
   employee: BusinessEmployee | undefined;
@@ -79,8 +79,7 @@ const EmployeeOfferingCard = ({
     clearErrors,
   ]);
 
-  const handleToggleOffering = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleToggleOffering = () => {
     const next = !isOffering;
     setValue(isOfferingName, next, { shouldDirty: true });
     setExpanded(next);
@@ -114,45 +113,49 @@ const EmployeeOfferingCard = ({
             </Box>
           </Stack>
 
-          <Box
-            component="button"
-            type="button"
-            onClick={handleToggleOffering}
-            sx={styles.toggle(!!isOffering)}
-          >
-            {isOffering && (
-              <Check fontSize="small" sx={{ color: "common.white" }} />
-            )}
-          </Box>
+          <OfferingToggle
+            isOffering={!!isOffering}
+            onToggle={handleToggleOffering}
+          />
         </Stack>
       </AccordionSummary>
 
       <AccordionDetails sx={styles.details}>
-        <Stack direction="row" spacing={2}>
-          <Input
-            size="small"
-            name={priceName}
-            label="Preț standard"
-            type="number"
-            rules={isOffering ? { ...isRequired } : {}}
-            disabled={!isOffering}
-          />
-          <Input
-            size="small"
-            name={discountName}
-            label="Discount %"
-            type="number"
-            rules={isOffering ? { ...minDiscount, ...maxDiscount } : {}}
-            disabled={!isOffering}
-          />
-        </Stack>
+        {isOffering ? (
+          <>
+            <Stack direction="row" spacing={2}>
+              <Input
+                size="small"
+                name={priceName}
+                label="Preț standard"
+                type="number"
+                rules={{ ...isRequired }}
+              />
+              <Input
+                size="small"
+                name={discountName}
+                label="Discount %"
+                type="number"
+                rules={{ ...minDiscount, ...maxDiscount }}
+              />
+            </Stack>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1.5 }}>
-          Preț final:{" "}
-          <Typography component="span" fontWeight="700" color="text.primary">
-            {`${formatPrice(calculatedPriceWithDiscount)} RON`}
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1.5 }}>
+              Preț final:{" "}
+              <Typography
+                component="span"
+                fontWeight="700"
+                color="text.primary"
+              >
+                {`${formatPrice(calculatedPriceWithDiscount)} RON`}
+              </Typography>
+            </Typography>
+          </>
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            Nu oferă serviciul respectiv
           </Typography>
-        </Typography>
+        )}
       </AccordionDetails>
     </Accordion>
   );
@@ -179,20 +182,6 @@ const styles = {
       minWidth: 0,
     },
   },
-  toggle: (checked: boolean) => ({
-    width: 28,
-    height: 28,
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-    p: 0,
-    border: "2px solid",
-    borderColor: checked ? "primary.main" : "divider",
-    bgcolor: checked ? "primary.main" : "transparent",
-    transition: "all 0.15s ease",
-  }),
   details: {
     bgcolor: "background.default",
     borderTop: "1px solid",

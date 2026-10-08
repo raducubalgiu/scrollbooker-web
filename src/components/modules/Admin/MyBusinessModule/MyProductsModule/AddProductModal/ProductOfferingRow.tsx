@@ -1,8 +1,9 @@
 import Input from "@/components/core/Input/Input";
 import { min, max, required } from "@/utils/validation-rules";
-import { Button, Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import OfferingToggle from "./OfferingToggle";
 
 type ProductOfferingRowProps = {
   index: number;
@@ -83,47 +84,47 @@ const ProductOfferingRow = ({
   ]);
 
   return (
-    <Stack direction="row" spacing={2} sx={{ flex: 1 }}>
-      <Input
-        size={inputSize}
-        name={priceName}
-        label="Preț standard"
-        type="number"
-        rules={!isFieldDisabled ? { ...isRequired } : {}}
-        disabled={isFieldDisabled}
-      />
-      <Input
-        size={inputSize}
-        name={discountName}
-        label="Discount %"
-        type="number"
-        rules={!isFieldDisabled ? { ...minDiscount, ...maxDiscount } : {}}
-        disabled={isFieldDisabled}
-      />
-      <Input
-        size={inputSize}
-        name={finalPriceName}
-        label="Preț final"
-        type="number"
-        disabled
-      />
+    <Stack
+      direction="row"
+      spacing={2}
+      alignItems="center"
+      sx={{ flex: 1 }}
+    >
+      {isFieldDisabled ? (
+        <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>
+          Nu oferă serviciul respectiv
+        </Typography>
+      ) : (
+        <>
+          <Input
+            size={inputSize}
+            name={priceName}
+            label="Preț standard"
+            type="number"
+            rules={{ ...isRequired }}
+          />
+          <Input
+            size={inputSize}
+            name={discountName}
+            label="Discount %"
+            type="number"
+            rules={{ ...minDiscount, ...maxDiscount }}
+          />
+          <Input
+            size={inputSize}
+            name={finalPriceName}
+            label="Preț final"
+            type="number"
+            disabled
+          />
+        </>
+      )}
 
       {showActions && (
-        <Button
-          variant={isOffering ? "text" : "contained"}
-          color={isOffering ? "error" : "primary"}
-          size="small"
-          sx={{
-            textTransform: "none",
-            fontWeight: "700",
-            minWidth: 140,
-          }}
-          onClick={() => {
-            setValue(isOfferingName, !isOffering);
-          }}
-        >
-          {isOffering ? "Nu oferă" : "Activează"}
-        </Button>
+        <OfferingToggle
+          isOffering={isOffering}
+          onToggle={() => setValue(isOfferingName, !isOffering)}
+        />
       )}
     </Stack>
   );
