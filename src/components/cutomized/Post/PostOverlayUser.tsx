@@ -36,12 +36,12 @@ const PostOverlayUser = ({ user, profession, distance }: PostOverlayUser) => {
             </Box>
           )}
           {profession && distance && (
-            <Box component="span" sx={{ color: "white" }}>
+            <Box component="span" sx={{ color: "white", fontWeight: 600 }}>
               {" • "}
             </Box>
           )}
           {distance && (
-            <Box component="span" sx={{ color: "white" }}>
+            <Box component="span" sx={{ color: "white", fontWeight: 600 }}>
               {formatDistance(distance)}
             </Box>
           )}

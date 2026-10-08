@@ -341,7 +341,7 @@ export default function FeedModule() {
         <PostCommentsSheet
           open={isCommentsOpen}
           onClose={() => setIsCommentsOpen(false)}
-          isLoadingPosts={false}
+          postId={currentPost?.id}
         />
 
         <PostReviewsSheet

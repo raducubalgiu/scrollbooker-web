@@ -21,10 +21,8 @@ type CommentThreadProps = {
   onOpenReply: (target: ReplyTarget) => void;
   onCloseReply: () => void;
   onSubmitReply: (rootComment: PostComment) => void;
-  onToggleLike: (
-    comment: PostComment,
-    nextLiked: boolean
-  ) => Promise<void> | void;
+  onToggleLike: (comment: PostComment, nextLiked: boolean) => void;
+  isSubmitting?: boolean;
 };
 
 const CommentThread = ({
@@ -38,6 +36,7 @@ const CommentThread = ({
   onCloseReply,
   onSubmitReply,
   onToggleLike,
+  isSubmitting = false,
 }: CommentThreadProps) => {
   const [isRepliesOpen, setIsRepliesOpen] = useState(false);
 
@@ -158,6 +157,7 @@ const CommentThread = ({
             replyingTo={activeReplyTarget.replyToFullName}
             onCancel={onCloseReply}
             autoFocus
+            disabled={isSubmitting}
             placeholder={`Răspunde lui ${activeReplyTarget.replyToFullName}...`}
           />
         </Box>

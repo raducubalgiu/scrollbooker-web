@@ -160,7 +160,7 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
       <PostCommentsSheet
         open={isCommentsOpen}
         onClose={() => setIsCommentsOpen(false)}
-        isLoadingPosts={false}
+        postId={post.id}
       />
 
       <PostReviewsSheet

@@ -6,11 +6,15 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSession } from "next-auth/react";
 import EmojiPicker from "@/components/core/EmojiPicker/EmojiPicker";
+
+const QUICK_EMOJIS = ["👌", "😁", "😇", "🤣", "😍", "🥰"];
 
 type CommentComposerProps = {
   value: string;
@@ -37,6 +41,9 @@ const CommentComposer = ({
   onCancel,
   disabled = false,
 }: CommentComposerProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const styles = {
     input: {
       "& .MuiOutlinedInput-root": {
@@ -52,6 +59,15 @@ const CommentComposer = ({
           border: 0,
         },
       },
+    },
+    quickEmoji: {
+      fontSize: 24,
+      lineHeight: 1,
+      border: "none",
+      background: "none",
+      p: 0,
+      py: 1,
+      cursor: "pointer",
     },
   };
 
@@ -73,6 +89,27 @@ const CommentComposer = ({
           <Typography variant="body2" color="text.secondary">
             Răspunzi lui <strong>@{replyingTo}</strong>
           </Typography>
+        </Stack>
+      )}
+
+      {isMobile && (
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ height: 44, mb: 1 }}
+        >
+          {QUICK_EMOJIS.map((emoji) => (
+            <Box
+              key={emoji}
+              component="button"
+              type="button"
+              onClick={() => handleEmojiSelect(emoji)}
+              sx={styles.quickEmoji}
+            >
+              {emoji}
+            </Box>
+          ))}
         </Stack>
       )}
 
@@ -103,7 +140,7 @@ const CommentComposer = ({
             />
           </Box>
 
-          <EmojiPicker onEmojiSelect={handleEmojiSelect} />
+          {!isMobile && <EmojiPicker onEmojiSelect={handleEmojiSelect} />}
         </Stack>
 
         <IconButton

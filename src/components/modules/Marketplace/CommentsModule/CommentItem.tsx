@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo } from "react";
 import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -13,10 +13,7 @@ type CommentItemProps = {
   postAuthorAvatar: string | null;
   isReply?: boolean;
   onReply: (comment: PostComment) => void;
-  onToggleLike?: (
-    comment: PostComment,
-    nextLiked: boolean
-  ) => Promise<void> | void;
+  onToggleLike?: (comment: PostComment, nextLiked: boolean) => void;
 };
 
 const CommentItem = ({
@@ -26,26 +23,8 @@ const CommentItem = ({
   onReply,
   onToggleLike,
 }: CommentItemProps) => {
-  const [liked, setLiked] = useState(comment.is_liked);
-  const [likeCount, setLikeCount] = useState(comment.like_count ?? 0);
-
-  useEffect(() => {
-    setLiked(comment.is_liked);
-    setLikeCount(comment.like_count ?? 0);
-  }, [comment.is_liked, comment.like_count]);
-
-  const handleToggleLike = async () => {
-    const nextLiked = !liked;
-
-    setLiked(nextLiked);
-    setLikeCount((prev) => prev + (nextLiked ? 1 : -1));
-
-    try {
-      await onToggleLike?.(comment, nextLiked);
-    } catch {
-      setLiked(!nextLiked);
-      setLikeCount((prev) => prev - (nextLiked ? 1 : -1));
-    }
+  const handleToggleLike = () => {
+    onToggleLike?.(comment, !comment.is_liked);
   };
 
   return (
@@ -58,7 +37,7 @@ const CommentItem = ({
       <Box sx={{ minWidth: 0, flex: 1 }}>
         <Stack
           direction="row"
-          spacing={1}
+          spacing={0.5}
           alignItems="center"
           sx={{ mb: 0.5, flexWrap: "wrap" }}
         >
@@ -85,7 +64,7 @@ const CommentItem = ({
             <Typography
               color="text.secondary"
               fontWeight={600}
-              sx={{ cursor: "pointer" }}
+              sx={{ cursor: "pointer", fontSize: { xs: 13 } }}
               onClick={() => onReply(comment)}
             >
               Răspunde
@@ -106,16 +85,16 @@ const CommentItem = ({
 
           <Stack direction="row" alignItems="center" spacing={0.5}>
             <IconButton size="small" onClick={handleToggleLike}>
-              {liked ? (
+              {comment.is_liked ? (
                 <FavoriteIcon fontSize="small" color="error" />
               ) : (
                 <FavoriteBorderIcon fontSize="small" />
               )}
             </IconButton>
 
-            {likeCount > 0 && (
+            {comment.like_count > 0 && (
               <Typography color="text.secondary" fontWeight={600}>
-                {likeCount}
+                {comment.like_count}
               </Typography>
             )}
           </Stack>

@@ -1,19 +1,20 @@
 import { Box, Drawer, IconButton, Stack, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import PostComments from "@/components/modules/Marketplace/CommentsModule/PostComments";
 
 type PostCommentsSheetProps = {
   open: boolean;
   onClose: () => void;
-  isLoadingPosts: boolean;
+  postId: number | undefined;
+  postAuthorAvatar?: string | null;
 };
 
 const PostCommentsSheet = ({
   open,
   onClose,
-  isLoadingPosts,
+  postId,
+  postAuthorAvatar = null,
 }: PostCommentsSheetProps) => {
-  console.log(isLoadingPosts);
-
   return (
     <Drawer
       anchor="bottom"
@@ -43,7 +44,9 @@ const PostCommentsSheet = ({
         </Stack>
       </Box>
 
-      <Box sx={styles.listContainer}></Box>
+      <Box sx={styles.listContainer}>
+        <PostComments postId={postId} postAuthorAvatar={postAuthorAvatar} />
+      </Box>
     </Drawer>
   );
 };
@@ -72,9 +75,10 @@ const styles = {
     color: "text.secondary",
   },
   listContainer: {
-    flexGrow: 1,
-    overflowY: "auto",
+    flex: 1,
+    minHeight: 0,
+    display: "flex",
+    flexDirection: "column",
     px: 0.5,
-    WebkitOverflowScrolling: "touch",
   },
 };

@@ -9,19 +9,18 @@ import {
 import CommentComposer from "./CommentComposer";
 import CommentThread from "./CommentThread";
 import { PostComment, ReplyTarget } from "@/ts/models/social/PostComment";
-import { useMutate } from "@/hooks/useHttp";
-import { useInfiniteComments } from "@/controllers/social/comment.controller";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  useCreateComment,
+  useInfiniteComments,
+  useLikeComment,
+  useUnlikeComment,
+} from "@/controllers/social/comment.controller";
+import { patchCommentInCache } from "@/utils/commentCache";
 
 type PostCommentsProps = {
   postId: number | undefined;
   postAuthorAvatar: string | null;
-};
-
-type CreateCommentPayload = {
-  text: string;
-  post_id: number;
-  parent_id: number | null;
-  reply_to_comment_id: number | null;
 };
 
 const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
@@ -30,48 +29,23 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
   const [activeReplyTarget, setActiveReplyTarget] =
     useState<ReplyTarget | null>(null);
 
-  const {
-    data,
-    refetch,
-    isLoading,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteComments({
-    enabled: true,
-    postId: postId ?? 0,
-  });
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useInfiniteComments({
+      enabled: true,
+      postId: postId ?? 0,
+    });
 
   const rootComments = useMemo(
     () => data?.pages.flatMap((page) => page.results) ?? [],
     [data]
   );
 
-  const { mutate: createComment } = useMutate({
-    key: ["comments", postId],
-    method: "POST",
-    url: "/api/social/comment",
-    options: {
-      onSuccess: () => {
-        setNewCommentText("");
-        setReplyText("");
-        setActiveReplyTarget(null);
-        refetch();
-      },
-    },
-  });
+  const { mutate: createComment, isPending: isSubmittingComment } =
+    useCreateComment();
 
-  const { mutate: likeComment } = useMutate({
-    key: ["like-comment", postId],
-    method: "POST",
-    url: "/api/social/comment/like",
-  });
-
-  const { mutate: unlikeComment } = useMutate({
-    key: ["unlike-comment", postId],
-    method: "DELETE",
-    url: "/api/social/comment/like",
-  });
+  const queryClient = useQueryClient();
+  const { mutate: likeComment } = useLikeComment();
+  const { mutate: unlikeComment } = useUnlikeComment();
 
   if (!postId) {
     return (
@@ -87,14 +61,14 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
     const text = newCommentText.trim();
     if (!text) return;
 
-    const payload: CreateCommentPayload = {
-      text,
-      post_id: postId,
-      parent_id: null,
-      reply_to_comment_id: null,
-    };
-
-    createComment(payload);
+    createComment(
+      { postId, text, parentId: null, replyToCommentId: null },
+      {
+        onSuccess: () => {
+          setNewCommentText("");
+        },
+      }
+    );
   };
 
   const handleOpenReply = (target: ReplyTarget) => {
@@ -124,23 +98,40 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
     const text = replyText.trim();
     if (!text) return;
 
-    const payload: CreateCommentPayload = {
-      text,
-      post_id: postId,
-      parent_id: rootComment.id,
-      reply_to_comment_id: activeReplyTarget.replyToCommentId,
-    };
-
-    createComment(payload);
+    createComment(
+      {
+        postId,
+        text,
+        parentId: rootComment.id,
+        replyToCommentId: activeReplyTarget.replyToCommentId,
+      },
+      {
+        onSuccess: () => {
+          setReplyText("");
+          setActiveReplyTarget(null);
+        },
+      }
+    );
   };
 
-  const handleToggleLike = async (comment: PostComment, nextLiked: boolean) => {
-    if (nextLiked) {
-      await likeComment({ comment_id: comment.id });
-      return;
-    }
+  const toggleCommentLike = (comment: PostComment, nextLiked: boolean): PostComment => ({
+    ...comment,
+    is_liked: nextLiked,
+    like_count: Math.max(0, comment.like_count + (nextLiked ? 1 : -1)),
+  });
 
-    await unlikeComment({ comment_id: comment.id });
+  const handleToggleLike = (comment: PostComment, nextLiked: boolean) => {
+    patchCommentInCache(queryClient, postId, comment, (c) =>
+      toggleCommentLike(c, nextLiked)
+    );
+
+    const mutate = nextLiked ? likeComment : unlikeComment;
+    mutate(comment.id, {
+      onError: () =>
+        patchCommentInCache(queryClient, postId, comment, (c) =>
+          toggleCommentLike(c, !nextLiked)
+        ),
+    });
   };
 
   return (
@@ -172,6 +163,7 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
               onCloseReply={handleCloseReply}
               onSubmitReply={handleSubmitReply}
               onToggleLike={handleToggleLike}
+              isSubmitting={isSubmittingComment}
             />
           ))}
 
@@ -199,6 +191,7 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
           onChange={setNewCommentText}
           onSubmit={handleCreateRootComment}
           placeholder="Add comment..."
+          disabled={isSubmittingComment}
         />
       </Box>
     </Stack>
@@ -213,7 +206,8 @@ const styles = {
     flex: 1,
     minHeight: 0,
     overflowY: "auto",
-    p: 3,
+    px: { xs: 1.5, md: 3 },
+    py: { xs: 2, md: 3 },
     scrollBarWidth: "none",
     msOverflowStyle: "none",
     "&::-webkit-scrollbar": {
