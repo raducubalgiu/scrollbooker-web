@@ -33,3 +33,30 @@ export const patchPostInAllCaches = (
     );
   });
 };
+
+export const patchFollowInAllCaches = (
+  queryClient: QueryClient,
+  userId: number,
+  isFollow: boolean
+) => {
+  Object.values(POST_QUERY_KEYS).forEach((key) => {
+    queryClient.setQueriesData<InfiniteData<PaginatedData<Post>>>(
+      { queryKey: key },
+      (data) => {
+        if (!data) return data;
+
+        return {
+          ...data,
+          pages: data.pages.map((page) => ({
+            ...page,
+            results: page.results.map((p) =>
+              p.user.id === userId
+                ? { ...p, user: { ...p.user, is_follow: isFollow } }
+                : p
+            ),
+          })),
+        };
+      }
+    );
+  });
+};

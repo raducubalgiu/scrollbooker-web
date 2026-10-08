@@ -32,6 +32,7 @@ export function FeedVideoPool({
   const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const lastSettledIndexRef = useRef(currentIndex);
   const isProgrammaticScrollRef = useRef(false);
+  const isFirstScrollRef = useRef(true);
   const programmaticScrollTimeoutRef = useRef<ReturnType<
     typeof setTimeout
   > | null>(null);
@@ -103,7 +104,14 @@ export function FeedVideoPool({
 
     isProgrammaticScrollRef.current = true;
     lastSettledIndexRef.current = currentIndex;
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    // The very first programmatic positioning (landing on the initially
+    // resolved post) must be instant — the user should never see the
+    // feed visibly scroll past the in-between videos on load.
+    target.scrollIntoView({
+      behavior: isFirstScrollRef.current ? "auto" : "smooth",
+      block: "start",
+    });
+    isFirstScrollRef.current = false;
 
     if (programmaticScrollTimeoutRef.current) {
       clearTimeout(programmaticScrollTimeoutRef.current);

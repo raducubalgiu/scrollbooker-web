@@ -1,4 +1,4 @@
-import VideoDetailModule from "@/components/modules/Marketplace/VideoDetailModule/VideoDetailModule";
+import UserPostFeedModule from "@/components/modules/Marketplace/UserPostFeedModule/UserPostFeedModule";
 import { Post } from "@/ts/models/social/Post";
 import { get } from "@/utils/requests";
 import React from "react";
@@ -29,12 +29,5 @@ export default async function PostPage({
     throw new Error("An error occured when fetching post");
   }
 
-  return (
-    <VideoDetailModule
-      initialPost={postData}
-      username={postData.user.username}
-      profession={postData.user.profession}
-      tab={tab ?? null}
-    />
-  );
+  return <UserPostFeedModule initialPost={postData} tab={tab ?? null} />;
 }
