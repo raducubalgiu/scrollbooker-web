@@ -1,9 +1,25 @@
 import { PaginatedData } from "@/components/core/Table/Table";
 import { Post } from "@/ts/models/social/Post";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { POST_QUERY_KEYS } from "@/utils/postCache";
 
+const POSTS_PATH = "/api/protected/posts";
 const PAGE_LIMIT = 20;
+
+export const useBookmarkPost = () => {
+  return useMutation({
+    mutationFn: (postId: number) =>
+      axios.post(`${POSTS_PATH}/${postId}/bookmark-posts`),
+  });
+};
+
+export const useUnbookmarkPost = () => {
+  return useMutation({
+    mutationFn: (postId: number) =>
+      axios.delete(`${POSTS_PATH}/${postId}/bookmark-posts`),
+  });
+};
 
 const fetchUserBookmarkedPosts = async ({
   userId,
@@ -27,7 +43,7 @@ export const useInfiniteUserBookmarkedPosts = ({
   userId: number;
 }) => {
   return useInfiniteQuery({
-    queryKey: ["userBookmarkedPosts"],
+    queryKey: POST_QUERY_KEYS.userBookmarkedPosts,
     queryFn: ({ pageParam = 1 }) =>
       fetchUserBookmarkedPosts({ pageParam, userId }),
     initialPageParam: 1,

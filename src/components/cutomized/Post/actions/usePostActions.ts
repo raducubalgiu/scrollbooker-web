@@ -74,7 +74,7 @@ export const usePostActions = ({
       },
       {
         key: "bookmark",
-        count: counters?.bookings_count ?? counters?.bookmark_count ?? 0,
+        count: counters?.bookmark_count ?? 0,
         disabled: isSavingBookmark,
         isActive: userActions?.is_bookmarked ?? false,
         activeColor: "rating.main",
@@ -83,7 +83,7 @@ export const usePostActions = ({
       {
         key: "share",
         onClick: onShareClick,
-        count: 100,
+        count: counters?.share_count ?? 0,
       },
     ],
     [

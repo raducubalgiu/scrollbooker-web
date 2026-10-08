@@ -2,6 +2,7 @@ import { PaginatedData } from "@/components/core/Table/Table";
 import { Post } from "@/ts/models/social/Post";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { POST_QUERY_KEYS } from "@/utils/postCache";
 
 const POST_PATH = "/api/protected/posts";
 
@@ -20,7 +21,7 @@ export const useInfiniteExplorePosts = ({
   enabled = true,
 }: { enabled?: boolean } = {}) => {
   return useInfiniteQuery({
-    queryKey: ["explorePosts"],
+    queryKey: POST_QUERY_KEYS.explore,
     queryFn: ({ pageParam = 1 }) => fetchExplorePosts({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
@@ -46,7 +47,7 @@ export const useInfiniteFollowingPosts = ({
   enabled = true,
 }: { enabled?: boolean } = {}) => {
   return useInfiniteQuery({
-    queryKey: ["followingPosts"],
+    queryKey: POST_QUERY_KEYS.following,
     queryFn: ({ pageParam = 1 }) => fetchFollowingPosts({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
@@ -75,7 +76,7 @@ const fetchUserPosts = async ({
 
 export const useInfiniteUserPosts = ({ userId }: { userId: number }) => {
   return useInfiniteQuery({
-    queryKey: ["userPosts", userId],
+    queryKey: [...POST_QUERY_KEYS.userPosts, userId],
     queryFn: ({ pageParam = 1 }) => fetchUserPosts({ pageParam, userId }),
     initialPageParam: 1,
     enabled: !!userId,

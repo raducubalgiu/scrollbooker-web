@@ -6,7 +6,6 @@ import PostActions from "../../../cutomized/Post/actions/PostActions";
 import ExploreControls from "../../../cutomized/Post/ExploreControls";
 import { useFeedPaginationPrefetch } from "./useFeedPaginationPrefetch";
 import FeedTabs, { FeedTabEnum } from "./FeedTabs";
-import { useMutate } from "@/hooks/useHttp";
 import PostLinkedProductsSheet from "../../../cutomized/Post/sheets/PostLinkedProductsSheet";
 import PostCommentsSheet from "@/components/cutomized/Post/sheets/PostCommentsSheet";
 import PostReviewsSheet from "@/components/cutomized/Post/sheets/PostReviewsSheet";
@@ -30,6 +29,8 @@ import { calculateDistance } from "@/utils/calculateDistance";
 import PostDesktopSidebar from "@/components/cutomized/Post/sidebar/PostDesktopSidebar";
 import FeedDrawer from "./FeedDrawer";
 import { FeedVideoPool } from "./FeedVideoPool";
+import { usePostLikeBookmark } from "@/components/cutomized/Post/actions/usePostLikeBookmark";
+import { POST_QUERY_KEYS } from "@/utils/postCache";
 
 const PREFETCH_OFFSET = 2;
 
@@ -49,14 +50,6 @@ export default function FeedModule() {
 
   const explorePosts = useInfiniteExplorePosts();
   const followingPosts = useInfiniteFollowingPosts();
-
-  const activeQueryKey = useMemo(
-    () =>
-      currentTab === FeedTabEnum.EXPLORE
-        ? ["explore-posts"]
-        : ["following-posts"],
-    [currentTab]
-  );
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     currentTab === FeedTabEnum.EXPLORE ? explorePosts : followingPosts;
@@ -119,122 +112,14 @@ export default function FeedModule() {
 
   const { user_actions, counters } = currentPost ?? {};
 
-  const { mutate: apiLike } = useMutate({
-    key: ["like-post", currentPost?.id],
-    method: "POST",
-    url: `/api/social/post/like`,
-  });
-
-  const { mutate: apiUnlike } = useMutate({
-    key: ["unlike-post", currentPost?.id],
-    method: "DELETE",
-    url: `/api/social/post/like`,
-  });
-
-  const { mutate: apiBookmark } = useMutate({
-    key: ["bookmark-post", currentPost?.id],
-    method: "POST",
-    url: `/api/social/post/bookmark`,
-  });
-
-  const { mutate: apiUnbookmark } = useMutate({
-    key: ["unbookmark-post", currentPost?.id],
-    method: "DELETE",
-    url: `/api/social/post/bookmark`,
-  });
-
   const { data: linkedProducts, isLoading: isLoadingLinkedProducts } =
     useGetLinkedProductsByPostId({
       postId: currentPost?.id ?? null,
       isEnabled: !!currentPost?.id,
     });
 
-  const updateInfinitePostState = useCallback(
-    (
-      postId: number,
-      type: "is_liked" | "is_bookmarked",
-      action: "increment" | "decrement"
-    ) => {
-      const counterKey = type === "is_liked" ? "like_count" : "bookmark_count";
-      const change = action === "increment" ? 1 : -1;
-
-      queryClient.setQueryData(
-        activeQueryKey,
-        (oldData: InfiniteData<PaginatedData<Post>>) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              results: page.results.map((p) => {
-                if (p.id !== postId) return p;
-                return {
-                  ...p,
-                  counters: {
-                    ...p.counters,
-                    [counterKey]: Math.max(0, p.counters[counterKey] + change),
-                  },
-                  user_actions: {
-                    ...p.user_actions,
-                    [type]: action === "increment",
-                  },
-                };
-              }),
-            })),
-          };
-        }
-      );
-    },
-    [queryClient, activeQueryKey]
-  );
-
-  const handleLike = useCallback(() => {
-    if (!currentPost) return;
-    const isLiked = currentPost.user_actions.is_liked;
-
-    updateInfinitePostState(
-      currentPost.id,
-      "is_liked",
-      isLiked ? "decrement" : "increment"
-    );
-
-    const triggerApi = isLiked ? apiUnlike : apiLike;
-    triggerApi(
-      { post_id: currentPost.id },
-      {
-        onError: () =>
-          updateInfinitePostState(
-            currentPost.id,
-            "is_liked",
-            isLiked ? "increment" : "decrement"
-          ),
-      }
-    );
-  }, [currentPost, apiLike, apiUnlike, updateInfinitePostState]);
-
-  const handleBookmark = useCallback(() => {
-    if (!currentPost) return;
-    const isBookmarked = currentPost.user_actions.is_bookmarked;
-
-    updateInfinitePostState(
-      currentPost.id,
-      "is_bookmarked",
-      isBookmarked ? "decrement" : "increment"
-    );
-
-    const triggerApi = isBookmarked ? apiUnbookmark : apiBookmark;
-    triggerApi(
-      { post_id: currentPost.id },
-      {
-        onError: () =>
-          updateInfinitePostState(
-            currentPost.id,
-            "is_bookmarked",
-            isBookmarked ? "increment" : "decrement"
-          ),
-      }
-    );
-  }, [currentPost, apiBookmark, apiUnbookmark, updateInfinitePostState]);
+  const { handleLike, handleBookmark, isSavingLike, isSavingBookmark } =
+    usePostLikeBookmark(currentPost);
 
   const updateUserFollowState = useCallback(
     (userId: number, isFollow: boolean) => {
@@ -253,8 +138,8 @@ export default function FeedModule() {
         };
       };
 
-      queryClient.setQueryData(["explore-posts"], patchPosts);
-      queryClient.setQueryData(["following-posts"], patchPosts);
+      queryClient.setQueryData(POST_QUERY_KEYS.explore, patchPosts);
+      queryClient.setQueryData(POST_QUERY_KEYS.following, patchPosts);
     },
     [queryClient]
   );
@@ -272,7 +157,7 @@ export default function FeedModule() {
     mutate(userId, {
       onError: () => updateUserFollowState(userId, isFollow),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["following-posts"] });
+        queryClient.invalidateQueries({ queryKey: POST_QUERY_KEYS.following });
       },
     });
   }, [currentPost, follow, unfollow, updateUserFollowState, queryClient]);
@@ -351,8 +236,8 @@ export default function FeedModule() {
 
   const loaders = {
     isLoading,
-    isSavingLike: false,
-    isSavingBookmark: false,
+    isSavingLike,
+    isSavingBookmark,
     isLoadingDelete: false,
   };
 

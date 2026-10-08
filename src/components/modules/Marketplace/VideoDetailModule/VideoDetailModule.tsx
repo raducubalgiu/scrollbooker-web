@@ -40,6 +40,8 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
     handleClose,
     handleLike,
     handleBookmark,
+    isSavingLike,
+    isSavingBookmark,
     handleFollow,
     isTogglingFollow,
     handleDelete,
@@ -76,8 +78,8 @@ export default function VideoDetailModule(props: ProfileVideoDetailPageProps) {
 
   const loaders = {
     isLoading: false,
-    isSavingLike: false,
-    isSavingBookmark: false,
+    isSavingLike,
+    isSavingBookmark,
     isLoadingDelete: isPendingDelete,
   };
 
