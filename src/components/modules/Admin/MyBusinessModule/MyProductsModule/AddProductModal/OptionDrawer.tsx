@@ -12,13 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import {
-  Control,
-  FormProvider,
-  UseFormWatch,
-  useForm,
-} from "react-hook-form";
+import { Control, FormProvider, UseFormWatch, useForm } from "react-hook-form";
 import { FormProductVariant, ProductFormValues } from "./AddProductModal";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import OptionFormFields from "./OptionFormFields";
@@ -34,7 +28,6 @@ type OptionDrawerProps = {
   ownerUserId: number;
   onClose: () => void;
   onCreate: (variant: FormProductVariant) => void;
-  onDelete?: () => void;
 };
 
 const buildSeedValues = (
@@ -66,7 +59,6 @@ const OptionDrawer = ({
   ownerUserId,
   onClose,
   onCreate,
-  onDelete,
 }: OptionDrawerProps) => {
   const isCreating = index === null;
 
@@ -118,13 +110,7 @@ const OptionDrawer = ({
 
         <Typography fontWeight={700}>Opțiune</Typography>
 
-        {onDelete ? (
-          <IconButton onClick={onDelete} size="small" color="error">
-            <DeleteOutlineIcon />
-          </IconButton>
-        ) : (
-          <Box sx={{ width: 34 }} />
-        )}
+        <Box sx={{ width: 34 }} />
       </Stack>
 
       <Box sx={styles.content}>
@@ -154,7 +140,6 @@ const OptionDrawer = ({
         <Button
           fullWidth
           variant="contained"
-          size="large"
           disableElevation
           onClick={handleSave}
         >

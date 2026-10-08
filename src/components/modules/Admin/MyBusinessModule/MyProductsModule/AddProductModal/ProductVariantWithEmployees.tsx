@@ -6,9 +6,12 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
 import ProductOfferingRow from "./ProductOfferingRow";
+import EmployeeOfferingCard from "./EmployeeOfferingCard";
 import {
   FieldArrayWithId,
   useFormContext,
@@ -35,6 +38,8 @@ const ProductVariantWithEmployees = ({
   watch,
   offeringFields,
 }: ProductVariantWithEmployeesProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { setValue } = useFormContext();
   const [bulkPrice, setBulkPrice] = useState("");
   const [bulkDiscount, setBulkDiscount] = useState("");
@@ -98,51 +103,68 @@ const ProductVariantWithEmployees = ({
         </Stack>
       </Box>
 
-      <Stack spacing={1.5}>
-        {offeringFields.map((field, empIndex) => {
-          const employee = find(employees, { id: field.user_id });
+      {isMobile ? (
+        <Stack spacing={1.5}>
+          {offeringFields.map((field, empIndex) => {
+            const employee = find(employees, { id: field.user_id });
 
-          const isOffering = watch(
-            `variants.${index}.offerings.${empIndex}.is_offering`
-          );
-
-          return (
-            <Paper
-              variant="outlined"
-              key={field.id}
-              sx={{
-                p: 2,
-                borderRadius: 3,
-                display: "flex",
-                alignItems: "center",
-                gap: 3,
-                bgcolor: isOffering ? "background.default" : "action.hover",
-                opacity: isOffering ? 1 : 0.6,
-                transition: "all 0.2s",
-              }}
-            >
-              <Avatar
-                src={employee?.avatar ?? ""}
-                sx={{ width: 40, height: 40 }}
-              />
-              <Box sx={{ minWidth: 180 }}>
-                <Typography variant="h5" fontWeight="700">
-                  {employee?.fullname}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {employee?.job}
-                </Typography>
-              </Box>
-
-              <ProductOfferingRow
+            return (
+              <EmployeeOfferingCard
+                key={field.id}
+                employee={employee}
                 index={index}
                 empIndex={empIndex}
-                isOffering={isOffering}
               />
-            </Paper>
-          );
-        })}
-      </Stack>
+            );
+          })}
+        </Stack>
+      ) : (
+        <Stack spacing={1.5}>
+          {offeringFields.map((field, empIndex) => {
+            const employee = find(employees, { id: field.user_id });
+
+            const isOffering = watch(
+              `variants.${index}.offerings.${empIndex}.is_offering`
+            );
+
+            return (
+              <Paper
+                variant="outlined"
+                key={field.id}
+                sx={{
+                  p: 2,
+                  borderRadius: 3,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 3,
+                  bgcolor: isOffering ? "background.default" : "action.hover",
+                  opacity: isOffering ? 1 : 0.6,
+                  transition: "all 0.2s",
+                }}
+              >
+                <Avatar
+                  src={employee?.avatar ?? ""}
+                  sx={{ width: 40, height: 40 }}
+                />
+                <Box sx={{ minWidth: 180 }}>
+                  <Typography variant="h5" fontWeight="700">
+                    {employee?.fullname}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {employee?.job}
+                  </Typography>
+                </Box>
+
+                <ProductOfferingRow
+                  index={index}
+                  empIndex={empIndex}
+                  isOffering={isOffering}
+                />
+              </Paper>
+            );
+          })}
+        </Stack>
+      )}
     </Box>
   );
 };

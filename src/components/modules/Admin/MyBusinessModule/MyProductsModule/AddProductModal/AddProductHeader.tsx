@@ -78,7 +78,6 @@ const AddProductHeader = ({
           <Button
             fullWidth
             variant="contained"
-            size="large"
             disableElevation
             onClick={onSaveProduct}
             disabled={isSavingProduct}

@@ -406,7 +406,7 @@ const getComponents = (mode: Mode) => ({
       },
       root: ({ theme }: { theme: Theme }) => ({
         backgroundColor: theme.palette.secondary.main,
-        borderRadius: 8,
+        borderRadius: 15,
         transition: theme.transitions.create(
           ["background-color", "box-shadow"],
           {

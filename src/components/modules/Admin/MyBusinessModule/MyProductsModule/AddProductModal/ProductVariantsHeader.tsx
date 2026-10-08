@@ -32,7 +32,7 @@ const ProductVariantsHeader = ({ onAdd }: ProductVariantsHeaderProps) => {
       <Tooltip title="Adaugă o opțiune">
         <IconButton
           onClick={onAdd}
-          size="large"
+          size="small"
           sx={{
             bgcolor: "primary.main",
             transition: "all 0.2s ease",

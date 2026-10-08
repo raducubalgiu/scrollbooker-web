@@ -1,5 +1,5 @@
-import { ChevronRight } from "@mui/icons-material";
-import { Box, Stack, Typography } from "@mui/material";
+import { DeleteOutline, EditOutlined } from "@mui/icons-material";
+import { alpha, Box, IconButton, Stack, Theme, Typography } from "@mui/material";
 import React from "react";
 import { Control, useWatch } from "react-hook-form";
 import { ProductFormValues } from "./AddProductModal";
@@ -9,13 +9,15 @@ import { formatPrice } from "@/utils/formatPrice";
 type ProductVariantCardProps = {
   index: number;
   control: Control<ProductFormValues>;
-  onClick: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 };
 
 const ProductVariantCard = ({
   index,
   control,
-  onClick,
+  onEdit,
+  onDelete,
 }: ProductVariantCardProps) => {
   const name = useWatch({ control, name: `variants.${index}.name` });
   const duration = useWatch({ control, name: `variants.${index}.duration` });
@@ -28,21 +30,32 @@ const ProductVariantCard = ({
   const cheapestPrice = activePrices.length ? Math.min(...activePrices) : 0;
 
   return (
-    <Box component="button" type="button" onClick={onClick} sx={styles.container}>
+    <Box sx={styles.container}>
       <Box minWidth={0}>
-        <Typography fontWeight="700" noWrap textAlign="left">
+        <Typography fontWeight="700" noWrap>
           {name || `Opțiunea #${index + 1}`}
         </Typography>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" noWrap>
           {duration
             ? ProductUtils.getDurationText(Number(duration))
             : "Fără durată setată"}
+          {" • "}
+          {`${formatPrice(cheapestPrice)} RON`}
         </Typography>
       </Box>
 
-      <Stack direction="row" alignItems="center" gap={0.5} flexShrink={0}>
-        <Typography fontWeight="700">{`${formatPrice(cheapestPrice)} RON`}</Typography>
-        <ChevronRight color="action" />
+      <Stack direction="row" gap={1} flexShrink={0}>
+        <IconButton size="small" onClick={onEdit} sx={styles.editButton}>
+          <EditOutlined fontSize="small" />
+        </IconButton>
+        <IconButton
+          size="small"
+          color="error"
+          onClick={onDelete}
+          sx={styles.deleteButton}
+        >
+          <DeleteOutline fontSize="small" />
+        </IconButton>
       </Stack>
     </Box>
   );
@@ -62,10 +75,14 @@ const styles = {
     border: "1px solid",
     borderColor: "divider",
     bgcolor: "background.paper",
-    cursor: "pointer",
-    textAlign: "left",
+  },
+  editButton: {
+    bgcolor: "action.hover",
+  },
+  deleteButton: {
+    bgcolor: (theme: Theme) => alpha(theme.palette.error.main, 0.08),
     "&:hover": {
-      borderColor: "primary.main",
+      bgcolor: (theme: Theme) => alpha(theme.palette.error.main, 0.16),
     },
   },
 };

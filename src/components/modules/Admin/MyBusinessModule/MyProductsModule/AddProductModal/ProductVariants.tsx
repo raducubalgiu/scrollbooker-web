@@ -69,14 +69,6 @@ const ProductVariants = ({
     setIsDrawerOpen(false);
   };
 
-  const handleDeleteFromDrawer = () => {
-    if (editingIndex !== null) {
-      remove(editingIndex);
-    }
-
-    setIsDrawerOpen(false);
-  };
-
   return (
     <Grid size={{ xs: 12, md: 8 }} sx={styles.container}>
       <ProductVariantsHeader onAdd={onAddVariant} />
@@ -107,7 +99,8 @@ const ProductVariants = ({
                 key={field.id}
                 index={index}
                 control={control}
-                onClick={() => handleOpenExistingOption(index)}
+                onEdit={() => handleOpenExistingOption(index)}
+                onDelete={() => remove(index)}
               />
             ))
           )}
@@ -139,7 +132,6 @@ const ProductVariants = ({
           ownerUserId={ownerUserId}
           onClose={handleCloseDrawer}
           onCreate={handleCreateOption}
-          {...(editingIndex !== null && { onDelete: handleDeleteFromDrawer })}
         />
       )}
     </Grid>

@@ -11,6 +11,7 @@ import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
 import {
   Box,
   Button,
+  IconButton,
   Stack,
   Typography,
   useMediaQuery,
@@ -25,6 +26,7 @@ import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 import AddProductModal from "./AddProductModal/AddProductModal";
+import AddIcon from "@mui/icons-material/Add";
 import { toast } from "react-toastify";
 
 const HEADER_HEIGHT = 88;
@@ -95,7 +97,11 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
     <Box sx={styles.container}>
       <HeaderMobile
         title="Serviciile mele"
-        onAction={() => setIsAddProductOpen(true)}
+        customAction={
+          <IconButton onClick={() => setIsAddProductOpen(true)}>
+            <AddIcon />
+          </IconButton>
+        }
       />
 
       <Box sx={[styles.scrollArea, { bgcolor: pageBgcolor }]}>
