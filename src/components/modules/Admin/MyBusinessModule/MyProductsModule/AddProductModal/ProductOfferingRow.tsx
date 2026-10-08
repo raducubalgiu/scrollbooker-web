@@ -3,7 +3,6 @@ import { min, max, required } from "@/utils/validation-rules";
 import { Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import OfferingToggle from "./OfferingToggle";
 
 type ProductOfferingRowProps = {
   index: number;
@@ -32,7 +31,6 @@ const ProductOfferingRow = ({
   const priceName = `variants.${index}.offerings.${empIndex}.price`;
   const discountName = `variants.${index}.offerings.${empIndex}.discount`;
   const finalPriceName = `variants.${index}.offerings.${empIndex}.price_with_discount`;
-  const isOfferingName = `variants.${index}.offerings.${empIndex}.is_offering`;
 
   const priceValue = useWatch({ control, name: priceName });
   const discountValue = useWatch({ control, name: discountName });
@@ -118,13 +116,6 @@ const ProductOfferingRow = ({
             disabled
           />
         </>
-      )}
-
-      {showActions && (
-        <OfferingToggle
-          isOffering={isOffering}
-          onToggle={() => setValue(isOfferingName, !isOffering)}
-        />
       )}
     </Stack>
   );

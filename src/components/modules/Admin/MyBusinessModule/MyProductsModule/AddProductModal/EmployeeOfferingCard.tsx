@@ -98,7 +98,13 @@ const EmployeeOfferingCard = ({
           justifyContent="space-between"
           sx={{ width: "100%" }}
         >
-          <Stack direction="row" alignItems="center" gap={1.5} minWidth={0}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            gap={1.5}
+            minWidth={0}
+            sx={{ opacity: isOffering ? 1 : 0.6, transition: "all 0.2s ease" }}
+          >
             <Avatar
               src={employee?.avatar ?? ""}
               sx={{ width: 40, height: 40 }}
@@ -170,7 +176,6 @@ const styles = {
     border: "1px solid",
     borderColor: "divider",
     bgcolor: isOffering ? "background.default" : "action.hover",
-    opacity: isOffering ? 1 : 0.6,
     transition: "all 0.2s ease",
     "&:before": { display: "none" },
     boxShadow: "none",

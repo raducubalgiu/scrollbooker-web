@@ -12,6 +12,7 @@ import {
 import React, { useState } from "react";
 import ProductOfferingRow from "./ProductOfferingRow";
 import EmployeeOfferingCard from "./EmployeeOfferingCard";
+import OfferingToggle from "./OfferingToggle";
 import {
   FieldArrayWithId,
   useFormContext,
@@ -138,27 +139,48 @@ const ProductVariantWithEmployees = ({
                   alignItems: "center",
                   gap: 3,
                   bgcolor: isOffering ? "background.default" : "action.hover",
-                  opacity: isOffering ? 1 : 0.6,
                   transition: "all 0.2s",
                 }}
               >
-                <Avatar
-                  src={employee?.avatar ?? ""}
-                  sx={{ width: 40, height: 40 }}
-                />
-                <Box sx={{ minWidth: 180 }}>
-                  <Typography variant="h5" fontWeight="700">
-                    {employee?.fullname}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {employee?.job}
-                  </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 3,
+                    flex: 1,
+                    minWidth: 0,
+                    opacity: isOffering ? 1 : 0.6,
+                    transition: "all 0.2s",
+                  }}
+                >
+                  <Avatar
+                    src={employee?.avatar ?? ""}
+                    sx={{ width: 40, height: 40 }}
+                  />
+                  <Box sx={{ minWidth: 180 }}>
+                    <Typography variant="h5" fontWeight="700">
+                      {employee?.fullname}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {employee?.job}
+                    </Typography>
+                  </Box>
+
+                  <ProductOfferingRow
+                    index={index}
+                    empIndex={empIndex}
+                    isOffering={isOffering}
+                  />
                 </Box>
 
-                <ProductOfferingRow
-                  index={index}
-                  empIndex={empIndex}
-                  isOffering={isOffering}
+                <OfferingToggle
+                  isOffering={!!isOffering}
+                  onToggle={() =>
+                    setValue(
+                      `variants.${index}.offerings.${empIndex}.is_offering`,
+                      !isOffering
+                    )
+                  }
                 />
               </Paper>
             );
