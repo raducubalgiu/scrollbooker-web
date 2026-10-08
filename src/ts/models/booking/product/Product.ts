@@ -47,6 +47,7 @@ export interface Product {
   id: number;
   name: string;
   description: string | null;
+  service_domain_id: number;
   service_id: number;
   business_id: number;
   business_owner_id: number;
@@ -145,5 +146,18 @@ export interface ProductCreate {
 
 export interface ProductWithFiltersCreate {
   product: ProductCreate;
+  filters: ProductFilterCreate[];
+}
+
+// Update Product DTO
+export interface ProductBaseInfoUpdate {
+  name: string;
+  description: string | null;
+  service_domain_id: number;
+  service_id: number;
+  can_be_booked: boolean;
+  type: string;
+  sessions_count?: number | null;
+  validity_days?: number | null;
   filters: ProductFilterCreate[];
 }

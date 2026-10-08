@@ -71,6 +71,10 @@ const ProductCard = ({
   };
 
   const filtersText = ProductUtils.getFiltersSummary(product);
+  const durationText = ProductUtils.getDurationText(starting_offering.duration);
+  const summaryText = filtersText
+    ? `${durationText} • ${filtersText}`
+    : durationText;
 
   const onSelectProduct = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -141,7 +145,7 @@ const ProductCard = ({
             {name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {filtersText}
+            {summaryText}
           </Typography>
 
           <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>

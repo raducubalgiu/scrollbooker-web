@@ -12,7 +12,7 @@ export const buildDefaultOfferings = (
         price: 0,
         price_with_discount: 0,
         discount: 0,
-        is_offering: true,
+        is_offering: false,
       }))
     : [
         {

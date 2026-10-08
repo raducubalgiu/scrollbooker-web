@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Control, FormProvider, UseFormWatch, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { FormProductVariant, ProductFormValues } from "./AddProductModal";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import OptionFormFields from "./OptionFormFields";
@@ -81,10 +82,29 @@ const OptionDrawer = ({
 
   const handleSave = async () => {
     if (isCreating) {
-      const isValid = await localTrigger("variants.0");
-      if (!isValid) return;
+      const isValid = await localTrigger([
+        "variants.0.name",
+        "variants.0.duration",
+      ]);
+      if (!isValid) {
+        toast.error("Completează toate câmpurile obligatorii.");
+        return;
+      }
 
-      onCreate(localGetValues("variants.0"));
+      const variant = localGetValues("variants.0");
+      const activeOfferings = variant.offerings.filter((o) => o.is_offering);
+
+      if (hasEmployees && activeOfferings.length === 0) {
+        toast.error("Activează cel puțin un angajat pentru această opțiune.");
+        return;
+      }
+
+      if (activeOfferings.some((o) => !(Number(o.price) > 0))) {
+        toast.error("Completează un preț valid pentru fiecare angajat activ.");
+        return;
+      }
+
+      onCreate(variant);
     }
 
     onClose();

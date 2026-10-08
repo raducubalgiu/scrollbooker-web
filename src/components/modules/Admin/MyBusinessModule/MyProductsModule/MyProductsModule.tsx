@@ -26,8 +26,10 @@ import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 import AddProductModal from "./AddProductModal/AddProductModal";
+import EditProductModal from "./EditProductModal/EditProductModal";
 import AddIcon from "@mui/icons-material/Add";
 import { toast } from "react-toastify";
+import { Product } from "@/ts/models/booking/product/Product";
 
 const HEADER_HEIGHT = 88;
 const TABS_HEIGHT = 72;
@@ -50,6 +52,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
     productId: null,
   });
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   const isEmployee = session?.business_owner_id !== session?.user_id;
 
@@ -120,6 +123,15 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
           open={isAddProductOpen}
           handleClose={() => setIsAddProductOpen(false)}
         />
+
+        {editingProduct && (
+          <EditProductModal
+            session={session}
+            open
+            product={editingProduct}
+            handleClose={() => setEditingProduct(null)}
+          />
+        )}
 
         <Stack
           flexDirection="row"
@@ -206,11 +218,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
                             onOpenDetail={() => {}}
                             onAdd={() => {}}
                             onNavigateToBooking={() => {}}
-                            onEditProduct={() =>
-                              toast.info(
-                                "Editarea produselor va fi disponibilă în curând"
-                              )
-                            }
+                            onEditProduct={() => setEditingProduct(prod)}
                             onDeleteProduct={(productId) =>
                               setDeleteConfirm({ open: true, productId })
                             }

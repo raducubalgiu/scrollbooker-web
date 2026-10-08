@@ -1,6 +1,8 @@
 import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
 import {
   Product,
+  ProductBaseInfoUpdate,
+  ProductVariantCreate,
   ProductWithFiltersCreate,
   UserProducts,
 } from "@/ts/models/booking/product/Product";
@@ -120,6 +122,115 @@ export const useDeleteProduct = () => {
       .then((res) => res.data);
 
   return useMutation<void, Error, number>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["business-employee-products"],
+      });
+    },
+  });
+};
+
+export type UpdateProductBaseInfoParams = {
+  productId: number;
+  data: ProductBaseInfoUpdate;
+};
+
+export const useUpdateProductBaseInfo = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    productId,
+    data,
+  }: UpdateProductBaseInfoParams): Promise<Product> =>
+    axios
+      .put(`/api/protected/products/${productId}/update-base-info`, data)
+      .then((res) => res.data);
+
+  return useMutation<Product, Error, UpdateProductBaseInfoParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["business-employee-products"],
+      });
+    },
+  });
+};
+
+export type CreateProductVariantParams = {
+  productId: number;
+  data: ProductVariantCreate;
+};
+
+export const useCreateProductVariant = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    productId,
+    data,
+  }: CreateProductVariantParams): Promise<Product> =>
+    axios
+      .post(`/api/protected/products/${productId}/variants`, data)
+      .then((res) => res.data);
+
+  return useMutation<Product, Error, CreateProductVariantParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["business-employee-products"],
+      });
+    },
+  });
+};
+
+export type UpdateProductVariantParams = {
+  productId: number;
+  variantId: number;
+  data: ProductVariantCreate;
+};
+
+export const useUpdateProductVariant = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    productId,
+    variantId,
+    data,
+  }: UpdateProductVariantParams): Promise<Product> =>
+    axios
+      .put(
+        `/api/protected/products/${productId}/variants/${variantId}`,
+        data
+      )
+      .then((res) => res.data);
+
+  return useMutation<Product, Error, UpdateProductVariantParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["business-employee-products"],
+      });
+    },
+  });
+};
+
+export type DeleteProductVariantParams = {
+  productId: number;
+  variantId: number;
+};
+
+export const useDeleteProductVariant = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    productId,
+    variantId,
+  }: DeleteProductVariantParams): Promise<void> =>
+    axios
+      .delete(`/api/protected/products/${productId}/variants/${variantId}`)
+      .then((res) => res.data);
+
+  return useMutation<void, Error, DeleteProductVariantParams>({
     mutationFn: doRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({

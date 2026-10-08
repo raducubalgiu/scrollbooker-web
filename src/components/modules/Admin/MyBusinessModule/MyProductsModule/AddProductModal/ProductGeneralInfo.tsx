@@ -18,7 +18,7 @@ const ProductGeneralInfo = ({
   selectedDomainId,
   serviceDomainServices,
 }: ProductGeneralInfoProps) => {
-  const { setValue, watch } = useFormContext();
+  const { setValue, watch, getValues } = useFormContext();
   const selectedServiceId = watch("serviceId");
 
   const isRequired = required();
@@ -31,17 +31,36 @@ const ProductGeneralInfo = ({
   });
 
   useEffect(() => {
-    if (filters) {
-      const initialFormFilters: FormProductFilter[] = filters.map((f) => ({
-        filter_id: f.id,
-        value: f.single_select ? "" : [],
-      }));
-
-      setValue("filters", initialFormFilters);
-    } else {
+    if (!filters) {
       setValue("filters", []);
+      return;
     }
-  }, [filters, setValue]);
+
+    const currentFilters = (getValues("filters") ?? []) as FormProductFilter[];
+
+    const nextFilters: FormProductFilter[] = filters.map((f) => {
+      const existing = currentFilters.find((cf) => cf.filter_id === f.id);
+
+      if (!existing) {
+        return { filter_id: f.id, value: f.single_select ? "" : [] };
+      }
+
+      if (f.single_select && Array.isArray(existing.value)) {
+        return { filter_id: f.id, value: existing.value[0] ?? "" };
+      }
+
+      if (!f.single_select && !Array.isArray(existing.value)) {
+        return {
+          filter_id: f.id,
+          value: existing.value ? [existing.value] : [],
+        };
+      }
+
+      return existing;
+    });
+
+    setValue("filters", nextFilters);
+  }, [filters, setValue, getValues]);
 
   const validDomains = useMemo(() => {
     if (!serviceDomainServices) return [];

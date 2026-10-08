@@ -17,6 +17,9 @@ type AddProductHeaderProps = {
   onHandleClose: () => void;
   onReset: () => void;
   onSaveProduct: () => void;
+  title?: string;
+  desktopSaveLabel?: string;
+  mobileSaveLabel?: string;
 };
 
 const AddProductHeader = ({
@@ -24,6 +27,9 @@ const AddProductHeader = ({
   onHandleClose,
   onReset,
   onSaveProduct,
+  title = "Adaugă serviciu",
+  desktopSaveLabel = "Salvează Serviciul",
+  mobileSaveLabel = "Creează serviciu",
 }: AddProductHeaderProps) => {
   return (
     <>
@@ -47,7 +53,7 @@ const AddProductHeader = ({
           </IconButton>
 
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" fontWeight="700">
-            Adaugă Serviciu Nou
+            {title}
           </Typography>
 
           <Button
@@ -67,7 +73,7 @@ const AddProductHeader = ({
             loading={isSavingProduct}
             sx={[styles.desktopOnly, { ml: 2 }]}
           >
-            Salvează Serviciul
+            {desktopSaveLabel}
           </Button>
         </Toolbar>
       </AppBar>
@@ -83,7 +89,7 @@ const AddProductHeader = ({
             disabled={isSavingProduct}
             loading={isSavingProduct}
           >
-            Creează Produs
+            {mobileSaveLabel}
           </Button>
         </Box>
       </Box>
