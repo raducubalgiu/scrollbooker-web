@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack, Theme } from "@mui/material";
+import { Badge, Box, IconButton, Stack, Theme } from "@mui/material";
 import React from "react";
 
 import SearchIcon from "@/assets/icons/ic_search.svg";
@@ -15,6 +15,7 @@ export enum FeedTabEnum {
 
 type FeedTabsProps = {
   activeTab: FeedTabEnum;
+  hasActiveFilters: boolean;
   onHandleToggleDrawer: () => void;
   onTabChange: (tab: FeedTabEnum) => void;
 };
@@ -26,6 +27,7 @@ const TABS: { key: FeedTabEnum; label: string }[] = [
 
 const FeedTabs = ({
   activeTab,
+  hasActiveFilters,
   onHandleToggleDrawer,
   onTabChange,
 }: FeedTabsProps) => {
@@ -37,11 +39,18 @@ const FeedTabs = ({
         <Box sx={styles.grid}>
           <Box sx={{ justifySelf: "start" }}>
             <IconButton size="large" onClick={onHandleToggleDrawer}>
-              <CustomSvg
-                src={BurgerIcon}
-                size={30}
-                sx={{ backgroundColor: "common.white" }}
-              />
+              <Badge
+                variant="dot"
+                color="primary"
+                invisible={!hasActiveFilters}
+                sx={styles.filterBadge}
+              >
+                <CustomSvg
+                  src={BurgerIcon}
+                  size={30}
+                  sx={{ backgroundColor: "common.white" }}
+                />
+              </Badge>
             </IconButton>
           </Box>
 
@@ -112,5 +121,13 @@ const styles = {
     alignItems: "center",
     width: "100%",
     px: 1,
+  },
+  filterBadge: {
+    "& .MuiBadge-badge": {
+      top: 6,
+      right: 6,
+      border: "2px solid",
+      borderColor: "common.black",
+    },
   },
 } as const;

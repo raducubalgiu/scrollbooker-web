@@ -6,9 +6,23 @@ import { POST_QUERY_KEYS } from "@/utils/postCache";
 
 const POST_PATH = "/api/protected/posts";
 
-const fetchExplorePosts = async ({ pageParam }: { pageParam: number }) => {
+const fetchExplorePosts = async ({
+  pageParam,
+  serviceIds,
+  onlyVideoReviews,
+}: {
+  pageParam: number;
+  serviceIds: number[];
+  onlyVideoReviews: boolean;
+}) => {
+  const params = new URLSearchParams();
+  params.set("page", String(pageParam));
+  params.set("limit", "10");
+  params.set("only_video_reviews", onlyVideoReviews ? "true" : "false");
+  serviceIds.forEach((id) => params.append("service_ids", String(id)));
+
   const { data } = await axios.get<PaginatedData<Post>>(
-    `${POST_PATH}/explore?page=${pageParam}&limit=10&only_video_reviews=false`
+    `${POST_PATH}/explore?${params.toString()}`
   );
 
   return {
@@ -19,10 +33,17 @@ const fetchExplorePosts = async ({ pageParam }: { pageParam: number }) => {
 
 export const useInfiniteExplorePosts = ({
   enabled = true,
-}: { enabled?: boolean } = {}) => {
+  serviceIds = [],
+  onlyVideoReviews = false,
+}: {
+  enabled?: boolean;
+  serviceIds?: number[];
+  onlyVideoReviews?: boolean;
+} = {}) => {
   return useInfiniteQuery({
-    queryKey: POST_QUERY_KEYS.explore,
-    queryFn: ({ pageParam = 1 }) => fetchExplorePosts({ pageParam }),
+    queryKey: [...POST_QUERY_KEYS.explore, serviceIds, onlyVideoReviews],
+    queryFn: ({ pageParam = 1 }) =>
+      fetchExplorePosts({ pageParam, serviceIds, onlyVideoReviews }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
       const totalFetched = pages.flatMap((p) => p.results).length;

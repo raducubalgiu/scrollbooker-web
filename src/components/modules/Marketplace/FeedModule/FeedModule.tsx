@@ -1,23 +1,39 @@
 "use client";
 
-import { Box, Slide } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import FeedTabs, { FeedTabEnum } from "./FeedTabs";
 import {
   useInfiniteExplorePosts,
   useInfiniteFollowingPosts,
 } from "@/controllers/social/post.controller";
-import FeedDrawer from "./FeedDrawer";
+import { useAllServiceDomains } from "@/controllers/nomenclature/service-domain.controller";
 import { usePostFeed } from "@/components/cutomized/Post/feed/usePostFeed";
 import PostFeedView from "@/components/cutomized/Post/feed/PostFeedView";
+import FeedFilterDialog from "./Filters/FeedFilterDialog";
+import FeedFilterMobileOverlay from "./Filters/FeedFilterMobileOverlay";
 
 export default function FeedModule() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const [currentTab, setCurrentTab] = useState<FeedTabEnum>(
     FeedTabEnum.EXPLORE
   );
-  const [showDrawer, setShowDrawer] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [appliedServiceIds, setAppliedServiceIds] = useState<Set<number>>(
+    new Set()
+  );
+  const [appliedOnlyVideoReviews, setAppliedOnlyVideoReviews] = useState(false);
 
-  const explorePosts = useInfiniteExplorePosts();
+  const { data: domainsData, isLoading: isLoadingDomains } =
+    useAllServiceDomains({ page: 1, limit: 100, all: false });
+  const domains = domainsData?.results ?? [];
+
+  const explorePosts = useInfiniteExplorePosts({
+    serviceIds: Array.from(appliedServiceIds),
+    onlyVideoReviews: appliedOnlyVideoReviews,
+  });
   const followingPosts = useInfiniteFollowingPosts();
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
@@ -47,44 +63,69 @@ export default function FeedModule() {
     [feed]
   );
 
-  const handleToggleDrawer = useCallback(() => {
-    setShowDrawer((prev) => !prev);
+  const handleToggleFilters = useCallback(() => {
+    setShowFilters((prev) => !prev);
   }, []);
 
+  const handleCloseFilters = useCallback(() => {
+    setShowFilters(false);
+  }, []);
+
+  const handleApplyFilters = useCallback(
+    (serviceIds: Set<number>, onlyVideoReviews: boolean) => {
+      setAppliedServiceIds(serviceIds);
+      setAppliedOnlyVideoReviews(onlyVideoReviews);
+    },
+    []
+  );
+
+  const hasActiveFilters =
+    appliedServiceIds.size > 0 || appliedOnlyVideoReviews;
+
   return (
-    <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+    <Box sx={styles.root}>
       <PostFeedView
         posts={posts}
         feed={feed}
         headerSlot={
           <FeedTabs
             activeTab={currentTab}
-            onHandleToggleDrawer={handleToggleDrawer}
+            hasActiveFilters={hasActiveFilters}
+            onHandleToggleDrawer={handleToggleFilters}
             onTabChange={handleTabChange}
           />
         }
       />
 
-      <Slide direction="right" in={showDrawer} mountOnEnter unmountOnExit>
-        <Box sx={styles.drawerContainer}>
-          <FeedDrawer onCloseDrawer={() => setShowDrawer(false)} />
-        </Box>
-      </Slide>
+      {isMobile ? (
+        <FeedFilterMobileOverlay
+          open={showFilters}
+          domains={domains}
+          isLoadingDomains={isLoadingDomains}
+          appliedServiceIds={appliedServiceIds}
+          appliedOnlyVideoReviews={appliedOnlyVideoReviews}
+          onApply={handleApplyFilters}
+          onClose={handleCloseFilters}
+        />
+      ) : (
+        <FeedFilterDialog
+          open={showFilters}
+          domains={domains}
+          isLoadingDomains={isLoadingDomains}
+          appliedServiceIds={appliedServiceIds}
+          appliedOnlyVideoReviews={appliedOnlyVideoReviews}
+          onApply={handleApplyFilters}
+          onClose={handleCloseFilters}
+        />
+      )}
     </Box>
   );
 }
 
 const styles = {
-  drawerContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
+  root: {
+    position: "relative",
     width: "100%",
     height: "100%",
-    zIndex: 12,
-    bgcolor: "common.black",
-    display: "flex",
-    flexDirection: "column",
-    p: 2.5,
   },
 } as const;
