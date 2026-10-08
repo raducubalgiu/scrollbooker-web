@@ -2,8 +2,12 @@ import { Button, Paper } from "@mui/material";
 import { useState } from "react";
 import { BusinessGalleryManager, GalleryItem } from "./BusinessGalleryManager";
 import { toast } from "react-toastify";
-import { useUpdateBusinessGalleryMutation } from "@/controllers/booking/business.controller";
+import {
+  GallerySlotInput,
+  useUpdateBusinessGalleryMutation,
+} from "@/controllers/booking/business.controller";
 import { BusinessMediaFile } from "@/ts/models/booking/business/BusinessMediaFile";
+import axios from "axios";
 
 type BusinessGalleryTabProps = {
   businessId: number;
@@ -26,34 +30,39 @@ export const BusinessGalleryTab = ({
       (url): url is string => typeof url === "string" && url.trim() !== ""
     );
 
+  const hasChanges = galleryItems.some((item, idx) => {
+    if (item.file) return true;
+    return item.src !== (initialThumbnailUrls[idx] ?? null);
+  });
+
   const handleUpdate = () => {
-    if (!isGalleryValid || !businessId) return;
+    if (!isGalleryValid || !businessId || !hasChanges) return;
 
-    const newFiles = galleryItems
-      .filter((it) => it.file !== undefined)
-      .map((it) => it.file as File);
+    const filledItems = galleryItems.filter((it) => it.src);
 
-    const keptServerUrls = galleryItems
-      .filter((it) => it.src && !it.src.startsWith("blob:"))
-      .map((it) => it.src as string);
-
-    if (newFiles.length === 0 && keptServerUrls.length === 0) {
+    if (filledItems.length === 0) {
       toast.error("Trebuie să ai cel puțin o imagine în galerie.");
       return;
     }
 
+    const slots: GallerySlotInput[] = filledItems.map((it) =>
+      it.file ? { type: "new" } : { type: "existing", url: it.src as string }
+    );
+    const newFiles = filledItems
+      .filter((it) => it.file)
+      .map((it) => it.file as File);
+
     handleUpload(
-      {
-        businessId,
-        photos: newFiles,
-        existingThumbnailUrls: keptServerUrls,
-      },
+      { businessId, slots, newFiles },
       {
         onSuccess: () => {
           toast.success("Galeria a fost actualizată cu succes!");
         },
-        onError: (err: any) => {
-          toast.error(err?.response?.data?.detail || "A apărut o eroare.");
+        onError: (err: Error) => {
+          const detail = axios.isAxiosError(err)
+            ? (err.response?.data as { detail?: string } | undefined)?.detail
+            : undefined;
+          toast.error(detail || "A apărut o eroare.");
         },
       }
     );
@@ -73,7 +82,7 @@ export const BusinessGalleryTab = ({
       <Button
         variant="contained"
         onClick={handleUpdate}
-        disabled={!isGalleryValid || isPending}
+        disabled={!isGalleryValid || !hasChanges || isPending}
         disableElevation
         sx={{ mt: 3 }}
       >

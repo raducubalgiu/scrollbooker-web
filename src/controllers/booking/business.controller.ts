@@ -13,6 +13,10 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { BusinessDescriptionUpdate } from "@/ts/models/booking/business/Business";
+import {
+  GallerySlotInput,
+  updateBusinessGallery,
+} from "./business.service";
 
 const BUSINESS_PATH = "/api/protected/businesses";
 const UNAPPROVED_BUSINESSES_LIMIT = 20;
@@ -157,10 +161,12 @@ export const useSearchBusinessAddress = (query: string) => {
   });
 };
 
+export type { GallerySlotInput };
+
 interface UpdateBusinessGalleryParams {
   businessId: string | number;
-  photos: File[];
-  existingThumbnailUrls: string[];
+  slots: GallerySlotInput[];
+  newFiles: File[];
 }
 
 export const useUpdateBusinessGalleryMutation = () => {
@@ -169,17 +175,12 @@ export const useUpdateBusinessGalleryMutation = () => {
   return useMutation({
     mutationFn: async ({
       businessId,
-      photos,
-      existingThumbnailUrls,
+      slots,
+      newFiles,
     }: UpdateBusinessGalleryParams): Promise<void> => {
       if (!businessId) throw new Error("Business ID este obligatoriu.");
 
-      const formData = new FormData();
-      photos.forEach((photo) => formData.append("photos", photo));
-
-      formData.append("existing_urls", JSON.stringify(existingThumbnailUrls));
-
-      await axios.patch(`${BUSINESS_PATH}/${businessId}/gallery`, formData);
+      await updateBusinessGallery({ businessId, slots, newFiles });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-business-details"] });
