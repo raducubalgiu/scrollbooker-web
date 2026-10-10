@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { AuthTokens, UserInfo, UserRegister } from "@/ts/models/auth/auth";
+import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
+import { ActionMessageResponse } from "@/ts/models/auth/ActionMessageResponse";
 
 type UpdateUserInfoPayload = Partial<
   Pick<UserInfo, "fullname" | "avatar" | "profession">
@@ -43,8 +45,22 @@ export const useUpdateUserInfoMutation = () => {
 
 export const useVerifyEmailMutation = () => {
   return useMutation({
+    mutationFn: async (code: string) => {
+      const response = await axios.post<OnboardingResponse>(
+        "/api/protected/auth/verify-email",
+        { code }
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useResendVerificationEmailMutation = () => {
+  return useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/protected/auth/verify-email");
+      const response = await axios.post<ActionMessageResponse>(
+        "/api/protected/auth/resend-verification-email"
+      );
       return response.data;
     },
   });

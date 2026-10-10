@@ -23,7 +23,14 @@
       "codePlaceholder": "Enter the code",
       "verify": "Verify",
       "noEmail": "Didn't get the email?",
-      "resend": "Resend"
+      "resend": "Resend",
+      "resendCooldown": "You can request a new code in {seconds}s",
+      "resendSuccess": "A new code has been sent.",
+      "alreadyVerified": "This email is already verified.",
+      "errorIncorrectCode": "The code you entered is incorrect.",
+      "errorTooManyAttempts": "Too many incorrect attempts. Request a new code.",
+      "errorExpiredCode": "This code has expired or is no longer valid. Request a new code.",
+      "errorGeneric": "Something went wrong. Please try again."
     },
     "username": {
       "title": "Username",

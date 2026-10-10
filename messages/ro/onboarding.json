@@ -23,7 +23,14 @@
       "codePlaceholder": "Introdu codul",
       "verify": "Verifică",
       "noEmail": "Nu ai primit emailul?",
-      "resend": "Trimite din nou"
+      "resend": "Trimite din nou",
+      "resendCooldown": "Poți cere un cod nou în {seconds}s",
+      "resendSuccess": "Un cod nou a fost trimis.",
+      "alreadyVerified": "Emailul este deja verificat.",
+      "errorIncorrectCode": "Codul introdus este greșit.",
+      "errorTooManyAttempts": "Prea multe încercări greșite. Cere un cod nou.",
+      "errorExpiredCode": "Codul a expirat sau nu mai este valid. Cere un cod nou.",
+      "errorGeneric": "Ceva nu a mers cum trebuie. Încearcă din nou."
     },
     "username": {
       "title": "Nume de utilizator",
