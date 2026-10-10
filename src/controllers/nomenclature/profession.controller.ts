@@ -2,6 +2,7 @@ import { PaginatedData } from "@/components/core/Table/Table";
 import {
   Profession,
   ProfessionCreateOrUpdate,
+  ProfessionWithBusinessTypes,
 } from "@/ts/models/nomenclatures/profession/ProfessionType";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -14,9 +15,19 @@ type GetAllProfessionsType = {
   all?: boolean;
 };
 
+type GetAllProfessionsWithBusinessTypesParams = {
+  page: number;
+  limit: number;
+};
+
 type UpdateProfessionParams = {
   id: string;
   data: ProfessionCreateOrUpdate;
+};
+
+type AttachDetachProfessionBusinessTypeParams = {
+  professionId: number;
+  businessTypeId: number;
 };
 
 export const useAllProfessions = ({
@@ -33,6 +44,23 @@ export const useAllProfessions = ({
 
   return useQuery({
     queryKey: ["professions", page, limit, all],
+    queryFn: doRequest,
+  });
+};
+
+export const useAllProfessionsWithBusinessTypes = ({
+  page,
+  limit,
+}: GetAllProfessionsWithBusinessTypesParams) => {
+  const doRequest = () =>
+    axios
+      .get<
+        PaginatedData<ProfessionWithBusinessTypes>
+      >(`${PROFESSION_PATH}/with-business-types?page=${page}&limit=${limit}`)
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["professions-with-business-types", page, limit],
     queryFn: doRequest,
   });
 };
@@ -87,6 +115,48 @@ export const useUpdateProfession = () => {
     mutationFn: doRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["professions"] });
+    },
+  });
+};
+
+export const useAttachProfessionBusinessType = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    professionId,
+    businessTypeId,
+  }: AttachDetachProfessionBusinessTypeParams): Promise<void> =>
+    axios
+      .post(`${PROFESSION_PATH}/${professionId}/business-types/${businessTypeId}`)
+      .then((res) => res.data);
+
+  return useMutation<void, Error, AttachDetachProfessionBusinessTypeParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["professions-with-business-types"],
+      });
+    },
+  });
+};
+
+export const useDetachProfessionBusinessType = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    professionId,
+    businessTypeId,
+  }: AttachDetachProfessionBusinessTypeParams): Promise<void> =>
+    axios
+      .delete(`${PROFESSION_PATH}/${professionId}/business-types/${businessTypeId}`)
+      .then((res) => res.data);
+
+  return useMutation<void, Error, AttachDetachProfessionBusinessTypeParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["professions-with-business-types"],
+      });
     },
   });
 };

@@ -1,80 +1,59 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Tooltip, Checkbox, CircularProgress } from "@mui/material";
-import { useCustomQuery, useMutate } from "@/hooks/useHttp";
-import { MRT_Row } from "material-react-table";
-import { find } from "lodash";
-import { BusinessType } from "@/ts/models/nomenclatures/businessType/BusinessType";
+import {
+  useAttachProfessionBusinessType,
+  useDetachProfessionBusinessType,
+} from "@/controllers/nomenclature/profession.controller";
 
-type ProfessionBusinessTypesCheckboxProps = {
-  row: MRT_Row<BusinessType>;
-  professionId: number | undefined;
-  professionName: string;
+type ProfessionBusinessTypeCheckboxProps = {
+  professionId: number;
+  businessTypeId: number;
+  businessTypeName: string;
+  isSelected: boolean;
 };
 
-export default function ProfessionBusinessTypesCheckbox({
-  row,
+export default function ProfessionBusinessTypeCheckbox({
   professionId,
-  professionName,
-}: ProfessionBusinessTypesCheckboxProps) {
-  const {
-    data: attachedBusinessTypes,
-    isLoading: isLoadingAttached,
-    refetch: refetchAttached,
-  } = useCustomQuery<BusinessType[]>({
-    key: ["profession-business-types", professionId],
-    url: "/api/nomenclatures/professions/business-types",
-    params: { professionId },
-  });
-
-  const [checked, setChecked] = useState(true);
+  businessTypeId,
+  businessTypeName,
+  isSelected,
+}: ProfessionBusinessTypeCheckboxProps) {
+  const [checked, setChecked] = useState(isSelected);
 
   useEffect(() => {
-    setChecked(!!find(attachedBusinessTypes, ["id", row.original.id]));
-  }, [attachedBusinessTypes, row.original.id, isLoadingAttached]);
+    setChecked(isSelected);
+  }, [isSelected]);
 
-  const { mutateAsync: handleAttach, isPending: isPendingAttach } = useMutate({
-    key: ["attach"],
-    url: "/api/nomenclatures/professions/business-types",
-    options: {
-      onError: () => setChecked(false),
-    },
-  });
-
-  const { mutateAsync: handleDetach, isPending: isPendingDetach } = useMutate({
-    key: ["detach"],
-    url: "/api/nomenclatures/professions/business-types",
-    method: "DELETE",
-    options: {
-      onError: () => setChecked(true),
-    },
-  });
+  const { mutateAsync: attach, isPending: isPendingAttach } =
+    useAttachProfessionBusinessType();
+  const { mutateAsync: detach, isPending: isPendingDetach } =
+    useDetachProfessionBusinessType();
 
   const handleCheckbox = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>, businessTypeId: number) => {
-      if (e.target.checked) {
-        await handleAttach({ professionId, businessTypeId });
-      } else {
-        await handleDetach({ professionId, businessTypeId });
-      }
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const nextChecked = e.target.checked;
+      setChecked(nextChecked);
 
-      await refetchAttached();
+      try {
+        if (nextChecked) {
+          await attach({ professionId, businessTypeId });
+        } else {
+          await detach({ professionId, businessTypeId });
+        }
+      } catch {
+        setChecked(!nextChecked);
+      }
     },
-    [refetchAttached, handleAttach, professionId, handleDetach]
+    [attach, detach, professionId, businessTypeId]
   );
 
-  const isLoading = isPendingAttach || isPendingDetach || isLoadingAttached;
-  const action = !checked ? "Creaază" : "Elimină";
+  const isLoading = isPendingAttach || isPendingDetach;
+  const action = checked ? "Elimină" : "Creează";
 
   return (
-    <Tooltip
-      title={`${action} relația ${professionName} - ${row.original.name}`}
-    >
+    <Tooltip title={`${action} relația cu ${businessTypeName}`}>
       {!isLoading ? (
-        <Checkbox
-          checked={checked}
-          onChange={(e) => handleCheckbox(e, Number(row.original.id))}
-          size="small"
-        />
+        <Checkbox checked={checked} onChange={handleCheckbox} size="small" />
       ) : (
         <CircularProgress size={25} />
       )}

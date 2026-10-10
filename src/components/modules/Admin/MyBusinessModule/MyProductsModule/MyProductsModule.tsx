@@ -30,6 +30,8 @@ import EditProductModal from "./EditProductModal/EditProductModal";
 import AddIcon from "@mui/icons-material/Add";
 import { toast } from "react-toastify";
 import { Product } from "@/ts/models/booking/product/Product";
+import Protected from "@/components/cutomized/Protected/Protected";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 const HEADER_HEIGHT = 88;
 const TABS_HEIGHT = 72;
@@ -101,9 +103,11 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
       <HeaderMobile
         title="Serviciile mele"
         customAction={
-          <IconButton onClick={() => setIsAddProductOpen(true)}>
-            <AddIcon />
-          </IconButton>
+          <Protected permission={PermissionEnum.PRODUCT_EDIT}>
+            <IconButton onClick={() => setIsAddProductOpen(true)}>
+              <AddIcon />
+            </IconButton>
+          </Protected>
         }
       />
 
@@ -146,14 +150,16 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
             Serviciile mele
           </Typography>
 
-          <Button
-            variant="contained"
-            color="primary"
-            disableElevation
-            onClick={() => setIsAddProductOpen(true)}
-          >
-            Adaugă serviciu
-          </Button>
+          <Protected permission={PermissionEnum.PRODUCT_EDIT}>
+            <Button
+              variant="contained"
+              color="primary"
+              disableElevation
+              onClick={() => setIsAddProductOpen(true)}
+            >
+              Adaugă serviciu
+            </Button>
+          </Protected>
         </Stack>
 
         <Box sx={{ px: 2.5, pb: 2.5 }}>

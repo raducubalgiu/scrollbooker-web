@@ -7,6 +7,15 @@ export interface Profession {
   updated_at: string;
 }
 
+export interface BusinessTypeLoadOnly {
+  id: number;
+  name: string;
+}
+
+export interface ProfessionWithBusinessTypes extends Profession {
+  business_types: BusinessTypeLoadOnly[];
+}
+
 export interface ProfessionCreateOrUpdate {
   name: string;
   active: boolean;

@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
-import useTableHandlers from "@/components/core/Table/useTableHandlers";
-import { MRT_ColumnDef } from "material-react-table";
-import Table from "@/components/core/Table/Table";
-import ProfessionBusinessTypesCheckbox from "./ProfessionBusinessTypeCheckbox";
+import {
+  MaterialReactTable,
+  MRT_ColumnDef,
+  useMaterialReactTable,
+} from "material-react-table";
 import {
   Accordion,
   AccordionDetails,
@@ -10,68 +11,93 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { BusinessType } from "@/ts/models/nomenclatures/businessType/BusinessType";
+import { BusinessTypeLoadOnly } from "@/ts/models/nomenclatures/profession/ProfessionType";
+import { useGetAllBusinessTypes } from "@/controllers/nomenclature/business-type.controller";
+import ProfessionBusinessTypeCheckbox from "./ProfessionBusinessTypeCheckbox";
 
 type ProfessionBusinessTypesProps = {
-  businessDomainId: number;
   professionId: number;
-  professionName: string;
+  attachedBusinessTypes: BusinessTypeLoadOnly[];
 };
 
 export default function ProfessionBusinessTypes({
-  businessDomainId,
   professionId,
-  professionName,
+  attachedBusinessTypes,
 }: ProfessionBusinessTypesProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
-  const {
-    data,
-    isLoading,
-    pagination,
-    setPagination,
-    onCreatingRowSave,
-    onDeletingRowSave,
-    onEditingRowSave,
-  } = useTableHandlers<BusinessType>({
-    route: "nomenclatures/business-domains/business-types",
-    extraParams: { id: businessDomainId },
-    enabled: isExpanded,
-  });
+  const { data: businessTypes, isLoading } = useGetAllBusinessTypes();
+
+  const attachedIds = useMemo(
+    () => new Set(attachedBusinessTypes.map((businessType) => businessType.id)),
+    [attachedBusinessTypes]
+  );
 
   const columns = useMemo<MRT_ColumnDef<BusinessType>[]>(
     () => [
       {
         accessorKey: "id",
         header: "ID",
-        enableEditing: false,
         size: 50,
       },
       {
         accessorKey: "name",
-        header: "Name",
-        enableEditing: false,
+        header: "Nume",
+        size: 300,
       },
       {
         accessorKey: "relation",
-        header: "Atasat",
+        header: "Atașat",
         Cell: ({ row }) => (
-          <ProfessionBusinessTypesCheckbox
-            row={row}
+          <ProfessionBusinessTypeCheckbox
             professionId={professionId}
-            professionName={professionName}
+            businessTypeId={row.original.id}
+            businessTypeName={row.original.name}
+            isSelected={attachedIds.has(row.original.id)}
           />
         ),
       },
     ],
-    [professionId, professionName]
+    [professionId, attachedIds]
   );
+
+  const table = useMaterialReactTable({
+    columns,
+    data: businessTypes ?? [],
+
+    enableKeyboardShortcuts: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: false,
+    enableSorting: false,
+    enableRowActions: false,
+    enableTopToolbar: false,
+    enableEditing: false,
+    positionActionsColumn: "last",
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper,
+    }),
+    localization: MRT_Localization_RO,
+    state: {
+      isLoading,
+    },
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: 2.5,
+        border: "1px solid",
+        borderColor: "divider",
+      },
+    },
+  });
 
   return (
     <Accordion
       expanded={isExpanded}
       onChange={() => setIsExpanded((expanded) => !expanded)}
-      sx={{ mb: 1.5 }}
+      sx={{ mb: 1.5, bgcolor: "background.default", boxShadow: 0 }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -79,27 +105,11 @@ export default function ProfessionBusinessTypes({
         id="panel1-header"
       >
         <Typography component="span" sx={{ fontWeight: "600" }}>
-          Tip Business:
+          Tipuri de Business:
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Table<BusinessType>
-          data={data?.results ?? []}
-          rowCount={data?.count ?? 0}
-          columns={columns}
-          onCreatingRowSave={onCreatingRowSave}
-          onEditingRowSave={onEditingRowSave}
-          onDeletingRowSave={onDeletingRowSave}
-          manualPagination={true}
-          onPaginationChange={setPagination ?? (() => {})}
-          enableTopToolbar={false}
-          enableEditing={false}
-          state={{
-            pagination: pagination ?? { pageIndex: 0, pageSize: 10 },
-            isLoading,
-          }}
-          muiTableHeadCellProps={{ sx: { bgcolor: "background.default" } }}
-        />
+        <MaterialReactTable table={table} />
       </AccordionDetails>
     </Accordion>
   );

@@ -202,7 +202,7 @@ const ProductCard = ({
         )}
 
         {displayEditableActions && (
-          <>
+          <Protected permission={PermissionEnum.PRODUCT_EDIT}>
             <IconButton
               size="large"
               onClick={(e) => {
@@ -219,38 +219,32 @@ const ProductCard = ({
               onClose={() => setActionsAnchorEl(null)}
               onClick={(e) => e.stopPropagation()}
             >
-              <Protected permission={PermissionEnum.PRODUCT_EDIT}>
-                <MenuItem
-                  onClick={() => {
-                    setActionsAnchorEl(null);
-                    onEditProduct?.(product.id);
-                  }}
-                >
-                  <ListItemIcon>
-                    <EditOutlinedIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Editează</ListItemText>
-                </MenuItem>
-              </Protected>
+              <MenuItem
+                onClick={() => {
+                  setActionsAnchorEl(null);
+                  onEditProduct?.(product.id);
+                }}
+              >
+                <ListItemIcon>
+                  <EditOutlinedIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Editează</ListItemText>
+              </MenuItem>
 
-              <Protected permission={PermissionEnum.PRODUCT_DELETE}>
-                <MenuItem
-                  disabled={isLoadingDelete}
-                  onClick={() => {
-                    setActionsAnchorEl(null);
-                    onDeleteProduct?.(product.id);
-                  }}
-                >
-                  <ListItemIcon>
-                    <DeleteOutlineIcon fontSize="small" color="error" />
-                  </ListItemIcon>
-                  <ListItemText sx={{ color: "error.main" }}>
-                    Șterge
-                  </ListItemText>
-                </MenuItem>
-              </Protected>
+              <MenuItem
+                disabled={isLoadingDelete}
+                onClick={() => {
+                  setActionsAnchorEl(null);
+                  onDeleteProduct?.(product.id);
+                }}
+              >
+                <ListItemIcon>
+                  <DeleteOutlineIcon fontSize="small" color="error" />
+                </ListItemIcon>
+                <ListItemText sx={{ color: "error.main" }}>Șterge</ListItemText>
+              </MenuItem>
             </Menu>
-          </>
+          </Protected>
         )}
       </Stack>
 
