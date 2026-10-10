@@ -30,13 +30,14 @@ type CustomTableProps<T extends MRT_RowData> = {
   editLabel?: string;
   onDelete?: (row: MRT_Row<T>) => void;
   deleteLabel?: string;
-  extraRowActions?: (
-    props: CustomTableRowActionProps<T>
-  ) => React.ReactNode[];
+  extraRowActions?: (props: CustomTableRowActionProps<T>) => React.ReactNode[];
   extraToolbarActions?: React.ReactNode;
 } & Omit<
   Partial<MRT_TableOptions<T>>,
-  "columns" | "data" | "renderRowActionMenuItems" | "renderTopToolbarCustomActions"
+  | "columns"
+  | "data"
+  | "renderRowActionMenuItems"
+  | "renderTopToolbarCustomActions"
 >;
 
 export default function CustomTable<T extends MRT_RowData>({
