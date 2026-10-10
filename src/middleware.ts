@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 const AUTH_ROUTES = [
   "/auth/signin",
+  "/auth/register",
   "/auth/register-business",
   "/auth/get-started",
 ];

@@ -71,7 +71,7 @@ const CollectBirthdateStep = () => {
       <Stack
         alignItems="center"
         justifyContent="center"
-        sx={{ minHeight: "100%", bgcolor: "background.paper" }}
+        sx={{ minHeight: "100%" }}
       >
         <Container maxWidth="sm">
           <Stack spacing={3}>

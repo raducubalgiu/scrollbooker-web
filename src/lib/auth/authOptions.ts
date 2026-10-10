@@ -15,20 +15,24 @@ import {
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60;
 
-// Două id-uri de provider Google distincte (nu unul singur) pentru că cele
-// două pagini au semantici diferite și signIn() de mai jos nu are acces la
+// Trei id-uri de provider Google distincte (nu unul singur) pentru că cele
+// trei pagini au semantici diferite și signIn() de mai jos nu are acces la
 // pagina care a declanșat fluxul OAuth, doar la account.provider:
 // - register-business: cont nou → role_name "business" obligatoriu, și
 //   respingem dacă userul există deja cu alt rol decât "business".
+// - register: cont nou → role_name "client" obligatoriu, și respingem dacă
+//   userul există deja cu alt rol decât "client" (simetric cu business).
 // - signin: niciun role_name (un user nou ar trebui să dea 400 pe backend,
 //   "role_name is required for new account registration" — intenționat,
 //   pagina de login nu creează conturi), niciun filtru de rol — orice cont
 //   existent poate intra.
-// Necesită AMBELE redirect URI înregistrate în Google Cloud Console:
-// /api/auth/callback/google-business și /api/auth/callback/google-signin
-// (pot folosi același client id/secret, Google nu are nevoie de provideri
-// separați, doar NextAuth îi diferențiază după acest id).
+// Necesită TOATE cele 3 redirect URI înregistrate în Google Cloud Console:
+// /api/auth/callback/google-business, /api/auth/callback/google-register și
+// /api/auth/callback/google-signin (pot folosi același client id/secret,
+// Google nu are nevoie de provideri separați, doar NextAuth îi diferențiază
+// după acest id).
 const REGISTER_BUSINESS_PATH = "/auth/register-business";
+const REGISTER_PATH = "/auth/register";
 const LOGIN_PATH = "/auth/signin";
 
 function buildGoogleProfile(profile: {
@@ -123,6 +127,12 @@ export const authOptions: AuthOptions = {
       profile: buildGoogleProfile,
     }),
     GoogleProvider({
+      id: "google-register",
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      profile: buildGoogleProfile,
+    }),
+    GoogleProvider({
       id: "google-signin",
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
@@ -162,6 +172,36 @@ export const authOptions: AuthOptions = {
         // în alt cont decât cel pe care voia să-l creeze.
         if (decoded.role !== "business") {
           return `${REGISTER_BUSINESS_PATH}?error=not_business_account`;
+        }
+
+        user.accessToken = auth.access_token;
+        user.refreshToken = auth.refresh_token;
+        user.accessTokenExpires = decoded.exp * 1000;
+
+        return true;
+      }
+
+      if (account?.provider === "google-register") {
+        if (!account.id_token) {
+          return `${REGISTER_PATH}?error=google_failed`;
+        }
+
+        const auth = await signInWithGoogle(account.id_token, "client");
+        if (!auth) {
+          return `${REGISTER_PATH}?error=google_failed`;
+        }
+
+        const decoded = await verifyAccessToken(auth.access_token);
+        if (!decoded) {
+          return `${REGISTER_PATH}?error=google_failed`;
+        }
+
+        // Aceeași rațiune ca la google-business: backend-ul ignoră role_name
+        // și loghează pe rolul curent dacă emailul/google_id-ul se potrivesc
+        // cu un cont existent — respingem aici dacă rolul rezultat nu e
+        // "client", ca userul să nu ajungă logat, fără să știe, în alt cont.
+        if (decoded.role !== "client") {
+          return `${REGISTER_PATH}?error=not_client_account`;
         }
 
         user.accessToken = auth.access_token;

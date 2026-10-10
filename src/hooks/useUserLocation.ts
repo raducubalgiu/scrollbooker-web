@@ -65,13 +65,25 @@ function requestLocation(): Promise<UserLocationState> {
   return inFlightRequest;
 }
 
-export function useUserLocation(): UserLocationState {
+type UseUserLocationOptions = {
+  // false pentru un consumator care vrea să declanșeze el însuși cererea
+  // (ex. la click pe un buton), nu automat la montare — altfel prompt-ul
+  // nativ al browserului ar apărea înainte ca userul să vadă vreun context,
+  // fără nicio acțiune de-a lui care să-l explice. Implicit true, ca să nu
+  // schimbe comportamentul pasiv existent (Feed: PostOverlay/SearchModule).
+  autoRequest?: boolean;
+};
+
+export function useUserLocation(
+  options: UseUserLocationOptions = {}
+): UserLocationState & { requestLocation: () => Promise<UserLocationState> } {
+  const { autoRequest = true } = options;
   const [state, setState] = useState<UserLocationState>(cachedState);
 
   useEffect(() => {
     listeners.add(setState);
 
-    if (cachedState.status === "idle") {
+    if (autoRequest && cachedState.status === "idle") {
       void requestLocation();
     } else {
       setState(cachedState);
@@ -80,7 +92,7 @@ export function useUserLocation(): UserLocationState {
     return () => {
       listeners.delete(setState);
     };
-  }, []);
+  }, [autoRequest]);
 
-  return state;
+  return { ...state, requestLocation };
 }

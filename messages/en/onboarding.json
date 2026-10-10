@@ -72,7 +72,8 @@
     "locationPermission": {
       "title": "Location permission",
       "subtitle": "This helps us show you nearby services and personalize your experience",
-      "save": "Save"
+      "allow": "Allow location access",
+      "notNow": "Not now"
     },
     "business": {
       "subSteps": {

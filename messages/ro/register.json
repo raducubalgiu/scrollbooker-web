@@ -1,0 +1,21 @@
+{
+  "register": {
+    "title": "Creează-ți contul",
+    "subtitle": "Creează-ți contul ScrollBooker în câteva minute",
+    "continueWithGoogle": "Continuă cu Google",
+    "continueWithApple": "Continuă cu Apple — în curând",
+    "orWithEmail": "sau cu email",
+    "emailLabel": "Email",
+    "passwordLabel": "Parola",
+    "passwordPlaceholder": "Parolă",
+    "submit": "Creează cont",
+    "haveAccount": "Ai deja un cont?",
+    "login": "Login",
+    "genericError": "Eroare la înregistrare.",
+    "registerError": "Înregistrarea a eșuat. Email-ul poate fi deja folosit.",
+    "autoLoginError": "Cont creat, dar autentificarea automată a eșuat.",
+    "success": "Cont creat cu succes!",
+    "googleFailed": "Autentificarea cu Google a eșuat. Încearcă din nou.",
+    "notClientAccount": "Acest email Google este deja asociat unui cont de business. Folosește altă adresă sau înregistrează-te mai jos cu email și parolă."
+  }
+}

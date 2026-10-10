@@ -9,22 +9,25 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { signIn } from "next-auth/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { signIn, useSession } from "next-auth/react";
 import AppleIcon from "@mui/icons-material/Apple";
 import { useTranslations } from "next-intl";
 
 import Input from "@/components/core/Input/Input";
 import GoogleIcon from "@/components/core/icons/GoogleIcon";
 import { required } from "@/utils/validation-rules";
+import { UserRegister } from "@/ts/models/auth/auth";
 import { AppRoutes } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
+import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
 import LandingLogo from "@/components/modules/LandingPageModule/components/LandingLogo";
+import { registerWithCredentials } from "@/controllers/auth/auth.service";
 
-type SignInForm = {
-  username: string;
+type RegisterForm = {
+  email: string;
   password: string;
 };
 
@@ -39,57 +42,83 @@ const oauthButtonSx = {
   },
 };
 
-export default function SignInPage() {
-  const t = useTranslations("signin");
-  const router = useRouter();
+export default function RegisterPage() {
+  const t = useTranslations("register");
+  const { update } = useSession();
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const { navigateTo } = useAppNavigation();
+  const router = useRouter();
   const searchParams = useSearchParams();
 
-  const methods = useForm<SignInForm>({
+  const methods = useForm<RegisterForm>({
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
-  const [loading, setLoading] = useState(false);
-  //const [googleLoading, setGoogleLoading] = useState(false);
   const isRequired = required();
-
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   useEffect(() => {
     const error = searchParams.get("error");
     if (!error) return;
 
-    toast.error(t("googleFailed"));
-    router.replace(AppRoutes.login());
+    const message =
+      error === "not_client_account" ? t("notClientAccount") : t("googleFailed");
+
+    toast.error(message);
+    router.replace(AppRoutes.register());
   }, [searchParams, router, t]);
 
   const handleGoogleSignIn = async () => {
-    //setGoogleLoading(true);
-    await signIn("google-signin", { callbackUrl });
+    setGoogleLoading(true);
+    await signIn("google-register", { callbackUrl: AppRoutes.home() });
   };
 
-  const handleLogin = async (data: SignInForm) => {
+  const onSubmit = async (data: RegisterForm): Promise<void> => {
     setLoading(true);
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      username: data.username,
+    const registerPayload: UserRegister = {
+      email: data.email,
       password: data.password,
-      callbackUrl,
-    });
+      role_name: "client",
+    };
 
-    setLoading(false);
+    try {
+      const registerResult = await registerWithCredentials(registerPayload);
 
-    if (result?.error) {
-      toast.error(t("credentialsError"));
-      return;
+      if (!registerResult) {
+        toast.error(t("registerError"));
+        setLoading(false);
+        return;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      const result = await signIn("credentials", {
+        redirect: false,
+        username: data.email,
+        password: data.password,
+      });
+
+      if (result?.error) {
+        console.error("NextAuth SignIn Error:", result.error);
+        toast.error(t("autoLoginError"));
+        navigateTo(AppRoutes.login());
+        return;
+      }
+
+      await update();
+
+      toast.success(t("success"));
+      router.refresh();
+    } catch (error: unknown) {
+      console.error("Register crash:", error);
+      toast.error(t("genericError"));
+    } finally {
+      setLoading(false);
     }
-
-    router.replace(result?.url || callbackUrl);
-    router.refresh();
   };
 
   return (
@@ -110,6 +139,7 @@ export default function SignInPage() {
           <Button
             variant="outlined"
             fullWidth
+            loading={googleLoading}
             onClick={handleGoogleSignIn}
             startIcon={<GoogleIcon />}
             disableElevation
@@ -138,11 +168,12 @@ export default function SignInPage() {
         <FormProvider {...methods}>
           <Stack spacing={1.5}>
             <Input
-              label={t("usernameLabel")}
-              name="username"
+              label={t("emailLabel")}
+              name="email"
               rules={isRequired}
-              placeholder={t("usernameLabel")}
+              placeholder={t("emailLabel")}
               size="medium"
+              type="email"
             />
 
             <Input
@@ -150,7 +181,7 @@ export default function SignInPage() {
               name="password"
               type="password"
               rules={isRequired}
-              placeholder={t("passwordLabel")}
+              placeholder={t("passwordPlaceholder")}
               size="medium"
             />
 
@@ -158,9 +189,16 @@ export default function SignInPage() {
               variant="contained"
               fullWidth
               loading={loading}
-              onClick={methods.handleSubmit(handleLogin)}
+              onClick={methods.handleSubmit(onSubmit)}
               disableElevation
-              sx={{ mt: 1, fontWeight: 700, textTransform: "none" }}
+              sx={{
+                mt: 1,
+                py: 1.5,
+                fontWeight: 700,
+                textTransform: "none",
+                backgroundColor: LANDING_COLORS.primary,
+                "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
+              }}
             >
               {t("submit")}
             </Button>
@@ -174,12 +212,12 @@ export default function SignInPage() {
           spacing={1}
           sx={{ mt: 4 }}
         >
-          <Typography color="text.secondary">{t("noAccount")}</Typography>
+          <Typography color="text.secondary">{t("haveAccount")}</Typography>
           <Button
             sx={{ textTransform: "none", fontWeight: 600 }}
-            onClick={() => navigateTo(AppRoutes.register())}
+            onClick={() => navigateTo(AppRoutes.login())}
           >
-            {t("register")}
+            {t("login")}
           </Button>
         </Stack>
       </Container>

@@ -72,7 +72,8 @@
     "locationPermission": {
       "title": "Permisiunea locației",
       "subtitle": "Ne ajută să îți oferim servicii din apropiere și să îți personalizăm experiența",
-      "save": "Salvează"
+      "allow": "Permite accesul la locație",
+      "notNow": "Nu acum"
     },
     "business": {
       "subSteps": {
