@@ -23,6 +23,7 @@ type PostDesktopSidebarProps = {
   postId: number | undefined;
   user: PostUser | undefined;
   isVideoReview: boolean;
+  isOwnPost: boolean;
   businessLocation: PostBusinessLocation | null | undefined;
   distanceKm: number | null;
   onNavigateToBooking: (selectedProductId: number | null) => void;
@@ -66,6 +67,7 @@ const PostDesktopSidebar = ({
   postId,
   user,
   isVideoReview,
+  isOwnPost,
   businessLocation,
   distanceKm,
   isLoading,
@@ -122,6 +124,7 @@ const PostDesktopSidebar = ({
             distanceKm={distanceKm}
             displayDescription={false}
             isVideoReview={isVideoReview}
+            isOwnPost={isOwnPost}
             onFollow={onFollow}
             isTogglingFollow={isTogglingFollow}
           />

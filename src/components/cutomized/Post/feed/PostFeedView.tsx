@@ -101,6 +101,7 @@ const PostFeedView = ({
             commentsCount={currentPost?.counters.comment_count}
             user={currentPost?.user}
             isVideoReview={currentPost?.is_video_review === true}
+            isOwnPost={currentPost?.is_own_post === true}
             businessLocation={currentPost?.business_location}
             distanceKm={distanceKm}
             onNavigateToBooking={handleNavigateToBooking}

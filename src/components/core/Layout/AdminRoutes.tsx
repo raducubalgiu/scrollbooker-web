@@ -23,6 +23,7 @@ import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOu
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import PersonSearchOutlinedIcon from "@mui/icons-material/PersonSearchOutlined";
 import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -56,19 +57,18 @@ type NavigationItem = {
   route: AppRouteValues;
 };
 
-// Static — defined outside component, never recreated
 const ADMIN_ROUTES: NavigationItem[] = [
-  {
-    label: "Calendar",
-    route: AppRoutes.calendar(),
-    icon: <CalendarMonthIcon />,
-    permission: PermissionEnum.MY_CALENDAR_VIEW,
-  },
   {
     label: "Dashboard",
     route: AppRoutes.myDashboard(),
     icon: <DashboardOutlinedIcon />,
     permission: PermissionEnum.NO_PROTECTION,
+  },
+  {
+    label: "Calendar",
+    route: AppRoutes.calendar(),
+    icon: <CalendarMonthIcon />,
+    permission: PermissionEnum.MY_CALENDAR_VIEW,
   },
   {
     label: "Detalii Business",
@@ -93,6 +93,12 @@ const ADMIN_ROUTES: NavigationItem[] = [
     route: AppRoutes.myProducts(),
     icon: <ShoppingBagOutlinedIcon />,
     permission: PermissionEnum.MY_PRODUCTS_VIEW,
+  },
+  {
+    label: "Clienții mei",
+    route: AppRoutes.myClients(),
+    icon: <PersonSearchOutlinedIcon />,
+    permission: PermissionEnum.MY_CLIENTS_VIEW,
   },
   {
     label: "Angajați",

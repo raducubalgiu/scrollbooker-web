@@ -15,6 +15,7 @@ type VideoHeaderProps = {
   distanceKm?: number | null;
   user: PostUser | undefined;
   isVideoReview: boolean;
+  isOwnPost: boolean;
   onFollow?: (() => void) | undefined;
   isTogglingFollow?: boolean | undefined;
 };
@@ -22,6 +23,7 @@ type VideoHeaderProps = {
 const VideoHeader = ({
   user,
   isVideoReview,
+  isOwnPost,
   description,
   businessLocation,
   distanceKm = null,
@@ -68,7 +70,7 @@ const VideoHeader = ({
               {fullname ?? "-"}
             </Typography>
 
-            {showFollowButton && onFollow && (
+            {showFollowButton && onFollow && !isOwnPost && (
               <Button
                 variant="contained"
                 size="small"

@@ -85,6 +85,7 @@ export const AppRoutes = {
   mySchedules: () => "/admin/my-business/schedules",
   myServices: () => "/admin/my-business/services",
   myProducts: () => "/admin/my-business/products",
+  myClients: () => "/admin/my-business/clients",
   myEmployees: () => "/admin/my-business/employees",
   calendar: () => "/admin/calendar",
   approve: () => "/admin/businesses/approve",
