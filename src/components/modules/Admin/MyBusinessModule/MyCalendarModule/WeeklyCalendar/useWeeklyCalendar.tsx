@@ -2,18 +2,17 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import dayjs from "dayjs";
-import { useMutate } from "@/hooks/useHttp";
 import { useGetCalendarEvents } from "@/controllers/booking/availability.controller";
 import { useGetCalendarSettings } from "@/controllers/booking/calendarSettings.controller";
 import {
   AppointmentBlockCreate,
   AppointmentBlockSlot,
-  AppointmentLastMinuteCreate,
   AppointmentOwnClientCreate,
 } from "@/ts/models/booking/appointment/Appointment";
 import { CreateAppointmentModalType } from "./WeeklyCalendar";
 import { getFrontendDays } from "../getFrontendDays";
 import { getScheduleBounds } from "../getScheduleBounds";
+import { useCalendarAppointmentMutations } from "../sharedComponents/useCalendarAppointmentMutations";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { Session } from "next-auth";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
@@ -77,7 +76,7 @@ export const useWeeklyCalendar = ({
   const bounds = useMemo(() => getScheduleBounds(schedules), [schedules]);
 
   // 2. LOGICA API (QUERY & MUTATION)
-  const { data, isLoading, refetch } = useGetCalendarEvents({
+  const { data, isLoading } = useGetCalendarEvents({
     businessId: session?.business_id ?? undefined,
     startDate: startDateStr,
     endDate: endDateStr,
@@ -101,39 +100,15 @@ export const useWeeklyCalendar = ({
     }));
   }, [frontendDays, data?.days]);
 
-  const { mutate: handleBlock, isPending: isLoadingBlock } = useMutate({
-    key: ["block-appointments"],
-    url: "/api/appointments/block",
-    options: {
-      onSuccess: async () => {
-        refetch();
+  const { handleBlock, isLoadingBlock, handleOwnClient, isLoadingOwnClient } =
+    useCalendarAppointmentMutations({
+      onBlockSuccess: () => {
         handleCloseBlocking();
       },
-    },
-  });
-
-  const { mutate: handleLastMinute, isPending: isLoadingLastMinute } =
-    useMutate({
-      key: ["last-minute-appointments"],
-      url: "/api/appointments/last-minute",
-      options: {
-        onSuccess: async () => {
-          refetch();
-          setCreateModal({ open: false, slot: null });
-        },
-      },
-    });
-
-  const { mutate: handleOwnClient, isPending: isLoadingOwnClient } = useMutate({
-    key: ["own-client-appointments"],
-    url: "/api/appointments/own-client",
-    options: {
-      onSuccess: async () => {
-        refetch();
+      onOwnClientSuccess: () => {
         setCreateModal({ open: false, slot: null });
       },
-    },
-  });
+    });
 
   // 3. CALCULUL COMPLEX DE REȚEA ORARĂ (MEMOIZAT AGRESIV)
   const { timeStrings, rowMap, totalRows } = useMemo(() => {
@@ -239,20 +214,6 @@ export const useWeeklyCalendar = ({
     handleBlock(payload);
   }, [selectedSlotsToBlock, session?.user_id, handleBlock]);
 
-  const handleLastMinutePayload = useCallback(
-    (discount: number, slot: CalendarEventsSlot) => {
-      const payload: AppointmentLastMinuteCreate = {
-        discount,
-        start_date: slot.start_date_utc,
-        end_date: slot.end_date_utc,
-        user_id: session?.user_id,
-      };
-
-      handleLastMinute(payload);
-    },
-    []
-  );
-
   const handleOwnClientPayload = useCallback(
     (data: CreateOwnClientFormData, slot: CalendarEventsSlot) => {
       const payload: AppointmentOwnClientCreate = {
@@ -296,7 +257,6 @@ export const useWeeklyCalendar = ({
     isLoading: isLoading,
     isInitialLoading: !hasLoadedOnce && isLoading,
     isLoadingBlock,
-    isLoadingLastMinute,
     isLoadingOwnClient,
     bounds,
     data,
@@ -309,7 +269,6 @@ export const useWeeklyCalendar = ({
     handleOpenCreateModal,
     handleCloseBlocking,
     handleConfirmBlockPayload,
-    handleLastMinutePayload,
     handleOwnClientPayload,
   };
 };

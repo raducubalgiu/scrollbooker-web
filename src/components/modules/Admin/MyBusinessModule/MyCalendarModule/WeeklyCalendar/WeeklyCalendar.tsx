@@ -51,7 +51,6 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     isLoading,
     isInitialLoading,
     isLoadingBlock,
-    isLoadingLastMinute,
     isLoadingOwnClient,
     bounds,
     data,
@@ -64,7 +63,6 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     handleOpenCreateModal,
     handleCloseBlocking,
     handleConfirmBlockPayload,
-    handleLastMinutePayload,
     handleOwnClientPayload,
   } = useWeeklyCalendar({ session, schedules });
 
@@ -152,8 +150,6 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
       >
         <CreateAppointmentModal
           createModal={createModal}
-          isLoadingLastMinute={isLoadingLastMinute}
-          onCreateLastMinute={handleLastMinutePayload}
           isLoadingOwnClient={isLoadingOwnClient}
           onCreateOwnClient={handleOwnClientPayload}
           onClose={handleCloseCreateModal}

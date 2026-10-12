@@ -3,15 +3,14 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
-import { useMutate } from "@/hooks/useHttp";
 import { useGetBusinessCalendarEventsByDay } from "@/controllers/booking/availability.controller";
 import { useGetScheduleBounds } from "@/controllers/booking/schedule.controller";
 import { useGetCalendarSettings } from "@/controllers/booking/calendarSettings.controller";
 import { createTimeRowMap } from "../createTimeRowMap";
+import { useCalendarAppointmentMutations } from "../sharedComponents/useCalendarAppointmentMutations";
 import {
   AppointmentBlockCreate,
   AppointmentBlockSlot,
-  AppointmentLastMinuteCreate,
   AppointmentOwnClientCreate,
 } from "@/ts/models/booking/appointment/Appointment";
 import {
@@ -78,7 +77,7 @@ export const useEmployeesDayCalendar = () => {
     };
   }, [scheduleBounds]);
 
-  const { data, isLoading, refetch } = useGetBusinessCalendarEventsByDay({
+  const { data, isLoading } = useGetBusinessCalendarEventsByDay({
     day: dayStr,
     slotDuration,
   });
@@ -109,39 +108,15 @@ export const useEmployeesDayCalendar = () => {
     [employees, isToday]
   );
 
-  const { mutate: handleBlock, isPending: isLoadingBlock } = useMutate({
-    key: ["block-appointments"],
-    url: "/api/appointments/block",
-    options: {
-      onSuccess: async () => {
-        refetch();
+  const { handleBlock, isLoadingBlock, handleOwnClient, isLoadingOwnClient } =
+    useCalendarAppointmentMutations({
+      onBlockSuccess: () => {
         handleCloseBlocking();
       },
-    },
-  });
-
-  const { mutate: handleLastMinute, isPending: isLoadingLastMinute } =
-    useMutate({
-      key: ["last-minute-appointments"],
-      url: "/api/appointments/last-minute",
-      options: {
-        onSuccess: async () => {
-          refetch();
-          setCreateModal({ open: false, slot: null, employeeId: null });
-        },
-      },
-    });
-
-  const { mutate: handleOwnClient, isPending: isLoadingOwnClient } = useMutate({
-    key: ["own-client-appointments"],
-    url: "/api/appointments/own-client",
-    options: {
-      onSuccess: async () => {
-        refetch();
+      onOwnClientSuccess: () => {
         setCreateModal({ open: false, slot: null, employeeId: null });
       },
-    },
-  });
+    });
 
   const { timeStrings, rowMap, totalRows } = useMemo(() => {
     if (!bounds) {
@@ -230,22 +205,6 @@ export const useEmployeesDayCalendar = () => {
     handleBlock(payload);
   }, [selectedSlotsToBlock, handleBlock]);
 
-  const handleLastMinutePayload = useCallback(
-    (discount: number, slot: CalendarEventsSlot) => {
-      if (!createModal.employeeId) return;
-
-      const payload: AppointmentLastMinuteCreate = {
-        discount,
-        start_date: slot.start_date_utc,
-        end_date: slot.end_date_utc,
-        user_id: createModal.employeeId,
-      };
-
-      handleLastMinute(payload);
-    },
-    [createModal.employeeId, handleLastMinute]
-  );
-
   const handleOwnClientPayload = useCallback(
     (data: CreateOwnClientFormData, slot: CalendarEventsSlot) => {
       if (!createModal.employeeId) return;
@@ -292,7 +251,6 @@ export const useEmployeesDayCalendar = () => {
     isLoading,
     isInitialLoading: isBoundsLoading || (!hasLoadedOnce && isLoading),
     isLoadingBlock,
-    isLoadingLastMinute,
     isLoadingOwnClient,
     bounds,
     data,
@@ -305,7 +263,6 @@ export const useEmployeesDayCalendar = () => {
     handleOpenCreateModal,
     handleCloseBlocking,
     handleConfirmBlockPayload,
-    handleLastMinutePayload,
     handleOwnClientPayload,
   };
 };

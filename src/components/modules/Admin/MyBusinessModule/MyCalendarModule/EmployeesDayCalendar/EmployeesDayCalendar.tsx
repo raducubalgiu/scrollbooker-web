@@ -40,7 +40,6 @@ export const EmployeesDayCalendar = () => {
     isLoading,
     isInitialLoading,
     isLoadingBlock,
-    isLoadingLastMinute,
     isLoadingOwnClient,
     bounds,
     data,
@@ -53,7 +52,6 @@ export const EmployeesDayCalendar = () => {
     handleOpenCreateModal,
     handleCloseBlocking,
     handleConfirmBlockPayload,
-    handleLastMinutePayload,
     handleOwnClientPayload,
   } = useEmployeesDayCalendar();
 
@@ -157,8 +155,6 @@ export const EmployeesDayCalendar = () => {
       >
         <CreateAppointmentModal
           createModal={createModal}
-          isLoadingLastMinute={isLoadingLastMinute}
-          onCreateLastMinute={handleLastMinutePayload}
           isLoadingOwnClient={isLoadingOwnClient}
           onCreateOwnClient={handleOwnClientPayload}
           onClose={handleCloseCreateModal}

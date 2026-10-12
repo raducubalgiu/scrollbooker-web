@@ -143,13 +143,6 @@ export interface AppointmentBlockCreate {
   slots: AppointmentBlockSlot[];
 }
 
-export interface AppointmentLastMinuteCreate {
-  start_date: string;
-  end_date: string;
-  user_id: number;
-  discount: number;
-}
-
 export interface AppointmentCustomProduct {
   product_name: string;
   price: number;
