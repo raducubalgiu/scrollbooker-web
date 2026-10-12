@@ -90,7 +90,8 @@ export const AppRoutes = {
   approve: () => "/admin/businesses/approve",
 
   // Settings
-  display: () => "/display",
+  display: () => "/settings/display",
+  account: () => "/settings/account",
 
   // Nomenclatures
   rolesAndPermissions: () => "/admin/nomenclatures/roles-and-permissions",

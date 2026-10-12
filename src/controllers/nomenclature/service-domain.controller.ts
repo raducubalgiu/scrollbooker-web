@@ -19,6 +19,11 @@ type UpdateServiceDomainsParams = {
   data: ServiceDomainCreateOrUpdate;
 };
 
+type ServiceDomainServiceRelationParams = {
+  serviceDomainId: string;
+  serviceId: string;
+};
+
 export const useAllServiceDomains = ({
   page,
   limit,
@@ -77,6 +82,44 @@ export const useDeleteServiceDomain = () => {
     axios.delete(`${SERVICE_DOMAIN_PATH}/${id}`).then((res) => res.data);
 
   return useMutation<void, Error, string>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["service-domains"] });
+    },
+  });
+};
+
+export const useAttachServiceToServiceDomain = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    serviceDomainId,
+    serviceId,
+  }: ServiceDomainServiceRelationParams): Promise<void> =>
+    axios
+      .post(`${SERVICE_DOMAIN_PATH}/${serviceDomainId}/services/${serviceId}`)
+      .then((res) => res.data);
+
+  return useMutation<void, Error, ServiceDomainServiceRelationParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["service-domains"] });
+    },
+  });
+};
+
+export const useDetachServiceFromServiceDomain = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    serviceDomainId,
+    serviceId,
+  }: ServiceDomainServiceRelationParams): Promise<void> =>
+    axios
+      .delete(`${SERVICE_DOMAIN_PATH}/${serviceDomainId}/services/${serviceId}`)
+      .then((res) => res.data);
+
+  return useMutation<void, Error, ServiceDomainServiceRelationParams>({
     mutationFn: doRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["service-domains"] });

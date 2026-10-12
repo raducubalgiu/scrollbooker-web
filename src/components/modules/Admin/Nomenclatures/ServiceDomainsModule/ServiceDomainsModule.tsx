@@ -223,7 +223,10 @@ export default function ServiceDomainsModule() {
       sx: { borderRadius: 2.5, border: "1px solid", borderColor: "divider" },
     },
     renderDetailPanel: ({ row }) => (
-      <ServicesByServiceDomainModule services={row.original.services} />
+      <ServicesByServiceDomainModule
+        serviceDomainId={row.original.id}
+        services={row.original.services}
+      />
     ),
   });
 

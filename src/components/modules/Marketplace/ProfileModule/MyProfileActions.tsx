@@ -22,7 +22,7 @@ const MyProfileActions = ({
     <>
       <ProfileActionButton
         color="secondary"
-        title="Editează"
+        title="Editează profilul"
         onClick={onOpenEditModal}
       />
 

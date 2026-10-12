@@ -1,11 +1,26 @@
 import { SelectedServiceDomainWithServices } from "@/ts/models/nomenclatures/serviceDomain/SelectedServiceDomainWithServices";
+import { Service } from "@/ts/models/nomenclatures/service/Service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+
+const SERVICES_PATH = "/api/protected/services";
 
 type GetMySelectedServicesParams = { businessId: string };
 type UpdateMySelectedServicesParams = {
   businessId: string;
   data: { service_ids: number[] };
+};
+
+export const useAllServices = () => {
+  const doRequest = () =>
+    axios
+      .get<Service[]>(`${SERVICES_PATH}?all=true`)
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["services", "all"],
+    queryFn: doRequest,
+  });
 };
 
 export const useGetMySelectedServices = ({

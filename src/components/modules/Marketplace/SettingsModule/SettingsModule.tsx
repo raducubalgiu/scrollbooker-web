@@ -11,10 +11,12 @@ import {
 import LogoutIcon from "@mui/icons-material/Logout";
 import BedtimeOutlinedIcon from "@mui/icons-material/BedtimeOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import React from "react";
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
 import { signOut } from "next-auth/react";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
+import { AppRoutes } from "@/utils/routes";
 
 const SettingsModule = () => {
   const { navigateTo } = useAppNavigation();
@@ -31,7 +33,16 @@ const SettingsModule = () => {
       <HeaderMobile title="Setări" />
 
       <List component="nav" aria-labelledby="nested-list-subheader">
-        <ListItemButton onClick={() => navigateTo("/display")}>
+        <ListItemButton onClick={() => navigateTo(AppRoutes.account())}>
+          <ListItemIcon>
+            <AdminPanelSettingsOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary="Cont" />
+        </ListItemButton>
+
+        <Divider />
+
+        <ListItemButton onClick={() => navigateTo(AppRoutes.display())}>
           <ListItemIcon>
             <BedtimeOutlinedIcon />
           </ListItemIcon>

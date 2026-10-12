@@ -1,6 +1,7 @@
 import { useThemeMode } from "@/providers/ThemeContext";
 import { ThemeModeEnum } from "@/providers/ThemeModeEnum";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CheckIcon from "@mui/icons-material/Check";
 import { signOut } from "next-auth/react";
@@ -17,6 +18,8 @@ import {
   Typography,
 } from "@mui/material";
 import React, { memo } from "react";
+import { useAppNavigation } from "@/hooks/useAppNavigation";
+import { AppRoutes } from "@/utils/routes";
 
 type DrawerPopperProps = {
   moreOpen: boolean;
@@ -34,6 +37,7 @@ const DrawerPopper = ({
   const [themeAnchorEl, setThemeAnchorEl] = React.useState<HTMLElement | null>(
     null
   );
+  const { navigateTo } = useAppNavigation();
 
   const themeCloseTimer = React.useRef<number | null>(null);
 
@@ -102,6 +106,21 @@ const DrawerPopper = ({
             Setări
           </Typography>
           <List>
+            <ListItem disablePadding sx={{ px: 0 }}>
+              <ListItemButton
+                onClick={() => {
+                  navigateTo(AppRoutes.account());
+                  onCloseMore();
+                }}
+                sx={styles.button}
+              >
+                <ListItemIcon>
+                  <AdminPanelSettingsOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={<Typography>Cont</Typography>} />
+              </ListItemButton>
+            </ListItem>
+
             <ListItem disablePadding sx={{ px: 0 }}>
               <ListItemButton
                 onMouseEnter={(e) =>
