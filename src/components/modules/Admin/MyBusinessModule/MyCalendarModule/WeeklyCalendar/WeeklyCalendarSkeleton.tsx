@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Skeleton } from "@mui/material";
-import { getCalendarTableBg } from "../calendarSurfaceColors";
+import { getCalendarTableBg } from "../sharedComponents/calendarSurfaceColors";
 
 const SKELETON_DAYS = 7;
 const SKELETON_ROWS = 8;

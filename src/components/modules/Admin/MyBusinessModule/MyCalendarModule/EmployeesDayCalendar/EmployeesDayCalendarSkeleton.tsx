@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Skeleton } from "@mui/material";
 import { EMPLOYEE_COLUMN_MIN_WIDTH } from "./employeesDayCalendarConstants";
-import { getCalendarTableBg } from "../calendarSurfaceColors";
+import { getCalendarTableBg } from "../sharedComponents/calendarSurfaceColors";
 
 const SKELETON_EMPLOYEES = 4;
 const SKELETON_ROWS = 8;

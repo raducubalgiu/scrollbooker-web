@@ -18,11 +18,11 @@ import {
   CalendarEventsBusinessEmployee,
   CalendarEventsSlot,
 } from "@/ts/models/booking/availability/CalendarEvents";
-import { CreateOwnClientFormData } from "../CreateAppointmentModal/CreateOwnClient";
+import { CreateOwnClientFormData } from "../sharedComponents/CreateAppointmentModal/CreateOwnClient";
 import {
   ROW_HEIGHT_LEVELS,
   RowHeightLevel,
-} from "../CalendarSettings/rowHeightLevels";
+} from "../sharedComponents/CalendarSettings/rowHeightLevels";
 
 export type EmployeesCreateAppointmentModalType = {
   open: boolean;

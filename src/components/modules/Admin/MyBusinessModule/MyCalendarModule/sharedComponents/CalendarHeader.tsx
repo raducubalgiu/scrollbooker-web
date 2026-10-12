@@ -15,15 +15,14 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import BlockIcon from "@mui/icons-material/Block";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import dayjs from "dayjs";
-import RowHeightControl from "../CalendarSettings/RowHeightControl";
-import CalendarSettingsModal from "../CalendarSettings/CalendarSettingsModal";
-import ExpandCalendarButton from "../CalendarSettings/ExpandCalendarButton";
-import { RowHeightLevel } from "../CalendarSettings/rowHeightLevels";
-import { getCalendarTableBg } from "../calendarSurfaceColors";
+import RowHeightControl from "./CalendarSettings/RowHeightControl";
+import CalendarSettingsModal from "./CalendarSettings/CalendarSettingsModal";
+import ExpandCalendarButton from "./CalendarSettings/ExpandCalendarButton";
+import { RowHeightLevel } from "./CalendarSettings/rowHeightLevels";
+import { getCalendarTableBg } from "./calendarSurfaceColors";
 
-interface EmployeesDayCalendarHeaderProps {
-  currentDay: dayjs.Dayjs;
+type CalendarHeaderProps = {
+  label: string;
   isLoading: boolean;
   isBlocking: boolean;
   slotDuration: number;
@@ -33,15 +32,16 @@ interface EmployeesDayCalendarHeaderProps {
   isExpanded: boolean;
   onToggleExpanded: () => void;
   userId: number | undefined;
-  onPrevDay: () => void;
-  onNextDay: () => void;
+  canSetAppointmentGap: boolean;
+  onPrevious: () => void;
+  onNext: () => void;
   onToday: () => void;
   onBlockSlots: () => void;
   onAddAppointment: () => void;
-}
+};
 
-export const EmployeesDayCalendarHeader = ({
-  currentDay,
+export const CalendarHeader = ({
+  label,
   isLoading,
   isBlocking,
   slotDuration,
@@ -51,14 +51,14 @@ export const EmployeesDayCalendarHeader = ({
   isExpanded,
   onToggleExpanded,
   userId,
-  onPrevDay,
-  onNextDay,
+  canSetAppointmentGap,
+  onPrevious,
+  onNext,
   onToday,
   onBlockSlots,
   onAddAppointment,
-}: EmployeesDayCalendarHeaderProps) => {
+}: CalendarHeaderProps) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const formattedDay = currentDay.format("dddd, DD MMMM YYYY");
 
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
     if (isDisabled) return;
@@ -120,6 +120,7 @@ export const EmployeesDayCalendarHeader = ({
 
         <IconButton
           onClick={isDisabled ? undefined : () => setIsSettingsOpen(true)}
+          size="large"
           sx={{
             color: "text.primary",
             backgroundColor: getCalendarTableBg,
@@ -141,7 +142,7 @@ export const EmployeesDayCalendarHeader = ({
           open={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           userId={userId}
-          canSetAppointmentGap={false}
+          canSetAppointmentGap={canSetAppointmentGap}
         />
 
         <Button
@@ -174,8 +175,7 @@ export const EmployeesDayCalendarHeader = ({
           gap={1}
         >
           <IconButton
-            onClick={isDisabled ? undefined : onPrevDay}
-            size="large"
+            onClick={isDisabled ? undefined : onPrevious}
             sx={{
               color: "text.primary",
               backgroundColor: getCalendarTableBg,
@@ -188,8 +188,7 @@ export const EmployeesDayCalendarHeader = ({
           </IconButton>
 
           <IconButton
-            onClick={isDisabled ? undefined : onNextDay}
-            size="large"
+            onClick={isDisabled ? undefined : onNext}
             sx={{
               color: "text.primary",
               backgroundColor: getCalendarTableBg,
@@ -202,7 +201,7 @@ export const EmployeesDayCalendarHeader = ({
           </IconButton>
 
           <Typography sx={{ fontWeight: 500, fontSize: 25, ml: 1 }}>
-            {formattedDay}
+            {label}
           </Typography>
         </Stack>
       </Stack>
@@ -215,14 +214,10 @@ export const EmployeesDayCalendarHeader = ({
       >
         <Button
           variant="contained"
-          color="inherit"
           startIcon={<BlockIcon sx={{ fontSize: 20 }} />}
           onClick={isLoading ? undefined : onBlockSlots}
           disableElevation
           sx={{
-            textTransform: "none",
-            fontWeight: 700,
-            fontSize: "15px",
             border: "1px solid",
             borderColor: "divider",
             backgroundColor: (theme) =>
@@ -239,17 +234,9 @@ export const EmployeesDayCalendarHeader = ({
 
         <Button
           variant="contained"
-          color="primary"
           startIcon={<AddIcon sx={{ fontSize: 22 }} />}
           onClick={isDisabled ? undefined : onAddAppointment}
           disableElevation
-          sx={{
-            textTransform: "none",
-            fontWeight: 700,
-            fontSize: "15px",
-            boxShadow: "none",
-            pointerEvents: isDisabled ? "none" : "auto",
-          }}
         >
           Adaugă o programare
         </Button>

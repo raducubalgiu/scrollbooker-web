@@ -3,7 +3,8 @@
 import React, { memo } from "react";
 import { Box } from "@mui/material";
 import dayjs from "dayjs";
-import CalendarEvent from "../CalendarEvent/CalendarEvent";
+import CalendarEvent from "../sharedComponents/CalendarEvent/CalendarEvent";
+import { CurrentTimeIndicator } from "../sharedComponents/CurrentTimeIndicator";
 import { FrontendDayResult } from "../getFrontendDays";
 import {
   CalendarEventsDay,
@@ -54,6 +55,7 @@ const WeeklyCalendarEventsLayerComponent = ({
 
         const colIndex = targetFrontendIndex + 2;
         const totalContentHeight = timeStringsLength * currentRowHeight;
+        const isToday = dayBackend.day === dayjs().format("YYYY-MM-DD");
 
         return (
           <Box
@@ -67,6 +69,15 @@ const WeeklyCalendarEventsLayerComponent = ({
               width: "100%",
             }}
           >
+            {isToday && (
+              <CurrentTimeIndicator
+                minTimeStr={bounds.minTime}
+                maxTimeStr={bounds.maxTime}
+                slotDuration={slotDuration}
+                rowHeight={currentRowHeight}
+              />
+            )}
+
             {dayBackend.slots.map((slot: CalendarEventsSlot, slotIndex: number) => {
               const isVacantPastSlot =
                 dayjs().isAfter(dayjs(slot.start_date_locale)) &&

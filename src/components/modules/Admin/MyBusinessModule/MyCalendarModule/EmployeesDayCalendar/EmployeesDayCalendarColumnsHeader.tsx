@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { Avatar, Box, Typography } from "@mui/material";
 import { CalendarEventsBusinessEmployee } from "@/ts/models/booking/availability/CalendarEvents";
 import { EMPLOYEE_COLUMN_MIN_WIDTH } from "./employeesDayCalendarConstants";
-import { getCalendarTableBg } from "../calendarSurfaceColors";
+import { getCalendarTableBg } from "../sharedComponents/calendarSurfaceColors";
 
 type EmployeesDayCalendarColumnsHeaderProps = {
   employees: CalendarEventsBusinessEmployee[];

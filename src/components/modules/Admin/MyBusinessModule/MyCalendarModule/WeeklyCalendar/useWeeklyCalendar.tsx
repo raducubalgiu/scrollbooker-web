@@ -17,11 +17,11 @@ import { getScheduleBounds } from "../getScheduleBounds";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { Session } from "next-auth";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
-import { CreateOwnClientFormData } from "../CreateAppointmentModal/CreateOwnClient";
+import { CreateOwnClientFormData } from "../sharedComponents/CreateAppointmentModal/CreateOwnClient";
 import {
   ROW_HEIGHT_LEVELS,
   RowHeightLevel,
-} from "../CalendarSettings/rowHeightLevels";
+} from "../sharedComponents/CalendarSettings/rowHeightLevels";
 
 interface UseWeeklyCalendarProps {
   session: Session;

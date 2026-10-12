@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import CreateOwnClient, { CreateOwnClientFormData } from "./CreateOwnClient";
 import CreateLastMinute from "./CreateLastMinute";
-import { CreateAppointmentModalType } from "../WeeklyCalendar/WeeklyCalendar";
+import { CreateAppointmentModalType } from "../../WeeklyCalendar/WeeklyCalendar";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import {
   SegmentedButtons,

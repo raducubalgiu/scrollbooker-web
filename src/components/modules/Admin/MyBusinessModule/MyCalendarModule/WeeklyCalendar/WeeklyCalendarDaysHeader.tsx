@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { Box, Theme, Typography } from "@mui/material";
 import dayjs from "dayjs";
-import { getCalendarTableBg } from "../calendarSurfaceColors";
+import { getCalendarTableBg } from "../sharedComponents/calendarSurfaceColors";
 import { FrontendDayResult } from "../getFrontendDays";
 
 type WeeklyCalendarDaysHeaderProps = {

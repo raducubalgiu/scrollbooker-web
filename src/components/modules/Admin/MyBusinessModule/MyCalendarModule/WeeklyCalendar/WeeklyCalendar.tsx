@@ -5,17 +5,20 @@ import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEve
 import { Box, Theme, Typography } from "@mui/material";
 import { Session } from "next-auth";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
-import { WeeklyCalendarHeader } from "./WeeklyCalendarHeader";
-import CreateAppointmentModal from "../CreateAppointmentModal/CreateAppointmentModal";
-import BlockAppBar from "../BlockAppBar";
+import { CalendarHeader } from "../sharedComponents/CalendarHeader";
+import CreateAppointmentModal from "../sharedComponents/CreateAppointmentModal/CreateAppointmentModal";
+import BlockAppBar from "../sharedComponents/BlockAppBar";
 import { WeeklyCalendarDaysHeader } from "./WeeklyCalendarDaysHeader";
 import { WeeklyCalendarGridBackground } from "./WeeklyCalendarGridBackground";
 import { WeeklyCalendarEventsLayer } from "./WeeklyCalendarEventsLayer";
-import CalendarLoadingOverlay from "../CalendarLoadingOverlay";
+import CalendarLoadingOverlay from "../sharedComponents/CalendarLoadingOverlay";
 import { useWeeklyCalendar } from "./useWeeklyCalendar";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { WeeklyCalendarSkeleton } from "./WeeklyCalendarSkeleton";
-import { getCalendarPageBg, getCalendarTableBg } from "../calendarSurfaceColors";
+import {
+  getCalendarPageBg,
+  getCalendarTableBg,
+} from "../sharedComponents/calendarSurfaceColors";
 
 type WeeklyCalendarProps = {
   session: Session;
@@ -73,6 +76,10 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     }
   }, []);
 
+  const startOfWeek = currentWeekDate.startOf("week");
+  const endOfWeek = currentWeekDate.endOf("week");
+  const formattedRange = `${startOfWeek.format("DD")} - ${endOfWeek.format("DD")} ${endOfWeek.format("MMMM YYYY")}`;
+
   if (totalRows === 0) {
     return (
       <Box
@@ -99,12 +106,12 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
         sx={{ bgcolor: getCalendarPageBg }}
       >
         <Box sx={{ width: "100%", boxSizing: "border-box" }}>
-          <WeeklyCalendarHeader
-            currentWeekDate={currentWeekDate}
+          <CalendarHeader
+            label={formattedRange}
             isBlocking={isBlocking}
             isLoading={isLoading}
-            onPrevWeek={handlePrevWeek}
-            onNextWeek={handleNextWeek}
+            onPrevious={handlePrevWeek}
+            onNext={handleNextWeek}
             onToday={handleToday}
             slotDuration={slotDuration}
             onSlotDurationChange={(duration) => setSlotDuration(duration)}
@@ -113,6 +120,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
             isExpanded={isExpanded}
             onToggleExpanded={() => setIsExpanded(!isExpanded)}
             userId={session?.user_id}
+            canSetAppointmentGap
             onBlockSlots={handleToggleBlocking}
             onAddAppointment={() => handleOpenCreateModal(null)}
           />
@@ -150,12 +158,12 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
           onClose={handleCloseCreateModal}
         />
 
-        <WeeklyCalendarHeader
-          currentWeekDate={currentWeekDate}
+        <CalendarHeader
+          label={formattedRange}
           isBlocking={isBlocking}
           isLoading={isLoading}
-          onPrevWeek={handlePrevWeek}
-          onNextWeek={handleNextWeek}
+          onPrevious={handlePrevWeek}
+          onNext={handleNextWeek}
           onToday={handleToday}
           slotDuration={slotDuration}
           onSlotDurationChange={(duration) => setSlotDuration(duration)}
@@ -164,6 +172,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
           isExpanded={isExpanded}
           onToggleExpanded={() => setIsExpanded(!isExpanded)}
           userId={session?.user_id}
+          canSetAppointmentGap
           onBlockSlots={handleToggleBlocking}
           onAddAppointment={() => handleOpenCreateModal(null)}
         />

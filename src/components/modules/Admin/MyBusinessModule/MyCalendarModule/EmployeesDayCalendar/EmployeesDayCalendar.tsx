@@ -2,18 +2,22 @@
 
 import { useCallback, useRef } from "react";
 import { Box, Theme, Typography } from "@mui/material";
-import { EmployeesDayCalendarHeader } from "./EmployeesDayCalendarHeader";
-import CreateAppointmentModal from "../CreateAppointmentModal/CreateAppointmentModal";
-import BlockAppBar from "../BlockAppBar";
+import dayjs from "@/lib/dayjs";
+import { CalendarHeader } from "../sharedComponents/CalendarHeader";
+import CreateAppointmentModal from "../sharedComponents/CreateAppointmentModal/CreateAppointmentModal";
+import BlockAppBar from "../sharedComponents/BlockAppBar";
 import { EmployeesDayCalendarColumnsHeader } from "./EmployeesDayCalendarColumnsHeader";
 import { EmployeesDayCalendarGridBackground } from "./EmployeesDayCalendarGridBackground";
 import { EmployeesDayCalendarEventsLayer } from "./EmployeesDayCalendarEventsLayer";
-import CalendarLoadingOverlay from "../CalendarLoadingOverlay";
+import CalendarLoadingOverlay from "../sharedComponents/CalendarLoadingOverlay";
 import { useEmployeesDayCalendar } from "./useEmployeesDayCalendar";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import { EMPLOYEE_COLUMN_MIN_WIDTH } from "./employeesDayCalendarConstants";
 import { EmployeesDayCalendarSkeleton } from "./EmployeesDayCalendarSkeleton";
-import { getCalendarPageBg, getCalendarTableBg } from "../calendarSurfaceColors";
+import {
+  getCalendarPageBg,
+  getCalendarTableBg,
+} from "../sharedComponents/calendarSurfaceColors";
 
 export const EmployeesDayCalendar = () => {
   const {
@@ -62,6 +66,9 @@ export const EmployeesDayCalendar = () => {
     }
   }, []);
 
+  const isToday = currentDay.isSame(dayjs(), "day");
+  const formattedDay = currentDay.format("dddd, DD MMMM YYYY");
+
   if (isInitialLoading) {
     return (
       <MainLayout
@@ -70,12 +77,12 @@ export const EmployeesDayCalendar = () => {
         sx={{ bgcolor: getCalendarPageBg }}
       >
         <Box sx={{ width: "100%", boxSizing: "border-box" }}>
-          <EmployeesDayCalendarHeader
-            currentDay={currentDay}
+          <CalendarHeader
+            label={formattedDay}
             isBlocking={isBlocking}
             isLoading={isLoading}
-            onPrevDay={handlePrevDay}
-            onNextDay={handleNextDay}
+            onPrevious={handlePrevDay}
+            onNext={handleNextDay}
             onToday={handleToday}
             slotDuration={slotDuration}
             onSlotDurationChange={(duration) => setSlotDuration(duration)}
@@ -84,6 +91,7 @@ export const EmployeesDayCalendar = () => {
             isExpanded={isExpanded}
             onToggleExpanded={() => setIsExpanded(!isExpanded)}
             userId={userId}
+            canSetAppointmentGap={false}
             onBlockSlots={handleToggleBlocking}
             onAddAppointment={() => handleOpenCreateModal(null, null)}
           />
@@ -157,12 +165,12 @@ export const EmployeesDayCalendar = () => {
           onClose={handleCloseCreateModal}
         />
 
-        <EmployeesDayCalendarHeader
-          currentDay={currentDay}
+        <CalendarHeader
+          label={formattedDay}
           isBlocking={isBlocking}
           isLoading={isLoading}
-          onPrevDay={handlePrevDay}
-          onNextDay={handleNextDay}
+          onPrevious={handlePrevDay}
+          onNext={handleNextDay}
           onToday={handleToday}
           slotDuration={slotDuration}
           onSlotDurationChange={(duration) => setSlotDuration(duration)}
@@ -171,6 +179,7 @@ export const EmployeesDayCalendar = () => {
           isExpanded={isExpanded}
           onToggleExpanded={() => setIsExpanded(!isExpanded)}
           userId={userId}
+          canSetAppointmentGap={false}
           onBlockSlots={handleToggleBlocking}
           onAddAppointment={() => handleOpenCreateModal(null, null)}
         />
@@ -250,6 +259,7 @@ export const EmployeesDayCalendar = () => {
               timeStringsLength={timeStrings.length}
               selectedSlotsToBlock={selectedSlotsToBlock}
               isBlocking={isBlocking}
+              isToday={isToday}
               businessShortDomain={data?.business_short_domain ?? ""}
               onToggleSelectSlot={handleToggleSelectSlot}
               onOpenCreateModal={handleOpenCreateModal}
