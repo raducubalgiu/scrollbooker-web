@@ -2,13 +2,12 @@
 
 import { useCallback, useRef } from "react";
 import { Box, Theme, Typography } from "@mui/material";
-import dayjs from "@/lib/dayjs";
 import { CalendarHeader } from "../sharedComponents/CalendarHeader";
 import CreateAppointmentModal from "../sharedComponents/CreateAppointmentModal/CreateAppointmentModal";
 import BlockAppBar from "../sharedComponents/BlockAppBar";
 import { EmployeesDayCalendarColumnsHeader } from "./EmployeesDayCalendarColumnsHeader";
-import { EmployeesDayCalendarGridBackground } from "./EmployeesDayCalendarGridBackground";
-import { EmployeesDayCalendarEventsLayer } from "./EmployeesDayCalendarEventsLayer";
+import { CalendarGridBackground } from "../sharedComponents/CalendarGridBackground";
+import { CalendarEventsLayer } from "../sharedComponents/CalendarEventsLayer";
 import CalendarLoadingOverlay from "../sharedComponents/CalendarLoadingOverlay";
 import { useEmployeesDayCalendar } from "./useEmployeesDayCalendar";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
@@ -34,6 +33,7 @@ export const EmployeesDayCalendar = () => {
     currentDay,
     currentRowHeight,
     employees,
+    columns,
     timeStrings,
     rowMap,
     totalRows,
@@ -66,7 +66,6 @@ export const EmployeesDayCalendar = () => {
     }
   }, []);
 
-  const isToday = currentDay.isSame(dayjs(), "day");
   const formattedDay = currentDay.format("dddd, DD MMMM YYYY");
 
   if (isInitialLoading) {
@@ -245,24 +244,27 @@ export const EmployeesDayCalendar = () => {
               );
             })}
 
-            <EmployeesDayCalendarGridBackground
-              employees={employees}
+            <CalendarGridBackground
+              columns={columns}
               timeStrings={timeStrings}
               rowMap={rowMap}
             />
 
-            <EmployeesDayCalendarEventsLayer
-              employees={employees}
+            <CalendarEventsLayer
+              columns={columns}
               bounds={bounds}
               currentRowHeight={currentRowHeight}
               slotDuration={slotDuration}
               timeStringsLength={timeStrings.length}
               selectedSlotsToBlock={selectedSlotsToBlock}
               isBlocking={isBlocking}
-              isToday={isToday}
               businessShortDomain={data?.business_short_domain ?? ""}
-              onToggleSelectSlot={handleToggleSelectSlot}
-              onOpenCreateModal={handleOpenCreateModal}
+              onToggleSelectSlot={(columnKey, slot) =>
+                handleToggleSelectSlot(Number(columnKey), slot)
+              }
+              onOpenCreateModal={(columnKey, slot) =>
+                handleOpenCreateModal(Number(columnKey), slot)
+              }
             />
 
             {isLoading && <CalendarLoadingOverlay />}

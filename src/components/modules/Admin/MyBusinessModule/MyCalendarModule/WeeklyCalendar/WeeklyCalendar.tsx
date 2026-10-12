@@ -9,8 +9,8 @@ import { CalendarHeader } from "../sharedComponents/CalendarHeader";
 import CreateAppointmentModal from "../sharedComponents/CreateAppointmentModal/CreateAppointmentModal";
 import BlockAppBar from "../sharedComponents/BlockAppBar";
 import { WeeklyCalendarDaysHeader } from "./WeeklyCalendarDaysHeader";
-import { WeeklyCalendarGridBackground } from "./WeeklyCalendarGridBackground";
-import { WeeklyCalendarEventsLayer } from "./WeeklyCalendarEventsLayer";
+import { CalendarGridBackground } from "../sharedComponents/CalendarGridBackground";
+import { CalendarEventsLayer } from "../sharedComponents/CalendarEventsLayer";
 import CalendarLoadingOverlay from "../sharedComponents/CalendarLoadingOverlay";
 import { useWeeklyCalendar } from "./useWeeklyCalendar";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
@@ -44,6 +44,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     currentWeekDate,
     currentRowHeight,
     frontendDays,
+    columns,
     timeStrings,
     rowMap,
     totalRows,
@@ -251,9 +252,8 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
             {/* ==========================================
           3. STRATUL DE FUNDAL: CELULE ȘI BUTOANE
           ========================================== */}
-            <WeeklyCalendarGridBackground
-              frontendDays={frontendDays}
-              daysBackend={data?.days}
+            <CalendarGridBackground
+              columns={columns}
               timeStrings={timeStrings}
               rowMap={rowMap}
             />
@@ -261,9 +261,8 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
             {/* ====================================================================
           4. STRATUL DE SUPRAPUNERE EXTRAS ȘI MEMOIZAT (ZERO PERF IMPACT)
           ==================================================================== */}
-            <WeeklyCalendarEventsLayer
-              daysBackend={data?.days}
-              frontendDays={frontendDays}
+            <CalendarEventsLayer
+              columns={columns}
               bounds={bounds}
               currentRowHeight={currentRowHeight}
               slotDuration={slotDuration}
@@ -271,8 +270,8 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
               selectedSlotsToBlock={selectedSlotsToBlock}
               isBlocking={isBlocking}
               businessShortDomain={data?.business_short_domain ?? ""}
-              onToggleSelectSlot={handleToggleSelectSlot}
-              onOpenCreateModal={handleOpenCreateModal}
+              onToggleSelectSlot={(_key, slot) => handleToggleSelectSlot(slot)}
+              onOpenCreateModal={(_key, slot) => handleOpenCreateModal(slot)}
             />
 
             {/* ==========================================

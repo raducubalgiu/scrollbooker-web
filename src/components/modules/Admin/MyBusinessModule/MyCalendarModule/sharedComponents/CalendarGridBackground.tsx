@@ -1,33 +1,33 @@
+"use client";
+
 import React, { memo } from "react";
 import { Box } from "@mui/material";
 import dayjs from "dayjs";
-import {
-  CalendarEventsDay,
-  CalendarEventsSlot,
-} from "@/ts/models/booking/availability/CalendarEvents";
-import { FrontendDayResult } from "../getFrontendDays";
+import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 
-type WeeklyCalendarGridBackgroundProps = {
-  frontendDays: FrontendDayResult[];
-  daysBackend: CalendarEventsDay[] | undefined;
+export type CalendarGridColumn = {
+  key: string;
+  slots: CalendarEventsSlot[];
+};
+
+type CalendarGridBackgroundProps = {
+  columns: CalendarGridColumn[];
   timeStrings: string[];
   rowMap: Record<string, number>;
 };
 
-const WeeklyCalendarGridBackgroundComponent = ({
-  frontendDays,
-  daysBackend,
+const CalendarGridBackgroundComponent = ({
+  columns,
   timeStrings,
   rowMap,
-}: WeeklyCalendarGridBackgroundProps) => {
+}: CalendarGridBackgroundProps) => {
   return (
     <>
-      {frontendDays.map((dayData, dayIndex) => {
-        const colIndex = dayIndex + 2;
-        const dayBackend = daysBackend?.find((d) => d.day === dayData.dateStr);
+      {columns.map((column, columnIndex) => {
+        const colIndex = columnIndex + 2;
 
         const slotsByTime: Record<string, CalendarEventsSlot> = {};
-        dayBackend?.slots.forEach((slot) => {
+        column.slots.forEach((slot) => {
           slotsByTime[slot.start_date_locale.split("T")[1] ?? ""] = slot;
         });
 
@@ -45,7 +45,7 @@ const WeeklyCalendarGridBackgroundComponent = ({
 
           return (
             <Box
-              key={`bg-${dayData.dateStr}-${time}`}
+              key={`bg-${column.key}-${time}`}
               sx={{
                 gridColumn: colIndex,
                 gridRow: currentRow,
@@ -66,6 +66,4 @@ const WeeklyCalendarGridBackgroundComponent = ({
   );
 };
 
-export const WeeklyCalendarGridBackground = memo(
-  WeeklyCalendarGridBackgroundComponent
-);
+export const CalendarGridBackground = memo(CalendarGridBackgroundComponent);

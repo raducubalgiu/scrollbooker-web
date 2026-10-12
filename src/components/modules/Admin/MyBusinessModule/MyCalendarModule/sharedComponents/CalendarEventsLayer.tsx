@@ -3,16 +3,18 @@
 import React, { memo } from "react";
 import { Box } from "@mui/material";
 import dayjs from "dayjs";
-import CalendarEvent from "../sharedComponents/CalendarEvent/CalendarEvent";
-import { CurrentTimeIndicator } from "../sharedComponents/CurrentTimeIndicator";
-import {
-  CalendarEventsBusinessEmployee,
-  CalendarEventsSlot,
-} from "@/ts/models/booking/availability/CalendarEvents";
+import CalendarEvent from "./CalendarEvent/CalendarEvent";
+import { CurrentTimeIndicator } from "./CurrentTimeIndicator";
+import { CalendarGridColumn } from "./CalendarGridBackground";
+import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { AppointmentBlockSlot } from "@/ts/models/booking/appointment/Appointment";
 
-type EmployeesDayCalendarEventsLayerProps = {
-  employees: CalendarEventsBusinessEmployee[];
+export type CalendarEventsLayerColumn = CalendarGridColumn & {
+  isToday: boolean;
+};
+
+type CalendarEventsLayerProps = {
+  columns: CalendarEventsLayerColumn[];
   bounds: {
     minTime: string | undefined;
     maxTime: string | undefined;
@@ -22,36 +24,34 @@ type EmployeesDayCalendarEventsLayerProps = {
   timeStringsLength: number;
   selectedSlotsToBlock: AppointmentBlockSlot[];
   isBlocking: boolean;
-  isToday: boolean;
   businessShortDomain: string;
-  onToggleSelectSlot: (employeeId: number, slot: CalendarEventsSlot) => void;
-  onOpenCreateModal: (employeeId: number, slot: CalendarEventsSlot) => void;
+  onToggleSelectSlot: (columnKey: string, slot: CalendarEventsSlot) => void;
+  onOpenCreateModal: (columnKey: string, slot: CalendarEventsSlot) => void;
 };
 
-const EmployeesDayCalendarEventsLayerComponent = ({
-  employees,
+const CalendarEventsLayerComponent = ({
+  columns,
   bounds,
   currentRowHeight,
   slotDuration,
   timeStringsLength,
   selectedSlotsToBlock,
   isBlocking,
-  isToday,
   businessShortDomain,
   onToggleSelectSlot,
   onOpenCreateModal,
-}: EmployeesDayCalendarEventsLayerProps) => {
+}: CalendarEventsLayerProps) => {
   if (!bounds || !bounds.minTime) return null;
 
   return (
     <>
-      {employees.map((employee, employeeIndex) => {
-        const colIndex = employeeIndex + 2;
+      {columns.map((column, columnIndex) => {
+        const colIndex = columnIndex + 2;
         const totalContentHeight = timeStringsLength * currentRowHeight;
 
         return (
           <Box
-            key={`events-col-${employee.id}`}
+            key={`events-col-${column.key}`}
             sx={{
               gridColumn: colIndex,
               gridRowStart: 1,
@@ -61,7 +61,7 @@ const EmployeesDayCalendarEventsLayerComponent = ({
               width: "100%",
             }}
           >
-            {isToday && (
+            {column.isToday && (
               <CurrentTimeIndicator
                 minTimeStr={bounds.minTime}
                 maxTimeStr={bounds.maxTime}
@@ -70,7 +70,7 @@ const EmployeesDayCalendarEventsLayerComponent = ({
               />
             )}
 
-            {employee.slots.map((slot, slotIndex) => {
+            {column.slots.map((slot, slotIndex) => {
               const isVacantPastSlot =
                 dayjs().isAfter(dayjs(slot.start_date_locale)) &&
                 !slot.is_booked &&
@@ -84,7 +84,7 @@ const EmployeesDayCalendarEventsLayerComponent = ({
 
               return (
                 <CalendarEvent
-                  key={`slot-${employee.id}-${slotIndex}`}
+                  key={`slot-${column.key}-${slotIndex}`}
                   slot={slot}
                   isBlocking={isBlocking}
                   minTimeStr={bounds.minTime}
@@ -92,8 +92,8 @@ const EmployeesDayCalendarEventsLayerComponent = ({
                   rowHeight={currentRowHeight}
                   isSelected={isSlotChecked}
                   businessShortDomain={businessShortDomain}
-                  onToggleSelectSlot={(s) => onToggleSelectSlot(employee.id, s)}
-                  onOpenCreateModal={(s) => onOpenCreateModal(employee.id, s)}
+                  onToggleSelectSlot={(s) => onToggleSelectSlot(column.key, s)}
+                  onOpenCreateModal={(s) => onOpenCreateModal(column.key, s)}
                 />
               );
             })}
@@ -104,6 +104,4 @@ const EmployeesDayCalendarEventsLayerComponent = ({
   );
 };
 
-export const EmployeesDayCalendarEventsLayer = memo(
-  EmployeesDayCalendarEventsLayerComponent
-);
+export const CalendarEventsLayer = memo(CalendarEventsLayerComponent);

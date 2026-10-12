@@ -91,6 +91,16 @@ export const useWeeklyCalendar = ({
     if (data && !hasLoadedOnce) setHasLoadedOnce(true);
   }, [data, hasLoadedOnce]);
 
+  const columns = useMemo(() => {
+    const todayStr = dayjs().format("YYYY-MM-DD");
+
+    return frontendDays.map((dayData) => ({
+      key: dayData.dateStr,
+      slots: data?.days?.find((d) => d.day === dayData.dateStr)?.slots ?? [],
+      isToday: dayData.dateStr === todayStr,
+    }));
+  }, [frontendDays, data?.days]);
+
   const { mutate: handleBlock, isPending: isLoadingBlock } = useMutate({
     key: ["block-appointments"],
     url: "/api/appointments/block",
@@ -279,6 +289,7 @@ export const useWeeklyCalendar = ({
     currentWeekDate,
     currentRowHeight,
     frontendDays,
+    columns,
     timeStrings,
     rowMap,
     totalRows,

@@ -94,6 +94,21 @@ export const useEmployeesDayCalendar = () => {
     setEmployees(data.employees);
   }, [data, hasLoadedOnce]);
 
+  const isToday = useMemo(
+    () => dayStr === dayjs().format("YYYY-MM-DD"),
+    [dayStr]
+  );
+
+  const columns = useMemo(
+    () =>
+      employees.map((employee) => ({
+        key: String(employee.id),
+        slots: employee.slots,
+        isToday,
+      })),
+    [employees, isToday]
+  );
+
   const { mutate: handleBlock, isPending: isLoadingBlock } = useMutate({
     key: ["block-appointments"],
     url: "/api/appointments/block",
@@ -270,6 +285,7 @@ export const useEmployeesDayCalendar = () => {
     currentDay,
     currentRowHeight,
     employees,
+    columns,
     timeStrings,
     rowMap,
     totalRows,
