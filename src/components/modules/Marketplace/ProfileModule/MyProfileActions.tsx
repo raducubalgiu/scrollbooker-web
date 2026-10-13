@@ -1,8 +1,8 @@
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import React from "react";
+import NextLink from "next/link";
 import { AppRoutes } from "@/utils/routes";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 import ProfileActionButton from "./ProfileActionButton";
 
 type MyProfileActionsProps = {
@@ -16,8 +16,6 @@ const MyProfileActions = ({
   onOpenEditModal,
   onShare,
 }: MyProfileActionsProps) => {
-  const { navigateTo } = useAppNavigation();
-
   return (
     <>
       <ProfileActionButton
@@ -30,7 +28,8 @@ const MyProfileActions = ({
         <ProfileActionButton
           color="secondary"
           title="Calendar"
-          onClick={() => navigateTo(AppRoutes.calendar())}
+          component={NextLink}
+          href={AppRoutes.calendar()}
           startIcon={<DateRangeOutlinedIcon />}
         />
       ) : (

@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { memo } from "react";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
+import NextLink from "next/link";
 import { AppRoutes } from "@/utils/routes";
 
 type DrawerPopperProps = {
@@ -37,7 +37,6 @@ const DrawerPopper = ({
   const [themeAnchorEl, setThemeAnchorEl] = React.useState<HTMLElement | null>(
     null
   );
-  const { navigateTo } = useAppNavigation();
 
   const themeCloseTimer = React.useRef<number | null>(null);
 
@@ -108,10 +107,9 @@ const DrawerPopper = ({
           <List>
             <ListItem disablePadding sx={{ px: 0 }}>
               <ListItemButton
-                onClick={() => {
-                  navigateTo(AppRoutes.account());
-                  onCloseMore();
-                }}
+                component={NextLink}
+                href={AppRoutes.account()}
+                onClick={onCloseMore}
                 sx={styles.button}
               >
                 <ListItemIcon>

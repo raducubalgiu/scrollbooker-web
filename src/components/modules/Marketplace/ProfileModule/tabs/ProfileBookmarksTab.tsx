@@ -36,7 +36,6 @@ const ProfileBookmarksTab = ({ userId }: ProfileBookmarksTabProps) => {
               key={post.id}
               viewsCount={post.counters.views_count}
               thumbnailUrl={post.media_files[0]?.thumbnail_url ?? null}
-              onNavigateToVideo={() => {}}
             />
           ))}
       </PostGridContainer>

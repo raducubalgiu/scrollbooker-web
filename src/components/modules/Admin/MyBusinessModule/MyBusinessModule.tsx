@@ -15,7 +15,6 @@ import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined
 
 import MyBusinessCard from "./MyBusinessCard";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { Session } from "next-auth";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
@@ -25,7 +24,7 @@ type BusinessCardItem = {
   description: string;
   icon: React.ReactNode;
   permission: PermissionEnum;
-  navigate: () => void;
+  href: string;
 };
 
 type MyBusinessModuleProps = {
@@ -39,8 +38,6 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
     permissions,
   } = session;
 
-  const { navigateTo } = useAppNavigation();
-
   const pages = useMemo<BusinessCardItem[]>(
     () => [
       {
@@ -48,59 +45,59 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
         description: "Statistici despre rezervări și postări",
         icon: <DashboardOutlinedIcon />,
         permission: PermissionEnum.MY_DASHBOARD_VIEW,
-        navigate: () => navigateTo(AppRoutes.myDashboard()),
+        href: AppRoutes.myDashboard(),
       },
       {
         title: "Afaceri în aprobare",
         description: "Lista de afaceri ce urmează a fi revizuite",
         icon: <ApartmentOutlinedIcon />,
         permission: PermissionEnum.NOMENCLATURES_VIEW,
-        navigate: () => navigateTo(AppRoutes.approve()),
+        href: AppRoutes.approve(),
       },
       {
         title: "Detalii afacere",
         description: "Detalii despre afacerea mea",
         icon: <LocationOnOutlinedIcon />,
         permission: PermissionEnum.MY_BUSINESS_LOCATION_VIEW,
-        navigate: () => navigateTo(AppRoutes.myBusinessDetails()),
+        href: AppRoutes.myBusinessDetails(),
       },
       {
         title: "Program de lucru",
         description: "Detalii despre programul meu",
         icon: <ScheduleOutlinedIcon />,
         permission: PermissionEnum.MY_SCHEDULES_VIEW,
-        navigate: () => navigateTo(AppRoutes.mySchedules()),
+        href: AppRoutes.mySchedules(),
       },
       {
         title: "Categorii",
         description: "Detalii despre categoriile mele de servicii",
         icon: <BookOutlinedIcon />,
         permission: PermissionEnum.MY_SERVICES_VIEW,
-        navigate: () => navigateTo(AppRoutes.myServices()),
+        href: AppRoutes.myServices(),
       },
       {
         title: "Servicii",
         description: "Detalii despre serviciile mele",
         icon: <ShoppingBagOutlinedIcon />,
         permission: PermissionEnum.MY_PRODUCTS_VIEW,
-        navigate: () => navigateTo(AppRoutes.myProducts()),
+        href: AppRoutes.myProducts(),
       },
       {
         title: "Calendar",
         description: "Calendarul meu de programări",
         icon: <CalendarTodayOutlinedIcon />,
-        navigate: () => navigateTo(AppRoutes.calendar()),
+        href: AppRoutes.calendar(),
         permission: PermissionEnum.MY_CALENDAR_VIEW,
       },
       {
         title: "Angajați",
         description: "Angajați și cereri de angajare",
         icon: <PeopleOutlineOutlinedIcon />,
-        navigate: () => navigateTo(AppRoutes.myEmployees()),
+        href: AppRoutes.myEmployees(),
         permission: PermissionEnum.MY_EMPLOYEES_VIEW,
       },
     ],
-    [navigateTo]
+    []
   );
 
   const visiblePages = useMemo(() => {
@@ -129,7 +126,7 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
                 title={page.title}
                 description={page.description}
                 icon={page.icon}
-                onClick={page.navigate}
+                href={page.href}
               />
             </Grid>
           ))}

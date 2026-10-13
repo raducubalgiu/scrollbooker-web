@@ -3,7 +3,7 @@ import React from "react";
 
 type ProfileActionButtonProps = {
   title: string;
-  onClick: () => void;
+  onClick?: () => void;
 } & ButtonProps;
 
 const ProfileActionButton = ({

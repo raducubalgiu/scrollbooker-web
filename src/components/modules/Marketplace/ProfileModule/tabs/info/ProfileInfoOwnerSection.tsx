@@ -1,4 +1,3 @@
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { UserProfileAboutOwner } from "@/ts/models/user/UserProfileAbout";
 import { AppRoutes } from "@/utils/routes";
 import { Business, ChevronRight } from "@mui/icons-material";
@@ -11,14 +10,13 @@ import {
 	Typography,
 } from "@mui/material";
 import React from "react";
+import NextLink from "next/link";
 
 type ProfileInfoOwnerSectionProps = {
 	owner: UserProfileAboutOwner;
 };
 
 const ProfileInfoOwnerSection = ({ owner }: ProfileInfoOwnerSectionProps) => {
-	const { navigateTo } = useAppNavigation();
-
 	return (
 		<Card elevation={0} sx={styles.schedulesContainer}>
 			<CardContent sx={styles.contentContainer}>
@@ -46,14 +44,13 @@ const ProfileInfoOwnerSection = ({ owner }: ProfileInfoOwnerSectionProps) => {
 				</Box>
 
 				<Button
+					component={NextLink}
+					href={AppRoutes.profile(owner.username, owner.profession)}
 					variant="outlined"
 					color="secondary"
 					fullWidth
 					endIcon={<ChevronRight />}
 					disableElevation
-					onClick={() =>
-						navigateTo(AppRoutes.profile(owner.username, owner.profession))
-					}
 					sx={{
 						fontWeight: "bold",
 						textTransform: "none",

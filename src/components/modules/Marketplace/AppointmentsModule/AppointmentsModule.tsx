@@ -11,12 +11,12 @@ import { useInfiniteAppointments } from "@/controllers/booking/appointments.cont
 
 type AppointmentsModuleProps = {
   scrollRootRef?: React.RefObject<HTMLDivElement | null>;
-  onNavigateToAppointment: (appointmentId: number) => void;
+  onNavigate?: () => void;
 };
 
 const AppointmentsModule = ({
   scrollRootRef,
-  onNavigateToAppointment,
+  onNavigate = () => {},
 }: AppointmentsModuleProps) => {
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   const localListScrollRef = React.useRef<HTMLDivElement | null>(null);
@@ -100,10 +100,7 @@ const AppointmentsModule = ({
       {!isLoading &&
         appointments.map((appointment, index) => (
           <Box key={`${appointment.id}-${index}`}>
-            <AppointmentCard
-              appointment={appointment}
-              navigateToAppointmentDetails={onNavigateToAppointment}
-            />
+            <AppointmentCard appointment={appointment} onNavigate={onNavigate} />
             {index < appointments.length - 1 && <Divider sx={{ my: 1.5 }} />}
           </Box>
         ))}

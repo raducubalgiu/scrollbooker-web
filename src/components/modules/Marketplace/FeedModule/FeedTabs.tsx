@@ -1,9 +1,9 @@
 import { Badge, Box, IconButton, Stack, Theme } from "@mui/material";
 import React from "react";
+import NextLink from "next/link";
 
 import SearchIcon from "@/assets/icons/ic_search.svg";
 import BurgerIcon from "@/assets/icons/ic_menu_solid.svg";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
 import FeedTab from "./FeedTab";
@@ -31,8 +31,6 @@ const FeedTabs = ({
   onHandleToggleDrawer,
   onTabChange,
 }: FeedTabsProps) => {
-  const { navigateTo } = useAppNavigation();
-
   return (
     <Box sx={styles.container}>
       <Box sx={styles.containerMenu}>
@@ -75,7 +73,8 @@ const FeedTabs = ({
 
           <Box sx={{ justifySelf: "end" }}>
             <IconButton
-              onClick={() => navigateTo(AppRoutes.searchUsers())}
+              component={NextLink}
+              href={AppRoutes.searchUsers()}
               size="large"
               sx={{ display: { xs: "block", lg: "none" } }}
             >

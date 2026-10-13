@@ -1,12 +1,10 @@
 "use client";
 
-import { useAppNavigation } from "@/hooks/useAppNavigation";
+import NextLink from "next/link";
 import { AppRoutes } from "@/utils/routes";
 import { Box, Button, Container, Typography } from "@mui/material";
 
 export default function NotFound() {
-	const { navigateTo } = useAppNavigation();
-
 	return (
 		<Container maxWidth="md">
 			<Box
@@ -29,8 +27,9 @@ export default function NotFound() {
 					Ne pare rău, dar pagina pe care o cauți nu există sau a fost mutată.
 				</Typography>
 				<Button
+					component={NextLink}
+					href={AppRoutes.home()}
 					variant="contained"
-					onClick={() => navigateTo(AppRoutes.home())}
 					disableElevation
 				>
 					Înapoi la pagina principală

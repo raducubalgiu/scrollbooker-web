@@ -14,6 +14,7 @@ import IosShareIcon from "@mui/icons-material/IosShare";
 import { BusinessMediaFile } from "@/ts/models/booking/business/BusinessMediaFile";
 import { BusinessOwnerProfile } from "@/ts/models/booking/business/BusinessProfile";
 import { formatRating } from "@/utils/formatters";
+import NextLink from "next/link";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
@@ -52,19 +53,15 @@ const BusinessPhotosTab = ({
 }: BusinessPhotosTabProps) => {
   const { fullname, counters, is_follow } = owner;
   const { ratings_average, ratings_count } = counters;
-  const { navigateTo, goBack } = useAppNavigation();
+  const { goBack } = useAppNavigation();
 
-  const handleNavigateToBooking = () => {
-    navigateTo(
-      AppRoutes.booking(
-        businessId,
-        owner.id,
-        owner.id,
-        BookingSourceEnum.SEARCH_BUSINESS_PROFILE,
-        null
-      )
-    );
-  };
+  const bookingHref = AppRoutes.booking(
+    businessId,
+    owner.id,
+    owner.id,
+    BookingSourceEnum.SEARCH_BUSINESS_PROFILE,
+    null
+  );
 
   return (
     <Box
@@ -144,7 +141,8 @@ const BusinessPhotosTab = ({
               }}
             >
               <Button
-                onClick={handleNavigateToBooking}
+                component={NextLink}
+                href={bookingHref}
                 variant="contained"
                 disableElevation
                 sx={{

@@ -16,6 +16,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { usePathname } from "next/navigation";
+import NextLink from "next/link";
 import { Session } from "next-auth";
 import DrawerPopper from "./DrawerPopper";
 import PublicRoutes from "./PublicRoutes";
@@ -214,11 +215,12 @@ const LayoutDrawer = ({
               {!isAuthenticated && !isCollapsed && (
                 <Box m={2.5}>
                   <Button
+                    component={NextLink}
+                    href={AppRoutes.login()}
                     variant="contained"
                     disableElevation
                     fullWidth
                     sx={{ p: 1.5 }}
-                    onClick={() => navigateTo(AppRoutes.login())}
                   >
                     Conectare
                   </Button>

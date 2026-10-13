@@ -6,7 +6,6 @@ import { isEmpty } from "lodash";
 import ErrorMessage from "@/components/cutomized/NotFound/ErrorMessage";
 import { AppRoutes } from "@/utils/routes";
 import { ProfileTabEnum } from "./profileTabsHelper";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { useInfiniteUserPosts } from "@/controllers/social/post.controller";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 
@@ -15,8 +14,6 @@ type ProfilePostsTabProps = {
 };
 
 const ProfilePostsTab = ({ userId }: ProfilePostsTabProps) => {
-  const { navigateTo } = useAppNavigation();
-
   const { data, isLoading, isError } = useInfiniteUserPosts({ userId });
 
   const posts = useMemo(() => {
@@ -32,17 +29,12 @@ const ProfilePostsTab = ({ userId }: ProfilePostsTabProps) => {
               key={post.id}
               viewsCount={post.counters.views_count}
               thumbnailUrl={post.media_files[0]?.thumbnail_url ?? null}
-              onNavigateToVideo={() => {
-                const { username, profession } = post.user;
-                navigateTo(
-                  AppRoutes.postDetail(
-                    username,
-                    profession,
-                    post.id,
-                    ProfileTabEnum.POSTS
-                  )
-                );
-              }}
+              href={AppRoutes.postDetail(
+                post.user.username,
+                post.user.profession,
+                post.id,
+                ProfileTabEnum.POSTS
+              )}
             />
           ))}
       </PostGridContainer>

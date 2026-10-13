@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import NextLink from "next/link";
 import {
   Box,
   Stack,
@@ -15,15 +16,16 @@ import {
 import AppointmentCardDate from "./AppointmentCardDate";
 import AppointmentCardInfo from "./AppointmentCardInfo";
 import dayjs from "@/lib/dayjs";
+import { AppRoutes } from "@/utils/routes";
 
 type AppointmentCardProps = {
   appointment: Appointment;
-  navigateToAppointmentDetails: (appointmentId: number) => void;
+  onNavigate?: () => void;
 };
 
 export default function AppointmentCard({
   appointment,
-  navigateToAppointmentDetails,
+  onNavigate = () => {},
 }: AppointmentCardProps) {
   const start = dayjs(appointment.start_date);
   const statusLabel = AppointmentUtils.getStatusLabel(appointment.status);
@@ -31,12 +33,14 @@ export default function AppointmentCard({
 
   return (
     <ListItem disablePadding>
-      <ListItemButton>
+      <ListItemButton
+        component={NextLink}
+        href={AppRoutes.appointmentDetails(appointment.id)}
+        onClick={onNavigate}
+      >
         <Stack
-          onClick={() => navigateToAppointmentDetails(appointment.id)}
           sx={{
             width: "100%",
-            cursor: "pointer",
             userSelect: "none",
           }}
         >

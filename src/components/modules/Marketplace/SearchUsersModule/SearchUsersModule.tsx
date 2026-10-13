@@ -15,12 +15,12 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { SearchUserItem } from "./SearchUserItem";
 
 type SearchUsersModuleProps = {
-  onNavigateToUserProfile: (username: string, profession: string) => void;
+  onNavigate?: () => void;
   showTitle?: boolean;
 };
 
 const SearchUsersModule = ({
-  onNavigateToUserProfile,
+  onNavigate = () => {},
   showTitle = true,
 }: SearchUsersModuleProps) => {
   const [value, setValue] = useState("");
@@ -91,11 +91,7 @@ const SearchUsersModule = ({
 
       {!loading &&
         users?.map((user) => (
-          <SearchUserItem
-            key={user.id}
-            user={user}
-            onNavigateToUserProfile={onNavigateToUserProfile}
-          />
+          <SearchUserItem key={user.id} user={user} onNavigate={onNavigate} />
         ))}
     </>
   );

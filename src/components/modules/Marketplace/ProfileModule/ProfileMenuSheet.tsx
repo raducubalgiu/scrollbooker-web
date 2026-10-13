@@ -11,9 +11,9 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import NextLink from "next/link";
 import CloseIcon from "@mui/icons-material/Close";
 import { AppRoutes } from "@/utils/routes";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
@@ -30,8 +30,6 @@ const ProfileMenuSheet = ({
   isMenuOpen,
   onCloseMenu,
 }: ProfileMenuSheetProps) => {
-  const { navigateTo } = useAppNavigation();
-
   return (
     <Drawer
       anchor="bottom"
@@ -108,7 +106,8 @@ const ProfileMenuSheet = ({
           <Protected permission={PermissionEnum.MY_BUSINESS_ROUTES_VIEW}>
             <ListItem disablePadding>
               <ListItemButton
-                onClick={() => navigateTo(AppRoutes.myBusiness())}
+                component={NextLink}
+                href={AppRoutes.myBusiness()}
                 sx={{
                   borderRadius: 2,
                   "&:hover": {
@@ -145,7 +144,8 @@ const ProfileMenuSheet = ({
 
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => navigateTo(AppRoutes.settings())}
+              component={NextLink}
+              href={AppRoutes.settings()}
               sx={{
                 borderRadius: 2,
                 "&:hover": {

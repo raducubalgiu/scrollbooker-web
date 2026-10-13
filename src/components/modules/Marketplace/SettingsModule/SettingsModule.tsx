@@ -13,14 +13,12 @@ import BedtimeOutlinedIcon from "@mui/icons-material/BedtimeOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import React from "react";
+import NextLink from "next/link";
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
 import { signOut } from "next-auth/react";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 
 const SettingsModule = () => {
-  const { navigateTo } = useAppNavigation();
-
   return (
     <Box
       sx={{
@@ -33,7 +31,7 @@ const SettingsModule = () => {
       <HeaderMobile title="Setări" />
 
       <List component="nav" aria-labelledby="nested-list-subheader">
-        <ListItemButton onClick={() => navigateTo(AppRoutes.account())}>
+        <ListItemButton component={NextLink} href={AppRoutes.account()}>
           <ListItemIcon>
             <AdminPanelSettingsOutlinedIcon />
           </ListItemIcon>
@@ -42,7 +40,7 @@ const SettingsModule = () => {
 
         <Divider />
 
-        <ListItemButton onClick={() => navigateTo(AppRoutes.display())}>
+        <ListItemButton component={NextLink} href={AppRoutes.display()}>
           <ListItemIcon>
             <BedtimeOutlinedIcon />
           </ListItemIcon>

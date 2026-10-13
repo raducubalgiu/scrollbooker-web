@@ -2,9 +2,9 @@
 
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
+import NextLink from "next/link";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
 import { AppRoutes } from "@/utils/routes";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 import AvatarWithRating from "../Avatar/AvatarWithRating";
 import ProfileAddress from "@/components/modules/Marketplace/ProfileModule/ProfileAddress";
 
@@ -35,7 +35,8 @@ const VideoHeader = ({
     user || {};
   const isBusinessOrEmployee = !isVideoReview;
   const showFollowButton = !is_follow && !!onFollow;
-  const { navigateTo } = useAppNavigation();
+  const profileHref =
+    username && profession ? AppRoutes.profile(username, profession) : null;
 
   return (
     <Box>
@@ -43,12 +44,13 @@ const VideoHeader = ({
         direction="row"
         spacing={1.5}
         alignItems="center"
-        onClick={() =>
-          username && profession
-            ? navigateTo(AppRoutes.profile(username, profession))
-            : undefined
-        }
-        sx={{ cursor: "pointer", minWidth: 0 }}
+        {...(profileHref
+          ? {
+              component: NextLink,
+              href: profileHref,
+              sx: { cursor: "pointer", minWidth: 0 },
+            }
+          : { sx: { minWidth: 0 } })}
       >
         <AvatarWithRating
           avatar={avatar ?? null}

@@ -8,6 +8,7 @@ import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
 import ServiceCategoryTabs from "@/components/cutomized/ProductCard/ServiceCategoryTabs";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import { Product, ProductUtils, UserProducts } from "@/ts/models/booking/product/Product";
+import NextLink from "next/link";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
@@ -60,6 +61,14 @@ const BusinessServicesTab = ({
 	const hasMoreServices =
 		serviceGroups.length * PRODUCTS_LIMIT_PER_SERVICE < userProducts.total_count;
 
+	const bookingAllServicesHref = AppRoutes.booking(
+		businessId,
+		businessOwnerId,
+		businessOwnerId,
+		BookingSourceEnum.SEARCH_BUSINESS_PROFILE,
+		null
+	);
+
 	return (
 		<Box id={id} ref={innerRef}>
 			<Typography variant="h3" gutterBottom>
@@ -96,12 +105,13 @@ const BusinessServicesTab = ({
 
 					{hasMoreServices && (
 						<Button
+							component={NextLink}
+							href={bookingAllServicesHref}
 							variant="outlined"
 							color="secondary"
 							fullWidth
 							disableElevation
 							sx={{ mt: 2.5 }}
-							onClick={() => handleNavigateToBooking(null)}
 						>
 							Vezi toate cele {userProducts.total_count} servicii
 						</Button>

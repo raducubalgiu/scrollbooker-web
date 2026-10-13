@@ -2,6 +2,7 @@
 
 import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 import Image from "next/image";
+import NextLink from "next/link";
 import React from "react";
 
 import PlayIcon from "@/assets/icons/ic_play_outline.svg";
@@ -9,7 +10,7 @@ import PlayIcon from "@/assets/icons/ic_play_outline.svg";
 type PostGridProps = {
   thumbnailUrl: string | null;
   viewsCount: number;
-  onNavigateToVideo: () => void;
+  href?: string;
 };
 
 export function formatViews(n: number) {
@@ -18,14 +19,10 @@ export function formatViews(n: number) {
   return String(n);
 }
 
-const PostGrid = ({
-  thumbnailUrl,
-  viewsCount = 0,
-  onNavigateToVideo,
-}: PostGridProps) => {
+const PostGrid = ({ thumbnailUrl, viewsCount = 0, href }: PostGridProps) => {
   return (
     <ButtonBase
-      onClick={onNavigateToVideo}
+      {...(href ? { component: NextLink, href } : {})}
       sx={{ width: "100%", display: "block" }}
     >
       <Box

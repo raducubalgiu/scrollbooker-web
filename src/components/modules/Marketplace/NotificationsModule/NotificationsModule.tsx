@@ -11,16 +11,12 @@ import { useInfiniteNotifications } from "@/controllers/user/notification.contro
 
 type NotificationsModuleProps = {
   scrollRootRef?: React.RefObject<HTMLDivElement | null>;
-  onNavigateToUserProfile: (username: string, profession: string) => void;
-  onNavigateToEmploymentRequest: (e: number) => void;
-  onNavigateToAppointmentDetails: (appointmentId: number) => void;
+  onNavigate?: () => void;
 };
 
 const NotificationsModule = ({
   scrollRootRef,
-  onNavigateToUserProfile,
-  onNavigateToEmploymentRequest,
-  onNavigateToAppointmentDetails,
+  onNavigate = () => {},
 }: NotificationsModuleProps) => {
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   const localListScrollRef = React.useRef<HTMLDivElement | null>(null);
@@ -76,9 +72,7 @@ const NotificationsModule = ({
           <NotificationItem
             key={`${notification.id}-${index}`}
             notification={notification}
-            onNavigateToUserProfile={onNavigateToUserProfile}
-            onNavigateToEmploymentRequest={onNavigateToEmploymentRequest}
-            onNavigateToAppointmentDetails={onNavigateToAppointmentDetails}
+            onNavigate={onNavigate}
           />
         ))}
 

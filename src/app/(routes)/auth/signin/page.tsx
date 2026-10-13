@@ -12,6 +12,7 @@ import {
 import { signIn } from "next-auth/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
+import NextLink from "next/link";
 import { toast } from "react-toastify";
 import AppleIcon from "@mui/icons-material/Apple";
 import { useTranslations } from "next-intl";
@@ -20,7 +21,6 @@ import Input from "@/components/core/Input/Input";
 import GoogleIcon from "@/components/core/icons/GoogleIcon";
 import { required } from "@/utils/validation-rules";
 import { AppRoutes } from "@/utils/routes";
-import { useAppNavigation } from "@/hooks/useAppNavigation";
 import LandingLogo from "@/components/modules/LandingPageModule/components/LandingLogo";
 
 type SignInForm = {
@@ -42,7 +42,6 @@ const oauthButtonSx = {
 export default function SignInPage() {
   const t = useTranslations("signin");
   const router = useRouter();
-  const { navigateTo } = useAppNavigation();
   const searchParams = useSearchParams();
 
   const methods = useForm<SignInForm>({
@@ -176,8 +175,9 @@ export default function SignInPage() {
         >
           <Typography color="text.secondary">{t("noAccount")}</Typography>
           <Button
+            component={NextLink}
+            href={AppRoutes.register()}
             sx={{ textTransform: "none", fontWeight: 600 }}
-            onClick={() => navigateTo(AppRoutes.register())}
           >
             {t("register")}
           </Button>

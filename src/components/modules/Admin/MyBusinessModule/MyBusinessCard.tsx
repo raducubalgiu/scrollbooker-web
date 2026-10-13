@@ -1,21 +1,27 @@
 import React from "react";
+import NextLink from "next/link";
 import { Box, Typography, ButtonBase, alpha, Theme } from "@mui/material";
 
 type MyBusinessCardProps = {
   title: string;
   description: string;
   icon: React.ReactNode;
-  onClick: () => void;
+  href: string;
 };
 
 export default function MyBusinessCard({
   title,
   description,
   icon,
-  onClick,
+  href,
 }: MyBusinessCardProps) {
   return (
-    <ButtonBase onClick={onClick} disableRipple sx={styles.container}>
+    <ButtonBase
+      component={NextLink}
+      href={href}
+      disableRipple
+      sx={styles.container}
+    >
       <Box sx={{ p: 2.5 }}>
         {icon}
 

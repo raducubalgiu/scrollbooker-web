@@ -6,21 +6,25 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import NextLink from "next/link";
 import AvatarWithRating from "@/components/cutomized/Avatar/AvatarWithRating";
+import { AppRoutes } from "@/utils/routes";
 
 type SearchUserItemProps = {
   user: SearchUser;
-  onNavigateToUserProfile: (username: string, profession: string) => void;
+  onNavigate?: () => void;
 };
 
 export const SearchUserItem = ({
   user,
-  onNavigateToUserProfile,
+  onNavigate = () => {},
 }: SearchUserItemProps) => {
   return (
     <ListItem disablePadding>
       <ListItemButton
-        onClick={() => onNavigateToUserProfile(user.username, user.profession)}
+        component={NextLink}
+        href={AppRoutes.profile(user.username, user.profession)}
+        onClick={onNavigate}
         sx={{ py: 2 }}
       >
         <Stack flexDirection="row" alignItems="center">

@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
+import NextLink from "next/link";
 import { toast } from "react-toastify";
 import { signIn, useSession } from "next-auth/react";
 import AppleIcon from "@mui/icons-material/Apple";
@@ -214,8 +215,9 @@ export default function RegisterPage() {
         >
           <Typography color="text.secondary">{t("haveAccount")}</Typography>
           <Button
+            component={NextLink}
+            href={AppRoutes.login()}
             sx={{ textTransform: "none", fontWeight: 600 }}
-            onClick={() => navigateTo(AppRoutes.login())}
           >
             {t("login")}
           </Button>

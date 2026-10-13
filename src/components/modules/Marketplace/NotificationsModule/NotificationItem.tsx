@@ -11,6 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import NextLink from "next/link";
+import { AppRoutes } from "@/utils/routes";
 import {
   AppointmentBookedNotificationData,
   AppointmentCanceledNotificationData,
@@ -39,16 +41,12 @@ import dayjs from "@/lib/dayjs";
 
 type NotificationItemProps = {
   notification: Notification;
-  onNavigateToUserProfile: (username: string, profession: string) => void;
-  onNavigateToEmploymentRequest: (e: number) => void;
-  onNavigateToAppointmentDetails: (appointmentId: number) => void;
+  onNavigate?: () => void;
 } & ListItemProps;
 
 export default function NotificationItem({
   notification,
-  onNavigateToUserProfile,
-  onNavigateToEmploymentRequest,
-  onNavigateToAppointmentDetails,
+  onNavigate = () => {},
   ...listItemProps
 }: NotificationItemProps) {
   const { type, sender, data, is_read } = notification || {};
@@ -132,9 +130,13 @@ export default function NotificationItem({
           text: `A efectuat o programare pentru data de ${formattedDate}`,
           action: (
             <Button
+              component={NextLink}
+              href={AppRoutes.appointmentDetails(
+                appointmentData.appointment_id
+              )}
               onClick={(e) => {
                 e.stopPropagation();
-                onNavigateToAppointmentDetails(appointmentData.appointment_id);
+                onNavigate?.();
               }}
               variant="contained"
               sx={styles.actionButton}
@@ -153,9 +155,11 @@ export default function NotificationItem({
           text: `a anulat programarea. ${cancelData.canceled_reason ? `Motiv: ${cancelData.canceled_reason}` : ""}`,
           action: (
             <Button
+              component={NextLink}
+              href={AppRoutes.appointmentDetails(cancelData.appointment_id)}
               onClick={(e) => {
                 e.stopPropagation();
-                onNavigateToAppointmentDetails(cancelData.appointment_id);
+                onNavigate?.();
               }}
               variant="contained"
               disableElevation
@@ -174,9 +178,13 @@ export default function NotificationItem({
           text: `Programarea a fost replanificată pe ${new Date(rescheduleData.new_start_date).toLocaleDateString("ro-RO")}`,
           action: (
             <Button
+              component={NextLink}
+              href={AppRoutes.appointmentDetails(
+                rescheduleData.appointment_id
+              )}
               onClick={(e) => {
                 e.stopPropagation();
-                onNavigateToAppointmentDetails(rescheduleData.appointment_id);
+                onNavigate?.();
               }}
               variant="outlined"
               sx={styles.actionButton}
@@ -198,9 +206,11 @@ export default function NotificationItem({
           text: `A lăsat o recenzie de ${reviewData.rating} stele pentru programarea finalizată.`,
           action: (
             <Button
+              component={NextLink}
+              href={AppRoutes.appointmentDetails(reviewData.appointment_id)}
               onClick={(e) => {
                 e.stopPropagation();
-                onNavigateToAppointmentDetails(reviewData.appointment_id);
+                onNavigate?.();
               }}
               variant="contained"
               disableElevation
@@ -221,11 +231,13 @@ export default function NotificationItem({
           action: (
             <Stack direction="row" gap={1}>
               <Button
+                component={NextLink}
+                href={AppRoutes.employmentRequest(
+                  empRequest.employment_request_id
+                )}
                 onClick={(e) => {
                   e.stopPropagation();
-                  onNavigateToEmploymentRequest(
-                    empRequest.employment_request_id
-                  );
+                  onNavigate?.();
                 }}
                 color="error"
                 variant="contained"
@@ -322,49 +334,41 @@ export default function NotificationItem({
   const badgeConfig = renderAvatarBadge();
   const content = renderNotificationContent();
 
-  const handleNotificationClick = () => {
+  const getTargetHref = (): string | null => {
     switch (type) {
       case NotificationTypeEnum.APPOINTMENT_REVIEWED: {
         const appointmentReviewData =
           data as AppointmentReviewedNotificationData;
-        onNavigateToAppointmentDetails(appointmentReviewData.appointment_id);
-        break;
+        return AppRoutes.appointmentDetails(
+          appointmentReviewData.appointment_id
+        );
       }
       case NotificationTypeEnum.APPOINTMENT_BOOKED:
       case NotificationTypeEnum.APPOINTMENT_CANCELED:
       case NotificationTypeEnum.APPOINTMENT_RESCHEDULED:
       case NotificationTypeEnum.APPOINTMENT_REMINDER: {
         const appointmentData = data as AppointmentReminderNotificationData;
-        onNavigateToAppointmentDetails(appointmentData.appointment_id);
-        break;
+        return AppRoutes.appointmentDetails(appointmentData.appointment_id);
       }
 
       case NotificationTypeEnum.LIKE_POST:
       case NotificationTypeEnum.COMMENT_POST:
       case NotificationTypeEnum.REPOST:
-      case NotificationTypeEnum.MENTION_POST: {
-        break;
-      }
+      case NotificationTypeEnum.MENTION_POST:
+        return null;
 
       default:
-        if (sender?.username) {
-          onNavigateToUserProfile(sender.username, sender.profession);
-        }
-        break;
+        return sender?.username
+          ? AppRoutes.profile(sender.username, sender.profession)
+          : null;
     }
   };
 
-  return (
-    <ListItem
-      disablePadding
-      {...listItemProps}
-      sx={{ bgcolor: is_read ? "transparent" : "action.hover" }}
-    >
-      <ListItemButton
-        onClick={handleNotificationClick}
-        sx={{ py: { xs: 1.5, lg: 2.5 } }}
-      >
-        <Stack
+  const targetHref = getTargetHref();
+
+  const itemContent = (
+    <>
+      <Stack
           direction="row"
           alignItems="center"
           justifyContent="space-between"
@@ -432,8 +436,30 @@ export default function NotificationItem({
           ) : content.action ? (
             <Box onMouseDown={(e) => e.stopPropagation()}>{content.action}</Box>
           ) : null}
-        </Stack>
-      </ListItemButton>
+      </Stack>
+    </>
+  );
+
+  return (
+    <ListItem
+      disablePadding
+      {...listItemProps}
+      sx={{ bgcolor: is_read ? "transparent" : "action.hover" }}
+    >
+      {targetHref ? (
+        <ListItemButton
+          component={NextLink}
+          href={targetHref}
+          onClick={onNavigate}
+          sx={{ py: { xs: 1.5, lg: 2.5 } }}
+        >
+          {itemContent}
+        </ListItemButton>
+      ) : (
+        <ListItemButton sx={{ py: { xs: 1.5, lg: 2.5 } }}>
+          {itemContent}
+        </ListItemButton>
+      )}
     </ListItem>
   );
 }
