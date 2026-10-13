@@ -62,6 +62,14 @@ export default async function RootLayout({ children }: ChildrenType) {
       style={{ colorScheme: resolvedTheme }}
       suppressHydrationWarning
     >
+      <head>
+        {/* Cookie name must stay in sync with THEME_COOKIE_NAME in providers/themeCookie.ts */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var m=document.cookie.match(/(?:^|;\\s*)sb-ui-color-mode=([^;]+)/);var mode=m?decodeURIComponent(m[1]):"system";var isDark=mode==="dark"||(mode!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var resolved=isDark?"dark":"light";document.documentElement.setAttribute("data-theme",resolved);document.documentElement.style.colorScheme=resolved;}catch(e){}})();`,
+          }}
+        />
+      </head>
       <AppRouterCacheProvider options={{ enableCssLayer: false }}>
         <body className={inter.className}>
           <NextIntlClientProvider locale={locale} messages={messages}>

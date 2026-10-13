@@ -278,6 +278,7 @@ const styles = {
     gap: 3,
     width: "100%",
     height: "calc(100vh - 40px)",
+    mt: "20px",
     mx: "auto",
     px: 3,
     overflow: "hidden",
@@ -295,6 +296,6 @@ const styles = {
     aspectRatio: "9 / 16",
     borderRadius: 4,
     overflow: "hidden",
-    bgcolor: "background.default",
+    bgcolor: "background.paper",
   },
 } as const;

@@ -24,9 +24,9 @@ type BookingModuleProps = {
   selectedProductId: number | null;
 };
 
-const HEADER_HEIGHT = 90;
+export const HEADER_HEIGHT = 90;
 const SCROLL_OFFSET = 180;
-const SIDEBAR_WIDTH = 600;
+export const SIDEBAR_WIDTH = 600;
 
 export enum BookingStepEnum {
   SERVICES = 0,

@@ -3,6 +3,7 @@ import { PostUser } from "@/ts/models/social/Post";
 import { formatDistance } from "@/utils/formatters";
 import { AppRoutes } from "@/utils/routes";
 import { Box, Link, Typography } from "@mui/material";
+import NextLink from "next/link";
 import React from "react";
 
 type PostOverlayUser = {
@@ -15,6 +16,7 @@ const PostOverlayUser = ({ user, profession, distance }: PostOverlayUser) => {
   return (
     <Box onClick={(e) => e.stopPropagation()}>
       <Link
+        component={NextLink}
         href={
           user
             ? AppRoutes.profile(

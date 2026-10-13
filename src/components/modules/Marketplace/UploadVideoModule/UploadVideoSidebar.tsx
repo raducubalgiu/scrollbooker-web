@@ -89,7 +89,6 @@ const styles = {
     p: 2.5,
     pt: 0,
     zIndex: 10,
-    bgcolor: "background.paper",
   },
   button: {
     p: 1.8,

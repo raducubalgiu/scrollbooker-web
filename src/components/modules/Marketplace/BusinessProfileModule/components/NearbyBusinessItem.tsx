@@ -1,8 +1,9 @@
 import { NearbyBusiness } from "@/ts/models/booking/business/BusinessProfile";
 import { formatRating } from "@/utils/formatters";
-import { Box, Link, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import React from "react";
+import NextLink from "next/link";
 import { makeProfessionSlug } from "@/utils/make-profession-slug";
 import NearbyBusinessImage from "./NearbyBusinessImage";
 
@@ -20,7 +21,7 @@ const NearbyBusinessItem = ({ business }: NearbyBusinessItemProps) => {
 
   return (
     <Box
-      component={Link}
+      component={NextLink}
       href={`/business/${professionSlug}/${username}`}
       sx={styles.container}
     >

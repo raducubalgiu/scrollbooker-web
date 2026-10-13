@@ -1,5 +1,6 @@
-import { Box, Link, Stack, useTheme } from "@mui/material";
+import { Box, Stack, useTheme } from "@mui/material";
 import { useRouter } from "next/navigation";
+import NextLink from "next/link";
 import { SearchHeaderStateType } from "../../SearchModule/SearchHeader/search-header-types";
 import SearchHeader from "../../SearchModule/SearchHeader/SearchHeader";
 import AppLogo from "@/components/core/Logo/AppLogo";
@@ -42,7 +43,7 @@ const BusinessProfileHeader = () => {
 			sx={{ display: { xs: "none", lg: "flex" } }}
 		>
 			<Box
-				component={Link}
+				component={NextLink}
 				href="/"
 				sx={{
 					display: "block",
