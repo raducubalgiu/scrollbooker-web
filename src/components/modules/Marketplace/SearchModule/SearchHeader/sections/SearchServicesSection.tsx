@@ -45,12 +45,14 @@ const SearchServicesSection = ({
     [businessDomains]
   );
 
-  const selectedServiceDomainName = useMemo(
-    () =>
-      serviceDomains.find((d) => d.id === selectedServiceDomainId)?.name ??
-      "",
+  const selectedServiceDomain = useMemo(
+    () => serviceDomains.find((d) => d.id === selectedServiceDomainId),
     [serviceDomains, selectedServiceDomainId]
   );
+
+  const selectedServiceDomainName = selectedServiceDomain?.name ?? "";
+  const selectedServiceDomainThumbnail =
+    selectedServiceDomain?.thumbnail_url ?? "";
 
   const handleSelectServiceDomain = useCallback(
     (serviceDomainId: number) => {
@@ -102,6 +104,7 @@ const SearchServicesSection = ({
         <ServicesSection
           selectedServiceDomainId={selectedServiceDomainId}
           selectedServiceDomainName={selectedServiceDomainName}
+          selectedServiceDomainThumbnail={selectedServiceDomainThumbnail}
           selectedServiceId={selectedServiceId}
           selectedSubFilterIds={selectedSubFilterIds}
           onClose={handleCloseServiceSection}

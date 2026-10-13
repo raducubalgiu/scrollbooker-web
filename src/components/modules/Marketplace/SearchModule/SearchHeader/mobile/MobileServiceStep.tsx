@@ -6,6 +6,7 @@ import MobileSheetActions from "./MobileSheetActions";
 type MobileServiceStepProps = {
   selectedServiceDomainId: number;
   selectedServiceDomainName: string;
+  selectedServiceDomainThumbnail: string;
   selectedServiceId: number | null;
   selectedSubFilterIds: number[];
   onBack: () => void;
@@ -17,6 +18,7 @@ type MobileServiceStepProps = {
 const MobileServiceStep = ({
   selectedServiceDomainId,
   selectedServiceDomainName,
+  selectedServiceDomainThumbnail,
   selectedServiceId,
   selectedSubFilterIds,
   onBack,
@@ -30,6 +32,7 @@ const MobileServiceStep = ({
         <ServicesSection
           selectedServiceDomainId={selectedServiceDomainId}
           selectedServiceDomainName={selectedServiceDomainName}
+          selectedServiceDomainThumbnail={selectedServiceDomainThumbnail}
           selectedServiceId={selectedServiceId}
           selectedSubFilterIds={selectedSubFilterIds}
           onClose={onBack}

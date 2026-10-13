@@ -34,7 +34,7 @@ const MobileMainFiltersStep = ({
         </IconButton>
       </Stack>
 
-      <Typography variant="h5" fontWeight={700} sx={{ px: 2.5, pb: 2 }}>
+      <Typography variant="h3" fontWeight={700} sx={{ px: 2.5, pb: 2 }}>
         Servicii
       </Typography>
 

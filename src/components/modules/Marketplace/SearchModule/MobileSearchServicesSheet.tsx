@@ -92,13 +92,17 @@ const MobileSearchServicesSheet = ({
     [businessDomains]
   );
 
-  const selectedServiceDomainName = useMemo(
+  const selectedServiceDomain = useMemo(
     () =>
       serviceDomains.find(
         (domain) => domain.id === localState.selectedServiceDomainId
-      )?.name ?? "",
+      ),
     [serviceDomains, localState.selectedServiceDomainId]
   );
+
+  const selectedServiceDomainName = selectedServiceDomain?.name ?? "";
+  const selectedServiceDomainThumbnail =
+    selectedServiceDomain?.thumbnail_url ?? "";
 
   const serviceSummary = useMemo(
     () =>
@@ -217,6 +221,7 @@ const MobileSearchServicesSheet = ({
         <MobileServiceStep
           selectedServiceDomainId={localState.selectedServiceDomainId}
           selectedServiceDomainName={selectedServiceDomainName}
+          selectedServiceDomainThumbnail={selectedServiceDomainThumbnail}
           selectedServiceId={localState.selectedServiceId}
           selectedSubFilterIds={localState.selectedSubFilterIds}
           onBack={() => setStep("main")}

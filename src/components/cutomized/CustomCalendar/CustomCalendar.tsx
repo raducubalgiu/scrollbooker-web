@@ -13,7 +13,6 @@ type Props = {
   onChange: (date: Dayjs) => void;
 };
 
-const CELL_SIZE = "56px";
 const CELL_GAP = 0.5;
 
 const CustomCalendar: React.FC<Props> = ({ value, onChange }) => {
@@ -120,41 +119,37 @@ export default memo(CustomCalendar);
 const styles = {
   root: {
     width: "100%",
-    maxWidth: `calc(7 * ${CELL_SIZE} + 6 * ${CELL_GAP}px)`,
+    maxWidth: { xs: "100%", md: 400 },
   },
   gridHeader: {
     display: "grid",
-    gridTemplateColumns: "repeat(7, 1fr)",
+    gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
     gap: CELL_GAP,
-    justifyItems: "center",
     mb: 1,
   },
   weekDayText: {
-    width: CELL_SIZE,
-    height: CELL_SIZE,
+    width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "0.9rem",
+    fontSize: "0.85rem",
     textTransform: "capitalize",
     color: (theme: Theme) => theme.palette.grey[500],
   },
   gridDays: {
     display: "grid",
-    gridTemplateColumns: "repeat(7, 1fr)",
+    gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
     gap: CELL_GAP,
-    justifyItems: "center",
   },
   emptyCell: {
-    width: CELL_SIZE,
-    height: CELL_SIZE,
+    aspectRatio: "1",
   },
   dayCell: (isDisabled: boolean, isSelected: boolean, isToday: boolean) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: CELL_SIZE,
-    height: CELL_SIZE,
+    width: "100%",
+    aspectRatio: "1",
     borderRadius: "50%",
     cursor: isDisabled ? "default" : "pointer",
     bgcolor: isSelected ? "primary.main" : "transparent",

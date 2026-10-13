@@ -36,7 +36,7 @@ export default function CalendarHeader({
         <ChevronLeftIcon />
       </IconButton>
       <Typography
-        variant="h4"
+        variant="subtitle1"
         fontWeight={600}
         sx={{ textTransform: "capitalize" }}
       >

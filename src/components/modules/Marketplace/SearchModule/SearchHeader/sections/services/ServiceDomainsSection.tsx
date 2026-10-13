@@ -26,7 +26,7 @@ const ServiceDomainsSection = ({
             xs: "repeat(2, 1fr)",
             sm: "repeat(3, 1fr)",
           },
-          gap: 2,
+          gap: { xs: 1, sm: 2 },
         }}
       >
         {isEmpty(selectedServiceDomains) && (
@@ -45,7 +45,6 @@ const ServiceDomainsSection = ({
               key={serviceDomain.id}
               sx={{
                 textAlign: "center",
-                p: 1,
                 cursor: "pointer",
                 transition: "box-shadow 0.2s",
                 "&:hover": {
@@ -59,14 +58,14 @@ const ServiceDomainsSection = ({
                 sx={{
                   position: "relative",
                   width: "100%",
-                  height: 150,
+                  aspectRatio: "4 / 3",
                 }}
               >
                 <Image
                   src={serviceDomain.thumbnail_url}
                   alt={serviceDomain.name}
                   fill
-                  sizes="(max-width: 600px) 100vw, 50vw"
+                  sizes="(max-width: 600px) 50vw, 33vw"
                   style={{
                     objectFit: "cover",
                     borderRadius: 8,

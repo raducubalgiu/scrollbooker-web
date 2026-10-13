@@ -130,13 +130,13 @@ const SearchDateTimeSection = ({
 
   return (
     <Box>
-      <Typography variant="subtitle1" fontWeight={700} mb={3}>
+      <Typography variant="h3" fontWeight={700} mb={3}>
         Când?
       </Typography>
 
       <Stack
         direction={{ xs: "column", md: "row" }}
-        spacing={4}
+        spacing={{ xs: 2, md: 4 }}
         divider={<Divider orientation="vertical" flexItem />}
         alignItems="flex-start"
       >
@@ -248,7 +248,7 @@ const SearchDateTimeSection = ({
           )}
         </Box>
 
-        <Box sx={{ px: 1 }}>
+        <Box sx={{ width: "100%" }}>
           <CustomCalendar
             value={selectedDateDayjs}
             onChange={handleCalendarChange}

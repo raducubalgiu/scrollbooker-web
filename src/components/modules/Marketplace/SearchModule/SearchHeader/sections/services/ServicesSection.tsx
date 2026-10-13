@@ -1,6 +1,5 @@
 import {
   Box,
-  Breadcrumbs,
   FormControl,
   IconButton,
   MenuItem,
@@ -8,6 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import React, { memo, useEffect, useRef, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGetServicesByServiceDomain } from "@/controllers/nomenclature/service.controller";
@@ -19,6 +19,7 @@ const ALL_SERVICES_ID = 0;
 type ServicesSectionProps = {
   selectedServiceDomainId: number;
   selectedServiceDomainName: string;
+  selectedServiceDomainThumbnail: string;
   selectedServiceId: number | null;
   selectedSubFilterIds: number[];
   onClose: () => void;
@@ -29,6 +30,7 @@ type ServicesSectionProps = {
 const ServicesSection = ({
   selectedServiceDomainId,
   selectedServiceDomainName,
+  selectedServiceDomainThumbnail,
   selectedServiceId,
   selectedSubFilterIds,
   onClose,
@@ -90,19 +92,27 @@ const ServicesSection = ({
 
   return (
     <Box sx={{ minWidth: { xs: "auto", md: 700 }, minHeight: 500 }}>
-      <Stack flexDirection="row" alignItems="center" gap={1} sx={{ mb: 1.5 }}>
-        <IconButton size="large" onClick={onClose}>
+      <Stack sx={{ mb: 1.5 }}>
+        <IconButton size="large" onClick={onClose} sx={{ alignSelf: "flex-start" }}>
           <ArrowBackIcon fontSize="medium" />
         </IconButton>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Typography sx={{ color: "text.primary", fontWeight: 500 }}>
-            {selectedServiceDomainName}
-          </Typography>
-          <Typography sx={{ color: "text.primary" }} fontWeight={700}>
-            Selectează serviciul
-          </Typography>
-        </Breadcrumbs>
       </Stack>
+
+      {selectedServiceDomainThumbnail && (
+        <Box sx={styles.thumbnail}>
+          <Image
+            src={selectedServiceDomainThumbnail}
+            alt={selectedServiceDomainName}
+            fill
+            sizes="(max-width: 600px) 100vw, 700px"
+            style={{ objectFit: "cover" }}
+          />
+        </Box>
+      )}
+
+      <Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
+        {selectedServiceDomainName}
+      </Typography>
 
       <FormControl fullWidth sx={{ mb: 2 }} size="medium">
         <Select
@@ -148,3 +158,14 @@ const ServicesSection = ({
 };
 
 export default memo(ServicesSection);
+
+const styles = {
+  thumbnail: {
+    position: "relative" as const,
+    width: "100%",
+    aspectRatio: "16 / 9",
+    borderRadius: 4,
+    overflow: "hidden",
+    mb: 2,
+  },
+};

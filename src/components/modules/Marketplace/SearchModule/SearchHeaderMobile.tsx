@@ -66,20 +66,28 @@ export default function SearchHeaderMobile({
         justifyContent="space-between"
         sx={styles.headerContainer}
       >
-        <Stack flexDirection="row" alignItems="center" gap={1} sx={{ minWidth: 0 }}>
-          <IconButton onClick={onOpenServicesSheet} sx={{ p: 1 }}>
-            <SearchIcon />
-          </IconButton>
+        <Box
+          role="button"
+          tabIndex={0}
+          onClick={onOpenServicesSheet}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") onOpenServicesSheet();
+          }}
+          sx={styles.searchArea}
+        >
+          <Box sx={styles.searchIconWrapper}>
+            <SearchIcon fontSize="medium" />
+          </Box>
 
-          <Stack sx={{ minWidth: 0 }} onClick={onOpenServicesSheet}>
-            <Typography fontWeight={600} variant="body2" noWrap>
+          <Stack sx={{ minWidth: 0 }}>
+            <Typography fontWeight={600} variant="h6" noWrap>
               {headline}
             </Typography>
-            <Typography variant="caption" color="text.secondary" noWrap>
+            <Typography variant="body2" color="text.secondary" noWrap>
               {subHeadline}
             </Typography>
           </Stack>
-        </Stack>
+        </Box>
 
         <IconButton onClick={onFilterClick} sx={styles.filterButton}>
           <FilterAltOutlinedIcon sx={{ color: "text.secondary" }} />
@@ -99,18 +107,36 @@ const styles = {
   },
   headerContainer: {
     display: { xs: "flex", md: "none" },
-    p: 1,
+    p: 1.25,
     borderRadius: 50,
     border: 1,
     borderColor: "rgba(0, 0, 0, 0.04)",
     boxShadow:
       "0px 4px 16px rgba(0, 0, 0, 0.06), 0px 1px 4px rgba(0, 0, 0, 0.04)",
   },
+  searchArea: {
+    display: "flex",
+    alignItems: "center",
+    gap: 1.5,
+    flex: 1,
+    minWidth: 0,
+    cursor: "pointer",
+    WebkitTapHighlightColor: "transparent",
+  },
+  searchIconWrapper: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 42,
+    height: 42,
+    borderRadius: "50%",
+    flexShrink: 0,
+  },
   filterButton: {
     border: 1,
     borderColor: "divider",
     borderRadius: "50%",
-    p: 1,
-    mr: 0.5,
+    p: 1.25,
+    ml: 1,
   },
 };
