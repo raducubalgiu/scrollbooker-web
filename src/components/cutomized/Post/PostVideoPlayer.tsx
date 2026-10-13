@@ -39,6 +39,9 @@ type PostVideoPlayerProps = {
   onOpenLinkedProducts: () => void;
 };
 
+const MAX_RESUME_RETRIES = 5;
+const RESUME_RETRY_DELAY_MS = 200;
+
 const getSliderValue = (value: number | number[]): number => {
   if (Array.isArray(value)) return value[0] ?? 0;
   return value;
@@ -99,6 +102,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   const resumeRetryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
+  const resumeRetryCountRef = useRef(0);
 
   useEffect(() => {
     isActiveRef.current = isActive;
@@ -161,6 +165,44 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     video.load();
   }, []);
 
+  const tryPlayRef = useRef<() => Promise<void>>(async () => {});
+
+  // Reîncercare partajată pentru orice moment în care videoul activ ar
+  // trebui să redea, dar nu redă (pause() extern pe tab hidden, sau
+  // play() întrerupt de o cursă cu un load()/pause() concurent — AbortError).
+  // Nu reîncercăm dacă tab-ul e ascuns, userul a pus pauză manual, sau
+  // videoul nu mai e cel activ — altfel am contrazice exact pauza voită.
+  const scheduleResumeRetry = useCallback(() => {
+    if (resumeRetryTimeoutRef.current) {
+      clearTimeout(resumeRetryTimeoutRef.current);
+      resumeRetryTimeoutRef.current = null;
+    }
+    if (
+      !isActiveRef.current ||
+      userPausedRef.current ||
+      document.hidden ||
+      resumeRetryCountRef.current >= MAX_RESUME_RETRIES
+    ) {
+      return;
+    }
+    resumeRetryCountRef.current += 1;
+    resumeRetryTimeoutRef.current = setTimeout(() => {
+      resumeRetryTimeoutRef.current = null;
+      const current = videoRef.current;
+      if (
+        !current ||
+        current.ended ||
+        !current.paused ||
+        !isActiveRef.current ||
+        userPausedRef.current ||
+        document.hidden
+      ) {
+        return;
+      }
+      void tryPlayRef.current();
+    }, RESUME_RETRY_DELAY_MS);
+  }, []);
+
   // Nu condiționăm de isReady — browser-ul gestionează nativ cazul "nu
   // sunt încă suficiente date": play() rămâne în așteptare și pornește
   // singur de îndată ce poate, fără să mai fie nevoie să noi reîncercăm.
@@ -172,7 +214,13 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     try {
       await video.play();
     } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
+      if (error instanceof DOMException && error.name === "AbortError") {
+        // play() întrerupt de o cursă (ex. un load()/pause() concurent
+        // în timpul settle-ului de scroll-snap) — nu înseamnă că userul
+        // a vrut pauză, doar reîncercăm.
+        scheduleResumeRetry();
+        return;
+      }
       setIsPlaying(false);
       if (
         !(error instanceof DOMException && error.name === "NotAllowedError")
@@ -180,9 +228,8 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         console.error("Unexpected play() error:", error);
       }
     }
-  }, [hasError, hasValidSource, isActive]);
+  }, [hasError, hasValidSource, isActive, scheduleResumeRetry]);
 
-  const tryPlayRef = useRef(tryPlay);
   useEffect(() => {
     tryPlayRef.current = tryPlay;
   }, [tryPlay]);
@@ -215,29 +262,14 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     const onPlay = () => setIsPlaying(true);
     // Un pause "extern" (nu din acțiunea userului) pe videoul activ —
     // de ex. un pause() rămas în urma unei curse cu play() în timpul
-    // settle-ului de scroll-snap — nu ar trebui să blocheze redarea la
-    // nesfârșit, pentru că nimic altceva nu mai retrimite play() după
-    // asta dacă isActive nu se mai schimbă. Reîncercăm o singură dată.
+    // settle-ului de scroll-snap, sau tab-ul redevenit vizibil — nu ar
+    // trebui să blocheze redarea la nesfârșit, pentru că nimic altceva
+    // nu mai retrimite play() după asta dacă isActive nu se mai schimbă.
+    // scheduleResumeRetry() decide singur dacă chiar trebuie reîncercat
+    // (nu dacă userul a pus pauză manual sau tab-ul e ascuns).
     const onPause = () => {
       setIsPlaying(false);
-      if (resumeRetryTimeoutRef.current) {
-        clearTimeout(resumeRetryTimeoutRef.current);
-        resumeRetryTimeoutRef.current = null;
-      }
-      if (!isActiveRef.current || userPausedRef.current) return;
-      resumeRetryTimeoutRef.current = setTimeout(() => {
-        resumeRetryTimeoutRef.current = null;
-        const current = videoRef.current;
-        if (
-          !current ||
-          current.ended ||
-          !isActiveRef.current ||
-          userPausedRef.current
-        ) {
-          return;
-        }
-        void tryPlayRef.current();
-      }, 200);
+      scheduleResumeRetry();
     };
     const onWaiting = () => {
       if (!isSeekingRef.current) setIsBuffering(true); // ✅ Ref în loc de state
@@ -247,6 +279,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       setIsBuffering(false);
       setIsReady(true);
       setHasError(false);
+      resumeRetryCountRef.current = 0;
     };
     const onSeeking = () => setIsBuffering(true);
     const onSeeked = () => setIsBuffering(false);
@@ -272,7 +305,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       video.removeEventListener("seeked", onSeeked);
       video.removeEventListener("timeupdate", handleTimeUpdateNativ);
     };
-  }, [handleTimeUpdateNativ]); // ✅ handleTimeUpdateNativ e stabil → effect rulează o singură dată
+  }, [handleTimeUpdateNativ, scheduleResumeRetry]); // ✅ ambele sunt stabile → effect rulează o singură dată
 
   // HLS & Init Effect
   useEffect(() => {
@@ -391,6 +424,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
 
     if (isActive) {
       userPausedRef.current = false;
+      resumeRetryCountRef.current = 0;
       void tryPlay();
       return;
     }
@@ -418,7 +452,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       if (!video) return;
       if (document.hidden) {
         video.pause();
-      } else if (isActive && !hasError) {
+      } else if (isActive && !hasError && !userPausedRef.current) {
         void tryPlay();
       }
     };
