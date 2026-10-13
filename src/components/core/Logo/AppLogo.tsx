@@ -3,12 +3,10 @@ type AppLogoProps = {
   color?: string;
 };
 
-export default function AppLogo({ height = 32, color = "#FFFFFF" }: AppLogoProps) {
-  // Viewbox-ul original (0 0 1393.55 460) are mult padding gol în jurul
-  // conținutului real — marca + wordmark-ul ocupă doar ~31% din înălțime,
-  // deci orice height setat randa un logo de câteva ori mai mic decât
-  // părea. Strâns aici să încadreze strâns conținutul (verificat pe
-  // path-urile reale, cu o marjă mică), fără să ating path data.
+export default function AppLogo({
+  height = 32,
+  color = "#FFFFFF",
+}: AppLogoProps) {
   const width = height * (1250 / 175);
 
   return (

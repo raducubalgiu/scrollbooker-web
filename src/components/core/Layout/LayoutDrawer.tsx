@@ -126,6 +126,8 @@ const LayoutDrawer = ({
         ) : (
           <>
             <Box
+              component={NextLink}
+              href="/"
               sx={[
                 styles.brandRow,
                 isCollapsed
@@ -282,6 +284,7 @@ const styles = {
   brandRow: {
     minHeight: 56,
     mb: 2,
+    cursor: "pointer",
   },
 
   brandRowExpanded: {

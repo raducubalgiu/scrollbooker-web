@@ -48,7 +48,7 @@ const VideoHeader = ({
           ? {
               component: NextLink,
               href: profileHref,
-              sx: { cursor: "pointer", minWidth: 0 },
+              sx: { cursor: "pointer", minWidth: 0, textDecoration: "none" },
             }
           : { sx: { minWidth: 0 } })}
       >
@@ -139,6 +139,7 @@ const styles = {
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     minWidth: 0,
+    color: "text.primary",
   },
   nameTextWithButton: {
     overflow: "hidden",
@@ -146,6 +147,7 @@ const styles = {
     whiteSpace: "nowrap",
     minWidth: 0,
     pr: 13,
+    color: "text.primary",
   },
   followButton: {
     position: "absolute",
