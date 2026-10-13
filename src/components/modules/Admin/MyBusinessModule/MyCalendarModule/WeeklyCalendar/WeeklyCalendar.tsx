@@ -6,7 +6,7 @@ import { Box, Theme, Typography } from "@mui/material";
 import { Session } from "next-auth";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { CalendarHeader } from "../sharedComponents/CalendarHeader";
-import CreateAppointmentModal from "../sharedComponents/CreateAppointmentModal/CreateAppointmentModal";
+import CreateOwnClientModal from "../sharedComponents/CreateOwnClientModal/CreateOwnClientModal";
 import BlockAppBar from "../sharedComponents/BlockAppBar";
 import { WeeklyCalendarDaysHeader } from "./WeeklyCalendarDaysHeader";
 import { CalendarGridBackground } from "../sharedComponents/CalendarGridBackground";
@@ -51,7 +51,6 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     isLoading,
     isInitialLoading,
     isLoadingBlock,
-    isLoadingOwnClient,
     bounds,
     data,
     handlePrevWeek,
@@ -63,7 +62,6 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     handleOpenCreateModal,
     handleCloseBlocking,
     handleConfirmBlockPayload,
-    handleOwnClientPayload,
   } = useWeeklyCalendar({ session, schedules });
 
   const headerScrollRef = useRef<HTMLDivElement>(null);
@@ -148,10 +146,10 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
           }),
         }}
       >
-        <CreateAppointmentModal
-          createModal={createModal}
-          isLoadingOwnClient={isLoadingOwnClient}
-          onCreateOwnClient={handleOwnClientPayload}
+        <CreateOwnClientModal
+          open={createModal.open}
+          businessId={session?.business_id ?? 0}
+          initialSlot={createModal.slot}
           onClose={handleCloseCreateModal}
         />
 

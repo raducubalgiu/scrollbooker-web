@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useRef } from "react";
+import { useSession } from "next-auth/react";
 import { Box, Theme, Typography } from "@mui/material";
 import { CalendarHeader } from "../sharedComponents/CalendarHeader";
-import CreateAppointmentModal from "../sharedComponents/CreateAppointmentModal/CreateAppointmentModal";
+import CreateOwnClientModal from "../sharedComponents/CreateOwnClientModal/CreateOwnClientModal";
 import BlockAppBar from "../sharedComponents/BlockAppBar";
 import { EmployeesDayCalendarColumnsHeader } from "./EmployeesDayCalendarColumnsHeader";
 import { CalendarGridBackground } from "../sharedComponents/CalendarGridBackground";
@@ -19,6 +20,8 @@ import {
 } from "../sharedComponents/calendarSurfaceColors";
 
 export const EmployeesDayCalendar = () => {
+  const { data: session } = useSession();
+
   const {
     isBlocking,
     selectedSlotsToBlock,
@@ -40,7 +43,6 @@ export const EmployeesDayCalendar = () => {
     isLoading,
     isInitialLoading,
     isLoadingBlock,
-    isLoadingOwnClient,
     bounds,
     data,
     handlePrevDay,
@@ -52,7 +54,6 @@ export const EmployeesDayCalendar = () => {
     handleOpenCreateModal,
     handleCloseBlocking,
     handleConfirmBlockPayload,
-    handleOwnClientPayload,
   } = useEmployeesDayCalendar();
 
   const headerScrollRef = useRef<HTMLDivElement>(null);
@@ -153,10 +154,10 @@ export const EmployeesDayCalendar = () => {
           }),
         }}
       >
-        <CreateAppointmentModal
-          createModal={createModal}
-          isLoadingOwnClient={isLoadingOwnClient}
-          onCreateOwnClient={handleOwnClientPayload}
+        <CreateOwnClientModal
+          open={createModal.open}
+          businessId={session?.business_id ?? 0}
+          initialSlot={createModal.slot}
           onClose={handleCloseCreateModal}
         />
 
