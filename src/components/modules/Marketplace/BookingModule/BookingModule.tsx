@@ -8,7 +8,7 @@ import ProductsStep from "./steps/Products/ProductsStep";
 import AvailabilityStep from "./steps/Availability/AvailabilityStep";
 import BookingBreadcrumbs from "./components/BookingBreadcrumbs";
 import Specialists from "./steps/Specialists/Specialists";
-import { ProductOffering } from "@/ts/models/booking/product/Product";
+import { Product, ProductOffering } from "@/ts/models/booking/product/Product";
 import { sumBy } from "lodash";
 import ConfirmStep from "./steps/Confirm/ConfirmStep";
 import BookingCart from "./components/cart/BookingCart";
@@ -43,6 +43,11 @@ export interface SelectedBookingItem {
   productName: string;
   variantName: string;
 }
+
+export type SelectedProductType = {
+  product: Product | null;
+  open: boolean;
+};
 
 const BookingModule = (props: BookingModuleProps) => {
   const {

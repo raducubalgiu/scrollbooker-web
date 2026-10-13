@@ -216,12 +216,12 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
                             product={prod}
                             isSelected={false}
                             showIcon={false}
+                            shouldToggleDescription
                             displayEditableActions
                             isLoadingDelete={
                               isLoadingDelete &&
                               deleteConfirm.productId === prod.id
                             }
-                            onOpenDetail={() => {}}
                             onAdd={() => {}}
                             onNavigateToBooking={() => {}}
                             onEditProduct={() => setEditingProduct(prod)}

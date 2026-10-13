@@ -1,7 +1,9 @@
 import ReviewCard from "@/components/modules/Marketplace/SocialModule/reviews/ReviewCard";
 import { useInfiniteReviews } from "@/controllers/booking/review.controller";
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import React, { memo } from "react";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 
 type ReviewsTabProps = {
   businessId: number;
@@ -13,7 +15,7 @@ const PostDesktopReviewsTab = ({ businessId, employeeId }: ReviewsTabProps) => {
   const reviews = data?.pages.flatMap((p) => p.results) ?? [];
 
   return (
-    <Box p={3}>
+    <Box sx={styles.container}>
       {isLoading && (
         <Stack alignItems="center" justifyContent="center" py={4}>
           <CircularProgress />
@@ -31,10 +33,34 @@ const PostDesktopReviewsTab = ({ businessId, employeeId }: ReviewsTabProps) => {
         ))}
 
       {!isLoading && reviews.length === 0 && (
-        <Typography>Nu există recenzii.</Typography>
+        <Box sx={styles.emptyState}>
+          <NotFound
+            compact
+            sx={{ "& > .MuiStack-root": { mt: 0 } }}
+            icon={<ReviewsOutlinedIcon />}
+            title="Recenzii"
+            description="Nu au fost găsite recenzii"
+          />
+        </Box>
       )}
     </Box>
   );
 };
 
 export default memo(PostDesktopReviewsTab);
+
+const styles = {
+  container: {
+    flex: 1,
+    minHeight: 0,
+    display: "flex",
+    flexDirection: "column",
+    p: 3,
+  },
+  emptyState: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+};

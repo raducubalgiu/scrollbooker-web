@@ -1,19 +1,7 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
-import React, { useMemo } from "react";
+import { Box, Drawer, IconButton, Stack, Typography } from "@mui/material";
+import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import ProductCardSkeleton from "@/components/cutomized/ProductCard/ProductCardSkeleton";
-import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
-import { isEmpty } from "lodash";
-import NotFound from "@/components/cutomized/NotFound/NotFound";
-import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import PostLinkedProductsList from "@/components/cutomized/Post/PostLinkedProductsList";
 import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
 import LinkedProductsUserInfo from "./LinkedProductsUserInfo";
 
@@ -37,19 +25,6 @@ const PostLinkedProductsSheet = ({
   onNavigateToBooking,
 }: PostLinkedProductsSheetProps) => {
   const { business } = linkedProducts || {};
-
-  const skeletons = useMemo(
-    () =>
-      Array.from({ length: 5 }).map((_, index) => {
-        return (
-          <Box key={index}>
-            <ProductCardSkeleton />
-            {index < 4 && <Divider sx={{ my: 1.5 }} />}
-          </Box>
-        );
-      }),
-    []
-  );
 
   return (
     <Drawer
@@ -92,47 +67,12 @@ const PostLinkedProductsSheet = ({
       )}
 
       <Box sx={styles.listContainer}>
-        {(isLoadingLinkedProducts || isLoadingPosts) && skeletons}
-
-        {!isLoadingLinkedProducts &&
-          linkedProducts?.products.map((prod, i) => (
-            <Box key={prod.id}>
-              <ProductCard
-                product={prod}
-                isSelected={false}
-                showIcon={false}
-                showDescription={false}
-                onOpenDetail={() => {}}
-                onNavigateToBooking={() => onNavigateToBooking(prod.id)}
-                sx={{ borderColor: "transparent", p: 1.5 }}
-                onAdd={() => {}}
-              />
-
-              {i < linkedProducts.products.length - 1 && (
-                <Divider sx={{ my: 1 }} />
-              )}
-            </Box>
-          ))}
-
-        {!isLoadingLinkedProducts && !isEmpty(linkedProducts) && (
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="small"
-            sx={{ m: 1.5 }}
-            onClick={() => onNavigateToBooking(null)}
-          >
-            Vezi toate serviciile
-          </Button>
-        )}
-
-        {!isLoadingLinkedProducts && linkedProducts?.products.length === 0 && (
-          <NotFound
-            title="Servicii"
-            description="Nu există servicii momentan"
-            icon={<ShoppingBagOutlinedIcon fontSize="large" />}
-          />
-        )}
+        <PostLinkedProductsList
+          linkedProducts={linkedProducts}
+          isLoadingLinkedProducts={isLoadingLinkedProducts}
+          isLoadingPosts={isLoadingPosts}
+          onNavigateToBooking={onNavigateToBooking}
+        />
       </Box>
     </Drawer>
   );
@@ -159,7 +99,10 @@ const styles = {
     color: "text.secondary",
   },
   listContainer: {
-    flexGrow: 1,
+    flex: 1,
+    minHeight: 0,
+    display: "flex",
+    flexDirection: "column",
     overflowY: "auto",
     px: 0.5,
     WebkitOverflowScrolling: "touch",

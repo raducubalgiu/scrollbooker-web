@@ -14,6 +14,7 @@ type NotFoundProps = {
   icon: React.ReactElement;
   action?: React.ReactNode;
   sx?: SxProps<Theme>;
+  compact?: boolean;
 };
 
 const NotFound = ({
@@ -22,7 +23,13 @@ const NotFound = ({
   icon,
   action,
   sx = {},
+  compact = false,
 }: NotFoundProps) => {
+  const iconSize = compact ? 55 : { xs: 55, lg: 80 };
+  const iconFontSize = compact ? 28 : { xs: 28, lg: 40 };
+  const titleFontSize = compact ? 18 : { xs: 18, lg: 22 };
+  const descriptionFontSize = compact ? 14 : { xs: 14, lg: 15 };
+
   return (
     <Container maxWidth="xs" sx={sx}>
       <Stack
@@ -38,10 +45,10 @@ const NotFound = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: { xs: 55, lg: 80 },
-            height: { xs: 55, lg: 80 },
+            width: iconSize,
+            height: iconSize,
             "& svg": {
-              fontSize: { xs: 28, lg: 40 },
+              fontSize: iconFontSize,
               color: "text.primary",
             },
           }}
@@ -59,7 +66,7 @@ const NotFound = ({
             sx={{
               color: "text.primary",
               fontWeight: 600,
-              fontSize: { xs: 18, lg: 22 },
+              fontSize: titleFontSize,
               textAlign: "center",
             }}
           >
@@ -71,7 +78,7 @@ const NotFound = ({
               sx={{
                 color: "text.secondary",
                 textAlign: "center",
-                fontSize: { xs: 14, lg: 15 },
+                fontSize: descriptionFontSize,
               }}
             >
               {description}

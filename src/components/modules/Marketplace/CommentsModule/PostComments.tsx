@@ -17,6 +17,8 @@ import {
   useUnlikeComment,
 } from "@/controllers/social/comment.controller";
 import { patchCommentInCache } from "@/utils/commentCache";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 
 type PostCommentsProps = {
   postId: number | undefined;
@@ -114,7 +116,10 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
     );
   };
 
-  const toggleCommentLike = (comment: PostComment, nextLiked: boolean): PostComment => ({
+  const toggleCommentLike = (
+    comment: PostComment,
+    nextLiked: boolean
+  ): PostComment => ({
     ...comment,
     is_liked: nextLiked,
     like_count: Math.max(0, comment.like_count + (nextLiked ? 1 : -1)),
@@ -137,7 +142,7 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
   return (
     <Stack sx={styles.container}>
       <Box sx={styles.listContainer}>
-        <Stack spacing={3}>
+        <Stack spacing={3} sx={{ flex: 1 }}>
           {isLoading && rootComments.length === 0 && (
             <Stack alignItems="center" justifyContent="center" py={4}>
               <CircularProgress />
@@ -145,9 +150,15 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
           )}
 
           {!isLoading && rootComments.length === 0 && (
-            <Typography color="text.secondary">
-              Nu există comentarii momentan.
-            </Typography>
+            <Box sx={styles.emptyState}>
+              <NotFound
+                compact
+                sx={{ "& > .MuiStack-root": { mt: 0 } }}
+                title="Nu au fost adaugate comentarii"
+                description="Fii primul care adauga un comentariu"
+                icon={<RateReviewOutlinedIcon />}
+              />
+            </Box>
           )}
 
           {rootComments.map((comment) => (
@@ -202,9 +213,18 @@ export default memo(PostComments);
 
 const styles = {
   container: { minHeight: 0, height: "100%" },
+  emptyState: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: { xs: "center", md: "flex-start" },
+    flex: { xs: 1, md: "0 1 auto" },
+    pt: { xs: 0, md: 4 },
+  },
   listContainer: {
     flex: 1,
     minHeight: 0,
+    display: "flex",
+    flexDirection: "column",
     overflowY: "auto",
     px: { xs: 1.5, md: 3 },
     py: { xs: 2, md: 3 },

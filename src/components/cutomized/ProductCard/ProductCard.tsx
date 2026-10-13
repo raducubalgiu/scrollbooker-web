@@ -28,8 +28,7 @@ type ProductCardProps = {
   product: Product;
   isSelected: boolean;
   showIcon: boolean;
-  showDescription?: boolean;
-  expandDescriptionOnClick?: boolean;
+  shouldToggleDescription?: boolean;
   displayEditableActions?: boolean;
   isLoadingDelete?: boolean;
   onOpenDetail?: () => void;
@@ -44,8 +43,7 @@ const ProductCard = ({
   product,
   isSelected,
   showIcon,
-  showDescription = true,
-  expandDescriptionOnClick = false,
+  shouldToggleDescription = false,
   displayEditableActions = false,
   isLoadingDelete = false,
   onOpenDetail,
@@ -63,7 +61,7 @@ const ProductCard = ({
   );
 
   const handleCardClick = () => {
-    if (expandDescriptionOnClick) {
+    if (shouldToggleDescription) {
       setIsDescriptionExpanded((prev) => !prev);
       return;
     }
@@ -248,18 +246,16 @@ const ProductCard = ({
         )}
       </Stack>
 
-      {description && showDescription && (
+      {description && (
         <Typography
-          variant="body2"
+          variant="caption"
           color="text.secondary"
           mt={1}
           sx={
-            expandDescriptionOnClick
+            shouldToggleDescription && isDescriptionExpanded
               ? {
                   whiteSpace: "pre-line",
                   overflow: "hidden",
-                  maxHeight: isDescriptionExpanded ? 1000 : 45,
-                  transition: "max-height 0.3s ease",
                 }
               : {
                   display: "-webkit-box",
@@ -267,7 +263,6 @@ const ProductCard = ({
                   WebkitBoxOrient: "vertical",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
-                  maxWidth: 200,
                 }
           }
         >

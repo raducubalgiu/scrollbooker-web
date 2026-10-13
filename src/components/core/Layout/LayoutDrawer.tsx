@@ -358,7 +358,7 @@ const styles = {
     "& .MuiOutlinedInput-root": {
       minHeight: 56,
       borderRadius: "999px",
-      bgcolor: (theme: Theme) => alpha(theme.palette.action.hover, 0.05),
+      bgcolor: "secondary",
       "& fieldset": {
         borderColor: "divider",
       },

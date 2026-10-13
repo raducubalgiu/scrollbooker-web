@@ -1,5 +1,9 @@
 import { useState, useCallback, useMemo } from "react";
-import { BookingStepEnum, SelectedBookingItem } from "./BookingModule";
+import {
+  BookingStepEnum,
+  SelectedBookingItem,
+  SelectedProductType,
+} from "./BookingModule";
 import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
 import {
   Appointment,
@@ -11,7 +15,6 @@ import {
   BusinessServicesWithProducts,
   Product,
 } from "@/ts/models/booking/product/Product";
-import { SelectedProductType } from "@/components/cutomized/Post/sidebar/PostDesktopServicesTab";
 import { AppRoutes } from "@/utils/routes";
 import { BookingFlow } from "@/ts/models/booking/booking/BookingFlow";
 import { useAppNavigation } from "@/hooks/useAppNavigation";

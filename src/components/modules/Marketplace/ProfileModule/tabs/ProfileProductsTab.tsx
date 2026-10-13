@@ -111,7 +111,7 @@ const ProfileProductsTab = ({
                 product={product}
                 isSelected={false}
                 showIcon={false}
-                expandDescriptionOnClick
+                shouldToggleDescription
                 onAdd={() => {}}
                 onNavigateToBooking={() => handleNavigateToBooking(product)}
               />
