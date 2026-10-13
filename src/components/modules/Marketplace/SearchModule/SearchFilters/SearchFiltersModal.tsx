@@ -1,10 +1,10 @@
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
-import { Box, Button, Slider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
-import React, { useState, useEffect } from "react";
-import { formatPrice } from "@/utils/formatPrice";
+import { useMediaQuery, useTheme } from "@mui/material";
+import React from "react";
 import { SearchSortEnum } from "@/ts/models/booking/business/search/BusinessMapCombined";
+import SearchFiltersContent from "./SearchFiltersContent";
+import { useSearchFiltersState, SearchFiltersResult } from "./useSearchFiltersState";
 
 type SearchFiltersModalProps = {
   hasDiscount: boolean;
@@ -12,14 +12,8 @@ type SearchFiltersModalProps = {
   open: boolean;
   sort: SearchSortEnum | null;
   onClose: () => void;
-  onApplyFilters: (filters: {
-    hasDiscount: boolean;
-    maxPrice: number | null;
-    sort: SearchSortEnum | null;
-  }) => void;
+  onApplyFilters: (filters: SearchFiltersResult) => void;
 };
-
-const DEFAULT_MAX_PRICE = 5000;
 
 export default function SearchFiltersModal({
   open,
@@ -29,42 +23,19 @@ export default function SearchFiltersModal({
   maxPrice,
   onApplyFilters,
 }: SearchFiltersModalProps) {
-  const [state, setState] = useState(() => ({
-    hasDiscount,
-    maxPrice: maxPrice ?? DEFAULT_MAX_PRICE,
-    sort: sort ?? SearchSortEnum.RECOMMENDED,
-  }));
+  const {
+    state,
+    handleToggleDiscount,
+    handlePriceChange,
+    handleSortChange,
+    isStateUnchanged,
+    isAlreadyReset,
+    handleReset,
+    handleApply,
+  } = useSearchFiltersState({ open, hasDiscount, maxPrice, sort, onApplyFilters });
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  useEffect(() => {
-    if (open) {
-      setState({
-        hasDiscount,
-        maxPrice: maxPrice ?? DEFAULT_MAX_PRICE,
-        sort: sort ?? SearchSortEnum.RECOMMENDED,
-      });
-    }
-  }, [open, hasDiscount, maxPrice, sort]);
-
-  const handleDiscountToggle = () => {
-    setState((prev) => ({ ...prev, hasDiscount: !prev.hasDiscount }));
-  };
-
-  const handlePriceChange = (_: Event, value: number | number[]) => {
-    setState((prev) => ({ ...prev, maxPrice: value as number }));
-  };
-
-  const isStateUnchanged =
-    state.hasDiscount === hasDiscount &&
-    state.maxPrice === (maxPrice ?? DEFAULT_MAX_PRICE) &&
-    state.sort === (sort ?? SearchSortEnum.RECOMMENDED);
-
-  const isAlreadyReset =
-    state.hasDiscount === false &&
-    state.maxPrice === DEFAULT_MAX_PRICE &&
-    state.sort === SearchSortEnum.RECOMMENDED;
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
   const actions: ActionButtonType[] = [
     {
@@ -72,17 +43,8 @@ export default function SearchFiltersModal({
       props: {
         variant: "text",
         disabled: isAlreadyReset,
-        sx: {
-          py: 1.75,
-          px: 3.5,
-        },
-        onClick: () => {
-          setState({
-            hasDiscount: false,
-            maxPrice: DEFAULT_MAX_PRICE,
-            sort: SearchSortEnum.RECOMMENDED,
-          });
-        },
+        sx: { py: 1.75, px: 3.5 },
+        onClick: handleReset,
       },
     },
     {
@@ -91,10 +53,12 @@ export default function SearchFiltersModal({
         disabled: isStateUnchanged,
         variant: "contained",
         sx: { py: 1.75, px: 3.5 },
-        onClick: () => onApplyFilters?.(state),
+        onClick: handleApply,
       },
     },
   ];
+
+  if (!isDesktop) return null;
 
   return (
     <Modal
@@ -104,66 +68,15 @@ export default function SearchFiltersModal({
       maxWidth="md"
       fullWidth
       actions={actions}
-      fullScreen={isMobile}
     >
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h5" fontWeight={600}>
-          Opțiuni
-        </Typography>
-
-        <Button
-          variant="outlined"
-          color={state.hasDiscount ? "primary" : "secondary"}
-          size="large"
-          sx={{ mt: 2.5 }}
-          startIcon={<LocalOfferOutlinedIcon />}
-          onClick={handleDiscountToggle}
-        >
-          Oferte
-        </Button>
-
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          mt={5}
-          mb={2.5}
-        >
-          <Typography variant="h5" fontWeight={600}>
-            Prețul maxim
-          </Typography>
-
-          <Typography variant="h5" fontWeight={600}>
-            {formatPrice(state.maxPrice)} RON
-          </Typography>
-        </Stack>
-
-        <Slider
-          value={state.maxPrice}
-          aria-label="Preț maxim"
-          valueLabelDisplay="auto"
-          min={0}
-          max={DEFAULT_MAX_PRICE}
-          onChange={handlePriceChange}
-        />
-
-        <Typography variant="h5" fontWeight={600} mt={5} mb={2.5}>
-          Sortează după
-        </Typography>
-
-        {SearchSortEnum.all.map((s) => (
-          <Button
-            key={s.value}
-            variant="outlined"
-            color={s.value === state.sort ? "primary" : "secondary"}
-            size="large"
-            sx={{ mr: 1 }}
-            onClick={() => setState({ ...state, sort: s.value })}
-          >
-            {s.label}
-          </Button>
-        ))}
-      </Box>
+      <SearchFiltersContent
+        hasDiscount={state.hasDiscount}
+        maxPrice={state.maxPrice}
+        sort={state.sort}
+        onToggleDiscount={handleToggleDiscount}
+        onPriceChange={handlePriceChange}
+        onSortChange={handleSortChange}
+      />
     </Modal>
   );
 }

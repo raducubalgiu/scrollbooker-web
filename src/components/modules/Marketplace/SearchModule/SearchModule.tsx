@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { LngLatBounds } from "mapbox-gl";
 import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
 import SearchFiltersModal from "./SearchFilters/SearchFiltersModal";
+import SearchFiltersDrawer from "./SearchFilters/SearchFiltersDrawer";
 import SearchBusinessList from "./SearchBusinessList";
 import SearchHeaderMobile from "./SearchHeaderMobile";
 import MobileSearchServicesSheet from "./MobileSearchServicesSheet";
@@ -262,6 +263,15 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       }}
     >
       <SearchFiltersModal
+        open={openFilters}
+        onClose={handleCloseFilters}
+        hasDiscount={searchState.hasDiscount}
+        maxPrice={searchState.maxPrice}
+        sort={searchState.sort}
+        onApplyFilters={handleApplyFilters}
+      />
+
+      <SearchFiltersDrawer
         open={openFilters}
         onClose={handleCloseFilters}
         hasDiscount={searchState.hasDiscount}
