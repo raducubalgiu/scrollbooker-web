@@ -228,6 +228,15 @@ const SearchHeader = ({
         selectedSubFilterIds: [],
       }));
     }
+
+    if (section === SearchHeaderSectionEnum.Datetime) {
+      setLocalHeaderState((prev) => ({
+        ...prev,
+        startDate: null,
+        startTime: null,
+        endTime: null,
+      }));
+    }
   }, []);
 
   const selectedDateTimeLabel = getDateTimeLabel({

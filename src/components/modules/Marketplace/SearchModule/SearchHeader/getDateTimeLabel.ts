@@ -9,16 +9,8 @@ type DateTimeLabelState = {
 export const getDateTimeLabel = (state: DateTimeLabelState): string | null => {
   const { startDate, startTime, endTime } = state;
 
-  const formatHourOnly = (timeString: string | null) => {
-    if (!timeString) return "";
-    return timeString.split(":")[0];
-  };
-
-  const startHour = formatHourOnly(startTime);
-  const endHour = formatHourOnly(endTime);
-
   if (!startDate && startTime && endTime) {
-    return `Oricând • ${startHour} - ${endHour}`;
+    return `Oricând • ${startTime} - ${endTime}`;
   }
 
   if (!startDate) return null;
@@ -26,11 +18,11 @@ export const getDateTimeLabel = (state: DateTimeLabelState): string | null => {
   const formattedDate = `${dayjs(startDate).format("D")} ${dayjs(startDate).format("MMM").toLowerCase()}`;
 
   if (startTime && endTime) {
-    return `${formattedDate} • ${startHour} - ${endHour}`;
+    return `${formattedDate} • ${startTime} - ${endTime}`;
   }
 
   if (startTime) {
-    return `${formattedDate} • de la ${startHour}`;
+    return `${formattedDate} • de la ${startTime}`;
   }
 
   return formattedDate;

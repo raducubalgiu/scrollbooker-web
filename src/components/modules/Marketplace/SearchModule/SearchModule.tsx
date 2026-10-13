@@ -271,8 +271,18 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       />
 
       <SearchHeaderMobile
+        businessDomains={businessDomains ?? []}
         onFilterClick={handleOpenFilters}
         onOpenServicesSheet={() => setIsMobileServicesSheetOpen(true)}
+        headerState={{
+          selectedBusinessDomainId: searchState.businessDomainId,
+          selectedServiceDomainId: searchState.serviceDomainId,
+          selectedServiceId: searchState.serviceId,
+          selectedSubFilterIds: searchState.subfilterIds,
+          startDate: searchState.startDate,
+          startTime: searchState.startTime,
+          endTime: searchState.endTime,
+        }}
       />
 
       <MobileSearchServicesSheet

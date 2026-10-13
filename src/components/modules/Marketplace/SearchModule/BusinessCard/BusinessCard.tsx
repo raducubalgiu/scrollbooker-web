@@ -132,6 +132,6 @@ const styles = {
     position: "absolute",
     inset: 0,
     transition: "transform 0.3s",
-    backgroundColor: "background.default",
+    backgroundColor: "background.paper",
   },
 };
