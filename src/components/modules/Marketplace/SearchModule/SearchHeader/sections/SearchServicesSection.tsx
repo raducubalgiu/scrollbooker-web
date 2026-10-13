@@ -1,12 +1,16 @@
-import { Box, Typography, Button } from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Box, Typography } from "@mui/material";
+import React, { useCallback, useMemo } from "react";
+import { useSession } from "next-auth/react";
 import ServiceDomainsSection from "./services/ServiceDomainsSection";
 import ServicesSection from "./services/ServicesSection";
+import RecentSearchesSection from "./services/RecentSearchesSection";
 import {
   SearchHeaderActionsType,
   SearchHeaderStateType,
 } from "../search-header-types";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import { RecentSearch } from "@/ts/models/search/RecentSearch";
+import { useGetRecentSearches } from "@/controllers/search/search.controller";
 
 type SearchServicesSectionProps = {
   businessDomains: BusinessDomain[];
@@ -19,45 +23,41 @@ const SearchServicesSection = ({
   state,
   actions,
 }: SearchServicesSectionProps) => {
+  const { selectedServiceDomainId, selectedServiceId, selectedSubFilterIds } =
+    state;
   const {
-    selectedBusinessDomainId,
-    selectedServiceDomainId,
-    selectedServiceId,
-  } = state;
-  const { onSetBusinessDomainId, onSetServiceDomainId, onSetServiceId } =
-    actions;
+    onSetServiceDomainId,
+    onSetServiceId,
+    onSetSubFilterIds,
+    onExecuteSearch,
+  } = actions;
 
-  const bDomains = useMemo(
-    () => [
-      {
-        id: null,
-        name: "Toate",
-        short_name: "Toate",
-        active: false,
-        service_domains: [],
-      },
-      ...businessDomains,
-    ],
-    []
+  const { status: sessionStatus } = useSession();
+
+  const { data: recentSearches } = useGetRecentSearches({
+    isEnabled: sessionStatus === "authenticated",
+  });
+
+  const displayServices = !!selectedServiceDomainId;
+
+  const serviceDomains = useMemo(
+    () => businessDomains.flatMap((d) => d.service_domains),
+    [businessDomains]
   );
 
-  const [displayServices, setDisplayServices] = useState(false);
+  const selectedServiceDomainName = useMemo(
+    () =>
+      serviceDomains.find((d) => d.id === selectedServiceDomainId)?.name ??
+      "",
+    [serviceDomains, selectedServiceDomainId]
+  );
 
-  useEffect(() => {
-    setDisplayServices(!!selectedServiceDomainId);
-  }, [selectedServiceDomainId]);
-
-  const selectedServiceDomains = useMemo(() => {
-    return (
-      bDomains.find((d) => d.id === selectedBusinessDomainId)
-        ?.service_domains || []
-    );
-  }, [selectedBusinessDomainId, bDomains]);
-
-  const handleSelectServiceDomain = useCallback((serviceDomainId: number) => {
-    setDisplayServices(true);
-    onSetServiceDomainId(serviceDomainId);
-  }, []);
+  const handleSelectServiceDomain = useCallback(
+    (serviceDomainId: number) => {
+      onSetServiceDomainId(serviceDomainId);
+    },
+    [onSetServiceDomainId]
+  );
 
   const handleSelectService = useCallback(
     (serviceId: number | null) => onSetServiceId(serviceId),
@@ -65,54 +65,48 @@ const SearchServicesSection = ({
   );
 
   const handleCloseServiceSection = useCallback(() => {
-    setDisplayServices(false);
     onSetServiceDomainId(null);
-  }, []);
+  }, [onSetServiceDomainId]);
+
+  const handleSelectRecentSearch = useCallback(
+    (search: RecentSearch) => {
+      onExecuteSearch({
+        selectedServiceDomainId: search.service_domain.id,
+        selectedServiceId: search.services[0]?.id ?? null,
+        selectedSubFilterIds: [],
+      });
+    },
+    [onExecuteSearch]
+  );
 
   return (
     <Box sx={styles.container}>
-      <Typography
-        variant="h6"
-        fontWeight={700}
-        key={displayServices ? "filtru" : "cautare"}
-        sx={styles.title}
-      >
-        {!displayServices ? "Ce serviciu cauți?" : "Filtrare avansată"}
-      </Typography>
-
-      <Box sx={{ mt: 3, mb: 2 }}>
-        {bDomains.map((d) => {
-          const isSelected = d.id === selectedBusinessDomainId;
-
-          return (
-            <Button
-              key={d.id}
-              variant={isSelected ? "contained" : "outlined"}
-              color={isSelected ? "primary" : "secondary"}
-              size="large"
-              disableElevation
-              sx={{ py: 1.5, px: 3, mr: 1 }}
-              onClick={() => onSetBusinessDomainId(d.id)}
-            >
-              {d.short_name}
-            </Button>
-          );
-        })}
-      </Box>
-
       {!displayServices && (
-        <ServiceDomainsSection
-          selectedServiceDomains={selectedServiceDomains}
-          onSelectServiceDomain={handleSelectServiceDomain}
-        />
+        <Box sx={{ mt: 3 }}>
+          <RecentSearchesSection
+            recentSearches={recentSearches ?? []}
+            onSelectRecentSearch={handleSelectRecentSearch}
+          />
+
+          <Typography fontWeight={700} mb={1.5}>
+            Categorii
+          </Typography>
+          <ServiceDomainsSection
+            selectedServiceDomains={serviceDomains}
+            onSelectServiceDomain={handleSelectServiceDomain}
+          />
+        </Box>
       )}
 
       {displayServices && selectedServiceDomainId && (
         <ServicesSection
           selectedServiceDomainId={selectedServiceDomainId}
+          selectedServiceDomainName={selectedServiceDomainName}
           selectedServiceId={selectedServiceId}
+          selectedSubFilterIds={selectedSubFilterIds}
           onClose={handleCloseServiceSection}
           onSelectServiceId={handleSelectService}
+          onSelectSubFilterIds={onSetSubFilterIds}
         />
       )}
     </Box>
@@ -122,7 +116,7 @@ const SearchServicesSection = ({
 export default SearchServicesSection;
 
 const styles = {
-  container: { minWidth: 700, minHeight: 500 },
+  container: { minWidth: { xs: "auto", md: 700 }, minHeight: 500 },
   title: {
     animation: "slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
     "@keyframes slideIn": {

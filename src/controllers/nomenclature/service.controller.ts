@@ -23,6 +23,29 @@ export const useAllServices = () => {
   });
 };
 
+type GetServicesByServiceDomainParams = {
+  serviceDomainId: number | null;
+  isEnabled?: boolean;
+};
+
+export const useGetServicesByServiceDomain = ({
+  serviceDomainId,
+  isEnabled = true,
+}: GetServicesByServiceDomainParams) => {
+  const doRequest = () =>
+    axios
+      .get<Service[]>(
+        `/api/protected/service-domains/${serviceDomainId}/services`
+      )
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["services-by-service-domain", serviceDomainId],
+    queryFn: doRequest,
+    enabled: isEnabled && !!serviceDomainId,
+  });
+};
+
 export const useGetMySelectedServices = ({
   businessId,
 }: GetMySelectedServicesParams) => {

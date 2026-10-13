@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { SearchUsername } from "@/ts/models/user/SearchUsername";
 import { SearchUser } from "@/ts/models/search/SearchUser";
+import { RecentSearch } from "@/ts/models/search/RecentSearch";
 
 const MIN_USERNAME_LENGTH = 3;
 
@@ -45,6 +46,26 @@ export const useSearchUsers = ({ query, roleClient }: UseSearchUsersParams) => {
       return response.data;
     },
     enabled: trimmed.length > 0,
+    staleTime: 1000 * 60,
+  });
+};
+
+type UseGetRecentSearchesParams = {
+  isEnabled: boolean;
+};
+
+export const useGetRecentSearches = ({
+  isEnabled,
+}: UseGetRecentSearchesParams) => {
+  return useQuery({
+    queryKey: ["search", "recent-searches"],
+    queryFn: async () => {
+      const response = await axios.get<RecentSearch[]>(
+        "/api/protected/search/recent-searches"
+      );
+      return response.data;
+    },
+    enabled: isEnabled,
     staleTime: 1000 * 60,
   });
 };

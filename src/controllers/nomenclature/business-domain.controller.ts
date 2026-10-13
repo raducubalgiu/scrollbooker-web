@@ -2,17 +2,27 @@ import {
   BusinessDomain,
   BusinessDomainCreateOrUpdate,
 } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 import axios from "axios";
 
 const BUSINESS_DOMAIN_PATH = "/api/protected/business-domains";
 
 type AllGetBusinessDomainsParams = {
   all: boolean;
+  options?: Omit<
+    UseQueryOptions<BusinessDomain[], Error>,
+    "queryKey" | "queryFn"
+  >;
 };
 
 export const useGetAllBusinessDomains = ({
   all,
+  options,
 }: AllGetBusinessDomainsParams) => {
   const doRequest = () =>
     axios
@@ -22,6 +32,7 @@ export const useGetAllBusinessDomains = ({
   return useQuery({
     queryKey: ["business-domains", all],
     queryFn: doRequest,
+    ...options,
   });
 };
 

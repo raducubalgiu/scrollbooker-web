@@ -8,7 +8,10 @@ import React, {
   useState,
 } from "react";
 import BusinessDomainsTabs from "../BusinessDomainsTabs";
-import { SearchHeaderSectionType } from "@/components/modules/Marketplace/SearchModule/SearchHeaderSectionEnum";
+import {
+  SearchHeaderSectionEnum,
+  SearchHeaderSectionType,
+} from "@/components/modules/Marketplace/SearchModule/SearchHeaderSectionEnum";
 import SearchPopperSections from "./SearchPopperSections";
 import SearchHeaderBar from "./SearchHeaderBar";
 import {
@@ -17,8 +20,10 @@ import {
 } from "./search-header-utils";
 import { SearchHeaderStateType } from "./search-header-types";
 import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
-import { getServiceDomainName } from "./getServiceDomainName";
+import { getSelectedServicesLabel } from "./getSelectedServicesLabel";
 import { getDateTimeLabel } from "./getDateTimeLabel";
+import { useGetServicesByServiceDomain } from "@/controllers/nomenclature/service.controller";
+import { useGetFiltersByService } from "@/controllers/nomenclature/filter.controller";
 
 type SearchHeaderProps = {
   areFiltersActive: boolean;
@@ -50,6 +55,7 @@ const SearchHeader = ({
       selectedBusinessDomainId: headerState.selectedBusinessDomainId,
       selectedServiceDomainId: headerState.selectedServiceDomainId,
       selectedServiceId: headerState.selectedServiceId,
+      selectedSubFilterIds: headerState.selectedSubFilterIds,
       startDate: headerState.startDate,
       startTime: headerState.startTime,
       endTime: headerState.endTime,
@@ -72,17 +78,32 @@ const SearchHeader = ({
   const pillRef = useRef<HTMLDivElement | null>(null);
   const popperRef = useRef<HTMLDivElement | null>(null);
 
+  const { data: selectedDomainServices } = useGetServicesByServiceDomain({
+    serviceDomainId: localHeaderState.selectedServiceDomainId,
+  });
+
+  const { data: selectedServiceFilters } = useGetFiltersByService({
+    serviceId: String(localHeaderState.selectedServiceId),
+    isEnabled: !!localHeaderState.selectedServiceId,
+  });
+
   const selectedServiceDomainName = useMemo(
     () =>
-      getServiceDomainName(
+      getSelectedServicesLabel({
         businessDomains,
-        headerState.selectedBusinessDomainId,
-        headerState.selectedServiceDomainId
-      ),
+        selectedServiceDomainId: localHeaderState.selectedServiceDomainId,
+        selectedServiceId: localHeaderState.selectedServiceId,
+        selectedSubFilterIds: localHeaderState.selectedSubFilterIds,
+        services: selectedDomainServices,
+        filters: selectedServiceFilters,
+      }),
     [
       businessDomains,
-      headerState.selectedBusinessDomainId,
-      headerState.selectedServiceDomainId,
+      localHeaderState.selectedServiceDomainId,
+      localHeaderState.selectedServiceId,
+      localHeaderState.selectedSubFilterIds,
+      selectedDomainServices,
+      selectedServiceFilters,
     ]
   );
 
@@ -144,6 +165,7 @@ const SearchHeader = ({
       selectedBusinessDomainId: id,
       selectedServiceDomainId: null,
       selectedServiceId: null,
+      selectedSubFilterIds: [],
     }));
   }, []);
 
@@ -152,11 +174,20 @@ const SearchHeader = ({
       ...prev,
       selectedServiceDomainId: id,
       selectedServiceId: null,
+      selectedSubFilterIds: [],
     }));
   }, []);
 
   const handleServiceChange = useCallback((id: number | null) => {
-    setLocalHeaderState((prev) => ({ ...prev, selectedServiceId: id }));
+    setLocalHeaderState((prev) => ({
+      ...prev,
+      selectedServiceId: id,
+      selectedSubFilterIds: [],
+    }));
+  }, []);
+
+  const handleSubFilterIdsChange = useCallback((ids: number[]) => {
+    setLocalHeaderState((prev) => ({ ...prev, selectedSubFilterIds: ids }));
   }, []);
 
   const handleDateTimeChange = useCallback(
@@ -177,6 +208,27 @@ const SearchHeader = ({
     closeSection();
     onSearch(localHeaderState);
   }, [closeSection, localHeaderState, onSearch]);
+
+  const handleExecuteSearchWithState = useCallback(
+    (partialState: Partial<SearchHeaderStateType>) => {
+      const nextState = { ...localHeaderState, ...partialState };
+      setLocalHeaderState(nextState);
+      closeSection();
+      onSearch(nextState);
+    },
+    [localHeaderState, closeSection, onSearch]
+  );
+
+  const handleClearSection = useCallback((section: SearchHeaderSectionType) => {
+    if (section === SearchHeaderSectionEnum.Services) {
+      setLocalHeaderState((prev) => ({
+        ...prev,
+        selectedServiceDomainId: null,
+        selectedServiceId: null,
+        selectedSubFilterIds: [],
+      }));
+    }
+  }, []);
 
   const selectedDateTimeLabel = getDateTimeLabel({
     startDate: localHeaderState.startDate,
@@ -203,6 +255,7 @@ const SearchHeader = ({
               toggle={toggle}
               activeSection={activeSection}
               onSearch={handleExecuteSearch}
+              onClearSection={handleClearSection}
               popperId="search-popper"
               close={closeSection}
             />
@@ -219,7 +272,9 @@ const SearchHeader = ({
                 onSetBusinessDomainId: handleBusinessDomainChange,
                 onSetServiceDomainId: handleServiceDomainChange,
                 onSetServiceId: handleServiceChange,
+                onSetSubFilterIds: handleSubFilterIdsChange,
                 onSetDateTime: handleDateTimeChange,
+                onExecuteSearch: handleExecuteSearchWithState,
               }}
             />
           </Box>
@@ -227,21 +282,11 @@ const SearchHeader = ({
 
         {displayFiltersSection && (
           <BusinessDomainsTabs
-            businessDomains={businessDomains || []}
             areFiltersActive={areFiltersActive}
             isExpanded={isExpanded}
             isMapVisible={isMapVisible ?? false}
             onOpenFilters={onOpenFilters}
             onToggleMap={onToggleMap}
-            selectedBusinessDomainId={headerState.selectedBusinessDomainId}
-            onSelectBusinessDomain={(id) =>
-              onSearch({
-                ...headerState,
-                selectedBusinessDomainId: id,
-                selectedServiceDomainId: null,
-                selectedServiceId: null,
-              })
-            }
           />
         )}
       </Box>

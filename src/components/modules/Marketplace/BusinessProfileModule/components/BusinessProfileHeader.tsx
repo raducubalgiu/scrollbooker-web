@@ -24,6 +24,10 @@ const BusinessProfileHeader = () => {
 			params.set("service", String(state.selectedServiceId));
 		}
 
+		if (state.selectedSubFilterIds.length > 0) {
+			params.set("subfilterIds", state.selectedSubFilterIds.join(","));
+		}
+
 		router.push(`/search?${params.toString()}`, { scroll: false });
 	};
 
@@ -56,6 +60,7 @@ const BusinessProfileHeader = () => {
 					selectedBusinessDomainId: null,
 					selectedServiceDomainId: null,
 					selectedServiceId: null,
+					selectedSubFilterIds: [],
 					startDate: null,
 					startTime: null,
 					endTime: null,

@@ -24,6 +24,7 @@ type SearchHeaderBarProps = {
   toggle: (section: SearchHeaderSectionType) => void;
   activeSection: SearchHeaderSectionType | null;
   onSearch: () => void;
+  onClearSection: (section: SearchHeaderSectionType) => void;
   popperId?: string;
   close?: () => void;
 };
@@ -38,11 +39,16 @@ const SearchHeaderBar = ({
   toggle,
   activeSection,
   onSearch,
+  onClearSection,
 }: SearchHeaderBarProps) => {
-  const handleClearSection = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-  }, []);
+  const handleClearSection = useCallback(
+    (e: React.MouseEvent, section: SearchHeaderSectionType) => {
+      e.stopPropagation();
+      e.preventDefault();
+      onClearSection(section);
+    },
+    [onClearSection]
+  );
 
   return (
     <Paper sx={styles.paper(isExpanded)}>
@@ -116,7 +122,7 @@ const SearchHeaderBar = ({
 
                   <IconButton
                     size="medium"
-                    onClick={(e) => handleClearSection(e)}
+                    onClick={(e) => handleClearSection(e, sectionKey)}
                     sx={styles.clearIconButton(showClearIcon)}
                   >
                     <CancelIcon fontSize="small" />

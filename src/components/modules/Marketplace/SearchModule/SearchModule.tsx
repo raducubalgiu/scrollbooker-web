@@ -17,8 +17,8 @@ import { SearchHeaderStateType } from "./SearchHeader/search-header-types";
 import SearchFiltersModal from "./SearchFilters/SearchFiltersModal";
 import SearchBusinessList from "./SearchBusinessList";
 import SearchHeaderMobile from "./SearchHeaderMobile";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
+import MobileSearchServicesSheet from "./MobileSearchServicesSheet";
+import { useGetAllBusinessDomains } from "@/controllers/nomenclature/business-domain.controller";
 import { useUserLocation } from "@/hooks/useUserLocation";
 
 const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
@@ -155,6 +155,8 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
   const [isMapVisible, setIsMapVisible] = React.useState(true);
   const [isMapExpanded, setIsMapExpanded] = React.useState(false);
   const [openFilters, setOpenFilters] = React.useState(false);
+  const [isMobileServicesSheetOpen, setIsMobileServicesSheetOpen] =
+    React.useState(false);
   const [searchHeaderHeight, setSearchHeaderHeight] = React.useState(0);
 
   const handleToggleMap = React.useCallback(() => {
@@ -179,6 +181,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
       businessDomainId: state.selectedBusinessDomainId,
       serviceDomainId: state.selectedServiceDomainId,
       serviceId: state.selectedServiceId,
+      subfilterIds: state.selectedSubFilterIds,
       startDate: state.startDate,
       startTime: state.startTime,
       endTime: state.endTime,
@@ -242,9 +245,8 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
     return isDiscountApplied || isPriceApplied || isSortApplied;
   }, [searchState.hasDiscount, searchState.maxPrice, searchState.sort]);
 
-  const { data: businessDomains } = useCustomQuery<BusinessDomain[]>({
-    key: ["business-domains"],
-    url: "/api/nomenclatures/business-domains",
+  const { data: businessDomains } = useGetAllBusinessDomains({
+    all: false,
     options: {
       staleTime: ONE_DAY_IN_MS,
       gcTime: ONE_DAY_IN_MS,
@@ -268,9 +270,25 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
         onApplyFilters={handleApplyFilters}
       />
 
-      <SearchHeaderMobile 
+      <SearchHeaderMobile
         onFilterClick={handleOpenFilters}
-        onOpenServicesSheet={() => {}}
+        onOpenServicesSheet={() => setIsMobileServicesSheetOpen(true)}
+      />
+
+      <MobileSearchServicesSheet
+        open={isMobileServicesSheetOpen}
+        businessDomains={businessDomains ?? []}
+        onClose={() => setIsMobileServicesSheetOpen(false)}
+        onSearch={handleSearch}
+        headerState={{
+          selectedBusinessDomainId: searchState.businessDomainId,
+          selectedServiceDomainId: searchState.serviceDomainId,
+          selectedServiceId: searchState.serviceId,
+          selectedSubFilterIds: searchState.subfilterIds,
+          startDate: searchState.startDate,
+          startTime: searchState.startTime,
+          endTime: searchState.endTime,
+        }}
       />
 
       <SearchHeader
@@ -286,6 +304,7 @@ export default function SearchModule({ searchParams }: SearchPageProps) {
           selectedBusinessDomainId: searchState.businessDomainId,
           selectedServiceDomainId: searchState.serviceDomainId,
           selectedServiceId: searchState.serviceId,
+          selectedSubFilterIds: searchState.subfilterIds,
           startDate: searchState.startDate,
           startTime: searchState.startTime,
           endTime: searchState.endTime,

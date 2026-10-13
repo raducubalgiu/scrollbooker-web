@@ -18,7 +18,7 @@ const ServiceDomainsSection = ({
   onSelectServiceDomain,
 }: ServiceDomainSectionProps) => {
   return (
-    <Box sx={{ minWidth: 700, minHeight: 500 }}>
+    <Box sx={{ minWidth: { xs: "auto", md: 700 }, minHeight: 500 }}>
       <Box
         sx={{
           display: "grid",
@@ -35,7 +35,7 @@ const ServiceDomainsSection = ({
             color="text.secondary"
             sx={{ gridColumn: "1 / -1" }}
           >
-            Selectează o categorie pentru a vedea serviciile disponibile.
+            Nu există categorii disponibile momentan.
           </Typography>
         )}
 

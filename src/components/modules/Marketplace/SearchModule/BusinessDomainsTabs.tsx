@@ -2,40 +2,22 @@ import { Box, Button, Stack } from "@mui/material";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import React from "react";
-import { BusinessDomain } from "@/ts/models/nomenclatures/businessDomain/BusinessDomain";
 
 type BusinessDomainsTabsProps = {
-  businessDomains: BusinessDomain[];
   areFiltersActive: boolean;
   isExpanded: boolean;
   isMapVisible: boolean;
   onOpenFilters: (() => void) | undefined;
   onToggleMap: (() => void) | undefined;
-  selectedBusinessDomainId: number | null;
-  onSelectBusinessDomain: (id: number | null) => void;
 };
 
 const BusinessDomainsTabs = ({
-  businessDomains,
   areFiltersActive,
   isExpanded,
   isMapVisible,
   onOpenFilters,
   onToggleMap,
-  selectedBusinessDomainId,
-  onSelectBusinessDomain,
 }: BusinessDomainsTabsProps) => {
-  const allBusinessDomains = [
-    {
-      id: null,
-      name: "Toate",
-      short_name: "Toate",
-      active: false,
-      service_domains: [],
-    },
-    ...businessDomains,
-  ];
-
   return (
     <Box
       sx={{
@@ -47,27 +29,9 @@ const BusinessDomainsTabs = ({
       <Stack
         flexDirection="row"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="flex-end"
         sx={{ mt: 2.5 }}
       >
-        <Stack flexDirection="row" alignItems="center" gap={1}>
-          {allBusinessDomains.map((d) => {
-            const isSelected = d.id === selectedBusinessDomainId;
-
-            return (
-              <Button
-                key={d.id}
-                variant={isSelected ? "contained" : "outlined"}
-                color={isSelected ? "primary" : "secondary"}
-                size="large"
-                disableElevation
-                onClick={() => onSelectBusinessDomain(d.id)}
-              >
-                {d.short_name}
-              </Button>
-            );
-          })}
-        </Stack>
         <Stack
           flexDirection="row"
           alignItems="center"

@@ -123,6 +123,8 @@ const SearchPopperSections = ({
               p: 3,
               minHeight: 160,
               minWidth: 600,
+              maxHeight: "calc(100vh - 160px)",
+              overflowY: "auto",
             }}
           >
             {sectionContent}
