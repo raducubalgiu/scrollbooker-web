@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -171,17 +171,35 @@ const ProductCard = ({
         {!displayEditableActions && (
           <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
             {showIcon ? (
-              <IconButton size="large" onClick={onSelectProduct}>
-                {isSelected ? (
-                  <Tooltip title="Elimină">
-                    <CheckCircleRoundedIcon fontSize="large" color="primary" />
-                  </Tooltip>
-                ) : (
-                  <Tooltip title="Adaugă">
-                    <AddRoundedIcon fontSize="large" />
-                  </Tooltip>
-                )}
-              </IconButton>
+              <Tooltip title={isSelected ? "Elimină" : "Adaugă"}>
+                <IconButton
+                  size="medium"
+                  onClick={onSelectProduct}
+                  sx={{
+                    width: { xs: 40, md: 46 },
+                    height: { xs: 40, md: 46 },
+                    bgcolor: isSelected ? "primary.main" : "background.default",
+                    color: isSelected ? "common.white" : "text.primary",
+                    boxShadow: isSelected ? 0 : 2,
+                    transition: "all 0.2s ease-in-out",
+
+                    "&:hover": {
+                      bgcolor: isSelected ? "primary.dark" : "action.hover",
+                      boxShadow: isSelected ? 6 : 4,
+                      transform: "scale(1.05)",
+                    },
+                    "&:active": {
+                      transform: "scale(0.95)",
+                    },
+                  }}
+                >
+                  {isSelected ? (
+                    <CheckRoundedIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
+                  ) : (
+                    <AddRoundedIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
+                  )}
+                </IconButton>
+              </Tooltip>
             ) : (
               <Button
                 variant="outlined"

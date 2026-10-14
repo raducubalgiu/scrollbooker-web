@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container } from "@mui/material";
+import { Box, Container, useMediaQuery, useTheme } from "@mui/material";
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import BookingAppBar from "./components/BookingAppBar";
@@ -25,6 +25,7 @@ type BookingModuleProps = {
 };
 
 export const HEADER_HEIGHT = 90;
+export const HEADER_HEIGHT_MOBILE = 64;
 const SCROLL_OFFSET = 180;
 export const SIDEBAR_WIDTH = 600;
 
@@ -82,6 +83,9 @@ const BookingModule = (props: BookingModuleProps) => {
     selectedProductId,
   });
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const renderStepContent = () => {
     switch (currentStep) {
       case BookingStepEnum.SERVICES:
@@ -93,7 +97,7 @@ const BookingModule = (props: BookingModuleProps) => {
             selectedProductId={selectedProductId}
             selectedItems={selectedItems}
             scrollOffset={SCROLL_OFFSET}
-            headerHeight={HEADER_HEIGHT}
+            headerHeight={isMobile ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT}
             onAdd={handleSelectItem}
             onOpenDetail={(product) =>
               setSelectedProduct({ product, open: true })
@@ -141,7 +145,7 @@ const BookingModule = (props: BookingModuleProps) => {
   return (
     <Box sx={{ minHeight: "100vh" }}>
       <BookingAppBar
-        headerHeight={HEADER_HEIGHT}
+        headerHeight={isMobile ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT}
         onBack={() => router.back()}
       />
       <Container maxWidth="xl">
