@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, useMediaQuery, useTheme } from "@mui/material";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import FeedTabs, { FeedTabEnum } from "./FeedTabs";
 import {
   useInfiniteExplorePosts,
@@ -12,19 +12,22 @@ import { usePostFeed } from "@/components/cutomized/Post/feed/usePostFeed";
 import PostFeedView from "@/components/cutomized/Post/feed/PostFeedView";
 import FeedFilterDialog from "./Filters/FeedFilterDialog";
 import FeedFilterMobileOverlay from "./Filters/FeedFilterMobileOverlay";
+import { useFeedState } from "@/providers/FeedStateProvider";
 
 export default function FeedModule() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [currentTab, setCurrentTab] = useState<FeedTabEnum>(
-    FeedTabEnum.EXPLORE
-  );
+  const {
+    currentTab,
+    currentIndex,
+    appliedServiceIds,
+    appliedOnlyVideoReviews,
+    setCurrentTab,
+    setCurrentIndex,
+    setAppliedFilters,
+  } = useFeedState();
   const [showFilters, setShowFilters] = useState(false);
-  const [appliedServiceIds, setAppliedServiceIds] = useState<Set<number>>(
-    new Set()
-  );
-  const [appliedOnlyVideoReviews, setAppliedOnlyVideoReviews] = useState(false);
 
   const { data: domainsData, isLoading: isLoadingDomains } =
     useAllServiceDomains({ page: 1, limit: 100, all: false });
@@ -53,14 +56,19 @@ export default function FeedModule() {
     isFetchingNextPage,
     fetchNextPage,
     isLoading,
+    initialIndex: currentIndex,
   });
+
+  useEffect(() => {
+    setCurrentIndex(feed.currentIndex);
+  }, [feed.currentIndex, setCurrentIndex]);
 
   const handleTabChange = useCallback(
     (tab: FeedTabEnum) => {
       setCurrentTab(tab);
       feed.handleIndexChange(0);
     },
-    [feed]
+    [feed, setCurrentTab]
   );
 
   const handleToggleFilters = useCallback(() => {
@@ -73,10 +81,9 @@ export default function FeedModule() {
 
   const handleApplyFilters = useCallback(
     (serviceIds: Set<number>, onlyVideoReviews: boolean) => {
-      setAppliedServiceIds(serviceIds);
-      setAppliedOnlyVideoReviews(onlyVideoReviews);
+      setAppliedFilters(serviceIds, onlyVideoReviews);
     },
-    []
+    [setAppliedFilters]
   );
 
   const hasActiveFilters =
