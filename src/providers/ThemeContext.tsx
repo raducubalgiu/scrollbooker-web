@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { ThemeModeEnum } from "./ThemeModeEnum";
@@ -36,34 +37,22 @@ export function ThemeModeProvider({
   initialResolvedMode,
 }: ThemeModeProviderProps) {
   const [mode, setModeState] = React.useState<ThemeModeEnum>(initialMode);
-  const [systemPrefersDarkMode, setSystemPrefersDarkMode] = React.useState<boolean>(
-    initialResolvedMode === ThemeModeEnum.DARK
-  );
+  const [systemPrefersDarkMode, setSystemPrefersDarkMode] =
+    React.useState<boolean>(initialResolvedMode === ThemeModeEnum.DARK);
   const [, startTransition] = React.useTransition();
 
-  // Ecrane precum feed-ul video (vezi ForceDarkChrome) trebuie să forțeze
-  // bara browser-ului (status bar Android, chrome-ul iOS) la o culoare
-  // fixă, indiferent de tema curentă — nu doar "la montare": dacă
-  // resolvedMode se recalculează cât timp un asemenea ecran e activ (ex.
-  // corecția ghicirii de temă System după hidratare), efectul de mai jos
-  // rulează din nou și, fără acest stack, ar rescrie peste override cu
-  // culoarea temei. Stack-ul (nu un singur slot) susține corect cazul în
-  // care două asemenea ecrane se suprapun la tranziție.
   const overrideIdRef = React.useRef(0);
   const [chromeOverrides, setChromeOverrides] = React.useState<
     { id: number; override: ChromeOverride }[]
   >([]);
 
-  const pushChromeOverride = React.useCallback(
-    (override: ChromeOverride) => {
-      const id = ++overrideIdRef.current;
-      setChromeOverrides((prev) => [...prev, { id, override }]);
-      return () => {
-        setChromeOverrides((prev) => prev.filter((o) => o.id !== id));
-      };
-    },
-    []
-  );
+  const pushChromeOverride = React.useCallback((override: ChromeOverride) => {
+    const id = ++overrideIdRef.current;
+    setChromeOverrides((prev) => [...prev, { id, override }]);
+    return () => {
+      setChromeOverrides((prev) => prev.filter((o) => o.id !== id));
+    };
+  }, []);
 
   React.useEffect(() => {
     const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY);
@@ -96,11 +85,14 @@ export function ThemeModeProvider({
     return mode;
   }, [mode, systemPrefersDarkMode]);
 
+  const pathname = usePathname();
+
   React.useLayoutEffect(() => {
     const html = document.documentElement;
     html.setAttribute("data-theme", resolvedMode);
 
-    const activeOverride = chromeOverrides[chromeOverrides.length - 1]?.override;
+    const activeOverride =
+      chromeOverrides[chromeOverrides.length - 1]?.override;
 
     html.style.colorScheme = activeOverride?.colorScheme ?? resolvedMode;
 
@@ -113,7 +105,7 @@ export function ThemeModeProvider({
           : lightTheme.palette.background.default);
       meta.setAttribute("content", color);
     }
-  }, [resolvedMode, chromeOverrides]);
+  }, [resolvedMode, chromeOverrides, pathname]);
 
   const setMode = React.useCallback((nextMode: ThemeModeEnum) => {
     setModeState(nextMode);

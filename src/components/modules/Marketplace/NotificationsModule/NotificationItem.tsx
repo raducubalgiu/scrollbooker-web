@@ -336,20 +336,21 @@ export default function NotificationItem({
 
   const getTargetHref = (): string | null => {
     switch (type) {
-      case NotificationTypeEnum.APPOINTMENT_REVIEWED: {
-        const appointmentReviewData =
-          data as AppointmentReviewedNotificationData;
-        return AppRoutes.appointmentDetails(
-          appointmentReviewData.appointment_id
-        );
-      }
-      case NotificationTypeEnum.APPOINTMENT_BOOKED:
-      case NotificationTypeEnum.APPOINTMENT_CANCELED:
-      case NotificationTypeEnum.APPOINTMENT_RESCHEDULED:
       case NotificationTypeEnum.APPOINTMENT_REMINDER: {
         const appointmentData = data as AppointmentReminderNotificationData;
         return AppRoutes.appointmentDetails(appointmentData.appointment_id);
       }
+
+      // Aceste tipuri au propriul buton de acțiune, deja un NextLink spre
+      // destinație (aceeași, sau una diferită la EMPLOYMENT_REQUEST) —
+      // rândul însuși nu mai poate fi tot un <a>, HTML nu permite <a>
+      // imbricat în alt <a> (eroare de hidratare).
+      case NotificationTypeEnum.APPOINTMENT_BOOKED:
+      case NotificationTypeEnum.APPOINTMENT_CANCELED:
+      case NotificationTypeEnum.APPOINTMENT_RESCHEDULED:
+      case NotificationTypeEnum.APPOINTMENT_REVIEWED:
+      case NotificationTypeEnum.EMPLOYMENT_REQUEST:
+        return null;
 
       case NotificationTypeEnum.LIKE_POST:
       case NotificationTypeEnum.COMMENT_POST:

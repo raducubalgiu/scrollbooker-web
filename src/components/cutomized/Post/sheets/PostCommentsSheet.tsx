@@ -63,8 +63,7 @@ const styles = {
   },
   container: {
     width: "100%",
-    pt: 2,
-    pb: 1.5,
+    py: 1,
     borderBottom: 1,
     borderColor: "divider",
     flexShrink: 0,
