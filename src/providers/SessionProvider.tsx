@@ -7,9 +7,15 @@ import {
 
 const SESSION_REFETCH_INTERVAL = 60 * 5 - 10; // 290s
 
-export default function SessionProvider({ children }: SessionProviderProps) {
+export default function SessionProvider({
+  children,
+  session,
+}: SessionProviderProps) {
   return (
-    <NextAuthSessionProvider refetchInterval={SESSION_REFETCH_INTERVAL}>
+    <NextAuthSessionProvider
+      session={session ?? null}
+      refetchInterval={SESSION_REFETCH_INTERVAL}
+    >
       {children}
     </NextAuthSessionProvider>
   );
