@@ -97,14 +97,14 @@ const ProfileProductsTab = ({
           description="Nu au fost găsite servicii"
         />
       ) : (
-        <Box sx={{ maxWidth: "md", pt: 2.5 }}>
+        <Box sx={{ maxWidth: "md", py: 2.5 }}>
           <ServiceCategoryTabs
             serviceGroups={serviceGroups}
             activeServiceId={activeGroup.service.id}
             onSelect={setActiveServiceId}
           />
 
-          <Stack spacing={2} mt={2.5}>
+          <Stack spacing={2} mt={1.5}>
             {activeGroup.products.map((product) => (
               <ProductCard
                 key={product.id}
