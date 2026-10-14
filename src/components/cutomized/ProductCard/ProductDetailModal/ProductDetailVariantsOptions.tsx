@@ -42,7 +42,7 @@ const ProductDetailVariantsOptions = ({
                   <Box>
                     <Stack mb={2} spacing={0.5}>
                       <Typography
-                        fontSize={20}
+                        fontSize={{ xs: "1rem", md: "1.25rem" }}
                         fontWeight={600}
                         noWrap
                         sx={{
@@ -81,7 +81,7 @@ export default ProductDetailVariantsOptions;
 
 const styles = {
   radioStyles: {
-    "& .MuiSvgIcon-root": { fontSize: 32.5 },
+    "& .MuiSvgIcon-root": { fontSize: { xs: 24, md: 32.5 } },
   },
   formControl: {
     display: "flex",

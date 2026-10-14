@@ -1,23 +1,24 @@
-import { ProductVariant } from "@/ts/models/booking/product/Product";
+import { ProductUtils, ProductVariant } from "@/ts/models/booking/product/Product";
 import { Button, Stack, Typography } from "@mui/material";
 import React from "react";
 
 type ProductDetailFooterProps = {
   currentVariant: ProductVariant | undefined;
-  durationText: string;
   onHandleAdd: () => void;
 };
 
 const ProductDetailFooter = ({
   currentVariant,
-  durationText,
   onHandleAdd,
 }: ProductDetailFooterProps) => {
-  const { has_different_prices, starting_offering } = currentVariant || {};
+  const { has_different_prices, starting_offering, duration } =
+    currentVariant || {};
 
   const displayedPrice = has_different_prices
     ? `de la ${starting_offering?.price_with_discount} RON`
     : `${starting_offering?.price_with_discount} RON`;
+
+  const durationText = duration ? ProductUtils.getDurationText(duration) : "";
 
   return (
     <Stack
@@ -28,7 +29,7 @@ const ProductDetailFooter = ({
       sx={{
         zIndex: 1,
         width: "100%",
-        p: 3,
+        p: { xs: 2, md: 3 },
         borderTop: 1,
         borderColor: "divider",
       }}
@@ -37,13 +38,20 @@ const ProductDetailFooter = ({
         <Typography variant="h4" fontWeight={600}>
           {displayedPrice}
         </Typography>
-        <Typography color="text.secondary">{durationText}</Typography>
+        <Typography color="text.secondary" variant="body2">
+          {durationText}
+        </Typography>
       </Stack>
 
       <Button
         variant="contained"
         disableElevation
-        sx={{ py: 1.75, px: 3, fontSize: 18, fontWeight: 600 }}
+        sx={{
+          py: { xs: 1.25, md: 1.75 },
+          px: { xs: 2.5, md: 3 },
+          fontSize: { xs: 15, md: 18 },
+          fontWeight: 600,
+        }}
         onClick={onHandleAdd}
       >
         Adaugă

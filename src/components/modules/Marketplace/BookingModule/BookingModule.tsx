@@ -14,6 +14,7 @@ import ConfirmStep from "./steps/Confirm/ConfirmStep";
 import BookingCart from "./components/cart/BookingCart";
 import BookingBottomBar from "./components/BookingBottomBar";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
+import ProductDetailDrawer from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailDrawer";
 import { useBookingState } from "./useBookingState";
 import { BookingFlow } from "@/ts/models/booking/booking/BookingFlow";
 
@@ -204,12 +205,20 @@ const BookingModule = (props: BookingModuleProps) => {
       />
 
       {selectedProduct.open && (
-        <ProductDetailModal
-          open={selectedProduct.open}
-          product={selectedProduct.product}
-          onClose={handleCloseDetailModal}
-          onAdd={handleSelectItem}
-        />
+        <>
+          <ProductDetailModal
+            open={selectedProduct.open}
+            product={selectedProduct.product}
+            onClose={handleCloseDetailModal}
+            onAdd={handleSelectItem}
+          />
+          <ProductDetailDrawer
+            open={selectedProduct.open}
+            product={selectedProduct.product}
+            onClose={handleCloseDetailModal}
+            onAdd={handleSelectItem}
+          />
+        </>
       )}
     </Box>
   );
