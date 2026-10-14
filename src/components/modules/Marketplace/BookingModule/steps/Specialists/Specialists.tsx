@@ -37,7 +37,7 @@ const Specialists = ({
 
   return (
     <Box sx={{ minWidth: 0 }}>
-      <Typography fontWeight={800} fontSize={47.5} mt={3} mb={2}>
+      <Typography fontWeight={800} variant="h2" mt={{ xs: 1, md: 3 }} mb={2.5}>
         Selectează specialistul
       </Typography>
 

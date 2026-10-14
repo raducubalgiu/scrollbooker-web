@@ -150,7 +150,7 @@ const AppointmentDetailsModule = ({
   );
 
   return (
-    <MainLayout showHeader={false}>
+    <MainLayout showHeader={false} title="Detalii rezervare">
       <Box sx={styles.container}>
         <CancelAppointmentModal
           open={openCancel}

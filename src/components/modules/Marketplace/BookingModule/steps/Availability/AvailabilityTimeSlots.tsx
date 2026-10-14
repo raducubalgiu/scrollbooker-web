@@ -96,7 +96,7 @@ export default AvailabilityTimeSlots;
 
 const styles = {
   slotsPlaceholder: {
-    mt: 4,
+    mt: { xs: 1.5, md: 4 },
     width: "100%",
   },
   slotContainer: (theme: Theme) => ({

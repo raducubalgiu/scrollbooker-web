@@ -21,12 +21,7 @@ const ConfirmStep = ({ selectedTimeSlot, address }: ConfirmStepProps) => {
 
   return (
     <Box sx={{ minWidth: 0, pb: 4 }}>
-      <Typography
-        fontWeight={800}
-        fontSize={{ xs: 32, md: 47.5 }}
-        mt={3}
-        mb={1}
-      >
+      <Typography fontWeight={800} variant="h2" mt={{ xs: 1, md: 3 }}>
         Verifică detaliile
       </Typography>
       <Typography color="text.secondary" mb={5} fontSize={18}>

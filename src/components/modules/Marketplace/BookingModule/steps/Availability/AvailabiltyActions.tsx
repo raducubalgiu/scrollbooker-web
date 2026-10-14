@@ -23,8 +23,8 @@ const AvailabiltyActions = ({
       flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
-      //mt={2.5}
-      mb={3}
+      mb={{ xs: 0, md: 3 }}
+      mt={3}
     >
       <Typography
         variant="h4"
@@ -35,20 +35,18 @@ const AvailabiltyActions = ({
       </Typography>
       <Stack flexDirection="row" gap={1}>
         <IconButton
-          size="large"
           onClick={onNavigatePrev}
           sx={styles.navButton}
           disabled={isPrevDisabled}
         >
-          <ChevronLeftIcon fontSize="medium" />
+          <ChevronLeftIcon sx={styles.navIcon} />
         </IconButton>
         <IconButton
-          size="large"
           onClick={onNavigateNext}
           sx={styles.navButton}
           disabled={isNextDisabled}
         >
-          <ChevronRightIcon fontSize="medium" />
+          <ChevronRightIcon sx={styles.navIcon} />
         </IconButton>
       </Stack>
     </Stack>
@@ -62,6 +60,9 @@ const styles = {
     border: 1.5,
     borderColor: "divider",
     borderRadius: 50,
-    p: 2.5,
+    p: { xs: 1, md: 2.5 },
+  },
+  navIcon: {
+    fontSize: { xs: 18, md: 24 },
   },
 };

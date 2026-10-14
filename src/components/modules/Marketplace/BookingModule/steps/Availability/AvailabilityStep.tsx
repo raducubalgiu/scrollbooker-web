@@ -61,8 +61,8 @@ const AvailabilityStep = ({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Typography fontWeight={800} fontSize={47.5} mt={3}>
-        Data și ora
+      <Typography fontWeight={800} variant="h2" mt={{ xs: 1, md: 3 }}>
+        Alege data și ora
       </Typography>
 
       <AvailabiltyActions

@@ -23,11 +23,11 @@ const AvailableSlot = ({
       onClick={() => onSelectSlot(slot)}
       sx={(theme) => {
         return {
-          p: 3,
+          p: { xs: 2, md: 3 },
           border: 1.5,
           borderColor: "divider",
           borderRadius: 2.5,
-          mb: 2.5,
+          mb: { xs: 1.5, md: 2.5 },
           cursor: "pointer",
           transition: "all 0.2s ease",
           "&:hover": {
@@ -43,9 +43,7 @@ const AvailableSlot = ({
         {dayjs.utc(slot.start_date_locale).format("HH:mm")}
       </Typography>
 
-      {isSelected && (
-        <CheckCircleRoundedIcon fontSize="large" color="primary" />
-      )}
+      {isSelected && <CheckCircleRoundedIcon color="primary" />}
     </Stack>
   );
 };

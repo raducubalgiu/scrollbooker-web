@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Theme, Typography } from "@mui/material";
 import { Dayjs } from "dayjs";
 import dayjs from "@/lib/dayjs";
 import React from "react";
@@ -84,8 +84,8 @@ const AvailabilityHeader = ({
 
                     <Box
                       sx={{
-                        width: 65,
-                        height: 65,
+                        width: { xs: 45, md: 65 },
+                        height: { xs: 45, md: 65 },
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -97,7 +97,7 @@ const AvailabilityHeader = ({
                       }}
                     >
                       <Typography
-                        variant="h5"
+                        fontSize={{ xs: "0.9rem", md: "1.5rem" }}
                         fontWeight={isSelected ? 800 : 600}
                         color={isSelected ? "#fff" : "text.primary"}
                       >
@@ -122,25 +122,22 @@ const styles = {
     width: "100%",
     overflow: "hidden",
     position: "relative",
-    border: 1.5,
-    borderColor: "divider",
-    py: 5,
-    borderRadius: 5,
+    py: { xs: 2, md: 5 },
   },
   weekContainer: {
     width: "33.3333%",
     flexShrink: 0,
-    px: 1,
+    px: { xs: 0, md: 1 },
   },
   weekGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(7, 1fr)",
+    gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
     width: "100%",
   },
   activeDayCircle: {
     bgcolor: "primary.main",
     color: "primary.contrastText",
-    boxShadow: (theme: any) => `0 4px 10px ${theme.palette.primary.main}40`,
+    boxShadow: (theme: Theme) => `0 4px 10px ${theme.palette.primary.main}40`,
   },
   inactiveDayCircle: {
     bgcolor: "transparent",
