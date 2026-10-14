@@ -129,6 +129,59 @@ export function FeedVideoPool({
     };
   }, []);
 
+  // WebKit (Safari/Chrome pe iOS — ambele rulează pe WebKit acolo) e mult
+  // mai strict decât Chrome desktop/Android cu privire la autoplay cu
+  // sunet: play() trebuie apelat cât mai aproape de gestul userului, nu
+  // la finalul lanțului IntersectionObserver → setState → effect, care e
+  // asincron și poate ajunge după ce fereastra de "user activation" a
+  // expirat (mai probabil la swipe-uri cu impuls mare, unde settle-ul
+  // scroll-snap durează mai mult). Acest listener apelează play() sincron,
+  // chiar în handler-ul de touchend, pe cel mai probabil video următor —
+  // doar un "nudge" suplimentar; starea de play/pause autoritativă rămâne
+  // integral în PostVideoPlayer.
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleTouchEnd = () => {
+      const containerRect = container.getBoundingClientRect();
+      const containerArea = containerRect.width * containerRect.height;
+      if (containerArea <= 0) return;
+
+      let bestIndex: number | null = null;
+      let bestRatio = 0;
+
+      itemRefs.current.forEach((el, index) => {
+        const rect = el.getBoundingClientRect();
+        const overlapHeight = Math.max(
+          0,
+          Math.min(rect.bottom, containerRect.bottom) -
+            Math.max(rect.top, containerRect.top)
+        );
+        const overlapWidth = Math.max(
+          0,
+          Math.min(rect.right, containerRect.right) -
+            Math.max(rect.left, containerRect.left)
+        );
+        const ratio = (overlapHeight * overlapWidth) / containerArea;
+
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          bestIndex = index;
+        }
+      });
+
+      if (bestIndex === null || bestRatio < ACTIVE_RATIO_THRESHOLD) return;
+
+      const el = itemRefs.current.get(bestIndex);
+      const video = el?.querySelector("video");
+      video?.play().catch(() => {});
+    };
+
+    container.addEventListener("touchend", handleTouchEnd, { passive: true });
+    return () => container.removeEventListener("touchend", handleTouchEnd);
+  }, []);
+
   return (
     <Box ref={containerRef} sx={styles.root}>
       {posts.map((post, index) => {
