@@ -34,8 +34,8 @@ const SpecialistItem = ({ specialist, isSelected }: SpecialistItemProps) => {
         <Avatar
           sx={{
             ...styles.avatar,
-            width: isSelected ? 50 : styles.avatar.width,
-            height: isSelected ? 50 : styles.avatar.height,
+            width: isSelected ? 35 : styles.avatar.width,
+            height: isSelected ? 35 : styles.avatar.height,
           }}
           src={specialist.avatar ?? ""}
         />
@@ -72,8 +72,8 @@ const styles = {
     boxShadow: 1,
   },
   avatar: {
-    width: { xs: 50, lg: 65 },
-    height: { xs: 50, lg: 65 },
+    width: { xs: 45, md: 50 },
+    height: { xs: 45, md: 50 },
     border: 1,
     borderColor: "divider",
   },

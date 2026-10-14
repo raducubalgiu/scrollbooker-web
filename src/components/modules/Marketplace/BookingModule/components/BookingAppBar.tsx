@@ -1,13 +1,17 @@
-import { alpha, AppBar, IconButton, Theme, Toolbar } from "@mui/material";
+import { alpha, AppBar, IconButton, Theme, Toolbar, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
 
 type BookingAppBarProps = {
   headerHeight: number;
+  title?: string;
   onBack: () => void;
 };
 
-const BookingAppBar = ({ headerHeight, onBack }: BookingAppBarProps) => {
+// Titlul pasului apare aici doar pe mobil — pe desktop rămâne afișat în
+// conținutul paginii (fiecare step își are propriul <Typography variant="h2">),
+// ca să economisim spațiu vertical pe ecrane mici.
+const BookingAppBar = ({ headerHeight, title, onBack }: BookingAppBarProps) => {
   return (
     <AppBar
       position="sticky"
@@ -20,6 +24,7 @@ const BookingAppBar = ({ headerHeight, onBack }: BookingAppBarProps) => {
         sx={{
           height: headerHeight,
           px: { xs: 2.5, md: 5 },
+          gap: 1.5,
         }}
       >
         <IconButton
@@ -32,6 +37,17 @@ const BookingAppBar = ({ headerHeight, onBack }: BookingAppBarProps) => {
         >
           <ArrowBackIcon fontSize="medium" />
         </IconButton>
+
+        {title && (
+          <Typography
+            fontWeight={700}
+            variant="h6"
+            noWrap
+            sx={styles.title}
+          >
+            {title}
+          </Typography>
+        )}
       </Toolbar>
     </AppBar>
   );
@@ -40,6 +56,10 @@ const BookingAppBar = ({ headerHeight, onBack }: BookingAppBarProps) => {
 export default BookingAppBar;
 
 const styles = {
+  title: {
+    display: { xs: "block", md: "none" },
+    minWidth: 0,
+  },
   back: {
     width: { xs: 40, md: 64 },
     height: { xs: 40, md: 64 },

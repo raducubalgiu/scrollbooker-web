@@ -44,8 +44,8 @@ const SelectedItemsCheckSpecialist = ({
     <Box
       key={item.productId}
       sx={{
-        p: 3,
-        mb: 2.5,
+        p: { xs: 1.5, md: 3 },
+        mb: { xs: 1, md: 2.5 },
         borderRadius: 4,
         border: 1.5,
         borderColor: hasOffering ? "divider" : "error.light",
@@ -60,10 +60,8 @@ const SelectedItemsCheckSpecialist = ({
         alignItems="flex-start"
       >
         <Box>
-          <Typography fontSize={20} fontWeight={700}>
-            {item.productName}
-          </Typography>
-          <Typography color="text.secondary" fontWeight={500}>
+          <Typography fontWeight={700}>{item.productName}</Typography>
+          <Typography color="text.secondary" variant="body2">
             {item.variantName} •{" "}
             {ProductUtils.getDurationText(item.variantDuration)}
           </Typography>

@@ -38,8 +38,8 @@ const SpecialistSelect = ({
               <Stack flexDirection="row" alignItems="center" gap={2}>
                 <Avatar
                   sx={{
-                    width: 50,
-                    height: 50,
+                    width: { xs: 45, md: 55 },
+                    height: { xs: 45, md: 55 },
                     bgcolor: "primary.main",
                   }}
                 >

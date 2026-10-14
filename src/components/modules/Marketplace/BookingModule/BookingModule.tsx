@@ -37,6 +37,13 @@ export enum BookingStepEnum {
   CONFIRM = 3,
 }
 
+const STEP_TITLES: Record<BookingStepEnum, string> = {
+  [BookingStepEnum.SERVICES]: "Alege serviciile",
+  [BookingStepEnum.SPECIALISTS]: "Selectează specialistul",
+  [BookingStepEnum.DATE_AND_HOUR]: "Alege data și ora",
+  [BookingStepEnum.CONFIRM]: "Verifică detaliile",
+};
+
 export interface SelectedBookingItem {
   productId: number;
   variantId: number;
@@ -147,6 +154,7 @@ const BookingModule = (props: BookingModuleProps) => {
     <Box sx={{ minHeight: "100vh" }}>
       <BookingAppBar
         headerHeight={isMobile ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT}
+        title={STEP_TITLES[currentStep]}
         onBack={() => {
           if (currentStep === BookingStepEnum.SERVICES) {
             router.back();

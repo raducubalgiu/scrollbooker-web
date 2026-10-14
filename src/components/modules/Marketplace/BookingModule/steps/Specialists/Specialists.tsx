@@ -37,7 +37,13 @@ const Specialists = ({
 
   return (
     <Box sx={{ minWidth: 0 }}>
-      <Typography fontWeight={800} variant="h2" mt={{ xs: 1, md: 3 }} mb={2.5}>
+      <Typography
+        fontWeight={800}
+        variant="h2"
+        mt={{ xs: 1, md: 3 }}
+        mb={2.5}
+        sx={{ display: { xs: "none", md: "block" } }}
+      >
         Selectează specialistul
       </Typography>
 
@@ -47,7 +53,7 @@ const Specialists = ({
         onChangeSelectedEmployeeId={onChangeSelectedEmployeeId}
       />
 
-      <Typography variant="h5" fontWeight={700} my={3}>
+      <Typography variant="h5" fontWeight={700} mb={{ xs: 1.5, md: 3 }}>
         Verificare servicii
       </Typography>
 

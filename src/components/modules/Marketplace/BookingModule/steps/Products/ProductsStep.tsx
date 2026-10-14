@@ -62,7 +62,12 @@ const ProductsStep = ({
   return (
     <Box sx={{ minWidth: 0 }}>
       {displayTitle && (
-        <Typography fontWeight={800} variant="h2" mt={{ xs: 1, md: 3 }}>
+        <Typography
+          fontWeight={800}
+          variant="h2"
+          mt={{ xs: 1, md: 3 }}
+          sx={{ display: { xs: "none", md: "block" } }}
+        >
           Alege serviciile
         </Typography>
       )}
