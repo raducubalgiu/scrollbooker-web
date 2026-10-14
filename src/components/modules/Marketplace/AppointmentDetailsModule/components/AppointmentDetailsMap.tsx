@@ -79,7 +79,7 @@ const styles = {
     boxShadow: { xs: "none", md: "0px 5px 16px rgba(0,0,0,0.1)" },
 
     "&:hover": {
-      boxShadow: "0px 10px 35px rgba(0,0,0,0.1)",
+      boxShadow: { xs: "none", md: "0px 10px 35px rgba(0,0,0,0.1)" },
       borderColor: "primary.main",
     },
   },

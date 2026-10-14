@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import { Box, IconButton, Stack } from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { ServiceDomain } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import { useFeedFilterDraft } from "./useFeedFilterDraft";
-import FeedFilterHeader from "./FeedFilterHeader";
 import FeedFilterVideoReviewsToggle from "./FeedFilterVideoReviewsToggle";
 import FeedFilterDomainSection from "./FeedFilterDomainSection";
 import FeedFilterActions from "./FeedFilterActions";
+import AppLogo from "@/components/core/Logo/AppLogo";
 
 type FeedFilterContentProps = {
   domains: ServiceDomain[];
@@ -49,7 +49,12 @@ const FeedFilterContent = ({
         alignItems="flex-start"
         sx={{ flexShrink: 0 }}
       >
-        <FeedFilterHeader />
+        <Stack spacing={1.5} sx={styles.header}>
+          <AppLogo height={30} />
+          <Typography sx={styles.subtitle}>
+            Alege ce vrei sa vezi in feed-ul tau
+          </Typography>
+        </Stack>
 
         <IconButton onClick={onClose} sx={styles.closeButton}>
           <CloseIcon sx={{ color: "text.primary" }} />
@@ -90,6 +95,8 @@ const styles = {
     height: "100%",
     p: 2.5,
   },
+  header: { flexShrink: 1, minWidth: 0 },
+  subtitle: { color: "text.secondary" },
   scrollArea: {
     flex: 1,
     minHeight: 0,

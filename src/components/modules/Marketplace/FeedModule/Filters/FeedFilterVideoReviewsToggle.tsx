@@ -35,7 +35,7 @@ const FeedFilterVideoReviewsToggle = ({
           Doar recenzii video
         </Typography>
         <Typography variant="caption" sx={styles.description}>
-          Filtrează conținutul video după preferințele tale
+          Îți vom afișa recenzii video de la clienți reali
         </Typography>
       </Box>
 
@@ -49,7 +49,7 @@ export default FeedFilterVideoReviewsToggle;
 const styles = {
   container: {
     p: 2,
-    borderRadius: 2,
+    borderRadius: 2.5,
     cursor: "pointer",
     bgcolor: "action.hover",
   },

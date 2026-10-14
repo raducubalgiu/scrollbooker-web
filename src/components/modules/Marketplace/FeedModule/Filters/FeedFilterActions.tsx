@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Stack } from "@mui/material";
+import { Button, Fade, Stack } from "@mui/material";
 
 type FeedFilterActionsProps = {
   isClearEnabled: boolean;
@@ -16,13 +16,15 @@ const FeedFilterActions = ({
 }: FeedFilterActionsProps) => {
   return (
     <Stack spacing={1.5} sx={styles.container}>
-      <Button
-        onClick={onClear}
-        disabled={!isClearEnabled}
-        sx={styles.clearButton}
-      >
-        Șterge filtrele
-      </Button>
+      <Fade in={isClearEnabled}>
+        <Button
+          onClick={onClear}
+          disabled={!isClearEnabled}
+          sx={styles.clearButton}
+        >
+          Șterge filtrele
+        </Button>
+      </Fade>
 
       <Button
         fullWidth

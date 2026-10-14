@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   alpha,
+  Box,
   IconButton,
   Theme,
   useMediaQuery,
@@ -118,34 +119,47 @@ export default function UserPostFeedModule({
   };
 
   return (
-    <PostFeedView
-      posts={posts}
-      feed={feed}
-      topLeftSlot={
-        isMobile ? (
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              handleClose();
-            }}
-            size="small"
-            sx={styles.closeButtonMobile}
-          >
-            <CloseIcon fontSize="medium" />
-          </IconButton>
-        ) : (
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              handleClose();
-            }}
-            sx={styles.backButton}
-          >
-            <ArrowBackIcon sx={{ fontSize: "2.1875rem" }} />
-          </IconButton>
-        )
-      }
-    />
+    <Box
+      sx={{
+        // Forțează acest punct din pagină să devină un container fix pe tot ecranul
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        zIndex: 1300, // Se asigură că trece peste orice container limitat de deasupra
+        bgcolor: "background.default", // Fundalul care va acoperi spațiul alb
+      }}
+    >
+      <PostFeedView
+        posts={posts}
+        feed={feed}
+        topLeftSlot={
+          isMobile ? (
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
+              }}
+              size="small"
+              sx={styles.closeButtonMobile}
+            >
+              <CloseIcon fontSize="medium" />
+            </IconButton>
+          ) : (
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
+              }}
+              sx={styles.backButton}
+            >
+              <ArrowBackIcon sx={{ fontSize: "2.1875rem" }} />
+            </IconButton>
+          )
+        }
+      />
+    </Box>
   );
 }
 

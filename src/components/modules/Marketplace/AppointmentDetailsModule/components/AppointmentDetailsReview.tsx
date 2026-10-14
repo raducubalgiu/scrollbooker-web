@@ -41,7 +41,7 @@ const AppointmentDetailsReview = ({
   return (
     <Box mt={5}>
       {writtenReview?.id && (
-        <Box>
+        <Box sx={{ bgcolor: "background.paper", p: 2, borderRadius: 5 }}>
           <Stack
             flexDirection="row"
             alignItems="center"

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Badge,
@@ -16,6 +15,7 @@ import { AppRoutes } from "@/utils/routes";
 import CustomSvg from "../CustomSvg/CustomSvg";
 import HomeIconOutlined from "@/assets/icons/ic_home_outline.svg";
 import HomeIconSolid from "@/assets/icons/ic_home_solid.svg";
+import NextLink from "next/link";
 
 import NotificationsIconOutlined from "@/assets/icons/ic_notifications_outline.svg";
 import NotificationsIconSolid from "@/assets/icons/ic_notifications_solid.svg";
@@ -148,7 +148,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
             <BottomNavigationAction
               key={a.label}
               label={a.label}
-              component={Link}
+              component={NextLink}
               href={a.route}
               icon={
                 <Badge badgeContent={a.badge} color="error" sx={styles.badge}>
