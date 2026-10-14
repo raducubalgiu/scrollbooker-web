@@ -10,6 +10,7 @@ import {
 const PRELOAD_RADIUS = 1;
 const ACTIVE_RATIO_THRESHOLD = 0.6;
 const PROGRAMMATIC_SCROLL_GUARD_MS = 500;
+const SWIPE_MOVE_THRESHOLD_PX = 10;
 
 type FeedVideoPoolProps = {
   posts: Post[];
@@ -131,19 +132,49 @@ export function FeedVideoPool({
 
   // WebKit (Safari/Chrome pe iOS — ambele rulează pe WebKit acolo) e mult
   // mai strict decât Chrome desktop/Android cu privire la autoplay cu
-  // sunet: play() trebuie apelat cât mai aproape de gestul userului, nu
-  // la finalul lanțului IntersectionObserver → setState → effect, care e
+  // sunet: play() trebuie apelat cât mai aproape de gestul userului, nu la
+  // finalul lanțului IntersectionObserver → setState → effect, care e
   // asincron și poate ajunge după ce fereastra de "user activation" a
   // expirat (mai probabil la swipe-uri cu impuls mare, unde settle-ul
-  // scroll-snap durează mai mult). Acest listener apelează play() sincron,
-  // chiar în handler-ul de touchend, pe cel mai probabil video următor —
-  // doar un "nudge" suplimentar; starea de play/pause autoritativă rămâne
-  // integral în PostVideoPlayer.
+  // scroll-snap durează mai mult).
+  //
+  // Doar un touchend nu e suficient ca semnal — se declanșează și la un
+  // tap static pe video (toggle play/pause din PostVideoPlayer), caz în
+  // care un play() aici intră în cursă cu verificarea video.paused din
+  // acel toggle și îi inversează direcția. De-asta urmărim mișcarea reală
+  // dintre touchstart/touchend (un swipe, nu un tap) și nu apelăm play()
+  // dacă cel mai vizibil post e tot cel deja activ — altfel am putea anula
+  // o pauză manuală a userului chiar pe videoul curent.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
+    let startX = 0;
+    let startY = 0;
+    let hasMoved = false;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      startX = touch.clientX;
+      startY = touch.clientY;
+      hasMoved = false;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      if (
+        Math.abs(touch.clientX - startX) > SWIPE_MOVE_THRESHOLD_PX ||
+        Math.abs(touch.clientY - startY) > SWIPE_MOVE_THRESHOLD_PX
+      ) {
+        hasMoved = true;
+      }
+    };
+
     const handleTouchEnd = () => {
+      if (!hasMoved) return;
+
       const containerRect = container.getBoundingClientRect();
       const containerArea = containerRect.width * containerRect.height;
       if (containerArea <= 0) return;
@@ -171,15 +202,31 @@ export function FeedVideoPool({
         }
       });
 
-      if (bestIndex === null || bestRatio < ACTIVE_RATIO_THRESHOLD) return;
+      if (
+        bestIndex === null ||
+        bestRatio < ACTIVE_RATIO_THRESHOLD ||
+        bestIndex === lastSettledIndexRef.current
+      ) {
+        return;
+      }
 
       const el = itemRefs.current.get(bestIndex);
       const video = el?.querySelector("video");
       video?.play().catch(() => {});
     };
 
+    container.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
+    });
+    container.addEventListener("touchmove", handleTouchMove, {
+      passive: true,
+    });
     container.addEventListener("touchend", handleTouchEnd, { passive: true });
-    return () => container.removeEventListener("touchend", handleTouchEnd);
+    return () => {
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handleTouchEnd);
+    };
   }, []);
 
   return (
