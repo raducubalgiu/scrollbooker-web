@@ -2,6 +2,7 @@ import { IconButton, Stack, Typography } from "@mui/material";
 import React from "react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 type AvailabilityActionsProps = {
   activeMonth: string;
@@ -24,15 +25,14 @@ const AvailabiltyActions = ({
       alignItems="center"
       justifyContent="space-between"
       mb={{ xs: 0, md: 3 }}
-      mt={3}
+      mt={1}
     >
-      <Typography
-        variant="h4"
-        fontWeight={800}
-        sx={{ textTransform: "capitalize" }}
-      >
-        {activeMonth}
-      </Typography>
+      <Stack flexDirection="row" alignItems="center" gap={1}>
+        <CalendarMonthIcon />
+        <Typography variant="h6" fontWeight={500}>
+          {activeMonth}
+        </Typography>
+      </Stack>
       <Stack flexDirection="row" gap={1}>
         <IconButton
           onClick={onNavigatePrev}

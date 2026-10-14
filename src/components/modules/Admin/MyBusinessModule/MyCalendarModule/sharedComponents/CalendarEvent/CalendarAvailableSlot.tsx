@@ -17,7 +17,6 @@ type CalendarAvailableSlotProps = {
   globalSx: SxProps<Theme>;
   isBlocking: boolean;
   isSelected: boolean;
-  //isPast: boolean;
   onSlotClick: () => void;
 };
 
@@ -29,7 +28,6 @@ const CalendarAvailableSlot = ({
   //isPast,
   onSlotClick,
 }: CalendarAvailableSlotProps) => {
-  // CORECȚIE CRITICĂ: Adăugăm isPast în dependențele useMemo pentru a recalcula stilul corect
   const memoizedButtonStyle = useMemo(() => {
     return styles.button(isBlocking, isSelected);
   }, [isBlocking, isSelected]);

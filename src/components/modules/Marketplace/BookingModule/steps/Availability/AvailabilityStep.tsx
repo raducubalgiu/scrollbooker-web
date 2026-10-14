@@ -65,7 +65,7 @@ const AvailabilityStep = ({
         fontWeight={800}
         variant="h2"
         mt={{ xs: 0, md: 3 }}
-        sx={{ display: { xs: "none", md: "block" } }}
+        sx={{ display: { xs: "block", md: "block" } }}
       >
         Alege data și ora
       </Typography>

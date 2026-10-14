@@ -43,12 +43,7 @@ const ConfirmStep = ({
 
   return (
     <Box sx={{ minWidth: 0, pb: 4 }}>
-      <Typography
-        fontWeight={800}
-        variant="h2"
-        mt={{ xs: 1, md: 3 }}
-        sx={{ display: { xs: "none", md: "block" } }}
-      >
+      <Typography fontWeight={800} variant="h2" mt={{ xs: 1, md: 3 }}>
         Verifică detaliile
       </Typography>
       <Typography color="text.secondary" mb={5} fontSize={18}>

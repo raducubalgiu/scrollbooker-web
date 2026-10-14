@@ -39,11 +39,16 @@ const AvailableSlot = ({
         };
       }}
     >
-      <Typography variant="h6" fontWeight={600}>
+      <Typography fontWeight={600}>
         {dayjs.utc(slot.start_date_locale).format("HH:mm")}
       </Typography>
 
-      {isSelected && <CheckCircleRoundedIcon color="primary" />}
+      {isSelected && (
+        <CheckCircleRoundedIcon
+          sx={{ fontSize: { xs: 27.5, md: 32.5 } }}
+          color="primary"
+        />
+      )}
     </Stack>
   );
 };

@@ -21,9 +21,11 @@ const ProductDetailContent = ({
         {product?.name}
       </Typography>
 
-      {product?.description && (
-        <Typography color="text.secondary">{product.description}</Typography>
-      )}
+      <Typography color="text.secondary">
+        {product?.description
+          ? product?.description
+          : "Acest serviciu nu conține o descriere"}
+      </Typography>
 
       <Stack
         spacing={{ xs: 2.5, md: 4 }}

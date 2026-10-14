@@ -1,4 +1,11 @@
-import { alpha, AppBar, IconButton, Theme, Toolbar, Typography } from "@mui/material";
+import {
+  alpha,
+  AppBar,
+  IconButton,
+  Theme,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
 
@@ -8,9 +15,6 @@ type BookingAppBarProps = {
   onBack: () => void;
 };
 
-// Titlul pasului apare aici doar pe mobil — pe desktop rămâne afișat în
-// conținutul paginii (fiecare step își are propriul <Typography variant="h2">),
-// ca să economisim spațiu vertical pe ecrane mici.
 const BookingAppBar = ({ headerHeight, title, onBack }: BookingAppBarProps) => {
   return (
     <AppBar
@@ -39,12 +43,7 @@ const BookingAppBar = ({ headerHeight, title, onBack }: BookingAppBarProps) => {
         </IconButton>
 
         {title && (
-          <Typography
-            fontWeight={700}
-            variant="h6"
-            noWrap
-            sx={styles.title}
-          >
+          <Typography fontWeight={700} variant="h6" noWrap sx={styles.title}>
             {title}
           </Typography>
         )}
