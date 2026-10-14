@@ -141,8 +141,18 @@ export const useBookingState = ({
     if (currentStep === BookingStepEnum.CONFIRM) {
       if (!selectedTimeSlot || !userId) return;
 
-      const isEmployee = businessOwnerId !== userId ? userId : null;
-      const targetUserId = isEmployee ? selectedEmployeeId : userId;
+      // selectedEmployeeId e mereu sursa corectă aici — fie preselectat
+      // din URL (profilul unui angajat specific), fie ales explicit în
+      // pasul Specialists (deja validat acolo de isNextDisabled). Cade pe
+      // businessOwnerId doar când n-a fost selectat niciun angajat
+      // vreodată — cazul unic unde asta se întâmplă legitim este un
+      // business solo, fără angajați (pasul Specialists e skip-uit).
+      // Varianta veche (`isEmployee ? selectedEmployeeId : userId`)
+      // ignora selecția reală de fiecare dată când userId === businessOwnerId
+      // (adică exact cazul normal de business CU angajați), recăzând pe
+      // owner indiferent pe cine alesese userul — de-aici eroarea "nu
+      // oferă acest serviciu" chiar și cu un singur produs în coș.
+      const targetUserId = selectedEmployeeId ?? businessOwnerId;
 
       const allItemsHaveOffering = selectedItems.every((item) =>
         item.offerings.some((o) => o.user.id === targetUserId)
