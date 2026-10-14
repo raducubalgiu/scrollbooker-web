@@ -444,6 +444,22 @@ const getComponents = (mode: Mode) => ({
       }),
     },
   },
+
+  MuiCircularProgress: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        "&:not(.MuiButton-root *, .MuiButton-loadingIndicator *)": {
+          width: "26px !important",
+          height: "26px !important",
+
+          [theme.breakpoints.up("md")]: {
+            width: "40px !important",
+            height: "40px !important",
+          },
+        },
+      }),
+    },
+  },
 });
 
 export const darkTheme = createTheme({
