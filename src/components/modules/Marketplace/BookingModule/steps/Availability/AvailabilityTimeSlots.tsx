@@ -2,18 +2,11 @@ import {
   AvailableTimeSlot,
   AvailableTimeslotsResponse,
 } from "@/ts/models/booking/availability/AvailableTimeSlot";
-import {
-  alpha,
-  Box,
-  Button,
-  Skeleton,
-  Stack,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import React from "react";
 import AvailableSlot from "./AvailableSlot";
+import AvailableSlotSkeleton from "./AvailableSlotSkeleton";
 
 type AvailabilityTimeSlotsProps = {
   data: AvailableTimeslotsResponse | undefined;
@@ -36,15 +29,7 @@ const AvailabilityTimeSlots = ({
     <Box sx={styles.slotsPlaceholder}>
       {isLoading &&
         Array.from({ length: 5 }).map((_, i) => (
-          <Stack key={i} flexDirection="row" sx={styles.slotContainer}>
-            <Stack
-              sx={{ height: 30 }}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Skeleton variant="rounded" width={60} height={15} />
-            </Stack>
-          </Stack>
+          <AvailableSlotSkeleton key={i} />
         ))}
 
       {!isLoading && (is_closed || isEmpty(available_slots)) && (
@@ -53,11 +38,10 @@ const AvailabilityTimeSlots = ({
           alignItems="center"
           spacing={2.5}
           sx={{
-            p: 3,
+            p: { xs: 1, md: 3 },
             border: 1.5,
             borderColor: "divider",
             borderRadius: 2.5,
-            minHeight: 300,
           }}
         >
           <Typography variant="h4" fontWeight={600}>
@@ -99,16 +83,4 @@ const styles = {
     mt: { xs: 1.5, md: 4 },
     width: "100%",
   },
-  slotContainer: (theme: Theme) => ({
-    p: 3,
-    border: 1.5,
-    borderColor: "divider",
-    borderRadius: 2.5,
-    mb: 2.5,
-    cursor: "pointer",
-    "&:hover": {
-      color: theme.palette.text.primary + "90",
-      backgroundColor: alpha(theme.palette.divider, 0),
-    },
-  }),
 };

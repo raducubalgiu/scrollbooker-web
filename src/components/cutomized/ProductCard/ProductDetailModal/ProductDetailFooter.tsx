@@ -1,4 +1,7 @@
-import { ProductUtils, ProductVariant } from "@/ts/models/booking/product/Product";
+import {
+  ProductUtils,
+  ProductVariant,
+} from "@/ts/models/booking/product/Product";
 import { Button, Stack, Typography } from "@mui/material";
 import React from "react";
 
@@ -25,14 +28,8 @@ const ProductDetailFooter = ({
       flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
-      bgcolor="background.paper"
-      sx={{
-        zIndex: 1,
-        width: "100%",
-        p: { xs: 2, md: 3 },
-        borderTop: 1,
-        borderColor: "divider",
-      }}
+      bgcolor="background.default"
+      sx={styles.container}
     >
       <Stack spacing={0.5}>
         <Typography variant="h4" fontWeight={600}>
@@ -46,12 +43,7 @@ const ProductDetailFooter = ({
       <Button
         variant="contained"
         disableElevation
-        sx={{
-          py: { xs: 1.25, md: 1.75 },
-          px: { xs: 2.5, md: 3 },
-          fontSize: { xs: 15, md: 18 },
-          fontWeight: 600,
-        }}
+        sx={styles.addButton}
         onClick={onHandleAdd}
       >
         Adaugă
@@ -61,3 +53,19 @@ const ProductDetailFooter = ({
 };
 
 export default ProductDetailFooter;
+
+const styles = {
+  container: {
+    zIndex: 1,
+    width: "100%",
+    p: { xs: 2, md: 3 },
+    borderTop: 1,
+    borderColor: "divider",
+  },
+  addButton: {
+    py: { xs: 1.25, md: 1.75 },
+    px: { xs: 2.5, md: 3 },
+    fontSize: { xs: 15, md: 18 },
+    fontWeight: 600,
+  },
+};

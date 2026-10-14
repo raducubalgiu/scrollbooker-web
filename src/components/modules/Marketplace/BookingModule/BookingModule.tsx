@@ -142,6 +142,9 @@ const BookingModule = (props: BookingModuleProps) => {
           <ConfirmStep
             selectedTimeSlot={selectedTimeSlot}
             address={bookingFlow.business.formatted_address}
+            owner={bookingFlow.business.owner}
+            selectedItems={selectedItems}
+            selectedEmployeeId={selectedEmployeeId}
           />
         );
       default:

@@ -23,7 +23,6 @@ type ProductDetailDrawerProps = {
   onAdd: (item: SelectedBookingItem) => void;
 };
 
-// Varianta mobil — pe desktop se randează ProductDetailModal în locul ei.
 const ProductDetailDrawer = ({
   product,
   open,
