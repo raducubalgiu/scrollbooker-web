@@ -16,6 +16,7 @@ type SpecialistsProps = {
   employees: BookingFlowUser[];
   selectedEmployeeId: number | null;
   onChangeSelectedEmployeeId: (event: SelectChangeEvent<number>) => void;
+  onRemoveItem: (item: SelectedBookingItem) => void;
 };
 
 const Specialists = ({
@@ -23,6 +24,7 @@ const Specialists = ({
   employees,
   selectedEmployeeId,
   onChangeSelectedEmployeeId,
+  onRemoveItem,
 }: SpecialistsProps) => {
   const theme = useTheme();
 
@@ -80,6 +82,7 @@ const Specialists = ({
             item={item}
             eligibleEmployees={eligibleEmployees}
             selectedEmployeeId={selectedEmployeeId}
+            onRemoveItem={onRemoveItem}
           />
         ))
       )}

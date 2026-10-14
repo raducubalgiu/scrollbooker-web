@@ -88,6 +88,21 @@ export const useBookingState = ({
     });
   }, []);
 
+  // La fel ca pe iOS (removeBookingItem): dacă eliminarea golește coșul,
+  // nu mai are sens ca selectedEmployeeId să rămână setat — altfel pasul
+  // de "Verificare servicii" ar rămâne inconsistent (specialist selectat,
+  // dar fără niciun serviciu de verificat).
+  const handleRemoveItem = useCallback(
+    (item: SelectedBookingItem) => {
+      const next = selectedItems.filter((i) => i.productId !== item.productId);
+      setSelectedItems(next);
+      if (next.length === 0) {
+        setSelectedEmployeeId(null);
+      }
+    },
+    [selectedItems]
+  );
+
   const handleDataLoaded = useCallback(
     (products: BusinessServicesWithProducts[]) => {
       if (!selectedProductId || products.length === 0) return;
@@ -213,6 +228,7 @@ export const useBookingState = ({
     setSelectedTimeSlot,
     setSelectedProduct,
     handleSelectItem,
+    handleRemoveItem,
     handleDataLoaded,
     handleNext,
     handleBack,

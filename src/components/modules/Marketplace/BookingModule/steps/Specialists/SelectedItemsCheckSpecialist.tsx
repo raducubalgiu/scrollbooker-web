@@ -1,33 +1,23 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { alpha, Box, useTheme } from "@mui/material";
 import { SelectedBookingItem } from "../../BookingModule";
 import { BookingFlowUser } from "@/ts/models/booking/booking/BookingFlow";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  alpha,
-  Avatar,
-  Box,
-  Button,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ProductUtils } from "@/ts/models/booking/product/Product";
-import { formatPrice } from "@/utils/formatPrice";
+import SelectedItemHeader from "./SelectedItemHeader";
+import SelectedItemStatusRow from "./SelectedItemStatusRow";
+import SelectedItemPriceVariance from "./SelectedItemPriceVariance";
 
 type SelectedItemsCheckSpecialistProps = {
   item: SelectedBookingItem;
   eligibleEmployees: BookingFlowUser[];
   selectedEmployeeId: number | null;
+  onRemoveItem: (item: SelectedBookingItem) => void;
 };
 
 const SelectedItemsCheckSpecialist = ({
   item,
   eligibleEmployees,
   selectedEmployeeId,
+  onRemoveItem,
 }: SelectedItemsCheckSpecialistProps) => {
   const theme = useTheme();
 
@@ -36,13 +26,13 @@ const SelectedItemsCheckSpecialist = ({
   );
   const hasOffering = !!currentOffering;
 
-  const offerings = item.offerings || [];
-  const prices = offerings.map((o) => o.price_with_discount);
-  const hasPriceVariance = offerings.length > 1 && new Set(prices).size > 1;
+  const hasPriceVariance = useMemo(() => {
+    const prices = item.offerings.map((o) => o.price_with_discount);
+    return item.offerings.length > 1 && new Set(prices).size > 1;
+  }, [item.offerings]);
 
   return (
     <Box
-      key={item.productId}
       sx={{
         p: { xs: 1.5, md: 3 },
         mb: { xs: 1, md: 2.5 },
@@ -54,127 +44,25 @@ const SelectedItemsCheckSpecialist = ({
           : alpha(theme.palette.error.main, 0.02),
       }}
     >
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-      >
-        <Box>
-          <Typography fontWeight={700}>{item.productName}</Typography>
-          <Typography color="text.secondary" variant="body2">
-            {item.variantName} •{" "}
-            {ProductUtils.getDurationText(item.variantDuration)}
-          </Typography>
-        </Box>
+      <SelectedItemHeader
+        productName={item.productName}
+        variantName={item.variantName}
+        variantDuration={item.variantDuration}
+        hasOffering={hasOffering}
+        price={currentOffering?.price_with_discount}
+      />
 
-        {hasOffering && (
-          <Typography variant="h6" fontWeight={700}>
-            {formatPrice(currentOffering.price_with_discount)} RON
-          </Typography>
-        )}
-      </Stack>
-
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mt={3}
-      >
-        <Stack direction="row" alignItems="center" gap={1.5}>
-          <Box
-            sx={{
-              width: 10,
-              height: 10,
-              borderRadius: "50%",
-              bgcolor: hasOffering ? "success.main" : "error.main",
-              boxShadow: `0 0 0 4px ${hasOffering ? alpha(theme.palette.success.main, 0.1) : alpha(theme.palette.error.main, 0.1)}`,
-            }}
-          />
-          <Typography
-            fontWeight={600}
-            color={hasOffering ? "success.main" : "error.main"}
-            fontSize={15}
-          >
-            {hasOffering
-              ? "Disponibil la acest specialist"
-              : "Nu oferă acest serviciu"}
-          </Typography>
-        </Stack>
-
-        {!hasOffering && (
-          <Button
-            color="error"
-            variant="text"
-            startIcon={<DeleteOutlineOutlinedIcon />}
-            onClick={() => {}}
-            sx={{ fontWeight: 700, textTransform: "none" }}
-          >
-            Elimină
-          </Button>
-        )}
-      </Stack>
+      <SelectedItemStatusRow
+        hasOffering={hasOffering}
+        onRemove={() => onRemoveItem(item)}
+      />
 
       {hasPriceVariance && (
-        <Accordion
-          elevation={0}
-          sx={{
-            mt: 2,
-            bgcolor: alpha(theme.palette.action.hover, 0.04),
-            borderRadius: "12px !important",
-            "&:before": { display: "none" },
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ fontSize: 20 }} />}
-          >
-            <Typography fontSize={14} fontWeight={600} color="text.secondary">
-              Preturile difera in functie de specialist
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails sx={{ pt: 0 }}>
-            <Stack spacing={1.5}>
-              {eligibleEmployees.map((emp) => {
-                const offering = item.offerings.find(
-                  (o) => o.user.id === emp.id
-                );
-                const isCurrentlySelected = emp.id === selectedEmployeeId;
-
-                return (
-                  <Stack
-                    key={emp.id}
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    sx={{
-                      opacity: offering ? 1 : 0.4,
-                      bgcolor: isCurrentlySelected
-                        ? alpha(theme.palette.primary.main, 0.08)
-                        : "transparent",
-                      p: 1,
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Stack direction="row" alignItems="center" gap={1.5}>
-                      <Avatar
-                        src={emp.avatar ?? ""}
-                        sx={{ width: 28, height: 28 }}
-                      />
-                      <Typography
-                        fontSize={14}
-                        fontWeight={isCurrentlySelected ? 700 : 500}
-                      >
-                        {emp.fullname} {isCurrentlySelected && "(Selectat)"}
-                      </Typography>
-                    </Stack>
-                    <Typography fontSize={14} fontWeight={700}>
-                      {offering ? `${offering.price_with_discount} RON` : "N/A"}
-                    </Typography>
-                  </Stack>
-                );
-              })}
-            </Stack>
-          </AccordionDetails>
-        </Accordion>
+        <SelectedItemPriceVariance
+          item={item}
+          eligibleEmployees={eligibleEmployees}
+          selectedEmployeeId={selectedEmployeeId}
+        />
       )}
     </Box>
   );

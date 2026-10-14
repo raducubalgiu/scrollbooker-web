@@ -81,6 +81,7 @@ const BookingModule = (props: BookingModuleProps) => {
     setSelectedTimeSlot,
     setSelectedProduct,
     handleSelectItem,
+    handleRemoveItem,
     handleDataLoaded,
     handleNext,
     handleBack,
@@ -122,6 +123,7 @@ const BookingModule = (props: BookingModuleProps) => {
             onChangeSelectedEmployeeId={(e) =>
               setSelectedEmployeeId(Number(e.target.value))
             }
+            onRemoveItem={handleRemoveItem}
           />
         );
       case BookingStepEnum.DATE_AND_HOUR:
