@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { usePathname } from "next/navigation";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { ThemeModeEnum } from "./ThemeModeEnum";
@@ -85,8 +84,6 @@ export function ThemeModeProvider({
     return mode;
   }, [mode, systemPrefersDarkMode]);
 
-  const pathname = usePathname();
-
   React.useLayoutEffect(() => {
     const html = document.documentElement;
     html.setAttribute("data-theme", resolvedMode);
@@ -105,7 +102,7 @@ export function ThemeModeProvider({
           : lightTheme.palette.background.default);
       meta.setAttribute("content", color);
     }
-  }, [resolvedMode, chromeOverrides, pathname]);
+  }, [resolvedMode, chromeOverrides]);
 
   const setMode = React.useCallback((nextMode: ThemeModeEnum) => {
     setModeState(nextMode);
