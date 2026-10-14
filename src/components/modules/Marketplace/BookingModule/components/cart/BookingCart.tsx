@@ -1,10 +1,10 @@
 import { alpha, Box, Theme } from "@mui/material";
-import { useMemo } from "react";
 import { BookingStepEnum, SelectedBookingItem } from "../../BookingModule";
 import BookingCartHeader from "./BookingCartHeader";
 import BookingCartActions from "./BookingCartActions";
 import BookingCartTotals from "./BookingCartTotals";
 import BookingCartContent from "./BookingCartContent";
+import { useBookingCartTotals } from "./useBookingCartTotals";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { BookingFlowUser } from "@/ts/models/booking/booking/BookingFlow";
@@ -23,7 +23,6 @@ type BookingCartProps = {
   isNextDisabled: boolean;
   isLoadingNext: boolean;
   onNext: () => void;
-  onBack: () => void;
 };
 
 const BookingCart = ({
@@ -33,47 +32,12 @@ const BookingCart = ({
   isNextDisabled,
   isLoadingNext,
   currentStep,
-  onBack,
   onNext,
 }: BookingCartProps) => {
-  const isFirstStep = currentStep === BookingStepEnum.SERVICES;
   const isLastStep = currentStep === BookingStepEnum.CONFIRM;
   const { selectedEmployeeId } = employeeData;
 
-  const totals = useMemo(() => {
-    let minTotal = 0;
-    let fixedTotal = 0;
-    let hasGlobalVariance = false;
-    let totalDuration = 0;
-
-    selectedItems?.forEach((item) => {
-      const offerings = item.offerings || [];
-      const prices = offerings.map((o) => Number(o.price_with_discount));
-
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-
-      if (offerings.length > 1 && minPrice !== maxPrice) {
-        hasGlobalVariance = true;
-      }
-
-      const currentOffering = offerings.find(
-        (o) => o.user.id === selectedEmployeeId
-      );
-
-      minTotal += minPrice;
-      fixedTotal += currentOffering
-        ? Number(currentOffering.price_with_discount)
-        : minPrice;
-      totalDuration += item.variantDuration;
-    });
-
-    return {
-      displayPrice: selectedEmployeeId ? fixedTotal : minTotal,
-      showFromLabel: !selectedEmployeeId && hasGlobalVariance,
-      totalDuration,
-    };
-  }, [selectedItems, selectedEmployeeId]);
+  const totals = useBookingCartTotals(selectedItems, selectedEmployeeId);
 
   return (
     <Box sx={styles.container}>
@@ -94,11 +58,9 @@ const BookingCart = ({
 
         <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
           <BookingCartActions
-            isFirstStep={isFirstStep}
             isLastStep={isLastStep}
             isLoadingNext={isLoadingNext}
             isNextDisabled={isNextDisabled}
-            onBack={onBack}
             onNext={onNext}
           />
         </Protected>

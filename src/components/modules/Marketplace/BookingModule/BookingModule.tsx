@@ -12,6 +12,7 @@ import { Product, ProductOffering } from "@/ts/models/booking/product/Product";
 import { sumBy } from "lodash";
 import ConfirmStep from "./steps/Confirm/ConfirmStep";
 import BookingCart from "./components/cart/BookingCart";
+import BookingBottomBar from "./components/BookingBottomBar";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
 import { useBookingState } from "./useBookingState";
 import { BookingFlow } from "@/ts/models/booking/booking/BookingFlow";
@@ -146,9 +147,15 @@ const BookingModule = (props: BookingModuleProps) => {
     <Box sx={{ minHeight: "100vh" }}>
       <BookingAppBar
         headerHeight={isMobile ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT}
-        onBack={() => router.back()}
+        onBack={() => {
+          if (currentStep === BookingStepEnum.SERVICES) {
+            router.back();
+          } else {
+            handleBack();
+          }
+        }}
       />
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ pb: { xs: 14, md: 0 } }}>
         <BookingBreadcrumbs
           currentStep={currentStep}
           shouldSkipSpecialistsStep={shouldSkipSpecialistsStep}
@@ -173,10 +180,18 @@ const BookingModule = (props: BookingModuleProps) => {
             isNextDisabled={isNextDisabled}
             isLoadingNext={isPending}
             onNext={handleNext}
-            onBack={handleBack}
           />
         </Box>
       </Container>
+
+      <BookingBottomBar
+        selectedItems={selectedItems}
+        employeeData={employeeData}
+        currentStep={currentStep}
+        isNextDisabled={isNextDisabled}
+        isLoadingNext={isPending}
+        onNext={handleNext}
+      />
 
       {selectedProduct.open && (
         <ProductDetailModal
