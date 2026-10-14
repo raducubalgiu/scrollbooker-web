@@ -22,9 +22,12 @@ export default function MainLayout({
   onOpenModal,
   sx = {},
 }: MainLayoutProps) {
+  const hasBothTitleAndDesc = !!(title?.trim() && description?.trim());
+  const hasMobileHeaderContent = hasBothTitleAndDesc || !hideAction;
+
   return (
     <Box sx={styles.container}>
-      <HeaderMobile />
+      <HeaderMobile title={!hasBothTitleAndDesc ? title : undefined} />
 
       <Box sx={styles.main}>
         <Box sx={[{ p: 2.5 }, ...(Array.isArray(sx) ? sx : [sx])]}>
@@ -33,18 +36,30 @@ export default function MainLayout({
               flexDirection="row"
               alignItems="center"
               justifyContent="space-between"
-              sx={{ mb: 2.5 }}
+              sx={{
+                mb: { xs: hasMobileHeaderContent ? 2.5 : 0, lg: 2.5 },
+              }}
             >
               <Box>
-                <Typography fontWeight={700} variant="h4">
+                <Typography
+                  fontWeight={700}
+                  variant="h4"
+                  sx={
+                    !hasBothTitleAndDesc
+                      ? { display: { xs: "none", lg: "block" } }
+                      : {}
+                  }
+                >
                   {title}
                 </Typography>
+
                 {description && (
                   <Typography variant="body1" color="text.secondary">
                     {description}
                   </Typography>
                 )}
               </Box>
+
               {!hideAction && (
                 <Button
                   onClick={onOpenModal}

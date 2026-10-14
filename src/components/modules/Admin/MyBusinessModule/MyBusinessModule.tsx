@@ -117,7 +117,7 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
   }, [pages, hasEmployees, isEmployee, permissions]);
 
   return (
-    <MainLayout hideAction showHeader={false}>
+    <MainLayout hideAction title="Afacerea mea">
       <Box sx={{ height: "100%" }}>
         <Grid container columnSpacing={1} rowSpacing={1} sx={{ width: "100%" }}>
           {visiblePages.map((page, index) => (

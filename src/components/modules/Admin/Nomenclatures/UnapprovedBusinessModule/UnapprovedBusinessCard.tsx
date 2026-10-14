@@ -1,4 +1,12 @@
-import { Avatar, Box, Button, Divider, Stack, Typography, alpha } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Stack,
+  Typography,
+  alpha,
+} from "@mui/material";
 import { UnapprovedBusinessResponse } from "@/ts/models/booking/business/UnapprovedBusinessResponse";
 
 type UnapprovedBusinessCardProps = {
@@ -58,16 +66,28 @@ export default function UnapprovedBusinessCard({
         </Typography>
       </Box>
 
-      <Button
-        variant="contained"
-        fullWidth
-        loading={isApproving}
-        disabled={isApproving}
-        onClick={onApprove}
-        sx={{ mt: 3 }}
-      >
-        Aprobă
-      </Button>
+      <Stack flexDirection="row" alignItems="center" gap={1} mt={3}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          fullWidth
+          onClick={() => {}}
+          disableElevation
+        >
+          Respinge
+        </Button>
+
+        <Button
+          variant="contained"
+          fullWidth
+          loading={isApproving}
+          disabled={isApproving}
+          onClick={onApprove}
+          disableElevation
+        >
+          Aprobă
+        </Button>
+      </Stack>
     </Box>
   );
 }

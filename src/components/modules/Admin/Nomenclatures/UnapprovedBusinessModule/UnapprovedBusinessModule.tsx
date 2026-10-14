@@ -1,6 +1,12 @@
 "use client";
 
-import { Button, CircularProgress, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import {
   useApproveBusiness,
@@ -55,15 +61,27 @@ export default function UnapprovedBusinessModule() {
       )}
 
       {!isLoading && !isError && businesses.length > 0 && (
-        <Stack spacing={2}>
-          {businesses.map((item) => (
-            <UnapprovedBusinessCard
-              key={item.id}
-              item={item}
-              isApproving={isPending && approvingUserId === item.id}
-              onApprove={() => approveBusiness(item.id)}
-            />
-          ))}
+        // Folosim un Stack principal doar pentru a ține grid-ul și butonul de "Încarcă mai multe" separate vertical
+        <Stack spacing={4}>
+          {/* Containerul pentru carduri convertit în CSS Grid responsiv */}
+          <Box
+            sx={{
+              display: "grid",
+              // 1 coloană pe mobil (xs), 2 coloane pe desktop (md)
+              gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+              gap: 2, // Spațiul dintre carduri (echivalentul la spacing={2} din Stack)
+              width: "100%",
+            }}
+          >
+            {businesses.map((item) => (
+              <UnapprovedBusinessCard
+                key={item.id}
+                item={item}
+                isApproving={isPending && approvingUserId === item.id}
+                onApprove={() => approveBusiness(item.id)}
+              />
+            ))}
+          </Box>
 
           {hasNextPage && (
             <Stack alignItems="center" sx={{ pt: 1 }}>
