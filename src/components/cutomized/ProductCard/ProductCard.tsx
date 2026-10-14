@@ -111,7 +111,7 @@ const ProductCard = ({
       sx={[
         {
           bgcolor: "background.default",
-          p: 2.5,
+          p: { xs: 1.5, md: 2.5 },
           borderRadius: 2.5,
           border: 1.5,
           borderColor: "divider",
