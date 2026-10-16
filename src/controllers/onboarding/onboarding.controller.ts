@@ -115,6 +115,7 @@ export const useCollectBusinessGalleryMutation = () => {
       return response.data;
     },
     onSuccess: invalidateUserInfo,
+    meta: { skipErrorToast: true },
   });
 };
 

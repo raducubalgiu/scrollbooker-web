@@ -49,9 +49,6 @@ export default function MyBusinessDescriptionTab({
           setIsEditing(false);
           toast.success("Descrierea a fost salvată cu succes.");
         },
-        onError: () => {
-          toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu.");
-        },
       }
     );
   };

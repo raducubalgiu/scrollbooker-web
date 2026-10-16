@@ -90,9 +90,6 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
         toast.success("Serviciul a fost șters cu succes!");
         handleCloseDeleteConfirm();
       },
-      onError: () => {
-        toast.error("A apărut o eroare la ștergerea serviciului.");
-      },
     });
   };
 

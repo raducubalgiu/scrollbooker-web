@@ -83,9 +83,6 @@ export default function BusinessDomainsModule() {
         toast.success("Domeniul a fost șters cu succes!");
         handleCloseDeleteModal();
       },
-      onError: () => {
-        toast.error("A apărut o eroare la ștergere.");
-      },
     });
   };
 
@@ -100,7 +97,6 @@ export default function BusinessDomainsModule() {
             toast.success("Domeniul a fost modificat cu succes!");
             handleCloseModal();
           },
-          onError: () => toast.error("Eroare la modificarea domeniului."),
         }
       );
     } else {
@@ -109,7 +105,6 @@ export default function BusinessDomainsModule() {
           toast.success("Domeniul a fost adăugat cu succes!");
           handleCloseModal();
         },
-        onError: () => toast.error("Eroare la adăugarea domeniului."),
       });
     }
   };

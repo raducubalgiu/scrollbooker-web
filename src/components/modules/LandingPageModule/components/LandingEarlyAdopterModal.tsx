@@ -14,7 +14,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { useTranslations } from "next-intl";
-import { toast } from "react-toastify";
 import Input from "@/components/core/Input/Input";
 import { emailField, required } from "@/utils/validation-rules";
 import { useCreateEarlyAdopterMutation } from "@/controllers/earlyAdopters/earlyAdopters.controller";
@@ -58,7 +57,6 @@ export default function LandingEarlyAdopterModal({
       },
       {
         onSuccess: () => setSubmitted(true),
-        onError: () => toast.error(t("errorMessage")),
       }
     );
   };

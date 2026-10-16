@@ -94,8 +94,6 @@ export default function ServiceDomainsModule() {
             toast.success("Domeniul de serviciu a fost modificat cu succes!");
             handleCloseModal();
           },
-          onError: () =>
-            toast.error("Eroare la modificarea domeniului de serviciu."),
         }
       );
     } else {
@@ -104,8 +102,6 @@ export default function ServiceDomainsModule() {
           toast.success("Domeniul de serviciu a fost adăugat cu succes!");
           handleCloseModal();
         },
-        onError: () =>
-          toast.error("Eroare la adăugarea domeniului de serviciu."),
       });
     }
   };
@@ -117,9 +113,6 @@ export default function ServiceDomainsModule() {
       onSuccess: () => {
         toast.success("Domeniul de serviciu a fost șters cu succes!");
         handleCloseDeleteModal();
-      },
-      onError: () => {
-        toast.error("A apărut o eroare la ștergere.");
       },
     });
   };

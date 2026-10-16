@@ -44,9 +44,6 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
         onSuccess: () => {
           toast.success(t("saveSuccess"));
         },
-        onError: (err) => {
-          toast.error(t("saveError", { message: err.message }));
-        },
       }
     );
   };

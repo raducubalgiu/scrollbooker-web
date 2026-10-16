@@ -199,9 +199,6 @@ const AddProductModal = ({
           toast.success("Serviciul a fost creat cu succes!");
           handleResetAndClose();
         },
-        onError: () => {
-          toast.error("A apărut o eroare la crearea serviciului.");
-        },
       }
     );
   };

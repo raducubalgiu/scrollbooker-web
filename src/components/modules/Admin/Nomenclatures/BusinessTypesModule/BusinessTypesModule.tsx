@@ -100,8 +100,6 @@ export default function BusinessTypesModule({
             toast.success("Tipul de business a fost modificat cu succes!");
             handleCloseModal();
           },
-          onError: () =>
-            toast.error("Eroare la modificarea tipului de business."),
         }
       );
     } else {
@@ -110,7 +108,6 @@ export default function BusinessTypesModule({
           toast.success("Tipul de business a fost adăugat cu succes!");
           handleCloseModal();
         },
-        onError: () => toast.error("Eroare la adăugarea tipului de business."),
       });
     }
   };
@@ -123,7 +120,6 @@ export default function BusinessTypesModule({
         toast.success("Tipul de business a fost șters cu succes!");
         handleCloseDeleteModal();
       },
-      onError: () => toast.error("A apărut o eroare la ștergere."),
     });
   };
 

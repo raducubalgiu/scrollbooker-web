@@ -59,7 +59,6 @@ const ClientSelectionContent = ({
           setNewFullname("");
           setNewPhone("");
         },
-        onError: () => toast.error("Eroare la adăugarea clientului."),
       }
     );
   };

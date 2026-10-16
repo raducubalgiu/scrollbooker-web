@@ -77,7 +77,6 @@ export default function EmploymentRequestsModal({
         handleResetAndClose();
       },
       onError: (error) => {
-        toast.error("A apărut o eroare la trimiterea cererii.");
         console.error(error);
       },
     });

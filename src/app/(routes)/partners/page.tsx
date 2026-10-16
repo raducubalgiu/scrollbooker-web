@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { useTranslations } from "next-intl";
@@ -73,7 +72,6 @@ export default function PartnersPage() {
       },
       onError: () => {
         trackBusinessLeadError();
-        toast.error(t("genericError"));
       },
     });
   };

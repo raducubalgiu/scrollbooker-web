@@ -78,7 +78,6 @@ const ServicesByServiceDomainModule = ({
         {
           onSuccess: () =>
             toast.success(`Serviciul "${service.name}" a fost atașat.`),
-          onError: () => toast.error("Eroare la atașarea serviciului."),
         }
       );
     },
@@ -95,7 +94,6 @@ const ServicesByServiceDomainModule = ({
         {
           onSuccess: () =>
             toast.success(`Serviciul "${service.name}" a fost detașat.`),
-          onError: () => toast.error("Eroare la detașarea serviciului."),
         }
       );
     },

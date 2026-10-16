@@ -84,7 +84,6 @@ const ConsentsModule = () => {
             toast.success("Consimțământul a fost modificat cu succes!");
             handleCloseModal();
           },
-          onError: () => toast.error("Eroare la modificarea consimțământului."),
         }
       );
     } else {
@@ -93,7 +92,6 @@ const ConsentsModule = () => {
           toast.success("Consimțământul a fost adăugat cu succes!");
           handleCloseModal();
         },
-        onError: () => toast.error("Eroare la adăugarea consimțământului."),
       });
     }
   };
@@ -106,8 +104,6 @@ const ConsentsModule = () => {
         toast.success("Consimțământul a fost șters cu succes!");
         handleCloseDeleteModal();
       },
-      onError: () =>
-        toast.error("A apărut o eroare la ștergerea consimțământului."),
     });
   };
 

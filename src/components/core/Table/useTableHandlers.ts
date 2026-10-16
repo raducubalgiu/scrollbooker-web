@@ -17,8 +17,6 @@ type UseTableHandlersProps = {
   manualPagination?: boolean;
   enabled?: boolean;
 };
-const errorMessage = "Ceva nu a mers cum trebuie. Încearcă mai târziu";
-
 export default function useTableHandlers<T extends Record<string, unknown>>({
   route,
   extraParams = {},
@@ -47,10 +45,7 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
     url: `/api/${route}`,
     method: "POST",
     options: {
-      onError: () => {
-        setIsMutateAction(false);
-        toast.error(errorMessage);
-      },
+      onError: () => setIsMutateAction(false),
     },
   });
 
@@ -68,10 +63,7 @@ export default function useTableHandlers<T extends Record<string, unknown>>({
     url: `/api/${route}`,
     method: "DELETE",
     options: {
-      onError: () => {
-        setIsMutateAction(false);
-        toast.error("Ceva nu a mers cum trebuie. Încearcă mai târziu");
-      },
+      onError: () => setIsMutateAction(false),
     },
   });
 

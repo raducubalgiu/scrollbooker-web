@@ -93,7 +93,6 @@ export default function FiltersModule() {
             toast.success("Filtrul a fost modificat cu succes!");
             handleCloseModal();
           },
-          onError: () => toast.error("Eroare la modificarea filtrului."),
         }
       );
     } else {
@@ -102,7 +101,6 @@ export default function FiltersModule() {
           toast.success("Filtrul a fost adăugat cu succes!");
           handleCloseModal();
         },
-        onError: () => toast.error("Eroare la adăugarea filtrului."),
       });
     }
   };
@@ -114,9 +112,6 @@ export default function FiltersModule() {
       onSuccess: () => {
         toast.success("Filtrul a fost șters cu succes!");
         handleCloseDeleteModal();
-      },
-      onError: () => {
-        toast.error("A apărut o eroare la ștergerea filtrului.");
       },
     });
   };

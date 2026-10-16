@@ -52,6 +52,7 @@ export const useVerifyEmailMutation = () => {
       );
       return response.data;
     },
+    meta: { skipErrorToast: true },
   });
 };
 

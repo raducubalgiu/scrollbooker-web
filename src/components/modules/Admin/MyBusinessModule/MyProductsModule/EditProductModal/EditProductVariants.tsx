@@ -190,7 +190,6 @@ const EditProductVariants = ({
             setSavingIndex(null);
           },
           onError: () => {
-            toast.error("A apărut o eroare la adăugarea opțiunii.");
             setSavingIndex(null);
           },
         }
@@ -207,7 +206,6 @@ const EditProductVariants = ({
           setSavingIndex(null);
         },
         onError: () => {
-          toast.error("A apărut o eroare la salvarea opțiunii.");
           setSavingIndex(null);
         },
       }
@@ -243,9 +241,6 @@ const EditProductVariants = ({
           );
           setDeleteTarget(null);
           toast.success("Opțiunea a fost ștearsă.");
-        },
-        onError: () => {
-          toast.error("A apărut o eroare la ștergerea opțiunii.");
         },
       }
     );

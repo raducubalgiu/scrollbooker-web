@@ -185,6 +185,7 @@ export const useUpdateBusinessGalleryMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-business-details"] });
     },
+    meta: { skipErrorToast: true },
   });
 };
 

@@ -86,7 +86,6 @@ export default function ProfessionsModule({
             toast.success("Profesia a fost modificată cu succes!");
             handleCloseModal();
           },
-          onError: () => toast.error("Eroare la modificarea profesiei."),
         }
       );
     } else {
@@ -95,7 +94,6 @@ export default function ProfessionsModule({
           toast.success("Profesia a fost adăugată cu succes!");
           handleCloseModal();
         },
-        onError: () => toast.error("Eroare la adăugarea profesiei."),
       });
     }
   };
@@ -108,7 +106,6 @@ export default function ProfessionsModule({
         toast.success("Profesia a fost ștearsă cu succes!");
         handleCloseDeleteModal();
       },
-      onError: () => toast.error("A apărut o eroare la ștergerea profesiei."),
     });
   };
 

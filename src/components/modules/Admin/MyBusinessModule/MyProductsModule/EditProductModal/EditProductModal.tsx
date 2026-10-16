@@ -95,9 +95,6 @@ const EditProductModal = ({
         onSuccess: () => {
           toast.success("Informațiile serviciului au fost actualizate.");
         },
-        onError: () => {
-          toast.error("A apărut o eroare la salvarea informațiilor.");
-        },
       }
     );
   };

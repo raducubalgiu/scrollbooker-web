@@ -138,9 +138,6 @@ const EditOptionDrawer = ({
             toast.success("Opțiunea a fost adăugată.");
             onSaved(freshProduct);
           },
-          onError: () => {
-            toast.error("A apărut o eroare la adăugarea opțiunii.");
-          },
         }
       );
       return;
@@ -152,9 +149,6 @@ const EditOptionDrawer = ({
         onSuccess: (freshProduct) => {
           toast.success("Opțiunea a fost actualizată.");
           onSaved(freshProduct);
-        },
-        onError: () => {
-          toast.error("A apărut o eroare la salvarea opțiunii.");
         },
       }
     );

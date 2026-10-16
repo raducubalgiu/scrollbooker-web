@@ -85,7 +85,6 @@ export default function CollectEmailVerificationStep() {
         setCooldown(RESEND_COOLDOWN_SECONDS);
       },
       onError: () => {
-        toast.error(t("errorGeneric"));
         setCooldown(RESEND_COOLDOWN_SECONDS);
       },
     });

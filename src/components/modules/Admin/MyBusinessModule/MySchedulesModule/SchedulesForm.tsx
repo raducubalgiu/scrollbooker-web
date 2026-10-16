@@ -65,7 +65,6 @@ export const SchedulesForm = ({ initialSchedules }: SchedulesFormProps) => {
       },
       onError: () => {
         reset();
-        toast.error(t("saveError"));
       },
     });
   };

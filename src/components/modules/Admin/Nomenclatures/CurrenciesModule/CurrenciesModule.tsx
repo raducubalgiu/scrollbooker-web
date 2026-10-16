@@ -85,7 +85,6 @@ export default function CurrenciesModule() {
             toast.success("Moneda a fost modificată cu succes!");
             handleCloseModal();
           },
-          onError: () => toast.error("Eroare la modificarea monedei."),
         }
       );
     } else {
@@ -94,7 +93,6 @@ export default function CurrenciesModule() {
           toast.success("Moneda a fost adăugată cu succes!");
           handleCloseModal();
         },
-        onError: () => toast.error("Eroare la adăugarea monedei."),
       });
     }
   };
@@ -106,9 +104,6 @@ export default function CurrenciesModule() {
       onSuccess: () => {
         toast.success("Moneda a fost ștearsă cu succes!");
         handleCloseDeleteModal();
-      },
-      onError: () => {
-        toast.error("A apărut o eroare la ștergerea monedei.");
       },
     });
   };
