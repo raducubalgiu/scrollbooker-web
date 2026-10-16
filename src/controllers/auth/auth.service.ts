@@ -16,9 +16,15 @@ export type DecodedAccessToken = {
   exp: number;
 };
 
+function extractBackendDetail(error: unknown): string | undefined {
+  const axiosError = error as { response?: { data?: { detail?: unknown } } };
+  const detail = axiosError?.response?.data?.detail;
+  return typeof detail === "string" ? detail : undefined;
+}
+
 export async function registerWithCredentials(
   registerPayload: UserRegister
-): Promise<AuthTokens | null> {
+): Promise<AuthTokens> {
   try {
     const response = await axios.post<AuthTokens>(
       `${BACKEND_URL}/auth/register`,
@@ -42,14 +48,14 @@ export async function registerWithCredentials(
       );
     }
 
-    return null;
+    throw new Error(extractBackendDetail(error) ?? "generic");
   }
 }
 
 export async function loginWithCredentials(
   username: string,
   password: string
-): Promise<AuthTokens | null> {
+): Promise<AuthTokens> {
   try {
     const response = await axios.post<AuthTokens>(
       `${BACKEND_URL}/auth/login`,
@@ -74,7 +80,7 @@ export async function loginWithCredentials(
       );
     }
 
-    return null;
+    throw new Error(extractBackendDetail(error) ?? "generic");
   }
 }
 

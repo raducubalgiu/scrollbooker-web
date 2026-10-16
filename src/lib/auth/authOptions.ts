@@ -98,13 +98,12 @@ export const authOptions: AuthOptions = {
       ): Promise<User | null> {
         const { username, password } = credentials || {};
 
-        if (!username || !password) return null;
+        if (!username || !password) throw new Error("generic");
 
         const auth = await loginWithCredentials(username, password);
-        if (!auth) return null;
 
         const decoded = await verifyAccessToken(auth.access_token);
-        if (!decoded) return null;
+        if (!decoded) throw new Error("generic");
 
         const user: User = {
           id: String(decoded.id),

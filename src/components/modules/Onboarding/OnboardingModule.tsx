@@ -2,7 +2,6 @@
 
 import React, { useMemo } from "react";
 import { Session } from "next-auth";
-import Link from "next/link";
 import {
   Box,
   Button,
@@ -12,7 +11,6 @@ import {
   Stepper,
   Grid2 as Grid,
   Typography,
-  useTheme,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { signOut } from "next-auth/react";
@@ -21,8 +19,7 @@ import {
   displayStepLabel,
   RegistrationStepEnum,
 } from "@/ts/enums/RegistrationStepEnum";
-import { AppRoutes } from "@/utils/routes";
-import AppLogo from "@/components/core/Logo/AppLogo";
+import TopBar from "@/components/core/TopBar/TopBar";
 import { useTranslations } from "next-intl";
 
 import CollectEmailVerificationStep from "./shared/CollectEmailVerification";
@@ -42,7 +39,6 @@ type OnboardingModuleProps = {
 };
 
 export default function OnboardingModule({ session }: OnboardingModuleProps) {
-  const theme = useTheme();
   const t = useTranslations("onboarding");
   const step = session?.registration_step;
 
@@ -90,25 +86,19 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
 
   return (
     <Box sx={styles.outer}>
-      <Box sx={styles.topBar}>
-        <Box
-          component={Link}
-          href={AppRoutes.home()}
-          sx={{ display: "inline-flex", lineHeight: 0 }}
-        >
-          <AppLogo height={26} color={theme.palette.text.primary} />
-        </Box>
-
-        <Button
-          size="small"
-          color="inherit"
-          startIcon={<LogoutIcon fontSize="small" />}
-          onClick={() => signOut()}
-          sx={{ textTransform: "none", color: "text.secondary" }}
-        >
-          {t("logout")}
-        </Button>
-      </Box>
+      <TopBar
+        rightContent={
+          <Button
+            size="small"
+            color="inherit"
+            startIcon={<LogoutIcon fontSize="small" />}
+            onClick={() => signOut()}
+            sx={{ textTransform: "none", color: "text.secondary" }}
+          >
+            {t("logout")}
+          </Button>
+        }
+      />
 
       <Box sx={styles.contentArea}>
         <Container maxWidth="xl" sx={{ height: "100%" }}>
@@ -154,16 +144,6 @@ const styles = {
     height: "100dvh",
     display: "flex",
     flexDirection: "column",
-  },
-  topBar: {
-    flexShrink: 0,
-    height: 68,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    px: { xs: 2, md: 4 },
-    borderBottom: "1px solid",
-    borderColor: "divider",
   },
   contentArea: {
     flex: 1,

@@ -1,59 +1,56 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { signIn } from "next-auth/react";
-import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
-import NextLink from "next/link";
 import { toast } from "react-toastify";
-import AppleIcon from "@mui/icons-material/Apple";
 import { useTranslations } from "next-intl";
 
-import Input from "@/components/core/Input/Input";
-import GoogleIcon from "@/components/core/icons/GoogleIcon";
-import { required } from "@/utils/validation-rules";
 import { AppRoutes } from "@/utils/routes";
-import LandingLogo from "@/components/modules/LandingPageModule/components/LandingLogo";
+import TopBar from "@/components/core/TopBar/TopBar";
+import AuthForm, { AuthFormValues } from "@/components/modules/AuthModule/AuthForm";
 
-type SignInForm = {
-  username: string;
-  password: string;
-};
-
-const oauthButtonSx = {
-  borderColor: "divider",
-  color: "text.primary",
-  textTransform: "none" as const,
-  fontWeight: 600,
-  "&:hover": {
-    borderColor: "text.secondary",
-    backgroundColor: "action.hover",
+const identifierOptions = (t: ReturnType<typeof useTranslations<"signin">>) => [
+  {
+    value: "email" as const,
+    label: t("identifierEmail"),
+    placeholder: t("identifierEmailPlaceholder"),
   },
-};
+  {
+    value: "username" as const,
+    label: t("identifierUsername"),
+    placeholder: t("identifierUsernamePlaceholder"),
+  },
+  {
+    value: "phone" as const,
+    label: t("identifierPhone"),
+    placeholder: t("identifierPhonePlaceholder"),
+  },
+];
+
+function loginErrorMessage(
+  detail: string | undefined,
+  t: ReturnType<typeof useTranslations<"signin">>
+): string {
+  switch (detail) {
+    case "This user is not registered yet":
+      return t("errorUserNotFound");
+    case "This account uses Google Sign-In. Please use Google to log in.":
+      return t("errorGoogleAccount");
+    case "Invalid username or password":
+      return t("errorInvalidCredentials");
+    default:
+      return t("errorGeneric");
+  }
+}
 
 export default function SignInPage() {
   const t = useTranslations("signin");
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const methods = useForm<SignInForm>({
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
   const [loading, setLoading] = useState(false);
-  //const [googleLoading, setGoogleLoading] = useState(false);
-  const isRequired = required();
 
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
@@ -66,16 +63,15 @@ export default function SignInPage() {
   }, [searchParams, router, t]);
 
   const handleGoogleSignIn = async () => {
-    //setGoogleLoading(true);
     await signIn("google-signin", { callbackUrl });
   };
 
-  const handleLogin = async (data: SignInForm) => {
+  const handleLogin = async (data: AuthFormValues) => {
     setLoading(true);
 
     const result = await signIn("credentials", {
       redirect: false,
-      username: data.username,
+      username: data.identifier,
       password: data.password,
       callbackUrl,
     });
@@ -83,7 +79,7 @@ export default function SignInPage() {
     setLoading(false);
 
     if (result?.error) {
-      toast.error(t("credentialsError"));
+      toast.error(loginErrorMessage(result.error, t));
       return;
     }
 
@@ -92,97 +88,30 @@ export default function SignInPage() {
   };
 
   return (
-    <Box sx={{ minHeight: "100dvh", py: { xs: 6, md: 10 } }}>
-      <Container maxWidth="xs">
-        <Stack alignItems="center" sx={{ mb: 5 }}>
-          <LandingLogo height={22} />
-        </Stack>
+    <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column" }}>
+      <TopBar />
 
-        <Stack spacing={0.75} sx={{ mb: 5, textAlign: "center" }}>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>
-            {t("title")}
-          </Typography>
-          <Typography color="text.secondary">{t("subtitle")}</Typography>
-        </Stack>
-
-        <Stack spacing={1.5} sx={{ mb: 3 }}>
-          <Button
-            variant="outlined"
-            fullWidth
-            onClick={handleGoogleSignIn}
-            startIcon={<GoogleIcon />}
-            disableElevation
-            sx={oauthButtonSx}
-          >
-            {t("continueWithGoogle")}
-          </Button>
-
-          <Button
-            variant="outlined"
-            fullWidth
-            startIcon={<AppleIcon />}
-            disableElevation
-            sx={oauthButtonSx}
-          >
-            {t("continueWithApple")}
-          </Button>
-        </Stack>
-
-        <Divider sx={{ mb: 3 }}>
-          <Typography variant="body2" color="text.secondary">
-            {t("orWithEmail")}
-          </Typography>
-        </Divider>
-
-        <FormProvider {...methods}>
-          <Stack spacing={1.5}>
-            <Input
-              label={t("usernameLabel")}
-              name="username"
-              rules={isRequired}
-              placeholder={t("usernameLabel")}
-              size="medium"
-            />
-
-            <Input
-              label={t("passwordLabel")}
-              name="password"
-              type="password"
-              rules={isRequired}
-              placeholder={t("passwordLabel")}
-              size="medium"
-            />
-
-            <Button
-              variant="contained"
-              fullWidth
-              loading={loading}
-              onClick={methods.handleSubmit(handleLogin)}
-              disableElevation
-              sx={{ mt: 1, fontWeight: 700, textTransform: "none" }}
-            >
-              {t("submit")}
-            </Button>
-          </Stack>
-        </FormProvider>
-
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-          spacing={1}
-          sx={{ mt: 4 }}
-        >
-          <Typography color="text.secondary">{t("noAccount")}</Typography>
-          <Button
-            component={NextLink}
-            href={AppRoutes.register()}
-            sx={{ textTransform: "none", fontWeight: 600 }}
-          >
-            {t("register")}
-          </Button>
-        </Stack>
-      </Container>
+      <Box sx={{ flex: 1, py: { xs: 6, md: 10 } }}>
+        <Container maxWidth="sm">
+          <AuthForm
+            title={t("title")}
+            subtitle={t("subtitle")}
+            identifierOptions={identifierOptions(t)}
+            passwordLabel={t("passwordLabel")}
+            passwordPlaceholder={t("passwordLabel")}
+            submitLabel={t("submit")}
+            isSubmitting={loading}
+            onSubmit={handleLogin}
+            orLabel={t("or")}
+            googleLabel={t("continueWithGoogle")}
+            onGoogleClick={handleGoogleSignIn}
+            appleLabel={t("continueWithApple")}
+            footerText={t("noAccount")}
+            footerLinkText={t("register")}
+            footerHref={AppRoutes.register()}
+          />
+        </Container>
+      </Box>
     </Box>
   );
 }
