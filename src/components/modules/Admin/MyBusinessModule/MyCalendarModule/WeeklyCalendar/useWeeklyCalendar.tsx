@@ -95,6 +95,7 @@ export const useWeeklyCalendar = ({
 
     return frontendDays.map((dayData) => ({
       key: dayData.dateStr,
+      date: dayData.dateStr,
       slots: data?.days?.find((d) => d.day === dayData.dateStr)?.slots ?? [],
       isToday: dayData.dateStr === todayStr,
     }));

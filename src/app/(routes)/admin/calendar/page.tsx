@@ -1,6 +1,7 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import { WeeklyCalendar } from "@/components/modules/Admin/MyBusinessModule/MyCalendarModule/WeeklyCalendar/WeeklyCalendar";
 import { EmployeesDayCalendar } from "@/components/modules/Admin/MyBusinessModule/MyCalendarModule/EmployeesDayCalendar/EmployeesDayCalendar";
+import MyCalendarMobileScreen from "@/components/modules/Admin/MyBusinessModule/MyCalendarModule/Mobile/MyCalendarMobileScreen";
 import { authOptions } from "@/lib/auth/authOptions";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
@@ -27,10 +28,20 @@ async function Calendar(): Promise<JSX.Element> {
       throw new Error("Schedules are not defined");
     }
 
-    return <WeeklyCalendar session={session} schedules={schedules} />;
+    return (
+      <>
+        <MyCalendarMobileScreen session={session} />
+        <WeeklyCalendar session={session} schedules={schedules} />
+      </>
+    );
   }
 
-  return <EmployeesDayCalendar />;
+  return (
+    <>
+      <MyCalendarMobileScreen session={session} />
+      <EmployeesDayCalendar />
+    </>
+  );
 }
 
 export default ProtectedPage(Calendar, PermissionEnum.MY_CALENDAR_VIEW);

@@ -5,10 +5,11 @@ import { useAppNavigation } from "@/hooks/useAppNavigation";
 
 type HeaderMobileProps = {
   title?: string | undefined;
+  customTitle?: React.ReactNode;
   customAction?: React.ReactNode;
 };
 
-const HeaderMobile = ({ title, customAction }: HeaderMobileProps) => {
+const HeaderMobile = ({ title, customTitle, customAction }: HeaderMobileProps) => {
   const { goBack } = useAppNavigation();
 
   return (
@@ -22,15 +23,17 @@ const HeaderMobile = ({ title, customAction }: HeaderMobileProps) => {
         <IconButton onClick={() => goBack()}>
           <ArrowBackIcon />
         </IconButton>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: "bold",
-            color: "text.primary",
-          }}
-        >
-          {title}
-        </Typography>
+        {customTitle ?? (
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+              color: "text.primary",
+            }}
+          >
+            {title}
+          </Typography>
+        )}
         {customAction ? (
           customAction
         ) : (

@@ -2,7 +2,7 @@
 
 import { useCallback, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { Box, Theme, Typography } from "@mui/material";
+import { Box, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { CalendarHeader } from "../sharedComponents/CalendarHeader";
 import CreateOwnClientModal from "../sharedComponents/CreateOwnClientModal/CreateOwnClientModal";
 import BlockAppBar from "../sharedComponents/BlockAppBar";
@@ -56,6 +56,9 @@ export const EmployeesDayCalendar = () => {
     handleConfirmBlockPayload,
   } = useEmployeesDayCalendar();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const headerScrollRef = useRef<HTMLDivElement>(null);
   const bodyScrollRef = useRef<HTMLDivElement>(null);
 
@@ -64,6 +67,8 @@ export const EmployeesDayCalendar = () => {
       headerScrollRef.current.scrollLeft = bodyScrollRef.current.scrollLeft;
     }
   }, []);
+
+  if (isMobile) return null;
 
   const formattedDay = currentDay.format("dddd, DD MMMM YYYY");
 

@@ -2,7 +2,7 @@
 
 import { useCallback, useRef } from "react";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
-import { Box, Theme, Typography } from "@mui/material";
+import { Box, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Session } from "next-auth";
 import { Schedule } from "@/ts/models/booking/schedule/Schedule";
 import { CalendarHeader } from "../sharedComponents/CalendarHeader";
@@ -64,6 +64,9 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
     handleConfirmBlockPayload,
   } = useWeeklyCalendar({ session, schedules });
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const headerScrollRef = useRef<HTMLDivElement>(null);
   const bodyScrollRef = useRef<HTMLDivElement>(null);
 
@@ -72,6 +75,8 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
       headerScrollRef.current.scrollLeft = bodyScrollRef.current.scrollLeft;
     }
   }, []);
+
+  if (isMobile) return null;
 
   const startOfWeek = currentWeekDate.startOf("week");
   const endOfWeek = currentWeekDate.endOf("week");

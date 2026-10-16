@@ -7,6 +7,7 @@ import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEve
 
 export type CalendarGridColumn = {
   key: string;
+  date: string;
   slots: CalendarEventsSlot[];
 };
 
@@ -26,22 +27,19 @@ const CalendarGridBackgroundComponent = ({
       {columns.map((column, columnIndex) => {
         const colIndex = columnIndex + 2;
 
-        const slotsByTime: Record<string, CalendarEventsSlot> = {};
-        column.slots.forEach((slot) => {
-          slotsByTime[slot.start_date_locale.split("T")[1] ?? ""] = slot;
-        });
-
         return timeStrings.map((time) => {
           const baseRow = rowMap[time];
           if (baseRow === undefined) return null;
           const currentRow = baseRow - 1;
 
-          const slot = slotsByTime[time];
-          const isUnavailable =
-            !slot ||
-            (!slot.is_booked &&
-              !slot.is_blocked &&
-              dayjs().isAfter(dayjs(slot.start_date_locale)));
+          const rowStart = dayjs(`${column.date}T${time}`);
+          const slot = column.slots.find((s) => {
+            const slotStart = dayjs(s.start_date_locale);
+            const slotEnd = dayjs(s.end_date_locale);
+            return !rowStart.isBefore(slotStart) && rowStart.isBefore(slotEnd);
+          });
+
+          const isUnavailable = dayjs().isAfter(rowStart) || !slot;
 
           return (
             <Box

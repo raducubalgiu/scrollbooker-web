@@ -102,10 +102,11 @@ export const useEmployeesDayCalendar = () => {
     () =>
       employees.map((employee) => ({
         key: String(employee.id),
+        date: dayStr,
         slots: employee.slots,
         isToday,
       })),
-    [employees, isToday]
+    [employees, isToday, dayStr]
   );
 
   const { handleBlock, isLoadingBlock, handleOwnClient, isLoadingOwnClient } =
