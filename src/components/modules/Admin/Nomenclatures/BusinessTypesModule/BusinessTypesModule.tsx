@@ -231,7 +231,7 @@ export default function BusinessTypesModule({
     localization: MRT_Localization_RO,
     state: {
       pagination,
-      isLoading: !tableData.length || isLoading,
+      isLoading: isLoading,
       showLoadingOverlay: isPendingDelete,
       showAlertBanner: isError,
     },

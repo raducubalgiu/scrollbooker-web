@@ -166,7 +166,7 @@ export default function ProfessionsModule({
         manualPagination
         state={{
           pagination,
-          isLoading: !tableData.length || isLoading,
+          isLoading: isLoading,
           showLoadingOverlay: isPendingDelete,
           showAlertBanner: isError,
         }}
