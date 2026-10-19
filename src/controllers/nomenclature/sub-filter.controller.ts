@@ -1,7 +1,8 @@
 import { PaginatedData } from "@/components/core/Table/Table";
 import {
   SubFilter,
-  SubFilterCreateOrUpdate,
+  SubFilterCreate,
+  SubFilterUpdate,
 } from "@/ts/models/nomenclatures/subFilter/SubFilter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -17,7 +18,7 @@ type GetAllSubFiltersType = {
 
 type UpdateSubFilterParams = {
   id: string;
-  data: SubFilterCreateOrUpdate;
+  data: SubFilterUpdate;
 };
 
 export const useAllSubFilters = ({
@@ -42,10 +43,10 @@ export const useAllSubFilters = ({
 export const useCreateSubFilter = () => {
   const queryClient = useQueryClient();
 
-  const doRequest = (payload: SubFilterCreateOrUpdate): Promise<SubFilter> =>
+  const doRequest = (payload: SubFilterCreate): Promise<SubFilter> =>
     axios.post(SUB_FILTER_PATH, payload).then((response) => response.data);
 
-  return useMutation<SubFilter, Error, SubFilterCreateOrUpdate>({
+  return useMutation<SubFilter, Error, SubFilterCreate>({
     mutationFn: doRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["sub-filters"] });
