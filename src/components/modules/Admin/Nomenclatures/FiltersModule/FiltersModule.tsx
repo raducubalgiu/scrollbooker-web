@@ -209,7 +209,7 @@ export default function FiltersModule() {
       sx: { borderRadius: 2.5, border: "1px solid", borderColor: "divider" },
     },
     renderDetailPanel: ({ row }) => (
-      <SubFiltersModule subFilters={row.original.sub_filters} />
+      <SubFiltersModule filterId={row.original.id} />
     ),
   });
 
