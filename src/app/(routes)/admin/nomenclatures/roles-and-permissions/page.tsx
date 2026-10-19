@@ -1,9 +1,8 @@
-//import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
 import PermissionsModule from "@/components/modules/Admin/Nomenclatures/PermissionsModule/PermissionsModule";
 import React, { JSX } from "react";
 
-export async function RolesAndPermissions(): Promise<JSX.Element> {
+async function RolesAndPermissions(): Promise<JSX.Element> {
   return <PermissionsModule />;
 }
 
-//export default ProtectedPage(RolesAndPermissions, "NO_PROTECTION");
+export default RolesAndPermissions;
