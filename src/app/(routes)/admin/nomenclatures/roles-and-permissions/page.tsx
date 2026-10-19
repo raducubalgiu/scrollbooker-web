@@ -6,4 +6,4 @@ async function RolesAndPermissions(): Promise<JSX.Element> {
   return <PermissionsModule />;
 }
 
-export default ProtectedPage(RolesAndPermissions, "NOMENCLATURES_VIEW");
+export default ProtectedPage(RolesAndPermissions, "NO_PROTECTION");
