@@ -327,7 +327,7 @@ const AdminRoutes = ({
         </Collapse>
       </Protected>
 
-      <Protected permission="NO_PROTECTION">
+      <Protected permission="NOMENCLATURES_VIEW">
         {!isCollapsed ? (
           <ListItemButton
             onClick={() => setOpenNomenclatures((v) => !v)}
