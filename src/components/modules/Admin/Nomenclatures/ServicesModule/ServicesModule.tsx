@@ -184,7 +184,7 @@ export default function ServicesModule({
     localization: MRT_Localization_RO,
     state: {
       pagination,
-      isLoading: !tableData.length || isLoading || isPendingDelete,
+      isLoading: isLoading || isPendingDelete,
       showAlertBanner: isError,
     },
 
