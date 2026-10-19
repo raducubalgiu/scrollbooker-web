@@ -191,7 +191,10 @@ export default function BusinessDomainsModule() {
       sx: { borderRadius: 2.5, border: "1px solid", borderColor: "divider" },
     },
     renderDetailPanel: ({ row }) => (
-      <BusinessDomainsServiceDomains data={row.original.service_domains} />
+      <BusinessDomainsServiceDomains
+        businessDomainId={row.original.id}
+        data={row.original.service_domains}
+      />
     ),
   });
 

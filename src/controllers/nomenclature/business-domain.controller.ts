@@ -87,3 +87,50 @@ export const useDeleteBusinessDomain = () => {
     },
   });
 };
+
+type BusinessDomainServiceDomainRelationParams = {
+  businessDomainId: string;
+  serviceDomainId: string;
+};
+
+export const useAttachServiceDomainToBusinessDomain = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    businessDomainId,
+    serviceDomainId,
+  }: BusinessDomainServiceDomainRelationParams): Promise<void> =>
+    axios
+      .post(
+        `${BUSINESS_DOMAIN_PATH}/${businessDomainId}/service-domains/${serviceDomainId}`
+      )
+      .then((res) => res.data);
+
+  return useMutation<void, Error, BusinessDomainServiceDomainRelationParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["business-domains"] });
+    },
+  });
+};
+
+export const useDetachServiceDomainFromBusinessDomain = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    businessDomainId,
+    serviceDomainId,
+  }: BusinessDomainServiceDomainRelationParams): Promise<void> =>
+    axios
+      .delete(
+        `${BUSINESS_DOMAIN_PATH}/${businessDomainId}/service-domains/${serviceDomainId}`
+      )
+      .then((res) => res.data);
+
+  return useMutation<void, Error, BusinessDomainServiceDomainRelationParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["business-domains"] });
+    },
+  });
+};
