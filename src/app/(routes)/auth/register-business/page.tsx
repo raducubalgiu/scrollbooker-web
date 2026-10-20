@@ -164,7 +164,7 @@ export default function RegisterBusinessPage() {
 
         <Divider sx={{ mb: 3 }}>
           <Typography variant="body2" color="text.secondary">
-            {t("orWithEmail")}
+            {t("or")}
           </Typography>
         </Divider>
 

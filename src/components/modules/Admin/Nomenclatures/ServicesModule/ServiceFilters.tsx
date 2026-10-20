@@ -13,7 +13,6 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { ServiceFilter } from "@/ts/models/nomenclatures/service/Service";
-import FilterSubFilters from "./FilterSubFilters";
 
 type ServicesFiltersType = {
   filters: ServiceFilter[] | undefined;
@@ -67,9 +66,6 @@ const ServiceFilters = ({ filters }: ServicesFiltersType) => {
         border: "1px solid",
         borderColor: "divider",
       },
-    },
-    renderDetailPanel: ({ row }) => {
-      return <FilterSubFilters sub_filters={row.original.sub_filters} />;
     },
   });
 
