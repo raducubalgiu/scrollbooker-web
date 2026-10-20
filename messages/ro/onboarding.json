@@ -15,6 +15,7 @@
       "businessServices": "Servicii",
       "businessSchedules": "Programul locației",
       "businessHasEmployees": "Echipă",
+      "businessInstantBooking": "Rezervări instant",
       "businessValidation": "Validare"
     },
     "emailVerification": {
@@ -129,6 +130,20 @@
       "subtitle": "Alege „Da” dacă ai colegi care lucrează în paralel. Fiecare va primi un calendar individual pentru a-și gestiona propriile servicii și clienți. Dacă lucrezi singur, totul va fi centralizat într-un singur calendar business.",
       "yes": "DA, am angajați care primesc programări",
       "no": "NU am angajați care primesc programări"
+    },
+    "instantBooking": {
+      "title": "Vrei să activezi Rezervarea Instant?",
+      "subtitle": "Alege cum vrei să primești programări din aplicație",
+      "calendarInfoTitle": "Calendar propriu",
+      "calendarInfoDescription": "Îți administrezi programul și sloturile disponobile în aplicație",
+      "dashboardTitle": "Statistici",
+      "dashboardDescription": "Vezi programările, încasările și performanța profilului tău",
+      "bookingsTitle": "Rezervări direct din postări",
+      "bookingsDescription": "Clienții pot rezerva instant dintr-o postare, fără să mai scrie un mesaj",
+      "yes": "DA, vreau Rezervare Instant",
+      "yesDescription": "Activezi calendarul și poți primi rezervări instant direct din fiecare postare. Fiecare angajat va primi propriul calendar",
+      "no": "NU, nu vreau Rezervare Instant",
+      "noDescription": "Pe fiecare postarea va apărea un buton 'Contactează' prin care clienții îți pot scrie pe WhatsApp sau te pot suna direct"
     },
     "validation": {
       "title": "Felicitări! Ai finalizat configurarea",

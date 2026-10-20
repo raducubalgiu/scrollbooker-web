@@ -14,3 +14,7 @@ export interface OnboardingBusinessCreateResponse {
 export interface BusinessHasEmployeesUpdate {
   has_employees: boolean;
 }
+
+export interface BusinessInstantBookingUpdate {
+  instant_booking: boolean;
+}
