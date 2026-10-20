@@ -24,6 +24,18 @@ type ServiceDomainServiceRelationParams = {
   serviceId: string;
 };
 
+export const useAllServiceDomainsWithoutPagination = () => {
+  const doRequest = () =>
+    axios
+      .get<ServiceDomain[]>(SERVICE_DOMAIN_PATH)
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["service-domains"],
+    queryFn: doRequest,
+  });
+};
+
 export const useAllServiceDomains = ({
   page,
   limit,
