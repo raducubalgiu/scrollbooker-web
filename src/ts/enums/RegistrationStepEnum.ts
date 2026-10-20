@@ -16,6 +16,7 @@ export enum RegistrationStepEnum {
   COLLECT_BUSINESS_SCHEDULES = "collect_business_schedules",
   COLLECT_BUSINESS_HAS_EMPLOYEES = "collect_business_has_employees",
   COLLECT_BUSINESS_INSTANT_BOOKING = "collect_business_instant_booking",
+  COLLECT_BUSINESS_PUBLIC_PHONE = "collect_business_public_phone",
   COLLECT_BUSINESS_VALIDATION = "collect_business_validation",
 }
 
@@ -63,6 +64,8 @@ export const displayStepLabel = (
       return t("steps.businessHasEmployees");
     case RegistrationStepEnum.COLLECT_BUSINESS_INSTANT_BOOKING:
       return t("steps.businessInstantBooking");
+    case RegistrationStepEnum.COLLECT_BUSINESS_PUBLIC_PHONE:
+      return t("steps.businessPublicPhone");
     case RegistrationStepEnum.COLLECT_BUSINESS_VALIDATION:
       return t("steps.businessValidation");
     default:

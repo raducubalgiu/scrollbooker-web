@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { AuthTokens, UserInfo, UserRegister } from "@/ts/models/auth/auth";
+import {
+  AuthTokens,
+  PhoneVerificationSendRequest,
+  PhoneVerificationSendResponse,
+  UserInfo,
+  UserRegister,
+} from "@/ts/models/auth/auth";
 import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { ActionMessageResponse } from "@/ts/models/auth/ActionMessageResponse";
 
@@ -72,6 +78,18 @@ export const useRegisterMutation = () => {
     mutationFn: async (data: UserRegister) => {
       const response = await axios.post<AuthTokens>(
         `${BACKEND_URL}/auth/register`,
+        data
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useSendPhoneVerificationCode = () => {
+  return useMutation({
+    mutationFn: async (data: PhoneVerificationSendRequest) => {
+      const response = await axios.post<PhoneVerificationSendResponse>(
+        `/api/protected/users/user-info/phone/send-verification`,
         data
       );
       return response.data;
