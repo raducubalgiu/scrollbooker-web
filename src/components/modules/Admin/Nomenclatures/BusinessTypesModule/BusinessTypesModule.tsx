@@ -28,6 +28,7 @@ import {
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import BusinessTypeModal from "./BusinessTypeModal";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
+import BusinessTypeServiceDomains from "./BusinessTypeServiceDomains";
 
 type RenderRowActionMenuItemsProps = {
   row: MRT_Row<BusinessType>;
@@ -244,6 +245,12 @@ export default function BusinessTypesModule({
         borderColor: "divider",
       },
     },
+    renderDetailPanel: ({ row }) => (
+      <BusinessTypeServiceDomains
+        businessTypeId={row.original.id}
+        serviceDomains={row.original.service_domains}
+      />
+    ),
   });
 
   return (

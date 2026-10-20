@@ -19,6 +19,11 @@ type UpdateBusinessTypeParams = {
   data: BusinessTypeCreateOrUpdate;
 };
 
+type BusinessTypeServiceDomainRelationParams = {
+  businessTypeId: string;
+  serviceDomainId: string;
+};
+
 export const useGetAllBusinessTypes = () => {
   const doRequest = () =>
     axios
@@ -89,6 +94,48 @@ export const useDeleteBusinessType = () => {
     axios.delete(`${BUSINESS_TYPE_PATH}/${id}`).then((res) => res.data);
 
   return useMutation<void, Error, string>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["business-types"] });
+    },
+  });
+};
+
+export const useAttachServiceDomainToBusinessType = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    businessTypeId,
+    serviceDomainId,
+  }: BusinessTypeServiceDomainRelationParams): Promise<void> =>
+    axios
+      .post(
+        `${BUSINESS_TYPE_PATH}/${businessTypeId}/service-domains/${serviceDomainId}`
+      )
+      .then((res) => res.data);
+
+  return useMutation<void, Error, BusinessTypeServiceDomainRelationParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["business-types"] });
+    },
+  });
+};
+
+export const useDetachServiceDomainFromBusinessType = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({
+    businessTypeId,
+    serviceDomainId,
+  }: BusinessTypeServiceDomainRelationParams): Promise<void> =>
+    axios
+      .delete(
+        `${BUSINESS_TYPE_PATH}/${businessTypeId}/service-domains/${serviceDomainId}`
+      )
+      .then((res) => res.data);
+
+  return useMutation<void, Error, BusinessTypeServiceDomainRelationParams>({
     mutationFn: doRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["business-types"] });
