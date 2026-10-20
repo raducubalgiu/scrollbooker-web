@@ -15,6 +15,7 @@
       "businessServices": "Services",
       "businessSchedules": "Working hours",
       "businessHasEmployees": "Team",
+      "businessInstantBooking": "Instant Booking",
       "businessValidation": "Validation"
     },
     "emailVerification": {
@@ -129,6 +130,20 @@
       "subtitle": "Choose \"Yes\" if you have colleagues working in parallel. Each of them gets their own calendar to manage their own services and clients. If you work alone, everything will be centralized in a single business calendar.",
       "yes": "YES, I have employees who take bookings",
       "no": "NO, I don't have employees who take bookings"
+    },
+    "instantBooking": {
+      "title": "Do you want to enable Instant Booking?",
+      "subtitle": "Choose how you want to receive appointments from the app",
+      "calendarInfoTitle": "Own calendar",
+      "calendarInfoDescription": "Manage your schedule and available slots directly in the app",
+      "dashboardTitle": "Analytics",
+      "dashboardDescription": "View appointments, earnings, and your profile performance",
+      "bookingsTitle": "Bookings directly from posts",
+      "bookingsDescription": "Customers can book instantly from a post without having to send a message",
+      "yes": "YES, I want Instant Booking",
+      "yesDescription": "You enable the calendar and can receive instant bookings directly from each post. Each employee will get their own calendar",
+      "no": "NO, I don't want Instant Booking",
+      "noDescription": "A 'Contact' button will appear on each post, allowing customers to message you on WhatsApp or call you directly"
     },
     "validation": {
       "title": "Congrats! You've finished the setup",

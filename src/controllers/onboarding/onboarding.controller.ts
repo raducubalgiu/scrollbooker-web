@@ -5,10 +5,13 @@ import { BusinessCreate } from "@/ts/models/booking/business/Business";
 import { ScheduleUpdate } from "@/ts/models/booking/schedule/Schedule";
 import {
   BusinessHasEmployeesUpdate,
+  BusinessInstantBookingUpdate,
   OnboardingBusinessCreateResponse,
   OnboardingResponse,
 } from "@/ts/models/onboarding/Onboarding";
 import { authQueryKeys } from "@/controllers/auth/auth.controller";
+
+const ONBOARDING_PATH = "/api/protected/onboarding";
 
 type UsernamePayload = { username: string };
 type BirthdatePayload = { birthdate: string | null };
@@ -26,7 +29,7 @@ export const useCollectUsernameMutation = () => {
   return useMutation({
     mutationFn: async (data: UsernamePayload) => {
       const response = await axios.patch<OnboardingResponse>(
-        "/api/protected/onboarding/collect-user-username",
+        `${ONBOARDING_PATH}/collect-user-username`,
         data
       );
       return response.data;
@@ -41,7 +44,7 @@ export const useCollectBirthdateMutation = () => {
   return useMutation({
     mutationFn: async (data: BirthdatePayload) => {
       const response = await axios.patch<OnboardingResponse>(
-        "/api/protected/onboarding/collect-client-birthdate",
+        `${ONBOARDING_PATH}/collect-client-birthdate`,
         data
       );
       return response.data;
@@ -56,7 +59,7 @@ export const useCollectGenderMutation = () => {
   return useMutation({
     mutationFn: async (data: GenderPayload) => {
       const response = await axios.patch<OnboardingResponse>(
-        "/api/protected/onboarding/collect-client-gender",
+        `${ONBOARDING_PATH}/collect-client-gender`,
         data
       );
       return response.data;
@@ -71,7 +74,7 @@ export const useCollectLocationPermissionMutation = () => {
   return useMutation({
     mutationFn: async () => {
       const response = await axios.patch<OnboardingResponse>(
-        "/api/protected/onboarding/collect-user-location-permission"
+        `${ONBOARDING_PATH}/collect-user-location-permission`
       );
       return response.data;
     },
@@ -85,7 +88,7 @@ export const useCollectBusinessMutation = () => {
   return useMutation({
     mutationFn: async (data: BusinessCreate) => {
       const response = await axios.post<OnboardingBusinessCreateResponse>(
-        "/api/protected/onboarding/collect-business",
+        `${ONBOARDING_PATH}/collect-business`,
         data
       );
       return response.data;
@@ -108,7 +111,7 @@ export const useCollectBusinessGalleryMutation = () => {
       photos.forEach((photo) => formData.append("photos", photo));
 
       const response = await axios.patch<OnboardingResponse>(
-        `/api/protected/onboarding/collect-business-gallery/${session.business_id}/update`,
+        `${ONBOARDING_PATH}/collect-business-gallery/${session.business_id}/update`,
         formData,
         { params: { skip_update_gallery: skipUpdateGallery } }
       );
@@ -125,7 +128,7 @@ export const useCollectBusinessServicesMutation = () => {
   return useMutation({
     mutationFn: async (serviceIds: number[]) => {
       const response = await axios.patch<OnboardingResponse>(
-        "/api/protected/onboarding/collect-business-services",
+        `${ONBOARDING_PATH}/collect-business-services`,
         { service_ids: serviceIds }
       );
       return response.data;
@@ -140,7 +143,7 @@ export const useCollectBusinessSchedulesMutation = () => {
   return useMutation({
     mutationFn: async (schedules: ScheduleUpdate[]) => {
       const response = await axios.patch<OnboardingResponse>(
-        "/api/protected/onboarding/collect-business-schedules",
+        `${ONBOARDING_PATH}/collect-business-schedules`,
         schedules
       );
       return response.data;
@@ -155,7 +158,22 @@ export const useCollectBusinessHasEmployeesMutation = () => {
   return useMutation({
     mutationFn: async (data: BusinessHasEmployeesUpdate) => {
       const response = await axios.patch<OnboardingResponse>(
-        "/api/protected/onboarding/collect-business-has-employees",
+        `${ONBOARDING_PATH}/collect-business-has-employees`,
+        data
+      );
+      return response.data;
+    },
+    onSuccess: invalidateUserInfo,
+  });
+};
+
+export const useCollectBusinessInstantBookingMutation = () => {
+  const invalidateUserInfo = useInvalidateUserInfoOnSuccess();
+
+  return useMutation({
+    mutationFn: async (data: BusinessInstantBookingUpdate) => {
+      const response = await axios.patch<OnboardingResponse>(
+        `${ONBOARDING_PATH}/collect-business-instant-booking`,
         data
       );
       return response.data;

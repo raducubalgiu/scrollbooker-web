@@ -15,6 +15,7 @@ export enum RegistrationStepEnum {
   COLLECT_BUSINESS_SERVICES = "collect_business_services",
   COLLECT_BUSINESS_SCHEDULES = "collect_business_schedules",
   COLLECT_BUSINESS_HAS_EMPLOYEES = "collect_business_has_employees",
+  COLLECT_BUSINESS_INSTANT_BOOKING = "collect_business_instant_booking",
   COLLECT_BUSINESS_VALIDATION = "collect_business_validation",
 }
 
@@ -28,10 +29,6 @@ export function RegistrationStepfromKey(
     : null;
 }
 
-// `t` e legat la namespace-ul "onboarding" (vezi OnboardingModule.tsx) —
-// funcția rămâne în afara componentei ca să poată fi apelată dintr-un
-// switch simplu, dar depinde de un `t` transmis explicit, nu de
-// useTranslations() direct (asta ar cere să fie ea însăși un hook/componentă).
 export const displayStepLabel = (
   step: RegistrationStepEnum,
   t: (key: string) => string
@@ -64,6 +61,8 @@ export const displayStepLabel = (
       return t("steps.businessSchedules");
     case RegistrationStepEnum.COLLECT_BUSINESS_HAS_EMPLOYEES:
       return t("steps.businessHasEmployees");
+    case RegistrationStepEnum.COLLECT_BUSINESS_INSTANT_BOOKING:
+      return t("steps.businessInstantBooking");
     case RegistrationStepEnum.COLLECT_BUSINESS_VALIDATION:
       return t("steps.businessValidation");
     default:
