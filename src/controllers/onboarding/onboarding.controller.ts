@@ -10,6 +10,7 @@ import {
   OnboardingResponse,
 } from "@/ts/models/onboarding/Onboarding";
 import { authQueryKeys } from "@/controllers/auth/auth.controller";
+import { PhoneVerificationCheckRequest } from "@/ts/models/auth/auth";
 
 const ONBOARDING_PATH = "/api/protected/onboarding";
 
@@ -174,6 +175,21 @@ export const useCollectBusinessInstantBookingMutation = () => {
     mutationFn: async (data: BusinessInstantBookingUpdate) => {
       const response = await axios.patch<OnboardingResponse>(
         `${ONBOARDING_PATH}/collect-business-instant-booking`,
+        data
+      );
+      return response.data;
+    },
+    onSuccess: invalidateUserInfo,
+  });
+};
+
+export const useCollectPhoneCodeVerification = () => {
+  const invalidateUserInfo = useInvalidateUserInfoOnSuccess();
+
+  return useMutation({
+    mutationFn: async (data: PhoneVerificationCheckRequest) => {
+      const response = await axios.patch<OnboardingResponse>(
+        `${ONBOARDING_PATH}/collect-business-public-phone`,
         data
       );
       return response.data;

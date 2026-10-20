@@ -16,6 +16,7 @@
       "businessSchedules": "Working hours",
       "businessHasEmployees": "Team",
       "businessInstantBooking": "Instant Booking",
+      "publicPhone": "Numărul tău de contact",
       "businessValidation": "Validation"
     },
     "emailVerification": {
@@ -144,6 +145,20 @@
       "yesDescription": "You enable the calendar and can receive instant bookings directly from each post. Each employee will get their own calendar",
       "no": "NO, I don't want Instant Booking",
       "noDescription": "A 'Contact' button will appear on each post, allowing customers to message you on WhatsApp or call you directly"
+    },
+    "publicPhone": {
+      "title": "Your contact number",
+      "subtitle": "Verify the number that customers will see to contact you via WhatsApp or phone",
+      "phoneVerificationTitle": "Verify phone number",
+      "phoneVerificationDescription": "Enter the phone number used for your account security.",
+      "phoneVerificationCodeDescription": "We sent a code via SMS",
+      "phoneVerificationSendCode": "Send code",
+      "phoneVerificationVerify": "Verify",
+      "phoneVerificationPlaceholder": "7xx xxx xxx",
+      "phoneVerificationCodePlaceholder": "Verification code",
+      "resendCooldown": "Resend code in {seconds}s",
+      "resend": "Resend",
+      "changePhoneNumber": "Change phone number"
     },
     "validation": {
       "title": "Congrats! You've finished the setup",

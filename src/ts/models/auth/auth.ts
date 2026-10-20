@@ -24,3 +24,16 @@ export interface UserInfo {
   is_validated: boolean;
   registration_step: string | null;
 }
+
+export interface PhoneVerificationSendRequest {
+  phone: string;
+}
+
+export interface PhoneVerificationSendResponse {
+  detail: string;
+}
+
+export interface PhoneVerificationCheckRequest {
+  code: string;
+  phone: string;
+}

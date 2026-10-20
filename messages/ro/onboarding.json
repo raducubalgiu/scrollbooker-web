@@ -16,6 +16,7 @@
       "businessSchedules": "Programul locației",
       "businessHasEmployees": "Echipă",
       "businessInstantBooking": "Rezervări instant",
+      "publicPhone": "Numărul tău de contact",
       "businessValidation": "Validare"
     },
     "emailVerification": {
@@ -144,6 +145,20 @@
       "yesDescription": "Activezi calendarul și poți primi rezervări instant direct din fiecare postare. Fiecare angajat va primi propriul calendar",
       "no": "NU, nu vreau Rezervare Instant",
       "noDescription": "Pe fiecare postarea va apărea un buton 'Contactează' prin care clienții îți pot scrie pe WhatsApp sau te pot suna direct"
+    },
+    "publicPhone": {
+      "title": "Numărul tău de contact",
+      "subtitle": "Verifică numărul pe care îl vor vedea clienții pentru a te contacta pe WhatsApp sau telefon",
+      "phoneVerificationTitle": "Verifică numărul de telefon",
+      "phoneVerificationDescription": "Introdu numărul de telefon folosit pentru securitatea contului tău.",
+      "phoneVerificationCodeDescription": "Am trimis un codul prin SMS",
+      "phoneVerificationSendCode": "Trimite codul",
+      "phoneVerificationVerify": "Verifică",
+      "phoneVerificationPlaceholder": "7xx xxx xxx",
+      "phoneVerificationCodePlaceholder": "Cod de verificare",
+      "resendCooldown": "Retrimite codul în {seconds}s",
+      "resend": "Retrimite",
+      "changePhoneNumber": "Modifică numărul de telefon"
     },
     "validation": {
       "title": "Felicitări! Ai finalizat configurarea",

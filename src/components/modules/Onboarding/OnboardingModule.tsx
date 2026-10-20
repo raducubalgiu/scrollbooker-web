@@ -34,6 +34,7 @@ import CollectBusinessValidationStep from "./business/CollectBusinessValidationS
 import CollectLocationPermission from "./client/CollectLocationPermission";
 import CollectBusinessGalleryStep from "./business/CollectBusinessGalleryStep";
 import CollectBusinessInstantBookingStep from "./business/CollectBusinessInstantBookingStep";
+import CollectBusinessPublicPhone from "./business/CollectBusinessPublicPhone";
 
 type OnboardingModuleProps = {
   session: Session | null;
@@ -80,6 +81,8 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
         return <CollectBusinessHasEmployeesStep />;
       case RegistrationStepEnum.COLLECT_BUSINESS_INSTANT_BOOKING:
         return <CollectBusinessInstantBookingStep />;
+      case RegistrationStepEnum.COLLECT_BUSINESS_PUBLIC_PHONE:
+        return <CollectBusinessPublicPhone />;
       case RegistrationStepEnum.COLLECT_BUSINESS_VALIDATION:
         return <CollectBusinessValidationStep />;
       default:
