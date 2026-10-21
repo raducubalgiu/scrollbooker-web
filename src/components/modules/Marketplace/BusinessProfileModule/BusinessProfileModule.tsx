@@ -72,6 +72,8 @@ const BusinessProfileModule = ({
 					owner={profile.owner}
 					businessId={profile.id}
 					mediaFiles={profile?.media_files || []}
+					instantBooking={profile.instant_booking}
+					contact={profile.contact}
 					onFollow={handleFollow}
 					onShare={handleShare}
 				/>

@@ -716,6 +716,14 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
             }}
             businessLocation={post?.business_location ?? null}
             description={post?.description ?? null}
+            instantBooking={post?.instant_booking ?? false}
+            contact={
+              post?.contact ?? {
+                phone: null,
+                accepts_whatsapp: false,
+                accepts_calls: false,
+              }
+            }
             onOpenLinkedProducts={onOpenLinkedProducts}
           />
         </div>

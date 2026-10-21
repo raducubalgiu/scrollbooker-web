@@ -1,5 +1,6 @@
 import { PostMediaFile } from "../../social/Post";
 import { OpeningHours } from "../../user/UserProfile";
+import { ContactInfo } from "../../user/ContactInfo";
 import { UserProducts } from "../product/Product";
 import { Schedule } from "../schedule/Schedule";
 import { BusinessCoordinates } from "./Business";
@@ -7,6 +8,8 @@ import { BusinessMediaFile } from "./BusinessMediaFile";
 
 export interface BusinessProfile {
   id: number;
+  instant_booking: boolean;
+  contact: ContactInfo;
   owner: BusinessOwnerProfile;
   opening_hours: OpeningHours;
   media_files: BusinessMediaFile[];

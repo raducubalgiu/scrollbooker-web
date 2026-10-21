@@ -13,8 +13,9 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import IosShareIcon from "@mui/icons-material/IosShare";
 import { BusinessMediaFile } from "@/ts/models/booking/business/BusinessMediaFile";
 import { BusinessOwnerProfile } from "@/ts/models/booking/business/BusinessProfile";
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
 import { formatRating } from "@/utils/formatters";
-import NextLink from "next/link";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
@@ -25,6 +26,8 @@ type BusinessPhotosTabProps = {
   owner: BusinessOwnerProfile;
   businessId: number;
   mediaFiles?: BusinessMediaFile[];
+  instantBooking: boolean;
+  contact: ContactInfo;
   onFollow: () => void;
   onShare: () => void;
 };
@@ -48,12 +51,14 @@ const BusinessPhotosTab = ({
   owner,
   businessId,
   mediaFiles,
+  instantBooking,
+  contact,
   onFollow,
   onShare,
 }: BusinessPhotosTabProps) => {
   const { fullname, counters, is_follow } = owner;
   const { ratings_average, ratings_count } = counters;
-  const { goBack } = useAppNavigation();
+  const { navigateTo, goBack } = useAppNavigation();
 
   const bookingHref = AppRoutes.booking(
     businessId,
@@ -140,11 +145,11 @@ const BusinessPhotosTab = ({
                 justifyContent: { xs: "stretch", md: "flex-end" },
               }}
             >
-              <Button
-                component={NextLink}
-                href={bookingHref}
-                variant="contained"
-                disableElevation
+              <ContactActionButton
+                instantBooking={instantBooking}
+                contact={contact}
+                bookLabel="Rezervă"
+                onBookNow={() => navigateTo(bookingHref)}
                 sx={{
                   display: { xs: "inline-flex", md: "none" },
                   flexGrow: 1,
@@ -152,9 +157,7 @@ const BusinessPhotosTab = ({
                   fontWeight: 600,
                   whiteSpace: "nowrap",
                 }}
-              >
-                Rezervă
-              </Button>
+              />
 
               <Button
                 onClick={onFollow}

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {
 	Box,
-	Button,
 	Collapse,
 	Divider,
 	Paper,
@@ -16,6 +15,7 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
 import UserAvatar from "@/components/core/Avatar/UserAvatar";
+import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
 import SchedulesSection from "@/components/cutomized/SchedulesSection/SchedulesSection";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -100,13 +100,13 @@ export default function BusinessStickyCard({
 					</Box>
 				</Stack>
 
-				<Button
-					variant="contained"
+				<ContactActionButton
+					instantBooking={business.instant_booking}
+					contact={business.contact}
 					fullWidth
-					disableElevation
 					size="large"
 					sx={{ py: 1.75, fontSize: "1rem" }}
-					onClick={() =>
+					onBookNow={() =>
 						router.push(
 							AppRoutes.booking(
 								business.id,
@@ -117,9 +117,7 @@ export default function BusinessStickyCard({
 							),
 						)
 					}
-				>
-					Rezervă acum
-				</Button>
+				/>
 
 				<Divider sx={{ my: 3 }} />
 

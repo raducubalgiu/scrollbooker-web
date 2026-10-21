@@ -125,11 +125,20 @@ const ProfileUserInfo = ({
         isBusinessOrEmployee={is_business_or_employee}
         isFollow={is_follow}
         instantBooking={instant_booking}
+        contact={profile.contact}
         onUpdateFollows={onUpdateFollows}
         onBookNow={handleBookNow}
       />
     );
-  }, [is_business_or_employee, is_own_profile, is_follow, id, onUpdateFollows]);
+  }, [
+    is_business_or_employee,
+    is_own_profile,
+    is_follow,
+    id,
+    instant_booking,
+    profile.contact,
+    onUpdateFollows,
+  ]);
 
   return (
     <Box sx={styles.root}>
