@@ -6,6 +6,7 @@ import {
 import {
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
@@ -31,6 +32,25 @@ export const useInfiniteAppointments = () => {
       if (lastPage.results.length < 10) return undefined;
       return lastPage.page + 1;
     },
+  });
+};
+
+type UseAppointmentsCountParams = {
+  isEnabled?: boolean;
+};
+
+export const useAppointmentsCount = ({
+  isEnabled = true,
+}: UseAppointmentsCountParams = {}) => {
+  const doRequest = () =>
+    axios
+      .get<number>(`${APPOINTMENTS_PATH}/count`)
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["appointments-me", "count"],
+    queryFn: doRequest,
+    enabled: isEnabled,
   });
 };
 
