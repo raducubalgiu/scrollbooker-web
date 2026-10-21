@@ -7,29 +7,29 @@ import ProfileActionButton from "./ProfileActionButton";
 
 type UserProfileActionsProps = {
   userId: number;
-  is_business_or_employee: boolean;
-  is_follow: boolean;
-  instant_booking: boolean;
+  isBusinessOrEmployee: boolean;
+  isFollow: boolean;
+  instantBooking: boolean;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
   onBookNow: () => void;
 };
 
 const UserProfileActions = ({
   userId,
-  is_business_or_employee,
-  is_follow,
-  instant_booking,
+  isBusinessOrEmployee,
+  isFollow,
+  instantBooking,
   onUpdateFollows,
   onBookNow,
 }: UserProfileActionsProps) => {
-  const [localFollow, setLocalFollow] = useState<boolean>(is_follow);
-  const previousLocalRef = useRef<boolean>(is_follow);
+  const [localFollow, setLocalFollow] = useState<boolean>(isFollow);
+  const previousLocalRef = useRef<boolean>(isFollow);
   const intendedNewFollowRef = useRef<boolean | null>(null);
 
   useEffect(() => {
-    setLocalFollow(is_follow);
-    previousLocalRef.current = is_follow;
-  }, [is_follow]);
+    setLocalFollow(isFollow);
+    previousLocalRef.current = isFollow;
+  }, [isFollow]);
 
   const onErrorHandler = () => {
     const intended = intendedNewFollowRef.current;
@@ -91,7 +91,7 @@ const UserProfileActions = ({
     });
   };
 
-  const contactButton = instant_booking ? (
+  const contactButton = instantBooking ? (
     <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
       <ProfileActionButton title="Rezervă acum" onClick={onBookNow} />
     </Protected>
@@ -103,7 +103,7 @@ const UserProfileActions = ({
 
   return (
     <>
-      {is_business_or_employee && contactButton}
+      {isBusinessOrEmployee && contactButton}
       <ProfileActionButton
         title={localFollow ? "Urmărești" : "Urmărește"}
         variant={localFollow ? "outlined" : "contained"}

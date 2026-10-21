@@ -6,13 +6,15 @@ import { AppRoutes } from "@/utils/routes";
 import ProfileActionButton from "./ProfileActionButton";
 
 type MyProfileActionsProps = {
-  is_business_or_employee: boolean;
+  isBusinessOrEmployee: boolean;
+  instantBooking: boolean;
   onOpenEditModal: () => void;
   onShare: () => void;
 };
 
 const MyProfileActions = ({
-  is_business_or_employee,
+  isBusinessOrEmployee,
+  instantBooking,
   onOpenEditModal,
   onShare,
 }: MyProfileActionsProps) => {
@@ -24,7 +26,7 @@ const MyProfileActions = ({
         onClick={onOpenEditModal}
       />
 
-      {is_business_or_employee ? (
+      {instantBooking && isBusinessOrEmployee ? (
         <ProfileActionButton
           color="secondary"
           title="Calendar"
