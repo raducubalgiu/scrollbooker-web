@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import { Post } from "@/ts/models/social/Post";
 import { PostVideoPlayer } from "@/components/cutomized/Post/PostVideoPlayer";
@@ -31,7 +31,7 @@ export function FeedVideoPool({
 }: FeedVideoPoolProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
-  const lastSettledIndexRef = useRef(currentIndex);
+  const lastSettledIndexRef = useRef<number | null>(null);
   const isProgrammaticScrollRef = useRef(false);
   const isFirstScrollRef = useRef(true);
   const programmaticScrollTimeoutRef = useRef<ReturnType<
@@ -97,7 +97,7 @@ export function FeedVideoPool({
   // programatic către el. Dacă schimbarea vine chiar din swipe-ul userului
   // (IntersectionObserver-ul de mai sus a raportat-o deja), nu mai facem
   // nimic — containerul e deja acolo.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (currentIndex === lastSettledIndexRef.current) return;
 
     const target = itemRefs.current.get(currentIndex);
