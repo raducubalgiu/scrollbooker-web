@@ -20,11 +20,11 @@ export default function FeedModule() {
 
   const {
     currentTab,
-    currentIndex,
+    currentPostId,
     appliedServiceIds,
     appliedOnlyVideoReviews,
     setCurrentTab,
-    setCurrentIndex,
+    setCurrentPostId,
     setAppliedFilters,
   } = useFeedState();
   const [showFilters, setShowFilters] = useState(false);
@@ -56,12 +56,12 @@ export default function FeedModule() {
     isFetchingNextPage,
     fetchNextPage,
     isLoading,
-    initialIndex: currentIndex,
+    initialPostId: currentPostId,
   });
 
   useEffect(() => {
-    setCurrentIndex(feed.currentIndex);
-  }, [feed.currentIndex, setCurrentIndex]);
+    setCurrentPostId(feed.currentPost?.id ?? null);
+  }, [feed.currentPost?.id, setCurrentPostId]);
 
   const handleTabChange = useCallback(
     (tab: FeedTabEnum) => {

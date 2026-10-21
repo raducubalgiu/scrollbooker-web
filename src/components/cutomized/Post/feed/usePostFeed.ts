@@ -22,7 +22,16 @@ type UsePostFeedParams = {
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
   isLoading: boolean;
+  // Index deja rezolvat de caller (ex. UserPostFeedModule, care are nevoie
+  // să pagineze singur ca să găsească postarea pe o pagină ulterioară) —
+  // folosit ca atare, fără căutare internă.
   initialIndex?: number | undefined;
+  // Id al postării de restaurat (ex. FeedModule, la revenirea dintr-o altă
+  // rută) — rezolvat aici la index căutând prin `posts`, nu reținut ca
+  // index brut: lista poate reveni cu altă ordine/conținut (refetch, feed
+  // nedeterminist), caz în care un index fix ar ajunge să arate altă
+  // postare decât cea reală.
+  initialPostId?: number | null | undefined;
 };
 
 export const usePostFeed = ({
@@ -33,6 +42,7 @@ export const usePostFeed = ({
   fetchNextPage,
   isLoading,
   initialIndex,
+  initialPostId,
 }: UsePostFeedParams) => {
   const { navigateTo } = useAppNavigation();
   const queryClient = useQueryClient();
@@ -42,11 +52,24 @@ export const usePostFeed = ({
 
   useEffect(() => {
     if (hasAppliedInitialIndex.current) return;
-    if (initialIndex === undefined) return;
 
-    setCurrentIndex(initialIndex);
+    if (initialIndex !== undefined) {
+      setCurrentIndex(initialIndex);
+      hasAppliedInitialIndex.current = true;
+      return;
+    }
+
+    if (initialPostId == null) {
+      hasAppliedInitialIndex.current = true;
+      return;
+    }
+
+    if (isLoading || posts.length === 0) return;
+
+    const idx = posts.findIndex((p) => p.id === initialPostId);
+    setCurrentIndex(idx >= 0 ? idx : 0);
     hasAppliedInitialIndex.current = true;
-  }, [initialIndex]);
+  }, [initialIndex, initialPostId, posts, isLoading]);
 
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);

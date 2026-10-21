@@ -130,21 +130,6 @@ export function FeedVideoPool({
     };
   }, []);
 
-  // WebKit (Safari/Chrome pe iOS — ambele rulează pe WebKit acolo) e mult
-  // mai strict decât Chrome desktop/Android cu privire la autoplay cu
-  // sunet: play() trebuie apelat cât mai aproape de gestul userului, nu la
-  // finalul lanțului IntersectionObserver → setState → effect, care e
-  // asincron și poate ajunge după ce fereastra de "user activation" a
-  // expirat (mai probabil la swipe-uri cu impuls mare, unde settle-ul
-  // scroll-snap durează mai mult).
-  //
-  // Doar un touchend nu e suficient ca semnal — se declanșează și la un
-  // tap static pe video (toggle play/pause din PostVideoPlayer), caz în
-  // care un play() aici intră în cursă cu verificarea video.paused din
-  // acel toggle și îi inversează direcția. De-asta urmărim mișcarea reală
-  // dintre touchstart/touchend (un swipe, nu un tap) și nu apelăm play()
-  // dacă cel mai vizibil post e tot cel deja activ — altfel am putea anula
-  // o pauză manuală a userului chiar pe videoul curent.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;

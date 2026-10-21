@@ -11,11 +11,11 @@ import { FeedTabEnum } from "@/components/modules/Marketplace/FeedModule/FeedTab
 
 type FeedStateContextValue = {
   currentTab: FeedTabEnum;
-  currentIndex: number;
+  currentPostId: number | null;
   appliedServiceIds: Set<number>;
   appliedOnlyVideoReviews: boolean;
   setCurrentTab: (tab: FeedTabEnum) => void;
-  setCurrentIndex: (index: number) => void;
+  setCurrentPostId: (postId: number | null) => void;
   setAppliedFilters: (
     serviceIds: Set<number>,
     onlyVideoReviews: boolean
@@ -32,7 +32,7 @@ export default function FeedStateProvider({
   const [currentTab, setCurrentTab] = useState<FeedTabEnum>(
     FeedTabEnum.EXPLORE
   );
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentPostId, setCurrentPostId] = useState<number | null>(null);
   const [appliedServiceIds, setAppliedServiceIds] = useState<Set<number>>(
     new Set()
   );
@@ -50,14 +50,14 @@ export default function FeedStateProvider({
   const value = useMemo(
     () => ({
       currentTab,
-      currentIndex,
+      currentPostId,
       appliedServiceIds,
       appliedOnlyVideoReviews,
       setCurrentTab,
-      setCurrentIndex,
+      setCurrentPostId,
       setAppliedFilters,
     }),
-    [currentTab, currentIndex, appliedServiceIds, appliedOnlyVideoReviews, setAppliedFilters]
+    [currentTab, currentPostId, appliedServiceIds, appliedOnlyVideoReviews, setAppliedFilters]
   );
 
   return (
