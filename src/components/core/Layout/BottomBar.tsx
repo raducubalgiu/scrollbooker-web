@@ -2,6 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   Badge,
   BottomNavigation,
@@ -9,6 +10,8 @@ import {
   Box,
   useTheme,
 } from "@mui/material";
+import { useNotificationsCount } from "@/controllers/user/notification.controller";
+import { useAppointmentsCount } from "@/controllers/booking/appointments.controller";
 import type { Theme } from "@mui/material/styles";
 import type { StaticImageData } from "next/image";
 import { AppRoutes } from "@/utils/routes";
@@ -38,15 +41,21 @@ type BottomBarActionItem = {
   route: string;
   activeIcon: StaticImageData;
   inactiveIcon: StaticImageData;
-  badge?: number;
+  badge?: number | undefined;
 };
 
 export default function BottomBar({ username, profession }: BottomBarProps) {
   const theme = useTheme();
   const pathname = usePathname() || "/";
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
 
-  const notificationsCount = 5;
-  const appointmentsCount = 2;
+  const { data: notificationsCount } = useNotificationsCount({
+    isEnabled: isAuthenticated,
+  });
+  const { data: appointmentsCount } = useAppointmentsCount({
+    isEnabled: isAuthenticated,
+  });
 
   const isDarkPage = pathname === "/";
   const isDarkMode = theme.palette.mode === "dark";
@@ -101,7 +110,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
         inactiveIcon: PersonIconOutlined,
       },
     ],
-    [username, profession]
+    [username, profession, notificationsCount, appointmentsCount]
   );
 
   const currentIndex = React.useMemo(

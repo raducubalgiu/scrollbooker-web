@@ -3,11 +3,13 @@ import { Notification } from "@/ts/models/user/Notification";
 import {
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
 
 const NOTIFICATIONS_PATH = "/api/protected/notifications";
+const NOTIFICATIONS_COUNT_POLL_INTERVAL = 60_000;
 
 const fetchNotifications = async ({ pageParam }: { pageParam: number }) => {
   const { data } = await axios.get<PaginatedData<Notification>>(
@@ -28,6 +30,26 @@ export const useInfiniteNotifications = () => {
       if (lastPage.results.length < 10) return undefined;
       return lastPage.page + 1;
     },
+  });
+};
+
+type UseNotificationsCountParams = {
+  isEnabled?: boolean;
+};
+
+export const useNotificationsCount = ({
+  isEnabled = true,
+}: UseNotificationsCountParams = {}) => {
+  const doRequest = () =>
+    axios
+      .get<number>(`${NOTIFICATIONS_PATH}/count`)
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["notifications", "count"],
+    queryFn: doRequest,
+    enabled: isEnabled,
+    refetchInterval: NOTIFICATIONS_COUNT_POLL_INTERVAL,
   });
 };
 

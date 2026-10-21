@@ -22,6 +22,8 @@ import { AppRoutes, AppRouteValues } from "@/utils/routes";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { DRAWER_PADDING_X, ICON_SLOT_SIZE, ITEM_GAP } from "./Drawer.constants";
 import Protected from "@/components/cutomized/Protected/Protected";
+import { useNotificationsCount } from "@/controllers/user/notification.controller";
+import { useAppointmentsCount } from "@/controllers/booking/appointments.controller";
 
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
@@ -51,16 +53,6 @@ export type NavigationItem = {
 const STATIC_ICONS = {
   explore: <VideoLibraryOutlinedIcon />,
   search: <SearchOutlinedIcon />,
-  appointments: (
-    <Badge badgeContent={0} color="error">
-      <QueryBuilderOutlinedIcon />
-    </Badge>
-  ),
-  notifications: (
-    <Badge badgeContent={4} color="error">
-      <NotificationsNoneOutlinedIcon />
-    </Badge>
-  ),
   personOutline: <PersonOutlineOutlinedIcon />,
   upload: <AddBoxOutlinedIcon />,
   more: <MoreHorizOutlinedIcon />,
@@ -70,12 +62,16 @@ const getPublicRoutes = ({
   username,
   profession,
   avatar,
+  appointmentsCount,
+  notificationsCount,
   onOpenNotificationsView,
   onOpenAppointmentsView,
 }: {
   username: string | undefined;
   profession: string | undefined;
   avatar: string | null | undefined;
+  appointmentsCount: number | undefined;
+  notificationsCount: number | undefined;
   onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
   onOpenAppointmentsView: () => void;
@@ -95,14 +91,22 @@ const getPublicRoutes = ({
   {
     label: "Rezervări",
     overlayView: "appointments",
-    icon: STATIC_ICONS.appointments,
+    icon: (
+      <Badge badgeContent={appointmentsCount} color="error">
+        <QueryBuilderOutlinedIcon />
+      </Badge>
+    ),
     permission: PermissionEnum.NO_PROTECTION,
     onClick: () => onOpenAppointmentsView(),
   },
   {
     label: "Notificări",
     overlayView: "notifications",
-    icon: STATIC_ICONS.notifications,
+    icon: (
+      <Badge badgeContent={notificationsCount} color="error">
+        <NotificationsNoneOutlinedIcon />
+      </Badge>
+    ),
     permission: PermissionEnum.NO_PROTECTION,
     onClick: () => onOpenNotificationsView(),
   },
@@ -205,12 +209,23 @@ const PublicRoutes = ({
   onOpenNotificationsView,
   onOpenAppointmentsView,
 }: PublicRoutesProps) => {
+  const isAuthenticated = !!session;
+
+  const { data: notificationsCount } = useNotificationsCount({
+    isEnabled: isAuthenticated,
+  });
+  const { data: appointmentsCount } = useAppointmentsCount({
+    isEnabled: isAuthenticated,
+  });
+
   const publicRoutes = React.useMemo(
     () =>
       getPublicRoutes({
         username: session?.username,
         profession: session?.profession,
         avatar: session?.avatar,
+        appointmentsCount,
+        notificationsCount,
         onOpenSearchView,
         onOpenNotificationsView,
         onOpenAppointmentsView,
@@ -219,6 +234,8 @@ const PublicRoutes = ({
       session?.username,
       session?.profession,
       session?.avatar,
+      appointmentsCount,
+      notificationsCount,
       onOpenSearchView,
       onOpenNotificationsView,
       onOpenAppointmentsView,
