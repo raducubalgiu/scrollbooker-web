@@ -63,18 +63,28 @@ export const useCancelEmploymentRequest = () => {
   });
 };
 
-export const useRespondEmploymentRequest = (id: string) => {
-  const queryClient = useQueryClient();
-
-  const doRequest = (payload: EmploymentRequestStatusEnum): Promise<void> =>
+export const useAcceptEmploymentRequest = () => {
+  const doRequest = (id: string): Promise<void> =>
     axios
-      .put(`/${EMPLOYMENT_REQUEST_PATH}/${id}`, payload)
+      .put(`${EMPLOYMENT_REQUEST_PATH}/${id}`, {
+        status: EmploymentRequestStatusEnum.ACCEPTED,
+      })
       .then((response) => response.data);
 
-  return useMutation<void, Error, EmploymentRequestStatusEnum>({
+  return useMutation<void, Error, string>({
     mutationFn: doRequest,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["employment-requests"] });
-    },
+  });
+};
+
+export const useDenyEmploymentRequest = () => {
+  const doRequest = (id: string): Promise<void> =>
+    axios
+      .put(`${EMPLOYMENT_REQUEST_PATH}/${id}`, {
+        status: EmploymentRequestStatusEnum.DENIED,
+      })
+      .then((response) => response.data);
+
+  return useMutation<void, Error, string>({
+    mutationFn: doRequest,
   });
 };

@@ -10,11 +10,12 @@ import {
 } from "@mui/material";
 
 type ConsentLayoutProps = {
-  acknowledged: boolean;
-  setAcknowledged: (e: boolean) => void;
+  acknowledged?: boolean;
+  setAcknowledged?: (e: boolean) => void;
   mainTitle: string;
   isLoading: boolean;
   sections: string[];
+  hideAcknowledgement?: boolean;
 };
 
 export default function ConsentLayout({
@@ -23,6 +24,7 @@ export default function ConsentLayout({
   acknowledged,
   setAcknowledged,
   sections,
+  hideAcknowledgement = false,
 }: ConsentLayoutProps) {
   return (
     <>
@@ -36,7 +38,7 @@ export default function ConsentLayout({
           borderRadius: 2,
         }}
       >
-        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ fontWeight: 700 }}>
           {mainTitle}
         </Typography>
         <Typography variant="body1" gutterBottom>
@@ -51,10 +53,8 @@ export default function ConsentLayout({
             return (
               <ListItem key={index} alignItems="flex-start">
                 <ListItemText
-                  primary={<Typography variant="subtitle1">{title}</Typography>}
-                  secondary={
-                    <Typography variant="body2">{description}</Typography>
-                  }
+                  primary={<Typography>{title}</Typography>}
+                  secondary={<Typography>{description}</Typography>}
                 />
               </ListItem>
             );
@@ -62,17 +62,19 @@ export default function ConsentLayout({
         {isLoading && <CircularProgress />}
       </Box>
 
-      <Box>
-        <FormControlLabel
-          label="Am citit și sunt de acord cu condițiile de mai sus."
-          control={
-            <Checkbox
-              checked={acknowledged}
-              onChange={(e) => setAcknowledged(e.target.checked)}
-            />
-          }
-        />
-      </Box>
+      {!hideAcknowledgement && (
+        <Box>
+          <FormControlLabel
+            label="Am citit și sunt de acord cu condițiile de mai sus."
+            control={
+              <Checkbox
+                checked={acknowledged ?? false}
+                onChange={(e) => setAcknowledged?.(e.target.checked)}
+              />
+            }
+          />
+        </Box>
+      )}
     </>
   );
 }
