@@ -20,6 +20,7 @@ export interface UserInfo {
   business_owner_id: number | null;
   business_type_id: number | null;
   has_employees: boolean;
+  instant_booking: boolean;
   is_employee: boolean;
   is_validated: boolean;
   registration_step: string | null;

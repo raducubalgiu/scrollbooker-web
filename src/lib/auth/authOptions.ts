@@ -80,6 +80,7 @@ async function buildRefreshedJwt(refreshToken: string): Promise<JWT> {
     business_owner_id: userInfo.business_owner_id,
     business_type_id: userInfo.business_type_id,
     has_employees: userInfo.has_employees,
+    instant_booking: userInfo.instant_booking,
     is_employee: userInfo.is_employee,
   };
 }
@@ -273,6 +274,7 @@ export const authOptions: AuthOptions = {
           business_type_id: userInfo.business_type_id,
           avatar: userInfo.avatar,
           has_employees: userInfo.has_employees,
+          instant_booking: userInfo.instant_booking,
           is_employee: userInfo.is_employee,
           permissions: permissions,
         };
@@ -315,6 +317,7 @@ export const authOptions: AuthOptions = {
         session.business_type_id = token.business_type_id;
         session.permissions = token.permissions;
         session.has_employees = token.has_employees;
+        session.instant_booking = token.instant_booking;
         session.is_employee = token.is_employee;
       }
 
