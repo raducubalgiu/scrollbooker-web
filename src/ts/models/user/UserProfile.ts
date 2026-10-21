@@ -1,3 +1,5 @@
+import { ContactInfo } from "./ContactInfo";
+
 export interface UserProfile {
   id: number;
   username: string;
@@ -23,6 +25,8 @@ export interface UserProfile {
   is_business_or_employee: boolean;
   distance_km: number | null;
   address: string | null;
+  instant_booking: boolean;
+  contact: ContactInfo;
 }
 
 export interface UserCounter {

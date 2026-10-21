@@ -9,6 +9,7 @@ type UserProfileActionsProps = {
   userId: number;
   is_business_or_employee: boolean;
   is_follow: boolean;
+  instant_booking: boolean;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
   onBookNow: () => void;
 };
@@ -17,6 +18,7 @@ const UserProfileActions = ({
   userId,
   is_business_or_employee,
   is_follow,
+  instant_booking,
   onUpdateFollows,
   onBookNow,
 }: UserProfileActionsProps) => {
@@ -89,13 +91,19 @@ const UserProfileActions = ({
     });
   };
 
+  const contactButton = instant_booking ? (
+    <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+      <ProfileActionButton title="Rezervă acum" onClick={onBookNow} />
+    </Protected>
+  ) : (
+    <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+      <ProfileActionButton title="Contactează" onClick={() => {}} />
+    </Protected>
+  );
+
   return (
     <>
-      {is_business_or_employee && (
-        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-          <ProfileActionButton title="Rezervă acum" onClick={onBookNow} />
-        </Protected>
-      )}
+      {is_business_or_employee && contactButton}
       <ProfileActionButton
         title={localFollow ? "Urmărești" : "Urmărește"}
         variant={localFollow ? "outlined" : "contained"}

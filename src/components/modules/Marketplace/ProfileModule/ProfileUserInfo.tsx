@@ -49,6 +49,7 @@ const ProfileUserInfo = ({
     counters,
     opening_hours,
     address,
+    instant_booking,
   } = profile || {};
 
   const openingStatus = useMemo(
@@ -122,6 +123,7 @@ const ProfileUserInfo = ({
         userId={id}
         is_business_or_employee={is_business_or_employee}
         is_follow={is_follow}
+        instant_booking={instant_booking}
         onUpdateFollows={onUpdateFollows}
         onBookNow={handleBookNow}
       />
