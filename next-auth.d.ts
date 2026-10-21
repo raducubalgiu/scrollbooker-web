@@ -24,6 +24,7 @@ declare module "next-auth" {
     business_owner_id: number | null;
     business_type_id: number | null;
     has_employees: boolean | null;
+    instant_booking: boolean | null;
     is_employee: boolean | null;
     permissions: string[];
   }
@@ -46,6 +47,7 @@ declare module "next-auth/jwt" {
     business_owner_id: number | null;
     business_type_id: number | null;
     has_employees: boolean | null;
+    instant_booking: boolean | null;
     is_employee: boolean | null;
     permissions: string[];
     error?: "RefreshAccessTokenError" | undefined;
