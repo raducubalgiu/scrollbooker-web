@@ -15,6 +15,7 @@ type TabValue = "services" | "comments" | "reviews";
 const TAB_ORDER: readonly TabValue[] = ["services", "comments", "reviews"];
 
 type PostDesktopSidebarProps = {
+  isEmpty?: boolean;
   post: Post | null;
   linkedProducts: LinkedProducts | undefined;
   isLoadingLinkedProducts: boolean;
@@ -60,6 +61,7 @@ const TabButton = memo(
 TabButton.displayName = "TabButton";
 
 const PostDesktopSidebar = ({
+  isEmpty = false,
   post,
   linkedProducts,
   isLoadingLinkedProducts,
@@ -76,6 +78,10 @@ const PostDesktopSidebar = ({
   isTogglingFollow,
 }: PostDesktopSidebarProps) => {
   const [activeTab, setActiveTab] = useState<TabValue>("services");
+
+  if (isEmpty) {
+    return <Box sx={styles.container} />;
+  }
 
   const labels: Record<TabValue, string> = {
     services: "Servicii",

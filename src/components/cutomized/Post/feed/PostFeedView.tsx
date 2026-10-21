@@ -1,5 +1,13 @@
 import React from "react";
-import { Alert, Box, Snackbar, ThemeProvider } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Snackbar,
+  Stack,
+  ThemeProvider,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 import { Post } from "@/ts/models/social/Post";
 import PostActions from "../actions/PostActions";
@@ -57,6 +65,19 @@ const PostFeedView = ({
   const { user_actions, counters } = currentPost ?? {};
   const isEmpty = !loaders.isLoading && posts.length === 0;
 
+  const ambientTheme = useTheme();
+  const isMobile = useMediaQuery(ambientTheme.breakpoints.down("md"));
+
+  const emptyState = (
+    <Stack justifyContent="center" alignItems="center" height="100%">
+      <NotFound
+        icon={<VideoLibraryOutlinedIcon />}
+        title="Nu există postări"
+        description="Nu au fost găsite postări momentan."
+      />
+    </Stack>
+  );
+
   return (
     <Box
       sx={{
@@ -71,76 +92,72 @@ const PostFeedView = ({
       <Box sx={styles.container}>
         {topLeftSlot}
 
-        {isEmpty ? (
-          <ThemeProvider theme={darkTheme}>
-            <Box sx={styles.emptyStateContainer}>
-              {headerSlot}
-              <NotFound
-                icon={<VideoLibraryOutlinedIcon />}
-                title="Nu există postări"
-                description="Nu au fost găsite postări momentan."
-              />
-            </Box>
-          </ThemeProvider>
-        ) : (
-          <>
-            <Box sx={styles.mainContent}>
-              <Box sx={styles.leftSection}>
-                <Box sx={styles.videoContainer}>
-                  <FeedVideoPool
-                    posts={posts}
-                    currentIndex={currentIndex}
-                    loaders={loaders}
-                    callbacks={callbacks}
-                    onIndexChange={handleIndexChange}
-                    onOpenLinkedProducts={() => setIsProductsOpen(true)}
-                  />
-
-                  {headerSlot}
-                </Box>
-
-                <PostActions
-                  user={currentPost?.user ?? null}
-                  counters={counters ?? null}
-                  userActions={user_actions ?? null}
-                  isOwnPost={currentPost?.is_own_post ?? false}
+        <Box sx={styles.mainContent}>
+          <Box sx={styles.leftSection}>
+            <Box sx={styles.videoContainer}>
+              {isEmpty ? (
+                isMobile ? (
+                  <ThemeProvider theme={darkTheme}>{emptyState}</ThemeProvider>
+                ) : (
+                  emptyState
+                )
+              ) : (
+                <FeedVideoPool
+                  posts={posts}
+                  currentIndex={currentIndex}
                   loaders={loaders}
                   callbacks={callbacks}
-                />
-              </Box>
-
-              <PostDesktopSidebar
-                post={currentPost ?? null}
-                linkedProducts={linkedProducts}
-                isLoadingLinkedProducts={isLoadingLinkedProducts}
-                postId={currentPost?.id}
-                isLoading={loaders.isLoading}
-                commentsCount={currentPost?.counters.comment_count}
-                user={currentPost?.user}
-                isVideoReview={currentPost?.is_video_review === true}
-                isOwnPost={currentPost?.is_own_post === true}
-                businessLocation={currentPost?.business_location}
-                distanceKm={distanceKm}
-                onNavigateToBooking={handleNavigateToBooking}
-                onFollow={handleFollow}
-                isTogglingFollow={isTogglingFollow}
-              />
-            </Box>
-
-            <Box sx={styles.controlsSection}>
-              {loaders.isLoading ? (
-                <Box width={70} />
-              ) : (
-                <ExploreControls
-                  isDisabledPrev={currentIndex === 0}
-                  isDisabledNext={currentIndex >= posts.length - 1}
-                  onGoToPrev={goToPrev}
-                  onGoToNext={goToNext}
+                  onIndexChange={handleIndexChange}
+                  onOpenLinkedProducts={() => setIsProductsOpen(true)}
                 />
               )}
+
+              {headerSlot}
             </Box>
-          </>
-        )}
+
+            {!isEmpty && (
+              <PostActions
+                user={currentPost?.user ?? null}
+                counters={counters ?? null}
+                userActions={user_actions ?? null}
+                isOwnPost={currentPost?.is_own_post ?? false}
+                loaders={loaders}
+                callbacks={callbacks}
+              />
+            )}
+          </Box>
+
+          <PostDesktopSidebar
+            isEmpty={isEmpty}
+            post={currentPost ?? null}
+            linkedProducts={linkedProducts}
+            isLoadingLinkedProducts={isLoadingLinkedProducts}
+            postId={currentPost?.id}
+            isLoading={loaders.isLoading}
+            commentsCount={currentPost?.counters.comment_count}
+            user={currentPost?.user}
+            isVideoReview={currentPost?.is_video_review === true}
+            isOwnPost={currentPost?.is_own_post === true}
+            businessLocation={currentPost?.business_location}
+            distanceKm={distanceKm}
+            onNavigateToBooking={handleNavigateToBooking}
+            onFollow={handleFollow}
+            isTogglingFollow={isTogglingFollow}
+          />
+        </Box>
+
+        <Box sx={styles.controlsSection}>
+          {loaders.isLoading ? (
+            <Box width={70} />
+          ) : (
+            <ExploreControls
+              isDisabledPrev={currentIndex === 0}
+              isDisabledNext={currentIndex >= posts.length - 1}
+              onGoToPrev={goToPrev}
+              onGoToNext={goToNext}
+            />
+          )}
+        </Box>
 
         <PostLinkedProductsSheet
           open={isProductsOpen}
@@ -199,14 +216,6 @@ const styles = {
       md: "calc(100vh - 40px)",
     },
     overflow: "hidden",
-  },
-  emptyStateContainer: {
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%",
   },
   mainContent: {
     minWidth: 0,
