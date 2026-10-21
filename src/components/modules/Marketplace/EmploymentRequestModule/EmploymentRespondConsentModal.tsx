@@ -1,11 +1,17 @@
 "use client";
 
-import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import Modal from "@/components/core/Modal/Modal";
 import ConsentLayout from "@/components/cutomized/MainLayout/ConsentLayout";
-import { useCustomQuery } from "@/hooks/useHttp";
-import { Consent } from "@/ts/models/nomenclatures/consent/Consent";
+import { useGetConsentByName } from "@/controllers/nomenclature/consent.controller";
 import { ConsentEnum } from "@/ts/models/nomenclatures/consent/ConsentEnum";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Stack,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React, { useState } from "react";
 
 type EmploymentRespondConsentModalProps = {
@@ -23,34 +29,15 @@ export default function EmploymentRespondConsentModal({
 }: EmploymentRespondConsentModalProps) {
   const [acknowledged, setAcknowledged] = useState(false);
 
-  const { data: consent, isLoading } = useCustomQuery<Consent>({
-    key: ["get-consent"],
-    url: `/api/nomenclatures/consents/name/${ConsentEnum.EMPLOYMENT_REQUESTS_ACCEPTANCE}`,
-    options: { enabled: open },
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { data: consent, isLoading } = useGetConsentByName({
+    consentName: ConsentEnum.EMPLOYMENT_REQUESTS_ACCEPTANCE,
+    isEnabled: open,
   });
 
   const sections = consent?.text?.split(/\n(?=\d+\. )/);
-
-  const actions: ActionButtonType[] = [
-    {
-      title: "Renunță",
-      props: {
-        variant: "outlined",
-        color: "secondary",
-        onClick: onClose,
-        disabled: isLoadingAccept,
-        loading: isLoadingAccept,
-      },
-    },
-    {
-      title: "Acceptă",
-      props: {
-        onClick: onAccept,
-        disabled: isLoading,
-        loading: isLoadingAccept,
-      },
-    },
-  ];
 
   return (
     <Modal
@@ -59,14 +46,54 @@ export default function EmploymentRespondConsentModal({
       handleClose={onClose}
       maxWidth="md"
       fullWidth
-      actions={actions}
+      fullScreen={isMobile}
+      customFooter={
+        <Stack spacing={1.5} width="100%">
+          <FormControlLabel
+            label="Am citit și sunt de acord cu condițiile de mai sus."
+            control={
+              <Checkbox
+                checked={acknowledged}
+                onChange={(e) => setAcknowledged(e.target.checked)}
+              />
+            }
+          />
+
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={1}
+            justifyContent="flex-end"
+          >
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={onClose}
+              disabled={isLoadingAccept}
+              loading={isLoadingAccept}
+              sx={{ fontWeight: 600, width: { xs: "100%", sm: "auto" } }}
+            >
+              Renunță
+            </Button>
+
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={onAccept}
+              disabled={isLoading}
+              loading={isLoadingAccept}
+              sx={{ fontWeight: 600, width: { xs: "100%", sm: "auto" } }}
+            >
+              Acceptă
+            </Button>
+          </Stack>
+        </Stack>
+      }
     >
       <ConsentLayout
         mainTitle="Acceptare cerere angajare"
         sections={sections ?? []}
-        acknowledged={acknowledged}
-        setAcknowledged={setAcknowledged}
         isLoading={isLoading}
+        hideAcknowledgement
       />
     </Modal>
   );
