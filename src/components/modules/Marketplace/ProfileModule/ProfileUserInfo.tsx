@@ -111,7 +111,8 @@ const ProfileUserInfo = ({
     if (is_own_profile) {
       return (
         <MyProfileActions
-          is_business_or_employee={is_business_or_employee}
+          isBusinessOrEmployee={is_business_or_employee}
+          instantBooking={instant_booking}
           onOpenEditModal={onOpenEditModal}
           onShare={handleShare}
         />
@@ -121,9 +122,9 @@ const ProfileUserInfo = ({
     return (
       <UserProfileActions
         userId={id}
-        is_business_or_employee={is_business_or_employee}
-        is_follow={is_follow}
-        instant_booking={instant_booking}
+        isBusinessOrEmployee={is_business_or_employee}
+        isFollow={is_follow}
+        instantBooking={instant_booking}
         onUpdateFollows={onUpdateFollows}
         onBookNow={handleBookNow}
       />
