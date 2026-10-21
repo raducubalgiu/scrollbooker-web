@@ -28,6 +28,7 @@ type ProductCardProps = {
   product: Product;
   isSelected: boolean;
   showIcon: boolean;
+  instantBooking?: boolean;
   shouldToggleDescription?: boolean;
   displayEditableActions?: boolean;
   isLoadingDelete?: boolean;
@@ -43,6 +44,7 @@ const ProductCard = ({
   product,
   isSelected,
   showIcon,
+  instantBooking = true,
   shouldToggleDescription = false,
   displayEditableActions = false,
   isLoadingDelete = false,
@@ -168,7 +170,7 @@ const ProductCard = ({
           </Stack>
         </Box>
 
-        {!displayEditableActions && (
+        {!displayEditableActions && instantBooking && (
           <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
             {showIcon ? (
               <Tooltip title={isSelected ? "Elimină" : "Adaugă"}>

@@ -166,6 +166,7 @@ const PostFeedView = ({
           linkedProducts={linkedProducts}
           isLoadingLinkedProducts={isLoadingLinkedProducts}
           isLoadingPosts={loaders.isLoading}
+          instantBooking={currentPost?.instant_booking ?? false}
           onNavigateToBooking={handleNavigateToBooking}
         />
 

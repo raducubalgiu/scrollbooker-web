@@ -114,6 +114,7 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
         userId={localProfile.id}
         businessId={localProfile.business_id}
         businessOwnerId={localProfile.business_owner?.id}
+        instantBooking={localProfile.instant_booking}
         isBusinessOrEmployee={localProfile.is_business_or_employee}
         isMyProfile={localProfile.is_own_profile}
         tab={tab}

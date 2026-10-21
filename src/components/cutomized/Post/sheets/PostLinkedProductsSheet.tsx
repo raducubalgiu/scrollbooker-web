@@ -12,6 +12,7 @@ type PostLinkedProductsSheetProps = {
   linkedProducts: LinkedProducts | undefined;
   isLoadingLinkedProducts: boolean;
   isLoadingPosts: boolean;
+  instantBooking: boolean;
   onNavigateToBooking: (prodId: number | null) => void;
 };
 
@@ -22,6 +23,7 @@ const PostLinkedProductsSheet = ({
   linkedProducts,
   isLoadingLinkedProducts,
   isLoadingPosts,
+  instantBooking,
   onNavigateToBooking,
 }: PostLinkedProductsSheetProps) => {
   const { business } = linkedProducts || {};
@@ -71,6 +73,7 @@ const PostLinkedProductsSheet = ({
           linkedProducts={linkedProducts}
           isLoadingLinkedProducts={isLoadingLinkedProducts}
           isLoadingPosts={isLoadingPosts}
+          instantBooking={instantBooking}
           onNavigateToBooking={onNavigateToBooking}
         />
       </Box>

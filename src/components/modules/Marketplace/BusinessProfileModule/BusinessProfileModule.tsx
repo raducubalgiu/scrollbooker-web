@@ -87,6 +87,7 @@ const BusinessProfileModule = ({
 								userProducts={profile.user_products}
 								businessId={profile.id}
 								businessOwnerId={profile.owner.id}
+								instantBooking={profile.instant_booking}
 							/>
 							<BusinessPostsTab
 								id="social"

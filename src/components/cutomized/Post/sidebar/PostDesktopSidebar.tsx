@@ -98,6 +98,7 @@ const PostDesktopSidebar = ({
             isLoadingLinkedProducts={isLoadingLinkedProducts}
             userId={user?.id}
             isLoadingPosts={isLoading}
+            instantBooking={post?.instant_booking ?? false}
             onNavigateToBooking={onNavigateToBooking}
           />
         );

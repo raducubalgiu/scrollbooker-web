@@ -25,6 +25,7 @@ type BusinessServicesTabProps = {
 	userProducts: UserProducts;
 	businessId: number;
 	businessOwnerId: number;
+	instantBooking: boolean;
 };
 
 const BusinessServicesTab = ({
@@ -33,6 +34,7 @@ const BusinessServicesTab = ({
 	userProducts,
 	businessId,
 	businessOwnerId,
+	instantBooking,
 }: BusinessServicesTabProps) => {
 	const { navigateTo } = useAppNavigation();
 	const [activeServiceId, setActiveServiceId] = useState<number | null>(null);
@@ -96,6 +98,7 @@ const BusinessServicesTab = ({
 								product={product}
 								isSelected={false}
 								showIcon={false}
+								instantBooking={instantBooking}
 								shouldToggleDescription
 								onAdd={() => {}}
 								onNavigateToBooking={() => handleNavigateToBooking(product)}

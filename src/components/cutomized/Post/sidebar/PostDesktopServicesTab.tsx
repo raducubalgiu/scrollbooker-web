@@ -10,6 +10,7 @@ type PostDesktopServicesTabProps = {
   isLoadingLinkedProducts: boolean;
   userId: number | undefined;
   isLoadingPosts: boolean;
+  instantBooking: boolean;
   onNavigateToBooking: (selectedProductId: number | null) => void;
 };
 
@@ -17,6 +18,7 @@ const PostDesktopServicesTab = ({
   linkedProducts,
   isLoadingLinkedProducts,
   isLoadingPosts,
+  instantBooking,
   onNavigateToBooking,
 }: PostDesktopServicesTabProps) => {
   return (
@@ -25,6 +27,7 @@ const PostDesktopServicesTab = ({
         linkedProducts={linkedProducts}
         isLoadingLinkedProducts={isLoadingLinkedProducts}
         isLoadingPosts={isLoadingPosts}
+        instantBooking={instantBooking}
         onNavigateToBooking={onNavigateToBooking}
       />
     </Box>

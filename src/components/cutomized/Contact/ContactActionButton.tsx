@@ -48,7 +48,9 @@ const ContactActionButton = ({
     );
   }
 
-  const contactAction = getContactActionInfo(contact, () => setIsChoiceOpen(true));
+  const contactAction = getContactActionInfo(contact, () =>
+    setIsChoiceOpen(true)
+  );
 
   if (!contactAction.isVisible) {
     return null;
@@ -64,7 +66,9 @@ const ContactActionButton = ({
         disableElevation
         fullWidth={fullWidth}
         size={size}
-        startIcon={contactAction.isWhatsAppStyled ? <WhatsAppIcon /> : undefined}
+        startIcon={
+          contactAction.isWhatsAppStyled ? <WhatsAppIcon /> : undefined
+        }
         onClick={contactAction.onClick}
         sx={
           contactAction.isWhatsAppStyled
