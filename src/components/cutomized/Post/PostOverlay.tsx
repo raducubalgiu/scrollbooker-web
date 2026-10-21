@@ -9,6 +9,7 @@ import { useUserLocation } from "@/hooks/useUserLocation";
 import { PostBusinessLocation } from "@/ts/models/social/Post";
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
 import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
+import PostContactActions from "./PostContactActions";
 import PostOverlayUser from "./PostOverlayUser";
 import { calculateDistance } from "@/utils/calculateDistance";
 
@@ -102,15 +103,22 @@ const PostOverlay = ({
               </Box>
             )}
 
-            <Box onClick={(e) => e.stopPropagation()}>
-              <ContactActionButton
-                instantBooking={instantBooking}
-                contact={contact}
-                onBookNow={onOpenLinkedProducts}
-                fullWidth
-                size="small"
-                sx={styles.bookButton}
-              />
+            <Box onClick={(e) => e.stopPropagation()} sx={styles.bookButton}>
+              {instantBooking ? (
+                <ContactActionButton
+                  instantBooking
+                  contact={contact}
+                  onBookNow={onOpenLinkedProducts}
+                  bookLabel={isVideoReview ? "Rezervă și tu" : "Rezervă acum"}
+                  fullWidth
+                  size="small"
+                />
+              ) : (
+                <PostContactActions
+                  contact={contact}
+                  onOpenServices={onOpenLinkedProducts}
+                />
+              )}
             </Box>
           </Stack>
 

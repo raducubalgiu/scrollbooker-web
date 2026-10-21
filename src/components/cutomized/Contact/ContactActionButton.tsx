@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { Button, SxProps, Theme } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import CallIcon from "@mui/icons-material/Call";
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
-import { buildCallUrl, buildWhatsappUrl } from "@/utils/contact-utils";
+import { getContactActionInfo } from "@/utils/contact-utils";
 import ContactChoiceDialog from "./ContactChoiceDialog";
 
 type ContactActionButtonProps = {
@@ -32,9 +31,6 @@ const ContactActionButton = ({
   sx = {},
 }: ContactActionButtonProps) => {
   const [isChoiceOpen, setIsChoiceOpen] = useState(false);
-  const { phone, accepts_whatsapp, accepts_calls } = contact;
-
-  const sxArray = Array.isArray(sx) ? sx : [sx];
 
   if (instantBooking) {
     return (
@@ -52,67 +48,41 @@ const ContactActionButton = ({
     );
   }
 
-  if (!phone || (!accepts_whatsapp && !accepts_calls)) {
+  const contactAction = getContactActionInfo(contact, () => setIsChoiceOpen(true));
+
+  if (!contactAction.isVisible) {
     return null;
   }
 
-  if (accepts_whatsapp && accepts_calls) {
-    return (
-      <>
-        <Button
-          variant={variant}
-          color={color}
-          disableElevation
-          fullWidth={fullWidth}
-          size={size}
-          onClick={() => setIsChoiceOpen(true)}
-          sx={sx}
-        >
-          Contactează
-        </Button>
+  const sxArray = Array.isArray(sx) ? sx : [sx];
 
-        <ContactChoiceDialog
-          open={isChoiceOpen}
-          phone={phone}
-          onClose={() => setIsChoiceOpen(false)}
-        />
-      </>
-    );
-  }
-
-  if (accepts_whatsapp) {
-    return (
+  return (
+    <>
       <Button
-        variant="contained"
+        variant={variant}
+        color={color}
         disableElevation
         fullWidth={fullWidth}
         size={size}
-        startIcon={<WhatsAppIcon />}
-        component="a"
-        href={buildWhatsappUrl(phone)}
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={[styles.whatsappButton, ...sxArray]}
+        startIcon={contactAction.isWhatsAppStyled ? <WhatsAppIcon /> : undefined}
+        onClick={contactAction.onClick}
+        sx={
+          contactAction.isWhatsAppStyled
+            ? [styles.whatsappButton, ...sxArray]
+            : sx
+        }
       >
-        WhatsApp
+        {contactAction.title}
       </Button>
-    );
-  }
 
-  return (
-    <Button
-      variant={variant}
-      color={color}
-      disableElevation
-      fullWidth={fullWidth}
-      size={size}
-      startIcon={<CallIcon />}
-      component="a"
-      href={buildCallUrl(phone)}
-      sx={sx}
-    >
-      Sună
-    </Button>
+      {contact.phone && (
+        <ContactChoiceDialog
+          open={isChoiceOpen}
+          phone={contact.phone}
+          onClose={() => setIsChoiceOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

@@ -1,0 +1,81 @@
+"use client";
+
+import { useState } from "react";
+import { Button, Stack } from "@mui/material";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import { getContactActionInfo } from "@/utils/contact-utils";
+import ContactChoiceDialog from "@/components/cutomized/Contact/ContactChoiceDialog";
+
+type PostContactActionsProps = {
+  contact: ContactInfo;
+  onOpenServices: () => void;
+};
+
+const PostContactActions = ({
+  contact,
+  onOpenServices,
+}: PostContactActionsProps) => {
+  const [isChoiceOpen, setIsChoiceOpen] = useState(false);
+  const contactAction = getContactActionInfo(contact, () =>
+    setIsChoiceOpen(true)
+  );
+
+  return (
+    <Stack direction="row" spacing={1}>
+      {contactAction.isVisible && (
+        <Button
+          variant="contained"
+          disableElevation
+          fullWidth
+          size="small"
+          startIcon={contactAction.isWhatsAppStyled ? <WhatsAppIcon /> : undefined}
+          onClick={contactAction.onClick}
+          sx={contactAction.isWhatsAppStyled ? styles.whatsappButton : {}}
+        >
+          {contactAction.title}
+        </Button>
+      )}
+
+      <Button
+        variant="contained"
+        disableElevation
+        fullWidth
+        size="small"
+        onClick={onOpenServices}
+        sx={styles.pricesButton}
+      >
+        Prețuri
+      </Button>
+
+      {contact.phone && (
+        <ContactChoiceDialog
+          open={isChoiceOpen}
+          phone={contact.phone}
+          onClose={() => setIsChoiceOpen(false)}
+        />
+      )}
+    </Stack>
+  );
+};
+
+export default PostContactActions;
+
+const styles = {
+  whatsappButton: {
+    bgcolor: "whatsapp.main",
+    color: "common.white",
+    "&:hover": {
+      bgcolor: "whatsapp.main",
+      filter: "brightness(0.92)",
+    },
+  },
+  pricesButton: {
+    bgcolor: "common.white",
+    color: "common.black",
+    "&:hover": {
+      bgcolor: "common.white",
+      filter: "brightness(0.95)",
+    },
+  },
+};
