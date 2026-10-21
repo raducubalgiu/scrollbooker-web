@@ -1,3 +1,5 @@
+import { ContactInfo } from "../user/ContactInfo";
+
 export interface Post {
   id: number;
   description: string | null;
@@ -14,6 +16,8 @@ export interface Post {
   business_id: number | null;
   review: PostReview | null;
   service_domain: PostServiceDomain | null;
+  instant_booking: boolean;
+  contact: ContactInfo;
   created_at: string;
 }
 

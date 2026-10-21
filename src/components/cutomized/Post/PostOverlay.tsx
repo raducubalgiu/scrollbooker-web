@@ -1,12 +1,14 @@
 "use client";
 
 import React, { memo, useMemo, useState } from "react";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import PostActionsMobile from "./actions/PostActionsMobile";
 import PostBadge from "./PostBadge";
 import { PostActionsProps } from "./actions/postActionTypes";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import { PostBusinessLocation } from "@/ts/models/social/Post";
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
 import PostOverlayUser from "./PostOverlayUser";
 import { calculateDistance } from "@/utils/calculateDistance";
 
@@ -14,6 +16,8 @@ type PostOverlayProps = {
   actions: PostActionsProps;
   description: string | null;
   businessLocation: PostBusinessLocation | null;
+  instantBooking: boolean;
+  contact: ContactInfo;
   onOpenLinkedProducts: () => void;
 };
 
@@ -21,6 +25,8 @@ const PostOverlay = ({
   actions,
   description,
   businessLocation,
+  instantBooking,
+  contact,
   onOpenLinkedProducts,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -96,18 +102,16 @@ const PostOverlay = ({
               </Box>
             )}
 
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                onOpenLinkedProducts();
-              }}
-              variant="contained"
-              fullWidth
-              size="small"
-              sx={styles.bookButton}
-            >
-              Rezervă acum
-            </Button>
+            <Box onClick={(e) => e.stopPropagation()}>
+              <ContactActionButton
+                instantBooking={instantBooking}
+                contact={contact}
+                onBookNow={onOpenLinkedProducts}
+                fullWidth
+                size="small"
+                sx={styles.bookButton}
+              />
+            </Box>
           </Stack>
 
           <Box sx={styles.actionsMobileWrapper}>

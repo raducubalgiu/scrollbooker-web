@@ -3,6 +3,8 @@ import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
 import ProfileActionButton from "./ProfileActionButton";
 
 type UserProfileActionsProps = {
@@ -10,6 +12,7 @@ type UserProfileActionsProps = {
   isBusinessOrEmployee: boolean;
   isFollow: boolean;
   instantBooking: boolean;
+  contact: ContactInfo;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
   onBookNow: () => void;
 };
@@ -19,6 +22,7 @@ const UserProfileActions = ({
   isBusinessOrEmployee,
   isFollow,
   instantBooking,
+  contact,
   onUpdateFollows,
   onBookNow,
 }: UserProfileActionsProps) => {
@@ -91,13 +95,15 @@ const UserProfileActions = ({
     });
   };
 
-  const contactButton = instantBooking ? (
+  const contactButton = (
     <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-      <ProfileActionButton title="Rezervă acum" onClick={onBookNow} />
-    </Protected>
-  ) : (
-    <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-      <ProfileActionButton title="Contactează" onClick={() => {}} />
+      <ContactActionButton
+        instantBooking={instantBooking}
+        contact={contact}
+        onBookNow={onBookNow}
+        size="medium"
+        sx={styles.contactButton}
+      />
     </Protected>
   );
 
@@ -116,3 +122,12 @@ const UserProfileActions = ({
 };
 
 export default UserProfileActions;
+
+const styles = {
+  contactButton: {
+    textTransform: "none",
+    flex: { xs: 1, sm: "none" },
+    whiteSpace: "nowrap",
+    minWidth: "max-content",
+  },
+};
