@@ -91,7 +91,7 @@ export default function PostActionsMobile({
         direction="column"
         justifyContent="center"
         alignItems="center"
-        spacing={0.5}
+        spacing={0.75}
       >
         {mobileActions.map(
           ({ key, count, disabled, isActive, activeColor, onClick }) => {
@@ -112,7 +112,7 @@ export default function PostActionsMobile({
                 >
                   <CustomSvg
                     src={icon}
-                    size={30}
+                    size={32}
                     sx={{
                       backgroundColor:
                         isActive && activeColor ? activeColor : "common.white",
