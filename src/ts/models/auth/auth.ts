@@ -26,6 +26,16 @@ export interface UserInfo {
   registration_step: string | null;
 }
 
+export interface UnfinishedRegistration {
+  id: number;
+  email: string;
+  username: string;
+  fullname: string;
+  role_name: string;
+  registration_step: string | null;
+  created_at: string;
+}
+
 export interface PhoneVerificationSendRequest {
   phone: string;
 }

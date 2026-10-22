@@ -20,6 +20,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import BeenhereOutlinedIcon from "@mui/icons-material/BeenhereOutlined";
 import AddModeratorOutlinedIcon from "@mui/icons-material/AddModeratorOutlined";
 import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOutlined";
+import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
@@ -114,6 +115,12 @@ const NOMENCLATURES_ROUTES: NavigationItem[] = [
     route: AppRoutes.approve(),
     icon: <BeenhereOutlinedIcon />,
     permission: PermissionEnum.NO_PROTECTION,
+  },
+  {
+    label: "Înregistrări nefinalizate",
+    route: AppRoutes.unfinishedRegistrations(),
+    icon: <PersonOffOutlinedIcon />,
+    permission: PermissionEnum.UNFINISHED_REGISTRATIONS_VIEW,
   },
   {
     label: "Roluri și permisiuni",

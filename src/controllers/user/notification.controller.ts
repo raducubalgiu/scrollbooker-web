@@ -53,6 +53,17 @@ export const useNotificationsCount = ({
   });
 };
 
+export const useMarkNotificationsAsRead = () => {
+  const doRequest = (notificationIds: number[]): Promise<void> =>
+    axios
+      .patch(`${NOTIFICATIONS_PATH}/read`, { notification_ids: notificationIds })
+      .then((res) => res.data);
+
+  return useMutation<void, Error, number[]>({
+    mutationFn: doRequest,
+  });
+};
+
 export const useDeleteNotification = () => {
   const queryClient = useQueryClient();
 

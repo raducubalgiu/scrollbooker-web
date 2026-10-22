@@ -61,15 +61,12 @@ export default function UnapprovedBusinessModule() {
       )}
 
       {!isLoading && !isError && businesses.length > 0 && (
-        // Folosim un Stack principal doar pentru a ține grid-ul și butonul de "Încarcă mai multe" separate vertical
         <Stack spacing={4}>
-          {/* Containerul pentru carduri convertit în CSS Grid responsiv */}
           <Box
             sx={{
               display: "grid",
-              // 1 coloană pe mobil (xs), 2 coloane pe desktop (md)
               gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-              gap: 2, // Spațiul dintre carduri (echivalentul la spacing={2} din Stack)
+              gap: 2,
               width: "100%",
             }}
           >
