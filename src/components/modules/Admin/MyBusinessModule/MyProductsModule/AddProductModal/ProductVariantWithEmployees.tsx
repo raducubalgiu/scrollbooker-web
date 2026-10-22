@@ -71,27 +71,25 @@ const ProductVariantWithEmployees = ({
         <Typography fontWeight="600" mb={1.5}>
           Aplică același preț tuturor angajaților
         </Typography>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2}
-          alignItems={{ xs: "stretch", sm: "flex-end" }}
-        >
-          <TextField
-            label="Preț"
-            type="number"
-            size="small"
-            value={bulkPrice}
-            onChange={(e) => setBulkPrice(e.target.value)}
-            sx={styles.bulkInput}
-          />
-          <TextField
-            label="Discount %"
-            type="number"
-            size="small"
-            value={bulkDiscount}
-            onChange={(e) => setBulkDiscount(e.target.value)}
-            sx={styles.bulkInput}
-          />
+        <Stack spacing={1.5} alignItems={{ xs: "stretch", sm: "flex-start" }}>
+          <Stack flexDirection="row" gap={1.5}>
+            <TextField
+              label="Preț"
+              type="number"
+              size="small"
+              value={bulkPrice}
+              onChange={(e) => setBulkPrice(e.target.value)}
+              sx={styles.bulkInput}
+            />
+            <TextField
+              label="Discount %"
+              type="number"
+              size="small"
+              value={bulkDiscount}
+              onChange={(e) => setBulkDiscount(e.target.value)}
+              sx={styles.bulkInput}
+            />
+          </Stack>
           <Button
             variant="contained"
             disableElevation

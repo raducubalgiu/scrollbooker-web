@@ -121,7 +121,7 @@ const ProductGeneralInfo = ({
           rules={{ ...isRequired, ...nameMinLength, ...nameMaxLength }}
         />
 
-        <Input name="description" label="Descriere" multiline rows={2} />
+        <Input name="description" label="Descriere" multiline rows={1} />
 
         {!!filters?.length && (
           <Box sx={{ py: 2 }}>
