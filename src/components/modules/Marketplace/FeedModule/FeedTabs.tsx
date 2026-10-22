@@ -48,8 +48,8 @@ const FeedTabs = ({
                   size={30}
                   sx={{
                     backgroundColor: "common.white",
-                    width: { xs: 26, lg: 30 },
-                    height: { xs: 26, lg: 30 },
+                    width: { xs: 28, lg: 30 },
+                    height: { xs: 28, lg: 30 },
                   }}
                 />
               </Badge>
@@ -87,8 +87,8 @@ const FeedTabs = ({
                 size={30}
                 sx={{
                   backgroundColor: "common.white",
-                  width: { xs: 26, lg: 30 },
-                  height: { xs: 26, lg: 30 },
+                  width: { xs: 28, lg: 30 },
+                  height: { xs: 28, lg: 30 },
                 }}
               />
             </IconButton>

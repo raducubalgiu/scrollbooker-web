@@ -27,11 +27,13 @@ const PostContactActions = ({
         <Button
           variant="contained"
           disableElevation
-          fullWidth
           size="small"
           startIcon={contactAction.isWhatsAppStyled ? <WhatsAppIcon /> : undefined}
           onClick={contactAction.onClick}
-          sx={contactAction.isWhatsAppStyled ? styles.whatsappButton : {}}
+          sx={[
+            styles.actionButton,
+            contactAction.isWhatsAppStyled && styles.whatsappButton,
+          ]}
         >
           {contactAction.title}
         </Button>
@@ -40,10 +42,9 @@ const PostContactActions = ({
       <Button
         variant="contained"
         disableElevation
-        fullWidth
         size="small"
         onClick={onOpenServices}
-        sx={styles.pricesButton}
+        sx={[styles.actionButton, styles.pricesButton]}
       >
         Prețuri
       </Button>
@@ -62,6 +63,10 @@ const PostContactActions = ({
 export default PostContactActions;
 
 const styles = {
+  actionButton: {
+    flex: 1,
+    minWidth: 0,
+  },
   whatsappButton: {
     bgcolor: "whatsapp.main",
     color: "common.white",
