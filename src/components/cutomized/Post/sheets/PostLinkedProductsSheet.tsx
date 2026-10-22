@@ -24,7 +24,12 @@ const PostLinkedProductsSheet = ({
   isLoadingPosts,
   onNavigateToBooking,
 }: PostLinkedProductsSheetProps) => {
-  const { business } = linkedProducts || {};
+  const { business, products } = linkedProducts || {};
+  const hasNoProducts =
+    !isLoadingLinkedProducts &&
+    !isLoadingPosts &&
+    !!products &&
+    products.length === 0;
 
   return (
     <Drawer
@@ -43,7 +48,7 @@ const PostLinkedProductsSheet = ({
           justifyContent="center"
           position="relative"
           mx={2}
-          minHeight={30}
+          sx={{ py: 1 }}
         >
           <Typography fontWeight={800} fontSize={16}>
             Servicii recomandate
@@ -55,18 +60,18 @@ const PostLinkedProductsSheet = ({
         </Stack>
       </Box>
 
-      {business && (
-        <LinkedProductsUserInfo
-          avatar={business.avatar ?? ""}
-          fullname={business.fullname}
-          ratingsAverage={business.ratings_average}
-          ratingsCount={business.ratings_count}
-          address={business.address ?? ""}
-          distanceKm={distanceKm}
-        />
-      )}
-
       <Box sx={styles.listContainer}>
+        {business && !hasNoProducts && (
+          <LinkedProductsUserInfo
+            avatar={business.avatar ?? ""}
+            fullname={business.fullname}
+            ratingsAverage={business.ratings_average}
+            ratingsCount={business.ratings_count}
+            address={business.address ?? ""}
+            distanceKm={distanceKm}
+          />
+        )}
+
         <PostLinkedProductsList
           linkedProducts={linkedProducts}
           isLoadingLinkedProducts={isLoadingLinkedProducts}
@@ -84,13 +89,12 @@ const styles = {
   drawer: {
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    height: "75vh",
+    height: "85vh",
     display: "flex",
     flexDirection: "column",
   },
   container: {
     width: "100%",
-    py: 1,
     flexShrink: 0,
   },
   iconBack: {

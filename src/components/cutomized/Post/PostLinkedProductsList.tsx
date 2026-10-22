@@ -62,7 +62,7 @@ const PostLinkedProductsList = ({
           variant="outlined"
           color="secondary"
           size="small"
-          sx={{ mt: 2.5, alignSelf: "flex-start" }}
+          sx={{ mt: 2.5, mx: 1.5, alignSelf: "flex-start" }}
           onClick={() => onNavigateToBooking(null)}
         >
           Vezi toate serviciile
@@ -92,6 +92,8 @@ const styles = {
     flexDirection: "column",
     flex: 1,
     minHeight: 0,
+    height: "100%",
+    py: 1.5,
   },
   emptyState: {
     flex: 1,
