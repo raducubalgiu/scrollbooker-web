@@ -22,7 +22,7 @@ const PostContactActions = ({
   );
 
   return (
-    <Stack direction="row" spacing={1}>
+    <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
       {contactAction.isVisible && (
         <Button
           variant="contained"
