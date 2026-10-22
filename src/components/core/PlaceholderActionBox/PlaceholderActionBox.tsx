@@ -45,12 +45,7 @@ export default function PlaceholderActionBox({
       </Box>
 
       {isError && errorMessage && (
-        <Stack
-          direction="row"
-          spacing={0.5}
-          alignItems="center"
-          sx={{ mt: 1 }}
-        >
+        <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 1 }}>
           <ErrorOutlineRoundedIcon sx={{ fontSize: 16, color: "error.main" }} />
           <Typography variant="caption" color="error.main">
             {errorMessage}
@@ -68,8 +63,8 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     px: 3,
-    py: 4,
-    borderRadius: 2,
+    py: 3,
+    borderRadius: 5,
     border: "1.5px dashed",
     borderColor: "divider",
     bgcolor: "action.hover",
