@@ -1,9 +1,14 @@
 {
+  "registerBusinessMetadata": {
+    "title": "Register your business — ScrollBooker",
+    "description": "Create your ScrollBooker business account in a few minutes and manage your calendar, services and team, all in one place."
+  },
   "registerBusiness": {
     "title": "Register your business",
     "subtitle": "Create your ScrollBooker business account in a few minutes",
     "continueWithGoogle": "Continue with Google",
     "continueWithApple": "Continue with Apple — coming soon",
+    "or": "or",
     "orWithEmail": "or with email",
     "emailLabel": "Email",
     "passwordLabel": "Password",

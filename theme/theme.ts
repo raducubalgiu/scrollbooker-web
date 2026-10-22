@@ -403,18 +403,18 @@ const getComponents = (mode: Mode) => ({
 
   MuiOutlinedInput: {
     styleOverrides: {
-      notchedOutline: {
-        border: "none",
-      },
+      notchedOutline: ({ theme }: { theme: Theme }) => ({
+        borderColor: "transparent",
+        transition: theme.transitions.create(["border-color"], {
+          duration: theme.transitions.duration.short,
+        }),
+      }),
       root: ({ theme }: { theme: Theme }) => ({
         backgroundColor: theme.palette.secondary.main,
-        borderRadius: 15,
-        transition: theme.transitions.create(
-          ["background-color", "box-shadow"],
-          {
-            duration: theme.transitions.duration.short,
-          }
-        ),
+        borderRadius: 14,
+        transition: theme.transitions.create(["background-color"], {
+          duration: theme.transitions.duration.short,
+        }),
         "&:not(.Mui-disabled):hover": {
           backgroundColor: alpha(
             theme.palette.mode === "dark"
@@ -424,11 +424,13 @@ const getComponents = (mode: Mode) => ({
           ),
         },
         "&:not(.Mui-disabled).Mui-focused": {
-          boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
           backgroundColor: theme.palette.secondary.main,
         },
-        "&:not(.Mui-disabled).Mui-focusVisible": {
-          boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.16)}`,
+        "&:not(.Mui-disabled).Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: theme.palette.primary.main,
+        },
+        "&.Mui-error .MuiOutlinedInput-notchedOutline": {
+          borderColor: theme.palette.error.main,
         },
         "& input:-webkit-autofill, & textarea:-webkit-autofill, & select:-webkit-autofill":
           {
@@ -443,6 +445,38 @@ const getComponents = (mode: Mode) => ({
             boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
             WebkitTextFillColor: theme.palette.text.primary,
           },
+      }),
+      input: ({ theme }: { theme: Theme }) => ({
+        padding: "12px 14px",
+        [theme.breakpoints.up("md")]: {
+          padding: "14.5px 16px",
+        },
+      }),
+      inputSizeSmall: ({ theme }: { theme: Theme }) => ({
+        padding: "8px 12px",
+        [theme.breakpoints.up("md")]: {
+          padding: "8.5px 14px",
+        },
+      }),
+    },
+  },
+
+  MuiInputLabel: {
+    styleOverrides: {
+      outlined: ({ theme }: { theme: Theme }) => ({
+        transform: "translate(14px, 12px) scale(1)",
+        [theme.breakpoints.up("md")]: {
+          transform: "translate(16px, 14.5px) scale(1)",
+        },
+        "&.MuiInputLabel-sizeSmall": {
+          transform: "translate(12px, 8px) scale(1)",
+          [theme.breakpoints.up("md")]: {
+            transform: "translate(14px, 8.5px) scale(1)",
+          },
+        },
+        "&.MuiInputLabel-shrink": {
+          transform: "translate(14px, -9px) scale(0.75)",
+        },
       }),
     },
   },

@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Divider, Stack, SxProps, Theme, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  Stack,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import NextLink from "next/link";
 import AppleIcon from "@mui/icons-material/Apple";
@@ -97,6 +104,36 @@ export default function AuthForm({
         <Typography color="text.secondary">{subtitle}</Typography>
       </Stack>
 
+      <Stack spacing={1.5} sx={{ mb: 3 }}>
+        <Button
+          variant="outlined"
+          fullWidth
+          loading={isGoogleLoading ?? false}
+          onClick={onGoogleClick}
+          startIcon={<GoogleIcon />}
+          disableElevation
+          sx={oauthButtonSx}
+        >
+          {googleLabel}
+        </Button>
+
+        <Button
+          variant="outlined"
+          fullWidth
+          startIcon={<AppleIcon />}
+          disableElevation
+          sx={oauthButtonSx}
+        >
+          {appleLabel}
+        </Button>
+      </Stack>
+
+      <Divider sx={{ mb: 3 }}>
+        <Typography variant="body2" color="text.secondary">
+          {orLabel}
+        </Typography>
+      </Divider>
+
       <FormProvider {...methods}>
         <Stack spacing={1.5} sx={{ mb: 3 }}>
           <IdentifierInput
@@ -123,55 +160,31 @@ export default function AuthForm({
             disabled={isPhoneFlow}
             onClick={methods.handleSubmit(handleSubmit)}
             disableElevation
-            sx={{ mt: 1, fontWeight: 700, textTransform: "none", ...submitButtonSx }}
+            sx={{
+              mt: 1,
+              fontWeight: 700,
+              textTransform: "none",
+              ...submitButtonSx,
+            }}
           >
             {submitLabel}
           </Button>
         </Stack>
       </FormProvider>
 
-      <Divider sx={{ mb: 3 }}>
-        <Typography variant="body2" color="text.secondary">
-          {orLabel}
-        </Typography>
-      </Divider>
-
-      <Stack spacing={1.5} sx={{ mb: 3 }}>
-        <Button
-          variant="outlined"
-          fullWidth
-          loading={isGoogleLoading ?? false}
-          onClick={onGoogleClick}
-          startIcon={<GoogleIcon />}
-          disableElevation
-          sx={oauthButtonSx}
-        >
-          {googleLabel}
-        </Button>
-
-        <Button
-          variant="outlined"
-          fullWidth
-          startIcon={<AppleIcon />}
-          disableElevation
-          sx={oauthButtonSx}
-        >
-          {appleLabel}
-        </Button>
-      </Stack>
-
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="center"
-        spacing={1}
-        sx={{ mt: 4 }}
+        sx={{ mt: "auto", borderTop: 1, borderColor: "divider", pt: 1 }}
       >
-        <Typography color="text.secondary">{footerText}</Typography>
+        <Typography color="text.secondary" variant="body2">
+          {footerText}
+        </Typography>
         <Button
           component={NextLink}
           href={footerHref}
-          sx={{ textTransform: "none", fontWeight: 600 }}
+          sx={{ textTransform: "none", fontWeight: 600, px: 1.5 }}
         >
           {footerLinkText}
         </Button>

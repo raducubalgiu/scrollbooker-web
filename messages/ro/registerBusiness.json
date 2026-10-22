@@ -1,4 +1,8 @@
 {
+  "registerBusinessMetadata": {
+    "title": "Înregistrează-ți afacerea — ScrollBooker",
+    "description": "Creează contul de business ScrollBooker în câteva minute și administrează calendarul, serviciile și echipa, totul într-un singur loc."
+  },
   "registerBusiness": {
     "title": "Înregistrează-ți afacerea",
     "subtitle": "Creează contul de business ScrollBooker în câteva minute",

@@ -1,7 +1,11 @@
 {
+  "registerMetadata": {
+    "title": "Creează-ți contul — ScrollBooker",
+    "description": "Creează-ți contul ScrollBooker, descoperă servicii noi și conectează-te cu prietenii tăi."
+  },
   "register": {
     "title": "Creează-ți contul",
-    "subtitle": "Creează-ți contul ScrollBooker în câteva minute",
+    "subtitle": "Creează-ți contul ScrollBooker, descoperă servicii noi și conectează-te cu prietenii tăi.",
     "continueWithGoogle": "Continuă cu Google",
     "continueWithApple": "Continuă cu Apple — în curând",
     "or": "sau",

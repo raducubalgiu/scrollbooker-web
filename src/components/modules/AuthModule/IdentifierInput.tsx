@@ -27,7 +27,21 @@ export default function IdentifierInput({
 }: IdentifierInputProps) {
   const isRequired = required();
   const activePlaceholder =
-    options.find((option) => option.value === identifierType)?.placeholder ?? "";
+    options.find((option) => option.value === identifierType)?.placeholder ??
+    "";
+
+  if (options.length <= 1) {
+    return (
+      <Input
+        name={name}
+        rules={isRequired}
+        placeholder={activePlaceholder}
+        type={identifierType === "email" ? "email" : "text"}
+        size="medium"
+        fullWidth
+      />
+    );
+  }
 
   return (
     <Stack direction="row">

@@ -22,8 +22,6 @@ export default function TopBar({ rightContent }: TopBarProps) {
         alignItems: "center",
         justifyContent: rightContent ? "space-between" : "flex-start",
         px: { xs: 2, md: 4 },
-        borderBottom: "1px solid",
-        borderColor: "divider",
       }}
     >
       <Box
