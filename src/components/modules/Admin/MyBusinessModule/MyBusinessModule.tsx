@@ -12,6 +12,7 @@ import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
+import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
 
 import MyBusinessCard from "./MyBusinessCard";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
@@ -46,6 +47,13 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
         icon: <DashboardOutlinedIcon />,
         permission: PermissionEnum.MY_DASHBOARD_VIEW,
         href: AppRoutes.myDashboard(),
+      },
+      {
+        title: "Înregistrări nefinalizate",
+        description: "Useri care nu au finalizat onboarding-ul",
+        icon: <PersonOffOutlinedIcon />,
+        href: AppRoutes.unfinishedRegistrations(),
+        permission: PermissionEnum.UNFINISHED_REGISTRATIONS_VIEW,
       },
       {
         title: "Afaceri în aprobare",

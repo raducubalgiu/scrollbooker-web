@@ -4,11 +4,13 @@ import {
   AuthTokens,
   PhoneVerificationSendRequest,
   PhoneVerificationSendResponse,
+  UnfinishedRegistration,
   UserInfo,
   UserRegister,
 } from "@/ts/models/auth/auth";
 import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { ActionMessageResponse } from "@/ts/models/auth/ActionMessageResponse";
+import { PaginatedData } from "@/components/core/Table/Table";
 
 type UpdateUserInfoPayload = Partial<
   Pick<UserInfo, "fullname" | "avatar" | "profession">
@@ -81,6 +83,46 @@ export const useRegisterMutation = () => {
         data
       );
       return response.data;
+    },
+  });
+};
+
+type GetUnfinishedRegistrationsParams = {
+  page: number;
+  limit: number;
+};
+
+export const useUnfinishedRegistrations = ({
+  page,
+  limit,
+}: GetUnfinishedRegistrationsParams) => {
+  const doRequest = () =>
+    axios
+      .get<
+        PaginatedData<UnfinishedRegistration>
+      >(`/api/protected/auth/unfinished-registrations?page=${page}&limit=${limit}`)
+      .then((response) => response.data);
+
+  return useQuery({
+    queryKey: ["unfinished-registrations", page, limit],
+    queryFn: doRequest,
+  });
+};
+
+export const useDeleteUnfinishedRegistration = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = (userId: number): Promise<ActionMessageResponse> =>
+    axios
+      .delete<ActionMessageResponse>(
+        `/api/protected/auth/unfinished-registrations/${userId}`
+      )
+      .then((response) => response.data);
+
+  return useMutation<ActionMessageResponse, Error, number>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["unfinished-registrations"] });
     },
   });
 };

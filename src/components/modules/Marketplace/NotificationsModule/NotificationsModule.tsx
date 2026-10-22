@@ -7,7 +7,10 @@ import NotificationItem from "./NotificationItem";
 import NotificationSkeletons from "@/components/cutomized/Skeletons/NotificationSkeletons";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
-import { useInfiniteNotifications } from "@/controllers/user/notification.controller";
+import {
+  useInfiniteNotifications,
+  useMarkNotificationsAsRead,
+} from "@/controllers/user/notification.controller";
 
 type NotificationsModuleProps = {
   scrollRootRef?: React.RefObject<HTMLDivElement | null>;
@@ -28,6 +31,20 @@ const NotificationsModule = ({
     () => data?.pages.flatMap((p) => p.results) ?? [],
     [data]
   );
+
+  const { mutate: markAsRead } = useMarkNotificationsAsRead();
+  const sentIdsRef = React.useRef<Set<number>>(new Set());
+
+  React.useEffect(() => {
+    const unreadIds = notifications
+      .filter((n) => !n.is_read && !sentIdsRef.current.has(n.id))
+      .map((n) => n.id);
+
+    if (unreadIds.length === 0) return;
+
+    unreadIds.forEach((id) => sentIdsRef.current.add(id));
+    markAsRead(unreadIds);
+  }, [notifications, markAsRead]);
 
   const isInsideOverlay = Boolean(scrollRootRef);
   const activeScrollContainerRef = scrollRootRef || localListScrollRef;
