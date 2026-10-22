@@ -5,8 +5,8 @@ import { Box, IconButton, Stack, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { ServiceDomain } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import { useFeedFilterDraft } from "./useFeedFilterDraft";
-import FeedFilterVideoReviewsToggle from "./FeedFilterVideoReviewsToggle";
 import FeedFilterDomainSection from "./FeedFilterDomainSection";
+import FeedFilterNearbyToggle from "./FeedFilterNearbyToggle";
 import FeedFilterActions from "./FeedFilterActions";
 import AppLogo from "@/components/core/Logo/AppLogo";
 
@@ -15,7 +15,14 @@ type FeedFilterContentProps = {
   isLoadingDomains: boolean;
   appliedServiceIds: Set<number>;
   appliedOnlyVideoReviews: boolean;
-  onApply: (serviceIds: Set<number>, onlyVideoReviews: boolean) => void;
+  appliedOnlyNearby: boolean;
+  hasLocationAccess: boolean;
+  onRequestLocationAccess: () => void;
+  onApply: (
+    serviceIds: Set<number>,
+    onlyVideoReviews: boolean,
+    onlyNearby: boolean
+  ) => void;
   onClose: () => void;
 };
 
@@ -24,20 +31,28 @@ const FeedFilterContent = ({
   isLoadingDomains,
   appliedServiceIds,
   appliedOnlyVideoReviews,
+  appliedOnlyNearby,
+  hasLocationAccess,
+  onRequestLocationAccess,
   onApply,
   onClose,
 }: FeedFilterContentProps) => {
   const {
     draftSelectedIds,
     draftOnlyVideoReviews,
+    draftOnlyNearby,
     toggleService,
-    toggleVideoReviews,
+    toggleOnlyNearby,
     clear,
     isClearEnabled,
-  } = useFeedFilterDraft(appliedServiceIds, appliedOnlyVideoReviews);
+  } = useFeedFilterDraft(
+    appliedServiceIds,
+    appliedOnlyVideoReviews,
+    appliedOnlyNearby
+  );
 
   const handleConfirm = () => {
-    onApply(draftSelectedIds, draftOnlyVideoReviews);
+    onApply(draftSelectedIds, draftOnlyVideoReviews, draftOnlyNearby);
     onClose();
   };
 
@@ -50,8 +65,8 @@ const FeedFilterContent = ({
         sx={{ flexShrink: 0 }}
       >
         <Stack spacing={1.5} sx={styles.header}>
-          <AppLogo height={30} />
-          <Typography sx={styles.subtitle}>
+          <AppLogo height={22} />
+          <Typography variant="body2" sx={styles.subtitle}>
             Alege ce vrei sa vezi in feed-ul tau
           </Typography>
         </Stack>
@@ -62,9 +77,17 @@ const FeedFilterContent = ({
       </Stack>
 
       <Box sx={styles.scrollArea}>
-        <FeedFilterVideoReviewsToggle
+        {/* MVP: video reviews filter is on hold for now */}
+        {/* <FeedFilterVideoReviewsToggle
           checked={draftOnlyVideoReviews}
           onToggle={toggleVideoReviews}
+        /> */}
+
+        <FeedFilterNearbyToggle
+          checked={draftOnlyNearby}
+          hasLocationAccess={hasLocationAccess}
+          onToggle={toggleOnlyNearby}
+          onRequestLocationAccess={onRequestLocationAccess}
         />
 
         {!isLoadingDomains &&

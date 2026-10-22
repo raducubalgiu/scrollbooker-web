@@ -15,7 +15,7 @@ export enum FeedTabEnum {
 
 type FeedTabsProps = {
   activeTab: FeedTabEnum;
-  hasActiveFilters: boolean;
+  activeFiltersCount: number;
   onHandleToggleDrawer: () => void;
   onTabChange: (tab: FeedTabEnum) => void;
 };
@@ -27,7 +27,7 @@ const TABS: { key: FeedTabEnum; label: string }[] = [
 
 const FeedTabs = ({
   activeTab,
-  hasActiveFilters,
+  activeFiltersCount,
   onHandleToggleDrawer,
   onTabChange,
 }: FeedTabsProps) => {
@@ -38,15 +38,19 @@ const FeedTabs = ({
           <Box sx={{ justifySelf: "start" }}>
             <IconButton size="large" onClick={onHandleToggleDrawer}>
               <Badge
-                variant="dot"
+                badgeContent={activeFiltersCount}
                 color="primary"
-                invisible={!hasActiveFilters}
+                invisible={activeFiltersCount === 0}
                 sx={styles.filterBadge}
               >
                 <CustomSvg
                   src={BurgerIcon}
                   size={30}
-                  sx={{ backgroundColor: "common.white" }}
+                  sx={{
+                    backgroundColor: "common.white",
+                    width: { xs: 26, lg: 30 },
+                    height: { xs: 26, lg: 30 },
+                  }}
                 />
               </Badge>
             </IconButton>
@@ -81,7 +85,11 @@ const FeedTabs = ({
               <CustomSvg
                 src={SearchIcon}
                 size={30}
-                sx={{ backgroundColor: "common.white" }}
+                sx={{
+                  backgroundColor: "common.white",
+                  width: { xs: 26, lg: 30 },
+                  height: { xs: 26, lg: 30 },
+                }}
               />
             </IconButton>
           </Box>
@@ -123,10 +131,14 @@ const styles = {
   },
   filterBadge: {
     "& .MuiBadge-badge": {
-      top: 6,
-      right: 6,
-      border: "2px solid",
-      borderColor: "common.black",
+      top: 5,
+      right: 5,
+      minWidth: 16,
+      height: 16,
+      padding: 0,
+      fontSize: 10,
+      fontWeight: 700,
+      color: "common.white",
     },
   },
 } as const;

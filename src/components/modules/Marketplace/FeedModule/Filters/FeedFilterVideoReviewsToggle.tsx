@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { Box, Stack, Switch, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import type { Theme } from "@mui/material/styles";
 import { alpha } from "@mui/material/styles";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 
 type FeedFilterVideoReviewsToggleProps = {
   checked: boolean;
@@ -39,7 +40,9 @@ const FeedFilterVideoReviewsToggle = ({
         </Typography>
       </Box>
 
-      <Switch checked={checked} onChange={onToggle} color="primary" />
+      <Box sx={[styles.checkbox, checked && styles.checkboxChecked]}>
+        {checked && <CheckRoundedIcon sx={styles.checkboxIcon} />}
+      </Box>
     </Stack>
   );
 };
@@ -60,4 +63,22 @@ const styles = {
   iconActive: { color: "primary.main" },
   title: { color: "text.primary" },
   description: { color: "text.secondary" },
+  checkbox: {
+    width: 20,
+    height: 20,
+    flexShrink: 0,
+    boxSizing: "border-box",
+    border: "1.5px solid",
+    borderColor: "divider",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "background-color 0.15s ease, border-color 0.15s ease",
+  },
+  checkboxChecked: {
+    bgcolor: "primary.main",
+    borderColor: "primary.main",
+  },
+  checkboxIcon: { fontSize: 14, color: "common.white" },
 } as const;

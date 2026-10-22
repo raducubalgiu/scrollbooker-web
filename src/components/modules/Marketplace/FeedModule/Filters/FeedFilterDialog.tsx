@@ -11,7 +11,14 @@ type FeedFilterDialogProps = {
   isLoadingDomains: boolean;
   appliedServiceIds: Set<number>;
   appliedOnlyVideoReviews: boolean;
-  onApply: (serviceIds: Set<number>, onlyVideoReviews: boolean) => void;
+  appliedOnlyNearby: boolean;
+  hasLocationAccess: boolean;
+  onRequestLocationAccess: () => void;
+  onApply: (
+    serviceIds: Set<number>,
+    onlyVideoReviews: boolean,
+    onlyNearby: boolean
+  ) => void;
   onClose: () => void;
 };
 

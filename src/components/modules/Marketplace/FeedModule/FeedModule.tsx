@@ -13,6 +13,7 @@ import PostFeedView from "@/components/cutomized/Post/feed/PostFeedView";
 import FeedFilterDialog from "./Filters/FeedFilterDialog";
 import FeedFilterMobileOverlay from "./Filters/FeedFilterMobileOverlay";
 import { useFeedState } from "@/providers/FeedStateProvider";
+import { useUserLocation } from "@/hooks/useUserLocation";
 
 export default function FeedModule() {
   const theme = useTheme();
@@ -23,11 +24,19 @@ export default function FeedModule() {
     currentIndex,
     appliedServiceIds,
     appliedOnlyVideoReviews,
+    appliedOnlyNearby,
     setCurrentTab,
     setCurrentIndex,
     setAppliedFilters,
   } = useFeedState();
   const [showFilters, setShowFilters] = useState(false);
+
+  const {
+    status: locationStatus,
+    location: userLocation,
+    requestLocation,
+  } = useUserLocation();
+  const hasLocationAccess = locationStatus === "granted";
 
   const { data: domainsData, isLoading: isLoadingDomains } =
     useAllServiceDomains({ page: 1, limit: 100, all: false });
@@ -36,6 +45,9 @@ export default function FeedModule() {
   const explorePosts = useInfiniteExplorePosts({
     serviceIds: Array.from(appliedServiceIds),
     onlyVideoReviews: appliedOnlyVideoReviews,
+    onlyNearby: appliedOnlyNearby,
+    userLat: userLocation?.lat,
+    userLng: userLocation?.lng,
   });
   const followingPosts = useInfiniteFollowingPosts();
 
@@ -80,14 +92,20 @@ export default function FeedModule() {
   }, []);
 
   const handleApplyFilters = useCallback(
-    (serviceIds: Set<number>, onlyVideoReviews: boolean) => {
-      setAppliedFilters(serviceIds, onlyVideoReviews);
+    (serviceIds: Set<number>, onlyVideoReviews: boolean, onlyNearby: boolean) => {
+      setAppliedFilters(serviceIds, onlyVideoReviews, onlyNearby);
     },
     [setAppliedFilters]
   );
 
-  const hasActiveFilters =
-    appliedServiceIds.size > 0 || appliedOnlyVideoReviews;
+  const handleRequestLocationAccess = useCallback(() => {
+    void requestLocation();
+  }, [requestLocation]);
+
+  const activeFiltersCount =
+    appliedServiceIds.size +
+    (appliedOnlyVideoReviews ? 1 : 0) +
+    (appliedOnlyNearby ? 1 : 0);
 
   return (
     <Box sx={styles.root}>
@@ -97,7 +115,7 @@ export default function FeedModule() {
         headerSlot={
           <FeedTabs
             activeTab={currentTab}
-            hasActiveFilters={hasActiveFilters}
+            activeFiltersCount={activeFiltersCount}
             onHandleToggleDrawer={handleToggleFilters}
             onTabChange={handleTabChange}
           />
@@ -111,6 +129,9 @@ export default function FeedModule() {
           isLoadingDomains={isLoadingDomains}
           appliedServiceIds={appliedServiceIds}
           appliedOnlyVideoReviews={appliedOnlyVideoReviews}
+          appliedOnlyNearby={appliedOnlyNearby}
+          hasLocationAccess={hasLocationAccess}
+          onRequestLocationAccess={handleRequestLocationAccess}
           onApply={handleApplyFilters}
           onClose={handleCloseFilters}
         />
@@ -121,6 +142,9 @@ export default function FeedModule() {
           isLoadingDomains={isLoadingDomains}
           appliedServiceIds={appliedServiceIds}
           appliedOnlyVideoReviews={appliedOnlyVideoReviews}
+          appliedOnlyNearby={appliedOnlyNearby}
+          hasLocationAccess={hasLocationAccess}
+          onRequestLocationAccess={handleRequestLocationAccess}
           onApply={handleApplyFilters}
           onClose={handleCloseFilters}
         />
