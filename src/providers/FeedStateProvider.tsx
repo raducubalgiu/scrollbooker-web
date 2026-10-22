@@ -14,11 +14,13 @@ type FeedStateContextValue = {
   currentPostId: number | null;
   appliedServiceIds: Set<number>;
   appliedOnlyVideoReviews: boolean;
+  appliedOnlyNearby: boolean;
   setCurrentTab: (tab: FeedTabEnum) => void;
   setCurrentPostId: (postId: number | null) => void;
   setAppliedFilters: (
     serviceIds: Set<number>,
-    onlyVideoReviews: boolean
+    onlyVideoReviews: boolean,
+    onlyNearby: boolean
   ) => void;
 };
 
@@ -38,11 +40,17 @@ export default function FeedStateProvider({
   );
   const [appliedOnlyVideoReviews, setAppliedOnlyVideoReviews] =
     useState(false);
+  const [appliedOnlyNearby, setAppliedOnlyNearby] = useState(false);
 
   const setAppliedFilters = useCallback(
-    (serviceIds: Set<number>, onlyVideoReviews: boolean) => {
+    (
+      serviceIds: Set<number>,
+      onlyVideoReviews: boolean,
+      onlyNearby: boolean
+    ) => {
       setAppliedServiceIds(serviceIds);
       setAppliedOnlyVideoReviews(onlyVideoReviews);
+      setAppliedOnlyNearby(onlyNearby);
     },
     []
   );
@@ -53,11 +61,19 @@ export default function FeedStateProvider({
       currentPostId,
       appliedServiceIds,
       appliedOnlyVideoReviews,
+      appliedOnlyNearby,
       setCurrentTab,
       setCurrentPostId,
       setAppliedFilters,
     }),
-    [currentTab, currentPostId, appliedServiceIds, appliedOnlyVideoReviews, setAppliedFilters]
+    [
+      currentTab,
+      currentPostId,
+      appliedServiceIds,
+      appliedOnlyVideoReviews,
+      appliedOnlyNearby,
+      setAppliedFilters,
+    ]
   );
 
   return (

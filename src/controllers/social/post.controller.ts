@@ -10,16 +10,28 @@ const fetchExplorePosts = async ({
   pageParam,
   serviceIds,
   onlyVideoReviews,
+  onlyNearby,
+  userLat,
+  userLng,
 }: {
   pageParam: number;
   serviceIds: number[];
   onlyVideoReviews: boolean;
+  onlyNearby: boolean;
+  userLat?: number | null | undefined;
+  userLng?: number | null | undefined;
 }) => {
   const params = new URLSearchParams();
   params.set("page", String(pageParam));
   params.set("limit", "10");
   params.set("only_video_reviews", onlyVideoReviews ? "true" : "false");
   serviceIds.forEach((id) => params.append("service_ids", String(id)));
+
+  if (onlyNearby && userLat != null && userLng != null) {
+    params.set("only_nearby", "true");
+    params.set("user_lat", String(userLat));
+    params.set("user_lng", String(userLng));
+  }
 
   const { data } = await axios.get<PaginatedData<Post>>(
     `${POST_PATH}/explore?${params.toString()}`
@@ -35,15 +47,35 @@ export const useInfiniteExplorePosts = ({
   enabled = true,
   serviceIds = [],
   onlyVideoReviews = false,
+  onlyNearby = false,
+  userLat,
+  userLng,
 }: {
   enabled?: boolean;
   serviceIds?: number[];
   onlyVideoReviews?: boolean;
+  onlyNearby?: boolean;
+  userLat?: number | null | undefined;
+  userLng?: number | null | undefined;
 } = {}) => {
   return useInfiniteQuery({
-    queryKey: [...POST_QUERY_KEYS.explore, serviceIds, onlyVideoReviews],
+    queryKey: [
+      ...POST_QUERY_KEYS.explore,
+      serviceIds,
+      onlyVideoReviews,
+      onlyNearby,
+      userLat,
+      userLng,
+    ],
     queryFn: ({ pageParam = 1 }) =>
-      fetchExplorePosts({ pageParam, serviceIds, onlyVideoReviews }),
+      fetchExplorePosts({
+        pageParam,
+        serviceIds,
+        onlyVideoReviews,
+        onlyNearby,
+        userLat,
+        userLng,
+      }),
     initialPageParam: 1,
     staleTime: 2 * 60 * 1000,
     getNextPageParam: (lastPage, pages) => {

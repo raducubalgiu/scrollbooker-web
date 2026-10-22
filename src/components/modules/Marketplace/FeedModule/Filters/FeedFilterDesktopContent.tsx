@@ -5,7 +5,7 @@ import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { ServiceDomain } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
 import { useFeedFilterDraft } from "./useFeedFilterDraft";
-import FeedFilterVideoReviewsToggle from "./FeedFilterVideoReviewsToggle";
+import FeedFilterNearbyToggle from "./FeedFilterNearbyToggle";
 import FeedFilterDesktopDomainCard from "./FeedFilterDesktopDomainCard";
 
 type FeedFilterDesktopContentProps = {
@@ -13,7 +13,14 @@ type FeedFilterDesktopContentProps = {
   isLoadingDomains: boolean;
   appliedServiceIds: Set<number>;
   appliedOnlyVideoReviews: boolean;
-  onApply: (serviceIds: Set<number>, onlyVideoReviews: boolean) => void;
+  appliedOnlyNearby: boolean;
+  hasLocationAccess: boolean;
+  onRequestLocationAccess: () => void;
+  onApply: (
+    serviceIds: Set<number>,
+    onlyVideoReviews: boolean,
+    onlyNearby: boolean
+  ) => void;
   onClose: () => void;
 };
 
@@ -22,20 +29,28 @@ const FeedFilterDesktopContent = ({
   isLoadingDomains,
   appliedServiceIds,
   appliedOnlyVideoReviews,
+  appliedOnlyNearby,
+  hasLocationAccess,
+  onRequestLocationAccess,
   onApply,
   onClose,
 }: FeedFilterDesktopContentProps) => {
   const {
     draftSelectedIds,
     draftOnlyVideoReviews,
+    draftOnlyNearby,
     toggleService,
-    toggleVideoReviews,
+    toggleOnlyNearby,
     clear,
     isClearEnabled,
-  } = useFeedFilterDraft(appliedServiceIds, appliedOnlyVideoReviews);
+  } = useFeedFilterDraft(
+    appliedServiceIds,
+    appliedOnlyVideoReviews,
+    appliedOnlyNearby
+  );
 
   const handleConfirm = () => {
-    onApply(draftSelectedIds, draftOnlyVideoReviews);
+    onApply(draftSelectedIds, draftOnlyVideoReviews, draftOnlyNearby);
     onClose();
   };
 
@@ -67,9 +82,17 @@ const FeedFilterDesktopContent = ({
       </Stack>
 
       <Box sx={styles.scrollArea}>
-        <FeedFilterVideoReviewsToggle
+        {/* MVP: video reviews filter is on hold for now */}
+        {/* <FeedFilterVideoReviewsToggle
           checked={draftOnlyVideoReviews}
           onToggle={toggleVideoReviews}
+        /> */}
+
+        <FeedFilterNearbyToggle
+          checked={draftOnlyNearby}
+          hasLocationAccess={hasLocationAccess}
+          onToggle={toggleOnlyNearby}
+          onRequestLocationAccess={onRequestLocationAccess}
         />
 
         {!isLoadingDomains && (

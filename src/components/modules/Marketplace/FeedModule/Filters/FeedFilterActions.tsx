@@ -15,8 +15,8 @@ const FeedFilterActions = ({
   onConfirm,
 }: FeedFilterActionsProps) => {
   return (
-    <Stack spacing={1.5} sx={styles.container}>
-      <Fade in={isClearEnabled}>
+    <Stack spacing={1} sx={styles.container}>
+      <Fade in={isClearEnabled} unmountOnExit>
         <Button
           onClick={onClear}
           disabled={!isClearEnabled}
@@ -41,7 +41,7 @@ const FeedFilterActions = ({
 export default FeedFilterActions;
 
 const styles = {
-  container: { flexShrink: 0, pt: 1 },
+  container: { flexShrink: 0 },
   clearButton: {
     alignSelf: "center",
     color: "error.main",

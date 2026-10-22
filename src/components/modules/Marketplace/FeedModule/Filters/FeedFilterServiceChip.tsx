@@ -32,7 +32,8 @@ const styles = {
     fontWeight: 600,
     bgcolor: "action.selected",
     color: "text.primary",
-    border: "none",
+    border: "1px solid",
+    borderColor: "divider",
     "&:hover": {
       bgcolor: "action.hover",
     },
@@ -40,6 +41,7 @@ const styles = {
   chipSelected: {
     bgcolor: "primary.main",
     color: "white",
+    borderColor: "primary.main",
     "&:hover": {
       bgcolor: "primary.main",
     },

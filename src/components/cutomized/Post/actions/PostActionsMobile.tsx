@@ -112,7 +112,7 @@ export default function PostActionsMobile({
                 >
                   <CustomSvg
                     src={icon}
-                    size={35}
+                    size={30}
                     sx={{
                       backgroundColor:
                         isActive && activeColor ? activeColor : "common.white",
