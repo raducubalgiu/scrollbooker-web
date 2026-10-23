@@ -46,13 +46,16 @@ const CollectLocationPermission = () => {
   return (
     <Stack
       alignItems="center"
-      justifyContent="center"
-      sx={{ minHeight: "100%" }}
+      justifyContent={{ xs: "flex-start", md: "center" }}
+      sx={{ minHeight: "100%", mt: { xs: 7.5, md: 0 } }}
     >
       <Container maxWidth="sm">
         <Stack spacing={3}>
           <Stack alignItems="center" sx={{ mb: 1 }}>
-            <LocationOnRoundedIcon color="primary" sx={{ fontSize: 90 }} />
+            <LocationOnRoundedIcon
+              color="primary"
+              sx={{ fontSize: { xs: 50, md: 50 } }}
+            />
           </Stack>
 
           <Stack spacing={1}>
@@ -70,7 +73,6 @@ const CollectLocationPermission = () => {
             loading={isRequestingLocation || isPending}
             onClick={handleAllow}
             disableElevation
-            sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
           >
             {t("allow")}
           </Button>

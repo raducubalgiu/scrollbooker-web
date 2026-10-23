@@ -70,8 +70,8 @@ const CollectBirthdateStep = () => {
     <FormProvider {...methods}>
       <Stack
         alignItems="center"
-        justifyContent="center"
-        sx={{ minHeight: "100%" }}
+        justifyContent={{ xs: "flex-start", md: "center" }}
+        sx={{ minHeight: "100%", mt: { xs: 7.5, md: 0 } }}
       >
         <Container maxWidth="sm">
           <Stack spacing={3}>
@@ -112,7 +112,6 @@ const CollectBirthdateStep = () => {
               disabled={isPending}
               onClick={methods.handleSubmit(onSubmit)}
               disableElevation
-              sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
             >
               {t("save")}
             </Button>
@@ -125,7 +124,6 @@ const CollectBirthdateStep = () => {
                 )
               }
               disableElevation
-              sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
               disabled={isPending}
             >
               {t("skip")}

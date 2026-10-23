@@ -104,12 +104,9 @@ const CollectBusinessStep = () => {
     []
   );
 
-  const handleSetAddressQuery = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setAddressQuery(e.target.value);
-    },
-    []
-  );
+  const handleSetAddressQuery = useCallback((val: string) => {
+    setAddressQuery(val);
+  }, []);
 
   const stepContent = useMemo(() => {
     switch (step) {
