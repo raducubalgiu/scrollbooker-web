@@ -4,15 +4,12 @@ import {
   TextField,
   Typography,
   Theme,
-  Stack,
-  CircularProgress,
   Box,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import React, { useState } from "react";
-import { useSearchUsers } from "@/controllers/search/search.controller";
-import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { SearchUserItem } from "./SearchUserItem";
+import React from "react";
+import { useSearchUsersQuery } from "./useSearchUsersQuery";
+import SearchUsersResultsList from "./SearchUsersResultsList";
 
 type SearchUsersModuleProps = {
   onNavigate?: () => void;
@@ -23,18 +20,7 @@ const SearchUsersModule = ({
   onNavigate = () => {},
   showTitle = true,
 }: SearchUsersModuleProps) => {
-  const [value, setValue] = useState("");
-  const debouncedValue = useDebouncedValue(value, 400);
-
-  const {
-    data: users = [],
-    isLoading,
-    isFetching,
-  } = useSearchUsers({
-    query: debouncedValue.trim().length >= 2 ? debouncedValue : "",
-  });
-
-  const loading = isLoading || isFetching;
+  const { value, setValue, users, loading } = useSearchUsersQuery();
 
   return (
     <>
@@ -67,6 +53,7 @@ const SearchUsersModule = ({
           variant="outlined"
           fullWidth
           focused
+          value={value}
           onFocus={() => {}}
           onBlur={() => {}}
           onChange={(e) => setValue(e.target.value)}
@@ -83,16 +70,7 @@ const SearchUsersModule = ({
         />
       </Box>
 
-      {loading && (
-        <Stack justifyContent="center" alignItems="center" p={2.5}>
-          <CircularProgress />
-        </Stack>
-      )}
-
-      {!loading &&
-        users?.map((user) => (
-          <SearchUserItem key={user.id} user={user} onNavigate={onNavigate} />
-        ))}
+      <SearchUsersResultsList users={users} loading={loading} onNavigate={onNavigate} />
     </>
   );
 };
