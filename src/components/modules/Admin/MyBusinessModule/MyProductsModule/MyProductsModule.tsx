@@ -209,6 +209,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
                       >
                         {group.products.map((prod) => (
                           <ProductCard
+                            key={prod.id}
                             product={prod}
                             isSelected={false}
                             showIcon={false}

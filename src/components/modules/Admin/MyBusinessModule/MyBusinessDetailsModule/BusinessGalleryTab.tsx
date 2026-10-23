@@ -86,7 +86,7 @@ export const BusinessGalleryTab = ({
     onFooterChange(<MainLayoutFooterActions actions={footerActions} />);
     return () => onFooterChange(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isGalleryValid, hasChanges, isPending]);
+  }, [galleryItems, isGalleryValid, hasChanges, isPending]);
 
   return (
     <Paper

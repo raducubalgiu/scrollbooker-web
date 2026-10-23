@@ -118,7 +118,7 @@ const ProductCard = ({
           cursor: "pointer",
           transition: "all 0.2s ease",
           "&:hover": {
-            bgcolor: "background.paper",
+            bgcolor: { xs: "transparent", md: "background.paper" },
           },
         },
         ...(Array.isArray(sx) ? sx : [sx]),
