@@ -36,6 +36,7 @@ type PostVideoPlayerProps = {
   isLoading?: boolean;
   preload?: "none" | "metadata" | "auto";
   resetOnInactive?: boolean;
+  showBookButton?: boolean;
   onOpenLinkedProducts: () => void;
 };
 
@@ -77,6 +78,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   isLoading = false,
   preload = "metadata",
   resetOnInactive = true,
+  showBookButton = true,
   onOpenLinkedProducts,
 }: PostVideoPlayerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -725,6 +727,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
               }
             }
             onOpenLinkedProducts={onOpenLinkedProducts}
+            showBookButton={showBookButton}
           />
         </div>
       </Fade>

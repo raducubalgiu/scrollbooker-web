@@ -28,6 +28,7 @@ type PostFeedViewProps = {
   feed: ReturnType<typeof usePostFeed>;
   headerSlot?: React.ReactNode;
   topLeftSlot?: React.ReactNode;
+  showBookButton?: boolean;
 };
 
 const PostFeedView = ({
@@ -35,6 +36,7 @@ const PostFeedView = ({
   feed,
   headerSlot,
   topLeftSlot,
+  showBookButton = true,
 }: PostFeedViewProps) => {
   const {
     currentIndex,
@@ -109,6 +111,7 @@ const PostFeedView = ({
                   callbacks={callbacks}
                   onIndexChange={handleIndexChange}
                   onOpenLinkedProducts={() => setIsProductsOpen(true)}
+                  showBookButton={showBookButton}
                 />
               )}
 

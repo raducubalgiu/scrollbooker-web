@@ -1,19 +1,16 @@
 import { Stack, Typography, TypographyProps } from "@mui/material";
 import React, { useState } from "react";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { formatDistance } from "@/utils/formatters";
 
 type ProfileAddressProps = {
   address: string;
   distanceKm?: number | null;
-  icon?: boolean;
   variant?: TypographyProps["variant"];
 };
 
 const ProfileAddress = ({
   address,
   distanceKm = null,
-  icon = false,
   variant = "caption",
 }: ProfileAddressProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -30,7 +27,6 @@ const ProfileAddress = ({
       onClick={() => setIsExpanded((prev) => !prev)}
       sx={styles.container}
     >
-      {icon && <LocationOnOutlinedIcon sx={styles.icon} />}
       <Typography
         variant={variant}
         color="text.secondary"

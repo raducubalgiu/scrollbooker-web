@@ -49,11 +49,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isNoLayoutPage =
     isExplicitNoLayoutPage || (!isSessionLoading && !isAuthenticated);
 
-  const isPageWithoutBottomBar =
-    pathname.startsWith("/admin") || pathname.startsWith("/settings");
-
   const isVideoPage =
     pathname.startsWith("/user/") && pathname.includes("/post/");
+
+  const isPageWithoutBottomBar =
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/settings") ||
+    isVideoPage;
   const isOverlayOpen = activeView !== null;
   const visualDrawerCollapsed = isOverlayOpen || isDrawerCollapsed;
 

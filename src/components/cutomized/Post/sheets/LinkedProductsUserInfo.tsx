@@ -50,7 +50,6 @@ const LinkedProductsUserInfo = ({
             address={address}
             distanceKm={distanceKm}
             variant="body2"
-            icon
           />
         </Stack>
       </Box>
