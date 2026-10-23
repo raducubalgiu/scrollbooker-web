@@ -1,7 +1,9 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import React, { memo, useEffect, useRef } from "react";
 import ReviewCard from "./ReviewCard";
+import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import { useInfiniteReviews } from "@/controllers/booking/review.controller";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
 
 type WrittenReviewsTabProps = {
   businessId: number;
@@ -70,9 +72,11 @@ const WrittenReviewsTab = ({
   return (
     <Box sx={{ mt: 1.5 }}>
       {!isLoadingWrittenReviews && reviews.length === 0 && (
-        <Typography variant="h6" color="text.secondary" align="center" mt={4}>
-          Nu există recenzii scrise.
-        </Typography>
+        <NotFound
+          title={"Recenzii"}
+          description="Nu au fost găsite recenzii"
+          icon={<RateReviewOutlinedIcon />}
+        />
       )}
 
       {!isLoadingWrittenReviews &&

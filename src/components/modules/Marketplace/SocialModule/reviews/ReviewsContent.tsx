@@ -83,7 +83,7 @@ const ReviewsContent = ({
   }
 
   return (
-    <Box sx={{ mx: 2 }}>
+    <Box>
       <ReviewsSummarySection
         summary={summary}
         selectedRatings={selectedRatings}

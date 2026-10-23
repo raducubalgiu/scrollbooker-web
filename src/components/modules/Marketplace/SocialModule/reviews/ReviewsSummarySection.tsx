@@ -52,7 +52,7 @@ const ReviewsSummarySection = ({
       </Stack>
 
       <Stack
-        spacing={1}
+        spacing={0.5}
         sx={{ flex: 1, minWidth: 0 }}
         role="group"
         aria-label="Filtrează după rating"
@@ -81,7 +81,7 @@ const styles = {
     alignItems: "center",
     gap: 3,
     px: 2,
-    mt: 5,
+    mt: 2.5,
     mb: 2.5,
     boxSizing: "border-box",
     width: "100%",
