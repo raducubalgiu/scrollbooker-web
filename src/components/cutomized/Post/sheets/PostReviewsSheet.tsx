@@ -1,18 +1,26 @@
 import { Box, Drawer, IconButton, Stack, Typography } from "@mui/material";
+import React, { useRef } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import ReviewsContent from "@/components/modules/Marketplace/SocialModule/reviews/ReviewsContent";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 
 type PostReviewsSheetProps = {
   open: boolean;
   onClose: () => void;
+  businessId: number | null;
+  employeeId: number | null;
   isLoadingPosts: boolean;
 };
 
 const PostReviewsSheet = ({
   open,
   onClose,
+  businessId,
+  employeeId,
   isLoadingPosts,
 }: PostReviewsSheetProps) => {
-  console.log(isLoadingPosts);
+  const scrollRootRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <Drawer
@@ -43,7 +51,24 @@ const PostReviewsSheet = ({
         </Stack>
       </Box>
 
-      <Box sx={styles.listContainer}></Box>
+      <Box sx={styles.listContainer} ref={scrollRootRef}>
+        {!isLoadingPosts && businessId && (
+          <ReviewsContent
+            businessId={businessId}
+            employeeId={employeeId}
+            rootRef={scrollRootRef}
+          />
+        )}
+
+        {!isLoadingPosts && !businessId && (
+          <NotFound
+            compact
+            title="Recenzii"
+            description="Nu au fost găsite recenzii"
+            icon={<ReviewsOutlinedIcon />}
+          />
+        )}
+      </Box>
     </Drawer>
   );
 };

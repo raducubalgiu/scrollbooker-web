@@ -22,15 +22,7 @@ type UsePostFeedParams = {
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
   isLoading: boolean;
-  // Index deja rezolvat de caller (ex. UserPostFeedModule, care are nevoie
-  // să pagineze singur ca să găsească postarea pe o pagină ulterioară) —
-  // folosit ca atare, fără căutare internă.
   initialIndex?: number | undefined;
-  // Id al postării de restaurat (ex. FeedModule, la revenirea dintr-o altă
-  // rută) — rezolvat aici la index căutând prin `posts`, nu reținut ca
-  // index brut: lista poate reveni cu altă ordine/conținut (refetch, feed
-  // nedeterminist), caz în care un index fix ar ajunge să arate altă
-  // postare decât cea reală.
   initialPostId?: number | null | undefined;
 };
 
@@ -80,7 +72,8 @@ export const usePostFeed = ({
   const currentPost = posts[currentIndex] ?? null;
 
   const { location: userLocation } = useUserLocation();
-  const businessCoordinates = currentPost?.business_location?.coordinates ?? null;
+  const businessCoordinates =
+    currentPost?.business_location?.coordinates ?? null;
 
   const distanceKm = useMemo(() => {
     if (!userLocation || !businessCoordinates) return null;
@@ -225,6 +218,7 @@ export const usePostFeed = ({
     onBookmarkClick: handleBookmark,
     onShareClick: handleShare,
     onCommentClick: () => setIsCommentsOpen(true),
+    onReviewsClick: () => setIsReviewsOpen(true),
     onDeleteClick: () => {},
     onReportClick: () => {},
     onNavigateToUser: () => {},

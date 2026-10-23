@@ -182,7 +182,9 @@ const PostFeedView = ({
         <PostReviewsSheet
           open={isReviewsOpen}
           onClose={() => setIsReviewsOpen(false)}
-          isLoadingPosts={false}
+          businessId={currentPost?.business_id ?? null}
+          employeeId={currentPost?.employee?.id ?? null}
+          isLoadingPosts={loaders.isLoading}
         />
 
         <PostMoreSheet

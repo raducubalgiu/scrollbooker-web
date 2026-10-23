@@ -44,6 +44,7 @@ export default function PostActionsMobile({
   callbacks: {
     onLike,
     onCommentClick,
+    onReviewsClick,
     onBookmarkClick,
     onShareClick,
     onDeleteClick,
@@ -62,6 +63,7 @@ export default function PostActionsMobile({
     onLike,
     onBookmark: onBookmarkClick,
     onCommentClick,
+    onReviewsClick,
     onShareClick,
     onDeleteClick,
     onReportClick,

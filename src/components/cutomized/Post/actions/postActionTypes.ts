@@ -8,6 +8,7 @@ import {
 export type PostActionCallbacks = {
   onLike: () => void;
   onCommentClick: () => void;
+  onReviewsClick: () => void;
   onBookmarkClick: () => void;
   onShareClick: () => void;
   onDeleteClick: () => void;
