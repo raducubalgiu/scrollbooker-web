@@ -1,4 +1,4 @@
-import { Avatar, Button, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Button, Skeleton, Stack, Typography } from "@mui/material";
 import {
   MaterialReactTable,
   MRT_ColumnDef,
@@ -6,11 +6,14 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import GradeIcon from "@mui/icons-material/Grade";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import React, { useMemo } from "react";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import { Session } from "next-auth";
 import { useGetAllEmployeesByOwner } from "@/controllers/booking/employee.controller";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import EmployeeMobileCard from "./EmployeeMobileCard";
 
 type MyEmployeesTabProps = {
   session: Session;
@@ -18,11 +21,11 @@ type MyEmployeesTabProps = {
 };
 
 const MyEmployeesTab = ({ session, isEnabled }: MyEmployeesTabProps) => {
-  if (!session.business_owner_id) return;
+  const hasBusinessOwnerId = !!session.business_owner_id;
 
   const { data, isLoading, isError } = useGetAllEmployeesByOwner({
-    businessOwnerId: session.business_owner_id,
-    isEnabled,
+    businessOwnerId: session.business_owner_id ?? 0,
+    isEnabled: isEnabled && hasBusinessOwnerId,
   });
 
   const tableData = useMemo(() => data || [], [data]);
@@ -125,7 +128,50 @@ const MyEmployeesTab = ({ session, isEnabled }: MyEmployeesTabProps) => {
     },
   });
 
-  return <MaterialReactTable table={table} />;
+  if (!hasBusinessOwnerId) {
+    return (
+      <NotFound
+        compact
+        icon={<PeopleAltOutlinedIcon />}
+        title="Angajați"
+        description="Nu există un business asociat acestui cont."
+      />
+    );
+  }
+
+  return (
+    <>
+      <Box sx={{ display: { xs: "none", lg: "block" } }}>
+        <MaterialReactTable table={table} />
+      </Box>
+
+      <Box sx={{ display: { xs: "block", lg: "none" } }}>
+        {isLoading &&
+          Array.from({ length: 3 }).map((_, index) => (
+            <Skeleton
+              key={index}
+              variant="rounded"
+              height={128}
+              sx={{ mb: 1.5, borderRadius: 2.5 }}
+            />
+          ))}
+
+        {!isLoading && tableData.length === 0 && (
+          <NotFound
+            compact
+            icon={<PeopleAltOutlinedIcon />}
+            title="Angajați"
+            description="Nu ai niciun angajat momentan"
+          />
+        )}
+
+        {!isLoading &&
+          tableData.map((employee) => (
+            <EmployeeMobileCard key={employee.id} employee={employee} />
+          ))}
+      </Box>
+    </>
+  );
 };
 
 export default MyEmployeesTab;
