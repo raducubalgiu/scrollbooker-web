@@ -45,19 +45,36 @@ const CommentComposer = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const styles = {
+    pill: {
+      bgcolor: "background.paper",
+      borderRadius: 3,
+      px: 2,
+      py: 1.5,
+    },
+    // theme.ts aplică global, prin MuiCssBaseline, un stil de "câmp de
+    // formular" oricărui <textarea> (padding, minHeight: 44, un glow pe
+    // focus) — folosit intenționat de alte textarea-uri din app
+    // (descrieri, recenzii scrise etc.). Acest composer e un input
+    // minimal, tip TikTok/Instagram, deci trebuie să anuleze explicit
+    // acele proprietăți.
     input: {
-      "& .MuiOutlinedInput-root": {
+      "& .MuiInputBase-root": {
         padding: 0,
-        borderRadius: 10,
       },
-
-      "& .MuiInputBase-inputMultiline": {
-        padding: "10px 20px 0px 20px",
-        borderRadius: 10,
-
-        "&:focus": {
-          border: 0,
-        },
+      "& .MuiInputBase-input": {
+        padding: "0 !important",
+        minHeight: "0 !important",
+        borderRadius: "0 !important",
+        backgroundColor: "transparent !important",
+        lineHeight: 1.4,
+        fontSize: 15,
+      },
+      "& .MuiInputBase-input:hover": {
+        backgroundColor: "transparent !important",
+      },
+      "& .MuiInputBase-input:focus, & .MuiInputBase-input:focus-visible": {
+        outline: "none !important",
+        boxShadow: "none !important",
       },
     },
     quickEmoji: {
@@ -121,24 +138,22 @@ const CommentComposer = ({
           alignItems="center"
           justifyContent="space-between"
           flex={1}
-          sx={{
-            bgcolor: "background.default",
-            borderRadius: 50,
-          }}
+          gap={1}
+          sx={styles.pill}
         >
-          <Box flex={1}>
-            <TextField
-              fullWidth
-              multiline
-              minRows={minRows}
-              maxRows={maxRows}
-              autoFocus={autoFocus}
-              placeholder={placeholder}
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-              sx={styles.input}
-            />
-          </Box>
+          <TextField
+            fullWidth
+            multiline
+            variant="standard"
+            minRows={minRows}
+            maxRows={maxRows}
+            autoFocus={autoFocus}
+            placeholder={placeholder}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            slotProps={{ input: { disableUnderline: true } }}
+            sx={styles.input}
+          />
 
           {!isMobile && <EmojiPicker onEmojiSelect={handleEmojiSelect} />}
         </Stack>
@@ -158,7 +173,7 @@ const CommentComposer = ({
             },
           }}
         >
-          <ArrowUpwardOutlinedIcon />
+          <ArrowUpwardOutlinedIcon fontSize="small" />
         </IconButton>
 
         {onCancel && (
