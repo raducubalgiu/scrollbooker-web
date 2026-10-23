@@ -7,7 +7,7 @@ import { signOut } from "next-auth/react";
 import axios from "axios";
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
-import { useDeleteAccount } from "@/controllers/user/account.controller";
+import { useDeleteAccount } from "@/controllers/auth/auth.controller";
 import { AppRoutes } from "@/utils/routes";
 
 const DeleteAccountModule = () => {
