@@ -51,11 +51,7 @@ export default function MyEmployeesModule({ session }: MyEmployeesModuleProps) {
   }, [currentTab]);
 
   return (
-    <MainLayout
-      hideAction
-      title="Angajați"
-      sx={{ bgcolor: "background.paper", minHeight: "100%" }}
-    >
+    <MainLayout hideAction title="Angajați">
       <Box>
         <CustomTabs
           currentTab={currentTab}

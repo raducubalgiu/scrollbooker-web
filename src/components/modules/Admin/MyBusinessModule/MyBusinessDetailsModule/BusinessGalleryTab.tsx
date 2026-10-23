@@ -1,5 +1,5 @@
-import { Button, Paper } from "@mui/material";
-import { useState } from "react";
+import { Paper } from "@mui/material";
+import { useLayoutEffect, useState } from "react";
 import { BusinessGalleryManager, GalleryItem } from "./BusinessGalleryManager";
 import { toast } from "react-toastify";
 import {
@@ -7,16 +7,20 @@ import {
   useUpdateBusinessGalleryMutation,
 } from "@/controllers/booking/business.controller";
 import { BusinessMediaFile } from "@/ts/models/booking/business/BusinessMediaFile";
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import MainLayoutFooterActions from "@/components/cutomized/MainLayout/MainLayoutFooterActions";
 import axios from "axios";
 
 type BusinessGalleryTabProps = {
   businessId: number;
   mediaFiles?: BusinessMediaFile[];
+  onFooterChange: (footer: React.ReactNode) => void;
 };
 
 export const BusinessGalleryTab = ({
   businessId,
   mediaFiles = [],
+  onFooterChange,
 }: BusinessGalleryTabProps) => {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [isGalleryValid, setIsGalleryValid] = useState(false);
@@ -68,8 +72,31 @@ export const BusinessGalleryTab = ({
     );
   };
 
+  const footerActions: ActionButtonType[] = [
+    {
+      title: isPending ? "Se salvează..." : "Salvează Galeria",
+      props: {
+        onClick: handleUpdate,
+        disabled: !isGalleryValid || !hasChanges || isPending,
+      },
+    },
+  ];
+
+  useLayoutEffect(() => {
+    onFooterChange(<MainLayoutFooterActions actions={footerActions} />);
+    return () => onFooterChange(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isGalleryValid, hasChanges, isPending]);
+
   return (
-    <Paper sx={{ p: 2.5 }}>
+    <Paper
+      sx={{
+        p: { xs: 0, lg: 2.5 },
+        bgcolor: { xs: "transparent" },
+        borderRadius: { lg: 1 },
+        boxShadow: { xs: 0, lg: "0 8px 24px rgba(0, 0, 0, 0.06)" },
+      }}
+    >
       <BusinessGalleryManager
         isMandatory={true}
         initialImages={initialThumbnailUrls}
@@ -78,16 +105,6 @@ export const BusinessGalleryTab = ({
           setIsGalleryValid(isValid);
         }}
       />
-
-      <Button
-        variant="contained"
-        onClick={handleUpdate}
-        disabled={!isGalleryValid || !hasChanges || isPending}
-        disableElevation
-        sx={{ mt: 3 }}
-      >
-        {isPending ? "Se salvează..." : "Salvează Galeria"}
-      </Button>
     </Paper>
   );
 };

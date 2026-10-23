@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   Paper,
   Table,
@@ -16,13 +16,22 @@ import { toast } from "react-toastify";
 import ActionButton, {
   ActionButtonType,
 } from "@/components/core/ActionButton/ActionButton";
+import MainLayoutFooterActions from "@/components/cutomized/MainLayout/MainLayoutFooterActions";
 import SchedulesSelectHours from "./SchedulesSelectHours";
 
 type SchedulesFormProps = {
   initialSchedules: Schedule[];
+  // Lifts the save/edit actions into an ancestor MainLayout's fixed footer
+  // (MyBusinessDetailsModule's tab shell). Omit it for a standalone render
+  // (e.g. the dedicated schedules page, onboarding) to keep the actions
+  // rendered inline below the table instead.
+  onFooterChange?: (footer: React.ReactNode) => void;
 };
 
-export const SchedulesForm = ({ initialSchedules }: SchedulesFormProps) => {
+export const SchedulesForm = ({
+  initialSchedules,
+  onFooterChange,
+}: SchedulesFormProps) => {
   const t = useTranslations("mySchedules");
   const [disabled, setDisabled] = useState(true);
   const { mutate: handleUpdateSchedules, isPending } = useUpdateSchedules();
@@ -103,6 +112,13 @@ export const SchedulesForm = ({ initialSchedules }: SchedulesFormProps) => {
         },
       ];
 
+  useLayoutEffect(() => {
+    if (!onFooterChange) return;
+    onFooterChange(<MainLayoutFooterActions actions={actions} />);
+    return () => onFooterChange(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disabled, isPending, isDirty]);
+
   return (
     <Paper>
       <FormProvider {...methods}>
@@ -145,9 +161,12 @@ export const SchedulesForm = ({ initialSchedules }: SchedulesFormProps) => {
             ))}
           </TableBody>
         </Table>
-        <Stack alignItems="flex-end" sx={{ p: 1.5 }}>
-          <ActionButton actions={actions} />
-        </Stack>
+
+        {!onFooterChange && (
+          <Stack alignItems="flex-end" sx={{ p: 1.5 }}>
+            <ActionButton actions={actions} />
+          </Stack>
+        )}
       </FormProvider>
     </Paper>
   );

@@ -17,7 +17,7 @@ export const MyProductsTabs = ({
       position: "sticky",
       top: top ?? 0,
       zIndex: 10,
-      bgcolor: "background.paper",
+      bgcolor: "background.default",
       mb: 4,
       height: 72,
       display: "flex",

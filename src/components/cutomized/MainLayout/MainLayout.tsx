@@ -6,6 +6,7 @@ type MainLayoutProps = {
   description?: string;
   actionTitle?: string;
   children: React.ReactNode;
+  footer?: React.ReactNode;
   showHeader?: boolean;
   hideAction?: boolean;
   onOpenModal?: () => void;
@@ -17,6 +18,7 @@ export default function MainLayout({
   description,
   actionTitle,
   children,
+  footer,
   showHeader = true,
   hideAction = false,
   onOpenModal,
@@ -75,6 +77,8 @@ export default function MainLayout({
           {children}
         </Box>
       </Box>
+
+      {footer && <Box sx={styles.footer}>{footer}</Box>}
     </Box>
   );
 }
@@ -91,5 +95,15 @@ const styles = {
     overflowY: "auto",
     WebkitOverflowScrolling: "touch",
     overscrollBehaviorY: "contain",
+  },
+  footer: {
+    flexShrink: 0,
+    display: "flex",
+    justifyContent: { xs: "stretch", lg: "flex-end" },
+    borderTop: "1px solid",
+    borderColor: "divider",
+    px: 2.5,
+    py: 2,
+    pb: { xs: "calc(16px + env(safe-area-inset-bottom))", lg: 2 },
   },
 };

@@ -1,11 +1,9 @@
 "use client";
 
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
+import MainLayoutFooterActions from "@/components/cutomized/MainLayout/MainLayoutFooterActions";
 import React from "react";
-import ActionButton, {
-  ActionButtonType,
-} from "@/components/core/ActionButton/ActionButton";
-import { Stack, useTheme } from "@mui/material";
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import { Session } from "next-auth";
 import MyServicesSkeleton from "./MyServicesSkeleton";
 import SelectedServicesList from "./SelectedServicesList";
@@ -21,7 +19,6 @@ type MyServicesModule = {
 export const MyServicesModule = ({ session }: MyServicesModule) => {
   const t = useTranslations("myServices");
   const businessId = String(session.business_id);
-  const theme = useTheme();
 
   const {
     serviceDomains,
@@ -48,7 +45,7 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
     );
   };
 
-  const actions: ActionButtonType[] = [
+  const footerActions: ActionButtonType[] = [
     {
       title: t("reset"),
       props: {
@@ -73,13 +70,7 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
       title={t("title")}
       showHeader={true}
       hideAction
-      sx={{
-        bgcolor:
-          theme.palette.mode === "dark"
-            ? "background.default"
-            : "background.paper",
-        minHeight: "100%",
-      }}
+      footer={<MainLayoutFooterActions actions={footerActions} />}
     >
       {isLoading && <MyServicesSkeleton />}
 
@@ -90,10 +81,6 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
           onToggleService={toggleService}
         />
       )}
-
-      <Stack alignItems="flex-end">
-        <ActionButton actions={actions} sx={{ mt: 1.5 }} />
-      </Stack>
     </MainLayout>
   );
 };
