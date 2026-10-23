@@ -28,10 +28,13 @@ const updateProfileRequest = async (
     formData.append("avatar", payload.avatar);
   }
 
-  const response = await fetch("/api/profile/edit", {
-    method: "PATCH",
-    body: formData,
-  });
+  const response = await fetch(
+    "/api/protected/users/user-info/update-profile",
+    {
+      method: "PATCH",
+      body: formData,
+    }
+  );
 
   if (!response.ok) {
     const errorData: MutationError = await response.json().catch(() => ({
