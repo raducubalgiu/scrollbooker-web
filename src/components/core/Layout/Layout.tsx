@@ -66,8 +66,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       : DRAWER_WIDTH;
 
   const styles = React.useMemo(
-    () => getStyles(theme, { isOverlayOpen, visualDrawerCollapsed, navWidth }),
-    [theme, isOverlayOpen, visualDrawerCollapsed, navWidth]
+    () =>
+      getStyles(theme, {
+        isOverlayOpen,
+        visualDrawerCollapsed,
+        navWidth,
+        isVideoPage,
+      }),
+    [theme, isOverlayOpen, visualDrawerCollapsed, navWidth, isVideoPage]
   );
 
   const handleCloseAll = React.useCallback(() => setActiveView(null), []);
@@ -175,9 +181,11 @@ const getStyles = (
     isOverlayOpen: boolean;
     visualDrawerCollapsed: boolean;
     navWidth: number;
+    isVideoPage: boolean;
   }
 ) => {
-  const { isOverlayOpen, visualDrawerCollapsed, navWidth } = layoutState;
+  const { isOverlayOpen, visualDrawerCollapsed, navWidth, isVideoPage } =
+    layoutState;
 
   return {
     layoutContainer: {
@@ -186,7 +194,7 @@ const getStyles = (
       height: "100dvh",
       width: "100vw",
       overflow: "hidden",
-      backgroundColor: "background.default",
+      backgroundColor: isVideoPage ? "common.black" : "background.default",
     },
 
     backdrop: {
@@ -252,7 +260,7 @@ const getStyles = (
       overflowY: "auto",
       height: { xs: "auto", lg: "100%" },
       flex: { xs: "1 1 auto", lg: "none" },
-      bgColor: "background.default",
+      bgcolor: isVideoPage ? "common.black" : "background.default",
 
       WebkitOverflowScrolling: "touch",
       overscrollBehaviorY: "contain",
