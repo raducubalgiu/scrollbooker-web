@@ -1,16 +1,11 @@
 import {
-  alpha,
   CircularProgress,
   FormControl,
   FormControlLabel,
-  InputAdornment,
   Radio,
   RadioGroup,
   Stack,
-  TextField,
-  Theme,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import { memo } from "react";
 import BusinessOnboardingSectionLayout from "../../../BusinessOnboardingSectionLayout";
 import { useTranslations } from "next-intl";
@@ -37,7 +32,7 @@ const CollectBusinessType = ({
       isDisabled={false}
       displayButton={false}
     >
-      <TextField
+      {/* <TextField
         autoFocus={false}
         placeholder={t("search")}
         variant="outlined"
@@ -53,7 +48,7 @@ const CollectBusinessType = ({
             ),
           },
         }}
-      />
+      /> */}
 
       {isLoading && (
         <Stack justifyContent="center" alignItems="center" p={2.5}>
@@ -76,7 +71,7 @@ const CollectBusinessType = ({
                   <Radio
                     sx={{
                       "& .MuiSvgIcon-root": {
-                        fontSize: 32.5,
+                        fontSize: 30,
                       },
                     }}
                   />
@@ -100,35 +95,35 @@ const CollectBusinessType = ({
 
 export default memo(CollectBusinessType);
 
-const styles = {
-  search: {
-    "& .MuiOutlinedInput-root": {
-      minHeight: 56,
-      borderRadius: "999px",
-      bgcolor: (theme: Theme) => alpha(theme.palette.action.hover, 0.05),
-      "& fieldset": {
-        borderColor: "divider",
-      },
-      "&:hover fieldset": {
-        borderColor: "action.disabled",
-      },
-      "&.Mui-focused": {
-        bgcolor: "background.paper",
-      },
-      "& input": {
-        fontSize: 18,
-        py: 1.6,
-      },
-      "& input::placeholder": {
-        fontSize: 18,
-        opacity: 0.8,
-        color: (theme: Theme) => alpha(theme.palette.text.disabled, 0.5),
-      },
-    },
-  },
-  searchFieldIcon: {
-    color: "text.secondary",
-    ml: 0.5,
-    fontSize: 24,
-  },
-};
+// const styles = {
+//   search: {
+//     "& .MuiOutlinedInput-root": {
+//       minHeight: 56,
+//       borderRadius: "999px",
+//       bgcolor: (theme: Theme) => alpha(theme.palette.action.hover, 0.05),
+//       "& fieldset": {
+//         borderColor: "divider",
+//       },
+//       "&:hover fieldset": {
+//         borderColor: "action.disabled",
+//       },
+//       "&.Mui-focused": {
+//         bgcolor: "background.paper",
+//       },
+//       "& input": {
+//         fontSize: 18,
+//         py: 1.6,
+//       },
+//       "& input::placeholder": {
+//         fontSize: 18,
+//         opacity: 0.8,
+//         color: (theme: Theme) => alpha(theme.palette.text.disabled, 0.5),
+//       },
+//     },
+//   },
+//   searchFieldIcon: {
+//     color: "text.secondary",
+//     ml: 0.5,
+//     fontSize: 24,
+//   },
+// };
