@@ -159,6 +159,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
               label={a.label}
               component={NextLink}
               href={a.route}
+              prefetch
               icon={
                 <Badge badgeContent={a.badge} color="error" sx={styles.badge}>
                   <CustomSvg src={baseIcon} sx={styles.icon} />

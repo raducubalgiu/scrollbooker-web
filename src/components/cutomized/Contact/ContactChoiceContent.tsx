@@ -29,8 +29,8 @@ const ContactChoiceContent = ({ phone, onClose }: ContactChoiceContentProps) => 
     <List sx={{ py: 0 }}>
       <ListItem disablePadding>
         <ListItemButton onClick={handleWhatsapp} sx={styles.item}>
-          <ListItemIcon sx={{ minWidth: 44, color: "whatsapp.main" }}>
-            <WhatsAppIcon fontSize="large" />
+          <ListItemIcon sx={styles.icon}>
+            <WhatsAppIcon sx={styles.iconSize} />
           </ListItemIcon>
           <ListItemText
             primary="Trimite mesaj pe WhatsApp"
@@ -41,8 +41,8 @@ const ContactChoiceContent = ({ phone, onClose }: ContactChoiceContentProps) => 
 
       <ListItem disablePadding>
         <ListItemButton onClick={handleCall} sx={styles.item}>
-          <ListItemIcon sx={{ minWidth: 44, color: "primary.main" }}>
-            <CallIcon fontSize="large" />
+          <ListItemIcon sx={styles.icon}>
+            <CallIcon sx={styles.iconSize} />
           </ListItemIcon>
           <ListItemText
             primary="Sună"
@@ -62,5 +62,12 @@ const styles = {
     "&:hover": {
       backgroundColor: "action.hover",
     },
+  },
+  icon: {
+    minWidth: 44,
+    color: "text.primary",
+  },
+  iconSize: {
+    fontSize: { xs: 24, lg: 28 },
   },
 };

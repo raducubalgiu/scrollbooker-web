@@ -1,3 +1,5 @@
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+
 export interface BusinessEmployee {
   [key: string]: unknown;
   id: number;
@@ -10,4 +12,6 @@ export interface BusinessEmployee {
   ratings_count: number;
   ratings_average: number;
   products_count: number;
+  instant_booking: boolean;
+  contact_info: ContactInfo;
 }
