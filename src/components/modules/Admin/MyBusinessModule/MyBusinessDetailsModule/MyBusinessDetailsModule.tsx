@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, CircularProgress, useTheme } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import CustomTabs, {
   CustomTabType,
 } from "@/components/core/CustomTabs/CustomTabs";
@@ -20,9 +20,9 @@ const TABS: CustomTabType[] = [
 ];
 
 export default function MyBusinessDetailsModule() {
-  const theme = useTheme();
   const { data: myBusinessDetails, isLoading } = useGetMyBusinessDetails();
   const [currentTab, setCurrentTab] = useState(0);
+  const [footer, setFooter] = useState<React.ReactNode>(null);
 
   if (isLoading || !myBusinessDetails) {
     return (
@@ -52,6 +52,7 @@ export default function MyBusinessDetailsModule() {
           <MyBusinessDescriptionTab
             businessId={id}
             defaultDescription={description}
+            onFooterChange={setFooter}
           />
         );
       case 2:
@@ -59,10 +60,16 @@ export default function MyBusinessDetailsModule() {
           <BusinessGalleryTab
             businessId={id}
             mediaFiles={myBusinessDetails.media_files}
+            onFooterChange={setFooter}
           />
         );
       case 3:
-        return <SchedulesForm initialSchedules={schedules} />;
+        return (
+          <SchedulesForm
+            initialSchedules={schedules}
+            onFooterChange={setFooter}
+          />
+        );
       default:
         return null;
     }
@@ -72,20 +79,14 @@ export default function MyBusinessDetailsModule() {
     <MainLayout
       hideAction
       title="Detalii Business"
-      sx={{
-        bgcolor:
-          theme.palette.mode === "dark"
-            ? "background.default"
-            : "background.paper",
-        minHeight: "100%",
-      }}
+      footer={currentTab === 0 ? null : footer}
     >
       <CustomTabs
         currentTab={currentTab}
         setValue={setCurrentTab}
         tabs={TABS}
       />
-      <Box mt={2.5}>{renderTabContent()}</Box>
+      <Box mt={1.5}>{renderTabContent()}</Box>
     </MainLayout>
   );
 }

@@ -76,9 +76,6 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
     scrollOffset
   );
 
-  const pageBgcolor =
-    theme.palette.mode === "light" ? "background.paper" : "background.default";
-
   const handleCloseDeleteConfirm = () =>
     setDeleteConfirm({ open: false, productId: null });
 
@@ -108,7 +105,7 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
         }
       />
 
-      <Box sx={[styles.scrollArea, { bgcolor: pageBgcolor }]}>
+      <Box sx={[styles.scrollArea, { bgcolor: "background.default" }]}>
         <ConfirmationModal
           open={deleteConfirm.open}
           primaryActionTitle="Șterge"
@@ -140,7 +137,10 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
           justifyContent="space-between"
           sx={[
             styles.header,
-            { display: { xs: "none", lg: "flex" }, bgcolor: pageBgcolor },
+            {
+              display: { xs: "none", lg: "flex" },
+              bgcolor: "background.default",
+            },
           ]}
         >
           <Typography variant="h4" fontWeight={700}>
@@ -209,7 +209,6 @@ export default function MyProductsModule({ session }: MyProductsModuleProps) {
                       >
                         {group.products.map((prod) => (
                           <ProductCard
-                            key={prod.id}
                             product={prod}
                             isSelected={false}
                             showIcon={false}

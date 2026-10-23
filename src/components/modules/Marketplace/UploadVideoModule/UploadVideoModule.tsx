@@ -125,7 +125,7 @@ const UploadVideoModule = () => {
               business_or_employee_id: null,
             };
 
-            const saveResponse = await fetch("/api/posts/create", {
+            const saveResponse = await fetch("/api/protected/posts", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -136,7 +136,8 @@ const UploadVideoModule = () => {
             if (!saveResponse.ok) {
               const errorPayload = await saveResponse.json().catch(() => null);
               throw new Error(
-                errorPayload?.error ||
+                errorPayload?.detail ||
+                  errorPayload?.error ||
                   "Eroare la salvarea postării în baza de date."
               );
             }

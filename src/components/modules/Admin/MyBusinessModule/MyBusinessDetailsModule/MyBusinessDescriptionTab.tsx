@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { Box, Paper, Typography } from "@mui/material";
 import { toast } from "react-toastify";
-import ActionButton, {
-  ActionButtonType,
-} from "@/components/core/ActionButton/ActionButton";
+import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
+import MainLayoutFooterActions from "@/components/cutomized/MainLayout/MainLayoutFooterActions";
 import Input from "@/components/core/Input/Input";
 import { maxField, minField } from "@/utils/validation-rules";
 import { useUpdateBusinessDescription } from "@/controllers/booking/business.controller";
@@ -14,6 +13,7 @@ import { useUpdateBusinessDescription } from "@/controllers/booking/business.con
 type MyBusinessDescriptionTabProps = {
   businessId: number;
   defaultDescription: string | null;
+  onFooterChange: (footer: React.ReactNode) => void;
 };
 
 type FormValues = {
@@ -25,6 +25,7 @@ const DESCRIPTION_RULES = { ...minField(5), ...maxField(2500) };
 export default function MyBusinessDescriptionTab({
   businessId,
   defaultDescription,
+  onFooterChange,
 }: MyBusinessDescriptionTabProps) {
   const [isEditing, setIsEditing] = useState(false);
   const { mutate, isPending } = useUpdateBusinessDescription();
@@ -80,6 +81,12 @@ export default function MyBusinessDescriptionTab({
       ]
     : [{ title: "Editează", props: { onClick: () => setIsEditing(true) } }];
 
+  useLayoutEffect(() => {
+    onFooterChange(<MainLayoutFooterActions actions={actions} />);
+    return () => onFooterChange(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditing, isPending, isDirty]);
+
   return (
     <Paper sx={{ p: 2.5 }}>
       <Typography variant="h6" sx={{ mb: 2.5 }}>
@@ -96,7 +103,6 @@ export default function MyBusinessDescriptionTab({
             disabled={!isEditing || isPending}
             rules={DESCRIPTION_RULES}
           />
-          <ActionButton actions={actions} />
         </Box>
       </FormProvider>
     </Paper>

@@ -55,6 +55,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isNoLayoutPage =
     isExplicitNoLayoutPage || (!isSessionLoading && !isAuthenticated);
 
+  const isAdminPage = pathname.startsWith("/admin");
+
   const isVideoPage =
     pathname.startsWith("/user/") && pathname.includes("/post/");
   const isOverlayOpen = activeView !== null;
@@ -160,10 +162,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </Box>
 
-      <BottomBar
-        username={session?.username}
-        profession={session?.profession}
-      />
+      {!isAdminPage && (
+        <BottomBar
+          username={session?.username}
+          profession={session?.profession}
+        />
+      )}
     </Box>
   );
 }
