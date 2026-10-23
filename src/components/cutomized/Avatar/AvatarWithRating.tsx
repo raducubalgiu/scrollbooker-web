@@ -67,8 +67,8 @@ const styles = {
     color: "text.primary",
   },
   avatar: {
-    width: { xs: 55, md: 70 },
-    height: { xs: 55, md: 70 },
+    width: { xs: 50, md: 70 },
+    height: { xs: 50, md: 70 },
     border: 1,
     borderColor: "divider",
   },

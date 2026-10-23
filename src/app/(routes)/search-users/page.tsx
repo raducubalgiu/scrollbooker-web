@@ -1,7 +1,7 @@
 "use client";
 
-import SearchUsersModule from "@/components/modules/Marketplace/SearchUsersModule/SearchUsersModule";
+import SearchUsersMobileModule from "@/components/modules/Marketplace/SearchUsersModule/SearchUsersMobileModule";
 
 export default function SearchUsersPage() {
-  return <SearchUsersModule showTitle={false} />;
+  return <SearchUsersMobileModule />;
 }
