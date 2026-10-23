@@ -39,7 +39,7 @@ const CommentItem = ({
           direction="row"
           spacing={0.5}
           alignItems="center"
-          sx={{ mb: 0.5, flexWrap: "wrap" }}
+          sx={{ flexWrap: "wrap" }}
         >
           <Typography fontWeight={700}>{comment.user.fullname}</Typography>
 
@@ -58,7 +58,7 @@ const CommentItem = ({
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          sx={{ mt: 1 }}
+          sx={{ mt: 0.5 }}
         >
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography
