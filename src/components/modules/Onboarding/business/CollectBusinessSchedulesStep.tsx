@@ -8,7 +8,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableRow,
 } from "@mui/material";
 import SchedulesSelectHours from "../../Admin/MyBusinessModule/MySchedulesModule/SchedulesSelectHours";
@@ -94,33 +93,6 @@ const CollectBusinessSchedulesStep = () => {
       <FormProvider {...methods}>
         <Box>
           <Table size="medium">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  component="th"
-                  scope="col"
-                  sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-                >
-                  {t("day")}
-                </TableCell>
-                <TableCell
-                  component="th"
-                  scope="col"
-                  align="center"
-                  sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-                >
-                  {t("start")}
-                </TableCell>
-                <TableCell
-                  component="th"
-                  scope="col"
-                  align="center"
-                  sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-                >
-                  {t("end")}
-                </TableCell>
-              </TableRow>
-            </TableHead>
             <TableBody>
               {isLoading &&
                 Array.from(new Array(7)).map((_, index) => (

@@ -97,7 +97,7 @@ export default function CollectEmailVerificationStep() {
       sx={{ minHeight: "100%" }}
     >
       <Container maxWidth="sm">
-        <Stack spacing={{ xs: 1.5, md: 3 }}>
+        <Stack spacing={{ xs: 2, md: 3 }}>
           <Stack spacing={1} textAlign="center">
             <Typography variant="h4" fontWeight={700}>
               {t("title")}

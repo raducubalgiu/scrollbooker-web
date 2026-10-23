@@ -76,7 +76,6 @@ const CollectGenderStep = () => {
 
           <Button
             variant="contained"
-            size="large"
             fullWidth
             loading={isPending}
             onClick={() =>

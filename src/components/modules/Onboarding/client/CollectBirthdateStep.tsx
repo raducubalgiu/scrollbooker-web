@@ -106,7 +106,6 @@ const CollectBirthdateStep = () => {
 
             <Button
               variant="contained"
-              size="large"
               fullWidth
               loading={isPending}
               disabled={isPending}
