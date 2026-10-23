@@ -46,16 +46,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     "/employment-request",
   ].some((p) => (p === "/" ? pathname === "/" : pathname.startsWith(p)));
 
-  // The app shell (Drawer + BottomBar) only makes sense once there's a
-  // session to navigate around — an unauthenticated visitor (landing page
-  // today, any future public page) never gets it, regardless of whether
-  // that page happens to be in the explicit list below. Gated on
-  // `!isSessionLoading` so an actually-authenticated user doesn't see the
-  // chrome flash away while the session is still resolving.
   const isNoLayoutPage =
     isExplicitNoLayoutPage || (!isSessionLoading && !isAuthenticated);
 
-  const isAdminPage = pathname.startsWith("/admin");
+  const isPageWithoutBottomBar =
+    pathname.startsWith("/admin") || pathname.startsWith("/settings");
 
   const isVideoPage =
     pathname.startsWith("/user/") && pathname.includes("/post/");
@@ -162,7 +157,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </Box>
 
-      {!isAdminPage && (
+      {!isPageWithoutBottomBar && (
         <BottomBar
           username={session?.username}
           profession={session?.profession}

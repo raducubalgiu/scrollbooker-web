@@ -94,6 +94,11 @@ export const AppRoutes = {
   // Settings
   display: () => "/settings/display",
   account: () => "/settings/account",
+  accountInfo: () => "/settings/account/info",
+  accountInfoPhoneVerification: () => "/settings/account/info/phone-verification",
+  accountPassword: () => "/settings/account/password",
+  deactivateDeleteAccount: () => "/settings/account/deactivate-delete",
+  deleteAccount: () => "/settings/account/deactivate-delete/delete",
 
   // Nomenclatures
   rolesAndPermissions: () => "/admin/nomenclatures/roles-and-permissions",
