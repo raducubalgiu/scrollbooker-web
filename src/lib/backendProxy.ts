@@ -79,6 +79,10 @@ async function forwardMultipart(
     body: formData,
   });
 
+  if (beResponse.status === 204) {
+    return new NextResponse(null, { status: 204 });
+  }
+
   const payload = await beResponse.json().catch(() => ({}));
   return NextResponse.json(payload, { status: beResponse.status });
 }

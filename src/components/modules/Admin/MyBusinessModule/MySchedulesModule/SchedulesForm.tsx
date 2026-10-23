@@ -1,13 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
-import {
-  Paper,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Stack,
-} from "@mui/material";
+import { Paper, Table, TableBody, Stack } from "@mui/material";
 import { useForm, FormProvider } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { useUpdateSchedules } from "@/controllers/booking/schedule.controller";
@@ -21,10 +13,6 @@ import SchedulesSelectHours from "./SchedulesSelectHours";
 
 type SchedulesFormProps = {
   initialSchedules: Schedule[];
-  // Lifts the save/edit actions into an ancestor MainLayout's fixed footer
-  // (MyBusinessDetailsModule's tab shell). Omit it for a standalone render
-  // (e.g. the dedicated schedules page, onboarding) to keep the actions
-  // rendered inline below the table instead.
   onFooterChange?: (footer: React.ReactNode) => void;
 };
 
@@ -123,33 +111,6 @@ export const SchedulesForm = ({
     <Paper>
       <FormProvider {...methods}>
         <Table size="medium">
-          <TableHead>
-            <TableRow>
-              <TableCell
-                component="th"
-                scope="col"
-                sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-              >
-                {t("day")}
-              </TableCell>
-              <TableCell
-                component="th"
-                scope="col"
-                align="center"
-                sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-              >
-                {t("start")}
-              </TableCell>
-              <TableCell
-                component="th"
-                scope="col"
-                align="center"
-                sx={{ fontWeight: 700, fontSize: "1rem", letterSpacing: 0.2 }}
-              >
-                {t("end")}
-              </TableCell>
-            </TableRow>
-          </TableHead>
           <TableBody>
             {schedules?.map((schedule, i) => (
               <SchedulesSelectHours
