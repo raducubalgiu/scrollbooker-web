@@ -200,7 +200,7 @@ const ProfileUserInfo = ({
             </ButtonBase>
           )}
 
-          {address && (
+          {address && !profile.is_own_profile && (
             <Box sx={styles.addressRow}>
               <ProfileAddress address={address} />
             </Box>
