@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect } from "react";
 import { Paper, Table, TableBody, Stack } from "@mui/material";
 import { useForm, FormProvider } from "react-hook-form";
 import { useTranslations } from "next-intl";
@@ -21,7 +21,6 @@ export const SchedulesForm = ({
   onFooterChange,
 }: SchedulesFormProps) => {
   const t = useTranslations("mySchedules");
-  const [disabled, setDisabled] = useState(true);
   const { mutate: handleUpdateSchedules, isPending } = useUpdateSchedules();
 
   const methods = useForm({
@@ -58,7 +57,7 @@ export const SchedulesForm = ({
     handleUpdateSchedules(updated_schedules, {
       onSuccess: () => {
         toast.success(t("saveSuccess"));
-        setDisabled(true);
+        reset(methods.getValues());
       },
       onError: () => {
         reset();
@@ -66,46 +65,24 @@ export const SchedulesForm = ({
     });
   };
 
-  const actions: ActionButtonType[] = disabled
-    ? [
-        {
-          title: t("edit"),
-          props: {
-            onClick: () => setDisabled(false),
-            disableElevation: true,
-          },
-        },
-      ]
-    : [
-        {
-          title: t("cancel"),
-          props: {
-            variant: "outlined",
-            color: "secondary",
-            onClick: () => {
-              reset();
-              setDisabled(true);
-            },
-            disableElevation: true,
-          },
-        },
-        {
-          title: isPending ? t("saving") : t("save"),
-          props: {
-            onClick: handleSubmit(handleSave),
-            loading: isPending,
-            disabled: isPending || !isDirty,
-            disableElevation: true,
-          },
-        },
-      ];
+  const actions: ActionButtonType[] = [
+    {
+      title: isPending ? t("saving") : t("save"),
+      props: {
+        onClick: handleSubmit(handleSave),
+        loading: isPending,
+        disabled: isPending || !isDirty,
+        disableElevation: true,
+      },
+    },
+  ];
 
   useLayoutEffect(() => {
     if (!onFooterChange) return;
     onFooterChange(<MainLayoutFooterActions actions={actions} />);
     return () => onFooterChange(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [disabled, isPending, isDirty]);
+  }, [isPending, isDirty]);
 
   return (
     <Paper>
@@ -117,7 +94,7 @@ export const SchedulesForm = ({
                 key={schedule.id || i}
                 schedule={schedule}
                 namePath={`schedules.${i}`}
-                disabled={disabled}
+                disabled={false}
               />
             ))}
           </TableBody>

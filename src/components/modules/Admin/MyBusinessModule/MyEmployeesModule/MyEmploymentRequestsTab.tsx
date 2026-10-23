@@ -1,6 +1,14 @@
 import ConfirmationModal from "@/components/cutomized/ConfirmationModal/ConfirmationModal";
 import { Close } from "@mui/icons-material";
-import { Avatar, Button, IconButton, Stack, Tooltip } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Skeleton,
+  Stack,
+  Tooltip,
+} from "@mui/material";
 import dayjs from "dayjs";
 import {
   MaterialReactTable,
@@ -18,6 +26,9 @@ import {
   useGetUserEmploymentRequests,
 } from "@/controllers/booking/employment-request.controller";
 import { Session } from "next-auth";
+import NotFound from "@/components/cutomized/NotFound/NotFound";
+import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
+import EmploymentRequestMobileCard from "./EmploymentRequestMobileCard";
 
 type OpenConfirmationState = {
   openModal: boolean;
@@ -91,28 +102,16 @@ const MyEmploymentRequestsTab = ({
     []
   );
 
+  const handleOpenConfirmation = (employmentRequestId: number) =>
+    setConfirmation({ openModal: true, employment_request_id: employmentRequestId });
+
   const renderRowActions = ({ row }: { row: MRT_Row<EmploymentRequest> }) => (
     <Tooltip title="Anulează cererea">
-      <IconButton
-        onClick={() =>
-          setConfirmation({
-            openModal: true,
-            employment_request_id: row.original.id,
-          })
-        }
-      >
+      <IconButton onClick={() => handleOpenConfirmation(row.original.id)}>
         <Close color="error" />
       </IconButton>
     </Tooltip>
   );
-
-  const getToolbarCustomActions = React.useCallback(() => {
-    return (
-      <Button variant="outlined" onClick={() => setOpen(true)}>
-        Trimite o cerere
-      </Button>
-    );
-  }, []);
 
   const table = useMaterialReactTable({
     columns,
@@ -123,7 +122,7 @@ const MyEmploymentRequestsTab = ({
     enableGlobalFilter: false,
     enableHiding: false,
     enableFullScreenToggle: false,
-    enableTopToolbar: true,
+    enableTopToolbar: false,
 
     enableKeyboardShortcuts: false,
     enableColumnActions: false,
@@ -131,7 +130,6 @@ const MyEmploymentRequestsTab = ({
     enablePagination: false,
     enableRowActions: true,
     renderRowActions,
-    renderTopToolbarCustomActions: getToolbarCustomActions,
     positionActionsColumn: "last",
     localization: MRT_Localization_RO,
     state: {
@@ -173,7 +171,46 @@ const MyEmploymentRequestsTab = ({
         }}
       />
 
-      <MaterialReactTable table={table} />
+      <Stack alignItems="flex-start" sx={{ mb: 2.5 }}>
+        <Button variant="outlined" onClick={() => setOpen(true)}>
+          Trimite o cerere
+        </Button>
+      </Stack>
+
+      <Box sx={{ display: { xs: "none", lg: "block" } }}>
+        <MaterialReactTable table={table} />
+      </Box>
+
+      <Box sx={{ display: { xs: "block", lg: "none" } }}>
+        {(isLoading || isPendingCancel) &&
+          Array.from({ length: 3 }).map((_, index) => (
+            <Skeleton
+              key={index}
+              variant="rounded"
+              height={128}
+              sx={{ mb: 1.5, borderRadius: 2.5 }}
+            />
+          ))}
+
+        {!isLoading && !isPendingCancel && memoizedData.length === 0 && (
+          <NotFound
+            compact
+            icon={<ScheduleSendOutlinedIcon />}
+            title="Cereri de angajare"
+            description="Nu ai nicio cerere de angajare trimisă"
+          />
+        )}
+
+        {!isLoading &&
+          !isPendingCancel &&
+          memoizedData.map((employmentRequest) => (
+            <EmploymentRequestMobileCard
+              key={employmentRequest.id}
+              employmentRequest={employmentRequest}
+              onCancel={handleOpenConfirmation}
+            />
+          ))}
+      </Box>
     </>
   );
 };
