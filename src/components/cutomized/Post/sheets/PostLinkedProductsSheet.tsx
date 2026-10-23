@@ -92,7 +92,7 @@ const styles = {
   drawer: {
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    height: "85vh",
+    height: "80vh",
     display: "flex",
     flexDirection: "column",
   },

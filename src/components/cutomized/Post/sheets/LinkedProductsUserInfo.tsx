@@ -22,7 +22,7 @@ const LinkedProductsUserInfo = ({
   distanceKm,
 }: LinkedProductsUserInfoProps) => {
   return (
-    <Stack direction="row" alignItems="center" gap={2} mx={1.5} mt={1.5}>
+    <Stack direction="row" alignItems="center" gap={2} mx={1.5} mt={2.5}>
       <AvatarWithRating avatar={avatar} ratingsAverage={null} />
 
       <Box sx={{ minWidth: 0 }}>
