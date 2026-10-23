@@ -13,10 +13,7 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { BusinessDescriptionUpdate } from "@/ts/models/booking/business/Business";
-import {
-  GallerySlotInput,
-  updateBusinessGallery,
-} from "./business.service";
+import { BusinessMediaFile } from "@/ts/models/booking/business/BusinessMediaFile";
 
 const BUSINESS_PATH = "/api/protected/businesses";
 const UNAPPROVED_BUSINESSES_LIMIT = 20;
@@ -161,13 +158,30 @@ export const useSearchBusinessAddress = (query: string) => {
   });
 };
 
-export type { GallerySlotInput };
+export type GallerySlotInput =
+  | { type: "existing"; url: string }
+  | { type: "new" };
 
 interface UpdateBusinessGalleryParams {
   businessId: string | number;
   slots: GallerySlotInput[];
   newFiles: File[];
+  existingMediaFiles: BusinessMediaFile[];
 }
+
+const fetchExistingImageAsFile = async (
+  url: string,
+  filename: string
+): Promise<File> => {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Nu am putut prelua o imagine existentă din galerie.");
+  }
+
+  const blob = await response.blob();
+  return new File([blob], filename, { type: blob.type || "image/jpeg" });
+};
 
 export const useUpdateBusinessGalleryMutation = () => {
   const queryClient = useQueryClient();
@@ -177,10 +191,49 @@ export const useUpdateBusinessGalleryMutation = () => {
       businessId,
       slots,
       newFiles,
+      existingMediaFiles,
     }: UpdateBusinessGalleryParams): Promise<void> => {
       if (!businessId) throw new Error("Business ID este obligatoriu.");
 
-      await updateBusinessGallery({ businessId, slots, newFiles });
+      if (slots.length === 0) {
+        throw new Error("Trebuie să ai cel puțin o imagine în galerie.");
+      }
+
+      const allowedUrls = new Set(
+        existingMediaFiles.flatMap((m) =>
+          [m.url, m.thumbnail_url].filter(
+            (value): value is string => !!value
+          )
+        )
+      );
+
+      let nextNewFileIndex = 0;
+
+      const orderedPhotos = await Promise.all(
+        slots.map(async (slot, index) => {
+          if (slot.type === "new") {
+            const file = newFiles[nextNewFileIndex];
+            nextNewFileIndex += 1;
+
+            if (!file) {
+              throw new Error("Lipsește o imagine încărcată.");
+            }
+
+            return file;
+          }
+
+          if (!allowedUrls.has(slot.url)) {
+            throw new Error("Imagine din galerie invalidă.");
+          }
+
+          return fetchExistingImageAsFile(slot.url, `existing_${index}.jpg`);
+        })
+      );
+
+      const formData = new FormData();
+      orderedPhotos.forEach((photo) => formData.append("photos", photo));
+
+      await axios.patch(`${BUSINESS_PATH}/${businessId}/gallery`, formData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-business-details"] });

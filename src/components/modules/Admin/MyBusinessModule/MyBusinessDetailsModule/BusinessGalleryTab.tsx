@@ -57,7 +57,7 @@ export const BusinessGalleryTab = ({
       .map((it) => it.file as File);
 
     handleUpload(
-      { businessId, slots, newFiles },
+      { businessId, slots, newFiles, existingMediaFiles: mediaFiles },
       {
         onSuccess: () => {
           toast.success("Galeria a fost actualizată cu succes!");
