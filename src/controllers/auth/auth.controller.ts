@@ -11,6 +11,11 @@ import {
 import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { ActionMessageResponse } from "@/ts/models/auth/ActionMessageResponse";
 import { PaginatedData } from "@/components/core/Table/Table";
+import {
+  AccountInfo,
+  AccountPhoneVerificationCheckRequest,
+  AccountPhoneVerificationResponse,
+} from "@/ts/models/user/AccountInfo";
 
 type UpdateUserInfoPayload = Partial<
   Pick<UserInfo, "fullname" | "avatar" | "profession">
@@ -20,6 +25,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT;
 
 export const authQueryKeys = {
   userInfo: ["auth", "user-info"] as const,
+  accountInfo: ["account-info"] as const,
 };
 
 export const useUserInfo = () => {
@@ -136,5 +142,47 @@ export const useSendPhoneVerificationCode = () => {
       );
       return response.data;
     },
+  });
+};
+
+export const useAccountInfo = () => {
+  return useQuery({
+    queryKey: authQueryKeys.accountInfo,
+    queryFn: async () => {
+      const response = await axios.get<AccountInfo>(
+        "/api/protected/auth/user-info/account"
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useVerifyAccountPhoneNumber = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: AccountPhoneVerificationCheckRequest) => {
+      const response = await axios.post<AccountPhoneVerificationResponse>(
+        "/api/protected/auth/user-info/account-phone/verify",
+        data
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authQueryKeys.accountInfo });
+    },
+    meta: { skipErrorToast: true },
+  });
+};
+
+export const useDeleteAccount = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axios.post<ActionMessageResponse>(
+        "/api/protected/auth/delete-account"
+      );
+      return response.data;
+    },
+    meta: { skipErrorToast: true },
   });
 };

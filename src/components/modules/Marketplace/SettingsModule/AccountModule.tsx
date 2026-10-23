@@ -39,14 +39,7 @@ const ACCOUNT_ITEMS: AccountListItem[] = [
 
 const AccountModule = () => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
-    >
+    <Box sx={styles.container}>
       <HeaderMobile title="Cont" />
 
       <List component="nav">
@@ -72,3 +65,12 @@ const AccountModule = () => {
 };
 
 export default AccountModule;
+
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    width: "100%",
+  },
+};

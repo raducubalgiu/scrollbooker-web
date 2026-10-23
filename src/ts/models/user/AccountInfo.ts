@@ -1,16 +1,16 @@
 export interface AccountInfo {
-  private_phone: string | null;
-  private_phone_verified: boolean;
+  account_phone: string | null;
+  account_phone_verified: boolean;
   email: string;
   email_verified: boolean;
 }
 
-export interface PrivatePhoneVerificationCheckRequest {
+export interface AccountPhoneVerificationCheckRequest {
   phone: string;
   code: string;
 }
 
-export interface PrivatePhoneVerificationResponse {
-  private_phone: string | null;
-  private_phone_verified: boolean;
+export interface AccountPhoneVerificationResponse {
+  account_phone: string | null;
+  account_phone_verified: boolean;
 }

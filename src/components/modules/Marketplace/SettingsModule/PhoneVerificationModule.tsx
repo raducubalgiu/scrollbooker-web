@@ -4,8 +4,10 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
-import { useSendPhoneVerificationCode } from "@/controllers/auth/auth.controller";
-import { useVerifyPrivatePhoneNumber } from "@/controllers/user/account.controller";
+import {
+  useSendPhoneVerificationCode,
+  useVerifyAccountPhoneNumber,
+} from "@/controllers/auth/auth.controller";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 
@@ -25,7 +27,7 @@ const PhoneVerificationModule = () => {
   const { mutate: sendCode, isPending: isSending } =
     useSendPhoneVerificationCode();
   const { mutate: verifyCode, isPending: isVerifying } =
-    useVerifyPrivatePhoneNumber();
+    useVerifyAccountPhoneNumber();
 
   useEffect(() => {
     if (cooldown <= 0) return;

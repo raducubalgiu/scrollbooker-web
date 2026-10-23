@@ -4,7 +4,7 @@ import { Box, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import React from "react";
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
-import { useAccountInfo } from "@/controllers/user/account.controller";
+import { useAccountInfo } from "@/controllers/auth/auth.controller";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 
@@ -54,9 +54,7 @@ const AccountInfoRow = ({
         {value}
       </Typography>
 
-      {showChevron && (
-        <ChevronRightIcon sx={{ color: "text.secondary" }} />
-      )}
+      {showChevron && <ChevronRightIcon sx={{ color: "text.secondary" }} />}
     </Stack>
   </Stack>
 );
@@ -66,14 +64,7 @@ const AccountInfoModule = () => {
   const { data, isLoading, isError, refetch } = useAccountInfo();
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
-    >
+    <Box sx={styles.container}>
       <HeaderMobile title="Informații Cont" />
 
       <Box sx={{ px: 2.5 }}>
@@ -103,7 +94,7 @@ const AccountInfoModule = () => {
             <AccountInfoRow
               title="Număr de telefon"
               value={
-                data.private_phone ? maskedPhone(data.private_phone) : "Nesetat"
+                data.account_phone ? maskedPhone(data.account_phone) : "Nesetat"
               }
               showChevron
               onClick={() =>
@@ -122,3 +113,12 @@ const AccountInfoModule = () => {
 };
 
 export default AccountInfoModule;
+
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    width: "100%",
+  },
+};
