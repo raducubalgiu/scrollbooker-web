@@ -15,6 +15,7 @@ import { Post } from "@/ts/models/social/Post";
 import { useInfiniteUserPosts } from "@/controllers/social/post.controller";
 import { usePostFeed } from "@/components/cutomized/Post/feed/usePostFeed";
 import PostFeedView from "@/components/cutomized/Post/feed/PostFeedView";
+import PostMainActionBar from "@/components/cutomized/Post/PostMainActionBar";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { getProfileRoute } from "../ProfileModule/tabs/profileTabsHelper";
@@ -79,7 +80,7 @@ export default function UserPostFeedModule({
     initialIndex: resolvedIndex,
   });
 
-  const { currentPost } = feed;
+  const { currentPost, setIsProductsOpen } = feed;
 
   useEffect(() => {
     if (!currentPost || resolvedIndex === undefined) return;
@@ -93,11 +94,6 @@ export default function UserPostFeedModule({
       targetTab
     );
 
-    // Deliberately bypasses next/navigation's router: postId is a path
-    // segment, and router.replace() on a changed dynamic segment re-runs
-    // this route's Server Component (re-fetch + full remount), wiping the
-    // in-progress scroll/index state. A plain history update keeps the
-    // address bar in sync without touching the already-loaded feed.
     window.history.replaceState(null, "", url);
   }, [currentPost, resolvedIndex, tab]);
 
@@ -121,44 +117,59 @@ export default function UserPostFeedModule({
   return (
     <Box
       sx={{
-        // Forțează acest punct din pagină să devină un container fix pe tot ecranul
         position: "fixed",
         top: 0,
         left: 0,
         width: "100vw",
         height: "100vh",
-        zIndex: 1300, // Se asigură că trece peste orice container limitat de deasupra
-        bgcolor: "background.default", // Fundalul care va acoperi spațiul alb
+        zIndex: 1300,
+        bgcolor: "background.default",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <PostFeedView
-        posts={posts}
-        feed={feed}
-        topLeftSlot={
-          isMobile ? (
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClose();
-              }}
-              size="small"
-              sx={styles.closeButtonMobile}
-            >
-              <CloseIcon fontSize="medium" />
-            </IconButton>
-          ) : (
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClose();
-              }}
-              sx={styles.backButton}
-            >
-              <ArrowBackIcon sx={{ fontSize: "2.1875rem" }} />
-            </IconButton>
-          )
-        }
-      />
+      <Box sx={{ flex: 1, minHeight: 0 }}>
+        <PostFeedView
+          posts={posts}
+          feed={feed}
+          showBookButton={false}
+          topLeftSlot={
+            isMobile ? (
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClose();
+                }}
+                size="small"
+                sx={styles.closeButtonMobile}
+              >
+                <CloseIcon fontSize="medium" />
+              </IconButton>
+            ) : (
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClose();
+                }}
+                sx={styles.backButton}
+              >
+                <ArrowBackIcon sx={{ fontSize: "2.1875rem" }} />
+              </IconButton>
+            )
+          }
+        />
+      </Box>
+
+      {currentPost && (
+        <Box sx={styles.bottomActionsBar} onClick={(e) => e.stopPropagation()}>
+          <PostMainActionBar
+            instantBooking={currentPost.instant_booking}
+            isVideoReview={currentPost.is_video_review}
+            contact={currentPost.contact}
+            onOpenLinkedProducts={() => setIsProductsOpen(true)}
+          />
+        </Box>
+      )}
     </Box>
   );
 }
@@ -184,5 +195,13 @@ const styles = {
     left: 10,
     zIndex: 20,
     color: "#fff",
+  },
+  bottomActionsBar: {
+    display: { xs: "block", lg: "none" },
+    flexShrink: 0,
+    bgcolor: "common.black",
+    px: 2,
+    pt: 1,
+    pb: "calc(8px + env(safe-area-inset-bottom))",
   },
 } as const;

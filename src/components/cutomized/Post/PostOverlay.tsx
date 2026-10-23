@@ -8,8 +8,7 @@ import { PostActionsProps } from "./actions/postActionTypes";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import { PostBusinessLocation } from "@/ts/models/social/Post";
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
-import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
-import PostContactActions from "./PostContactActions";
+import PostMainActionBar from "./PostMainActionBar";
 import PostOverlayUser from "./PostOverlayUser";
 import { calculateDistance } from "@/utils/calculateDistance";
 
@@ -19,6 +18,7 @@ type PostOverlayProps = {
   businessLocation: PostBusinessLocation | null;
   instantBooking: boolean;
   contact: ContactInfo;
+  showBookButton?: boolean;
   onOpenLinkedProducts: () => void;
 };
 
@@ -28,6 +28,7 @@ const PostOverlay = ({
   businessLocation,
   instantBooking,
   contact,
+  showBookButton = true,
   onOpenLinkedProducts,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -103,23 +104,16 @@ const PostOverlay = ({
               </Box>
             )}
 
-            <Box onClick={(e) => e.stopPropagation()} sx={styles.bookButton}>
-              {instantBooking ? (
-                <ContactActionButton
-                  instantBooking
+            {showBookButton && (
+              <Box onClick={(e) => e.stopPropagation()} sx={styles.bookButton}>
+                <PostMainActionBar
+                  instantBooking={instantBooking}
+                  isVideoReview={isVideoReview ?? false}
                   contact={contact}
-                  onBookNow={onOpenLinkedProducts}
-                  bookLabel={isVideoReview ? "Rezervă și tu" : "Rezervă acum"}
-                  fullWidth
-                  size="small"
+                  onOpenLinkedProducts={onOpenLinkedProducts}
                 />
-              ) : (
-                <PostContactActions
-                  contact={contact}
-                  onOpenServices={onOpenLinkedProducts}
-                />
-              )}
-            </Box>
+              </Box>
+            )}
           </Stack>
 
           <Box sx={styles.actionsMobileWrapper}>

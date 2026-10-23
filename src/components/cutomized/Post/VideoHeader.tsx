@@ -104,7 +104,6 @@ const VideoHeader = ({
                 address={businessLocation.formatted_address}
                 distanceKm={distanceKm}
                 variant="body2"
-                icon
               />
             </Box>
           )}

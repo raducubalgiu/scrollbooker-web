@@ -19,6 +19,7 @@ type FeedVideoPoolProps = {
   callbacks: PostActionCallbacks;
   onIndexChange: (index: number) => void;
   onOpenLinkedProducts: () => void;
+  showBookButton?: boolean;
 };
 
 export function FeedVideoPool({
@@ -28,6 +29,7 @@ export function FeedVideoPool({
   callbacks,
   onIndexChange,
   onOpenLinkedProducts,
+  showBookButton = true,
 }: FeedVideoPoolProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
@@ -254,6 +256,7 @@ export function FeedVideoPool({
                 preload="auto"
                 resetOnInactive={false}
                 onOpenLinkedProducts={onOpenLinkedProducts}
+                showBookButton={showBookButton}
               />
             ) : (
               <Box
