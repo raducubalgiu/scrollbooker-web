@@ -7,9 +7,15 @@ type HeaderMobileProps = {
   title?: string | undefined;
   customTitle?: React.ReactNode;
   customAction?: React.ReactNode;
+  onBack?: () => void;
 };
 
-const HeaderMobile = ({ title, customTitle, customAction }: HeaderMobileProps) => {
+const HeaderMobile = ({
+  title,
+  customTitle,
+  customAction,
+  onBack,
+}: HeaderMobileProps) => {
   const { goBack } = useAppNavigation();
 
   return (
@@ -20,7 +26,7 @@ const HeaderMobile = ({ title, customTitle, customAction }: HeaderMobileProps) =
         justifyContent="space-between"
         sx={styles.container}
       >
-        <IconButton onClick={() => goBack()}>
+        <IconButton onClick={() => (onBack ? onBack() : goBack())}>
           <ArrowBackIcon />
         </IconButton>
         {customTitle ?? (

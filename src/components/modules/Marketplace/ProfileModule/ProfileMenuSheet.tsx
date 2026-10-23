@@ -47,7 +47,6 @@ const ProfileMenuSheet = ({
           justifyContent="center"
           position="relative"
           mx={1.5}
-          minHeight={35}
         >
           <Typography fontWeight={800}>Meniu principal</Typography>
 
@@ -79,8 +78,8 @@ const ProfileMenuSheet = ({
                 <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
                   <Box
                     sx={{
-                      width: 24,
-                      height: 24,
+                      width: 20,
+                      height: 20,
                       backgroundColor: "currentColor",
                       maskImage: `url(${VideoIcon.src})`,
                       WebkitMaskImage: `url(${VideoIcon.src})`,
@@ -118,8 +117,8 @@ const ProfileMenuSheet = ({
                 <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
                   <Box
                     sx={{
-                      width: 24,
-                      height: 24,
+                      width: 20,
+                      height: 20,
                       backgroundColor: "currentColor",
                       maskImage: `url(${BusinessIcon.src})`,
                       WebkitMaskImage: `url(${BusinessIcon.src})`,
@@ -156,8 +155,8 @@ const ProfileMenuSheet = ({
               <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
                 <Box
                   sx={{
-                    width: 24,
-                    height: 24,
+                    width: 20,
+                    height: 20,
                     backgroundColor: "currentColor",
                     maskImage: `url(${SettingsIcon.src})`,
                     WebkitMaskImage: `url(${SettingsIcon.src})`,
