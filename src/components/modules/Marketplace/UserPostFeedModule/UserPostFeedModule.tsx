@@ -123,7 +123,7 @@ export default function UserPostFeedModule({
         width: "100vw",
         height: "100dvh",
         zIndex: 1300,
-        bgcolor: "background.default",
+        bgcolor: "common.black",
         display: "flex",
         flexDirection: "column",
       }}
