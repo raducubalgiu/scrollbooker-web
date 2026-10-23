@@ -39,7 +39,7 @@ const PostReviewsSheet = ({
           justifyContent="center"
           position="relative"
           mx={2}
-          minHeight={30}
+          sx={{ py: 1 }}
         >
           <Typography fontWeight={800} fontSize={16}>
             Recenzii
@@ -85,10 +85,6 @@ const styles = {
   },
   container: {
     width: "100%",
-    pt: 2,
-    pb: 1.5,
-    borderBottom: 1,
-    borderColor: "divider",
     flexShrink: 0,
   },
   iconBack: {

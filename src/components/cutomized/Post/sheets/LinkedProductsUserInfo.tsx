@@ -39,11 +39,13 @@ const LinkedProductsUserInfo = ({
           </Typography>
 
           <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap">
-            <Typography fontWeight={600}>
+            <Typography fontWeight={600} variant="body2">
               {formatRating(ratingsAverage)}
             </Typography>
             <Rating value={4.9} precision={0.5} readOnly size="small" />
-            <Typography fontWeight={600}>({ratingsCount})</Typography>
+            <Typography fontWeight={600} variant="body2">
+              ({ratingsCount})
+            </Typography>
           </Stack>
 
           <ProfileAddress
