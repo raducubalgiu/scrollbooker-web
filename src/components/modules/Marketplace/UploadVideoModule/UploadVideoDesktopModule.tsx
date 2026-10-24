@@ -5,7 +5,7 @@ import React from "react";
 import UploadIcon from "@mui/icons-material/Upload";
 import UploadVideoSidebar from "./UploadVideoSidebar";
 import ProgressWithFeedback from "@/components/cutomized/ProgressWithFeedback/ProgressWithFeedback";
-import ProductsSelectionModal from "./products/ProductsSelectionModal";
+import UploadVideoProductsPicker from "./products/UploadVideoProductsPicker";
 import { useUploadVideoFlow } from "./useUploadVideoFlow";
 
 const UploadVideoDesktopModule = () => {
@@ -34,7 +34,7 @@ const UploadVideoDesktopModule = () => {
 
   return (
     <>
-      <ProductsSelectionModal
+      <UploadVideoProductsPicker
         selectedProducts={selectedProducts}
         onAddProducts={handleSelectProducts}
         open={openProducts}

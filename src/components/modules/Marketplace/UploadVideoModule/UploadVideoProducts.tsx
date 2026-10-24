@@ -38,25 +38,30 @@ const UploadVideoProducts = ({
         justifyContent="space-between"
       >
         <Stack>
-          <Typography fontWeight={700}>
-            Servicii atașate ({selectedProducts.length}/5)
-          </Typography>
+          <Stack
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography fontWeight={700}>
+              Servicii atașate ({selectedProducts.length}/5)
+            </Typography>
+
+            <Button
+              variant="text"
+              size="small"
+              onClick={onOpenProducts}
+              sx={{ fontWeight: 700 }}
+            >
+              {hasProducts ? "Modifică" : "Adaugă"}
+            </Button>
+          </Stack>
 
           <Typography variant="caption" color="text.secondary">
             Serviciile atașate acestui videoclip vor apărea primele in lista
             afișată userilor atunci cand doresc să facă o rezervare.
           </Typography>
         </Stack>
-
-        {hasProducts && (
-          <Button
-            variant="outlined"
-            onClick={onOpenProducts}
-            sx={styles.modifyButton}
-          >
-            Modifică serviciile
-          </Button>
-        )}
       </Stack>
 
       {!hasProducts ? (
@@ -107,22 +112,22 @@ const UploadVideoProducts = ({
                           flexDirection="row"
                           alignItems="center"
                           gap={1}
-                          mt={1.5}
+                          mt={1}
                         >
-                          <Typography fontSize={18} fontWeight={600}>
+                          <Typography fontWeight={600}>
                             {has_different_prices && "de la"}{" "}
                             {`${formatPrice(starting_offering.price_with_discount)} RON`}
                           </Typography>
                           {starting_offering.discount > 0 && (
                             <>
                               <Typography
-                                variant="body1"
+                                variant="body2"
                                 color="text.secondary"
                                 sx={{ textDecoration: "line-through" }}
                               >
                                 {formatPrice(starting_offering.price)}
                               </Typography>
-                              <Typography fontWeight={600} color="error.main">
+                              <Typography variant="body2" color="error.main">
                                 (-{starting_offering.discount}%)
                               </Typography>
                             </>
@@ -144,16 +149,11 @@ const UploadVideoProducts = ({
 export default UploadVideoProducts;
 
 const styles = {
-  modifyButton: {
-    textTransform: "none",
-    fontWeight: 600,
-  },
   listItem: {
     border: 1,
     borderColor: "divider",
     borderRadius: 3,
     mb: 1.5,
-    py: 1.5,
     bgcolor: "background.paper",
     "&:hover": { bgcolor: "action.hover" },
   },

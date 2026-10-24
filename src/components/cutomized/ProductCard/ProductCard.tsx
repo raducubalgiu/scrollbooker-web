@@ -10,7 +10,6 @@ import {
   Stack,
   SxProps,
   Theme,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
@@ -149,20 +148,20 @@ const ProductCard = ({
           </Typography>
 
           <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
-            <Typography fontSize={{ xs: 17, lg: 18 }} fontWeight={600}>
+            <Typography variant="body1" fontWeight={600}>
               {has_different_prices && "de la"}{" "}
               {`${formatPrice(starting_offering.price_with_discount)} RON`}
             </Typography>
             {starting_offering.discount > 0 && (
               <>
                 <Typography
-                  variant="body1"
+                  variant="body2"
                   color="text.secondary"
                   sx={{ textDecoration: "line-through" }}
                 >
                   {formatPrice(starting_offering.price)}
                 </Typography>
-                <Typography fontWeight={600} color="error.main">
+                <Typography variant="body2" fontWeight={600} color="error.main">
                   (-{starting_offering.discount}%)
                 </Typography>
               </>
@@ -173,35 +172,33 @@ const ProductCard = ({
         {!displayEditableActions && instantBooking && (
           <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
             {showIcon ? (
-              <Tooltip title={isSelected ? "Elimină" : "Adaugă"}>
-                <IconButton
-                  size="medium"
-                  onClick={onSelectProduct}
-                  sx={{
-                    width: { xs: 40, md: 46 },
-                    height: { xs: 40, md: 46 },
-                    bgcolor: isSelected ? "primary.main" : "background.default",
-                    color: isSelected ? "common.white" : "text.primary",
-                    boxShadow: isSelected ? 0 : 2,
-                    transition: "all 0.2s ease-in-out",
+              <IconButton
+                size="medium"
+                onClick={onSelectProduct}
+                sx={{
+                  width: { xs: 40, md: 46 },
+                  height: { xs: 40, md: 46 },
+                  bgcolor: isSelected ? "primary.main" : "background.default",
+                  color: isSelected ? "common.white" : "text.primary",
+                  boxShadow: isSelected ? 0 : 2,
+                  transition: "all 0.2s ease-in-out",
 
-                    "&:hover": {
-                      bgcolor: isSelected ? "primary.dark" : "action.hover",
-                      boxShadow: isSelected ? 6 : 4,
-                      transform: "scale(1.05)",
-                    },
-                    "&:active": {
-                      transform: "scale(0.95)",
-                    },
-                  }}
-                >
-                  {isSelected ? (
-                    <CheckRoundedIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
-                  ) : (
-                    <AddRoundedIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
-                  )}
-                </IconButton>
-              </Tooltip>
+                  "&:hover": {
+                    bgcolor: isSelected ? "primary.dark" : "action.hover",
+                    boxShadow: isSelected ? 6 : 4,
+                    transform: "scale(1.05)",
+                  },
+                  "&:active": {
+                    transform: "scale(0.95)",
+                  },
+                }}
+              >
+                {isSelected ? (
+                  <CheckRoundedIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
+                ) : (
+                  <AddRoundedIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
+                )}
+              </IconButton>
             ) : (
               <Button
                 variant="outlined"

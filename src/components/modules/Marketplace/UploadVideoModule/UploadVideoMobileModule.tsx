@@ -6,7 +6,7 @@ import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { useUploadVideoFlow } from "./useUploadVideoFlow";
 import UploadVideoMobileSelectStep from "./UploadVideoMobileSelectStep";
 import UploadVideoMobileDetailsStep from "./UploadVideoMobileDetailsStep";
-import ProductsSelectionModal from "./products/ProductsSelectionModal";
+import UploadVideoProductsPicker from "./products/UploadVideoProductsPicker";
 
 type UploadStep = "select" | "details";
 
@@ -56,7 +56,7 @@ const UploadVideoMobileModule = () => {
 
   return (
     <>
-      <ProductsSelectionModal
+      <UploadVideoProductsPicker
         selectedProducts={selectedProducts}
         onAddProducts={handleSelectProducts}
         open={openProducts}
