@@ -2,8 +2,10 @@
 
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import { alpha, Theme } from "@mui/material/styles";
-import React, { ChangeEvent, RefObject } from "react";
+import React, { ChangeEvent, RefObject, useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import UploadIcon from "@mui/icons-material/Upload";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 
 type UploadVideoMobileSelectStepProps = {
@@ -23,6 +25,20 @@ const UploadVideoMobileSelectStep = ({
   onNext,
   onBack,
 }: UploadVideoMobileSelectStepProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handleTogglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  };
+
   return (
     <Box sx={styles.page}>
       <input
@@ -41,11 +57,24 @@ const UploadVideoMobileSelectStep = ({
         </Box>
 
         {videoPreview ? (
-          <video
-            src={videoPreview}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            controls
-          />
+          <Box sx={styles.videoWrapper} onClick={handleTogglePlay}>
+            <video
+              ref={videoRef}
+              src={videoPreview}
+              loop
+              autoPlay
+              playsInline
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+
+            {!isPlaying && (
+              <Box sx={styles.playOverlay}>
+                <PlayArrowRoundedIcon sx={styles.playIcon} />
+              </Box>
+            )}
+          </Box>
         ) : (
           <Stack
             alignItems="center"
@@ -63,14 +92,39 @@ const UploadVideoMobileSelectStep = ({
       </Box>
 
       <Box sx={styles.actions}>
-        <Button
-          variant="contained"
-          disableElevation
-          fullWidth
-          onClick={videoPreview ? onNext : onSelectVideo}
-        >
-          {videoPreview ? "Mai departe" : "Selectează un video"}
-        </Button>
+        {videoPreview ? (
+          <Stack direction="row" gap={1.5}>
+            <Button
+              variant="contained"
+              color="secondary"
+              disableElevation
+              fullWidth
+              startIcon={<UploadIcon />}
+              onClick={onSelectVideo}
+            >
+              Schimbă
+            </Button>
+
+            <Button
+              variant="contained"
+              disableElevation
+              fullWidth
+              onClick={onNext}
+            >
+              Mai departe
+            </Button>
+          </Stack>
+        ) : (
+          <Button
+            variant="contained"
+            disableElevation
+            fullWidth
+            startIcon={<UploadIcon />}
+            onClick={onSelectVideo}
+          >
+            Selectează un video
+          </Button>
+        )}
       </Box>
     </Box>
   );
@@ -96,6 +150,22 @@ const styles = {
     borderBottomLeftRadius: "16px",
     borderBottomRightRadius: "16px",
   },
+  videoWrapper: {
+    position: "relative" as const,
+    width: "100%",
+    height: "100%",
+    cursor: "pointer",
+    WebkitTapHighlightColor: "transparent",
+    "& video": { WebkitTapHighlightColor: "transparent" },
+  },
+  playOverlay: {
+    position: "absolute" as const,
+    inset: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  playIcon: { fontSize: 74, color: "common.white", opacity: 0.85 },
   placeholderIcon: { fontSize: 32, color: "common.white" },
   placeholderText: (theme: Theme) => ({
     color: alpha(theme.palette.common.white, 0.7),

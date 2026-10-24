@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Box, Chip, Stack, Typography } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 import { GenderTypeEnum } from "@/ts/enums/GenderTypeEnum";
 
 type UploadVideoTargetGenderSectionProps = {
@@ -38,6 +39,7 @@ const UploadVideoTargetGenderSection = ({
               key={option.value}
               label={option.label}
               onClick={() => onChange(option.value)}
+              {...(isSelected ? { icon: <CheckIcon /> } : {})}
               sx={[styles.chip, isSelected && styles.chipSelected]}
             />
           );
@@ -56,10 +58,16 @@ const styles = {
     color: "text.primary",
     border: "1px solid",
     borderColor: "divider",
+    WebkitTapHighlightColor: "transparent",
+    "&:hover": { bgcolor: "action.selected" },
+    "&.Mui-focusVisible": { bgcolor: "action.selected" },
   },
   chipSelected: {
     bgcolor: "primary.main",
     color: "common.white",
     borderColor: "primary.main",
+    "& .MuiChip-icon": { color: "common.white", fontSize: 16 },
+    "&:hover": { bgcolor: "primary.main" },
+    "&.Mui-focusVisible": { bgcolor: "primary.main" },
   },
 } as const;
