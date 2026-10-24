@@ -32,7 +32,7 @@ const UploadVideoProducts = ({
 
   return (
     <Box>
-      <Typography variant="h4" fontWeight={600} mb={2.5}>
+      <Typography fontWeight={700} mb={2.5}>
         Servicii
       </Typography>
 
@@ -44,7 +44,7 @@ const UploadVideoProducts = ({
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography fontWeight={700}>
           Servicii atașate ({selectedProducts.length}/5)
         </Typography>
 

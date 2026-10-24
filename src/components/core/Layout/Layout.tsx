@@ -55,6 +55,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isPageWithoutBottomBar =
     pathname.startsWith("/admin") ||
     pathname.startsWith("/settings") ||
+    pathname.startsWith("/upload-video") ||
     isVideoPage;
   const isOverlayOpen = activeView !== null;
   const visualDrawerCollapsed = isOverlayOpen || isDrawerCollapsed;

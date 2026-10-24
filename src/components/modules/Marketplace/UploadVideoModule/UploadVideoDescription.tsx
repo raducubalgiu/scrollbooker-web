@@ -12,7 +12,7 @@ const UploadVideoDescription = ({
 }: UploadVideoDescriptionProps) => {
   return (
     <Box>
-      <Typography variant="h4" fontWeight={600} mb={1}>
+      <Typography fontWeight={700} mb={1}>
         Descriere
       </Typography>
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
