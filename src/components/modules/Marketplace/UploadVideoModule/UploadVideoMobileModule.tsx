@@ -28,6 +28,10 @@ const UploadVideoMobileModule = () => {
     fileInputRef,
     openProducts,
     selectedProducts,
+    serviceDomainId,
+    setServiceDomainId,
+    targetGender,
+    setTargetGender,
     handleOpenProducts,
     handleCloseProducts,
     handleVideoChange,
@@ -71,13 +75,18 @@ const UploadVideoMobileModule = () => {
       ) : (
         <UploadVideoMobileDetailsStep
           description={description}
+          videoPreview={videoPreview}
           selectedProducts={selectedProducts}
+          serviceDomainId={serviceDomainId}
+          targetGender={targetGender}
           isUploading={isUploading}
           uploadProgress={uploadProgress}
           onBack={() => goBack()}
           onDescriptionChange={handleDescription}
           onOpenProducts={handleOpenProducts}
           onRemoveProduct={handleRemoveProduct}
+          onServiceDomainChange={setServiceDomainId}
+          onTargetGenderChange={setTargetGender}
           onUpload={handleUpload}
         />
       )}

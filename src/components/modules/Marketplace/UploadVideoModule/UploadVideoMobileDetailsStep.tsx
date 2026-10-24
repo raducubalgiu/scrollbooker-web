@@ -1,48 +1,74 @@
 "use client";
 
-import { Box, Button, Divider, IconButton, Stack } from "@mui/material";
+import { Box, Button, Divider, Stack } from "@mui/material";
 import React from "react";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
 import UploadVideoDescription from "./UploadVideoDescription";
 import UploadVideoProducts from "./UploadVideoProducts";
+import UploadVideoServiceDomainSection from "./UploadVideoServiceDomainSection";
+import UploadVideoTargetGenderSection from "./UploadVideoTargetGenderSection";
 import ProgressWithFeedback from "@/components/cutomized/ProgressWithFeedback/ProgressWithFeedback";
 import { Product } from "@/ts/models/booking/product/Product";
+import { GenderTypeEnum } from "@/ts/enums/GenderTypeEnum";
 
 type UploadVideoMobileDetailsStepProps = {
   description: string;
+  videoPreview: string | null;
   selectedProducts: Product[];
+  serviceDomainId: number | null;
+  targetGender: GenderTypeEnum;
   isUploading: boolean;
   uploadProgress: number;
   onBack: () => void;
   onDescriptionChange: (d: string) => void;
   onOpenProducts: () => void;
   onRemoveProduct: (product: Product) => void;
+  onServiceDomainChange: (serviceDomainId: number | null) => void;
+  onTargetGenderChange: (gender: GenderTypeEnum) => void;
   onUpload: () => void;
 };
 
 const UploadVideoMobileDetailsStep = ({
   description,
+  videoPreview,
   selectedProducts,
+  serviceDomainId,
+  targetGender,
   isUploading,
   uploadProgress,
   onBack,
   onDescriptionChange,
   onOpenProducts,
   onRemoveProduct,
+  onServiceDomainChange,
+  onTargetGenderChange,
   onUpload,
 }: UploadVideoMobileDetailsStepProps) => {
   return (
     <Stack sx={styles.page}>
-      <Stack direction="row" alignItems="center" gap={0.5} sx={styles.header}>
-        <IconButton onClick={onBack} disabled={isUploading}>
-          <ArrowBackIcon />
-        </IconButton>
-      </Stack>
+      <HeaderMobile
+        title="Creează postare"
+        displayDivider={false}
+        onBack={() => {
+          if (!isUploading) onBack();
+        }}
+      />
 
       <Box sx={styles.content}>
         <UploadVideoDescription
           description={description}
           onDescriptionChange={onDescriptionChange}
+          thumbnailSrc={videoPreview}
+        />
+
+        <UploadVideoServiceDomainSection
+          selectedServiceDomainId={serviceDomainId}
+          onSelect={onServiceDomainChange}
+        />
+
+        <UploadVideoTargetGenderSection
+          value={targetGender}
+          onChange={onTargetGenderChange}
         />
 
         <UploadVideoProducts
@@ -67,7 +93,6 @@ const UploadVideoMobileDetailsStep = ({
           fullWidth
           disableElevation
           disabled={isUploading}
-          sx={styles.button}
         >
           Postează
         </Button>
@@ -80,14 +105,6 @@ export default UploadVideoMobileDetailsStep;
 
 const styles = {
   page: { height: "100%" },
-  header: {
-    position: "sticky",
-    top: 0,
-    zIndex: 10,
-    bgcolor: "background.default",
-    px: 1,
-    py: 1,
-  },
   content: {
     flex: 1,
     overflowY: "auto",
@@ -96,13 +113,7 @@ const styles = {
     pb: 1,
     display: "flex",
     flexDirection: "column",
-    gap: 4,
+    gap: 3,
   },
-  actions: { px: 2.5, pb: 2.5, pt: 0 },
-  button: {
-    p: 1.8,
-    fontWeight: 600,
-    textTransform: "none" as const,
-    fontSize: "1rem",
-  },
+  actions: { px: 1.5, pb: 1.5, pt: 0 },
 };

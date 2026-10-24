@@ -7,6 +7,7 @@ type HeaderMobileProps = {
   title?: string | undefined;
   customTitle?: React.ReactNode;
   customAction?: React.ReactNode;
+  displayDivider?: boolean;
   onBack?: () => void;
 };
 
@@ -14,6 +15,7 @@ const HeaderMobile = ({
   title,
   customTitle,
   customAction,
+  displayDivider = true,
   onBack,
 }: HeaderMobileProps) => {
   const { goBack } = useAppNavigation();
@@ -48,7 +50,7 @@ const HeaderMobile = ({
           </IconButton>
         )}
       </Stack>
-      <Divider />
+      {displayDivider && <Divider />}
     </>
   );
 };

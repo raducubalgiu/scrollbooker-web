@@ -50,7 +50,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     isExplicitNoLayoutPage || (!isSessionLoading && !isAuthenticated);
 
   const isVideoPage =
-    pathname.startsWith("/user/") && pathname.includes("/post/");
+    pathname.startsWith("/user/") &&
+    pathname.includes("/post/") &&
+    pathname.includes("/upload-video");
 
   const isPageWithoutBottomBar =
     pathname.startsWith("/admin") ||

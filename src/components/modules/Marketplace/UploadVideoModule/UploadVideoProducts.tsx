@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import React from "react";
-import ProductsInfoSection from "./ProductsInfoSection";
 import EmptyProductsSection from "./EmptyProductsSection";
 import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
 import { isEmpty } from "lodash";
@@ -32,21 +31,22 @@ const UploadVideoProducts = ({
 
   return (
     <Box>
-      <Typography fontWeight={700} mb={2.5}>
-        Servicii
-      </Typography>
-
-      <ProductsInfoSection />
-
       <Stack
         mb={2}
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography fontWeight={700}>
-          Servicii atașate ({selectedProducts.length}/5)
-        </Typography>
+        <Stack>
+          <Typography fontWeight={700}>
+            Servicii atașate ({selectedProducts.length}/5)
+          </Typography>
+
+          <Typography variant="caption" color="text.secondary">
+            Serviciile atașate acestui videoclip vor apărea primele in lista
+            afișată userilor atunci cand doresc să facă o rezervare.
+          </Typography>
+        </Stack>
 
         {hasProducts && (
           <Button

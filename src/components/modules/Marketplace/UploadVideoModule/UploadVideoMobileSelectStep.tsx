@@ -68,7 +68,6 @@ const UploadVideoMobileSelectStep = ({
           disableElevation
           fullWidth
           onClick={videoPreview ? onNext : onSelectVideo}
-          sx={styles.primaryButton}
         >
           {videoPreview ? "Mai departe" : "Selectează un video"}
         </Button>
@@ -124,5 +123,4 @@ const styles = {
     pb: "calc(10px + env(safe-area-inset-bottom))",
     bgcolor: "common.black",
   },
-  primaryButton: { p: 1.6, textTransform: "none" as const, fontWeight: 600 },
 };

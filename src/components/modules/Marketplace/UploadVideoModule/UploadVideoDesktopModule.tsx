@@ -18,6 +18,10 @@ const UploadVideoDesktopModule = () => {
     fileInputRef,
     openProducts,
     selectedProducts,
+    serviceDomainId,
+    setServiceDomainId,
+    targetGender,
+    setTargetGender,
     handleOpenProducts,
     handleCloseProducts,
     handleVideoChange,
@@ -103,10 +107,14 @@ const UploadVideoDesktopModule = () => {
         <UploadVideoSidebar
           selectedProducts={selectedProducts}
           description={description}
+          serviceDomainId={serviceDomainId}
+          targetGender={targetGender}
           onHandleOpenProducts={handleOpenProducts}
           onDescriptionChange={handleDescription}
           onHandleUpload={handleUpload}
           onRemoveProduct={handleRemoveProduct}
+          onServiceDomainChange={setServiceDomainId}
+          onTargetGenderChange={setTargetGender}
           isDisabled={isUploading || !selectedVideo}
         />
       </Box>

@@ -2,6 +2,7 @@ import * as tus from "tus-js-client";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { PostCreate } from "@/ts/models/social/PostCreate";
 import { Product } from "@/ts/models/booking/product/Product";
+import { GenderTypeEnum } from "@/ts/enums/GenderTypeEnum";
 
 export const useUploadVideoFlow = () => {
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
@@ -13,6 +14,11 @@ export const useUploadVideoFlow = () => {
 
   const [openProducts, setOpenProducts] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+
+  const [serviceDomainId, setServiceDomainId] = useState<number | null>(null);
+  const [targetGender, setTargetGender] = useState<GenderTypeEnum>(
+    GenderTypeEnum.OTHER
+  );
 
   const handleOpenProducts = useCallback(() => {
     setOpenProducts(true);
@@ -112,10 +118,8 @@ export const useUploadVideoFlow = () => {
               provider_uid: initData.uid,
               order_index: 0,
               linked_product_ids,
-              video_review_message: null,
-              is_video_review: false,
-              rating: null,
-              business_or_employee_id: null,
+              service_domain_id: serviceDomainId,
+              target_gender: targetGender,
             };
 
             const saveResponse = await fetch("/api/protected/posts", {
@@ -139,6 +143,8 @@ export const useUploadVideoFlow = () => {
             setVideoPreview(null);
             setDescription("");
             setSelectedProducts([]);
+            setServiceDomainId(null);
+            setTargetGender(GenderTypeEnum.OTHER);
             setUploadProgress(0);
             setIsUploading(false);
 
@@ -187,6 +193,10 @@ export const useUploadVideoFlow = () => {
     fileInputRef,
     openProducts,
     selectedProducts,
+    serviceDomainId,
+    setServiceDomainId,
+    targetGender,
+    setTargetGender,
     handleOpenProducts,
     handleCloseProducts,
     handleVideoChange,
