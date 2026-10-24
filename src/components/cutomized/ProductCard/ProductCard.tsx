@@ -1,27 +1,10 @@
 import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
-import {
-  Box,
-  Button,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Stack,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Box, Stack, SxProps, Theme, Typography } from "@mui/material";
 import React, { useState } from "react";
-import Protected from "../Protected/Protected";
-import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingModule/BookingModule";
-import { formatPrice } from "@/utils/formatPrice";
+import ProductCardInfo from "./ProductCardInfo";
+import ProductCardSelectActions from "./ProductCardSelectActions";
+import ProductCardEditableActions from "./ProductCardEditableActions";
 
 type ProductCardProps = {
   product: Product;
@@ -57,9 +40,6 @@ const ProductCard = ({
   const { name, description, starting_offering, has_different_prices } =
     product;
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const [actionsAnchorEl, setActionsAnchorEl] = useState<HTMLElement | null>(
-    null
-  );
 
   const handleCardClick = () => {
     if (shouldToggleDescription) {
@@ -109,21 +89,7 @@ const ProductCard = ({
 
   return (
     <Box
-      sx={[
-        {
-          bgcolor: "background.default",
-          p: { xs: 1.5, md: 2.5 },
-          borderRadius: 2.5,
-          border: 1.5,
-          borderColor: "divider",
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-          "&:hover": {
-            bgcolor: { xs: "transparent", md: "background.paper" },
-          },
-        },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
+      sx={[styles.container, ...(Array.isArray(sx) ? sx : [sx])]}
       onClick={handleCardClick}
     >
       <Stack
@@ -132,135 +98,30 @@ const ProductCard = ({
         justifyContent="space-between"
         gap={2}
       >
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography
-            fontWeight={700}
-            noWrap
-            sx={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {summaryText}
-          </Typography>
+        <ProductCardInfo
+          name={name}
+          summaryText={summaryText}
+          startingPrice={starting_offering.price}
+          startingDiscount={starting_offering.discount}
+          startingPriceWithDiscount={starting_offering.price_with_discount}
+          hasDifferentPrices={has_different_prices}
+        />
 
-          <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
-            <Typography variant="body1" fontWeight={600}>
-              {has_different_prices && "de la"}{" "}
-              {`${formatPrice(starting_offering.price_with_discount)} RON`}
-            </Typography>
-            {starting_offering.discount > 0 && (
-              <>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ textDecoration: "line-through" }}
-                >
-                  {formatPrice(starting_offering.price)}
-                </Typography>
-                <Typography variant="body2" fontWeight={600} color="error.main">
-                  (-{starting_offering.discount}%)
-                </Typography>
-              </>
-            )}
-          </Stack>
-        </Box>
+        <ProductCardSelectActions
+          isSelected={isSelected}
+          showIcon={showIcon}
+          instantBooking={instantBooking}
+          displayEditableActions={false}
+          onSelectProduct={onSelectProduct}
+          onNavigateToBooking={() => onNavigateToBooking(product)}
+        />
 
-        {!displayEditableActions && instantBooking && (
-          <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-            {showIcon ? (
-              <IconButton
-                size="medium"
-                onClick={onSelectProduct}
-                sx={{
-                  width: { xs: 40, md: 46 },
-                  height: { xs: 40, md: 46 },
-                  bgcolor: isSelected ? "primary.main" : "background.default",
-                  color: isSelected ? "common.white" : "text.primary",
-                  boxShadow: isSelected ? 0 : 2,
-                  transition: "all 0.2s ease-in-out",
-
-                  "&:hover": {
-                    bgcolor: isSelected ? "primary.dark" : "action.hover",
-                    boxShadow: isSelected ? 6 : 4,
-                    transform: "scale(1.05)",
-                  },
-                  "&:active": {
-                    transform: "scale(0.95)",
-                  },
-                }}
-              >
-                {isSelected ? (
-                  <CheckRoundedIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
-                ) : (
-                  <AddRoundedIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
-                )}
-              </IconButton>
-            ) : (
-              <Button
-                variant="outlined"
-                color="secondary"
-                size="small"
-                disableElevation
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onNavigateToBooking(product);
-                }}
-              >
-                Rezervă
-              </Button>
-            )}
-          </Protected>
-        )}
-
-        {displayEditableActions && (
-          <Protected permission={PermissionEnum.PRODUCT_EDIT}>
-            <IconButton
-              size="large"
-              onClick={(e) => {
-                e.stopPropagation();
-                setActionsAnchorEl(e.currentTarget);
-              }}
-            >
-              <MoreVertIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={actionsAnchorEl}
-              open={!!actionsAnchorEl}
-              onClose={() => setActionsAnchorEl(null)}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <MenuItem
-                onClick={() => {
-                  setActionsAnchorEl(null);
-                  onEditProduct?.(product.id);
-                }}
-              >
-                <ListItemIcon>
-                  <EditOutlinedIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Editează</ListItemText>
-              </MenuItem>
-
-              <MenuItem
-                disabled={isLoadingDelete}
-                onClick={() => {
-                  setActionsAnchorEl(null);
-                  onDeleteProduct?.(product.id);
-                }}
-              >
-                <ListItemIcon>
-                  <DeleteOutlineIcon fontSize="small" color="error" />
-                </ListItemIcon>
-                <ListItemText sx={{ color: "error.main" }}>Șterge</ListItemText>
-              </MenuItem>
-            </Menu>
-          </Protected>
-        )}
+        <ProductCardEditableActions
+          isLoadingDelete={isLoadingDelete}
+          displayEditableActions={displayEditableActions}
+          onEditProduct={() => onEditProduct?.(product.id)}
+          onDeleteProduct={() => onDeleteProduct?.(product.id)}
+        />
       </Stack>
 
       {description && (
@@ -291,3 +152,18 @@ const ProductCard = ({
 };
 
 export default ProductCard;
+
+const styles = {
+  container: {
+    bgcolor: "background.default",
+    p: { xs: 1.5, md: 2.5 },
+    borderRadius: 2.5,
+    border: 1.5,
+    borderColor: "divider",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      bgcolor: { xs: "transparent", md: "background.paper" },
+    },
+  },
+};
