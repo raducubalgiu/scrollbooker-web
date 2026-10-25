@@ -1,5 +1,5 @@
 import { IconButton, Stack, Typography } from "@mui/material";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import ControlPointOutlinedIcon from "@mui/icons-material/ControlPointOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import NextLink from "next/link";
@@ -25,7 +25,9 @@ const MyProfileHeaderMobile = ({
       <Stack direction="row" alignItems="center" sx={styles.rightActions}>
         {isBusinessOrEmployee && (
           <IconButton component={NextLink} href={AppRoutes.uploadVideo()}>
-            <AddRoundedIcon sx={{ fontSize: 27.5, color: "text.primary" }} />
+            <ControlPointOutlinedIcon
+              sx={{ fontSize: 27.5, color: "text.primary" }}
+            />
           </IconButton>
         )}
 

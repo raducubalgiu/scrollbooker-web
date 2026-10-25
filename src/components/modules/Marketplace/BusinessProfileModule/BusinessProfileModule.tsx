@@ -1,7 +1,7 @@
 "use client";
 
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
-import { Container, Stack } from "@mui/material";
+import { Alert, Container, Snackbar, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import BusinessStickyCard from "./components/BusinessStickyCard";
 import NearbyBusinesses from "./components/NearbyBusinesses";
@@ -35,8 +35,13 @@ const TAB_SECTIONS: BusinessProfileTabSection[] = [
 const BusinessProfileModule = ({
 	initialProfile,
 }: BusinessProfileModuleProps) => {
-	const { profile, handleFollow, handleShare } =
-		useBusinessSocialActions(initialProfile);
+	const {
+		profile,
+		handleFollow,
+		handleShare,
+		copiedSnackbarOpen,
+		closeCopiedSnackbar,
+	} = useBusinessSocialActions(initialProfile);
 
 	const {
 		tabsContainerRef,
@@ -118,6 +123,17 @@ const BusinessProfileModule = ({
 
 				<NearbyBusinesses businesses={profile.nearby_businesses} />
 			</Container>
+
+			<Snackbar
+				open={copiedSnackbarOpen}
+				autoHideDuration={3000}
+				onClose={closeCopiedSnackbar}
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+			>
+				<Alert severity="success" variant="filled" sx={{ width: "100%" }}>
+					Link-ul a fost copiat în clipboard!
+				</Alert>
+			</Snackbar>
 		</>
 	);
 };
