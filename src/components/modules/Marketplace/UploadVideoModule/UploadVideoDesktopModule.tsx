@@ -4,7 +4,6 @@ import { Box, Button, Stack } from "@mui/material";
 import React from "react";
 import UploadIcon from "@mui/icons-material/Upload";
 import UploadVideoSidebar from "./UploadVideoSidebar";
-import ProgressWithFeedback from "@/components/cutomized/ProgressWithFeedback/ProgressWithFeedback";
 import UploadVideoProductsPicker from "./products/UploadVideoProductsPicker";
 import { useUploadVideoFlow } from "./useUploadVideoFlow";
 
@@ -14,7 +13,6 @@ const UploadVideoDesktopModule = () => {
     videoPreview,
     description,
     isUploading,
-    uploadProgress,
     fileInputRef,
     openProducts,
     selectedProducts,
@@ -56,8 +54,6 @@ const UploadVideoDesktopModule = () => {
             alignItems="center"
             sx={{ width: "100%", height: "100%" }}
           >
-            {isUploading && <ProgressWithFeedback progress={uploadProgress} />}
-
             <Box
               sx={{
                 ...styles.videoContainer,
@@ -116,6 +112,7 @@ const UploadVideoDesktopModule = () => {
           onServiceDomainChange={setServiceDomainId}
           onTargetGenderChange={setTargetGender}
           isDisabled={isUploading || !selectedVideo}
+          isUploading={isUploading}
         />
       </Box>
     </>

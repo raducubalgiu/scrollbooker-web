@@ -24,7 +24,6 @@ const UploadVideoMobileModule = () => {
     videoPreview,
     description,
     isUploading,
-    uploadProgress,
     fileInputRef,
     openProducts,
     selectedProducts,
@@ -80,7 +79,6 @@ const UploadVideoMobileModule = () => {
           serviceDomainId={serviceDomainId}
           targetGender={targetGender}
           isUploading={isUploading}
-          uploadProgress={uploadProgress}
           onBack={() => goBack()}
           onDescriptionChange={handleDescription}
           onOpenProducts={handleOpenProducts}

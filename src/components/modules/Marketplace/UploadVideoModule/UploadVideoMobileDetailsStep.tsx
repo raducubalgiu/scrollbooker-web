@@ -7,7 +7,6 @@ import UploadVideoDescription from "./UploadVideoDescription";
 import UploadVideoProducts from "./UploadVideoProducts";
 import UploadVideoServiceDomainSection from "./UploadVideoServiceDomainSection";
 import UploadVideoTargetGenderSection from "./UploadVideoTargetGenderSection";
-import ProgressWithFeedback from "@/components/cutomized/ProgressWithFeedback/ProgressWithFeedback";
 import { Product } from "@/ts/models/booking/product/Product";
 import { GenderTypeEnum } from "@/ts/enums/GenderTypeEnum";
 
@@ -18,7 +17,6 @@ type UploadVideoMobileDetailsStepProps = {
   serviceDomainId: number | null;
   targetGender: GenderTypeEnum;
   isUploading: boolean;
-  uploadProgress: number;
   onBack: () => void;
   onDescriptionChange: (d: string) => void;
   onOpenProducts: () => void;
@@ -35,7 +33,6 @@ const UploadVideoMobileDetailsStep = ({
   serviceDomainId,
   targetGender,
   isUploading,
-  uploadProgress,
   onBack,
   onDescriptionChange,
   onOpenProducts,
@@ -79,12 +76,6 @@ const UploadVideoMobileDetailsStep = ({
       </Box>
 
       <Box sx={styles.actions}>
-        {isUploading && (
-          <Box sx={{ mb: 2 }}>
-            <ProgressWithFeedback progress={uploadProgress} />
-          </Box>
-        )}
-
         <Divider sx={{ mb: 2, opacity: 0.6 }} />
 
         <Button
@@ -93,6 +84,7 @@ const UploadVideoMobileDetailsStep = ({
           fullWidth
           disableElevation
           disabled={isUploading}
+          loading={isUploading}
         >
           Postează
         </Button>

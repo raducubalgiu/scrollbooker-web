@@ -1,15 +1,34 @@
-import * as tus from "tus-js-client";
+import axios from "axios";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { PostCreate } from "@/ts/models/social/PostCreate";
 import { Product } from "@/ts/models/booking/product/Product";
 import { GenderTypeEnum } from "@/ts/enums/GenderTypeEnum";
+import { AppRoutes } from "@/utils/routes";
+
+type CloudflareDirectUploadResponse = {
+  provider_uid: string;
+  upload_url: string;
+  watermark: string | null;
+  scheduled_deletion: string | null;
+};
+
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (axios.isAxiosError(error)) {
+    return error.response?.data?.detail ?? error.response?.data?.error ?? fallback;
+  }
+  return error instanceof Error ? error.message : fallback;
+};
 
 export const useUploadVideoFlow = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
+
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [description, setDescription] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [openProducts, setOpenProducts] = useState(false);
@@ -51,126 +70,44 @@ export const useUploadVideoFlow = () => {
     if (!selectedVideo || isUploading) return;
 
     setIsUploading(true);
-    setUploadProgress(0);
 
     try {
-      const initResponse = await fetch("/api/social/post/upload-stream", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uploadLength: selectedVideo.size,
-          metadata: {
-            name: selectedVideo.name,
-            filename: selectedVideo.name,
-            filetype: selectedVideo.type || "application/octet-stream",
-          },
-        }),
-      });
-
-      if (!initResponse.ok) {
-        const errorPayload = await initResponse.json().catch(() => null);
-        throw new Error(
-          errorPayload?.error ||
-            "Nu s-a putut genera URL-ul de upload de la backend."
+      const { data: uploadData } =
+        await axios.post<CloudflareDirectUploadResponse>(
+          "/api/protected/cloudflare/upload",
+          { meta: { name: selectedVideo.name } }
         );
+
+      const formData = new FormData();
+      formData.append("file", selectedVideo);
+
+      await axios.post(uploadData.upload_url, formData);
+
+      const linked_product_ids = selectedProducts.map((prod) => prod.id);
+
+      const postData: PostCreate = {
+        description,
+        provider: "cloudflare_stream",
+        provider_uid: uploadData.provider_uid,
+        order_index: 0,
+        linked_product_ids,
+        service_domain_id: serviceDomainId,
+        target_gender: targetGender,
+      };
+
+      await axios.post("/api/protected/posts", postData);
+
+      if (session?.username && session?.profession) {
+        router.push(AppRoutes.profile(session.username, session.profession));
+      } else {
+        router.push(AppRoutes.feed());
       }
-
-      const initData: { uploadUrl: string; uid: string } =
-        await initResponse.json();
-
-      if (!initData.uploadUrl || !initData.uid) {
-        throw new Error(
-          "Cloudflare Stream didn't returned the uploadUrl / uid"
-        );
-      }
-
-      const upload = new tus.Upload(selectedVideo, {
-        uploadUrl: initData.uploadUrl,
-        metadata: {
-          filename: selectedVideo.name,
-          filetype: selectedVideo.type || "application/octet-stream",
-        },
-
-        uploadSize: selectedVideo.size,
-        retryDelays: [0, 1000, 3000, 5000],
-        removeFingerprintOnSuccess: true,
-
-        onError: (error) => {
-          console.error("Upload Error:", error);
-          alert(`Eroare la încărcare: ${error.message}`);
-          setIsUploading(false);
-        },
-
-        onProgress: (bytesUploaded, bytesTotal) => {
-          const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-          setUploadProgress(Number(percentage));
-        },
-
-        onSuccess: async () => {
-          const linked_product_ids = selectedProducts.map((prod) => prod.id);
-
-          try {
-            const postData: PostCreate = {
-              description,
-              provider: "cloudflare_stream",
-              provider_uid: initData.uid,
-              order_index: 0,
-              linked_product_ids,
-              service_domain_id: serviceDomainId,
-              target_gender: targetGender,
-            };
-
-            const saveResponse = await fetch("/api/protected/posts", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(postData),
-            });
-
-            if (!saveResponse.ok) {
-              const errorPayload = await saveResponse.json().catch(() => null);
-              throw new Error(
-                errorPayload?.detail ||
-                  errorPayload?.error ||
-                  "Eroare la salvarea postării în baza de date."
-              );
-            }
-
-            setSelectedVideo(null);
-            setVideoPreview(null);
-            setDescription("");
-            setSelectedProducts([]);
-            setServiceDomainId(null);
-            setTargetGender(GenderTypeEnum.OTHER);
-            setUploadProgress(0);
-            setIsUploading(false);
-
-            alert("Video-ul a fost încărcat cu succes.");
-          } catch (error) {
-            console.error("DB Save Error:", error);
-            alert(
-              error instanceof Error
-                ? error.message
-                : "A apărut o eroare la salvarea postării."
-            );
-            setIsUploading(false);
-          }
-        },
-      });
-
-      upload.start();
     } catch (error) {
-      console.error("Setup Error:", error);
+      console.error("Upload Error:", error);
       alert(
-        error instanceof Error
-          ? error.message
-          : "A apărut o eroare la inițierea upload-ului."
+        getErrorMessage(error, "A apărut o eroare la încărcarea video-ului.")
       );
       setIsUploading(false);
-      setUploadProgress(0);
     }
   };
 
@@ -189,7 +126,6 @@ export const useUploadVideoFlow = () => {
     videoPreview,
     description,
     isUploading,
-    uploadProgress,
     fileInputRef,
     openProducts,
     selectedProducts,
