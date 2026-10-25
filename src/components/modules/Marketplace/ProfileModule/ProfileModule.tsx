@@ -18,7 +18,7 @@ import UserProfileHeaderMobile from "./UserProfileHeaderMobile";
 import ProfileMenuSheet from "./ProfileMenuSheet";
 import { SocialTabEnum } from "../SocialModule/SocialTabEnum";
 import SocialModal from "../SocialModule/SocialModal";
-import { LOG } from "@/utils/logger";
+import { useShareUserProfile } from "@/controllers/social/share.controller";
 
 export type ProfileModuleProps = {
   profile: UserProfile | null;
@@ -55,54 +55,21 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
   const [openSocialModal, setOpenSocialModal] =
     useState<SocialModalProps | null>(null);
   const isSocialModalOpen = openSocialModal !== null;
-  const [shareSnackbarOpen, setShareSnackbarOpen] = useState(false);
 
   const [localProfile, setLocalProfile] = useState<UserProfile | null>(profile);
 
-  const handleShare = useCallback(async () => {
-    const shareData = {
-      title: "Profilul meu",
-      text: "Aruncă o privire peste profilul meu!",
-      url: window.location.href,
-    };
+  const { shareUserProfile, copiedSnackbarOpen, closeCopiedSnackbar } =
+    useShareUserProfile();
 
-    if (navigator.share && navigator.canShare?.(shareData)) {
-      try {
-        await navigator.share(shareData);
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        LOG.error(`Eroare tehnică la partajare: ${errorMessage}`);
-      }
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setShareSnackbarOpen(true);
-    } catch {
-      try {
-        const textarea = document.createElement("textarea");
-        textarea.value = window.location.href;
-        textarea.style.position = "fixed";
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
-        setShareSnackbarOpen(true);
-      } catch (fallbackError) {
-        const msg =
-          fallbackError instanceof Error
-            ? fallbackError.message
-            : String(fallbackError);
-        LOG.error(`Eșec total la copiere link: ${msg}`);
-      }
-    }
-  }, []);
+  const handleShare = useCallback(() => {
+    if (!localProfile) return;
+    shareUserProfile({
+      id: localProfile.id,
+      username: localProfile.username,
+      profession: localProfile.profession,
+      bio: localProfile.bio,
+    });
+  }, [localProfile, shareUserProfile]);
 
   const handleUpdateFollows = useCallback((action: UpdateFollowersAction) => {
     setLocalProfile((prev) => {
@@ -227,9 +194,9 @@ const ProfileModule = ({ profile, tab }: ProfileModuleProps) => {
       />
 
       <Snackbar
-        open={shareSnackbarOpen}
+        open={copiedSnackbarOpen}
         autoHideDuration={3000}
-        onClose={() => setShareSnackbarOpen(false)}
+        onClose={closeCopiedSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert severity="success" variant="filled" sx={{ width: "100%" }}>

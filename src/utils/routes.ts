@@ -48,6 +48,11 @@ export const AppRoutes = {
     return `${baseUrl}?tab=${tabParam}`;
   },
 
+  business: (profession: string, ownerUsername: string) => {
+    const professionSlug = makeProfessionSlug(profession);
+    return `/business/${professionSlug}/${ownerUsername}`;
+  },
+
   postDetail: (
     username: string,
     profession: string,

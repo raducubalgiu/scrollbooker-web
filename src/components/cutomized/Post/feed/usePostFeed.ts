@@ -4,7 +4,6 @@ import { Post } from "@/ts/models/social/Post";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
-import { LOG } from "@/utils/logger";
 import { useGetLinkedProductsByPostId } from "@/controllers/booking/product.controller";
 import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
 import { useUserLocation } from "@/hooks/useUserLocation";
@@ -12,6 +11,7 @@ import { calculateDistance } from "@/utils/calculateDistance";
 import { usePostLikeBookmark } from "../actions/usePostLikeBookmark";
 import { patchFollowInAllCaches } from "@/utils/postCache";
 import { useFeedPaginationPrefetch } from "./useFeedPaginationPrefetch";
+import { useSharePost } from "@/controllers/social/share.controller";
 
 const PREFETCH_OFFSET = 2;
 
@@ -52,7 +52,11 @@ export const usePostFeed = ({
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const {
+    sharePost,
+    copiedSnackbarOpen: snackbarOpen,
+    closeCopiedSnackbar,
+  } = useSharePost();
 
   const currentPost = posts[currentIndex] ?? null;
 
@@ -138,57 +142,16 @@ export const usePostFeed = ({
     [currentPost, navigateTo]
   );
 
-  const handleShare = async (): Promise<void> => {
+  const handleShare = useCallback(async (): Promise<void> => {
     if (!currentPost) return;
 
-    const { user } = currentPost;
-    const shareUrl = `https://scrollbooker-web.vercel.app/user/${user.username}/${user.profession}/post/${currentPost.id}`;
-
-    const shareData: ShareData = {
-      title: "Postare Video",
-      text: "Aruncă o privire peste aceasta postare video",
-      url: shareUrl,
-    };
-
-    if (navigator.share && navigator.canShare?.(shareData)) {
-      try {
-        await navigator.share(shareData);
-        return;
-      } catch (error: unknown) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-        const msg = error instanceof Error ? error.message : String(error);
-        LOG.error(
-          `Web Share API a eșuat sau a fost anulat: ${msg}. Trecem la clipboard.`
-        );
-      }
-    }
-
-    if (navigator.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(shareUrl);
-        setSnackbarOpen(true);
-        return;
-      } catch (error: unknown) {
-        const msg = error instanceof Error ? error.message : String(error);
-        LOG.error(`Clipboard API asincron a eșuat: ${msg}`);
-      }
-    }
-
-    try {
-      window.prompt(
-        "Copierea automată nu este permisă de browser. Copiază link-ul de mai jos:",
-        shareUrl
-      );
-    } catch (fallbackError: unknown) {
-      const msg =
-        fallbackError instanceof Error
-          ? fallbackError.message
-          : String(fallbackError);
-      LOG.error(`Eșec total la orice metodă de partajare/copiere: ${msg}`);
-    }
-  };
+    await sharePost({
+      postId: currentPost.id,
+      username: currentPost.user.username,
+      profession: currentPost.user.profession,
+      description: currentPost.description,
+    });
+  }, [currentPost, sharePost]);
 
   const loaders = {
     isLoading,
@@ -230,6 +193,6 @@ export const usePostFeed = ({
     isMoreOpen,
     setIsMoreOpen,
     snackbarOpen,
-    setSnackbarOpen,
+    setSnackbarOpen: closeCopiedSnackbar,
   };
 };

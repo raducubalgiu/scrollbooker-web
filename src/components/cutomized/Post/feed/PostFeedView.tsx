@@ -193,7 +193,7 @@ const PostFeedView = ({
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={3000}
-          onClose={() => setSnackbarOpen(false)}
+          onClose={() => setSnackbarOpen()}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <Alert severity="success" variant="filled" sx={{ width: "100%" }}>

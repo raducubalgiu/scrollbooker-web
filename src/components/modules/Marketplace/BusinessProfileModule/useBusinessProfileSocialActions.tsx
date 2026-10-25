@@ -1,5 +1,6 @@
 import { BusinessProfile } from "@/ts/models/booking/business/BusinessProfile";
 import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
+import { useShareBusinessProfile } from "@/controllers/social/share.controller";
 import { useState, useCallback } from "react";
 
 export const useBusinessSocialActions = (initialProfile: BusinessProfile) => {
@@ -50,23 +51,29 @@ export const useBusinessSocialActions = (initialProfile: BusinessProfile) => {
     mutate(profile.owner.id, { onError: rollbackFollowState });
   }, [isCurrentlyFollowing, follow, unfollow, profile.owner.id, rollbackFollowState]);
 
+  const { shareBusinessProfile, copiedSnackbarOpen, closeCopiedSnackbar } =
+    useShareBusinessProfile();
+
   const handleShare = useCallback(() => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: profile.owner.fullname,
-          text: profile.description || "",
-          url: window.location.href,
-        })
-        .catch(console.error);
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-    }
-  }, [profile.owner.fullname, profile.description]);
+    shareBusinessProfile({
+      businessId: profile.id,
+      ownerUsername: profile.owner.username,
+      profession: profile.owner.profession,
+      description: profile.description,
+    });
+  }, [
+    shareBusinessProfile,
+    profile.id,
+    profile.owner.username,
+    profile.owner.profession,
+    profile.description,
+  ]);
 
   return {
     profile,
     handleFollow,
     handleShare,
+    copiedSnackbarOpen,
+    closeCopiedSnackbar,
   };
 };
