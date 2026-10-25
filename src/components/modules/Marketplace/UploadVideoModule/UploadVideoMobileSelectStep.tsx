@@ -7,6 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import UploadIcon from "@mui/icons-material/Upload";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
+import ForceDarkChrome from "@/components/core/ForceDarkChrome";
 
 type UploadVideoMobileSelectStepProps = {
   videoPreview: string | null;
@@ -41,6 +42,8 @@ const UploadVideoMobileSelectStep = ({
 
   return (
     <Box sx={styles.page}>
+      <ForceDarkChrome />
+
       <input
         type="file"
         accept="video/*"
