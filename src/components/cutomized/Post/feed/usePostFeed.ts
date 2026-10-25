@@ -165,14 +165,11 @@ export const usePostFeed = ({
     onBookmarkClick: handleBookmark,
     onShareClick: handleShare,
     onCommentClick: () => setIsCommentsOpen(true),
-<<<<<<< HEAD
-=======
     onReviewsClick: () => setIsReviewsOpen(true),
     onOpenMoreOptions: () => setIsMoreOpen(true),
     onCloseMoreOptions: () => setIsMoreOpen(false),
     onStatisticsClick: () => {},
     onEditClick: () => {},
->>>>>>> bc85405 (Implement MoreMenu)
     onDeleteClick: () => {},
     onNavigateToUser: () => {},
   };
