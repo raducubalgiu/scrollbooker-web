@@ -3,25 +3,38 @@ import { Product } from "@/ts/models/booking/product/Product";
 import { Box, Button, Divider, Stack } from "@mui/material";
 import UploadVideoDescription from "./UploadVideoDescription";
 import UploadVideoProducts from "./UploadVideoProducts";
+import UploadVideoServiceDomainSection from "./UploadVideoServiceDomainSection";
+import UploadVideoTargetGenderSection from "./UploadVideoTargetGenderSection";
+import { GenderTypeEnum } from "@/ts/enums/GenderTypeEnum";
 
 type UploadVideoSidebarProps = {
   description: string;
   selectedProducts: Product[];
+  serviceDomainId: number | null;
+  targetGender: GenderTypeEnum;
   onHandleOpenProducts: () => void;
   onDescriptionChange: (d: string) => void;
   onHandleUpload: () => void;
   onRemoveProduct: (product: Product) => void;
+  onServiceDomainChange: (serviceDomainId: number | null) => void;
+  onTargetGenderChange: (gender: GenderTypeEnum) => void;
   isDisabled: boolean;
+  isUploading: boolean;
 };
 
 const UploadVideoSidebar = ({
   description,
   selectedProducts,
+  serviceDomainId,
+  targetGender,
   onHandleOpenProducts,
   onDescriptionChange,
   onHandleUpload,
   onRemoveProduct,
+  onServiceDomainChange,
+  onTargetGenderChange,
   isDisabled,
+  isUploading,
 }: UploadVideoSidebarProps) => {
   return (
     <Box flex={1} sx={styles.container}>
@@ -31,6 +44,16 @@ const UploadVideoSidebar = ({
             <UploadVideoDescription
               description={description}
               onDescriptionChange={onDescriptionChange}
+            />
+
+            <UploadVideoServiceDomainSection
+              selectedServiceDomainId={serviceDomainId}
+              onSelect={onServiceDomainChange}
+            />
+
+            <UploadVideoTargetGenderSection
+              value={targetGender}
+              onChange={onTargetGenderChange}
             />
 
             <UploadVideoProducts
@@ -50,6 +73,7 @@ const UploadVideoSidebar = ({
             fullWidth
             disableElevation
             disabled={isDisabled}
+            loading={isUploading}
             sx={styles.button}
           >
             Postează

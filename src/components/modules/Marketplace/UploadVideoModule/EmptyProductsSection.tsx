@@ -13,19 +13,14 @@ const EmptyProductsSection = ({
     <Box onClick={onOpenProducts} sx={styles.container}>
       <AddBoxOutlinedIcon color="primary" sx={{ fontSize: 32, opacity: 0.7 }} />
 
-      <Box>
-        <Typography variant="body2" color="text.primary" fontWeight={600}>
-          Niciun serviciu atașat încă
-        </Typography>
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ display: "block", mt: 0.5, px: 2 }}
-        >
-          Apasă aici pentru a atașa serviciile relevante și a facilita
-          programările clienților.
-        </Typography>
-      </Box>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: "block", mt: 0.5, px: 2 }}
+      >
+        Apasă aici pentru a atașa serviciile relevante și a facilita
+        programările clienților.
+      </Typography>
     </Box>
   );
 };
