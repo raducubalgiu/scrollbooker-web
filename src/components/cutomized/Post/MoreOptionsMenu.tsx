@@ -1,20 +1,13 @@
-import {
-  CircularProgress,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-} from "@mui/material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
+import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import React from "react";
+import { buildPostMoreOptionsItems } from "./postMoreOptionsItems";
 
 type MoreOptionsMenuProps = {
   anchorEl: HTMLElement | null;
   isMenuOpen: boolean;
-  isOwnPost: boolean;
   handleOptionsClose: () => void;
-  onReportClick: () => void;
+  onStatisticsClick: () => void;
+  onEditClick: () => void;
   onDeleteClick: () => void;
   isLoadingDelete: boolean;
 };
@@ -22,12 +15,19 @@ type MoreOptionsMenuProps = {
 const MoreOptionsMenu = ({
   anchorEl,
   isMenuOpen,
-  isOwnPost,
   handleOptionsClose,
-  onReportClick,
+  onStatisticsClick,
+  onEditClick,
   onDeleteClick,
   isLoadingDelete,
 }: MoreOptionsMenuProps) => {
+  const items = buildPostMoreOptionsItems({
+    onStatisticsClick,
+    onEditClick,
+    onDeleteClick,
+    isLoadingDelete,
+  });
+
   return (
     <Menu
       anchorEl={anchorEl}
@@ -41,38 +41,21 @@ const MoreOptionsMenu = ({
           sx: {
             mt: 1,
             borderRadius: 3,
-            minWidth: 160,
+            minWidth: 180,
             boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
           },
         },
       }}
     >
-      <MenuItem onClick={onReportClick} sx={{ py: 1.2 }}>
-        <ListItemIcon>
-          <ReportOutlinedIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText
-          primary="Raportează"
-          slotProps={{
-            primary: {
-              variant: "body2",
-              fontWeight: 500,
-            },
-          }}
-        />
-      </MenuItem>
-
-      {isOwnPost && (
-        <MenuItem onClick={onDeleteClick} sx={{ color: "error.main", py: 1.2 }}>
-          <ListItemIcon>
-            {isLoadingDelete ? (
-              <CircularProgress />
-            ) : (
-              <DeleteOutlineIcon fontSize="small" color="error" />
-            )}
-          </ListItemIcon>
+      {items.map((item) => (
+        <MenuItem
+          key={item.key}
+          onClick={item.onClick}
+          sx={{ py: 1.2, color: item.isDestructive ? "error.main" : undefined }}
+        >
+          <ListItemIcon>{item.icon}</ListItemIcon>
           <ListItemText
-            primary="Șterge"
+            primary={item.label}
             slotProps={{
               primary: {
                 variant: "body2",
@@ -81,7 +64,7 @@ const MoreOptionsMenu = ({
             }}
           />
         </MenuItem>
-      )}
+      ))}
     </Menu>
   );
 };

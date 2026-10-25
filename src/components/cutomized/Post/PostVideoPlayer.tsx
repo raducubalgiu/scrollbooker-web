@@ -10,8 +10,8 @@ import {
   Typography,
   Skeleton,
   Fade,
-  Slider,
   CircularProgress,
+  Slider,
 } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import Hls from "hls.js";
@@ -54,20 +54,6 @@ const formatVideoTime = (seconds: number): string => {
   const secs = Math.floor(seconds % 60);
   return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 };
-
-const volumeIconSx = {
-  color: "#fff",
-  fontSize: { xs: "1.5rem", sm: "2.1875rem" },
-};
-const fadeContainerSx = {
-  position: "absolute",
-  inset: 0,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  pointerEvents: "none",
-  zIndex: 6,
-} as const;
 
 export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   post,
@@ -169,11 +155,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
 
   const tryPlayRef = useRef<() => Promise<void>>(async () => {});
 
-  // Reîncercare partajată pentru orice moment în care videoul activ ar
-  // trebui să redea, dar nu redă (pause() extern pe tab hidden, sau
-  // play() întrerupt de o cursă cu un load()/pause() concurent — AbortError).
-  // Nu reîncercăm dacă tab-ul e ascuns, userul a pus pauză manual, sau
-  // videoul nu mai e cel activ — altfel am contrazice exact pauza voită.
   const scheduleResumeRetry = useCallback(() => {
     if (resumeRetryTimeoutRef.current) {
       clearTimeout(resumeRetryTimeoutRef.current);
@@ -205,11 +186,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     }, RESUME_RETRY_DELAY_MS);
   }, []);
 
-  // Nu condiționăm de isReady — browser-ul gestionează nativ cazul "nu
-  // sunt încă suficiente date": play() rămâne în așteptare și pornește
-  // singur de îndată ce poate, fără să mai fie nevoie să noi reîncercăm.
-  // Condiționarea de isReady aici era exact ce întârzia (sau rata complet)
-  // pornirea redării la fiecare swipe pe o rețea mai lentă.
   const tryPlay = useCallback(async () => {
     const video = videoRef.current;
     if (!video || !isActive || hasError || !hasValidSource) return;
@@ -217,9 +193,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       await video.play();
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {
-        // play() întrerupt de o cursă (ex. un load()/pause() concurent
-        // în timpul settle-ului de scroll-snap) — nu înseamnă că userul
-        // a vrut pauză, doar reîncercăm.
         scheduleResumeRetry();
         return;
       }
@@ -236,7 +209,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     tryPlayRef.current = tryPlay;
   }, [tryPlay]);
 
-  // ✅ ZERO re-renders în timpul redării — progresul merge direct în CSS
   const handleTimeUpdateNativ = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -245,7 +217,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     const dur = video.duration || 1;
     const ratio = Math.min(current / dur, 1);
 
-    sliderProgressRef.current = current; // ✅ Ref, nu state → zero re-render
+    sliderProgressRef.current = current;
 
     if (containerRef.current) {
       containerRef.current.style.setProperty(
@@ -253,28 +225,19 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         `${ratio}`
       );
     }
-    // ✅ Nu mai apelăm setSliderProgress aici deloc
-  }, []); // ✅ Deps goale — referință stabilă pentru totdeauna
+  }, []);
 
-  // ✅ Handleri video stabili într-un effect separat — se atașează o singură dată
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const onPlay = () => setIsPlaying(true);
-    // Un pause "extern" (nu din acțiunea userului) pe videoul activ —
-    // de ex. un pause() rămas în urma unei curse cu play() în timpul
-    // settle-ului de scroll-snap, sau tab-ul redevenit vizibil — nu ar
-    // trebui să blocheze redarea la nesfârșit, pentru că nimic altceva
-    // nu mai retrimite play() după asta dacă isActive nu se mai schimbă.
-    // scheduleResumeRetry() decide singur dacă chiar trebuie reîncercat
-    // (nu dacă userul a pus pauză manual sau tab-ul e ascuns).
     const onPause = () => {
       setIsPlaying(false);
       scheduleResumeRetry();
     };
     const onWaiting = () => {
-      if (!isSeekingRef.current) setIsBuffering(true); // ✅ Ref în loc de state
+      if (!isSeekingRef.current) setIsBuffering(true);
     };
     const onPlaying = () => {
       setIsPlaying(true);
@@ -307,7 +270,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
       video.removeEventListener("seeked", onSeeked);
       video.removeEventListener("timeupdate", handleTimeUpdateNativ);
     };
-  }, [handleTimeUpdateNativ, scheduleResumeRetry]); // ✅ ambele sunt stabile → effect rulează o singură dată
+  }, [handleTimeUpdateNativ, scheduleResumeRetry]);
 
   // HLS & Init Effect
   useEffect(() => {
@@ -692,7 +655,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         ) : null}
       </Box>
 
-      {/* ✅ fadeContainerSx e stabil (definit afara) — nu se recreează */}
       <Fade in={showPausedOverlay} timeout={{ enter: 150, exit: 0 }}>
         <Box sx={fadeContainerSx}>
           <PlayArrowRoundedIcon sx={styles.centerIcon} />
@@ -769,6 +731,20 @@ const videoStyles: React.CSSProperties = {
   display: "block",
   backgroundColor: "black",
 };
+
+const volumeIconSx = {
+  color: "#fff",
+  fontSize: { xs: "1.5rem", sm: "2.1875rem" },
+};
+const fadeContainerSx = {
+  position: "absolute",
+  inset: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  pointerEvents: "none",
+  zIndex: 6,
+} as const;
 
 const styles = {
   root: {

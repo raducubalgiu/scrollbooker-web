@@ -19,6 +19,7 @@ import PostMainActionBar from "@/components/cutomized/Post/PostMainActionBar";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { getProfileRoute } from "../ProfileModule/tabs/profileTabsHelper";
+import ForceDarkChrome from "@/components/core/ForceDarkChrome";
 
 type UserPostFeedModuleProps = {
   initialPost: Post;
@@ -123,11 +124,12 @@ export default function UserPostFeedModule({
         width: "100vw",
         height: "100dvh",
         zIndex: 1300,
-        bgcolor: "common.black",
         display: "flex",
         flexDirection: "column",
       }}
     >
+      <ForceDarkChrome />
+
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <PostFeedView
           posts={posts}

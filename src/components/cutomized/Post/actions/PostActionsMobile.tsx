@@ -9,6 +9,7 @@ import CommentIconOutline from "@/assets/icons/ic_comment_outline.svg";
 import BookmarkIconSolid from "@/assets/icons/ic_bookmark_solid.svg";
 import BookmarkIconOutline from "@/assets/icons/ic_bookmark_outline.svg";
 import ShareIcon from "@/assets/icons/ic_share_new.svg";
+import MoreIcon from "@/assets/icons/ic_elipsis-horizontal.svg";
 import { PostActionKey, usePostActions } from "./usePostActions";
 
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
@@ -40,15 +41,14 @@ export default function PostActionsMobile({
   userActions,
   isOwnPost,
   isVideoReview,
-  loaders: { isSavingLike, isSavingBookmark, isLoadingDelete },
+  loaders: { isSavingLike, isSavingBookmark },
   callbacks: {
     onLike,
     onCommentClick,
     onReviewsClick,
     onBookmarkClick,
     onShareClick,
-    onDeleteClick,
-    onReportClick,
+    onOpenMoreOptions,
     onNavigateToUser,
   },
 }: PostActionsProps) {
@@ -58,15 +58,11 @@ export default function PostActionsMobile({
     userActions,
     isSavingLike,
     isSavingBookmark,
-    isOwnPost,
-    isLoadingDelete,
     onLike,
     onBookmark: onBookmarkClick,
     onCommentClick,
     onReviewsClick,
     onShareClick,
-    onDeleteClick,
-    onReportClick,
   });
 
   const mobileActions = actions.filter((a) => MOBILE_KEYS.includes(a.key));
@@ -131,6 +127,22 @@ export default function PostActionsMobile({
               </Stack>
             );
           }
+        )}
+
+        {isOwnPost && (
+          <ButtonBase
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenMoreOptions();
+            }}
+            sx={styles.actionButton}
+          >
+            <CustomSvg
+              src={MoreIcon}
+              size={32}
+              sx={{ backgroundColor: "common.white" }}
+            />
+          </ButtonBase>
         )}
       </Stack>
     </Stack>

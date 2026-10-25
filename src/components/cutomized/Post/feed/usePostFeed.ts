@@ -182,8 +182,11 @@ export const usePostFeed = ({
     onShareClick: handleShare,
     onCommentClick: () => setIsCommentsOpen(true),
     onReviewsClick: () => setIsReviewsOpen(true),
+    onOpenMoreOptions: () => setIsMoreOpen(true),
+    onCloseMoreOptions: () => setIsMoreOpen(false),
+    onStatisticsClick: () => {},
+    onEditClick: () => {},
     onDeleteClick: () => {},
-    onReportClick: () => {},
     onNavigateToUser: () => {},
   };
 

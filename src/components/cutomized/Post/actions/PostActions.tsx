@@ -1,5 +1,12 @@
-import React from "react";
-import { Box, IconButton, Skeleton, Typography } from "@mui/material";
+import React, { useRef } from "react";
+import {
+  Box,
+  IconButton,
+  Skeleton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { StaticImageData } from "next/image";
 
 import LikeIconSolid from "@/assets/icons/ic_heart_solid.svg";
@@ -13,6 +20,7 @@ import ShareIcon from "@/assets/icons/ic_share_new.svg";
 import { PostActionKey, usePostActions } from "./usePostActions";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
 import { PostActionsProps } from "./postActionTypes";
+import MoreOptionsMenu from "../MoreOptionsMenu";
 
 type PostIconSet = { active?: StaticImageData; inactive: StaticImageData };
 
@@ -21,18 +29,11 @@ const POST_ICONS: Partial<Record<PostActionKey, PostIconSet>> = {
   comment: { inactive: CommentIconOutline },
   bookmark: { active: BookmarkIconSolid, inactive: BookmarkIconOutline },
   share: { inactive: ShareIcon },
-  options: { inactive: MoreIcon },
 };
 
-const DESKTOP_KEYS: PostActionKey[] = [
-  "like",
-  "comment",
-  "bookmark",
-  "options",
-  "share",
-];
+const DESKTOP_KEYS: PostActionKey[] = ["like", "comment", "bookmark", "share"];
 
-const getButtonStyles = (key: PostActionKey) => ({
+const getButtonStyles = (key: PostActionKey | "options") => ({
   width: key === "options" ? 40 : 60,
   height: key === "options" ? 40 : 60,
   borderRadius: "50%",
@@ -47,6 +48,7 @@ const PostActions = ({
   counters,
   userActions,
   isOwnPost,
+  isMoreOpen = false,
   loaders: { isLoading, isSavingLike, isSavingBookmark, isLoadingDelete },
   callbacks: {
     onLike,
@@ -54,8 +56,11 @@ const PostActions = ({
     onCommentClick,
     onReviewsClick,
     onShareClick,
+    onOpenMoreOptions,
+    onCloseMoreOptions,
+    onStatisticsClick,
+    onEditClick,
     onDeleteClick,
-    onReportClick,
   },
 }: PostActionsProps) => {
   const { actions } = usePostActions({
@@ -64,16 +69,16 @@ const PostActions = ({
     userActions,
     isSavingLike,
     isSavingBookmark,
-    isOwnPost,
-    isLoadingDelete,
     onLike,
     onBookmark: onBookmarkClick,
     onCommentClick,
     onReviewsClick,
     onShareClick,
-    onDeleteClick,
-    onReportClick,
   });
+
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
 
   const desktopActions = actions.filter((a) => DESKTOP_KEYS.includes(a.key));
 
@@ -135,6 +140,33 @@ const PostActions = ({
           </Box>
         );
       })}
+
+      {isOwnPost && (
+        <Box sx={styles.actionItem}>
+          <IconButton
+            ref={moreButtonRef}
+            onClick={onOpenMoreOptions}
+            disableRipple
+            sx={getButtonStyles("options")}
+          >
+            <CustomSvg
+              src={MoreIcon}
+              size={32.5}
+              sx={{ backgroundColor: "text.primary" }}
+            />
+          </IconButton>
+
+          <MoreOptionsMenu
+            anchorEl={moreButtonRef.current}
+            isMenuOpen={isMoreOpen && isDesktop}
+            handleOptionsClose={onCloseMoreOptions}
+            onStatisticsClick={onStatisticsClick}
+            onEditClick={onEditClick}
+            onDeleteClick={onDeleteClick}
+            isLoadingDelete={isLoadingDelete}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

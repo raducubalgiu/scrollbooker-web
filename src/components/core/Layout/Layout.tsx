@@ -50,9 +50,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     isExplicitNoLayoutPage || (!isSessionLoading && !isAuthenticated);
 
   const isVideoPage =
-    pathname.startsWith("/user/") &&
-    pathname.includes("/post/") &&
-    pathname.includes("/upload-video");
+    pathname.startsWith("/user/") && pathname.includes("/post/");
 
   const isPageWithoutBottomBar =
     pathname.startsWith("/admin") ||
@@ -197,7 +195,10 @@ const getStyles = (
       height: "100dvh",
       width: "100vw",
       overflow: "hidden",
-      backgroundColor: isVideoPage ? "common.black" : "background.default",
+      backgroundColor: {
+        xs: isVideoPage ? "common.black" : "background.default",
+        lg: "background.default",
+      },
     },
 
     backdrop: {
@@ -263,7 +264,10 @@ const getStyles = (
       overflowY: "auto",
       height: { xs: "auto", lg: "100%" },
       flex: { xs: "1 1 auto", lg: "none" },
-      bgcolor: isVideoPage ? "common.black" : "background.default",
+      bgcolor: {
+        xs: isVideoPage ? "common.black" : "background.default",
+        lg: "background.default",
+      },
 
       WebkitOverflowScrolling: "touch",
       overscrollBehaviorY: "contain",

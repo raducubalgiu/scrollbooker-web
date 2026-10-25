@@ -11,8 +11,11 @@ export type PostActionCallbacks = {
   onReviewsClick: () => void;
   onBookmarkClick: () => void;
   onShareClick: () => void;
+  onOpenMoreOptions: () => void;
+  onCloseMoreOptions: () => void;
+  onStatisticsClick: () => void;
+  onEditClick: () => void;
   onDeleteClick: () => void;
-  onReportClick: () => void;
   onNavigateToUser: () => void;
 };
 
@@ -30,6 +33,7 @@ export type PostActionsProps = {
   isOwnPost: boolean;
   isVideoReview?: boolean;
   serviceDomain?: PostServiceDomain | null;
+  isMoreOpen?: boolean;
   loaders: PostActionLoaders;
   callbacks: PostActionCallbacks;
 };
