@@ -67,7 +67,8 @@ const ProfileMenuSheet = ({
           <Protected permission={PermissionEnum.POST_CREATE}>
             <ListItem disablePadding>
               <ListItemButton
-                onClick={() => {}}
+                component={NextLink}
+                href={AppRoutes.uploadVideo()}
                 sx={{
                   borderRadius: 2,
                   "&:hover": {
