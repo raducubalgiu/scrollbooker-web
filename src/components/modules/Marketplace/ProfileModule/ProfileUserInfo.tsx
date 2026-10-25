@@ -1,23 +1,15 @@
 import UserAvatar from "@/components/core/Avatar/UserAvatar";
-import {
-  Alert,
-  Box,
-  ButtonBase,
-  Snackbar,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 import GradeIcon from "@mui/icons-material/Grade";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import UserProfileActions from "./UserProfileActions";
 import { UpdateFollowersAction } from "@/ts/enums/UpdateFollowersAction";
 import { UserProfile } from "@/ts/models/user/UserProfile";
 import { formatOpeningStatus, formatRating } from "@/utils/formatters";
 import { useRouter } from "next/navigation";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
-import { LOG } from "@/utils/logger";
 import MyProfileActions from "./MyProfileActions";
 import ProfileAddress from "./ProfileAddress";
 
@@ -26,6 +18,7 @@ type ProfileUserInfoProps = {
   onOpenScheduleModal: () => void;
   onUpdateFollows: (action: UpdateFollowersAction) => void;
   onOpenEditModal: () => void;
+  onShare: () => void;
 };
 
 const ProfileUserInfo = ({
@@ -33,8 +26,8 @@ const ProfileUserInfo = ({
   onOpenScheduleModal,
   onUpdateFollows,
   onOpenEditModal,
+  onShare,
 }: ProfileUserInfoProps) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const router = useRouter();
   const {
     id,
@@ -63,50 +56,6 @@ const ProfileUserInfo = ({
     );
   };
 
-  const handleShare = async () => {
-    const shareData = {
-      title: "Profilul meu",
-      text: "Aruncă o privire peste profilul meu!",
-      url: window.location.href,
-    };
-
-    if (navigator.share && navigator.canShare?.(shareData)) {
-      try {
-        await navigator.share(shareData);
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        LOG.error(`Eroare tehnică la partajare: ${errorMessage}`);
-      }
-    } else {
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        setSnackbarOpen(true);
-      } catch (error) {
-        try {
-          const textarea = document.createElement("textarea");
-          textarea.value = window.location.href;
-          textarea.style.position = "fixed";
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand("copy");
-          document.body.removeChild(textarea);
-          setSnackbarOpen(true);
-        } catch (fallbackError) {
-          const msg =
-            fallbackError instanceof Error
-              ? fallbackError.message
-              : String(fallbackError);
-          LOG.error(`Eșec total la copiere link: ${msg}`);
-        }
-      }
-    }
-  };
-
   const actions = useMemo(() => {
     if (is_own_profile) {
       return (
@@ -114,7 +63,7 @@ const ProfileUserInfo = ({
           isBusinessOrEmployee={is_business_or_employee}
           instantBooking={instant_booking}
           onOpenEditModal={onOpenEditModal}
-          onShare={handleShare}
+          onShare={onShare}
         />
       );
     }
@@ -138,6 +87,8 @@ const ProfileUserInfo = ({
     instant_booking,
     profile.contact,
     onUpdateFollows,
+    onOpenEditModal,
+    onShare,
   ]);
 
   return (
@@ -230,17 +181,6 @@ const ProfileUserInfo = ({
           <Typography sx={styles.bioMobileText}>{bio}</Typography>
         </Box>
       </Box>
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
-          Link-ul a fost copiat în clipboard!
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
