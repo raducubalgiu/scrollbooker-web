@@ -59,7 +59,6 @@ const PostFeedView = ({
     isReviewsOpen,
     setIsReviewsOpen,
     isMoreOpen,
-    setIsMoreOpen,
     snackbarOpen,
     setSnackbarOpen,
   } = feed;
@@ -124,6 +123,7 @@ const PostFeedView = ({
                 counters={counters ?? null}
                 userActions={user_actions ?? null}
                 isOwnPost={currentPost?.is_own_post ?? false}
+                isMoreOpen={isMoreOpen}
                 loaders={loaders}
                 callbacks={callbacks}
               />
@@ -186,8 +186,11 @@ const PostFeedView = ({
 
         <PostMoreSheet
           open={isMoreOpen}
-          onClose={() => setIsMoreOpen(false)}
-          isLoadingPosts={false}
+          onClose={callbacks.onCloseMoreOptions}
+          onStatisticsClick={callbacks.onStatisticsClick}
+          onEditClick={callbacks.onEditClick}
+          onDeleteClick={callbacks.onDeleteClick}
+          isLoadingDelete={loaders.isLoadingDelete}
         />
 
         <Snackbar

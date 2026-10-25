@@ -11,14 +11,10 @@ type UsePostActionsProps = {
   userActions: PostUserActions | null;
   isSavingLike: boolean;
   isSavingBookmark: boolean;
-  isLoadingDelete: boolean;
-  isOwnPost: boolean;
   onLike: () => void;
   onBookmark: () => void;
   onCommentClick: () => void;
   onShareClick: () => void;
-  onDeleteClick: () => void;
-  onReportClick: () => void;
 };
 
 export type PostActionKey =
@@ -26,8 +22,7 @@ export type PostActionKey =
   | "clipboard"
   | "comment"
   | "bookmark"
-  | "share"
-  | "options";
+  | "share";
 
 export type PostAction = {
   key: PostActionKey;
@@ -44,13 +39,10 @@ export const usePostActions = ({
   userActions,
   isSavingLike = false,
   isSavingBookmark = false,
-  isOwnPost,
   onLike,
   onBookmark,
   onCommentClick,
   onShareClick,
-  onDeleteClick,
-  onReportClick,
 }: UsePostActionsProps) => {
   const actions = useMemo<PostAction[]>(
     () => [
@@ -99,12 +91,5 @@ export const usePostActions = ({
     ]
   );
 
-  return {
-    actions,
-    moreMenuProps: {
-      isOwnPost,
-      onReportClick,
-      onDeleteClick,
-    },
-  };
+  return { actions };
 };

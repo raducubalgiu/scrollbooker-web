@@ -1,18 +1,41 @@
-import { Box, Drawer, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  Typography,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { buildPostMoreOptionsItems } from "../postMoreOptionsItems";
 
 type PostMoreSheetProps = {
   open: boolean;
   onClose: () => void;
-  isLoadingPosts: boolean;
+  onStatisticsClick: () => void;
+  onEditClick: () => void;
+  onDeleteClick: () => void;
+  isLoadingDelete: boolean;
 };
 
 const PostMoreSheet = ({
   open,
   onClose,
-  isLoadingPosts,
+  onStatisticsClick,
+  onEditClick,
+  onDeleteClick,
+  isLoadingDelete,
 }: PostMoreSheetProps) => {
-  console.log(isLoadingPosts);
+  const items = buildPostMoreOptionsItems({
+    onStatisticsClick,
+    onEditClick,
+    onDeleteClick,
+    isLoadingDelete,
+  });
 
   return (
     <Drawer
@@ -34,7 +57,7 @@ const PostMoreSheet = ({
           minHeight={30}
         >
           <Typography fontWeight={800} fontSize={16}>
-            Comentarii
+            Postarea mea
           </Typography>
 
           <IconButton onClick={onClose} size="small" sx={styles.iconBack}>
@@ -43,7 +66,39 @@ const PostMoreSheet = ({
         </Stack>
       </Box>
 
-      <Box sx={styles.listContainer}></Box>
+      <Box sx={styles.listContainer}>
+        <List disablePadding>
+          {items.map((item) => (
+            <ListItem key={item.key} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  item.onClick();
+                  onClose();
+                }}
+                sx={styles.item}
+              >
+                <ListItemIcon
+                  sx={{
+                    ...styles.itemIcon,
+                    color: item.isDestructive ? "error.main" : undefined,
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.label}
+                  slotProps={{
+                    primary: {
+                      fontWeight: 500,
+                      color: item.isDestructive ? "error.main" : undefined,
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
     </Drawer>
   );
 };
@@ -54,14 +109,16 @@ const styles = {
   drawer: {
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
+<<<<<<< HEAD
     height: "75vh",
+=======
+>>>>>>> bc85405 (Implement MoreMenu)
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as const,
   },
   container: {
     width: "100%",
-    pt: 2,
-    pb: 1.5,
+    py: 1,
     borderBottom: 1,
     borderColor: "divider",
     flexShrink: 0,
@@ -73,8 +130,20 @@ const styles = {
   },
   listContainer: {
     flexGrow: 1,
-    overflowY: "auto",
-    px: 0.5,
-    WebkitOverflowScrolling: "touch",
+    overflowY: "auto" as const,
+    py: 1,
+    WebkitOverflowScrolling: "touch" as const,
+  },
+  item: {
+    borderRadius: 2,
+    mx: 1,
+    px: 2,
+    py: 1.5,
+    "&:hover": {
+      backgroundColor: "action.hover",
+    },
+  },
+  itemIcon: {
+    minWidth: 40,
   },
 };
