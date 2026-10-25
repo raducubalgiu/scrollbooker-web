@@ -16,6 +16,9 @@ import PostLinkedProductsSheet from "../sheets/PostLinkedProductsSheet";
 import PostCommentsSheet from "../sheets/PostCommentsSheet";
 import PostReviewsSheet from "../sheets/PostReviewsSheet";
 import PostMoreSheet from "../sheets/PostMoreSheet";
+import PostStatisticsModal from "../statistics/PostStatisticsModal";
+import PostStatisticsDrawer from "../statistics/PostStatisticsDrawer";
+import PostDeleteConfirmDialog from "../PostDeleteConfirmDialog";
 import PostDesktopSidebar from "../sidebar/PostDesktopSidebar";
 import ForceDarkChrome from "@/components/core/ForceDarkChrome";
 import { FeedVideoPool } from "@/components/modules/Marketplace/FeedModule/FeedVideoPool";
@@ -59,6 +62,11 @@ const PostFeedView = ({
     isReviewsOpen,
     setIsReviewsOpen,
     isMoreOpen,
+    isStatisticsOpen,
+    setIsStatisticsOpen,
+    isDeleteConfirmOpen,
+    setIsDeleteConfirmOpen,
+    handleConfirmDelete,
     snackbarOpen,
     setSnackbarOpen,
   } = feed;
@@ -191,6 +199,25 @@ const PostFeedView = ({
           onEditClick={callbacks.onEditClick}
           onDeleteClick={callbacks.onDeleteClick}
           isLoadingDelete={loaders.isLoadingDelete}
+        />
+
+        <PostStatisticsModal
+          open={isStatisticsOpen}
+          postId={currentPost?.id ?? null}
+          onClose={() => setIsStatisticsOpen(false)}
+        />
+
+        <PostStatisticsDrawer
+          open={isStatisticsOpen}
+          postId={currentPost?.id ?? null}
+          onClose={() => setIsStatisticsOpen(false)}
+        />
+
+        <PostDeleteConfirmDialog
+          open={isDeleteConfirmOpen}
+          isLoading={loaders.isLoadingDelete}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setIsDeleteConfirmOpen(false)}
         />
 
         <Snackbar

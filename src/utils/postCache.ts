@@ -34,6 +34,31 @@ export const patchPostInAllCaches = (
   });
 };
 
+export const removePostFromAllCaches = (
+  queryClient: QueryClient,
+  postId: number
+) => {
+  Object.values(POST_QUERY_KEYS).forEach((key) => {
+    queryClient.setQueriesData<InfiniteData<PaginatedData<Post>>>(
+      { queryKey: key },
+      (data) => {
+        if (!data) return data;
+
+        return {
+          ...data,
+          pages: data.pages.map((page) => ({
+            ...page,
+            count: page.results.some((p) => p.id === postId)
+              ? page.count - 1
+              : page.count,
+            results: page.results.filter((p) => p.id !== postId),
+          })),
+        };
+      }
+    );
+  });
+};
+
 export const patchFollowInAllCaches = (
   queryClient: QueryClient,
   userId: number,
