@@ -1,8 +1,14 @@
 import { PaginatedData } from "@/components/core/Table/Table";
 import { Post } from "@/ts/models/social/Post";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { PostAnalyticsSummary } from "@/ts/models/social/PostAnalyticsSummary";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import axios from "axios";
-import { POST_QUERY_KEYS } from "@/utils/postCache";
+import { POST_QUERY_KEYS, removePostFromAllCaches } from "@/utils/postCache";
 
 const POST_PATH = "/api/protected/posts";
 
@@ -139,6 +145,38 @@ export const useInfiniteUserPosts = ({ userId }: { userId: number }) => {
     getNextPageParam: (lastPage, pages) => {
       const totalFetched = pages.flatMap((p) => p.results).length;
       return totalFetched < lastPage.count ? pages.length + 1 : undefined;
+    },
+  });
+};
+
+const POST_ANALYTICS_SUMMARY_QUERY_KEY = "postAnalyticsSummary";
+
+export const useGetPostAnalyticsSummary = (
+  postId: number | null,
+  enabled: boolean
+) => {
+  return useQuery({
+    queryKey: [POST_ANALYTICS_SUMMARY_QUERY_KEY, postId],
+    queryFn: async () => {
+      const { data } = await axios.get<PostAnalyticsSummary>(
+        `${POST_PATH}/${postId}/analytics/summary`
+      );
+      return data;
+    },
+    enabled: enabled && !!postId,
+  });
+};
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (postId: number) => axios.delete(`${POST_PATH}/${postId}`),
+    onSuccess: (_data, postId) => {
+      removePostFromAllCaches(queryClient, postId);
+      queryClient.removeQueries({
+        queryKey: [POST_ANALYTICS_SUMMARY_QUERY_KEY, postId],
+      });
     },
   });
 };

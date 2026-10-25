@@ -12,6 +12,7 @@ import { usePostLikeBookmark } from "../actions/usePostLikeBookmark";
 import { patchFollowInAllCaches } from "@/utils/postCache";
 import { useFeedPaginationPrefetch } from "./useFeedPaginationPrefetch";
 import { useSharePost } from "@/controllers/social/share.controller";
+import { useDeletePost } from "@/controllers/social/post.controller";
 
 const PREFETCH_OFFSET = 2;
 
@@ -67,11 +68,14 @@ export const usePostFeed = ({
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const {
     sharePost,
     copiedSnackbarOpen: snackbarOpen,
     closeCopiedSnackbar,
   } = useSharePost();
+  const { mutate: deletePost, isPending: isLoadingDelete } = useDeletePost();
 
   const currentPost = posts[currentIndex] ?? null;
 
@@ -169,11 +173,22 @@ export const usePostFeed = ({
     });
   }, [currentPost, sharePost]);
 
+  const handleConfirmDelete = useCallback(() => {
+    if (!currentPost) return;
+
+    deletePost(currentPost.id, {
+      onSuccess: () => {
+        setIsMoreOpen(false);
+        setIsDeleteConfirmOpen(false);
+      },
+    });
+  }, [currentPost, deletePost]);
+
   const loaders = {
     isLoading,
     isSavingLike,
     isSavingBookmark,
-    isLoadingDelete: false,
+    isLoadingDelete,
   };
 
   const callbacks = {
@@ -184,9 +199,9 @@ export const usePostFeed = ({
     onReviewsClick: () => setIsReviewsOpen(true),
     onOpenMoreOptions: () => setIsMoreOpen(true),
     onCloseMoreOptions: () => setIsMoreOpen(false),
-    onStatisticsClick: () => {},
+    onStatisticsClick: () => setIsStatisticsOpen(true),
     onEditClick: () => {},
-    onDeleteClick: () => {},
+    onDeleteClick: () => setIsDeleteConfirmOpen(true),
     onNavigateToUser: () => {},
   };
 
@@ -212,6 +227,11 @@ export const usePostFeed = ({
     setIsReviewsOpen,
     isMoreOpen,
     setIsMoreOpen,
+    isStatisticsOpen,
+    setIsStatisticsOpen,
+    isDeleteConfirmOpen,
+    setIsDeleteConfirmOpen,
+    handleConfirmDelete,
     snackbarOpen,
     setSnackbarOpen: closeCopiedSnackbar,
   };

@@ -122,8 +122,8 @@ export default function UserPostFeedModule({
         top: 0,
         left: 0,
         width: "100vw",
-        height: "100dvh",
-        zIndex: 1300,
+        height: "100vh",
+        zIndex: (theme: Theme) => theme.zIndex.appBar,
         display: "flex",
         flexDirection: "column",
       }}
