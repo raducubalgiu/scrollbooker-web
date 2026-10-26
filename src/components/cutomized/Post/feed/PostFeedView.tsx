@@ -155,6 +155,7 @@ const PostFeedView = ({
             contact={currentPost?.contact}
             businessId={currentPost?.business_id ?? null}
             onContactClick={callbacks.onContactClick}
+            onNavigateToUser={callbacks.onNavigateToUser}
             onNavigateToBooking={handleNavigateToBooking}
             onFollow={handleFollow}
             isTogglingFollow={isTogglingFollow}

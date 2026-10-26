@@ -33,6 +33,7 @@ type PostDesktopSidebarProps = {
   contact: ContactInfo | undefined;
   businessId: number | null;
   onContactClick: (clickType: ContactClickTypeEnum) => void;
+  onNavigateToUser: () => void;
   onNavigateToBooking: (selectedProductId: number | null) => void;
   onFollow?: () => void;
   isTogglingFollow?: boolean;
@@ -82,6 +83,7 @@ const PostDesktopSidebar = ({
   contact,
   businessId,
   onContactClick,
+  onNavigateToUser,
   isLoading,
   onNavigateToBooking,
   onFollow,
@@ -146,6 +148,7 @@ const PostDesktopSidebar = ({
             contact={contact}
             businessId={businessId}
             onContactClick={onContactClick}
+            onNavigateToUser={onNavigateToUser}
             onFollow={onFollow}
             isTogglingFollow={isTogglingFollow}
           />

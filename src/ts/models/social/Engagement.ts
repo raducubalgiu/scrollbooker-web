@@ -22,7 +22,6 @@ export interface ContactClickCreate {
 export interface ProfileVisitsCreate {
   event_id: string;
   user_id: number;
-  business_id: number | null;
   post_id: number | null;
   source: EngagementSourceEnum;
   captured_at: number;

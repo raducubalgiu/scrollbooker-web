@@ -10,9 +10,15 @@ type PostOverlayUser = {
   user: PostUser | null;
   profession: string | undefined;
   distance: number | null;
+  onNavigateToUser: () => void;
 };
 
-const PostOverlayUser = ({ user, profession, distance }: PostOverlayUser) => {
+const PostOverlayUser = ({
+  user,
+  profession,
+  distance,
+  onNavigateToUser,
+}: PostOverlayUser) => {
   return (
     <Box onClick={(e) => e.stopPropagation()}>
       <Link
@@ -26,6 +32,7 @@ const PostOverlayUser = ({ user, profession, distance }: PostOverlayUser) => {
               )
             : ""
         }
+        onClick={onNavigateToUser}
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <Typography variant="body1" fontWeight={800} sx={styles.fullName}>

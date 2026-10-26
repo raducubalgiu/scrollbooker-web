@@ -11,7 +11,10 @@ import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 import AvatarWithRating from "@/components/cutomized/Avatar/AvatarWithRating";
 import { getContactActionInfo } from "@/utils/contact-utils";
-import { useRecordContactClick } from "@/controllers/social/engagement.controller";
+import {
+  useRecordContactClick,
+  useRecordProfileVisit,
+} from "@/controllers/social/engagement.controller";
 import ContactChoiceDialog from "@/components/cutomized/Contact/ContactChoiceDialog";
 
 type EmployeeItemProps = {
@@ -27,6 +30,15 @@ const EmployeeItem = ({
 }: EmployeeItemProps) => {
   const [isChoiceOpen, setIsChoiceOpen] = useState(false);
   const { mutate: recordContactClick } = useRecordContactClick();
+  const { mutate: recordProfileVisit } = useRecordProfileVisit();
+
+  const handleNavigateToProfile = () => {
+    recordProfileVisit({
+      userId: employee.id,
+      postId: null,
+      source: EngagementSourceEnum.BUSINESS_PROFILE,
+    });
+  };
 
   const bookingHref =
     businessId && businessOwnerId
@@ -65,6 +77,7 @@ const EmployeeItem = ({
       <ButtonBase
         component={NextLink}
         href={AppRoutes.profile(employee.username, employee.job)}
+        onClick={handleNavigateToProfile}
       >
         <Stack flexDirection="row" alignItems="center">
           <AvatarWithRating

@@ -10,6 +10,8 @@ import { useCallback } from "react";
 import { UserMini } from "@/ts/models/user/UserMini";
 import Link from "next/link";
 import { AppRoutes } from "@/utils/routes";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
+import { useRecordProfileVisit } from "@/controllers/social/engagement.controller";
 import AvatarWithRating from "../Avatar/AvatarWithRating";
 
 type UserItemProps = {
@@ -33,6 +35,8 @@ const UserItem = ({
     profession,
   } = user;
 
+  const { mutate: recordProfileVisit } = useRecordProfileVisit();
+
   const handleFollowClick = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
@@ -43,11 +47,20 @@ const UserItem = ({
     [user, onToggleFollow]
   );
 
+  const handleNavigateToProfile = useCallback(() => {
+    recordProfileVisit({
+      userId: user.id,
+      postId: null,
+      source: EngagementSourceEnum.BUSINESS_PROFILE,
+    });
+  }, [user.id, recordProfileVisit]);
+
   return (
     <ListItem disablePadding>
       <ListItemButton
         LinkComponent={Link}
         href={AppRoutes.profile(user.username, user.profession)}
+        onClick={handleNavigateToProfile}
         sx={{ py: 2.5 }}
       >
         <Stack

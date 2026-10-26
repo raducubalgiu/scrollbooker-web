@@ -9,6 +9,8 @@ import {
 import NextLink from "next/link";
 import AvatarWithRating from "@/components/cutomized/Avatar/AvatarWithRating";
 import { AppRoutes } from "@/utils/routes";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
+import { useRecordProfileVisit } from "@/controllers/social/engagement.controller";
 
 type SearchUserItemProps = {
   user: SearchUser;
@@ -19,12 +21,23 @@ export const SearchUserItem = ({
   user,
   onNavigate = () => {},
 }: SearchUserItemProps) => {
+  const { mutate: recordProfileVisit } = useRecordProfileVisit();
+
+  const handleNavigate = () => {
+    recordProfileVisit({
+      userId: user.id,
+      postId: null,
+      source: EngagementSourceEnum.SEARCH,
+    });
+    onNavigate();
+  };
+
   return (
     <ListItem disablePadding>
       <ListItemButton
         component={NextLink}
         href={AppRoutes.profile(user.username, user.profession)}
-        onClick={onNavigate}
+        onClick={handleNavigate}
         sx={{ py: 2 }}
       >
         <Stack flexDirection="row" alignItems="center">

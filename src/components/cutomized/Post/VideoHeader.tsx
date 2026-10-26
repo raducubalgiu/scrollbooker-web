@@ -23,6 +23,7 @@ type VideoHeaderProps = {
   contact: ContactInfo | undefined;
   businessId: number | null;
   onContactClick: (clickType: ContactClickTypeEnum) => void;
+  onNavigateToUser: () => void;
   onFollow?: (() => void) | undefined;
   isTogglingFollow?: boolean | undefined;
 };
@@ -39,6 +40,7 @@ const VideoHeader = ({
   contact,
   businessId,
   onContactClick,
+  onNavigateToUser,
   onFollow,
   isTogglingFollow = false,
 }: VideoHeaderProps) => {
@@ -66,6 +68,7 @@ const VideoHeader = ({
           ? {
               component: NextLink,
               href: profileHref,
+              onClick: onNavigateToUser,
               sx: { cursor: "pointer", minWidth: 0, textDecoration: "none" },
             }
           : { sx: { minWidth: 0 } })}
