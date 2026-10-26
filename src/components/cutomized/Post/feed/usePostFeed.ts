@@ -13,6 +13,9 @@ import { patchFollowInAllCaches } from "@/utils/postCache";
 import { useFeedPaginationPrefetch } from "./useFeedPaginationPrefetch";
 import { useSharePost } from "@/controllers/social/share.controller";
 import { useDeletePost } from "@/controllers/social/post.controller";
+import { useRecordPostContactClick } from "@/controllers/social/engagement.controller";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 const PREFETCH_OFFSET = 2;
 
@@ -24,6 +27,7 @@ type UsePostFeedParams = {
   fetchNextPage: () => void;
   isLoading: boolean;
   initialIndex?: number | undefined;
+  engagementSource: EngagementSourceEnum;
 };
 
 export const usePostFeed = ({
@@ -34,6 +38,7 @@ export const usePostFeed = ({
   fetchNextPage,
   isLoading,
   initialIndex,
+  engagementSource,
 }: UsePostFeedParams) => {
   const { navigateTo } = useAppNavigation();
   const queryClient = useQueryClient();
@@ -61,6 +66,7 @@ export const usePostFeed = ({
     closeCopiedSnackbar,
   } = useSharePost();
   const { mutate: deletePost, isPending: isLoadingDelete } = useDeletePost();
+  const { mutate: recordContactClick } = useRecordPostContactClick();
 
   const currentPost = posts[currentIndex] ?? null;
 
@@ -157,6 +163,19 @@ export const usePostFeed = ({
     });
   }, [currentPost, sharePost]);
 
+  const handleContactClick = useCallback(
+    (clickType: ContactClickTypeEnum) => {
+      if (!currentPost) return;
+
+      recordContactClick({
+        postId: currentPost.id,
+        clickType,
+        source: engagementSource,
+      });
+    },
+    [currentPost, recordContactClick, engagementSource]
+  );
+
   const handleConfirmDelete = useCallback(() => {
     if (!currentPost) return;
 
@@ -187,6 +206,7 @@ export const usePostFeed = ({
     onEditClick: () => {},
     onDeleteClick: () => setIsDeleteConfirmOpen(true),
     onNavigateToUser: () => {},
+    onContactClick: handleContactClick,
   };
 
   return {

@@ -33,6 +33,19 @@
     "sourceProfileGridPostDetail": "Profil — grilă postări",
     "sourceProfileBookmarksPostDetail": "Profil — salvate",
     "sourceSearch": "Căutare",
-    "sourceSearchBusinessProfile": "Căutare — profil business"
+    "sourceSearchBusinessProfile": "Căutare — profil business",
+    "contactClicks": "Click-uri de contact",
+    "whatsappClicks": "Click-uri WhatsApp",
+    "callClicks": "Click-uri telefon",
+    "contactClickSources": "Surse click-uri de contact",
+    "engagementSourceSearchVideoFeed": "Video din căutare",
+    "engagementSourceExploreFeed": "Explorează",
+    "engagementSourceFollowingFeed": "Urmărești",
+    "engagementSourcePostDetail": "Din postare",
+    "engagementSourceBookmarkPostDetail": "Din postare salvată",
+    "engagementSourceVideoReviews": "Recenzii video",
+    "engagementSourceSearch": "Căutare",
+    "engagementSourceBusinessProfile": "Din profil",
+    "engagementSourceOther": "Altele"
   }
 }

@@ -7,8 +7,11 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import NextLink from "next/link";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 import AvatarWithRating from "@/components/cutomized/Avatar/AvatarWithRating";
 import { getContactActionInfo } from "@/utils/contact-utils";
+import { useRecordContactClick } from "@/controllers/social/engagement.controller";
 import ContactChoiceDialog from "@/components/cutomized/Contact/ContactChoiceDialog";
 
 type EmployeeItemProps = {
@@ -23,6 +26,7 @@ const EmployeeItem = ({
   businessOwnerId,
 }: EmployeeItemProps) => {
   const [isChoiceOpen, setIsChoiceOpen] = useState(false);
+  const { mutate: recordContactClick } = useRecordContactClick();
 
   const bookingHref =
     businessId && businessOwnerId
@@ -35,8 +39,20 @@ const EmployeeItem = ({
         )
       : null;
 
-  const contactAction = getContactActionInfo(employee.contact_info, () =>
-    setIsChoiceOpen(true)
+  const handleTrackClick = (clickType: ContactClickTypeEnum) => {
+    if (businessId === null) return;
+    recordContactClick({
+      userId: employee.id,
+      businessId,
+      clickType,
+      source: EngagementSourceEnum.BUSINESS_PROFILE,
+    });
+  };
+
+  const contactAction = getContactActionInfo(
+    employee.contact_info,
+    () => setIsChoiceOpen(true),
+    handleTrackClick
   );
 
   return (
@@ -99,6 +115,7 @@ const EmployeeItem = ({
           open={isChoiceOpen}
           phone={employee.contact_info.phone}
           onClose={() => setIsChoiceOpen(false)}
+          onTrackClick={handleTrackClick}
         />
       )}
     </Stack>

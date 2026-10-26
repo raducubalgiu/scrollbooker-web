@@ -165,10 +165,12 @@ const BookingModule = (props: BookingModuleProps) => {
         }}
       />
       <Container maxWidth="xl" sx={{ pb: { xs: 14, md: 0 } }}>
-        <BookingBreadcrumbs
-          currentStep={currentStep}
-          shouldSkipSpecialistsStep={shouldSkipSpecialistsStep}
-        />
+        {bookingFlow.business.instant_booking && (
+          <BookingBreadcrumbs
+            currentStep={currentStep}
+            shouldSkipSpecialistsStep={shouldSkipSpecialistsStep}
+          />
+        )}
 
         <Box sx={styles.container}>
           <Box
@@ -182,7 +184,7 @@ const BookingModule = (props: BookingModuleProps) => {
           </Box>
 
           <BookingCart
-            owner={bookingFlow.business.owner}
+            business={bookingFlow.business}
             selectedItems={selectedItems}
             employeeData={employeeData}
             currentStep={currentStep}

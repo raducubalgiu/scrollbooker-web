@@ -17,6 +17,7 @@ import { useDashboardPeriod } from "@/hooks/useDashboardPeriod";
 import PeriodSelector from "./PeriodSelector";
 import DashboardBookingDetails from "./DashboardBookingDetails";
 import DashboardBookingSources from "./DashboardBookingSources";
+import DashboardContactClicksDetails from "./DashboardContactClicksDetails";
 
 enum DashboardTab {
   BOOKINGS = "bookings",
@@ -76,8 +77,17 @@ export default function MyDashboardModule() {
 
           {!isLoading && !isError && data && (
             <Stack spacing={2.5}>
-              <DashboardBookingDetails data={data} periodText={periodText} />
-              <DashboardBookingSources sources={data.sources} />
+              {data.instant_booking ? (
+                <>
+                  <DashboardBookingDetails data={data} periodText={periodText} />
+                  <DashboardBookingSources sources={data.sources} />
+                </>
+              ) : (
+                <DashboardContactClicksDetails
+                  data={data}
+                  periodText={periodText}
+                />
+              )}
             </Stack>
           )}
         </Box>

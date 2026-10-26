@@ -19,6 +19,7 @@ import { formatRating } from "@/utils/formatters";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 type BusinessPhotosTabProps = {
   id: string;
@@ -148,6 +149,9 @@ const BusinessPhotosTab = ({
               <ContactActionButton
                 instantBooking={instantBooking}
                 contact={contact}
+                userId={owner.id}
+                businessId={businessId}
+                source={EngagementSourceEnum.BUSINESS_PROFILE}
                 bookLabel="Rezervă"
                 onBookNow={() => navigateTo(bookingHref)}
                 sx={{

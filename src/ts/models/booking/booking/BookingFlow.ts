@@ -1,3 +1,4 @@
+import { ContactInfo } from "../../user/ContactInfo";
 import { UserProducts } from "../product/Product";
 
 export interface BookingFlow {
@@ -20,4 +21,6 @@ export interface BookingFlowBusiness {
   owner: BookingFlowUser;
   has_employees: boolean;
   formatted_address: string;
+  instant_booking: boolean;
+  contact: ContactInfo;
 }

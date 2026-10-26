@@ -32,7 +32,7 @@ const PostOverlay = ({
   onOpenLinkedProducts,
 }: PostOverlayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { user, counters, userActions, isOwnPost } = actions;
+  const { user, counters, userActions, isOwnPost, callbacks } = actions;
   const { isVideoReview, serviceDomain } = actions;
 
   const handleToggleDescription = (e: React.MouseEvent) => {
@@ -111,6 +111,7 @@ const PostOverlay = ({
                   isVideoReview={isVideoReview ?? false}
                   contact={contact}
                   onOpenLinkedProducts={onOpenLinkedProducts}
+                  onContactClick={callbacks.onContactClick}
                 />
               </Box>
             )}

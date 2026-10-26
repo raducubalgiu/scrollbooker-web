@@ -19,7 +19,7 @@ import PostMainActionBar from "@/components/cutomized/Post/PostMainActionBar";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { AppRoutes } from "@/utils/routes";
 import { getProfileRoute } from "../ProfileModule/tabs/profileTabsHelper";
-import ForceDarkChrome from "@/components/core/ForceDarkChrome";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 type UserPostFeedModuleProps = {
   initialPost: Post;
@@ -79,9 +79,13 @@ export default function UserPostFeedModule({
     fetchNextPage,
     isLoading,
     initialIndex: resolvedIndex,
+    engagementSource:
+      tab === "bookmarks"
+        ? EngagementSourceEnum.BOOKMARK_POST_DETAIL
+        : EngagementSourceEnum.POST_DETAIL,
   });
 
-  const { currentPost, setIsProductsOpen } = feed;
+  const { currentPost, setIsProductsOpen, callbacks } = feed;
 
   useEffect(() => {
     if (!currentPost || resolvedIndex === undefined) return;
@@ -128,8 +132,6 @@ export default function UserPostFeedModule({
         flexDirection: "column",
       }}
     >
-      <ForceDarkChrome />
-
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <PostFeedView
           posts={posts}
@@ -169,6 +171,7 @@ export default function UserPostFeedModule({
             isVideoReview={currentPost.is_video_review}
             contact={currentPost.contact}
             onOpenLinkedProducts={() => setIsProductsOpen(true)}
+            onContactClick={callbacks.onContactClick}
           />
         </Box>
       )}

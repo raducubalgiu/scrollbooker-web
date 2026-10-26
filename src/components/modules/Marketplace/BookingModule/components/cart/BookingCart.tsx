@@ -7,7 +7,7 @@ import BookingCartContent from "./BookingCartContent";
 import { useBookingCartTotals } from "./useBookingCartTotals";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { BookingFlowUser } from "@/ts/models/booking/booking/BookingFlow";
+import { BookingFlowBusiness } from "@/ts/models/booking/booking/BookingFlow";
 
 export type EmployeeDataType = {
   selectedEmployeeId: number | null;
@@ -16,7 +16,7 @@ export type EmployeeDataType = {
 };
 
 type BookingCartProps = {
-  owner: BookingFlowUser;
+  business: BookingFlowBusiness;
   selectedItems: SelectedBookingItem[];
   employeeData: EmployeeDataType;
   currentStep: BookingStepEnum;
@@ -26,7 +26,7 @@ type BookingCartProps = {
 };
 
 const BookingCart = ({
-  owner,
+  business,
   selectedItems,
   employeeData,
   isNextDisabled,
@@ -41,7 +41,10 @@ const BookingCart = ({
 
   return (
     <Box sx={styles.container}>
-      <BookingCartHeader businessOwner={owner} employeeData={employeeData} />
+      <BookingCartHeader
+        businessOwner={business.owner}
+        employeeData={employeeData}
+      />
 
       <BookingCartContent
         selectedItems={selectedItems}

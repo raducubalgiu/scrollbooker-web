@@ -12,17 +12,20 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@/components/core/Modal/Modal";
 import ContactChoiceContent from "./ContactChoiceContent";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 
 type ContactChoiceDialogProps = {
   open: boolean;
   phone: string;
   onClose: () => void;
+  onTrackClick?: (clickType: ContactClickTypeEnum) => void;
 };
 
 const ContactChoiceDialog = ({
   open,
   phone,
   onClose,
+  onTrackClick,
 }: ContactChoiceDialogProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -55,7 +58,11 @@ const ContactChoiceDialog = ({
         </Stack>
 
         <Box sx={{ px: 1.5, pb: 2, pt: 1 }}>
-          <ContactChoiceContent phone={phone} onClose={onClose} />
+          <ContactChoiceContent
+            phone={phone}
+            onClose={onClose}
+            onTrackClick={onTrackClick}
+          />
         </Box>
       </Drawer>
     );
@@ -71,7 +78,11 @@ const ContactChoiceDialog = ({
       dividers={false}
     >
       <Box sx={{ p: { xs: 1.5, lg: 1.5 } }}>
-        <ContactChoiceContent phone={phone} onClose={onClose} />
+        <ContactChoiceContent
+          phone={phone}
+          onClose={onClose}
+          onTrackClick={onTrackClick}
+        />
       </Box>
     </Modal>
   );

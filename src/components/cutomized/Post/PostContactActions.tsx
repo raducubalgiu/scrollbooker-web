@@ -4,21 +4,26 @@ import { useState } from "react";
 import { Button, Stack } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 import { getContactActionInfo } from "@/utils/contact-utils";
 import ContactChoiceDialog from "@/components/cutomized/Contact/ContactChoiceDialog";
 
 type PostContactActionsProps = {
   contact: ContactInfo;
   onOpenServices: () => void;
+  onContactClick: (clickType: ContactClickTypeEnum) => void;
 };
 
 const PostContactActions = ({
   contact,
   onOpenServices,
+  onContactClick,
 }: PostContactActionsProps) => {
   const [isChoiceOpen, setIsChoiceOpen] = useState(false);
-  const contactAction = getContactActionInfo(contact, () =>
-    setIsChoiceOpen(true)
+  const contactAction = getContactActionInfo(
+    contact,
+    () => setIsChoiceOpen(true),
+    onContactClick
   );
 
   return (
@@ -54,6 +59,7 @@ const PostContactActions = ({
           open={isChoiceOpen}
           phone={contact.phone}
           onClose={() => setIsChoiceOpen(false)}
+          onTrackClick={onContactClick}
         />
       )}
     </Stack>

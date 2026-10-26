@@ -14,6 +14,7 @@ import FeedFilterDialog from "./Filters/FeedFilterDialog";
 import FeedFilterMobileOverlay from "./Filters/FeedFilterMobileOverlay";
 import { useFeedState } from "@/providers/FeedStateProvider";
 import { useUserLocation } from "@/hooks/useUserLocation";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 export default function FeedModule() {
   const theme = useTheme();
@@ -69,6 +70,10 @@ export default function FeedModule() {
     fetchNextPage,
     isLoading,
     initialIndex: currentIndex,
+    engagementSource:
+      currentTab === FeedTabEnum.EXPLORE
+        ? EngagementSourceEnum.EXPLORE_FEED
+        : EngagementSourceEnum.FOLLOWING_FEED,
   });
 
   useEffect(() => {

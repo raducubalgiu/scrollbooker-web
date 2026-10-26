@@ -4,6 +4,7 @@ import {
   PostUser,
   PostUserActions,
 } from "@/ts/models/social/Post";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 
 export type PostActionCallbacks = {
   onLike: () => void;
@@ -16,6 +17,7 @@ export type PostActionCallbacks = {
   onEditClick: () => void;
   onDeleteClick: () => void;
   onNavigateToUser: () => void;
+  onContactClick: (clickType: ContactClickTypeEnum) => void;
 };
 
 export type PostActionLoaders = {

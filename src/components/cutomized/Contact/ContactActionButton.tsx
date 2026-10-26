@@ -5,12 +5,18 @@ import { Button, SxProps, Theme } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
 import { getContactActionInfo } from "@/utils/contact-utils";
+import { useRecordContactClick } from "@/controllers/social/engagement.controller";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 import ContactChoiceDialog from "./ContactChoiceDialog";
 
 type ContactActionButtonProps = {
   instantBooking: boolean;
   contact: ContactInfo;
   onBookNow: () => void;
+  userId: number | null;
+  businessId: number | null;
+  source: EngagementSourceEnum;
   bookLabel?: string;
   variant?: "contained" | "outlined";
   color?: "primary" | "secondary";
@@ -23,6 +29,9 @@ const ContactActionButton = ({
   instantBooking,
   contact,
   onBookNow,
+  userId,
+  businessId,
+  source,
   bookLabel = "Rezervă acum",
   variant = "contained",
   color = "primary",
@@ -31,6 +40,7 @@ const ContactActionButton = ({
   sx = {},
 }: ContactActionButtonProps) => {
   const [isChoiceOpen, setIsChoiceOpen] = useState(false);
+  const { mutate: recordContactClick } = useRecordContactClick();
 
   if (instantBooking) {
     return (
@@ -48,7 +58,16 @@ const ContactActionButton = ({
     );
   }
 
-  const contactAction = getContactActionInfo(contact, () => setIsChoiceOpen(true));
+  const handleTrackClick = (clickType: ContactClickTypeEnum) => {
+    if (userId === null || businessId === null) return;
+    recordContactClick({ userId, businessId, clickType, source });
+  };
+
+  const contactAction = getContactActionInfo(
+    contact,
+    () => setIsChoiceOpen(true),
+    handleTrackClick
+  );
 
   if (!contactAction.isVisible) {
     return null;
@@ -80,6 +99,7 @@ const ContactActionButton = ({
           open={isChoiceOpen}
           phone={contact.phone}
           onClose={() => setIsChoiceOpen(false)}
+          onTrackClick={handleTrackClick}
         />
       )}
     </>
