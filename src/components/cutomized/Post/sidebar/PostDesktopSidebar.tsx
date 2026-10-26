@@ -1,6 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import React, { memo, useState } from "react";
 import { Post, PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 import PostComments from "@/components/modules/Marketplace/CommentsModule/PostComments";
 import VideoHeaderSkeleton from "../VideoHeaderSkeleton";
 import VideoHeader from "../VideoHeader";
@@ -27,6 +29,10 @@ type PostDesktopSidebarProps = {
   isOwnPost: boolean;
   businessLocation: PostBusinessLocation | null | undefined;
   distanceKm: number | null;
+  instantBooking: boolean;
+  contact: ContactInfo | undefined;
+  businessId: number | null;
+  onContactClick: (clickType: ContactClickTypeEnum) => void;
   onNavigateToBooking: (selectedProductId: number | null) => void;
   onFollow?: () => void;
   isTogglingFollow?: boolean;
@@ -72,6 +78,10 @@ const PostDesktopSidebar = ({
   isOwnPost,
   businessLocation,
   distanceKm,
+  instantBooking,
+  contact,
+  businessId,
+  onContactClick,
   isLoading,
   onNavigateToBooking,
   onFollow,
@@ -132,6 +142,10 @@ const PostDesktopSidebar = ({
             displayDescription={false}
             isVideoReview={isVideoReview}
             isOwnPost={isOwnPost}
+            instantBooking={instantBooking}
+            contact={contact}
+            businessId={businessId}
+            onContactClick={onContactClick}
             onFollow={onFollow}
             isTogglingFollow={isTogglingFollow}
           />

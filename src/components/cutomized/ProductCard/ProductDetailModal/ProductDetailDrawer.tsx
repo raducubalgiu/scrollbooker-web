@@ -12,6 +12,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingModule/BookingModule";
 import { Product } from "@/ts/models/booking/product/Product";
+import Protected from "@/components/cutomized/Protected/Protected";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import ProductDetailContent from "./ProductDetailContent";
 import ProductDetailFooter from "./ProductDetailFooter";
 import { useProductDetailState } from "./useProductDetailState";
@@ -19,6 +21,7 @@ import { useProductDetailState } from "./useProductDetailState";
 type ProductDetailDrawerProps = {
   open: boolean;
   product: Product | null;
+  instantBooking: boolean;
   onClose: () => void;
   onAdd: (item: SelectedBookingItem) => void;
 };
@@ -26,6 +29,7 @@ type ProductDetailDrawerProps = {
 const ProductDetailDrawer = ({
   product,
   open,
+  instantBooking,
   onClose,
   onAdd,
 }: ProductDetailDrawerProps) => {
@@ -54,14 +58,19 @@ const ProductDetailDrawer = ({
         <ProductDetailContent
           product={product}
           selectedVariantId={selectedVariant}
+          instantBooking={instantBooking}
           onHandleChange={handleChange}
         />
       </Box>
 
-      <ProductDetailFooter
-        currentVariant={currentVariant}
-        onHandleAdd={handleAddClick}
-      />
+      {instantBooking && (
+        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+          <ProductDetailFooter
+            currentVariant={currentVariant}
+            onHandleAdd={handleAddClick}
+          />
+        </Protected>
+      )}
     </Drawer>
   );
 };

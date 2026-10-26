@@ -4,9 +4,12 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 import NextLink from "next/link";
 import { PostBusinessLocation, PostUser } from "@/ts/models/social/Post";
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 import { AppRoutes } from "@/utils/routes";
 import AvatarWithRating from "../Avatar/AvatarWithRating";
 import ProfileAddress from "@/components/modules/Marketplace/ProfileModule/ProfileAddress";
+import BookingContactButtons from "@/components/modules/Marketplace/BookingModule/components/BookingContactButtons";
 
 type VideoHeaderProps = {
   displayDescription: boolean;
@@ -16,6 +19,10 @@ type VideoHeaderProps = {
   user: PostUser | undefined;
   isVideoReview: boolean;
   isOwnPost: boolean;
+  instantBooking: boolean;
+  contact: ContactInfo | undefined;
+  businessId: number | null;
+  onContactClick: (clickType: ContactClickTypeEnum) => void;
   onFollow?: (() => void) | undefined;
   isTogglingFollow?: boolean | undefined;
 };
@@ -28,11 +35,22 @@ const VideoHeader = ({
   businessLocation,
   distanceKm = null,
   displayDescription = false,
+  instantBooking,
+  contact,
+  businessId,
+  onContactClick,
   onFollow,
   isTogglingFollow = false,
 }: VideoHeaderProps) => {
-  const { avatar, fullname, username, profession, ratings_average, is_follow } =
-    user || {};
+  const {
+    id: userId,
+    avatar,
+    fullname,
+    username,
+    profession,
+    ratings_average,
+    is_follow,
+  } = user || {};
   const isBusinessOrEmployee = !isVideoReview;
   const showFollowButton = !is_follow && !!onFollow;
   const profileHref =
@@ -113,6 +131,18 @@ const VideoHeader = ({
       {displayDescription && (
         <Box sx={{ mt: 4 }}>
           <Typography>{description ?? "..."}</Typography>
+        </Box>
+      )}
+
+      {isBusinessOrEmployee && !instantBooking && contact && (
+        <Box sx={{ mt: 4 }}>
+          <BookingContactButtons
+            contact={contact}
+            userId={userId ?? null}
+            businessId={businessId}
+            onTrackClick={onContactClick}
+            size="small"
+          />
         </Box>
       )}
     </Box>

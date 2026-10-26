@@ -218,12 +218,14 @@ const BookingModule = (props: BookingModuleProps) => {
           <ProductDetailModal
             open={selectedProduct.open}
             product={selectedProduct.product}
+            instantBooking={instantBooking}
             onClose={handleCloseDetailModal}
             onAdd={handleSelectItem}
           />
           <ProductDetailDrawer
             open={selectedProduct.open}
             product={selectedProduct.product}
+            instantBooking={instantBooking}
             onClose={handleCloseDetailModal}
             onAdd={handleSelectItem}
           />

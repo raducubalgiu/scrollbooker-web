@@ -151,6 +151,10 @@ const PostFeedView = ({
             isOwnPost={currentPost?.is_own_post === true}
             businessLocation={currentPost?.business_location}
             distanceKm={distanceKm}
+            instantBooking={currentPost?.instant_booking ?? false}
+            contact={currentPost?.contact}
+            businessId={currentPost?.business_id ?? null}
+            onContactClick={callbacks.onContactClick}
             onNavigateToBooking={handleNavigateToBooking}
             onFollow={handleFollow}
             isTogglingFollow={isTogglingFollow}

@@ -7,21 +7,23 @@ import ProductDetailVariantsOptions from "./ProductDetailVariantsOptions";
 type ProductDetailContentProps = {
   product: Product | null;
   selectedVariantId: number | string;
+  instantBooking: boolean;
   onHandleChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const ProductDetailContent = ({
   product,
   selectedVariantId,
+  instantBooking,
   onHandleChange,
 }: ProductDetailContentProps) => {
   return (
     <Stack sx={{ p: { xs: 2, md: 2.5 } }}>
-      <Typography variant="h2" fontWeight={600} mb={{ xs: 1.5, md: 2.5 }}>
+      <Typography variant="h3" fontWeight={600} mb={{ xs: 1.5, md: 2.5 }}>
         {product?.name}
       </Typography>
 
-      <Typography color="text.secondary">
+      <Typography variant="body2" color="text.secondary">
         {product?.description
           ? product?.description
           : "Acest serviciu nu conține o descriere"}
@@ -70,6 +72,7 @@ const ProductDetailContent = ({
           <ProductDetailVariantsOptions
             selectedVariantId={selectedVariantId}
             variants={product?.variants ?? []}
+            instantBooking={instantBooking}
             onHandleChange={onHandleChange}
           />
         )}

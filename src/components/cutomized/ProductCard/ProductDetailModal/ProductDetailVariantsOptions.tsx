@@ -13,21 +13,25 @@ import {
   Typography,
 } from "@mui/material";
 import React, { ChangeEvent } from "react";
+import Protected from "@/components/cutomized/Protected/Protected";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 type ProductDetailVariantsOptionsProps = {
   variants: ProductVariant[];
   selectedVariantId: number | string;
+  instantBooking: boolean;
   onHandleChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const ProductDetailVariantsOptions = ({
   variants,
   selectedVariantId,
+  instantBooking,
   onHandleChange,
 }: ProductDetailVariantsOptionsProps) => {
   return (
     <>
-      <Typography variant="h4" fontWeight={600} mb={2.5}>
+      <Typography variant="h5" fontWeight={600} mb={2.5}>
         Selectează o opțiune *
       </Typography>
       <RadioGroup value={selectedVariantId} onChange={onHandleChange}>
@@ -57,14 +61,22 @@ const ProductDetailVariantsOptions = ({
                       </Typography>
                     </Stack>
 
-                    <Typography variant="h5">
+                    <Typography fontWeight={600}>
                       {variant.has_different_prices && "de la"}{" "}
                       {`${formatPrice(starting_offering.price_with_discount)} RON`}
                     </Typography>
                   </Box>
                 }
                 labelPlacement="start"
-                control={<Radio sx={styles.radioStyles} />}
+                control={
+                  instantBooking ? (
+                    <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+                      <Radio sx={styles.radioStyles} />
+                    </Protected>
+                  ) : (
+                    <></>
+                  )
+                }
                 sx={styles.formControl}
               />
 

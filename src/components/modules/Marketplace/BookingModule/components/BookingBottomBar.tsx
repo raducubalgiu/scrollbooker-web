@@ -9,7 +9,7 @@ import { ProductUtils } from "@/ts/models/booking/product/Product";
 import { formatPrice } from "@/utils/formatPrice";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
+import BookingContactButtons from "./BookingContactButtons";
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
 import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
@@ -26,11 +26,6 @@ type BookingBottomBarProps = {
   onNext: () => void;
 };
 
-// Structura din iOS: un singur row — stânga preț total + durată totală
-// (stivuite), dreapta butonul Next. Nu reutilizăm BookingCartTotals (cel
-// de pe sidebar-ul desktop), care e gândit pentru o altă formă (etichetă
-// "Total (N servicii)" + durată aliniată separat pe toată lățimea) — aici
-// e nevoie de blocul compact stânga/dreapta de pe mobil.
 const BookingBottomBar = ({
   selectedItems,
   employeeData,
@@ -105,15 +100,12 @@ const BookingBottomBar = ({
           </Stack>
         ) : (
           <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-            <ContactActionButton
-              instantBooking={false}
+            <BookingContactButtons
               contact={contact}
-              onBookNow={() => {}}
               userId={userId}
               businessId={businessId}
               source={EngagementSourceEnum.OTHER}
-              fullWidth
-              size="large"
+              sx={{ width: "100%" }}
             />
           </Protected>
         )}

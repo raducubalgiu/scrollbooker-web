@@ -5,6 +5,8 @@ import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingMod
 import { Product } from "@/ts/models/booking/product/Product";
 import { useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
+import Protected from "@/components/cutomized/Protected/Protected";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import ProductDetailFooter from "./ProductDetailFooter";
 import ProductDetailContent from "./ProductDetailContent";
 import { useProductDetailState } from "./useProductDetailState";
@@ -12,17 +14,15 @@ import { useProductDetailState } from "./useProductDetailState";
 type ProductDetailModalProps = {
   open: boolean;
   product: Product | null;
+  instantBooking: boolean;
   onClose: () => void;
   onAdd: (item: SelectedBookingItem) => void;
 };
 
-// Varianta desktop — pe mobil se randează ProductDetailDrawer în locul ei
-// (ambele mount-ate ca siblings de către caller, fiecare decide singur
-// dacă se afișează; Modal-ul shared nu propagă un sx extern care să
-// permită hide-ul prin CSS, de-aici gate-ul prin useMediaQuery).
 const ProductDetailModal = ({
   product,
   open,
+  instantBooking,
   onClose,
   onAdd,
 }: ProductDetailModalProps) => {
@@ -42,15 +42,20 @@ const ProductDetailModal = ({
       fullWidth
       dividers={false}
       customFooter={
-        <ProductDetailFooter
-          currentVariant={currentVariant}
-          onHandleAdd={handleAddClick}
-        />
+        instantBooking && (
+          <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+            <ProductDetailFooter
+              currentVariant={currentVariant}
+              onHandleAdd={handleAddClick}
+            />
+          </Protected>
+        )
       }
     >
       <ProductDetailContent
         product={product}
         selectedVariantId={selectedVariant}
+        instantBooking={instantBooking}
         onHandleChange={handleChange}
       />
     </Modal>
