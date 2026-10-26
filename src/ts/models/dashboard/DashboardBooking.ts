@@ -23,4 +23,6 @@ export interface DashboardBooking {
   channels: DashboardBookingChannel[];
   sources: DashboardBookingSource[];
   business_short_domain: string | null;
+  profile_visits_count: number;
+  unique_profile_visitors_count: number;
 }
