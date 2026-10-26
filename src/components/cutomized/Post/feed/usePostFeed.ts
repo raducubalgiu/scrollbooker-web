@@ -48,24 +48,11 @@ export const usePostFeed = ({
 
   useEffect(() => {
     if (hasAppliedInitialIndex.current) return;
+    if (initialIndex === undefined) return;
 
-    if (initialIndex !== undefined) {
-      setCurrentIndex(initialIndex);
-      hasAppliedInitialIndex.current = true;
-      return;
-    }
-
-    if (initialPostId == null) {
-      hasAppliedInitialIndex.current = true;
-      return;
-    }
-
-    if (isLoading || posts.length === 0) return;
-
-    const idx = posts.findIndex((p) => p.id === initialPostId);
-    setCurrentIndex(idx >= 0 ? idx : 0);
+    setCurrentIndex(initialIndex);
     hasAppliedInitialIndex.current = true;
-  }, [initialIndex, initialPostId, posts, isLoading]);
+  }, [initialIndex]);
 
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);

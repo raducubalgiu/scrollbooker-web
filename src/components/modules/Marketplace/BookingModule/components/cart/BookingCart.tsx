@@ -8,6 +8,9 @@ import { useBookingCartTotals } from "./useBookingCartTotals";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { BookingFlowBusiness } from "@/ts/models/booking/booking/BookingFlow";
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 export type EmployeeDataType = {
   selectedEmployeeId: number | null;
@@ -17,6 +20,7 @@ export type EmployeeDataType = {
 
 type BookingCartProps = {
   business: BookingFlowBusiness;
+  businessId: number;
   selectedItems: SelectedBookingItem[];
   employeeData: EmployeeDataType;
   currentStep: BookingStepEnum;
@@ -29,6 +33,7 @@ type BookingCartProps = {
 
 const BookingCart = ({
   business,
+  businessId,
   selectedItems,
   employeeData,
   isNextDisabled,
@@ -82,6 +87,9 @@ const BookingCart = ({
               instantBooking={false}
               contact={contact}
               onBookNow={() => {}}
+              userId={business.owner.id}
+              businessId={businessId}
+              source={EngagementSourceEnum.OTHER}
               fullWidth
               size="large"
               sx={{ p: 1.75, fontSize: 18 }}

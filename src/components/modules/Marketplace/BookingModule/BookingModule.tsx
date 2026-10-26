@@ -187,6 +187,7 @@ const BookingModule = (props: BookingModuleProps) => {
 
           <BookingCart
             business={bookingFlow.business}
+            businessId={businessId}
             selectedItems={selectedItems}
             employeeData={employeeData}
             currentStep={currentStep}
@@ -205,6 +206,8 @@ const BookingModule = (props: BookingModuleProps) => {
         currentStep={currentStep}
         instantBooking={instantBooking}
         contact={contact}
+        userId={userId}
+        businessId={businessId}
         isNextDisabled={isNextDisabled}
         isLoadingNext={isPending}
         onNext={handleNext}

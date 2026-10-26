@@ -11,6 +11,7 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 type BookingBottomBarProps = {
   selectedItems: SelectedBookingItem[];
@@ -18,6 +19,8 @@ type BookingBottomBarProps = {
   currentStep: BookingStepEnum;
   instantBooking: boolean;
   contact: ContactInfo;
+  userId: number;
+  businessId: number;
   isNextDisabled: boolean;
   isLoadingNext: boolean;
   onNext: () => void;
@@ -34,6 +37,8 @@ const BookingBottomBar = ({
   currentStep,
   instantBooking,
   contact,
+  userId,
+  businessId,
   isNextDisabled,
   isLoadingNext,
   onNext,
@@ -104,6 +109,9 @@ const BookingBottomBar = ({
               instantBooking={false}
               contact={contact}
               onBookNow={() => {}}
+              userId={userId}
+              businessId={businessId}
+              source={EngagementSourceEnum.OTHER}
               fullWidth
               size="large"
             />

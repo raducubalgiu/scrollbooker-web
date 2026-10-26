@@ -62,6 +62,12 @@ export default function FeedModule() {
 
   const postsCount = useMemo(() => data?.pages[0]?.count ?? 0, [data]);
 
+  const initialIndex = useMemo(() => {
+    if (currentPostId == null) return undefined;
+    const idx = posts.findIndex((p) => p.id === currentPostId);
+    return idx >= 0 ? idx : undefined;
+  }, [currentPostId, posts]);
+
   const feed = usePostFeed({
     posts,
     postsCount,
@@ -69,7 +75,7 @@ export default function FeedModule() {
     isFetchingNextPage,
     fetchNextPage,
     isLoading,
-    initialIndex: currentIndex,
+    initialIndex,
     engagementSource:
       currentTab === FeedTabEnum.EXPLORE
         ? EngagementSourceEnum.EXPLORE_FEED
