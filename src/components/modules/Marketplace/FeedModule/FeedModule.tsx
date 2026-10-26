@@ -22,12 +22,12 @@ export default function FeedModule() {
 
   const {
     currentTab,
-    currentIndex,
+    currentPostId,
     appliedServiceIds,
     appliedOnlyVideoReviews,
     appliedOnlyNearby,
     setCurrentTab,
-    setCurrentIndex,
+    setCurrentPostId,
     setAppliedFilters,
   } = useFeedState();
   const [showFilters, setShowFilters] = useState(false);
@@ -62,6 +62,12 @@ export default function FeedModule() {
 
   const postsCount = useMemo(() => data?.pages[0]?.count ?? 0, [data]);
 
+  const initialIndex = useMemo(() => {
+    if (currentPostId == null) return undefined;
+    const idx = posts.findIndex((p) => p.id === currentPostId);
+    return idx >= 0 ? idx : undefined;
+  }, [currentPostId, posts]);
+
   const feed = usePostFeed({
     posts,
     postsCount,
@@ -69,7 +75,7 @@ export default function FeedModule() {
     isFetchingNextPage,
     fetchNextPage,
     isLoading,
-    initialIndex: currentIndex,
+    initialIndex,
     engagementSource:
       currentTab === FeedTabEnum.EXPLORE
         ? EngagementSourceEnum.EXPLORE_FEED
@@ -77,8 +83,8 @@ export default function FeedModule() {
   });
 
   useEffect(() => {
-    setCurrentIndex(feed.currentIndex);
-  }, [feed.currentIndex, setCurrentIndex]);
+    setCurrentPostId(feed.currentPost?.id ?? null);
+  }, [feed.currentPost?.id, setCurrentPostId]);
 
   const handleTabChange = useCallback(
     (tab: FeedTabEnum) => {
@@ -97,7 +103,11 @@ export default function FeedModule() {
   }, []);
 
   const handleApplyFilters = useCallback(
-    (serviceIds: Set<number>, onlyVideoReviews: boolean, onlyNearby: boolean) => {
+    (
+      serviceIds: Set<number>,
+      onlyVideoReviews: boolean,
+      onlyNearby: boolean
+    ) => {
       setAppliedFilters(serviceIds, onlyVideoReviews, onlyNearby);
     },
     [setAppliedFilters]

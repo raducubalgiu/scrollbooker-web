@@ -9,6 +9,7 @@ import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 export type PostActionCallbacks = {
   onLike: () => void;
   onCommentClick: () => void;
+  onReviewsClick: () => void;
   onBookmarkClick: () => void;
   onShareClick: () => void;
   onOpenMoreOptions: () => void;

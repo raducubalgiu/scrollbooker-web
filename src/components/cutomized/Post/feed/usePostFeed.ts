@@ -71,7 +71,8 @@ export const usePostFeed = ({
   const currentPost = posts[currentIndex] ?? null;
 
   const { location: userLocation } = useUserLocation();
-  const businessCoordinates = currentPost?.business_location?.coordinates ?? null;
+  const businessCoordinates =
+    currentPost?.business_location?.coordinates ?? null;
 
   const distanceKm = useMemo(() => {
     if (!userLocation || !businessCoordinates) return null;

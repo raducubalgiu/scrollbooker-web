@@ -99,7 +99,6 @@ const CollectUsernameStep = () => {
 
         <Button
           variant="contained"
-          size="large"
           fullWidth
           loading={isLoadingSave || isLoadingSearch}
           disabled={isLoadingSearch || !data?.available}

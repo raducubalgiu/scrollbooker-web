@@ -11,12 +11,12 @@ import { FeedTabEnum } from "@/components/modules/Marketplace/FeedModule/FeedTab
 
 type FeedStateContextValue = {
   currentTab: FeedTabEnum;
-  currentIndex: number;
+  currentPostId: number | null;
   appliedServiceIds: Set<number>;
   appliedOnlyVideoReviews: boolean;
   appliedOnlyNearby: boolean;
   setCurrentTab: (tab: FeedTabEnum) => void;
-  setCurrentIndex: (index: number) => void;
+  setCurrentPostId: (postId: number | null) => void;
   setAppliedFilters: (
     serviceIds: Set<number>,
     onlyVideoReviews: boolean,
@@ -34,12 +34,11 @@ export default function FeedStateProvider({
   const [currentTab, setCurrentTab] = useState<FeedTabEnum>(
     FeedTabEnum.EXPLORE
   );
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentPostId, setCurrentPostId] = useState<number | null>(null);
   const [appliedServiceIds, setAppliedServiceIds] = useState<Set<number>>(
     new Set()
   );
-  const [appliedOnlyVideoReviews, setAppliedOnlyVideoReviews] =
-    useState(false);
+  const [appliedOnlyVideoReviews, setAppliedOnlyVideoReviews] = useState(false);
   const [appliedOnlyNearby, setAppliedOnlyNearby] = useState(false);
 
   const setAppliedFilters = useCallback(
@@ -58,17 +57,17 @@ export default function FeedStateProvider({
   const value = useMemo(
     () => ({
       currentTab,
-      currentIndex,
+      currentPostId,
       appliedServiceIds,
       appliedOnlyVideoReviews,
       appliedOnlyNearby,
       setCurrentTab,
-      setCurrentIndex,
+      setCurrentPostId,
       setAppliedFilters,
     }),
     [
       currentTab,
-      currentIndex,
+      currentPostId,
       appliedServiceIds,
       appliedOnlyVideoReviews,
       appliedOnlyNearby,

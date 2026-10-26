@@ -9,11 +9,18 @@ import { ProductUtils } from "@/ts/models/booking/product/Product";
 import { formatPrice } from "@/utils/formatPrice";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
+import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 type BookingBottomBarProps = {
   selectedItems: SelectedBookingItem[];
   employeeData: EmployeeDataType;
   currentStep: BookingStepEnum;
+  instantBooking: boolean;
+  contact: ContactInfo;
+  userId: number;
+  businessId: number;
   isNextDisabled: boolean;
   isLoadingNext: boolean;
   onNext: () => void;
@@ -28,6 +35,10 @@ const BookingBottomBar = ({
   selectedItems,
   employeeData,
   currentStep,
+  instantBooking,
+  contact,
+  userId,
+  businessId,
   isNextDisabled,
   isLoadingNext,
   onNext,
@@ -41,56 +52,71 @@ const BookingBottomBar = ({
     selectedEmployeeId
   );
 
-  const isVisible = !isFirstStep || selectedItems.length > 0;
+  const isVisible = !instantBooking || !isFirstStep || selectedItems.length > 0;
 
   return (
     <Slide in={isVisible} direction="up" mountOnEnter unmountOnExit>
       <Box sx={styles.container}>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          gap={2}
-        >
-          {selectedItems.length > 0 && (
-            <Stack spacing={0.25} sx={{ minWidth: 0 }}>
-              <Typography variant="h6" fontWeight={800} noWrap>
-                {showFromLabel && (
-                  <Box
-                    component="span"
-                    sx={{
-                      fontSize: "0.6em",
-                      fontWeight: 700,
-                      mr: 0.5,
-                      color: "text.secondary",
-                      verticalAlign: "middle",
-                    }}
-                  >
-                    DE LA
-                  </Box>
-                )}
-                {formatPrice(displayPrice)} RON
-              </Typography>
+        {instantBooking ? (
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            gap={2}
+          >
+            {selectedItems.length > 0 && (
+              <Stack spacing={0.25} sx={{ minWidth: 0 }}>
+                <Typography variant="h6" fontWeight={800} noWrap>
+                  {showFromLabel && (
+                    <Box
+                      component="span"
+                      sx={{
+                        fontSize: "0.6em",
+                        fontWeight: 700,
+                        mr: 0.5,
+                        color: "text.secondary",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      DE LA
+                    </Box>
+                  )}
+                  {formatPrice(displayPrice)} RON
+                </Typography>
 
-              <Typography variant="body2" color="text.secondary" noWrap>
-                {ProductUtils.getDurationText(totalDuration)}
-              </Typography>
-            </Stack>
-          )}
+                <Typography variant="body2" color="text.secondary" noWrap>
+                  {ProductUtils.getDurationText(totalDuration)}
+                </Typography>
+              </Stack>
+            )}
 
+            <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+              <Button
+                variant="contained"
+                disableElevation
+                onClick={onNext}
+                loading={isLoadingNext}
+                disabled={isNextDisabled || isLoadingNext}
+                sx={styles.nextButton}
+              >
+                {isLastStep ? "Finalizează" : "Continuă"}
+              </Button>
+            </Protected>
+          </Stack>
+        ) : (
           <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={onNext}
-              loading={isLoadingNext}
-              disabled={isNextDisabled || isLoadingNext}
-              sx={styles.nextButton}
-            >
-              {isLastStep ? "Finalizează" : "Continuă"}
-            </Button>
+            <ContactActionButton
+              instantBooking={false}
+              contact={contact}
+              onBookNow={() => {}}
+              userId={userId}
+              businessId={businessId}
+              source={EngagementSourceEnum.OTHER}
+              fullWidth
+              size="large"
+            />
           </Protected>
-        </Stack>
+        )}
       </Box>
     </Slide>
   );

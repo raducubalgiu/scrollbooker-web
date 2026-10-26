@@ -88,6 +88,7 @@ const BookingModule = (props: BookingModuleProps) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { instant_booking: instantBooking, contact } = bookingFlow.business;
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -97,6 +98,7 @@ const BookingModule = (props: BookingModuleProps) => {
             products={bookingFlow.products}
             businessId={businessId}
             employeeId={businessOwnerId !== userId ? userId : null}
+            instantBooking={instantBooking}
             selectedProductId={selectedProductId}
             selectedItems={selectedItems}
             scrollOffset={SCROLL_OFFSET}
@@ -185,9 +187,12 @@ const BookingModule = (props: BookingModuleProps) => {
 
           <BookingCart
             business={bookingFlow.business}
+            businessId={businessId}
             selectedItems={selectedItems}
             employeeData={employeeData}
             currentStep={currentStep}
+            instantBooking={instantBooking}
+            contact={contact}
             isNextDisabled={isNextDisabled}
             isLoadingNext={isPending}
             onNext={handleNext}
@@ -199,6 +204,10 @@ const BookingModule = (props: BookingModuleProps) => {
         selectedItems={selectedItems}
         employeeData={employeeData}
         currentStep={currentStep}
+        instantBooking={instantBooking}
+        contact={contact}
+        userId={userId}
+        businessId={businessId}
         isNextDisabled={isNextDisabled}
         isLoadingNext={isPending}
         onNext={handleNext}

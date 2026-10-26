@@ -18,6 +18,7 @@ type ProductsStepProps = {
   products: UserProducts;
   businessId: number;
   employeeId: number | null;
+  instantBooking: boolean;
   scrollOffset: number;
   headerHeight: number;
   displayTitle?: boolean;
@@ -30,6 +31,7 @@ type ProductsStepProps = {
 
 const ProductsStep = ({
   products,
+  instantBooking,
   scrollOffset,
   headerHeight,
   displayTitle = true,
@@ -109,6 +111,7 @@ const ProductsStep = ({
                       product={prod}
                       isSelected={isSelected}
                       showIcon={true}
+                      instantBooking={instantBooking}
                       onOpenDetail={() => onOpenDetail(prod)}
                       onAdd={onAdd}
                       onNavigateToBooking={() => {}}

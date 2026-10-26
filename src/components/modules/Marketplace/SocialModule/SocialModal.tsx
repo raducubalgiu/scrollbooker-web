@@ -14,7 +14,7 @@ import NotFound from "@/components/cutomized/NotFound/NotFound";
 import { SocialTabEnum } from "./SocialTabEnum";
 import { UserCounter } from "@/ts/models/user/UserProfile";
 import { SocialModalProps } from "../ProfileModule/ProfileModule";
-import SocialReviewsTab from "./reviews/SocialReviewsTab";
+import ReviewsContent from "./reviews/ReviewsContent";
 import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 
 type ProfileSocialModalProps = {
@@ -97,7 +97,7 @@ const SocialModal = ({
     switch (currentTab) {
       case SocialTabEnum.REVIEWS:
         return socialModal?.businessId ? (
-          <SocialReviewsTab
+          <ReviewsContent
             businessId={socialModal.businessId}
             employeeId={socialModal.employeeId ?? null}
             rootRef={scrollRootRef}

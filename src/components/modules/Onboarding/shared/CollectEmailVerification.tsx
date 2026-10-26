@@ -97,7 +97,7 @@ export default function CollectEmailVerificationStep() {
       sx={{ minHeight: "100%", mt: { xs: 7.5, md: 0 } }}
     >
       <Container maxWidth="sm">
-        <Stack spacing={3}>
+        <Stack spacing={{ xs: 2, md: 3 }}>
           <Stack spacing={1} textAlign="center">
             <Typography variant="h4" fontWeight={700}>
               {t("title")}
@@ -127,7 +127,6 @@ export default function CollectEmailVerificationStep() {
 
           <Button
             variant="contained"
-            size="large"
             fullWidth
             loading={isVerifying}
             disabled={isVerifying || code.length !== 6}
@@ -146,7 +145,9 @@ export default function CollectEmailVerificationStep() {
               disabled={cooldown > 0 || isResending}
               sx={{ textTransform: "none", fontWeight: 600 }}
             >
-              {cooldown > 0 ? t("resendCooldown", { seconds: cooldown }) : t("resend")}
+              {cooldown > 0
+                ? t("resendCooldown", { seconds: cooldown })
+                : t("resend")}
             </Button>
           </Stack>
         </Stack>

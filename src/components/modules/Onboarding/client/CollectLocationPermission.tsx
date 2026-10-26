@@ -68,7 +68,6 @@ const CollectLocationPermission = () => {
 
           <Button
             variant="contained"
-            size="large"
             fullWidth
             loading={isRequestingLocation || isPending}
             onClick={handleAllow}

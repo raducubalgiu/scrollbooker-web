@@ -54,6 +54,7 @@ const PostActions = ({
     onLike,
     onBookmarkClick,
     onCommentClick,
+    onReviewsClick,
     onShareClick,
     onOpenMoreOptions,
     onCloseMoreOptions,
@@ -71,6 +72,7 @@ const PostActions = ({
     onLike,
     onBookmark: onBookmarkClick,
     onCommentClick,
+    onReviewsClick,
     onShareClick,
   });
 

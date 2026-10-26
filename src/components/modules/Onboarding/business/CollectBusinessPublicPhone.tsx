@@ -153,7 +153,6 @@ const CollectBusinessPublicPhone = () => {
 
           <Button
             variant="contained"
-            size="large"
             fullWidth
             loading={isLoading}
             disabled={isLoading || isDisabled}

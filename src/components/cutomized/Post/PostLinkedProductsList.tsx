@@ -12,6 +12,7 @@ type PostLinkedProductsListProps = {
   linkedProducts: LinkedProducts | undefined;
   isLoadingLinkedProducts: boolean;
   isLoadingPosts: boolean;
+  instantBooking: boolean;
   onNavigateToBooking: (selectedProductId: number | null) => void;
 };
 
@@ -21,6 +22,7 @@ const PostLinkedProductsList = ({
   linkedProducts,
   isLoadingLinkedProducts,
   isLoadingPosts,
+  instantBooking,
   onNavigateToBooking,
 }: PostLinkedProductsListProps) => {
   const skeletons = useMemo(
@@ -47,6 +49,7 @@ const PostLinkedProductsList = ({
               product={prod}
               isSelected={false}
               showIcon={false}
+              instantBooking={instantBooking}
               shouldToggleDescription
               onNavigateToBooking={(prod) => onNavigateToBooking(prod.id)}
               sx={{ borderColor: "transparent", p: 1.5 }}

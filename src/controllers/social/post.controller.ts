@@ -83,6 +83,7 @@ export const useInfiniteExplorePosts = ({
         userLng,
       }),
     initialPageParam: 1,
+    staleTime: 2 * 60 * 1000,
     getNextPageParam: (lastPage, pages) => {
       const totalFetched = pages.flatMap((p) => p.results).length;
       return totalFetched < lastPage.count ? pages.length + 1 : undefined;
@@ -109,6 +110,7 @@ export const useInfiniteFollowingPosts = ({
     queryKey: POST_QUERY_KEYS.following,
     queryFn: ({ pageParam = 1 }) => fetchFollowingPosts({ pageParam }),
     initialPageParam: 1,
+    staleTime: 2 * 60 * 1000,
     getNextPageParam: (lastPage, pages) => {
       const totalFetched = pages.flatMap((p) => p.results).length;
       return totalFetched < lastPage.count ? pages.length + 1 : undefined;

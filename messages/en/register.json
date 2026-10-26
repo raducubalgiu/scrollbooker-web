@@ -1,7 +1,11 @@
 {
+  "registerMetadata": {
+    "title": "Create your account — ScrollBooker",
+    "description": "Create your ScrollBooker account, discover new services and connect with your friends."
+  },
   "register": {
     "title": "Create your account",
-    "subtitle": "Create your ScrollBooker account in a few minutes",
+    "subtitle": "Create your ScrollBooker account, discover new services and connect with your friends.",
     "continueWithGoogle": "Continue with Google",
     "continueWithApple": "Continue with Apple — coming soon",
     "or": "or",

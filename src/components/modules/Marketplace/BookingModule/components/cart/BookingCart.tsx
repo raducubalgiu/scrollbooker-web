@@ -8,6 +8,9 @@ import { useBookingCartTotals } from "./useBookingCartTotals";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { BookingFlowBusiness } from "@/ts/models/booking/booking/BookingFlow";
+import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 export type EmployeeDataType = {
   selectedEmployeeId: number | null;
@@ -17,9 +20,12 @@ export type EmployeeDataType = {
 
 type BookingCartProps = {
   business: BookingFlowBusiness;
+  businessId: number;
   selectedItems: SelectedBookingItem[];
   employeeData: EmployeeDataType;
   currentStep: BookingStepEnum;
+  instantBooking: boolean;
+  contact: ContactInfo;
   isNextDisabled: boolean;
   isLoadingNext: boolean;
   onNext: () => void;
@@ -27,11 +33,14 @@ type BookingCartProps = {
 
 const BookingCart = ({
   business,
+  businessId,
   selectedItems,
   employeeData,
   isNextDisabled,
   isLoadingNext,
   currentStep,
+  instantBooking,
+  contact,
   onNext,
 }: BookingCartProps) => {
   const isLastStep = currentStep === BookingStepEnum.CONFIRM;
@@ -46,27 +55,47 @@ const BookingCart = ({
         employeeData={employeeData}
       />
 
-      <BookingCartContent
-        selectedItems={selectedItems}
-        selectedEmployeeId={selectedEmployeeId}
-      />
+      {instantBooking && (
+        <BookingCartContent
+          selectedItems={selectedItems}
+          selectedEmployeeId={selectedEmployeeId}
+        />
+      )}
 
       <Box sx={styles.footer}>
-        <BookingCartTotals
-          selectedItems={selectedItems}
-          displayPrice={totals.displayPrice}
-          showFromLabel={totals.showFromLabel}
-          totalDuration={totals.totalDuration}
-        />
+        {instantBooking ? (
+          <>
+            <BookingCartTotals
+              selectedItems={selectedItems}
+              displayPrice={totals.displayPrice}
+              showFromLabel={totals.showFromLabel}
+              totalDuration={totals.totalDuration}
+            />
 
-        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-          <BookingCartActions
-            isLastStep={isLastStep}
-            isLoadingNext={isLoadingNext}
-            isNextDisabled={isNextDisabled}
-            onNext={onNext}
-          />
-        </Protected>
+            <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+              <BookingCartActions
+                isLastStep={isLastStep}
+                isLoadingNext={isLoadingNext}
+                isNextDisabled={isNextDisabled}
+                onNext={onNext}
+              />
+            </Protected>
+          </>
+        ) : (
+          <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+            <ContactActionButton
+              instantBooking={false}
+              contact={contact}
+              onBookNow={() => {}}
+              userId={business.owner.id}
+              businessId={businessId}
+              source={EngagementSourceEnum.OTHER}
+              fullWidth
+              size="large"
+              sx={{ p: 1.75, fontSize: 18 }}
+            />
+          </Protected>
+        )}
       </Box>
     </Box>
   );

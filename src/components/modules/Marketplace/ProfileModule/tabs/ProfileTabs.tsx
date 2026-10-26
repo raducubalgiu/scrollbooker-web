@@ -34,6 +34,7 @@ type ProfileTabsProps = {
   userId: number;
   businessId: number | null;
   businessOwnerId: number | undefined;
+  instantBooking: boolean;
   tab?: string | null | undefined;
   profileHeaderContent?: React.ReactNode;
 };
@@ -101,6 +102,7 @@ const ProfileTabs = ({
   userId,
   businessId,
   businessOwnerId,
+  instantBooking,
   tab,
   profileHeaderContent,
 }: ProfileTabsProps) => {
@@ -144,6 +146,7 @@ const ProfileTabs = ({
             businessId={businessId}
             userId={userId}
             businessOwnerId={businessOwnerId}
+            instantBooking={instantBooking}
           />
         );
       case ProfileTabEnum.EMPLOYEES:

@@ -14,6 +14,7 @@ type UsePostActionsProps = {
   onLike: () => void;
   onBookmark: () => void;
   onCommentClick: () => void;
+  onReviewsClick: () => void;
   onShareClick: () => void;
 };
 
@@ -42,6 +43,7 @@ export const usePostActions = ({
   onLike,
   onBookmark,
   onCommentClick,
+  onReviewsClick,
   onShareClick,
 }: UsePostActionsProps) => {
   const actions = useMemo<PostAction[]>(
@@ -57,7 +59,7 @@ export const usePostActions = ({
       {
         key: "clipboard",
         count: user?.ratings_count,
-        onClick: () => {},
+        onClick: onReviewsClick,
       },
       {
         key: "comment",
@@ -87,6 +89,7 @@ export const usePostActions = ({
       onLike,
       onBookmark,
       onCommentClick,
+      onReviewsClick,
       onShareClick,
     ]
   );

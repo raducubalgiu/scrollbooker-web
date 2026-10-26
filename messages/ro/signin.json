@@ -1,7 +1,11 @@
 {
+  "signinMetadata": {
+    "title": "Autentificare — ScrollBooker",
+    "description": "Autentifică-te în contul tău ScrollBooker și continuă să descoperi servicii și să te conectezi cu prietenii."
+  },
   "signin": {
     "title": "Conectare",
-    "subtitle": "Autentifică-te în contul tău ScrollBooker",
+    "subtitle": "Autentifică-te în contul tău ScrollBooker și continuă să descoperi servicii și să te conectezi cu prietenii.",
     "continueWithGoogle": "Continuă cu Google",
     "continueWithApple": "Continuă cu Apple — în curând",
     "or": "sau",

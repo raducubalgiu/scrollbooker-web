@@ -1,7 +1,11 @@
 {
+  "signinMetadata": {
+    "title": "Log in — ScrollBooker",
+    "description": "Log in to your ScrollBooker account and keep discovering services and connecting with friends."
+  },
   "signin": {
     "title": "Log in",
-    "subtitle": "Log in to your ScrollBooker account",
+    "subtitle": "Log in to your ScrollBooker account and keep discovering services and connecting with friends.",
     "continueWithGoogle": "Continue with Google",
     "continueWithApple": "Continue with Apple — coming soon",
     "or": "or",

@@ -1,37 +1,38 @@
 import { Box, CircularProgress, Stack } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
-import CustomTabs, {
-  CustomTabType,
-} from "@/components/core/CustomTabs/CustomTabs";
 import { useGetReviewsSummary } from "@/controllers/booking/review.controller";
 import ReviewsSummarySection from "./ReviewsSummarySection";
 import WrittenReviewsTab from "./WrittenReviewsTab";
-import VideoReviewsTab from "./VideoReviewsTab";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 
-type SocialReviewsTabProps = {
+// Componentă comună, folosită atât în SocialModal (tab-ul Recenzii), cât
+// și în PostReviewsSheet — orice modificare de aici se reflectă în ambele
+// locuri.
+type ReviewsContentProps = {
   businessId: number;
   employeeId: number | null;
   rootRef?: React.RefObject<HTMLDivElement | null>;
   disableInitialIgnore?: boolean;
 };
 
-const TABS: CustomTabType[] = [
-  { label: "Scrise", key: 0 },
-  { label: "Video", key: 1 },
-];
+// MVP: nu includem recenzii video — tab-urile ALL/VIDEO (+ VideoReviewsTab)
+// sunt comentate temporar, afișăm direct lista ALL (WrittenReviewsTab).
+// const TABS: CustomTabType[] = [
+//   { label: "Scrise", key: 0 },
+//   { label: "Video", key: 1 },
+// ];
 
-const SocialReviewsTab = ({
+const ReviewsContent = ({
   businessId,
   employeeId,
   rootRef,
   disableInitialIgnore,
-}: SocialReviewsTabProps) => {
+}: ReviewsContentProps) => {
   const [selectedRatings, setSelectedRatings] = useState<Set<number>>(
     () => new Set()
   );
-  const [currentTab, setCurrentTab] = useState(0);
+  // const [currentTab, setCurrentTab] = useState(0);
   const { data, isLoading } = useGetReviewsSummary({ businessId, employeeId });
 
   const summary = useMemo(
@@ -89,6 +90,7 @@ const SocialReviewsTab = ({
         onRatingClick={handleRatingClick}
       />
 
+      {/* MVP: tab-urile ALL/VIDEO sunt dezactivate, afișăm direct lista ALL.
       <Box sx={styles.tabsContainer}>
         <CustomTabs
           currentTab={currentTab}
@@ -96,17 +98,19 @@ const SocialReviewsTab = ({
           setValue={setCurrentTab}
         />
       </Box>
+      */}
 
-      {currentTab === 0 ? (
-        <WrittenReviewsTab
-          businessId={businessId}
-          employeeId={employeeId}
-          selectedRatings={selectedRatings}
-          isLoadingSummary={isLoading}
-          rootRef={rootRef}
-          disableInitialIgnore={disableInitialIgnore}
-        />
-      ) : (
+      <WrittenReviewsTab
+        businessId={businessId}
+        employeeId={employeeId}
+        selectedRatings={selectedRatings}
+        isLoadingSummary={isLoading}
+        rootRef={rootRef}
+        disableInitialIgnore={disableInitialIgnore}
+      />
+
+      {/* MVP: ramura video, dezactivată temporar.
+      {currentTab === 1 && (
         <VideoReviewsTab
           businessId={businessId}
           employeeId={employeeId}
@@ -114,21 +118,22 @@ const SocialReviewsTab = ({
           disableInitialIgnore={disableInitialIgnore}
         />
       )}
+      */}
     </Box>
   );
 };
 
-export default SocialReviewsTab;
+export default ReviewsContent;
 
-const styles = {
-  tabsContainer: {
-    position: "sticky",
-    top: 0,
-    zIndex: 8,
-    backgroundColor: "background.default",
-    py: 1,
-    borderTop: "1px solid transparent",
-    display: "flex",
-    justifyContent: "center",
-  },
-};
+// const styles = {
+//   tabsContainer: {
+//     position: "sticky",
+//     top: 0,
+//     zIndex: 8,
+//     backgroundColor: "background.default",
+//     py: 1,
+//     borderTop: "1px solid transparent",
+//     display: "flex",
+//     justifyContent: "center",
+//   },
+// };

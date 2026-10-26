@@ -83,7 +83,9 @@ const ContactActionButton = ({
         disableElevation
         fullWidth={fullWidth}
         size={size}
-        startIcon={contactAction.isWhatsAppStyled ? <WhatsAppIcon /> : undefined}
+        startIcon={
+          contactAction.isWhatsAppStyled ? <WhatsAppIcon /> : undefined
+        }
         onClick={contactAction.onClick}
         sx={
           contactAction.isWhatsAppStyled
