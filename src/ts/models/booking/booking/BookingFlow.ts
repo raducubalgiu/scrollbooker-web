@@ -1,3 +1,4 @@
+import { ContactInfo } from "../../user/ContactInfo";
 import { UserProducts } from "../product/Product";
 import { ContactInfo } from "../../user/ContactInfo";
 

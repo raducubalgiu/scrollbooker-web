@@ -1,4 +1,5 @@
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 
 const normalizeToE164Digits = (phone: string): string => {
   const trimmed = phone.replace(/[^\d+]/g, "");
@@ -23,7 +24,8 @@ export type ContactActionInfo = {
 
 export const getContactActionInfo = (
   contact: ContactInfo,
-  onOpenContactSheet: () => void
+  onOpenContactSheet: () => void,
+  onTrackClick?: (clickType: ContactClickTypeEnum) => void
 ): ContactActionInfo => {
   const { phone, accepts_whatsapp, accepts_calls } = contact;
 
@@ -46,6 +48,7 @@ export const getContactActionInfo = (
       isWhatsAppStyled: true,
       isVisible: true,
       onClick: () => {
+        onTrackClick?.(ContactClickTypeEnum.WHATSAPP);
         window.open(buildWhatsappUrl(phone), "_blank", "noopener,noreferrer");
       },
     };
@@ -56,6 +59,7 @@ export const getContactActionInfo = (
     isWhatsAppStyled: false,
     isVisible: true,
     onClick: () => {
+      onTrackClick?.(ContactClickTypeEnum.CALL);
       window.location.href = buildCallUrl(phone);
     },
   };

@@ -5,10 +5,12 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
 import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 import ProfileActionButton from "./ProfileActionButton";
 
 type UserProfileActionsProps = {
   userId: number;
+  businessId: number | null;
   isBusinessOrEmployee: boolean;
   isFollow: boolean;
   instantBooking: boolean;
@@ -19,6 +21,7 @@ type UserProfileActionsProps = {
 
 const UserProfileActions = ({
   userId,
+  businessId,
   isBusinessOrEmployee,
   isFollow,
   instantBooking,
@@ -101,6 +104,9 @@ const UserProfileActions = ({
         instantBooking={instantBooking}
         contact={contact}
         onBookNow={onBookNow}
+        userId={userId}
+        businessId={businessId}
+        source={EngagementSourceEnum.BUSINESS_PROFILE}
         size="medium"
         sx={styles.contactButton}
       />

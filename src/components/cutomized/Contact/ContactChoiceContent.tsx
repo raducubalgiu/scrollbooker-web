@@ -8,19 +8,27 @@ import {
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import CallIcon from "@mui/icons-material/Call";
 import { buildCallUrl, buildWhatsappUrl } from "@/utils/contact-utils";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 
 type ContactChoiceContentProps = {
   phone: string;
   onClose: () => void;
+  onTrackClick?: ((clickType: ContactClickTypeEnum) => void) | undefined;
 };
 
-const ContactChoiceContent = ({ phone, onClose }: ContactChoiceContentProps) => {
+const ContactChoiceContent = ({
+  phone,
+  onClose,
+  onTrackClick,
+}: ContactChoiceContentProps) => {
   const handleWhatsapp = () => {
+    onTrackClick?.(ContactClickTypeEnum.WHATSAPP);
     window.open(buildWhatsappUrl(phone), "_blank", "noopener,noreferrer");
     onClose();
   };
 
   const handleCall = () => {
+    onTrackClick?.(ContactClickTypeEnum.CALL);
     window.location.href = buildCallUrl(phone);
     onClose();
   };

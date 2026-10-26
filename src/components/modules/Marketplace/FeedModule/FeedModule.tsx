@@ -14,6 +14,7 @@ import FeedFilterDialog from "./Filters/FeedFilterDialog";
 import FeedFilterMobileOverlay from "./Filters/FeedFilterMobileOverlay";
 import { useFeedState } from "@/providers/FeedStateProvider";
 import { useUserLocation } from "@/hooks/useUserLocation";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 export default function FeedModule() {
   const theme = useTheme();
@@ -68,7 +69,11 @@ export default function FeedModule() {
     isFetchingNextPage,
     fetchNextPage,
     isLoading,
-    initialPostId: currentPostId,
+    initialIndex: currentIndex,
+    engagementSource:
+      currentTab === FeedTabEnum.EXPLORE
+        ? EngagementSourceEnum.EXPLORE_FEED
+        : EngagementSourceEnum.FOLLOWING_FEED,
   });
 
   useEffect(() => {
@@ -92,7 +97,11 @@ export default function FeedModule() {
   }, []);
 
   const handleApplyFilters = useCallback(
-    (serviceIds: Set<number>, onlyVideoReviews: boolean, onlyNearby: boolean) => {
+    (
+      serviceIds: Set<number>,
+      onlyVideoReviews: boolean,
+      onlyNearby: boolean
+    ) => {
       setAppliedFilters(serviceIds, onlyVideoReviews, onlyNearby);
     },
     [setAppliedFilters]

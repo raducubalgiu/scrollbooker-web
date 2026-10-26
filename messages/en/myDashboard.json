@@ -33,6 +33,19 @@
     "sourceProfileGridPostDetail": "Profile — post grid",
     "sourceProfileBookmarksPostDetail": "Profile — bookmarks",
     "sourceSearch": "Search",
-    "sourceSearchBusinessProfile": "Search — business profile"
+    "sourceSearchBusinessProfile": "Search — business profile",
+    "contactClicks": "Contact clicks",
+    "whatsappClicks": "WhatsApp clicks",
+    "callClicks": "Call clicks",
+    "contactClickSources": "Contact click sources",
+    "engagementSourceSearchVideoFeed": "Video search",
+    "engagementSourceExploreFeed": "Explore",
+    "engagementSourceFollowingFeed": "Following",
+    "engagementSourcePostDetail": "From post",
+    "engagementSourceBookmarkPostDetail": "From saved post",
+    "engagementSourceVideoReviews": "Video reviews",
+    "engagementSourceSearch": "Search",
+    "engagementSourceBusinessProfile": "From profile",
+    "engagementSourceOther": "Other"
   }
 }

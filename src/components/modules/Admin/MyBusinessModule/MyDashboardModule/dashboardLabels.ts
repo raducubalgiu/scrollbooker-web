@@ -47,3 +47,19 @@ export function getChannelLabelKey(channel: string): string | undefined {
 export function getSourceLabelKey(source: string): string | undefined {
   return SOURCE_LABEL_KEYS[source];
 }
+
+const ENGAGEMENT_SOURCE_LABEL_KEYS: Record<string, string> = {
+  search_video_feed: "engagementSourceSearchVideoFeed",
+  explore_feed: "engagementSourceExploreFeed",
+  following_feed: "engagementSourceFollowingFeed",
+  post_detail: "engagementSourcePostDetail",
+  bookmark_post_detail: "engagementSourceBookmarkPostDetail",
+  video_reviews: "engagementSourceVideoReviews",
+  search: "engagementSourceSearch",
+  business_profile: "engagementSourceBusinessProfile",
+  other: "engagementSourceOther",
+};
+
+export function getEngagementSourceLabelKey(source: string): string | undefined {
+  return ENGAGEMENT_SOURCE_LABEL_KEYS[source];
+}

@@ -71,6 +71,7 @@ const ProfileUserInfo = ({
     return (
       <UserProfileActions
         userId={id}
+        businessId={profile.business_id}
         isBusinessOrEmployee={is_business_or_employee}
         isFollow={is_follow}
         instantBooking={instant_booking}
@@ -85,6 +86,7 @@ const ProfileUserInfo = ({
     is_follow,
     id,
     instant_booking,
+    profile.business_id,
     profile.contact,
     onUpdateFollows,
     onOpenEditModal,

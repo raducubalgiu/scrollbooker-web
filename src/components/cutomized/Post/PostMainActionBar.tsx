@@ -1,4 +1,6 @@
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
+import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
 import PostContactActions from "./PostContactActions";
 
@@ -7,6 +9,7 @@ type PostMainActionBarProps = {
   isVideoReview: boolean;
   contact: ContactInfo;
   onOpenLinkedProducts: () => void;
+  onContactClick: (clickType: ContactClickTypeEnum) => void;
 };
 
 const PostMainActionBar = ({
@@ -14,6 +17,7 @@ const PostMainActionBar = ({
   isVideoReview,
   contact,
   onOpenLinkedProducts,
+  onContactClick,
 }: PostMainActionBarProps) => {
   if (instantBooking) {
     return (
@@ -22,6 +26,9 @@ const PostMainActionBar = ({
         contact={contact}
         onBookNow={onOpenLinkedProducts}
         bookLabel={isVideoReview ? "Rezervă și tu" : "Rezervă acum"}
+        userId={null}
+        businessId={null}
+        source={EngagementSourceEnum.OTHER}
         fullWidth
         size="small"
       />
@@ -29,7 +36,11 @@ const PostMainActionBar = ({
   }
 
   return (
-    <PostContactActions contact={contact} onOpenServices={onOpenLinkedProducts} />
+    <PostContactActions
+      contact={contact}
+      onOpenServices={onOpenLinkedProducts}
+      onContactClick={onContactClick}
+    />
   );
 };
 

@@ -23,6 +23,7 @@ import { getGoogleMapsDirectionsUrl } from "@/utils/get-google-maps-directions";
 import { formatOpeningStatus, formatRating } from "@/utils/formatters";
 import { AppRoutes } from "@/utils/routes";
 import { BookingSourceEnum } from "@/ts/enums/BookingSourceEnum";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 type BusinessStickyCardProps = {
 	business: BusinessProfile;
@@ -103,6 +104,9 @@ export default function BusinessStickyCard({
 				<ContactActionButton
 					instantBooking={business.instant_booking}
 					contact={business.contact}
+					userId={business.owner.id}
+					businessId={business.id}
+					source={EngagementSourceEnum.BUSINESS_PROFILE}
 					fullWidth
 					size="large"
 					sx={{ py: 1.75, fontSize: "1rem" }}
