@@ -9,7 +9,7 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 import { BookingFlowBusiness } from "@/ts/models/booking/booking/BookingFlow";
 import { ContactInfo } from "@/ts/models/user/ContactInfo";
-import ContactActionButton from "@/components/cutomized/Contact/ContactActionButton";
+import BookingContactButtons from "../BookingContactButtons";
 import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
 export type EmployeeDataType = {
@@ -55,12 +55,11 @@ const BookingCart = ({
         employeeData={employeeData}
       />
 
-      {instantBooking && (
-        <BookingCartContent
-          selectedItems={selectedItems}
-          selectedEmployeeId={selectedEmployeeId}
-        />
-      )}
+      <BookingCartContent
+        selectedItems={selectedItems}
+        selectedEmployeeId={selectedEmployeeId}
+        instantBooking={instantBooking}
+      />
 
       <Box sx={styles.footer}>
         {instantBooking ? (
@@ -83,16 +82,11 @@ const BookingCart = ({
           </>
         ) : (
           <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-            <ContactActionButton
-              instantBooking={false}
+            <BookingContactButtons
               contact={contact}
-              onBookNow={() => {}}
               userId={business.owner.id}
               businessId={businessId}
               source={EngagementSourceEnum.OTHER}
-              fullWidth
-              size="large"
-              sx={{ p: 1.75, fontSize: 18 }}
             />
           </Protected>
         )}

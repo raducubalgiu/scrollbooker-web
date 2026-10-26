@@ -55,8 +55,8 @@ const styles = {
   badgeContent: (theme: Theme) => ({
     backgroundColor:
       theme.palette.mode === "dark" ? "background.paper" : "background.default",
-    px: { xs: 1, md: 1.5 },
-    py: { xs: 0.25, md: 0.5 },
+    px: { xs: 1, md: 1.25 },
+    py: { xs: 0.25, md: 0.35 },
     borderRadius: 50,
     boxShadow: 1,
   }),

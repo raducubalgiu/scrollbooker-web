@@ -8,15 +8,27 @@ import { SelectedBookingItem } from "../../BookingModule";
 type BookingCartContentProps = {
   selectedItems: SelectedBookingItem[];
   selectedEmployeeId: number | null;
+  instantBooking: boolean;
 };
 
 const BookingCartContent = ({
   selectedItems,
   selectedEmployeeId,
+  instantBooking,
 }: BookingCartContentProps) => {
   return (
     <Box sx={styles.container}>
-      {isEmpty(selectedItems) ? (
+      {!instantBooking ? (
+        <Stack spacing={1} sx={{ textAlign: "center", mt: 4, px: 2 }}>
+          <Typography variant="body1" fontWeight={700}>
+            Acest business nu oferă rezervare instant
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Scrie-i pe WhatsApp sau sună-l folosind butoanele de mai jos
+            pentru a stabili o programare.
+          </Typography>
+        </Stack>
+      ) : isEmpty(selectedItems) ? (
         <Typography
           variant="body1"
           color="text.secondary"
