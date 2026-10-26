@@ -38,8 +38,7 @@ export default function FeedStateProvider({
   const [appliedServiceIds, setAppliedServiceIds] = useState<Set<number>>(
     new Set()
   );
-  const [appliedOnlyVideoReviews, setAppliedOnlyVideoReviews] =
-    useState(false);
+  const [appliedOnlyVideoReviews, setAppliedOnlyVideoReviews] = useState(false);
   const [appliedOnlyNearby, setAppliedOnlyNearby] = useState(false);
 
   const setAppliedFilters = useCallback(
