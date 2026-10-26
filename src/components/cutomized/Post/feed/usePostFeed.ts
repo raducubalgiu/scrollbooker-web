@@ -13,7 +13,10 @@ import { patchFollowInAllCaches } from "@/utils/postCache";
 import { useFeedPaginationPrefetch } from "./useFeedPaginationPrefetch";
 import { useSharePost } from "@/controllers/social/share.controller";
 import { useDeletePost } from "@/controllers/social/post.controller";
-import { useRecordPostContactClick } from "@/controllers/social/engagement.controller";
+import {
+  useRecordPostContactClick,
+  useRecordProfileVisit,
+} from "@/controllers/social/engagement.controller";
 import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
@@ -67,6 +70,7 @@ export const usePostFeed = ({
   } = useSharePost();
   const { mutate: deletePost, isPending: isLoadingDelete } = useDeletePost();
   const { mutate: recordContactClick } = useRecordPostContactClick();
+  const { mutate: recordProfileVisit } = useRecordProfileVisit();
 
   const currentPost = posts[currentIndex] ?? null;
 
@@ -177,6 +181,19 @@ export const usePostFeed = ({
     [currentPost, recordContactClick, engagementSource]
   );
 
+  const handleNavigateToUser = useCallback(() => {
+    if (!currentPost) return;
+    const { user } = currentPost;
+
+    recordProfileVisit({
+      userId: user.id,
+      postId: currentPost.id,
+      source: engagementSource,
+    });
+
+    navigateTo(AppRoutes.profile(user.username, user.profession));
+  }, [currentPost, recordProfileVisit, engagementSource, navigateTo]);
+
   const handleConfirmDelete = useCallback(() => {
     if (!currentPost) return;
 
@@ -206,7 +223,7 @@ export const usePostFeed = ({
     onStatisticsClick: () => setIsStatisticsOpen(true),
     onEditClick: () => {},
     onDeleteClick: () => setIsDeleteConfirmOpen(true),
-    onNavigateToUser: () => {},
+    onNavigateToUser: handleNavigateToUser,
     onContactClick: handleContactClick,
   };
 

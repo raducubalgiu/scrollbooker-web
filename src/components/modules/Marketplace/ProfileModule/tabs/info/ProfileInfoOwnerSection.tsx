@@ -11,12 +11,24 @@ import {
 } from "@mui/material";
 import React from "react";
 import NextLink from "next/link";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
+import { useRecordProfileVisit } from "@/controllers/social/engagement.controller";
 
 type ProfileInfoOwnerSectionProps = {
 	owner: UserProfileAboutOwner;
 };
 
 const ProfileInfoOwnerSection = ({ owner }: ProfileInfoOwnerSectionProps) => {
+	const { mutate: recordProfileVisit } = useRecordProfileVisit();
+
+	const handleNavigateToProfile = () => {
+		recordProfileVisit({
+			userId: owner.id,
+			postId: null,
+			source: EngagementSourceEnum.BUSINESS_PROFILE,
+		});
+	};
+
 	return (
 		<Card elevation={0} sx={styles.schedulesContainer}>
 			<CardContent sx={styles.contentContainer}>
@@ -46,6 +58,7 @@ const ProfileInfoOwnerSection = ({ owner }: ProfileInfoOwnerSectionProps) => {
 				<Button
 					component={NextLink}
 					href={AppRoutes.profile(owner.username, owner.profession)}
+					onClick={handleNavigateToProfile}
 					variant="outlined"
 					color="secondary"
 					fullWidth

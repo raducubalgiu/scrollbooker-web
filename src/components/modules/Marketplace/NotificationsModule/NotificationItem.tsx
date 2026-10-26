@@ -27,8 +27,10 @@ import {
   RepostNotificationData,
 } from "@/ts/models/user/Notification";
 import { NotificationTypeEnum } from "@/ts/enums/NotificationTypeEnum";
+import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFollow, useUnfollow } from "@/controllers/social/follow.controller";
+import { useRecordProfileVisit } from "@/controllers/social/engagement.controller";
 import Badge from "@mui/material/Badge";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
@@ -54,6 +56,7 @@ export default function NotificationItem({
 
   const { mutate: follow } = useFollow();
   const { mutate: unfollow } = useUnfollow();
+  const { mutate: recordProfileVisit } = useRecordProfileVisit();
 
   const handleFollow = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -367,6 +370,17 @@ export default function NotificationItem({
 
   const targetHref = getTargetHref();
 
+  const handleNavigate = () => {
+    if (sender?.id) {
+      recordProfileVisit({
+        userId: sender.id,
+        postId: null,
+        source: EngagementSourceEnum.OTHER,
+      });
+    }
+    onNavigate();
+  };
+
   const itemContent = (
     <>
       <Stack
@@ -451,7 +465,7 @@ export default function NotificationItem({
         <ListItemButton
           component={NextLink}
           href={targetHref}
-          onClick={onNavigate}
+          onClick={handleNavigate}
           sx={{ py: { xs: 1.5, lg: 2.5 } }}
         >
           {itemContent}

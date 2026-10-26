@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import axios from "axios";
 import {
   ContactClickCreate,
@@ -70,21 +71,18 @@ export const useRecordContactClick = () => {
 
 type RecordProfileVisitParams = {
   userId: number;
-  businessId: number | null;
   postId: number | null;
   source: EngagementSourceEnum;
 };
 
 const recordProfileVisit = ({
   userId,
-  businessId,
   postId,
   source,
 }: RecordProfileVisitParams) => {
   const body: ProfileVisitsCreate = {
     event_id: crypto.randomUUID(),
     user_id: userId,
-    business_id: businessId,
     post_id: postId,
     source,
     captured_at: Date.now(),
@@ -94,7 +92,14 @@ const recordProfileVisit = ({
 };
 
 export const useRecordProfileVisit = () => {
+  const { data: session } = useSession();
+
   return useMutation({
-    mutationFn: recordProfileVisit,
+    mutationFn: (params: RecordProfileVisitParams) => {
+      if (params.userId === session?.user_id) {
+        return Promise.resolve(null);
+      }
+      return recordProfileVisit(params);
+    },
   });
 };

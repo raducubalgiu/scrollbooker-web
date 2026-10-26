@@ -84,6 +84,7 @@ const PostOverlay = ({
               user={user}
               profession={user?.profession}
               distance={distanceKm}
+              onNavigateToUser={callbacks.onNavigateToUser}
             />
 
             {description && description.length > 0 && (
