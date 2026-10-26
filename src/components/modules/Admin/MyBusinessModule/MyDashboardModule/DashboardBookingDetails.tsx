@@ -77,6 +77,18 @@ export default function DashboardBookingDetails({
             highlight
           />
         </Grid>
+        <Grid size={{ xs: 6, sm: 4 }}>
+          <StatCard
+            label={t("profileVisits")}
+            value={`${data.profile_visits_count}`}
+          />
+        </Grid>
+        <Grid size={{ xs: 6, sm: 4 }}>
+          <StatCard
+            label={t("uniqueProfileVisitors")}
+            value={`${data.unique_profile_visitors_count}`}
+          />
+        </Grid>
       </Grid>
 
       <Box

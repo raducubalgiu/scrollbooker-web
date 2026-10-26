@@ -10,6 +10,7 @@ import ShareIcon from "@/assets/icons/ic_share_new.svg";
 import BookmarkIconOutline from "@/assets/icons/ic_bookmark_outline.svg";
 import CustomSvg from "@/components/core/CustomSvg/CustomSvg";
 import { PostAnalyticsSummary } from "@/ts/models/social/PostAnalyticsSummary";
+import { formatPrice } from "@/utils/formatPrice";
 import { groupSourceBreakdown } from "./postAnalyticsSourceLabels";
 
 type PostStatisticsContentProps = {
@@ -41,6 +42,21 @@ const PostStatisticsContent = ({ summary }: PostStatisticsContentProps) => {
     { label: "Vizitatori unici", value: String(summary.unique_viewers_count) },
     { label: "Timp total", value: formatWatchTime(summary.watch_time_ms) },
     { label: "Medie vizualizare", value: formatWatchTime(summary.average_watch_time_ms) },
+  ];
+
+  const conversionCards = summary.instant_booking
+    ? [
+        { label: "Rezervări", value: String(summary.bookings_count) },
+        { label: "Venit din rezervări", value: `${formatPrice(summary.bookings_revenue)} RON` },
+      ]
+    : [
+        { label: "Click-uri WhatsApp", value: String(summary.whatsapp_clicks_count) },
+        { label: "Click-uri telefon", value: String(summary.call_clicks_count) },
+      ];
+
+  const engagementCards = [
+    ...conversionCards,
+    { label: "Vizite din profil", value: String(summary.profile_visits_count) },
   ];
 
   const groupedSources = groupSourceBreakdown(summary.source_breakdown);
@@ -102,7 +118,29 @@ const PostStatisticsContent = ({ summary }: PostStatisticsContentProps) => {
         ))}
       </Box>
 
-      {groupedSources.length > 0 && (
+      <Typography variant="subtitle2" fontWeight={700} sx={{ pt: 1 }}>
+        {summary.instant_booking ? "Conversii" : "Interes de contactare"}
+      </Typography>
+
+      <Box sx={styles.cardsGrid}>
+        {engagementCards.map((card) => (
+          <Box key={card.label} sx={styles.card}>
+            <Typography
+              variant="caption"
+              fontWeight={700}
+              color="text.secondary"
+              noWrap
+            >
+              {card.label}
+            </Typography>
+            <Typography variant="h6" fontWeight={700} noWrap>
+              {card.value}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+
+      {summary.instant_booking && groupedSources.length > 0 && (
         <>
           <Typography variant="subtitle2" fontWeight={700} sx={{ pt: 1 }}>
             Surse de trafic

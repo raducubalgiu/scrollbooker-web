@@ -15,6 +15,7 @@ export type PostAnalyticsSourceBreakdownItem = {
 export type PostAnalyticsSummary = {
   post_id: number;
   thumbnail_url: string | null;
+  instant_booking: boolean;
   views_count: number;
   unique_viewers_count: number;
   watch_time_ms: number;
@@ -24,5 +25,10 @@ export type PostAnalyticsSummary = {
   comment_count: number;
   share_count: number;
   bookmark_count: number;
+  bookings_count: number;
+  bookings_revenue: number;
+  whatsapp_clicks_count: number;
+  call_clicks_count: number;
+  profile_visits_count: number;
   source_breakdown: PostAnalyticsSourceBreakdownItem[];
 };
