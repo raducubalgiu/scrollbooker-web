@@ -160,8 +160,24 @@ export function FeedVideoPool({
       }
     };
 
+    // Safari/iOS cere ca play() nemut să fie declanșat sincron, chiar în
+    // handler-ul gestului — un play() pornit dintr-un useEffect care
+    // reacționează la isActive (câteva tick-uri mai târziu) e tratat ca
+    // "neconectat la gest" și respins cu NotAllowedError, fără nicio
+    // reîncercare posibilă pe timer. Reîncercăm aici, necondiționat, la
+    // fiecare swipe, pe indexul deja agreat de IntersectionObserver — nu
+    // recalculăm un index separat (ar reintroduce cursa "alt video cântă").
+    // Pe un video care redă deja, play() e un no-op inofensiv.
+    const retryPlayOnGesture = () => {
+      const activeIndex = lastSettledIndexRef.current;
+      if (activeIndex === null) return;
+      const video = itemRefs.current.get(activeIndex)?.querySelector("video");
+      video?.play().catch(() => {});
+    };
+
     const handleTouchEnd = () => {
       if (!hasMoved) return;
+      retryPlayOnGesture();
 
       const containerRect = container.getBoundingClientRect();
       const containerArea = containerRect.width * containerRect.height;
