@@ -97,10 +97,10 @@ const CommentThread = ({
             }}
           >
             <Box sx={{ width: 24, height: 1.5, bgcolor: "divider" }} />
-            <Typography color="text.secondary" fontWeight={600}>
+            <Typography variant="body2" color="text.secondary" fontWeight={600}>
               {isRepliesOpen ? "Ascunde răspunsurile" : "Vezi răspunsurile"}
             </Typography>
-            <Typography color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               ({rootComment.replies_count})
             </Typography>
           </ButtonBase>

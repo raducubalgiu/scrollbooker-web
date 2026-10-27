@@ -59,10 +59,9 @@ const EmojiPicker = ({ onEmojiSelect }: EmojiPickerProps) => {
     <>
       <IconButton
         onClick={handleOpen}
-        size="large"
-        sx={{ color: "text.secondary" }}
+        sx={{ color: "text.secondary", width: 25, height: 25 }}
       >
-        <MoodOutlinedIcon fontSize="large" />
+        <MoodOutlinedIcon sx={{ fontSize: 25 }} />
       </IconButton>
 
       <Popover

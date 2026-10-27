@@ -16,17 +16,18 @@ export default function NearbyBusinessImage({
   return (
     <Box sx={styles.imageContainer}>
       {hasImage ? (
-        <Image
-          src={url}
-          alt={username}
-          fill
-          sizes="(max-width: 600px) 100vw, 50vw"
-          className="business-image"
-          style={{
-            objectFit: "cover",
-            transition: "transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
-          }}
-        />
+        <Box className="imageWrapper" sx={styles.imageWrapper}>
+          <Image
+            src={url}
+            alt={username}
+            fill
+            sizes="(max-width: 600px) 100vw, 50vw"
+            style={{
+              objectFit: "cover",
+              backgroundColor: "#eee",
+            }}
+          />
+        </Box>
       ) : (
         <Box sx={styles.placeholderContainer}>
           <InsertPhotoOutlinedIcon sx={{ fontSize: 40, opacity: 0.7 }} />
@@ -58,5 +59,11 @@ const styles = {
     color: "text.disabled",
     p: 2,
     textAlign: "center",
+  },
+  imageWrapper: {
+    position: "absolute",
+    inset: 0,
+    transition: "transform 0.3s",
+    backgroundColor: "background.paper",
   },
 };

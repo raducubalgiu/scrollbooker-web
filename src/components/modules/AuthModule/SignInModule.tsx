@@ -102,9 +102,7 @@ export default function SignInModule() {
     >
       <PageGlow />
 
-      <Box sx={{ display: { xs: "none", md: "block" } }}>
-        <TopBar />
-      </Box>
+      <TopBar />
 
       <Box
         sx={{

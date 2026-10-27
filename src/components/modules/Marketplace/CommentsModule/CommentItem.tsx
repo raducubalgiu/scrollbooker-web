@@ -41,14 +41,19 @@ const CommentItem = ({
           alignItems="center"
           sx={{ flexWrap: "wrap" }}
         >
-          <Typography fontWeight={700}>{comment.user.fullname}</Typography>
+          <Typography fontWeight={600} variant="body2">
+            {comment.user.fullname}
+          </Typography>
 
           <Typography variant="caption" color="text.secondary">
             {dayjs(comment.created_at).fromNow()}
           </Typography>
         </Stack>
 
-        <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+        <Typography
+          variant="body2"
+          sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+        >
           {comment.text}
         </Typography>
 
@@ -60,9 +65,10 @@ const CommentItem = ({
         >
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography
+              variant="body2"
               color="text.secondary"
               fontWeight={600}
-              sx={{ cursor: "pointer", fontSize: { xs: 13 } }}
+              sx={{ cursor: "pointer" }}
               onClick={() => onReply(comment)}
             >
               Răspunde

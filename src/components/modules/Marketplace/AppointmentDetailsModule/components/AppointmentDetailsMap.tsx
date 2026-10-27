@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
@@ -25,22 +25,16 @@ const AppointmentDetailsMap = ({ business }: AppointmentDetailsMapProps) => {
       prefetch={false}
       onClick={(e) => e.stopPropagation()}
     >
-      <Paper sx={styles.container}>
+      <Box sx={styles.container}>
         <Box sx={styles.imageContainer}>
-          <Image
-            src={business.map_url || "/placeholder.jpg"}
-            alt="Locație Business"
-            fill
-            sizes="(max-width: 900px) 100vw, 50vw"
-            style={{ objectFit: "cover", borderRadius: 15 }}
-          />
           {hasImage ? (
             <Image
               src={business.map_url || "/placeholder.jpg"}
               alt="Locație Business"
               fill
               sizes="(max-width: 900px) 100vw, 50vw"
-              style={{ objectFit: "cover", borderRadius: 15 }}
+              style={{ objectFit: "cover" }}
+              priority
             />
           ) : (
             <Box sx={styles.placeholderContainer}>
@@ -53,15 +47,15 @@ const AppointmentDetailsMap = ({ business }: AppointmentDetailsMapProps) => {
         </Box>
 
         <Stack mt={2.5} gap={1}>
-          <Typography color="text.secondary" variant="h6">
+          <Typography color="text.secondary" variant="body2">
             {business.address}
           </Typography>
 
-          <Typography color="primary" variant="h6" fontWeight={600}>
+          <Typography color="primary" fontWeight={600}>
             Obține indicații
           </Typography>
         </Stack>
-      </Paper>
+      </Box>
     </Link>
   );
 };
@@ -73,10 +67,12 @@ const styles = {
     position: { xs: "relative", md: "sticky" },
     top: { md: 24 },
     overflow: "hidden",
-    p: { md: 3 },
     borderRadius: 5,
     cursor: "pointer",
     boxShadow: { xs: "none", md: "0px 5px 16px rgba(0,0,0,0.1)" },
+    border: "1px solid transparent",
+    transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+    padding: { xs: 0, md: 3 },
 
     "&:hover": {
       boxShadow: { xs: "none", md: "0px 10px 35px rgba(0,0,0,0.1)" },
@@ -85,8 +81,11 @@ const styles = {
   },
   imageContainer: {
     position: "relative",
-    height: { xs: 250, md: 400 },
     width: "100%",
+    aspectRatio: "16 / 9",
+    borderRadius: 4,
+    overflow: "hidden",
+    bgcolor: "action.hover",
   },
   placeholderContainer: {
     display: "flex",

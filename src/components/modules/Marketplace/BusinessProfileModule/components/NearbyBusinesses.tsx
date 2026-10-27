@@ -24,7 +24,9 @@ const NearbyBusinesses = ({ businesses }: NearbyBusinessesProps) => {
   const handlePrev = () => setCurrentSlide(0);
 
   return (
-    <Box sx={{ py: 4, borderTop: "1px solid", borderColor: "divider", mt: 5 }}>
+    <Box
+      sx={{ py: 4, borderTop: "1px solid", borderColor: "divider", mt: 2.5 }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -33,7 +35,7 @@ const NearbyBusinesses = ({ businesses }: NearbyBusinessesProps) => {
           mb: 3,
         }}
       >
-        <Typography variant="h3" fontWeight={600}>
+        <Typography variant="h4" fontWeight={700}>
           În apropiere
         </Typography>
 

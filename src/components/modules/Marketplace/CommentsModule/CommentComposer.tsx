@@ -47,16 +47,10 @@ const CommentComposer = ({
   const styles = {
     pill: {
       bgcolor: "background.paper",
-      borderRadius: 3,
+      borderRadius: 7.5,
       px: 2,
       py: 1.5,
     },
-    // theme.ts aplică global, prin MuiCssBaseline, un stil de "câmp de
-    // formular" oricărui <textarea> (padding, minHeight: 44, un glow pe
-    // focus) — folosit intenționat de alte textarea-uri din app
-    // (descrieri, recenzii scrise etc.). Acest composer e un input
-    // minimal, tip TikTok/Instagram, deci trebuie să anuleze explicit
-    // acele proprietăți.
     input: {
       "& .MuiInputBase-root": {
         padding: 0,

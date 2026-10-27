@@ -84,21 +84,7 @@ const BusinessPhotosTab = ({
             gap={2.5}
           >
             <Stack spacing={0.5} sx={{ width: "100%", minWidth: 0 }}>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  fontSize: {
-                    xs: "1.5rem",
-                    sm: "2rem",
-                    md: "2.5rem",
-                    lg: "3rem",
-                  },
-                  lineHeight: 1.2,
-                  wordBreak: "break-word",
-                }}
-              >
+              <Typography variant="h3" textTransform="uppercase">
                 {fullname}
               </Typography>
 
@@ -112,7 +98,7 @@ const BusinessPhotosTab = ({
                   variant="h4"
                   sx={{
                     fontWeight: 600,
-                    fontSize: { xs: "1.25rem", md: "1.75rem" },
+                    fontSize: { xs: "1.25rem", md: "1.5rem" },
                   }}
                 >
                   {formatRating(ratings_average)}
@@ -121,14 +107,14 @@ const BusinessPhotosTab = ({
                   value={ratings_average || 0}
                   precision={0.5}
                   readOnly
-                  size={"large"}
-                  sx={{ fontSize: { xs: "1.5rem", md: "2.125rem" } }}
+                  size="small"
+                  sx={{ fontSize: { xs: "1.5rem", md: "1.8rem" } }}
                 />
                 <Typography
                   variant="h4"
                   sx={{
                     fontWeight: 600,
-                    fontSize: { xs: "1.1rem", md: "1.75rem" },
+                    fontSize: { xs: "1.1rem", md: "1.5rem" },
                     color: "text.secondary",
                   }}
                 >
@@ -183,8 +169,8 @@ const BusinessPhotosTab = ({
                 startIcon={
                   <IosShareIcon
                     sx={{
-                      width: { xs: 20, md: 24 },
-                      height: { xs: 20, md: 24 },
+                      width: { xs: 20, md: 20 },
+                      height: { xs: 20, md: 20 },
                     }}
                   />
                 }
@@ -213,8 +199,8 @@ const BusinessPhotosTab = ({
             display: { xs: "flex", md: "none" },
             position: "absolute",
             top: 12,
-            left: 12,
-            right: 12,
+            left: 0,
+            right: 0,
             zIndex: 2,
           }}
         >

@@ -76,6 +76,8 @@ export const useBookingState = ({
   });
 
   const handleSelectItem = useCallback((item: SelectedBookingItem) => {
+    console.log("ITEM!!!", item);
+
     setSelectedItems((prev) => {
       const exists = prev.find((i) => i.productId === item.productId);
       if (exists) {
@@ -88,10 +90,6 @@ export const useBookingState = ({
     });
   }, []);
 
-  // La fel ca pe iOS (removeBookingItem): dacă eliminarea golește coșul,
-  // nu mai are sens ca selectedEmployeeId să rămână setat — altfel pasul
-  // de "Verificare servicii" ar rămâne inconsistent (specialist selectat,
-  // dar fără niciun serviciu de verificat).
   const handleRemoveItem = useCallback(
     (item: SelectedBookingItem) => {
       const next = selectedItems.filter((i) => i.productId !== item.productId);
@@ -141,17 +139,6 @@ export const useBookingState = ({
     if (currentStep === BookingStepEnum.CONFIRM) {
       if (!selectedTimeSlot || !userId) return;
 
-      // selectedEmployeeId e mereu sursa corectă aici — fie preselectat
-      // din URL (profilul unui angajat specific), fie ales explicit în
-      // pasul Specialists (deja validat acolo de isNextDisabled). Cade pe
-      // businessOwnerId doar când n-a fost selectat niciun angajat
-      // vreodată — cazul unic unde asta se întâmplă legitim este un
-      // business solo, fără angajați (pasul Specialists e skip-uit).
-      // Varianta veche (`isEmployee ? selectedEmployeeId : userId`)
-      // ignora selecția reală de fiecare dată când userId === businessOwnerId
-      // (adică exact cazul normal de business CU angajați), recăzând pe
-      // owner indiferent pe cine alesese userul — de-aici eroarea "nu
-      // oferă acest serviciu" chiar și cu un singur produs în coș.
       const targetUserId = selectedEmployeeId ?? businessOwnerId;
 
       const allItemsHaveOffering = selectedItems.every((item) =>

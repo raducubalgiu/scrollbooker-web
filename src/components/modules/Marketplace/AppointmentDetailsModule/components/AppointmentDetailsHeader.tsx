@@ -91,7 +91,7 @@ const AppointmentDetailsHeader = ({
         </Alert>
       )}
 
-      <Typography variant="h4" fontWeight={700} mt={2}>
+      <Typography variant="h4" fontWeight={600} mt={2}>
         {dayjs(startDate).format("dddd, D MMMM YYYY HH:mm")}
       </Typography>
       <Typography variant="h6" color="text.secondary" fontWeight={500} mt={1}>
@@ -118,7 +118,7 @@ const AppointmentDetailsHeader = ({
             <Typography variant="h6" fontWeight={600}>
               {isCustomer ? user.fullname : customer.fullname}
             </Typography>
-            <Typography color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               {isCustomer
                 ? `${user.profession} • ${user.ratings_count} recenzii`
                 : customer.profession}

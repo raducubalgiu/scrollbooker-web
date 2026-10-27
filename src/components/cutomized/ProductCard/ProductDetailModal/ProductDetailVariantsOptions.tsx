@@ -13,8 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { ChangeEvent } from "react";
-import Protected from "@/components/cutomized/Protected/Protected";
-import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 type ProductDetailVariantsOptionsProps = {
   variants: ProductVariant[];
@@ -69,13 +67,7 @@ const ProductDetailVariantsOptions = ({
                 }
                 labelPlacement="start"
                 control={
-                  instantBooking ? (
-                    <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-                      <Radio sx={styles.radioStyles} />
-                    </Protected>
-                  ) : (
-                    <></>
-                  )
+                  instantBooking ? <Radio sx={styles.radioStyles} /> : <></>
                 }
                 sx={styles.formControl}
               />

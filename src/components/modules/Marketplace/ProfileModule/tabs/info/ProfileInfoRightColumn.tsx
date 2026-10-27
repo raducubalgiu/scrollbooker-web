@@ -7,21 +7,23 @@ import { UserProfileAboutOwner } from "@/ts/models/user/UserProfileAbout";
 import ProfileInfoOwnerSection from "./ProfileInfoOwnerSection";
 
 type ProfileInfoRightColumnProps = {
+  isBusinessOwner: boolean;
   schedules: Schedule[];
   owner: UserProfileAboutOwner;
 };
 
 const ProfileInfoRightColumn = ({
+  isBusinessOwner,
   schedules,
   owner,
 }: ProfileInfoRightColumnProps) => {
   return (
     <Box sx={styles.container}>
-      <ProfileInfoOwnerSection owner={owner} />
+      {!isBusinessOwner && <ProfileInfoOwnerSection owner={owner} />}
 
       <Card elevation={0} sx={styles.schedulesContainer}>
         <CardContent sx={{ p: 3 }}>
-          <Typography variant="h6" fontWeight="700" mb={2.5} sx={styles.title}>
+          <Typography variant="h6" fontWeight={700} mb={2.5} sx={styles.title}>
             <AccessTime fontSize="medium" sx={{ color: "text.secondary" }} />
             Program de lucru
           </Typography>

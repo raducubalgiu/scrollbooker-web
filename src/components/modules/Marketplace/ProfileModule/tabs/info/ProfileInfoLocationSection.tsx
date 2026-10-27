@@ -47,7 +47,11 @@ const styles = {
   imageContainer: {
     position: "relative",
     width: "100%",
-    height: 400,
+    aspectRatio: "16 / 9",
+    borderRadius: 4,
+    overflow: "hidden",
+    border: "1px solid",
+    borderColor: "divider",
   },
   addressContainer: {
     p: 2,

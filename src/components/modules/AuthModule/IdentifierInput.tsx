@@ -1,6 +1,6 @@
 "use client";
 
-import { MenuItem, Stack, TextField } from "@mui/material";
+import { Box, InputAdornment, MenuItem, TextField } from "@mui/material";
 import Input from "@/components/core/Input/Input";
 import { required } from "@/utils/validation-rules";
 
@@ -44,44 +44,67 @@ export default function IdentifierInput({
   }
 
   return (
-    <Stack direction="row">
-      <TextField
-        select
-        size="medium"
-        value={identifierType}
-        onChange={(event) =>
-          onIdentifierTypeChange(event.target.value as AuthIdentifierType)
-        }
-        sx={{
-          minWidth: 132,
-          "& .MuiOutlinedInput-root": {
-            borderTopRightRadius: 0,
-            borderBottomRightRadius: 0,
-          },
-        }}
-      >
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
-
-      <Input
-        name={name}
-        rules={isRequired}
-        placeholder={activePlaceholder}
-        type={identifierType === "email" ? "email" : "text"}
-        size="medium"
-        fullWidth
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            borderTopLeftRadius: 0,
-            borderBottomLeftRadius: 0,
-            marginLeft: "-1px",
-          },
-        }}
-      />
-    </Stack>
+    <Input
+      name={name}
+      rules={isRequired}
+      placeholder={activePlaceholder}
+      type={identifierType === "email" ? "email" : "text"}
+      size="medium"
+      fullWidth
+      slotProps={{
+        input: {
+          sx: { pl: 1.5 },
+          startAdornment: (
+            <InputAdornment
+              position="start"
+              sx={{ margin: 0, marginRight: 1.5 }}
+            >
+              <TextField
+                select
+                size="small"
+                variant="standard"
+                value={identifierType}
+                onChange={(event) =>
+                  onIdentifierTypeChange(
+                    event.target.value as AuthIdentifierType
+                  )
+                }
+                slotProps={{
+                  select: {
+                    disableUnderline: true,
+                    sx: {
+                      py: 0.5,
+                      fontWeight: 500,
+                      color: "text.secondary",
+                      minWidth: "auto",
+                      "&:focus": {
+                        backgroundColor: "transparent",
+                      },
+                    },
+                  },
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                }}
+              >
+                {options.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Box
+                sx={{
+                  width: "1px",
+                  height: "24px",
+                  bgcolor: "divider",
+                  ml: 1,
+                }}
+              />
+            </InputAdornment>
+          ),
+        },
+      }}
+    />
   );
 }
