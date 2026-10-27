@@ -12,6 +12,7 @@ import AuthForm, {
   AuthFormValues,
 } from "@/components/modules/AuthModule/AuthForm";
 import TopBar from "@/components/core/TopBar/TopBar";
+import PageGlow from "@/components/core/PageGlow/PageGlow";
 
 const identifierOptions = (t: ReturnType<typeof useTranslations<"signin">>) => [
   {
@@ -90,7 +91,17 @@ export default function SignInModule() {
   };
 
   return (
-    <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        position: "relative",
+        overflow: "hidden",
+        minHeight: "100dvh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <PageGlow />
+
       <Box sx={{ display: { xs: "none", md: "block" } }}>
         <TopBar />
       </Box>
@@ -120,7 +131,6 @@ export default function SignInModule() {
             orLabel={t("or")}
             googleLabel={t("continueWithGoogle")}
             onGoogleClick={handleGoogleSignIn}
-            appleLabel={t("continueWithApple")}
             footerText={t("noAccount")}
             footerLinkText={t("register")}
             footerHref={AppRoutes.register()}

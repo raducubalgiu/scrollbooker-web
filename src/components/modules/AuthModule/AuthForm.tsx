@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import NextLink from "next/link";
-import AppleIcon from "@mui/icons-material/Apple";
 import PasswordInput from "@/components/core/Input/PasswordInput";
 import GoogleIcon from "@/components/core/icons/GoogleIcon";
 import { required } from "@/utils/validation-rules";
@@ -50,7 +49,6 @@ type AuthFormProps = {
   googleLabel: string;
   isGoogleLoading?: boolean;
   onGoogleClick: () => void;
-  appleLabel: string;
   footerText: string;
   footerLinkText: string;
   footerHref: string;
@@ -70,7 +68,6 @@ export default function AuthForm({
   googleLabel,
   isGoogleLoading,
   onGoogleClick,
-  appleLabel,
   footerText,
   footerLinkText,
   footerHref,
@@ -116,7 +113,7 @@ export default function AuthForm({
         >
           {googleLabel}
         </Button>
-
+        {/* 
         <Button
           variant="outlined"
           fullWidth
@@ -125,7 +122,7 @@ export default function AuthForm({
           sx={oauthButtonSx}
         >
           {appleLabel}
-        </Button>
+        </Button> */}
       </Stack>
 
       <Divider sx={{ mb: 3 }}>

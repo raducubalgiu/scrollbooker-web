@@ -20,6 +20,7 @@ import {
   RegistrationStepEnum,
 } from "@/ts/enums/RegistrationStepEnum";
 import TopBar from "@/components/core/TopBar/TopBar";
+import PageGlow from "@/components/core/PageGlow/PageGlow";
 import { useTranslations } from "next-intl";
 
 import CollectEmailVerificationStep from "./shared/CollectEmailVerification";
@@ -92,6 +93,8 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
 
   return (
     <Box sx={styles.outer}>
+      <PageGlow />
+
       <TopBar
         rightContent={
           <Button
@@ -146,6 +149,8 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
 
 const styles = {
   outer: {
+    position: "relative",
+    overflow: "hidden",
     bgcolor: "background.default",
     height: "100dvh",
     display: "flex",
