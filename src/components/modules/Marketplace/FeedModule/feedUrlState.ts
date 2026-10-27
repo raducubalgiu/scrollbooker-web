@@ -1,6 +1,17 @@
+import { AppRoutes } from "@/utils/routes";
 import { FeedTabEnum } from "./FeedTabs";
 
 export const LAST_FEED_URL_STORAGE_KEY = "lastFeedUrl";
+
+export function getLastFeedUrl(): string {
+  try {
+    return (
+      sessionStorage.getItem(LAST_FEED_URL_STORAGE_KEY) ?? AppRoutes.feed()
+    );
+  } catch {
+    return AppRoutes.feed();
+  }
+}
 
 export type FeedUrlState = {
   tab: FeedTabEnum;

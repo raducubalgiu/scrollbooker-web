@@ -15,6 +15,7 @@ const SWIPE_MOVE_THRESHOLD_PX = 10;
 type FeedVideoPoolProps = {
   posts: Post[];
   currentIndex: number;
+  initialIndex?: number | undefined;
   loaders: PostActionLoaders;
   callbacks: PostActionCallbacks;
   onIndexChange: (index: number) => void;
@@ -25,6 +26,7 @@ type FeedVideoPoolProps = {
 export function FeedVideoPool({
   posts,
   currentIndex,
+  initialIndex,
   loaders,
   callbacks,
   onIndexChange,
@@ -50,10 +52,6 @@ export function FeedVideoPool({
     else itemRefs.current.delete(index);
   }, []);
 
-  // Browser-ul decide singur fizica swipe-ului (scroll-snap) — noi doar
-  // ascultăm ce index a devenit "principal" vizual, via IntersectionObserver.
-  // Recreat la fiecare schimbare a numărului de postări (pagination), ca să
-  // observe și elementele nou apărute.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -95,21 +93,15 @@ export function FeedVideoPool({
     return () => observer.disconnect();
   }, [posts.length]);
 
-  // currentIndex schimbat din exterior (butoanele de pe desktop) — scroll
-  // programatic către el. Dacă schimbarea vine chiar din swipe-ul userului
-  // (IntersectionObserver-ul de mai sus a raportat-o deja), nu mai facem
-  // nimic — containerul e deja acolo.
   useLayoutEffect(() => {
     if (currentIndex === lastSettledIndexRef.current) return;
 
-    // Montarea inițială aterizează mereu la index 0 (valoarea implicită din
-    // usePostFeed), înainte ca indexul real restaurat (din URL) să ajungă,
-    // un render mai târziu. Fără acest guard, acest no-op (ești deja la 0,
-    // nimic de scrollat) ar consuma flag-ul "primul scroll", iar corecția
-    // reală care vine imediat după s-ar face "smooth" — exact scroll-ul
-    // vizibil peste videoclipurile intermediare pe care nu-l vrem.
     if (lastSettledIndexRef.current === null && currentIndex === 0) {
       lastSettledIndexRef.current = 0;
+
+      if (initialIndex === undefined || initialIndex === 0) {
+        isFirstScrollRef.current = false;
+      }
       return;
     }
 
@@ -118,9 +110,7 @@ export function FeedVideoPool({
 
     isProgrammaticScrollRef.current = true;
     lastSettledIndexRef.current = currentIndex;
-    // The very first programmatic positioning (landing on the initially
-    // resolved post) must be instant — the user should never see the
-    // feed visibly scroll past the in-between videos on load.
+
     target.scrollIntoView({
       behavior: isFirstScrollRef.current ? "auto" : "smooth",
       block: "start",
@@ -133,7 +123,7 @@ export function FeedVideoPool({
     programmaticScrollTimeoutRef.current = setTimeout(() => {
       isProgrammaticScrollRef.current = false;
     }, PROGRAMMATIC_SCROLL_GUARD_MS);
-  }, [currentIndex]);
+  }, [currentIndex, initialIndex]);
 
   useEffect(() => {
     return () => {
@@ -208,14 +198,6 @@ export function FeedVideoPool({
         return;
       }
 
-      // Nu pornim direct play() pe elementul găsit aici — ar crea o a doua
-      // sursă de adevăr pentru "care index e activ", separată de
-      // IntersectionObserver, care poate diverge (scroll-snap-ul nu s-a
-      // stabilizat încă exact la touchend) și reda un video care nu
-      // devine niciodată isActive=true, deci nu se mai pune pe pauză.
-      // În schimb, anunțăm același index prin canalul unic deja existent —
-      // React actualizează isActive, PostVideoPlayer își pornește el singur
-      // redarea.
       lastSettledIndexRef.current = bestIndex;
       onIndexChangeRef.current(bestIndex);
     };
@@ -254,6 +236,7 @@ export function FeedVideoPool({
                 loaders={loaders}
                 callbacks={callbacks}
                 src={post.media_files?.[0]?.url ?? ""}
+                thumbnailUrl={thumbnailUrl ?? null}
                 isActive={isActive}
                 isLoading={loaders.isLoading && isActive}
                 preload="auto"

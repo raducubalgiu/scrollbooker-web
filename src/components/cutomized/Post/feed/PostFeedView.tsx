@@ -43,6 +43,7 @@ const PostFeedView = ({
 }: PostFeedViewProps) => {
   const {
     currentIndex,
+    initialIndex,
     currentPost,
     goToNext,
     goToPrev,
@@ -114,6 +115,7 @@ const PostFeedView = ({
                 <FeedVideoPool
                   posts={posts}
                   currentIndex={currentIndex}
+                  initialIndex={initialIndex}
                   loaders={loaders}
                   callbacks={callbacks}
                   onIndexChange={handleIndexChange}

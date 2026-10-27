@@ -2,20 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { AppRoutes } from "@/utils/routes";
-import { LAST_FEED_URL_STORAGE_KEY } from "@/components/modules/Marketplace/FeedModule/feedUrlState";
+import { getLastFeedUrl } from "@/components/modules/Marketplace/FeedModule/feedUrlState";
 
-// Starts as the plain /feed route (matches SSR output, no hydration mismatch),
-// then upgrades to whatever feed position the user last left, once mounted.
+// Doar pentru href-ul static/fallback (prefetch, deschidere în tab nou,
+// randare înainte de hidratare) — nu e sursa de adevăr la click. Începe ca
+// /feed simplu (identic cu SSR-ul, fără mismatch de hidratare), apoi se
+// actualizează o dată, la mount. Navigarea reală (onClick) citește mereu
+// live, via getLastFeedUrl(), nu acest hook — vezi feedUrlState.ts.
 export function useLastFeedUrl(): string {
   const [url, setUrl] = useState<string>(AppRoutes.feed());
 
   useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem(LAST_FEED_URL_STORAGE_KEY);
-      if (stored) setUrl(stored);
-    } catch {
-      // sessionStorage unavailable (private mode, etc.) — keep the default.
-    }
+    setUrl(getLastFeedUrl());
   }, []);
 
   return url;

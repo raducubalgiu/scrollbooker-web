@@ -32,6 +32,7 @@ type PostVideoPlayerProps = {
   loaders: PostActionLoaders;
   callbacks: PostActionCallbacks;
   src: string;
+  thumbnailUrl?: string | null;
   isActive: boolean;
   isLoading?: boolean;
   preload?: "none" | "metadata" | "auto";
@@ -60,6 +61,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   loaders,
   callbacks,
   src,
+  thumbnailUrl = null,
   isActive,
   isLoading = false,
   preload = "metadata",
@@ -618,6 +620,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         // orice cursă care ar porni play() pe el din afara fluxului normal
         // isActive — nu ne bazăm doar pe .pause() pentru liniște.
         muted={!isActive || isMuted}
+        poster={thumbnailUrl ?? undefined}
         preload={preload}
         loop={false}
         style={videoStyles}

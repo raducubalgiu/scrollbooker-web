@@ -25,6 +25,7 @@ import Protected from "@/components/cutomized/Protected/Protected";
 import { useNotificationsCount } from "@/controllers/user/notification.controller";
 import { useAppointmentsCount } from "@/controllers/booking/appointments.controller";
 import { useLastFeedUrl } from "@/hooks/useLastFeedUrl";
+import { getLastFeedUrl } from "@/components/modules/Marketplace/FeedModule/feedUrlState";
 
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
@@ -270,10 +271,11 @@ const PublicRoutes = ({
       }
 
       if (item.route) {
-        onNavigate(item.route, event);
+        const target = item.route === feedRoute ? getLastFeedUrl() : item.route;
+        onNavigate(target, event);
       }
     },
-    [onNavigate]
+    [onNavigate, feedRoute]
   );
 
   const getItemSelected = useCallback(

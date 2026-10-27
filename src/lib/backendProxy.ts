@@ -45,7 +45,7 @@ async function forwardJson(
     "X-B3-TraceId": randomHex(),
   });
 
-  const params = Object.fromEntries(req.nextUrl.searchParams);
+  const params = req.nextUrl.searchParams;
   const data =
     method === "get" ? undefined : await req.json().catch(() => undefined);
 
