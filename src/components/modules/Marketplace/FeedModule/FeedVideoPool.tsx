@@ -102,6 +102,17 @@ export function FeedVideoPool({
   useLayoutEffect(() => {
     if (currentIndex === lastSettledIndexRef.current) return;
 
+    // Montarea inițială aterizează mereu la index 0 (valoarea implicită din
+    // usePostFeed), înainte ca indexul real restaurat (din URL) să ajungă,
+    // un render mai târziu. Fără acest guard, acest no-op (ești deja la 0,
+    // nimic de scrollat) ar consuma flag-ul "primul scroll", iar corecția
+    // reală care vine imediat după s-ar face "smooth" — exact scroll-ul
+    // vizibil peste videoclipurile intermediare pe care nu-l vrem.
+    if (lastSettledIndexRef.current === null && currentIndex === 0) {
+      lastSettledIndexRef.current = 0;
+      return;
+    }
+
     const target = itemRefs.current.get(currentIndex);
     if (!target) return;
 
@@ -197,9 +208,16 @@ export function FeedVideoPool({
         return;
       }
 
-      const el = itemRefs.current.get(bestIndex);
-      const video = el?.querySelector("video");
-      video?.play().catch(() => {});
+      // Nu pornim direct play() pe elementul găsit aici — ar crea o a doua
+      // sursă de adevăr pentru "care index e activ", separată de
+      // IntersectionObserver, care poate diverge (scroll-snap-ul nu s-a
+      // stabilizat încă exact la touchend) și reda un video care nu
+      // devine niciodată isActive=true, deci nu se mai pune pe pauză.
+      // În schimb, anunțăm același index prin canalul unic deja existent —
+      // React actualizează isActive, PostVideoPlayer își pornește el singur
+      // redarea.
+      lastSettledIndexRef.current = bestIndex;
+      onIndexChangeRef.current(bestIndex);
     };
 
     container.addEventListener("touchstart", handleTouchStart, {

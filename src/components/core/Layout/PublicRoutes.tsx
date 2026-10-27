@@ -24,6 +24,7 @@ import { DRAWER_PADDING_X, ICON_SLOT_SIZE, ITEM_GAP } from "./Drawer.constants";
 import Protected from "@/components/cutomized/Protected/Protected";
 import { useNotificationsCount } from "@/controllers/user/notification.controller";
 import { useAppointmentsCount } from "@/controllers/booking/appointments.controller";
+import { useLastFeedUrl } from "@/hooks/useLastFeedUrl";
 
 type ActiveView = "search" | "notifications" | "appointments" | null;
 
@@ -64,6 +65,7 @@ const getPublicRoutes = ({
   avatar,
   appointmentsCount,
   notificationsCount,
+  feedRoute,
   onOpenNotificationsView,
   onOpenAppointmentsView,
 }: {
@@ -72,13 +74,14 @@ const getPublicRoutes = ({
   avatar: string | null | undefined;
   appointmentsCount: number | undefined;
   notificationsCount: number | undefined;
+  feedRoute: string;
   onOpenSearchView: () => void;
   onOpenNotificationsView: () => void;
   onOpenAppointmentsView: () => void;
 }): NavigationItem[] => [
   {
     label: "Explorează",
-    route: AppRoutes.feed(),
+    route: feedRoute,
     icon: STATIC_ICONS.explore,
     permission: PermissionEnum.NO_PROTECTION,
   },
@@ -217,6 +220,7 @@ const PublicRoutes = ({
   const { data: appointmentsCount } = useAppointmentsCount({
     isEnabled: isAuthenticated,
   });
+  const feedRoute = useLastFeedUrl();
 
   const publicRoutes = React.useMemo(
     () =>
@@ -226,6 +230,7 @@ const PublicRoutes = ({
         avatar: session?.avatar,
         appointmentsCount,
         notificationsCount,
+        feedRoute,
         onOpenSearchView,
         onOpenNotificationsView,
         onOpenAppointmentsView,
@@ -236,6 +241,7 @@ const PublicRoutes = ({
       session?.avatar,
       appointmentsCount,
       notificationsCount,
+      feedRoute,
       onOpenSearchView,
       onOpenNotificationsView,
       onOpenAppointmentsView,

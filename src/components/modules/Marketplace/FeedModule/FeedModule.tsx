@@ -1,7 +1,8 @@
 "use client";
 
 import { Box, useMediaQuery, useTheme } from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import FeedTabs, { FeedTabEnum } from "./FeedTabs";
 import {
   useInfiniteExplorePosts,
@@ -12,7 +13,11 @@ import { usePostFeed } from "@/components/cutomized/Post/feed/usePostFeed";
 import PostFeedView from "@/components/cutomized/Post/feed/PostFeedView";
 import FeedFilterDialog from "./Filters/FeedFilterDialog";
 import FeedFilterMobileOverlay from "./Filters/FeedFilterMobileOverlay";
-import { useFeedState } from "@/providers/FeedStateProvider";
+import {
+  buildFeedUrl,
+  LAST_FEED_URL_STORAGE_KEY,
+  parseFeedUrlState,
+} from "./feedUrlState";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 
@@ -20,16 +25,29 @@ export default function FeedModule() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const {
-    currentTab,
-    currentPostId,
-    appliedServiceIds,
-    appliedOnlyVideoReviews,
-    appliedOnlyNearby,
-    setCurrentTab,
-    setCurrentPostId,
-    setAppliedFilters,
-  } = useFeedState();
+  const searchParams = useSearchParams();
+  const initialUrlState = useMemo(
+    () => parseFeedUrlState(searchParams),
+    // Read once, at mount, as the seed for local state — not meant to react
+    // to later changes (we write the URL ourselves via history.replaceState,
+    // which Next's router doesn't pick back up, by design).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+  const initialPostIdRef = useRef<number | null>(initialUrlState.postId);
+
+  const [currentTab, setCurrentTab] = useState<FeedTabEnum>(
+    initialUrlState.tab
+  );
+  const [appliedServiceIds, setAppliedServiceIds] = useState<Set<number>>(
+    initialUrlState.serviceIds
+  );
+  const [appliedOnlyVideoReviews, setAppliedOnlyVideoReviews] = useState(
+    initialUrlState.onlyVideoReviews
+  );
+  const [appliedOnlyNearby, setAppliedOnlyNearby] = useState(
+    initialUrlState.onlyNearby
+  );
   const [showFilters, setShowFilters] = useState(false);
 
   const {
@@ -63,10 +81,10 @@ export default function FeedModule() {
   const postsCount = useMemo(() => data?.pages[0]?.count ?? 0, [data]);
 
   const initialIndex = useMemo(() => {
-    if (currentPostId == null) return undefined;
-    const idx = posts.findIndex((p) => p.id === currentPostId);
+    if (initialPostIdRef.current == null) return undefined;
+    const idx = posts.findIndex((p) => p.id === initialPostIdRef.current);
     return idx >= 0 ? idx : undefined;
-  }, [currentPostId, posts]);
+  }, [posts]);
 
   const feed = usePostFeed({
     posts,
@@ -82,16 +100,39 @@ export default function FeedModule() {
         : EngagementSourceEnum.FOLLOWING_FEED,
   });
 
+  // Oglindim poziția curentă în URL (fără să trecem prin router-ul Next —
+  // vrem doar bara de adrese/history actualizate, nu un re-render/refetch la
+  // fiecare swipe) și în sessionStorage, ca linkurile de nav către feed să
+  // poată relua exact de aici, nu de la /feed gol.
   useEffect(() => {
-    setCurrentPostId(feed.currentPost?.id ?? null);
-  }, [feed.currentPost?.id, setCurrentPostId]);
+    const url = buildFeedUrl({
+      tab: currentTab,
+      postId: feed.currentPost?.id ?? null,
+      serviceIds: appliedServiceIds,
+      onlyVideoReviews: appliedOnlyVideoReviews,
+      onlyNearby: appliedOnlyNearby,
+    });
+
+    window.history.replaceState(null, "", url);
+    try {
+      sessionStorage.setItem(LAST_FEED_URL_STORAGE_KEY, url);
+    } catch {
+      // sessionStorage unavailable — URL-ul din bară rămâne corect oricum.
+    }
+  }, [
+    currentTab,
+    feed.currentPost?.id,
+    appliedServiceIds,
+    appliedOnlyVideoReviews,
+    appliedOnlyNearby,
+  ]);
 
   const handleTabChange = useCallback(
     (tab: FeedTabEnum) => {
       setCurrentTab(tab);
       feed.handleIndexChange(0);
     },
-    [feed, setCurrentTab]
+    [feed]
   );
 
   const handleToggleFilters = useCallback(() => {
@@ -108,9 +149,11 @@ export default function FeedModule() {
       onlyVideoReviews: boolean,
       onlyNearby: boolean
     ) => {
-      setAppliedFilters(serviceIds, onlyVideoReviews, onlyNearby);
+      setAppliedServiceIds(serviceIds);
+      setAppliedOnlyVideoReviews(onlyVideoReviews);
+      setAppliedOnlyNearby(onlyNearby);
     },
-    [setAppliedFilters]
+    []
   );
 
   const handleRequestLocationAccess = useCallback(() => {

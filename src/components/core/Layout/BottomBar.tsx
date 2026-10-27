@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useNotificationsCount } from "@/controllers/user/notification.controller";
 import { useAppointmentsCount } from "@/controllers/booking/appointments.controller";
+import { useLastFeedUrl } from "@/hooks/useLastFeedUrl";
 import type { Theme } from "@mui/material/styles";
 import type { StaticImageData } from "next/image";
 import { AppRoutes } from "@/utils/routes";
@@ -56,6 +57,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
   const { data: appointmentsCount } = useAppointmentsCount({
     isEnabled: isAuthenticated,
   });
+  const lastFeedUrl = useLastFeedUrl();
 
   const isDarkPage = pathname === "/";
   const isDarkMode = theme.palette.mode === "dark";
@@ -76,7 +78,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
     () => [
       {
         label: "Acasă",
-        route: AppRoutes.feed(),
+        route: lastFeedUrl,
         activeIcon: HomeIconSolid,
         inactiveIcon: HomeIconOutlined,
       },
@@ -110,7 +112,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
         inactiveIcon: PersonIconOutlined,
       },
     ],
-    [username, profession, notificationsCount, appointmentsCount]
+    [username, profession, notificationsCount, appointmentsCount, lastFeedUrl]
   );
 
   const currentIndex = React.useMemo(

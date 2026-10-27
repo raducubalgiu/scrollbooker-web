@@ -614,7 +614,10 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         ref={videoRef}
         controls={false}
         playsInline
-        muted={isMuted}
+        // Plasă de siguranță: un video inactiv rămâne mut indiferent de
+        // orice cursă care ar porni play() pe el din afara fluxului normal
+        // isActive — nu ne bazăm doar pe .pause() pentru liniște.
+        muted={!isActive || isMuted}
         preload={preload}
         loop={false}
         style={videoStyles}

@@ -1,7 +1,7 @@
 import { Box, Drawer, IconButton, Stack, Typography } from "@mui/material";
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import PostLinkedProductsList from "@/components/cutomized/Post/PostLinkedProductsList";
+import PostLinkedProductsList from "@/components/cutomized/Post/sheets/PostLinkedProductsList";
 import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
 import LinkedProductsUserInfo from "./LinkedProductsUserInfo";
 
