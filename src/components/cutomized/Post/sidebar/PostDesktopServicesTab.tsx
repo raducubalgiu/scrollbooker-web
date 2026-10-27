@@ -2,7 +2,7 @@
 
 import { Box } from "@mui/material";
 import React, { memo } from "react";
-import PostLinkedProductsList from "@/components/cutomized/Post/PostLinkedProductsList";
+import PostLinkedProductsList from "@/components/cutomized/Post/sheets/PostLinkedProductsList";
 import { LinkedProducts } from "@/ts/models/booking/product/LinkedProducts";
 
 type PostDesktopServicesTabProps = {

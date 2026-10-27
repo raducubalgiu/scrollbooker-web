@@ -15,7 +15,6 @@ import { ThemeModeEnum } from "../providers/ThemeModeEnum";
 import QueryClientProvider from "../providers/QueryClientProvider";
 import SessionProvider from "../providers/SessionProvider";
 import ToastProvider from "@/providers/ToastProvider";
-import FeedStateProvider from "@/providers/FeedStateProvider";
 import AuthListener from "@/components/core/AuthListener/AuthListener";
 import Layout from "@/components/core/Layout/Layout";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
@@ -77,9 +76,7 @@ export default async function RootLayout({ children }: ChildrenType) {
               >
                 <ToastProvider />
                 <QueryClientProvider>
-                  <FeedStateProvider>
-                    <Layout>{children}</Layout>
-                  </FeedStateProvider>
+                  <Layout>{children}</Layout>
                 </QueryClientProvider>
               </MUIProvider>
             </SessionProvider>
