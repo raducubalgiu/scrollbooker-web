@@ -17,10 +17,26 @@ export default async function GetStartedModule() {
   return (
     <Box
       sx={{
+        position: "relative",
+        overflow: "hidden",
         backgroundColor: LANDING_COLORS.background,
         minHeight: "100dvh",
       }}
     >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "-20%",
+          right: "-10%",
+          width: 560,
+          height: 560,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${LANDING_COLORS.primary}33 0%, transparent 70%)`,
+          filter: "blur(10px)",
+          pointerEvents: "none",
+        }}
+      />
+
       <Container maxWidth="sm" sx={{ py: { xs: 6, md: 10 } }}>
         <Stack
           component={Link}

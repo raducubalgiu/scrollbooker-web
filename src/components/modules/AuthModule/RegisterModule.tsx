@@ -16,6 +16,7 @@ import AuthForm, {
   AuthFormValues,
 } from "@/components/modules/AuthModule/AuthForm";
 import TopBar from "@/components/core/TopBar/TopBar";
+import PageGlow from "@/components/core/PageGlow/PageGlow";
 
 const identifierOptions = (
   t: ReturnType<typeof useTranslations<"register">>
@@ -117,7 +118,17 @@ export default function RegisterModule() {
   };
 
   return (
-    <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        position: "relative",
+        overflow: "hidden",
+        minHeight: "100dvh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <PageGlow />
+
       <Box sx={{ display: { xs: "none", md: "block" } }}>
         <TopBar />
       </Box>
@@ -149,7 +160,6 @@ export default function RegisterModule() {
             googleLabel={t("continueWithGoogle")}
             isGoogleLoading={googleLoading}
             onGoogleClick={handleGoogleSignIn}
-            appleLabel={t("continueWithApple")}
             footerText={t("haveAccount")}
             footerLinkText={t("login")}
             footerHref={AppRoutes.login()}
