@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
   Badge,
@@ -13,6 +13,7 @@ import {
 import { useNotificationsCount } from "@/controllers/user/notification.controller";
 import { useAppointmentsCount } from "@/controllers/booking/appointments.controller";
 import { useLastFeedUrl } from "@/hooks/useLastFeedUrl";
+import { getLastFeedUrl } from "@/components/modules/Marketplace/FeedModule/feedUrlState";
 import type { Theme } from "@mui/material/styles";
 import type { StaticImageData } from "next/image";
 import { AppRoutes } from "@/utils/routes";
@@ -47,6 +48,7 @@ type BottomBarActionItem = {
 
 export default function BottomBar({ username, profession }: BottomBarProps) {
   const theme = useTheme();
+  const router = useRouter();
   const pathname = usePathname() || "/";
   const { status } = useSession();
   const isAuthenticated = status === "authenticated";
@@ -154,6 +156,7 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
         {actions.map((a, index) => {
           const baseIcon =
             currentIndex === index ? a.activeIcon : a.inactiveIcon;
+          const isFeedAction = a.route === lastFeedUrl;
 
           return (
             <BottomNavigationAction
@@ -162,6 +165,14 @@ export default function BottomBar({ username, profession }: BottomBarProps) {
               component={NextLink}
               href={a.route}
               prefetch
+              onClick={(e: React.MouseEvent) => {
+                if (!isFeedAction) return;
+                if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) {
+                  return;
+                }
+                e.preventDefault();
+                router.push(getLastFeedUrl());
+              }}
               icon={
                 <Badge badgeContent={a.badge} color="error" sx={styles.badge}>
                   <CustomSvg src={baseIcon} sx={styles.icon} />

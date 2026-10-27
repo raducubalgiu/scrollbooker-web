@@ -1,7 +1,13 @@
 "use client";
 
 import { Box, useMediaQuery, useTheme } from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useSearchParams } from "next/navigation";
 import FeedTabs, { FeedTabEnum } from "./FeedTabs";
 import {
@@ -28,9 +34,6 @@ export default function FeedModule() {
   const searchParams = useSearchParams();
   const initialUrlState = useMemo(
     () => parseFeedUrlState(searchParams),
-    // Read once, at mount, as the seed for local state — not meant to react
-    // to later changes (we write the URL ourselves via history.replaceState,
-    // which Next's router doesn't pick back up, by design).
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
@@ -100,10 +103,6 @@ export default function FeedModule() {
         : EngagementSourceEnum.FOLLOWING_FEED,
   });
 
-  // Oglindim poziția curentă în URL (fără să trecem prin router-ul Next —
-  // vrem doar bara de adrese/history actualizate, nu un re-render/refetch la
-  // fiecare swipe) și în sessionStorage, ca linkurile de nav către feed să
-  // poată relua exact de aici, nu de la /feed gol.
   useEffect(() => {
     const url = buildFeedUrl({
       tab: currentTab,

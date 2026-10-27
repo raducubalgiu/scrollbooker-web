@@ -229,6 +229,7 @@ export const usePostFeed = ({
 
   return {
     currentIndex,
+    initialIndex,
     currentPost,
     goToNext,
     goToPrev,
