@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "media.scrollbooker.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "*.cloudflarestream.com",
         port: "",
         pathname: "/**",
