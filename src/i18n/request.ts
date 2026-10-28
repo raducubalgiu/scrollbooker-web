@@ -45,6 +45,7 @@ export default getRequestConfig(async () => {
     mySchedules,
     myDashboard,
     common,
+    legal,
   ] = await Promise.all([
     import(`../../messages/${locale}/landing.json`),
     import(`../../messages/${locale}/forBusiness.json`),
@@ -57,6 +58,7 @@ export default getRequestConfig(async () => {
     import(`../../messages/${locale}/mySchedules.json`),
     import(`../../messages/${locale}/myDashboard.json`),
     import(`../../messages/${locale}/common.json`),
+    import(`../../messages/${locale}/legal.json`),
   ]);
 
   return {
@@ -73,6 +75,7 @@ export default getRequestConfig(async () => {
       ...mySchedules.default,
       ...myDashboard.default,
       ...common.default,
+      ...legal.default,
     },
   };
 });

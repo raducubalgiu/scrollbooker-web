@@ -218,7 +218,8 @@
   "footer": {
     "login": "Log in",
     "registerBusiness": "Register your business",
-    "forBusiness": "For business"
+    "forBusiness": "For business",
+    "cookies": "Cookie policy"
   },
   "features": {
     "kicker": "Why ScrollBooker",

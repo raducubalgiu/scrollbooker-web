@@ -25,10 +25,13 @@ const DeleteAccountModule = () => {
       },
       onError: (error) => {
         setShowConfirmation(false);
-        const detail = axios.isAxiosError(error)
-          ? (error.response?.data as { detail?: string } | undefined)?.detail
-          : undefined;
-        setErrorMessage(detail || "A apărut o eroare. Încearcă din nou.");
+        const hasUpcomingAppointments =
+          axios.isAxiosError(error) && error.response?.status === 409;
+        setErrorMessage(
+          hasUpcomingAppointments
+            ? "Ai programări viitoare. Anulează-le înainte să ștergi contul."
+            : "A apărut o eroare. Încearcă din nou.",
+        );
       },
     });
   };
@@ -50,7 +53,7 @@ const DeleteAccountModule = () => {
         onConfirm={handleConfirmDelete}
         isLoading={isPending}
         title="Ștergi contul permanent?"
-        message="Această acțiune nu poate fi anulată."
+        message="Contul va fi șters definitiv după 30 de zile, dacă nu te autentifici din nou în acest interval."
         primaryActionTitle="Șterge contul"
       />
 
@@ -62,9 +65,10 @@ const DeleteAccountModule = () => {
         </Typography>
 
         <Typography color="text.secondary">
-          Această acțiune este definitivă. Postările, programările,
-          conversațiile și toate celelalte date asociate contului tău vor fi
-          șterse permanent.
+          Contul tău devine invizibil imediat și va fi șters definitiv după 30
+          de zile, împreună cu postările, comentariile și celelalte date
+          asociate. Dacă te răzgândești, autentifică-te din nou în acest
+          interval și ștergerea se anulează.
         </Typography>
 
         {errorMessage && (

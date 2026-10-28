@@ -1,0 +1,137 @@
+{
+  "cookiesPolicy": {
+    "metadata": {
+      "title": "Cookie Policy — ScrollBooker",
+      "description": "Which cookies and other storage technologies ScrollBooker uses, why we use them and how you can control them."
+    },
+    "title": "Cookie Policy",
+    "lastUpdated": "Last updated: {date}",
+    "date": "October 28, 2026",
+    "intro": "This page explains which cookies and other storage technologies the ScrollBooker website uses, why we use them and how you can control them. We only use what is needed for the site to work and to remember your preferences. We do not use advertising or tracking cookies.",
+    "sections": {
+      "whatAre": {
+        "title": "What cookies are",
+        "body": [
+          "Cookies are small text files that a website saves in your browser. They let the site remember, for example, that you are signed in or which language you chose.",
+          "Besides cookies, browsers also offer other storage, such as localStorage and sessionStorage. We describe the ones we use below."
+        ]
+      },
+      "ourCookies": {
+        "title": "Cookies we use",
+        "intro": "All cookies below are set by ScrollBooker (first-party cookies).",
+        "columns": {
+          "name": "Cookie",
+          "purpose": "Purpose",
+          "duration": "Duration",
+          "category": "Type"
+        },
+        "items": [
+          {
+            "name": "next-auth.session-token",
+            "purpose": "Keeps you signed in to your account.",
+            "duration": "30 days",
+            "category": "Strictly necessary"
+          },
+          {
+            "name": "next-auth.csrf-token",
+            "purpose": "Protects sign-in against forged requests (CSRF).",
+            "duration": "Session",
+            "category": "Strictly necessary"
+          },
+          {
+            "name": "next-auth.callback-url",
+            "purpose": "Remembers the page to return to after signing in.",
+            "duration": "Session",
+            "category": "Strictly necessary"
+          },
+          {
+            "name": "next-auth.state, next-auth.pkce.code_verifier",
+            "purpose": "Secures signing in with Google. Only present during the sign-in process.",
+            "duration": "15 minutes",
+            "category": "Strictly necessary"
+          },
+          {
+            "name": "sb-ui-color-mode",
+            "purpose": "Remembers your chosen theme: light, dark or system.",
+            "duration": "1 year",
+            "category": "Preferences"
+          },
+          {
+            "name": "sb-ui-system-theme",
+            "purpose": "Remembers your system theme so pages load in the right colors straight away.",
+            "duration": "1 year",
+            "category": "Preferences"
+          },
+          {
+            "name": "NEXT_LOCALE",
+            "purpose": "Remembers your chosen language (Romanian or English).",
+            "duration": "1 year",
+            "category": "Preferences"
+          }
+        ],
+        "note": "On secure (HTTPS) connections, authentication cookie names may start with “__Secure-” or “__Host-”. These are security prefixes enforced by the browser and don’t change what the cookie does."
+      },
+      "storage": {
+        "title": "Other storage technologies",
+        "columns": {
+          "name": "Key",
+          "purpose": "Purpose",
+          "duration": "Duration"
+        },
+        "items": [
+          {
+            "name": "lastFeedUrl (sessionStorage)",
+            "purpose": "Remembers where you left off in the feed so you can return to the same spot.",
+            "duration": "Until you close the tab"
+          },
+          {
+            "name": "mapbox.eventData (localStorage)",
+            "purpose": "Set by Mapbox, the map provider on the search page, to measure usage of the map service.",
+            "duration": "Until you clear it from your browser"
+          }
+        ]
+      },
+      "thirdParties": {
+        "title": "Third-party services",
+        "items": [
+          {
+            "name": "Vercel Analytics and Speed Insights",
+            "description": "Help us see how many visits the site gets and how fast it loads. These services do not use cookies and do not identify you personally."
+          },
+          {
+            "name": "Google",
+            "description": "If you choose “Continue with Google”, signing in happens on Google’s website. Google’s cookies are set on Google’s domain and are governed by Google’s policy."
+          },
+          {
+            "name": "Mapbox",
+            "description": "Displays the map on the search page. For details, see Mapbox’s privacy policy."
+          }
+        ]
+      },
+      "consent": {
+        "title": "Why we don’t ask for consent with a banner",
+        "body": [
+          "Strictly necessary cookies are essential for the site to work, for example for signing in and security. Preference cookies only remember choices you make, such as theme or language.",
+          "Under electronic communications law, these cookies do not require your consent. If we ever add other types of cookies, such as marketing cookies, we will ask for your consent before using them."
+        ]
+      },
+      "manage": {
+        "title": "How you can control cookies",
+        "body": [
+          "You can view and delete cookies in your browser settings. You can also block them from being set.",
+          "If you block or delete strictly necessary cookies, some features will stop working. For example, you won’t be able to stay signed in. If you delete preference cookies, the site goes back to the default theme and language."
+        ]
+      },
+      "changes": {
+        "title": "Changes to this policy",
+        "body": [
+          "We may update this policy when we change the technologies we use. The date of the latest update is shown at the top of the page."
+        ]
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "For questions about this policy, write to us at <email>office@scrollbooker.com</email>."
+      }
+    }
+  }
+}
