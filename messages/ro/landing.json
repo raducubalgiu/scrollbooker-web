@@ -143,9 +143,7 @@
     "contactTitle": "Scrii pe WhatsApp sau suni",
     "contactDescription": "Unele business-uri preferă să stabilească programarea direct cu tine. Le scrii pe WhatsApp sau le suni cu un singur tap.",
     "whatsapp": "WhatsApp",
-    "call": "Sună",
-    "flowCaption": "De la clip la programare, în patru pași",
-    "bookingFlowImageAlt": "Flux de rezervare direct dintr-o postare video: vezi un look în feed, alegi serviciul, alegi ora, confirmi rezervarea"
+    "call": "Sună"
   },
   "homeGallery": {
     "kicker": "Ce găsești în feed",
@@ -231,8 +229,8 @@
         "description": "Like-uri, comentarii, distribuiri, urmăritori — fiecare interacțiune te aduce în fața a tot mai mulți oameni noi, ca pe orice rețea socială."
       },
       {
-        "title": "Programări online, 24/7",
-        "description": "Clienții rezervă direct din videoclip, oricând, fără telefoane sau mesaje. Calendarul tău se actualizează automat, în timp real."
+        "title": "Programări online sau contact direct",
+        "description": "Cu Instant Booking, clienții rezervă direct din videoclip, oricând, iar calendarul se actualizează automat. Fără el, te contactează pe WhatsApp sau telefon."
       },
       {
         "title": "Administrare completă",

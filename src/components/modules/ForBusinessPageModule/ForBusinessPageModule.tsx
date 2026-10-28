@@ -10,12 +10,13 @@ import LandingAdminShowcase from "@/components/modules/LandingPageModule/section
 import LandingGallery from "@/components/modules/LandingPageModule/sections/LandingGallery";
 import LandingCTA from "@/components/modules/LandingPageModule/sections/LandingCTA";
 import LandingFooter from "@/components/modules/LandingPageModule/sections/LandingFooter";
+import LandingFaq from "@/components/modules/LandingPageModule/sections/LandingFaq";
 import ForBusinessHero from "./sections/ForBusinessHero";
 import ForBusinessLogo from "./components/ForBusinessLogo";
-import ForBusinessPainPoints from "./sections/ForBusinessPainPoints";
 import ForBusinessCalendarShowcase from "./sections/ForBusinessCalendarShowcase";
 import ForBusinessDiscoveryChannels from "./sections/ForBusinessDiscoveryChannels";
 import ForBusinessHowItWorks from "./sections/ForBusinessHowItWorks";
+import ForBusinessBookingModes from "./sections/ForBusinessBookingModes";
 
 export default function ForBusinessPageModule() {
   const LANDING_COLORS = useLandingColors();
@@ -30,16 +31,17 @@ export default function ForBusinessPageModule() {
     >
       <LandingNav logo={<ForBusinessLogo height={18} />} displayCta />
       <ForBusinessHero />
-      <ForBusinessPainPoints />
+      <ForBusinessBookingModes />
+      <ForBusinessHowItWorks />
       <LandingProfileShowcase />
       <ForBusinessDiscoveryChannels />
       <LandingFeatures />
       <ForBusinessCalendarShowcase />
       <LandingAdminShowcase />
-      <ForBusinessHowItWorks />
       <LandingGallery />
-      <LandingCTA href={AppRoutes.partners()} />
-      <LandingFooter registerHref={AppRoutes.partners()} />
+      <LandingFaq namespace="forBusinessFaq" />
+      <LandingCTA href={AppRoutes.registerBusiness()} />
+      <LandingFooter registerHref={AppRoutes.registerBusiness()} />
     </Box>
   );
 }

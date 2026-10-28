@@ -2,7 +2,6 @@
 
 import { alpha, Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import Image from "next/image";
 import BoltRoundedIcon from "@mui/icons-material/BoltRounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
@@ -122,7 +121,7 @@ export default function LandingBookingDemo() {
           })}
         </Box>
 
-        <Grid container spacing={3} sx={{ mb: 6 }}>
+        <Grid container spacing={3}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Stack
               spacing={2}
@@ -192,31 +191,6 @@ export default function LandingBookingDemo() {
             </Stack>
           </Grid>
         </Grid>
-
-        <Typography
-          variant="body2"
-          sx={{ color: LANDING_COLORS.textSecondary, fontWeight: 600, mb: 2 }}
-        >
-          {t("flowCaption")}
-        </Typography>
-        <Box
-          sx={{
-            position: "relative",
-            width: "100%",
-            aspectRatio: "3840 / 2160",
-            borderRadius: 3,
-            overflow: "hidden",
-            border: `1px solid ${LANDING_COLORS.border}`,
-          }}
-        >
-          <Image
-            src="/landing/booking-flow.png"
-            alt={t("bookingFlowImageAlt")}
-            fill
-            sizes="(max-width: 1200px) 95vw, 1100px"
-            style={{ objectFit: "contain" }}
-          />
-        </Box>
       </Container>
     </Box>
   );

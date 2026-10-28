@@ -1,7 +1,7 @@
 {
   "forBusinessMetadata": {
-    "title": "ScrollBooker pentru afaceri — Calendar online și clienți noi, fără cost",
-    "description": "Calendar online sincronizat, administrare completă pentru echipa ta și recenzii video care îți aduc clienți noi, gratuit. Înregistrează-ți salonul, clinica sau cabinetul pe ScrollBooker."
+    "title": "ScrollBooker pentru afaceri — Clienți noi din video, gratuit în perioada pilot",
+    "description": "Clienții te descoperă prin video și te programează sau te contactează direct. Calendar online și administrare completă, gratuit pe toată perioada pilot. Înregistrează-ți salonul pe ScrollBooker."
   },
   "forBusinessTeaser": {
     "kicker": "Pentru business-uri",
@@ -24,33 +24,15 @@
     "button": "Află mai multe"
   },
   "forBusinessHero": {
-    "badge": "Lansăm în curând · București · locuri limitate",
-    "launchOffer": "<b>Grăbește-te!</b> Gratuit <b>3 luni</b> pentru primele <b>10 saloane</b>.",
+    "badge": "Program pilot · București",
+    "launchOffer": "<b>Totul e gratuit</b> pe toată perioada pilot.",
     "titlePrefix": "Transformă conținutul tău",
     "titleHighlight": "în programări",
     "titleSuffix": "",
-    "subtitle": "Postezi deja pe Instagram sau TikTok? Pe ScrollBooker, clienții îți descoperă serviciile prin video și pot face o programare direct din conținut — iar pentru administrarea afacerii ai calendar online, servicii și angajați, toate într-un singur loc.",
+    "subtitle": "Postezi deja pe Instagram sau TikTok? Pe ScrollBooker, clienții îți descoperă serviciile prin video și te programează sau te contactează direct din conținut — iar pentru administrarea afacerii ai calendar online, servicii și angajați, toate într-un singur loc.",
     "primaryButton": "Înregistrează-ți afacerea",
     "secondaryButton": "Vezi cum funcționează",
     "imageAlt": "Profil de business ScrollBooker, cu conținut video, recenzii și rezervare instant"
-  },
-  "forBusinessPainPoints": {
-    "kicker": "Problema pe care o rezolvăm",
-    "title": "Cât timp mai pierzi cu programări pe telefon și WhatsApp?",
-    "oldWayLabel": "Fără ScrollBooker",
-    "newWayLabel": "Cu ScrollBooker",
-    "oldWay": [
-      "Telefoane și mesaje pentru fiecare programare, inclusiv în afara programului",
-      "Suprapuneri și erori de agendă ținută manual",
-      "Zero prezență online — clienții noi nu te găsesc dacă nu te cunosc deja",
-      "Recenziile, dacă există, rămân ascunse pe alte platforme"
-    ],
-    "newWay": [
-      "Clienții rezervă singuri, online, 24/7 — fără niciun telefon",
-      "Calendar sincronizat automat, pe fiecare angajat în parte",
-      "Profil vizibil în feed-ul aplicației — descoperit organic de clienți noi",
-      "Recenziile video circulă ca reclamă gratuită, direct către clienți noi"
-    ]
   },
   "forBusinessCalendar": {
     "kicker": "Calendar inteligent",
@@ -106,7 +88,78 @@
       },
       {
         "title": "Primești programări",
-        "description": "După aprobare, profilul tău devine vizibil în aplicație — clienții te descoperă și rezervă direct."
+        "description": "După aprobare, profilul tău devine vizibil în aplicație — clienții te descoperă și te programează sau te contactează direct."
+      }
+    ]
+  },
+  "forBusinessBookingModes": {
+    "kicker": "Tu alegi cum primești clienți",
+    "title": "Cu Instant Booking sau fără — cum îți e mai comod",
+    "subtitle": "Clienții îți văd clipurile, prețurile, locația și recenziile. Ce se întâmplă când vor să vină la tine decizi tu, din setări.",
+    "modes": [
+      {
+        "badge": "Instant Booking",
+        "title": "Clienții rezervă singuri",
+        "description": "Aleg serviciul și o oră liberă din calendarul tău, iar programarea apare automat în agendă — fără niciun telefon.",
+        "steps": [
+          "Alege serviciul",
+          "Alege o oră liberă",
+          "Apare în calendarul tău"
+        ],
+        "fit": "Potrivit dacă ai un program clar și vrei agenda plină fără să răspunzi la telefon."
+      },
+      {
+        "badge": "Fără Instant Booking",
+        "title": "Clienții te contactează direct",
+        "description": "În locul butonului de rezervare, clienții văd butoanele de WhatsApp și apel. Alegi tu dacă vrei telefon, WhatsApp sau ambele.",
+        "steps": [
+          "Vede clipul și prețul",
+          "Apasă WhatsApp sau Sună",
+          "Stabiliți ora împreună"
+        ],
+        "fit": "Potrivit dacă preferi să vorbești cu fiecare client sau îți ții deja agenda în altă parte."
+      }
+    ],
+    "notes": [
+      "Activezi sau dezactivezi Instant Booking oricând, din setări.",
+      "Plata se face la salon, ca până acum — ScrollBooker nu încasează bani de la clienții tăi."
+    ]
+  },
+  "forBusinessFaq": {
+    "kicker": "Întrebări frecvente",
+    "title": "Ce întreabă business-urile înainte să se înscrie",
+    "items": [
+      {
+        "question": "Cât costă?",
+        "answer": "În perioada pilot, ScrollBooker e complet gratuit. Despre planurile de după pilot te anunțăm din timp, înainte să plătești ceva."
+      },
+      {
+        "question": "Sunt obligat să activez Instant Booking?",
+        "answer": "Nu. Implicit, clienții te contactează pe telefon sau WhatsApp, iar tu stabilești ora cu ei. Activezi Instant Booking doar dacă vrei ca rezervările să intre direct în calendar."
+      },
+      {
+        "question": "Trebuie să postez clipuri video?",
+        "answer": "Nu e obligatoriu. Clipurile te ajută să fii descoperit mai repede, dar profilul tău rămâne complet și găsibil prin căutare, hartă și recenzii."
+      },
+      {
+        "question": "Clienții plătesc prin aplicație?",
+        "answer": "Nu. Plata se face la salon, ca până acum. ScrollBooker nu încasează bani de la clienții tăi."
+      },
+      {
+        "question": "Lucrez pe cont propriu. Mi se potrivește?",
+        "answer": "Da. Poți folosi un singur calendar dacă lucrezi singur, sau câte un calendar pentru fiecare angajat dacă ai o echipă."
+      },
+      {
+        "question": "Pot adăuga angajați?",
+        "answer": "Da. Îți inviți echipa în aplicație, iar fiecare angajat are propriul program și propriul calendar, sincronizate cu agenda business-ului."
+      },
+      {
+        "question": "Cât durează până apar în aplicație?",
+        "answer": "Înregistrarea durează câteva minute. După ce îți completezi profilul și îl aprobăm, devii vizibil pentru clienți."
+      },
+      {
+        "question": "În ce orașe e disponibil?",
+        "answer": "Lansăm în București, cu business-uri din Beauty: păr și barbă, unghii, gene și sprâncene, make-up, cosmetică și masaj. Urmează și alte orașe."
       }
     ]
   }

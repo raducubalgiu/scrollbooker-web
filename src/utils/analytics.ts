@@ -7,17 +7,3 @@ export function trackRegisterCtaClick(location: string, destination: string) {
 export function trackLoginCtaClick(location: string) {
   track("login_cta_click", { location });
 }
-
-export function trackBusinessLeadSubmitted(
-  businessDomain: string,
-  hasCity: boolean
-) {
-  track("business_lead_submitted", {
-    business_domain: businessDomain,
-    has_city: hasCity,
-  });
-}
-
-export function trackBusinessLeadError() {
-  track("business_lead_error");
-}

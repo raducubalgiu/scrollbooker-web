@@ -143,9 +143,7 @@
     "contactTitle": "Message on WhatsApp or call",
     "contactDescription": "Some businesses prefer to set up the appointment with you directly. Message them on WhatsApp or call them with a single tap.",
     "whatsapp": "WhatsApp",
-    "call": "Call",
-    "flowCaption": "From video to appointment, in four steps",
-    "bookingFlowImageAlt": "Booking straight from a video post: spot a look in the feed, pick the service, pick a time, confirm the booking"
+    "call": "Call"
   },
   "homeGallery": {
     "kicker": "What's in the feed",
@@ -231,8 +229,8 @@
         "description": "Likes, comments, shares, followers — every interaction puts you in front of more and more new people, just like on any social network."
       },
       {
-        "title": "Online booking, 24/7",
-        "description": "Clients book straight from the video, anytime, without phone calls or messages. Your calendar updates automatically, in real time."
+        "title": "Online booking or direct contact",
+        "description": "With Instant Booking, clients book straight from the video, anytime, and your calendar updates automatically. Without it, they reach you on WhatsApp or by phone."
       },
       {
         "title": "Complete management",

@@ -95,16 +95,18 @@ export default function LandingNav({
             )}
             {displayCta && (
               <Button
+                component={Link}
+                href={AppRoutes.registerBusiness()}
                 variant="contained"
                 size="small"
                 onClick={() => {
                   trackRegisterCtaClick(
-                    "for_business_hero",
-                    AppRoutes.partners()
+                    "for_business_nav",
+                    AppRoutes.registerBusiness()
                   );
                 }}
                 sx={{
-                  display: { xs: "none", md: "block" },
+                  display: { xs: "none", md: "inline-flex" },
                 }}
               >
                 {t("primaryButton")}

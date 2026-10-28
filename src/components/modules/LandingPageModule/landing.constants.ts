@@ -1,4 +1,4 @@
-// Paleta pentru landing/for-business/partners. Aceste pagini nu urmează
+// Paleta pentru landing/for-business. Aceste pagini nu urmează
 // preferința light/dark a userului din restul aplicației — au propriul
 // toggle local (vezi LandingThemeContext.tsx), implicit pe "light".
 export type LandingMode = "light" | "dark";

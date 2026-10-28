@@ -15,8 +15,12 @@ import { useLandingColors } from "../LandingThemeContext";
 
 type FaqItem = { question: string; answer: string };
 
-export default function LandingFaq() {
-  const t = useTranslations("faq");
+type LandingFaqProps = {
+  namespace?: string;
+};
+
+export default function LandingFaq({ namespace = "faq" }: LandingFaqProps) {
+  const t = useTranslations(namespace);
   const LANDING_COLORS = useLandingColors();
   const items = t.raw("items") as FaqItem[];
 
@@ -31,7 +35,7 @@ export default function LandingFaq() {
   };
 
   return (
-    <Box component="section" sx={{ py: { xs: 8, md: 12 } }}>
+    <Box component="section" id="faq" sx={{ py: { xs: 8, md: 12 } }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
