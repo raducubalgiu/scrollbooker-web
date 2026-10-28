@@ -17,9 +17,10 @@ import {
   ServiceDomain,
   ServiceDomainCreateOrUpdate,
 } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
-import { Delete, Edit } from "@mui/icons-material";
+import { AddPhotoAlternate, Delete, Edit } from "@mui/icons-material";
 import { MRT_Localization_RO } from "material-react-table/locales/ro";
 import ServiceDomainsModal from "./ServiceDomainModal";
+import ServiceDomainUploadImageModal from "./ServiceDomainUploadImageModal";
 import {
   useAllServiceDomains,
   useCreateServiceDomain,
@@ -57,6 +58,11 @@ export default function ServiceDomainsModule() {
     data: null,
   });
 
+  const [imageModal, setImageModal] = useState<ServiceDomainModalState>({
+    open: false,
+    data: null,
+  });
+
   const [deleteModal, setDeleteModal] = useState<DeleteModalState>({
     open: false,
     id: null,
@@ -80,6 +86,8 @@ export default function ServiceDomainsModule() {
   const totalCount = useMemo(() => data?.count ?? 0, [data]);
 
   const handleCloseModal = () => setOpenModal({ open: false, data: null });
+  const handleCloseImageModal = () =>
+    setImageModal((prev) => ({ ...prev, open: false }));
   const handleCloseDeleteModal = () =>
     setDeleteModal({ open: false, id: null, name: "" });
 
@@ -159,6 +167,16 @@ export default function ServiceDomainsModule() {
       />,
       <MRT_ActionMenuItem
         key={2}
+        label="Imagine"
+        icon={<AddPhotoAlternate />}
+        onClick={() => {
+          setImageModal({ open: true, data: row.original });
+          closeMenu();
+        }}
+        table={table}
+      />,
+      <MRT_ActionMenuItem
+        key={3}
         label="Șterge"
         icon={<Delete />}
         onClick={() => {
@@ -231,6 +249,12 @@ export default function ServiceDomainsModule() {
         onClose={handleCloseModal}
         onSave={handleSaveServiceDomain}
         isSubmitting={isPendingCreate || isPendingUpdate}
+      />
+
+      <ServiceDomainUploadImageModal
+        open={imageModal.open}
+        serviceDomain={imageModal.data}
+        onClose={handleCloseImageModal}
       />
 
       <ConfirmationModal

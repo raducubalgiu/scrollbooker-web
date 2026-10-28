@@ -19,6 +19,11 @@ type UpdateServiceDomainsParams = {
   data: ServiceDomainCreateOrUpdate;
 };
 
+type UploadServiceDomainPhotoParams = {
+  id: number;
+  photo: File;
+};
+
 type ServiceDomainServiceRelationParams = {
   serviceDomainId: string;
   serviceId: string;
@@ -80,6 +85,26 @@ export const useUpdateServiceDomain = () => {
     axios.put(`${SERVICE_DOMAIN_PATH}/${id}`, data).then((res) => res.data);
 
   return useMutation<ServiceDomain, Error, UpdateServiceDomainsParams>({
+    mutationFn: doRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["service-domains"] });
+    },
+  });
+};
+
+export const useUploadServiceDomainPhoto = () => {
+  const queryClient = useQueryClient();
+
+  const doRequest = ({ id, photo }: UploadServiceDomainPhotoParams) => {
+    const formData = new FormData();
+    formData.append("photo", photo);
+
+    return axios
+      .patch(`${SERVICE_DOMAIN_PATH}/${id}/photo`, formData)
+      .then((res) => res.data);
+  };
+
+  return useMutation<void, Error, UploadServiceDomainPhotoParams>({
     mutationFn: doRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["service-domains"] });

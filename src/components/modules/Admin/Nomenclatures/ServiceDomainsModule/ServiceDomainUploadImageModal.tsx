@@ -3,78 +3,117 @@ import Modal from "@/components/core/Modal/Modal";
 import Image from "next/image";
 import { Box, ButtonBase, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { useUploadServiceDomainPhoto } from "@/controllers/nomenclature/service-domain.controller";
+import { ServiceDomain } from "@/ts/models/nomenclatures/serviceDomain/ServiceDomainType";
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+const MAX_FILE_SIZE = 25 * 1024 * 1024;
+const MAX_UPLOAD_SIZE = 4 * 1024 * 1024;
+const MAX_UPLOAD_DIMENSION = 2048;
+
+async function shrinkForUpload(file: File): Promise<File> {
+  if (file.size <= MAX_UPLOAD_SIZE) return file;
+
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(
+    1,
+    MAX_UPLOAD_DIMENSION / Math.max(bitmap.width, bitmap.height),
+  );
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+
+  const blob = await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob(resolve, "image/jpeg", 0.9),
+  );
+  if (!blob) throw new Error("Image conversion failed");
+
+  return new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", {
+    type: "image/jpeg",
+  });
+}
 
 type ServiceDomainUploadImageModalProps = {
   open: boolean;
-  serviceDomainId: number;
-  url: string | null | undefined;
+  serviceDomain: ServiceDomain | null;
   onClose: () => void;
 };
 
 const ServiceDomainUploadImageModal = ({
   open,
-  serviceDomainId,
-  url,
+  serviceDomain,
   onClose,
 }: ServiceDomainUploadImageModalProps) => {
-  const [previewUrl, setPreviewUrl] = useState<string | null | undefined>(url);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  console.log("ERROR!!!", error);
+  const { mutate: uploadPhoto, isPending } = useUploadServiceDomainPhoto();
 
   useEffect(() => {
-    setPreviewUrl(url);
-  }, [url]);
+    if (open) {
+      setPreviewUrl(serviceDomain?.url ?? null);
+      setSelectedFile(null);
+    }
+  }, [open, serviceDomain]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    event.target.value = "";
     if (!file) return;
 
-    setSelectedFile(file);
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      toast.error("Format neacceptat. Folosește JPG, PNG, WebP sau AVIF.");
+      return;
+    }
 
-    const reader = new FileReader();
-    reader.onloadend = () => setPreviewUrl(reader.result as string);
-    reader.readAsDataURL(file);
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("Imaginea depășește 25 MB.");
+      return;
+    }
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
   };
 
   const onUpload = async () => {
-    if (!selectedFile) return;
+    if (!selectedFile || !serviceDomain) return;
 
-    setLoading(true);
-    setError(null);
-
+    let photo: File;
     try {
-      const formData = new FormData();
-      formData.append("photo", selectedFile);
-      const res = await fetch(
-        `/api/nomenclatures/service-domains/${serviceDomainId}/upload-image`,
-        {
-          method: "PATCH",
-          body: formData,
-        }
-      );
-
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(text || `Upload failed (${res.status})`);
-      }
-    } catch (e: any) {
-      setError(e?.message ?? "Upload failed");
-    } finally {
-      setLoading(false);
+      photo = await shrinkForUpload(selectedFile);
+    } catch {
+      toast.error("Imaginea nu a putut fi procesată. Încearcă alt fișier.");
+      return;
     }
+
+    uploadPhoto(
+      { id: serviceDomain.id, photo },
+      {
+        onSuccess: () => {
+          toast.success("Imaginea a fost salvată cu succes!");
+          onClose();
+        },
+      },
+    );
   };
 
   const actions: ActionButtonType[] = [
     {
-      title: "Salveaza",
+      title: "Salvează",
       props: {
         onClick: onUpload,
-        loading,
-        disabled: loading,
+        loading: isPending,
+        disabled: !selectedFile || isPending,
       },
     },
   ];
@@ -82,10 +121,9 @@ const ServiceDomainUploadImageModal = ({
   return (
     <Modal
       open={open}
+      title={serviceDomain ? `Imagine — ${serviceDomain.name}` : ""}
       handleClose={() => {
-        setPreviewUrl("");
-        setSelectedFile(null);
-        onClose();
+        if (!isPending) onClose();
       }}
       actions={actions}
       maxWidth="md"
@@ -94,6 +132,7 @@ const ServiceDomainUploadImageModal = ({
       <Box>
         <ButtonBase
           onClick={() => fileInputRef.current?.click()}
+          disabled={isPending}
           sx={{
             ...styles.buttonContainer,
             borderColor: previewUrl ? "transparent" : "divider",
@@ -105,7 +144,7 @@ const ServiceDomainUploadImageModal = ({
               fill
               sizes="(max-width: 768px) 100vw, 700px"
               style={{ objectFit: "cover" }}
-              alt="Preview domeniu de servicii"
+              alt={`Imagine ${serviceDomain?.name ?? "domeniu de servicii"}`}
               unoptimized
             />
           ) : (
@@ -119,9 +158,17 @@ const ServiceDomainUploadImageModal = ({
             </Box>
           )}
         </ButtonBase>
+        <Typography
+          variant="caption"
+          display="block"
+          sx={{ color: "text.secondary", mt: 1.5 }}
+        >
+          {previewUrl ? "Apasă pe imagine pentru a alege alta. " : ""}
+          JPG, PNG, WebP sau AVIF, maxim 25 MB. Imaginea va fi decupată la 16:9.
+        </Typography>
         <input
           type="file"
-          accept="image/*"
+          accept={ALLOWED_TYPES.join(",")}
           ref={fileInputRef}
           style={{ display: "none" }}
           onChange={handleImageChange}
@@ -135,6 +182,7 @@ export default ServiceDomainUploadImageModal;
 
 const styles = {
   buttonContainer: {
+    position: "relative",
     width: "100%",
     aspectRatio: "16 / 9",
     borderRadius: "20px",
