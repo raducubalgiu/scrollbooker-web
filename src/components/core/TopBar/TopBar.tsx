@@ -8,9 +8,13 @@ import { AppRoutes } from "@/utils/routes";
 
 type TopBarProps = {
   rightContent?: ReactNode;
+  logoHref?: string;
 };
 
-export default function TopBar({ rightContent }: TopBarProps) {
+export default function TopBar({
+  rightContent,
+  logoHref = AppRoutes.home(),
+}: TopBarProps) {
   const theme = useTheme();
 
   return (
@@ -26,8 +30,12 @@ export default function TopBar({ rightContent }: TopBarProps) {
     >
       <Box
         component={NextLink}
-        href={AppRoutes.home()}
-        sx={{ display: "inline-flex", lineHeight: 0 }}
+        href={logoHref}
+        sx={{
+          display: "inline-flex",
+          lineHeight: 0,
+          "& svg": { height: { xs: 26, md: 32 }, width: "auto" },
+        }}
       >
         <AppLogo height={26} color={theme.palette.text.primary} />
       </Box>

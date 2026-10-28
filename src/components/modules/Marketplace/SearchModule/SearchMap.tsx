@@ -3,7 +3,6 @@ import React, { memo, useCallback } from "react";
 import mapboxgl, { LngLatBounds } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapActions from "./MapActions";
-import { useThemeMode } from "@/providers/ThemeContext";
 import {
   MAPBOX_STYLE_DARK,
   MAPBOX_STYLE_LIGHT,
@@ -63,11 +62,11 @@ const SearchMap = ({
   } | null>(null);
   const debounceTimerRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  const { mode } = useThemeMode();
+  const isDarkMode = theme.palette.mode === "dark";
 
   const mapStyle = React.useMemo(
-    () => (mode === "dark" ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT),
-    [mode]
+    () => (isDarkMode ? MAPBOX_STYLE_DARK : MAPBOX_STYLE_LIGHT),
+    [isDarkMode]
   );
 
   const initialBounds: [number, number, number, number] = [

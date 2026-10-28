@@ -516,6 +516,7 @@ export const darkTheme = createTheme({
       default: "#000000",
       paper: "#262626",
     },
+    divider: "#2E2E2E",
     rating: {
       main: "#FAAF00",
     },
