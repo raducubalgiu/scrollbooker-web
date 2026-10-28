@@ -16,126 +16,126 @@ import { useBusinessSocialActions } from "./useBusinessProfileSocialActions";
 import { useBusinessProfileScroll } from "./useBusinessProfileScroll";
 
 type BusinessProfileModuleProps = {
-	initialProfile: BusinessProfile;
+  initialProfile: BusinessProfile;
 };
 
 export type BusinessProfileTabSection = {
-	id: string;
-	label: string;
+  id: string;
+  label: string;
 };
 
 const TAB_SECTIONS: BusinessProfileTabSection[] = [
-	{ id: "photos", label: "Fotografii" },
-	{ id: "services", label: "Servicii" },
-	{ id: "social", label: "Postari" },
-	{ id: "reviews", label: "Recenzii" },
-	{ id: "about", label: "Despre" },
+  { id: "photos", label: "Fotografii" },
+  { id: "services", label: "Servicii" },
+  { id: "social", label: "Postari" },
+  { id: "reviews", label: "Recenzii" },
+  { id: "about", label: "Despre" },
 ];
 
 const BusinessProfileModule = ({
-	initialProfile,
+  initialProfile,
 }: BusinessProfileModuleProps) => {
-	const {
-		profile,
-		handleFollow,
-		handleShare,
-		copiedSnackbarOpen,
-		closeCopiedSnackbar,
-	} = useBusinessSocialActions(initialProfile);
+  const {
+    profile,
+    handleFollow,
+    handleShare,
+    copiedSnackbarOpen,
+    closeCopiedSnackbar,
+  } = useBusinessSocialActions(initialProfile);
 
-	const {
-		tabsContainerRef,
-		isTabsVisible,
-		activeTab,
-		handleTabChange,
-		sectionRefCallbacks,
-	} = useBusinessProfileScroll(TAB_SECTIONS);
+  const {
+    tabsContainerRef,
+    isTabsVisible,
+    activeTab,
+    handleTabChange,
+    sectionRefCallbacks,
+  } = useBusinessProfileScroll(TAB_SECTIONS);
 
-	return (
-		<>
-			<BusinessProfileHeader />
+  return (
+    <>
+      <BusinessProfileHeader />
 
-			<Container
-				maxWidth="xl"
-				sx={{
-					px: { xs: 2, sm: 3, md: 5 },
-					pt: { xs: 0, md: 1 },
-					pb: 1,
-				}}
-			>
-				<BusinessProfileTabs
-					tabsContainerRef={tabsContainerRef}
-					isTabsVisible={isTabsVisible}
-					tabSections={TAB_SECTIONS}
-					activeTab={activeTab}
-					onChangeTab={handleTabChange}
-				/>
+      <Container
+        maxWidth="xl"
+        sx={{
+          px: { xs: 2, sm: 3, md: 5 },
+          pt: { xs: 0, md: 1 },
+          pb: 1,
+        }}
+      >
+        <BusinessProfileTabs
+          tabsContainerRef={tabsContainerRef}
+          isTabsVisible={isTabsVisible}
+          tabSections={TAB_SECTIONS}
+          activeTab={activeTab}
+          onChangeTab={handleTabChange}
+        />
 
-				<BusinessPhotosTab
-					id="photos"
-					innerRef={sectionRefCallbacks.photos}
-					owner={profile.owner}
-					businessId={profile.id}
-					mediaFiles={profile?.media_files || []}
-					instantBooking={profile.instant_booking}
-					contact={profile.contact}
-					onFollow={handleFollow}
-					onShare={handleShare}
-				/>
+        <BusinessPhotosTab
+          id="photos"
+          innerRef={sectionRefCallbacks.photos}
+          owner={profile.owner}
+          businessId={profile.id}
+          mediaFiles={profile?.media_files || []}
+          instantBooking={profile.instant_booking}
+          contact={profile.contact}
+          onFollow={handleFollow}
+          onShare={handleShare}
+        />
 
-				<Grid container spacing={{ xs: 3, lg: 7.5 }}>
-					<Grid size={{ xs: 12, lg: 7.5 }}>
-						<Stack sx={{ py: 3 }} spacing={{ xs: 5, md: 10 }}>
-							<BusinessServicesTab
-								id="services"
-								innerRef={sectionRefCallbacks.services}
-								userProducts={profile.user_products}
-								businessId={profile.id}
-								businessOwnerId={profile.owner.id}
-								instantBooking={profile.instant_booking}
-							/>
-							<BusinessPostsTab
-								id="social"
-								innerRef={sectionRefCallbacks.social}
-								posts={profile?.posts}
-							/>
-							<BusinessReviewsTab
-								id="reviews"
-								innerRef={sectionRefCallbacks.reviews}
-								owner={profile.owner}
-								reviews={profile?.reviews}
-							/>
-							<BusinessAboutTab
-								id="about"
-								innerRef={sectionRefCallbacks.about}
-								profile={profile}
-							/>
-						</Stack>
-					</Grid>
+        <Grid container spacing={{ xs: 3, lg: 7.5 }}>
+          <Grid size={{ xs: 12, lg: 7.5 }}>
+            <Stack sx={{ py: 3 }} spacing={{ xs: 5, md: 10 }}>
+              <BusinessServicesTab
+                id="services"
+                innerRef={sectionRefCallbacks.services}
+                userProducts={profile.user_products}
+                businessId={profile.id}
+                businessOwnerId={profile.owner.id}
+                instantBooking={profile.instant_booking}
+              />
+              <BusinessPostsTab
+                id="social"
+                innerRef={sectionRefCallbacks.social}
+                posts={profile?.posts}
+              />
+              <BusinessReviewsTab
+                id="reviews"
+                innerRef={sectionRefCallbacks.reviews}
+                owner={profile.owner}
+                reviews={profile?.reviews}
+              />
+              <BusinessAboutTab
+                id="about"
+                innerRef={sectionRefCallbacks.about}
+                profile={profile}
+              />
+            </Stack>
+          </Grid>
 
-					<Grid
-						size={{ xs: 12, lg: 4.5 }}
-						sx={{ display: { xs: "none", lg: "block" } }}
-					>
-						<BusinessStickyCard business={profile} />
-					</Grid>
-				</Grid>
+          <Grid
+            size={{ xs: 12, lg: 4.5 }}
+            sx={{ display: { xs: "none", lg: "block" } }}
+          >
+            <BusinessStickyCard business={profile} />
+          </Grid>
+        </Grid>
 
-				<NearbyBusinesses businesses={profile.nearby_businesses} />
-			</Container>
+        <NearbyBusinesses businesses={profile.nearby_businesses} />
+      </Container>
 
-			<Snackbar
-				open={copiedSnackbarOpen}
-				autoHideDuration={3000}
-				onClose={closeCopiedSnackbar}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-			>
-				<Alert severity="success" variant="filled" sx={{ width: "100%" }}>
-					Link-ul a fost copiat în clipboard!
-				</Alert>
-			</Snackbar>
-		</>
-	);
+      <Snackbar
+        open={copiedSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={closeCopiedSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
+          Link-ul a fost copiat în clipboard!
+        </Alert>
+      </Snackbar>
+    </>
+  );
 };
 
 export default BusinessProfileModule;

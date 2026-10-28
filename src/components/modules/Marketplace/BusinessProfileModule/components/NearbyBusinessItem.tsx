@@ -37,7 +37,7 @@ const NearbyBusinessItem = ({ business }: NearbyBusinessItemProps) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography fontWeight={600} variant="h5" noWrap>
+          <Typography fontWeight={600} noWrap>
             {fullname}
           </Typography>
 
@@ -54,9 +54,11 @@ const NearbyBusinessItem = ({ business }: NearbyBusinessItemProps) => {
           </Stack>
         </Stack>
 
-        <Typography color="text.secondary">{profession}</Typography>
+        <Typography variant="body2" color="text.secondary">
+          {profession}
+        </Typography>
 
-        <Typography color="text.secondary" variant="body2">
+        <Typography variant="body2" color="text.secondary">
           {location.formatted_address}
         </Typography>
       </Box>

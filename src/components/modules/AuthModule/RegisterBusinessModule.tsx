@@ -10,7 +10,6 @@ import { useTranslations } from "next-intl";
 import { UserRegister } from "@/ts/models/auth/auth";
 import { AppRoutes } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
-import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
 import { registerWithCredentials } from "@/controllers/auth/auth.service";
 import AuthForm, {
   AuthFormValues,
@@ -27,12 +26,6 @@ const identifierOptions = (
     placeholder: t("emailLabel"),
   },
 ];
-
-const submitButtonSx = {
-  py: 1.5,
-  backgroundColor: LANDING_COLORS.primary,
-  "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
-};
 
 export default function RegisterBusinessModule() {
   const t = useTranslations("registerBusiness");
@@ -112,9 +105,7 @@ export default function RegisterBusinessModule() {
     >
       <PageGlow />
 
-      <Box sx={{ display: { xs: "none", md: "block" } }}>
-        <TopBar />
-      </Box>
+      <TopBar />
 
       <Box
         sx={{
@@ -137,7 +128,6 @@ export default function RegisterBusinessModule() {
             passwordPlaceholder={t("passwordPlaceholder")}
             submitLabel={t("submit")}
             isSubmitting={loading}
-            submitButtonSx={submitButtonSx}
             onSubmit={onSubmit}
             orLabel={t("or")}
             googleLabel={t("continueWithGoogle")}

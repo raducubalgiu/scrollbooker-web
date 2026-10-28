@@ -35,7 +35,7 @@ const HeaderMobile = ({
           <Typography
             variant="h6"
             sx={{
-              fontWeight: "bold",
+              fontWeight: 600,
               color: "text.primary",
             }}
           >

@@ -98,34 +98,36 @@ const ProfileUserInfo = ({
       <Stack
         flexDirection="row"
         alignItems="center"
-        gap={{ xs: 2, lg: 3 }}
+        gap={{ xs: 2.5, md: 4 }}
         sx={styles.headerRow}
       >
         <UserAvatar
           isBusinessOrEmployee={is_business_or_employee}
-          openNow={opening_hours.open_now}
+          openNow={opening_hours?.open_now}
           url={avatar}
           size={{ xs: "lg", md: "xxl" }}
         />
 
-        <Box sx={styles.infoWrapper}>
+        <Stack sx={styles.infoWrapper} spacing={{ xs: 0.5, md: 1 }}>
           <Stack flexDirection="row" alignItems="center" sx={styles.nameRow}>
-            <Typography variant="h5" sx={styles.fullName}>
-              {fullname}
-            </Typography>
-
+            <Typography sx={styles.fullName}>{fullname}</Typography>
             <Typography sx={styles.username}>@{username}</Typography>
           </Stack>
 
-          <Stack flexDirection="row" alignItems="center" gap={1} mt={0.5}>
-            <Typography variant="subtitle1" sx={styles.profession}>
+          <Stack flexDirection="row" alignItems="center" gap={1.5}>
+            <Typography variant="body2" fontWeight={500} color="text.secondary">
               {profession}
             </Typography>
 
-            {is_business_or_employee && (
-              <Stack flexDirection="row" alignItems="center">
+            {is_business_or_employee && counters?.ratings_average > 0 && (
+              <Stack
+                flexDirection="row"
+                alignItems="center"
+                gap={0.5}
+                sx={styles.ratingBadge}
+              >
                 <GradeIcon color="rating" sx={styles.star} />
-                <Typography variant="h6" sx={styles.rating}>
+                <Typography sx={styles.rating}>
                   {formatRating(counters.ratings_average)}
                 </Typography>
               </Stack>
@@ -154,7 +156,7 @@ const ProfileUserInfo = ({
           )}
 
           {address && !profile.is_own_profile && (
-            <Box sx={styles.addressRow}>
+            <Box sx={{ mt: 1.5 }}>
               <ProfileAddress address={address} />
             </Box>
           )}
@@ -162,18 +164,20 @@ const ProfileUserInfo = ({
           <Box sx={styles.bioDesktopWrapper}>
             <Box sx={styles.bioBox}>{bio}</Box>
 
-            <Stack flexDirection="row" alignItems="center" gap={1} mt={1.5}>
+            <Stack flexDirection="row" alignItems="center" gap={1.5} mt={3}>
+              {" "}
+              {/* 👈 mt generos pentru butoanele de acțiune pe desktop */}
               {actions}
             </Stack>
           </Box>
-        </Box>
+        </Stack>
       </Stack>
 
       <Box sx={styles.mobileWrapper}>
         <Stack
           flexDirection="row"
           alignItems="center"
-          gap={1}
+          gap={1.5}
           sx={styles.actionsRowMobile}
         >
           {actions}
@@ -191,8 +195,7 @@ export default ProfileUserInfo;
 
 const styles = {
   root: {
-    px: { xs: 2, lg: 0 },
-    pb: { xs: 2, lg: 0 },
+    px: { xs: 2, md: 4, lg: 0 },
   },
   headerRow: {
     width: "100%",
@@ -205,92 +208,91 @@ const styles = {
   nameRow: {
     width: "100%",
     minWidth: 0,
+    gap: 1,
   },
   fullName: {
-    fontWeight: 600,
+    fontWeight: 700,
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
     flexShrink: 1,
     minWidth: 0,
+    letterSpacing: "-0.02em",
     fontSize: {
-      xs: 17,
-      sm: 18,
-      md: 24,
-      lg: 30,
-      xl: 32,
+      xs: "1.25rem",
+      sm: "1.5rem",
+      md: "1.875rem",
+      lg: "2.25rem",
     },
   },
   username: {
-    ml: 1.5,
-    color: "text.secondary",
+    color: "text.disabled",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
     flexShrink: 2,
     minWidth: 0,
-    fontSize: { xs: "0.875rem", sm: "1rem" },
-    display: { xs: "none", lg: "block" },
+    fontSize: { md: "1rem", lg: "1.125rem" },
+    display: { xs: "none", sm: "block" },
   },
-  profession: {
-    color: "text.secondary",
-    fontSize: { xs: "0.875rem", sm: "1rem" },
+  ratingBadge: {
+    bgcolor: "action.hover",
+    px: 1,
+    py: 0.2,
+    borderRadius: 1.5,
   },
   star: {
-    mr: 0.5,
-    fontWeight: 600,
-    fontSize: {
-      sm: 20,
-      md: 25,
-      lg: 30,
-      xl: 32,
-    },
+    fontSize: { xs: 17, md: 19 },
   },
   rating: {
-    fontWeight: { xs: 800, lg: 600 },
-    fontSize: {
-      sm: 17,
-      md: 20,
-      lg: 25,
-      xl: 28,
-    },
+    fontWeight: 700,
+    color: "text.primary",
+    fontSize: { xs: 14, md: 18 },
   },
   scheduleButton: {
-    borderRadius: 5,
-    mt: 1,
+    display: "inline-flex",
+    width: "fit-content",
+    borderRadius: 2,
+    py: { xs: 0.5, md: "6px 12px" },
+    transition: "all 0.2s ease",
+    "&:hover": {
+      bgcolor: "action.hover",
+    },
   },
   scheduleIcon: {
-    fontSize: { xs: 20, lg: 25 },
+    fontSize: { xs: 18, md: 20 },
   },
   scheduleText: {
     mx: 0.5,
-    color: "text.secondary",
-    fontSize: { xs: "0.875rem", sm: "1rem" },
-  },
-  addressRow: {
-    mt: 1,
+    fontWeight: 500,
+    color: "text.primary",
+    fontSize: { xs: "0.8125rem", md: "0.875rem" },
   },
   bioDesktopWrapper: {
     display: { xs: "none", sm: "block" },
+    mt: 2,
   },
   bioBox: {
-    maxWidth: "sm",
-    mt: 1.5,
+    maxWidth: "md",
+    color: "text.secondary",
+    lineHeight: 1.5,
+    fontSize: { md: "0.9375rem", lg: "1rem" },
   },
   mobileWrapper: {
     display: { xs: "block", sm: "none" },
+    mt: 2,
   },
   actionsRowMobile: {
     width: "100%",
-    mt: 1.5,
   },
   bioMobileBox: {
-    maxWidth: "sm",
     mt: 2.5,
-    mx: 5,
+    px: 1,
   },
   bioMobileText: {
     textAlign: "center",
-    fontSize: { xs: "0.875rem", sm: "1rem" },
+    color: "text.secondary",
+    lineHeight: 1.5,
+    fontSize: "0.875rem",
   },
 };

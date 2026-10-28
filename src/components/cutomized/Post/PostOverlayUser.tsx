@@ -35,7 +35,7 @@ const PostOverlayUser = ({
         onClick={onNavigateToUser}
         style={{ textDecoration: "none", color: "inherit" }}
       >
-        <Typography variant="body1" fontWeight={800} sx={styles.fullName}>
+        <Typography variant="body1" fontWeight={600} sx={styles.fullName}>
           {user?.fullname}
         </Typography>
         <Typography variant="caption" color="primary">

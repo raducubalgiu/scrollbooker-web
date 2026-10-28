@@ -11,6 +11,7 @@ type ProfileInfoTabProps = {
 
 const ProfileInfoTab = ({ userId }: ProfileInfoTabProps) => {
   const { data, isLoading } = useGetUserProfileAbout(userId);
+  const isBusinessOwner = userId === data?.owner.id;
 
   return (
     <>
@@ -36,6 +37,7 @@ const ProfileInfoTab = ({ userId }: ProfileInfoTabProps) => {
 
             <Grid size={{ xs: 12, md: 5, lg: 4 }}>
               <ProfileInfoRightColumn
+                isBusinessOwner={isBusinessOwner}
                 owner={data.owner}
                 schedules={data.schedules}
               />

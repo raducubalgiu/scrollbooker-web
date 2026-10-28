@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Button,
-  Divider,
-  Stack,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { Button, Divider, Stack, Typography } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import NextLink from "next/link";
 import PasswordInput from "@/components/core/Input/PasswordInput";
@@ -43,7 +36,6 @@ type AuthFormProps = {
   passwordPlaceholder: string;
   submitLabel: string;
   isSubmitting: boolean;
-  submitButtonSx?: SxProps<Theme>;
   onSubmit: (values: AuthFormValues) => void | Promise<void>;
   orLabel: string;
   googleLabel: string;
@@ -62,7 +54,6 @@ export default function AuthForm({
   passwordPlaceholder,
   submitLabel,
   isSubmitting,
-  submitButtonSx,
   onSubmit,
   orLabel,
   googleLabel,
@@ -94,7 +85,10 @@ export default function AuthForm({
 
   return (
     <>
-      <Stack spacing={0.75} sx={{ mb: 5, textAlign: "center" }}>
+      <Stack
+        spacing={0.75}
+        sx={{ mb: 5, textAlign: { xs: "left", md: "center" } }}
+      >
         <Typography variant="h3" sx={{ fontWeight: 800 }}>
           {title}
         </Typography>
@@ -157,12 +151,7 @@ export default function AuthForm({
             disabled={isPhoneFlow}
             onClick={methods.handleSubmit(handleSubmit)}
             disableElevation
-            sx={{
-              mt: 1,
-              fontWeight: 700,
-              textTransform: "none",
-              ...submitButtonSx,
-            }}
+            sx={{ mt: 1 }}
           >
             {submitLabel}
           </Button>

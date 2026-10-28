@@ -26,7 +26,7 @@ const BusinessReviewsTab = ({
 
   return (
     <Box id={id} ref={innerRef}>
-      <Typography variant="h3" gutterBottom>
+      <Typography variant="h4" fontWeight={700} gutterBottom mb={2.5}>
         Recenzii
       </Typography>
 

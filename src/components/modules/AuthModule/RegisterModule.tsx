@@ -10,7 +10,6 @@ import { useTranslations } from "next-intl";
 import { UserRegister } from "@/ts/models/auth/auth";
 import { AppRoutes } from "@/utils/routes";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
-import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
 import { registerWithCredentials } from "@/controllers/auth/auth.service";
 import AuthForm, {
   AuthFormValues,
@@ -44,12 +43,6 @@ function registerErrorMessage(
       return t("errorGeneric");
   }
 }
-
-const submitButtonSx = {
-  py: 1.5,
-  backgroundColor: LANDING_COLORS.primary,
-  "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
-};
 
 export default function RegisterModule() {
   const t = useTranslations("register");
@@ -129,9 +122,7 @@ export default function RegisterModule() {
     >
       <PageGlow />
 
-      <Box sx={{ display: { xs: "none", md: "block" } }}>
-        <TopBar />
-      </Box>
+      <TopBar />
 
       <Box
         sx={{
@@ -154,7 +145,6 @@ export default function RegisterModule() {
             passwordPlaceholder={t("passwordPlaceholder")}
             submitLabel={t("submit")}
             isSubmitting={loading}
-            submitButtonSx={submitButtonSx}
             onSubmit={onSubmit}
             orLabel={t("or")}
             googleLabel={t("continueWithGoogle")}

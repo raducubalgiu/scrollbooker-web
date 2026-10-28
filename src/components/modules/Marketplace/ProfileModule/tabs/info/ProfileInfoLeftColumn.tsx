@@ -21,7 +21,7 @@ const ProfileInfoLeftColumn = ({
     <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
       <Stack spacing={2}>
         <Box>
-          <Typography variant="h6" fontWeight="800" mb={2}>
+          <Typography variant="h6" fontWeight={700} mb={2}>
             Adresa
           </Typography>
 
@@ -32,7 +32,7 @@ const ProfileInfoLeftColumn = ({
         </Box>
 
         <Box>
-          <Typography variant="h6" fontWeight="800" mb={2}>
+          <Typography variant="h6" fontWeight={700} mb={2}>
             Descriere
           </Typography>
 

@@ -179,17 +179,19 @@ const PostComments = ({ postId, postAuthorAvatar }: PostCommentsProps) => {
           ))}
 
           {hasNextPage && (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              fontWeight={600}
-              sx={{ cursor: "pointer" }}
-              onClick={() => fetchNextPage()}
-            >
-              {isFetchingNextPage
-                ? "Se încarcă..."
-                : "Vezi mai multe comentarii"}
-            </Typography>
+            <Stack alignItems="center">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                fontWeight={600}
+                sx={{ cursor: "pointer" }}
+                onClick={() => fetchNextPage()}
+              >
+                {isFetchingNextPage
+                  ? "Se încarcă..."
+                  : "Vezi mai multe comentarii"}
+              </Typography>
+            </Stack>
           )}
         </Stack>
       </Box>

@@ -1,22 +1,23 @@
 "use client";
 
+import React from "react";
 import {
   Box,
-  Divider,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Divider,
 } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
+import NextLink from "next/link";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import BedtimeOutlinedIcon from "@mui/icons-material/BedtimeOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-import React from "react";
-import NextLink from "next/link";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
-import { signOut } from "next-auth/react";
 import { AppRoutes } from "@/utils/routes";
+import { signOut } from "next-auth/react";
 
 const SettingsModule = () => {
   return (
@@ -30,39 +31,74 @@ const SettingsModule = () => {
     >
       <HeaderMobile title="Setări" />
 
-      <List component="nav" aria-labelledby="nested-list-subheader">
-        <ListItemButton component={NextLink} href={AppRoutes.account()}>
-          <ListItemIcon>
+      <List
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        sx={{
+          p: 0,
+          overflow: "hidden",
+        }}
+      >
+        <ListItemButton
+          component={NextLink}
+          href={AppRoutes.account()}
+          sx={styles.listItem}
+        >
+          <ListItemIcon sx={styles.listIcon}>
             <AdminPanelSettingsOutlinedIcon />
           </ListItemIcon>
-          <ListItemText primary="Cont" />
+          <ListItemText
+            primary="Cont"
+            slotProps={{ primary: { fontWeight: 500 } }}
+          />
+          <ChevronRightIcon sx={styles.arrowIcon} />
         </ListItemButton>
 
         <Divider />
 
-        <ListItemButton component={NextLink} href={AppRoutes.display()}>
-          <ListItemIcon>
+        <ListItemButton
+          component={NextLink}
+          href={AppRoutes.display()}
+          sx={styles.listItem}
+        >
+          <ListItemIcon sx={styles.listIcon}>
             <BedtimeOutlinedIcon />
           </ListItemIcon>
-          <ListItemText primary="Afișare" />
+          <ListItemText
+            primary="Afișare"
+            slotProps={{ primary: { fontWeight: 500 } }}
+          />
+          <ChevronRightIcon sx={styles.arrowIcon} />
         </ListItemButton>
 
         <Divider />
 
-        <ListItemButton>
-          <ListItemIcon>
+        <ListItemButton sx={styles.listItem}>
+          <ListItemIcon sx={styles.listIcon}>
             <FlagOutlinedIcon />
           </ListItemIcon>
-          <ListItemText primary="Raportează o problema" />
+          <ListItemText
+            primary="Raportează o problemă"
+            slotProps={{ primary: { fontWeight: 500 } }}
+          />
+          <ChevronRightIcon sx={styles.arrowIcon} />
         </ListItemButton>
 
         <Divider />
 
-        <ListItemButton onClick={() => signOut()}>
-          <ListItemIcon>
+        <ListItemButton onClick={() => signOut()} sx={styles.logoutItem}>
+          <ListItemIcon sx={styles.listIcon}>
             <LogoutIcon color="error" />
           </ListItemIcon>
-          <ListItemText primary="Delogare" />
+          <ListItemText
+            primary="Delogare"
+            slotProps={{
+              primary: {
+                fontWeight: 600,
+                color: "error.main",
+              },
+            }}
+          />
         </ListItemButton>
       </List>
     </Box>
@@ -70,3 +106,30 @@ const SettingsModule = () => {
 };
 
 export default SettingsModule;
+
+const styles = {
+  listItem: {
+    py: 1.8,
+    px: 2.5,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      bgcolor: "action.hover",
+    },
+  },
+  logoutItem: {
+    py: 1.8,
+    px: 2.5,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      bgcolor: "error.lighter",
+    },
+  },
+  listIcon: {
+    minWidth: 40,
+    color: "text.secondary",
+  },
+  arrowIcon: {
+    color: "text.disabled",
+    fontSize: "1.25rem",
+  },
+};

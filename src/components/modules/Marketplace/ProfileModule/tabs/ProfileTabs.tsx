@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Tab,
+  Tabs,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React, { useMemo, useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Theme } from "@mui/material/styles";
@@ -48,6 +55,7 @@ const paramToTabEnumMap = Object.entries(tabEnumToParamMap).reduce(
 );
 
 const getTabs = (
+  shouldDisplayEmployees: boolean,
   isBusinessOrEmployee: boolean,
   isMyProfile: boolean
 ): ProfileTabType[] => {
@@ -66,7 +74,7 @@ const getTabs = (
           },
         ]
       : []),
-    ...(isBusinessOrEmployee
+    ...(isBusinessOrEmployee && shouldDisplayEmployees
       ? [
           {
             route: ProfileTabEnum.EMPLOYEES,
@@ -109,10 +117,11 @@ const ProfileTabs = ({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const shouldDisplayEmployees = businessOwnerId === userId;
 
   const tabs = useMemo<ProfileTabType[]>(
-    () => getTabs(isBusinessOrEmployee, isMyProfile),
-    [isBusinessOrEmployee, isMyProfile]
+    () => getTabs(shouldDisplayEmployees, isBusinessOrEmployee, isMyProfile),
+    [shouldDisplayEmployees, isBusinessOrEmployee, isMyProfile]
   );
 
   const safeValue = useMemo(() => {
@@ -165,6 +174,9 @@ const ProfileTabs = ({
     }
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
     <Box sx={styles.scrollWrapper}>
       {profileHeaderContent}
@@ -174,7 +186,7 @@ const ProfileTabs = ({
           value={safeValue}
           onChange={handleChange}
           sx={styles.tabs}
-          variant="scrollable"
+          variant={isMobile ? "fullWidth" : "scrollable"}
           scrollButtons="auto"
           allowScrollButtonsMobile
         >
@@ -185,18 +197,9 @@ const ProfileTabs = ({
               icon={
                 <Box
                   sx={{
-                    width: { xs: 20, lg: 25 },
-                    height: { xs: 20, lg: 25 },
-                    backgroundColor: "currentColor",
                     maskImage: `url(${t.icon.src})`,
                     WebkitMaskImage: `url(${t.icon.src})`,
-                    maskSize: "contain",
-                    WebkitMaskSize: "contain",
-                    maskRepeat: "no-repeat",
-                    WebkitMaskRepeat: "no-repeat",
-                    maskPosition: "center",
-                    WebkitMaskPosition: "center",
-                    mr: 1,
+                    ...styles.tab,
                   }}
                 />
               }
@@ -244,13 +247,24 @@ const styles = {
       textTransform: "none",
       minHeight: 40,
       minWidth: { xs: 75, md: 150, lg: 150, xl: 200 },
-      //px: { xs: 1, sm: 2 },
       color: "text.secondary",
       "&.Mui-selected": {
         color: "text.primary",
       },
     },
     "& .MuiTab-icon": { fontSize: { xs: 22.5, md: 25, lg: 30 } },
+  },
+  tab: {
+    width: { xs: 20, lg: 25 },
+    height: { xs: 20, lg: 25 },
+    backgroundColor: "currentColor",
+    maskSize: "contain",
+    WebkitMaskSize: "contain",
+    maskRepeat: "no-repeat",
+    WebkitMaskRepeat: "no-repeat",
+    maskPosition: "center",
+    WebkitMaskPosition: "center",
+    mr: 1,
   },
   label: {
     fontSize: 20,

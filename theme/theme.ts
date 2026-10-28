@@ -88,6 +88,8 @@ const commonTypography = {
   fontWeightMedium: 500,
   fontWeightSemiBold: 600,
   fontWeightBold: 700,
+  fontWeightExtraBold: 800,
+  fontWeightBlack: 900,
 
   // --- TITLURI RESPONSIVE ---
   h1: {

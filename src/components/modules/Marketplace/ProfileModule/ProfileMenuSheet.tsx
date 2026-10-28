@@ -48,7 +48,7 @@ const ProfileMenuSheet = ({
           position="relative"
           mx={1.5}
         >
-          <Typography fontWeight={800}>Meniu principal</Typography>
+          <Typography fontWeight={600}>Meniu principal</Typography>
 
           <IconButton
             onClick={onCloseMenu}
