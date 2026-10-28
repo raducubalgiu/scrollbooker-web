@@ -96,22 +96,10 @@
       }
     ],
     "optionalNote": "Filters are optional — you can just as well scroll freely and discover what's new.",
-    "demo": {
-      "title": "Filters",
-      "servicesLabel": "Services",
-      "services": [
-        "Manicure",
-        "Haircut",
-        "Lash extensions",
-        "Make-up",
-        "Massage",
-        "Brows"
-      ],
-      "nearMeLabel": "Near me",
-      "nearMeHint": "Only businesses nearby",
-      "resultAll": "Feed: all videos",
-      "resultServices": "Feed: {services}",
-      "resultNearMe": "close to you"
+    "video": {
+      "imageAlt": "The “Near me” filter in the ScrollBooker app",
+      "nearMe": "Near me",
+      "distance": "Salons < 1 km away"
     }
   },
   "profiles": {
@@ -132,7 +120,11 @@
         "title": "The salon, one tap away",
         "description": "See where each artist works, whether they're open now and how far they are from you."
       }
-    ]
+    ],
+    "video": {
+      "following": "Following",
+      "contact": "WhatsApp · Call"
+    }
   },
   "bookingDemo": {
     "kicker": "The next step",

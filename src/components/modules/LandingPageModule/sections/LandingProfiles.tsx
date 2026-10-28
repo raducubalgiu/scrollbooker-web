@@ -1,12 +1,15 @@
 "use client";
 
-import { alpha, Box, Container, Stack, Typography } from "@mui/material";
-import Image from "next/image";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { useLandingColors } from "../LandingThemeContext";
+import PhoneMockup from "../components/PhoneMockup";
+import FloatingReaction from "../components/FloatingReaction";
 
 const ICONS = [
   AccountCircleRoundedIcon,
@@ -22,7 +25,7 @@ export default function LandingProfiles() {
   const items = t.raw("items") as ProfileItem[];
 
   return (
-    <Box component="section" sx={{ py: { xs: 8, md: 12 } }}>
+    <Box component="section" id="profiles" sx={{ py: { xs: 8, md: 12 } }}>
       <Container maxWidth="lg">
         <Stack
           direction={{ xs: "column-reverse", md: "row" }}
@@ -33,21 +36,38 @@ export default function LandingProfiles() {
             sx={{
               flex: 1,
               width: "100%",
+              maxWidth: { xs: 340, md: 420 },
+              mx: "auto",
               position: "relative",
-              borderRadius: 5,
-              overflow: "hidden",
-              backgroundColor: "#000",
-              aspectRatio: "2400 / 2120",
-              boxShadow: `0 40px 100px -40px ${alpha(LANDING_COLORS.accent, 0.5)}`,
+              px: { xs: 3, md: 5 },
             }}
           >
-            <Image
-              src="/landing/profile-screen.png"
-              alt={t("imageAlt")}
-              fill
-              sizes="(max-width: 900px) 95vw, 560px"
-              style={{ objectFit: "contain", padding: "6%" }}
-            />
+            <Box sx={{ transform: { md: "rotate(-3deg)" } }}>
+              <PhoneMockup
+                src="/landing/videos/profile-poster.jpg"
+                videoSrc="/landing/videos/profile.mp4"
+                alt={t("imageAlt")}
+              />
+            </Box>
+
+            <FloatingReaction
+              delay={0.4}
+              sx={{ top: "9%", right: { xs: -4, md: -24 } }}
+            >
+              <CheckRoundedIcon
+                sx={{ fontSize: 18, color: LANDING_COLORS.accent }}
+              />
+              {t("video.following")}
+            </FloatingReaction>
+
+            <FloatingReaction
+              delay={1.4}
+              variant="primary"
+              sx={{ top: "56%", right: { xs: -4, md: -24 } }}
+            >
+              <WhatsAppIcon sx={{ fontSize: 16 }} />
+              {t("video.contact")}
+            </FloatingReaction>
           </Box>
 
           <Box sx={{ flex: 1, minWidth: 0 }}>

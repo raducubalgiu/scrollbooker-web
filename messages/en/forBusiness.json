@@ -4,14 +4,23 @@
     "description": "A synced online calendar, complete management for your team, and video reviews that bring you new clients for free. Register your salon, clinic, or practice on ScrollBooker."
   },
   "forBusinessTeaser": {
-    "kicker": "Have a salon, clinic, or other business?",
-    "title": "An online calendar, complete management, and new clients from the feed — at no starting cost",
+    "kicker": "For businesses",
+    "title": "Own a salon or work in beauty? Let clients discover you.",
+    "subtitle": "Post videos of your best work, show up in the feed of people nearby and get clients straight from your videos.",
     "items": [
-      "An online calendar, synced in real time",
-      "Complete management: services and staff",
-      "Video reviews that bring you new clients, for free"
+      {
+        "title": "Post videos",
+        "description": "Transformations, techniques, the vibe of your salon — the content you already make."
+      },
+      {
+        "title": "Get discovered locally",
+        "description": "Your videos reach people nearby who are looking for exactly what you offer."
+      },
+      {
+        "title": "Get clients",
+        "description": "Instant booking or a WhatsApp message — you choose how they reach you."
+      }
     ],
-    "imageAlt": "ScrollBooker smart calendar, with automatically synced bookings",
     "button": "Learn more"
   },
   "forBusinessHero": {

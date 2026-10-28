@@ -1,6 +1,7 @@
 import { Metadata, Viewport } from "next";
 import { getTranslations } from "next-intl/server";
 import ForBusinessPageModule from "@/components/modules/ForBusinessPageModule/ForBusinessPageModule";
+import { LandingForcedTheme } from "@/components/modules/LandingPageModule/LandingThemeContext";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("forBusinessMetadata");
@@ -15,8 +16,13 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  themeColor: "#FFFFFF",
 };
 
 export default function ForBusinessPage() {
-  return <ForBusinessPageModule />;
+  return (
+    <LandingForcedTheme mode="light">
+      <ForBusinessPageModule />
+    </LandingForcedTheme>
+  );
 }

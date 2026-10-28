@@ -1,8 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
+import { ThemeProvider } from "@mui/material/styles";
 import { useThemeMode } from "@/providers/ThemeContext";
 import { ThemeModeEnum } from "@/providers/ThemeModeEnum";
+import ForceChrome from "@/components/core/ForceChrome";
+import { darkTheme, lightTheme } from "../../../../theme/theme";
 import {
   LANDING_COLORS_DARK,
   LANDING_COLORS_LIGHT,
@@ -15,16 +18,33 @@ type LandingThemeValue = {
   colors: LandingColors;
 };
 
-// Landing/for-business/partners nu mai au propriul sistem de temă — folosesc
-// exact ThemeModeProvider-ul deja montat la root layout (cookie-based,
-// urmărește system preference via matchMedia când mode === SYSTEM), ca tot
-// restul aplicației. Hook-ul de aici doar traduce rezultatul în paleta
-// LANDING_COLORS_LIGHT/DARK folosită de secțiunile acestor pagini.
+const ForcedLandingModeContext = createContext<LandingMode | null>(null);
+
+type LandingForcedThemeProps = {
+  mode: LandingMode;
+  children: React.ReactNode;
+};
+
+export function LandingForcedTheme({ mode, children }: LandingForcedThemeProps) {
+  return (
+    <ForcedLandingModeContext.Provider value={mode}>
+      <ThemeProvider theme={mode === "dark" ? darkTheme : lightTheme}>
+        <ForceChrome scheme={mode} />
+        {children}
+      </ThemeProvider>
+    </ForcedLandingModeContext.Provider>
+  );
+}
+
+// Landing (/) e forțat pe dark și /for-business pe light prin LandingForcedTheme;
+// fără el (ex. partners), paleta urmează tema aplicației.
 export function useLandingTheme(): LandingThemeValue {
   const { mode, isSystemInDarkMode } = useThemeMode();
+  const forcedMode = useContext(ForcedLandingModeContext);
 
-  const resolvedMode: LandingMode =
-    mode === ThemeModeEnum.SYSTEM
+  const resolvedMode: LandingMode = forcedMode
+    ? forcedMode
+    : mode === ThemeModeEnum.SYSTEM
       ? isSystemInDarkMode
         ? "dark"
         : "light"

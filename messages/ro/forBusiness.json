@@ -4,15 +4,24 @@
     "description": "Calendar online sincronizat, administrare completă pentru echipa ta și recenzii video care îți aduc clienți noi, gratuit. Înregistrează-ți salonul, clinica sau cabinetul pe ScrollBooker."
   },
   "forBusinessTeaser": {
-    "kicker": "Ai un salon, o clinică sau alt business?",
-    "title": "Calendar online, administrare completă și clienți noi din feed — fără cost de pornire",
+    "kicker": "Pentru business-uri",
+    "title": "Ai un salon sau lucrezi în beauty? Lasă clienții să te descopere.",
+    "subtitle": "Postezi clipuri cu ce faci mai bine, apari în feed-ul oamenilor din zona ta și primești clienți direct din video.",
     "items": [
-      "Calendar online, sincronizat în timp real",
-      "Administrare completă: servicii și angajați",
-      "Recenzii video care îți aduc clienți noi, gratuit"
+      {
+        "title": "Postezi clipuri",
+        "description": "Transformări, tehnici, atmosfera din salon — conținutul pe care îl faci deja."
+      },
+      {
+        "title": "Ești descoperit local",
+        "description": "Clipurile tale ajung la oameni din apropiere care caută exact serviciile tale."
+      },
+      {
+        "title": "Primești clienți",
+        "description": "Rezervare instant sau mesaj pe WhatsApp — tu alegi cum te contactează."
+      }
     ],
-    "button": "Vezi mai mult",
-    "imageAlt": "Calendar inteligent ScrollBooker, cu programări sincronizate automat"
+    "button": "Află mai multe"
   },
   "forBusinessHero": {
     "badge": "Lansăm în curând · București · locuri limitate",

@@ -3,7 +3,10 @@
 import { alpha, Box, Container, Stack, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import { useLandingColors } from "../LandingThemeContext";
-import NearMeFilterDemo from "../components/NearMeFilterDemo";
+import PlaceRoundedIcon from "@mui/icons-material/PlaceRounded";
+import ToggleOnRoundedIcon from "@mui/icons-material/ToggleOnRounded";
+import PhoneMockup from "../components/PhoneMockup";
+import FloatingReaction from "../components/FloatingReaction";
 
 type NearMeStep = { title: string; description: string };
 
@@ -130,8 +133,42 @@ export default function LandingNearMe() {
             </Typography>
           </Box>
 
-          <Box sx={{ flex: 1, width: "100%" }}>
-            <NearMeFilterDemo />
+          <Box
+            sx={{
+              flex: 1,
+              width: "100%",
+              maxWidth: { xs: 340, md: 420 },
+              mx: "auto",
+              position: "relative",
+              px: { xs: 3, md: 5 },
+            }}
+          >
+            <Box sx={{ transform: { md: "rotate(3deg)" } }}>
+              <PhoneMockup
+                src="/landing/videos/filters-drawer-poster.jpg"
+                videoSrc="/landing/videos/filters-drawer.mp4"
+                alt={t("video.imageAlt")}
+              />
+            </Box>
+
+            <FloatingReaction
+              delay={0.4}
+              variant="primary"
+              sx={{ top: "2%", left: { xs: -8, md: -32 } }}
+            >
+              <ToggleOnRoundedIcon sx={{ fontSize: 20 }} />
+              {t("video.nearMe")}
+            </FloatingReaction>
+
+            <FloatingReaction
+              delay={1.4}
+              sx={{ bottom: "16%", right: { xs: -4, md: -16 } }}
+            >
+              <PlaceRoundedIcon
+                sx={{ fontSize: 16, color: LANDING_COLORS.primary }}
+              />
+              {t("video.distance")}
+            </FloatingReaction>
           </Box>
         </Stack>
       </Container>
