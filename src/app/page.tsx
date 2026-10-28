@@ -1,7 +1,6 @@
 import { Metadata, Viewport } from "next";
 import { getTranslations } from "next-intl/server";
 import LandingPageModule from "@/components/modules/LandingPageModule/LandingPageModule";
-import { LandingForcedTheme } from "@/components/modules/LandingPageModule/LandingThemeContext";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
@@ -16,13 +15,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#000000",
 };
 
 export default async function HomePage() {
-  return (
-    <LandingForcedTheme mode="dark">
-      <LandingPageModule />
-    </LandingForcedTheme>
-  );
+  return <LandingPageModule />;
 }

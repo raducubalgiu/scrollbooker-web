@@ -61,7 +61,7 @@ export default async function RootLayout({ children }: ChildrenType) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var m=document.cookie.match(/(?:^|;\\s*)sb-ui-color-mode=([^;]+)/);var mode=m?decodeURIComponent(m[1]):"system";var isDark=mode==="dark"||(mode!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var resolved=isDark?"dark":"light";var chrome={"/":"dark","/for-business":"light"}[location.pathname]||resolved;document.documentElement.setAttribute("data-theme",resolved);document.documentElement.style.colorScheme=chrome;var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",chrome==="dark"?"#000000":"#FFFFFF");}catch(e){}})();`,
+            __html: `(function(){try{var m=document.cookie.match(/(?:^|;\\s*)sb-ui-color-mode=([^;]+)/);var mode=m?decodeURIComponent(m[1]):"system";var isDark=mode==="dark"||(mode!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var resolved=isDark?"dark":"light";var chrome={"/for-business":"light"}[location.pathname]||resolved;document.documentElement.setAttribute("data-theme",resolved);document.documentElement.style.colorScheme=chrome;var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",chrome==="dark"?"#000000":"#FFFFFF");}catch(e){}})();`,
           }}
         />
       </head>

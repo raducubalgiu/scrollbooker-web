@@ -36,8 +36,8 @@ export function LandingForcedTheme({ mode, children }: LandingForcedThemeProps) 
   );
 }
 
-// Landing (/) e forțat pe dark și /for-business pe light prin LandingForcedTheme;
-// fără el (ex. partners), paleta urmează tema aplicației.
+// /for-business e forțat pe light prin LandingForcedTheme; fără el (ex. landing,
+// partners), paleta urmează tema aplicației.
 export function useLandingTheme(): LandingThemeValue {
   const { mode, isSystemInDarkMode } = useThemeMode();
   const forcedMode = useContext(ForcedLandingModeContext);
