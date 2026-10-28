@@ -1,4 +1,4 @@
-// Paleta pentru landing/for-business/partners. Aceste pagini nu urmează
+// Paleta pentru landing/for-business. Aceste pagini nu urmează
 // preferința light/dark a userului din restul aplicației — au propriul
 // toggle local (vezi LandingThemeContext.tsx), implicit pe "light".
 export type LandingMode = "light" | "dark";
@@ -13,6 +13,8 @@ export type LandingColors = {
   primary: string;
   primaryDark: string;
   primaryLight: string;
+  accent: string;
+  accentAlt: string;
   beauty: string;
   medical: string;
   auto: string;
@@ -29,6 +31,8 @@ export const LANDING_COLORS_LIGHT: LandingColors = {
   primary: "#FF6F00",
   primaryDark: "#E06400",
   primaryLight: "#FF8F00",
+  accent: "#FF2E7E",
+  accentAlt: "#FFC83D",
   beauty: "#9B4A55",
   medical: "#5EDAD5",
   auto: "#6FA8FF",
@@ -45,6 +49,8 @@ export const LANDING_COLORS_DARK: LandingColors = {
   primary: "#FF6F00",
   primaryDark: "#E06400",
   primaryLight: "#FF8F00",
+  accent: "#FF2E7E",
+  accentAlt: "#FFC83D",
   beauty: "#9B4A55",
   medical: "#5EDAD5",
   auto: "#6FA8FF",

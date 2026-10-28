@@ -1,47 +1,38 @@
 {
   "forBusinessMetadata": {
-    "title": "ScrollBooker for Business — Online Calendar & New Clients, at No Cost",
-    "description": "A synced online calendar, complete management for your team, and video reviews that bring you new clients for free. Register your salon, clinic, or practice on ScrollBooker."
+    "title": "ScrollBooker for Business — New Clients from Video, Free During the Pilot",
+    "description": "Clients discover you through video and book or contact you directly. An online calendar and complete management, free for the whole pilot period. Register your salon on ScrollBooker."
   },
   "forBusinessTeaser": {
-    "kicker": "Have a salon, clinic, or other business?",
-    "title": "An online calendar, complete management, and new clients from the feed — at no starting cost",
+    "kicker": "For businesses",
+    "title": "Own a salon or work in beauty? Let clients discover you.",
+    "subtitle": "Post videos of your best work, show up in the feed of people nearby and get clients straight from your videos.",
     "items": [
-      "An online calendar, synced in real time",
-      "Complete management: services and staff",
-      "Video reviews that bring you new clients, for free"
+      {
+        "title": "Post videos",
+        "description": "Transformations, techniques, the vibe of your salon — the content you already make."
+      },
+      {
+        "title": "Get discovered locally",
+        "description": "Your videos reach people nearby who are looking for exactly what you offer."
+      },
+      {
+        "title": "Get clients",
+        "description": "Instant booking or a WhatsApp message — you choose how they reach you."
+      }
     ],
-    "imageAlt": "ScrollBooker smart calendar, with automatically synced bookings",
     "button": "Learn more"
   },
   "forBusinessHero": {
-    "badge": "Launching soon · Bucharest · limited spots",
-    "launchOffer": "<b>Hurry!</b> Free for <b>3 months</b> for the first <b>10 salons</b>.",
+    "badge": "Pilot program · Bucharest",
+    "launchOffer": "<b>Everything is free</b> for the whole pilot period.",
     "titlePrefix": "Turn your content",
     "titleHighlight": "into bookings",
     "titleSuffix": "",
-    "subtitle": "Already posting on Instagram or TikTok? On ScrollBooker, clients discover your services through video and can book directly from your content — and for running the business, you get an online calendar, services, and staff, all in one place.",
+    "subtitle": "Already posting on Instagram or TikTok? On ScrollBooker, clients discover your services through video and book or contact you straight from your content — and for running the business, you get an online calendar, services, and staff, all in one place.",
     "primaryButton": "Register your business",
     "secondaryButton": "See how it works",
     "imageAlt": "A ScrollBooker business profile, with video content, reviews, and instant booking"
-  },
-  "forBusinessPainPoints": {
-    "kicker": "The problem we solve",
-    "title": "How much time are you still losing to phone and WhatsApp bookings?",
-    "oldWayLabel": "Without ScrollBooker",
-    "newWayLabel": "With ScrollBooker",
-    "oldWay": [
-      "Phone calls and messages for every booking, even outside working hours",
-      "Overlaps and mistakes in a manually kept schedule",
-      "Zero online presence — new clients can't find you unless they already know you",
-      "Reviews, if they exist, stay hidden on other platforms"
-    ],
-    "newWay": [
-      "Clients book themselves, online, 24/7 — no phone calls needed",
-      "A calendar automatically synced, for each staff member",
-      "A profile visible in the app's feed — discovered organically by new clients",
-      "Video reviews circulate as free advertising, straight to new clients"
-    ]
   },
   "forBusinessCalendar": {
     "kicker": "Smart calendar",
@@ -97,7 +88,78 @@
       },
       {
         "title": "You get bookings",
-        "description": "Once approved, your profile becomes visible in the app — clients discover you and book directly."
+        "description": "Once approved, your profile becomes visible in the app — clients discover you and book or contact you directly."
+      }
+    ]
+  },
+  "forBusinessBookingModes": {
+    "kicker": "You choose how clients reach you",
+    "title": "With Instant Booking or without — whatever suits you",
+    "subtitle": "Clients see your videos, prices, location and reviews. What happens when they want to come to you is up to you, in your settings.",
+    "modes": [
+      {
+        "badge": "Instant Booking",
+        "title": "Clients book themselves",
+        "description": "They pick a service and a free slot in your calendar, and the booking lands in your schedule automatically — no phone calls.",
+        "steps": [
+          "Pick a service",
+          "Pick a free slot",
+          "It lands in your calendar"
+        ],
+        "fit": "A good fit if you have a clear schedule and want a full calendar without answering the phone."
+      },
+      {
+        "badge": "Without Instant Booking",
+        "title": "Clients contact you directly",
+        "description": "Instead of a booking button, clients see WhatsApp and call buttons. You choose phone, WhatsApp or both.",
+        "steps": [
+          "Sees the video and price",
+          "Taps WhatsApp or Call",
+          "You agree on a time together"
+        ],
+        "fit": "A good fit if you prefer talking to each client or already keep your schedule elsewhere."
+      }
+    ],
+    "notes": [
+      "Turn Instant Booking on or off anytime, from your settings.",
+      "Clients pay at the salon, just like today — ScrollBooker never collects money from your clients."
+    ]
+  },
+  "forBusinessFaq": {
+    "kicker": "FAQ",
+    "title": "What businesses ask before signing up",
+    "items": [
+      {
+        "question": "How much does it cost?",
+        "answer": "During the pilot, ScrollBooker is completely free. We’ll tell you about the plans after the pilot well in advance, before you pay anything."
+      },
+      {
+        "question": "Do I have to turn on Instant Booking?",
+        "answer": "No. By default, clients contact you by phone or WhatsApp and you agree on a time with them. Turn on Instant Booking only if you want bookings to go straight into your calendar."
+      },
+      {
+        "question": "Do I have to post videos?",
+        "answer": "It’s not required. Videos help you get discovered faster, but your profile stays complete and findable through search, the map and reviews."
+      },
+      {
+        "question": "Do clients pay through the app?",
+        "answer": "No. Clients pay at the salon, just like today. ScrollBooker never collects money from your clients."
+      },
+      {
+        "question": "I work on my own. Is it for me?",
+        "answer": "Yes. Use a single calendar if you work alone, or one calendar per employee if you have a team."
+      },
+      {
+        "question": "Can I add employees?",
+        "answer": "Yes. Invite your team into the app — each employee gets their own schedule and calendar, synced with the business’s overall schedule."
+      },
+      {
+        "question": "How long until I show up in the app?",
+        "answer": "Signing up takes a few minutes. Once you complete your profile and we approve it, clients can see you."
+      },
+      {
+        "question": "Which cities are you in?",
+        "answer": "We’re launching in Bucharest, with beauty businesses: hair and barber, nails, lashes and brows, make-up, skincare and massage. More cities will follow."
       }
     ]
   }

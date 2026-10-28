@@ -1,59 +1,224 @@
 {
   "metadata": {
-    "title": "ScrollBooker — Video-First Booking for Beauty",
-    "description": "ScrollBooker is the social network you book from: video feed, follows, likes, comments, video reviews — plus calendar, services, and staff, fully managed in one place."
+    "title": "ScrollBooker — The video feed for everything beauty",
+    "description": "Scroll videos of real work, like, comment, follow your favorite artists and salons — and when something catches your eye, see the price and location and book on the spot."
   },
   "nav": {
     "login": "Log in",
-    "registerFull": "Register your business",
-    "registerShort": "Register",
-    "forBusiness": "Learn more"
-  },
-  "announcementBar": {
-    "message": "We're launching ScrollBooker in Bucharest — the first salons to sign up get priority access, before the market fills up.",
-    "cta": "See more"
+    "register": "Sign up"
   },
   "hero": {
-    "badge": "Launching soon · Bucharest",
-    "titlePrefix": "Booking becomes",
-    "titleHighlight": "social",
-    "titleSuffix": "",
-    "subtitle": "Follow the businesses you like, discover new content in your feed, watch real video reviews — and book instantly, straight from the video. ScrollBooker is launching soon.",
-    "ctaButton": "Notify me at launch",
-    "imageAlt": "The ScrollBooker feed — video discovery, with likes, comments, and an instant booking button",
-    "forBusinessPrefix": "Have a salon, clinic, or other business?",
-    "forBusinessLink": "Learn more"
-  },
-  "earlyAdopters": {
-    "modalTitle": "Be the first to know",
-    "modalDescription": "ScrollBooker is launching soon — the social network you book from: follow businesses, discover new content in your feed, watch real video reviews, and book instantly, straight from the video. Leave your details and we'll let you know as soon as the app is available.",
-    "firstNameLabel": "First name",
-    "lastNameLabel": "Last name",
-    "cityLabel": "City",
-    "emailLabel": "Email",
-    "submit": "Notify me at launch",
-    "successTitle": "You're on the list!",
-    "successSubtitle": "We'll email you as soon as ScrollBooker is available.",
-    "errorMessage": "Something went wrong. Please try again."
-  },
-  "socialContrast": {
-    "kicker": "Why it's not just another booking app",
-    "title": "The engagement of a social network, with instant booking built in",
-    "oldWayLabel": "A typical booking app",
-    "newWayLabel": "ScrollBooker",
-    "oldWay": [
-      "A static list of businesses, sorted or filtered",
-      "You search actively, only when you already need a booking",
-      "Reviews = text and a score, that's it",
-      "No reason to ever open the app between bookings"
+    "badge": "Beauty, but make it scroll",
+    "words": [
+      "Scroll.",
+      "Like.",
+      "Follow."
     ],
-    "newWay": [
-      "A vertical video feed, like TikTok — you discover organically, not just search",
-      "You follow the businesses you like, see their new content in the feed",
-      "Likes, comments, shares — a real community forms",
-      "Reviews are video clips, not just stars — real proof that circulates as organic advertising for you",
-      "Instant booking, straight from the video, without leaving the app"
+    "highlight": "Book.",
+    "subtitle": "ScrollBooker is the video feed for everything beauty. Discover artists and salons near you, follow them, like and comment — and when something catches your eye, book it or message them directly.",
+    "primaryCta": "Jump into the feed",
+    "secondaryCta": "I already have an account",
+    "imageAlt": "The ScrollBooker feed — beauty videos with likes, comments, follows and a booking button",
+    "forBusinessPrefix": "Own a salon or work in beauty?",
+    "forBusinessLink": "ScrollBooker for business",
+    "reactions": {
+      "likes": "12.4K",
+      "comment": "Where is this salon?!",
+      "follow": "Follow",
+      "distance": "0.7 mi away",
+      "rating": "4.9",
+      "book": "Book now"
+    }
+  },
+  "marquee": {
+    "tags": [
+      "#nailart",
+      "#balayage",
+      "#fade",
+      "#lashlift",
+      "#makeup",
+      "#glowup",
+      "#barber",
+      "#browlamination",
+      "#skincare",
+      "#manicure",
+      "#hairstyle",
+      "#massage"
     ]
+  },
+  "social": {
+    "kicker": "Social, not a directory",
+    "title": "Everything you love about social media. Just for beauty.",
+    "subtitle": "No more searching through lists. You scroll, get inspired, follow and react — exactly like the apps you already use every day.",
+    "feed": {
+      "title": "Explore & Following",
+      "description": "An endless video feed of real work from artists and salons. Plus a tab with only the people you follow."
+    },
+    "items": [
+      {
+        "title": "Likes & comments",
+        "description": "React and ask questions right under the video."
+      },
+      {
+        "title": "Share",
+        "description": "Send it to your bestie: “We're going here!”"
+      },
+      {
+        "title": "Saves",
+        "description": "Keep your favorite looks for later."
+      },
+      {
+        "title": "Follow",
+        "description": "Be first to see new videos from your favorite artists."
+      },
+      {
+        "title": "Video reviews",
+        "description": "Real results filmed by customers, not just stars."
+      }
+    ]
+  },
+  "nearMe": {
+    "kicker": "Near me",
+    "title": "See what's trending right around you",
+    "subtitle": "Want inspiration from your own neighborhood? Pick the services you're into, turn on “Near me” and the feed instantly fills with videos from artists and salons nearby.",
+    "steps": [
+      {
+        "title": "Open the filters",
+        "description": "Right from the feed, without leaving the screen."
+      },
+      {
+        "title": "Choose services",
+        "description": "One or more — from manicure to massage."
+      },
+      {
+        "title": "Turn on “Near me”",
+        "description": "Only see videos from businesses close to you."
+      }
+    ],
+    "optionalNote": "Filters are optional — you can just as well scroll freely and discover what's new.",
+    "video": {
+      "imageAlt": "The “Near me” filter in the ScrollBooker app",
+      "nearMe": "Near me",
+      "distance": "Salons < 1 km away"
+    }
+  },
+  "profiles": {
+    "kicker": "Profiles",
+    "title": "Everyone has a profile. Just like TikTok.",
+    "subtitle": "You and your favorite artists alike. A profile tells you everything at a glance — content, community and, when you need it, the schedule.",
+    "imageAlt": "A hair stylist's ScrollBooker profile, with followers, reviews, videos and services",
+    "items": [
+      {
+        "title": "Your profile",
+        "description": "Followers, following, liked and saved videos — all in one place."
+      },
+      {
+        "title": "Artists' portfolios",
+        "description": "All their videos, follower count, rating and reviews, on a single screen."
+      },
+      {
+        "title": "The salon, one tap away",
+        "description": "See where each artist works, whether they're open now and how far they are from you."
+      }
+    ],
+    "video": {
+      "following": "Following",
+      "contact": "WhatsApp · Call"
+    }
+  },
+  "bookingDemo": {
+    "kicker": "The next step",
+    "title": "Liked what you saw? Go.",
+    "subtitle": "Every video has everything you need to go from inspiration to appointment — without switching apps.",
+    "infoChips": [
+      "Prices",
+      "Location & distance",
+      "Reviews",
+      "Opening hours"
+    ],
+    "instantChip": "Instant Booking",
+    "instantTitle": "Book straight from the video",
+    "instantDescription": "With businesses that take online bookings, you pick the service, day and time, then confirm. No calls, no waiting for a reply.",
+    "contactChip": "Direct contact",
+    "contactTitle": "Message on WhatsApp or call",
+    "contactDescription": "Some businesses prefer to set up the appointment with you directly. Message them on WhatsApp or call them with a single tap.",
+    "whatsapp": "WhatsApp",
+    "call": "Call"
+  },
+  "homeGallery": {
+    "kicker": "What's in the feed",
+    "title": "From nail art to perfect fades",
+    "items": [
+      {
+        "label": "Hair & beard",
+        "alt": "Modern barbershop with clients getting haircuts"
+      },
+      {
+        "label": "Make-up",
+        "alt": "Make-up artist working with a client"
+      },
+      {
+        "label": "Brows & lashes",
+        "alt": "Lash extensions being applied in a studio"
+      },
+      {
+        "label": "Nails",
+        "alt": "Manicure, close-up on finished nails"
+      },
+      {
+        "label": "Facial care",
+        "alt": "Cosmetic facial treatment in a salon"
+      },
+      {
+        "label": "Massage",
+        "alt": "Therapeutic massage in a spa"
+      }
+    ]
+  },
+  "mobileApps": {
+    "kicker": "Mobile apps",
+    "title": "Coming soon to iOS and Android",
+    "subtitle": "The native apps, with a full-screen video feed, are coming soon. Until then, you can create your account and explore ScrollBooker right here on the web.",
+    "forPrefix": "for",
+    "soonChip": "Coming soon"
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "ScrollBooker, in short",
+    "items": [
+      {
+        "question": "Is it like TikTok?",
+        "answer": "Pretty much: a vertical video feed, likes, comments, shares, follows and your own profile. The difference is that everything you see is a real service near you that you can book."
+      },
+      {
+        "question": "Does ScrollBooker cost anything?",
+        "answer": "No. You create your account, explore the feed, follow whoever you like and book appointments for free."
+      },
+      {
+        "question": "What does “Near me” mean?",
+        "answer": "When you turn it on, the feed only shows videos from businesses close to you. You can combine it with the services filter, or not use filters at all."
+      },
+      {
+        "question": "Can I book with any business?",
+        "answer": "Businesses that offer Instant Booking can be booked directly in the app. For the others, you get WhatsApp and call buttons to arrange the appointment with them directly."
+      },
+      {
+        "question": "Which cities is it available in?",
+        "answer": "We're starting with Bucharest and expanding gradually."
+      }
+    ]
+  },
+  "joinCta": {
+    "kicker": "Ready to scroll?",
+    "title": "Your beauty feed is waiting",
+    "subtitle": "Create your account in under a minute, follow your first artists and discover what's new near you.",
+    "primary": "Jump into the feed",
+    "secondary": "Log in"
+  },
+  "footer": {
+    "login": "Log in",
+    "registerBusiness": "Register your business",
+    "forBusiness": "For business"
   },
   "features": {
     "kicker": "Why ScrollBooker",
@@ -64,8 +229,8 @@
         "description": "Likes, comments, shares, followers — every interaction puts you in front of more and more new people, just like on any social network."
       },
       {
-        "title": "Online booking, 24/7",
-        "description": "Clients book straight from the video, anytime, without phone calls or messages. Your calendar updates automatically, in real time."
+        "title": "Online booking or direct contact",
+        "description": "With Instant Booking, clients book straight from the video, anytime, and your calendar updates automatically. Without it, they reach you on WhatsApp or by phone."
       },
       {
         "title": "Complete management",
@@ -101,11 +266,6 @@
       }
     ]
   },
-  "bookingDemo": {
-    "kicker": "How your clients book",
-    "title": "Booking is just as easy — straight from a video",
-    "bookingFlowImageAlt": "Booking flow straight from a video post: see a look in the feed, pick the service, pick the time, confirm the booking"
-  },
   "adminShowcase": {
     "kicker": "For your team",
     "title": "Not just bookings — your whole business, managed",
@@ -138,35 +298,32 @@
         "label": "Hair & beard",
         "alt": "A modern barbershop, with clients getting a haircut"
       },
-      { "label": "Make-up", "alt": "A make-up artist working with a client" },
+      {
+        "label": "Make-up",
+        "alt": "A make-up artist working with a client"
+      },
       {
         "label": "Brows & lashes",
         "alt": "Lash extensions being applied, in a treatment room"
       },
-      { "label": "Nails", "alt": "A manicure, close-up on finished nails" },
+      {
+        "label": "Nails",
+        "alt": "A manicure, close-up on finished nails"
+      },
       {
         "label": "Facial care",
         "alt": "A cosmetic facial treatment, at a salon"
       },
-      { "label": "Massage", "alt": "A therapeutic massage, at a spa salon" }
+      {
+        "label": "Massage",
+        "alt": "A therapeutic massage, at a spa salon"
+      }
     ]
-  },
-  "mobileApps": {
-    "kicker": "Mobile apps",
-    "title": "Just a little longer — and we'll be in your pocket too",
-    "subtitle": "The native ScrollBooker experience, with a full-screen video feed, is coming soon to iOS and Android. Until then, everything you need to get your business ready already works, right here, on the web.",
-    "forPrefix": "for",
-    "soonChip": "Coming soon"
   },
   "cta": {
     "title": "The first businesses to sign up get in front of clients first",
     "subtitle": "Set up your profile now and be visible from day one of launch — signing up takes a few minutes and costs nothing.",
     "button": "Register your business",
     "buttonForBusiness": "Learn more"
-  },
-  "footer": {
-    "login": "Log in",
-    "registerBusiness": "Register your business",
-    "forBusiness": "Learn more"
   }
 }

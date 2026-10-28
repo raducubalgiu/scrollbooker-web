@@ -17,8 +17,14 @@ const IMAGE_SOURCES = [
 
 type GalleryItem = { label: string; alt: string };
 
-export default function LandingGallery() {
-  const t = useTranslations("gallery");
+type LandingGalleryProps = {
+  namespace?: string;
+};
+
+export default function LandingGallery({
+  namespace = "gallery",
+}: LandingGalleryProps) {
+  const t = useTranslations(namespace);
   const LANDING_COLORS = useLandingColors();
   const items = t.raw("items") as GalleryItem[];
 

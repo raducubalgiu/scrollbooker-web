@@ -12,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import LocalOfferRoundedIcon from "@mui/icons-material/LocalOfferRounded";
+import RedeemRoundedIcon from "@mui/icons-material/RedeemRounded";
 import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
 import { AppRoutes } from "@/utils/routes";
 import { trackRegisterCtaClick } from "@/utils/analytics";
@@ -110,28 +110,34 @@ export default function ForBusinessHero() {
 
             <Stack
               direction="row"
-              spacing={1}
+              spacing={1.25}
               alignItems="center"
               sx={{
                 display: "inline-flex",
-                px: 2,
-                py: 1,
-                borderRadius: 50,
+                px: 2.25,
+                py: 1.25,
+                borderRadius: 3,
                 backgroundColor: alpha(LANDING_COLORS.primary, 0.1),
-                border: `1px solid ${alpha(LANDING_COLORS.primary, 0.3)}`,
+                border: `1.5px dashed ${alpha(LANDING_COLORS.primary, 0.6)}`,
                 mb: 4,
               }}
             >
-              <LocalOfferRoundedIcon
-                sx={{ fontSize: 18, color: LANDING_COLORS.primary }}
+              <RedeemRoundedIcon
+                sx={{ fontSize: 24, color: LANDING_COLORS.primary }}
               />
               <Typography
-                variant="body2"
-                sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 500 }}
+                sx={{
+                  color: LANDING_COLORS.textPrimary,
+                  fontWeight: 500,
+                  fontSize: { xs: "0.95rem", md: "1.05rem" },
+                }}
               >
                 {t.rich("launchOffer", {
                   b: (chunks) => (
-                    <Box component="span" sx={{ fontWeight: 800 }}>
+                    <Box
+                      component="span"
+                      sx={{ fontWeight: 800, color: LANDING_COLORS.primary }}
+                    >
                       {chunks}
                     </Box>
                   ),
@@ -146,11 +152,11 @@ export default function ForBusinessHero() {
             >
               <Button
                 component={Link}
-                href={AppRoutes.partners()}
+                href={AppRoutes.registerBusiness()}
                 onClick={() =>
                   trackRegisterCtaClick(
                     "for_business_hero",
-                    AppRoutes.partners()
+                    AppRoutes.registerBusiness()
                   )
                 }
                 variant="contained"

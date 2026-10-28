@@ -80,7 +80,6 @@ export const AppRoutes = {
   getStarted: () => "/auth/get-started",
 
   // Marketing
-  partners: () => "/partners",
   forBusiness: () => "/for-business",
 
   // My Business
