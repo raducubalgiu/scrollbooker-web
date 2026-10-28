@@ -1,8 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Box,
+  useMediaQuery,
+  useTheme,
   List,
   ListItemButton,
   ListItemIcon,
@@ -20,10 +23,18 @@ import { AppRoutes } from "@/utils/routes";
 import { signOut } from "next-auth/react";
 
 const SettingsModule = () => {
+  const theme = useTheme();
+  const router = useRouter();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
+
+  useEffect(() => {
+    if (isDesktop) router.replace(AppRoutes.accountInfo());
+  }, [isDesktop, router]);
+
   return (
     <Box
       sx={{
-        display: "flex",
+        display: { xs: "flex", lg: "none" },
         flexDirection: "column",
         height: "100%",
         width: "100%",
@@ -73,7 +84,11 @@ const SettingsModule = () => {
 
         <Divider />
 
-        <ListItemButton sx={styles.listItem}>
+        <ListItemButton
+          component={NextLink}
+          href={AppRoutes.reportProblem()}
+          sx={styles.listItem}
+        >
           <ListItemIcon sx={styles.listIcon}>
             <FlagOutlinedIcon />
           </ListItemIcon>

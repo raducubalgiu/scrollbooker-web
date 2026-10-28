@@ -1,7 +1,7 @@
 import { useThemeMode } from "@/providers/ThemeContext";
 import { ThemeModeEnum } from "@/providers/ThemeModeEnum";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CheckIcon from "@mui/icons-material/Check";
 import { signOut } from "next-auth/react";
@@ -108,14 +108,14 @@ const DrawerPopper = ({
             <ListItem disablePadding sx={{ px: 0 }}>
               <ListItemButton
                 component={NextLink}
-                href={AppRoutes.account()}
+                href={AppRoutes.settings()}
                 onClick={onCloseMore}
                 sx={styles.button}
               >
                 <ListItemIcon>
-                  <AdminPanelSettingsOutlinedIcon />
+                  <SettingsOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primary={<Typography>Cont</Typography>} />
+                <ListItemText primary={<Typography>Setări</Typography>} />
               </ListItemButton>
             </ListItem>
 

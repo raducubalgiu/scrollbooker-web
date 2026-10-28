@@ -52,19 +52,30 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isVideoPage =
     pathname.startsWith("/user/") && pathname.includes("/post/");
 
+  const isSettingsPage = pathname.startsWith("/settings");
+  const previousIsSettingsPageRef = React.useRef(isSettingsPage);
+  const isEnteringOrLeavingSettings =
+    previousIsSettingsPageRef.current !== isSettingsPage;
+
+  React.useEffect(() => {
+    previousIsSettingsPageRef.current = isSettingsPage;
+  }, [isSettingsPage]);
+
   const isPageWithoutBottomBar =
     pathname.startsWith("/admin") ||
-    pathname.startsWith("/settings") ||
+    isSettingsPage ||
     pathname.startsWith("/upload-video") ||
     isVideoPage;
   const isOverlayOpen = activeView !== null;
   const visualDrawerCollapsed = isOverlayOpen || isDrawerCollapsed;
 
-  const navWidth = isOverlayOpen
-    ? DRAWER_WIDTH
-    : isDrawerCollapsed
-      ? COLLAPSED_WIDTH
-      : DRAWER_WIDTH;
+  const navWidth = isSettingsPage
+    ? 0
+    : isOverlayOpen
+      ? DRAWER_WIDTH
+      : isDrawerCollapsed
+        ? COLLAPSED_WIDTH
+        : DRAWER_WIDTH;
 
   const styles = React.useMemo(
     () =>
@@ -73,8 +84,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         visualDrawerCollapsed,
         navWidth,
         isVideoPage,
+        animateWidth: !isEnteringOrLeavingSettings,
       }),
-    [theme, isOverlayOpen, visualDrawerCollapsed, navWidth, isVideoPage]
+    [
+      theme,
+      isOverlayOpen,
+      visualDrawerCollapsed,
+      navWidth,
+      isVideoPage,
+      isEnteringOrLeavingSettings,
+    ]
   );
 
   const handleCloseAll = React.useCallback(() => setActiveView(null), []);
@@ -121,7 +140,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         sx={styles.backdrop}
       />
 
-      {!isVideoPage && (
+      {!isVideoPage && !isSettingsPage && (
         <Box component="nav" sx={styles.navWrapper}>
           <Drawer
             variant="permanent"
@@ -183,10 +202,16 @@ const getStyles = (
     visualDrawerCollapsed: boolean;
     navWidth: number;
     isVideoPage: boolean;
+    animateWidth: boolean;
   }
 ) => {
-  const { isOverlayOpen, visualDrawerCollapsed, navWidth, isVideoPage } =
-    layoutState;
+  const {
+    isOverlayOpen,
+    visualDrawerCollapsed,
+    navWidth,
+    isVideoPage,
+    animateWidth,
+  } = layoutState;
 
   return {
     layoutContainer: {
@@ -260,7 +285,7 @@ const getStyles = (
       flexGrow: 1,
       width: { lg: `calc(100% - ${navWidth}px)` },
       minWidth: 0,
-      transition: "width 220ms ease",
+      transition: animateWidth ? "width 220ms ease" : "none",
       overflowY: "auto",
       height: { xs: "auto", lg: "100%" },
       flex: { xs: "1 1 auto", lg: "none" },

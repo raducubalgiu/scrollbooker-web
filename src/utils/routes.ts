@@ -103,6 +103,7 @@ export const AppRoutes = {
   accountPassword: () => "/settings/account/password",
   deactivateDeleteAccount: () => "/settings/account/deactivate-delete",
   deleteAccount: () => "/settings/account/deactivate-delete/delete",
+  reportProblem: () => "/settings/report-a-problem",
 
   // Nomenclatures
   rolesAndPermissions: () => "/admin/nomenclatures/roles-and-permissions",
