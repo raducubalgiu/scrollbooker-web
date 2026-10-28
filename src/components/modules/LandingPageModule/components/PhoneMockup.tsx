@@ -1,12 +1,16 @@
+"use client";
+
 import { Box } from "@mui/material";
 import Image from "next/image";
 import { LANDING_COLORS_DARK } from "../landing.constants";
+import LandingVideo from "./LandingVideo";
 
 type PhoneMockupProps = {
   src: string;
   alt: string;
   priority?: boolean;
   sizes?: string;
+  videoSrc?: string;
 };
 
 export default function PhoneMockup({
@@ -14,6 +18,7 @@ export default function PhoneMockup({
   alt,
   priority = false,
   sizes = "(max-width: 900px) 80vw, 320px",
+  videoSrc,
 }: PhoneMockupProps) {
   return (
     <Box
@@ -39,29 +44,49 @@ export default function PhoneMockup({
           backgroundColor: "#000",
         }}
       >
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes={sizes}
-          style={{ objectFit: "cover" }}
-          priority={priority}
-        />
+        {videoSrc ? (
+          <>
+            <LandingVideo src={videoSrc} poster={src} label={alt} />
+            <Box
+              sx={{
+                position: "absolute",
+                top: "1.1%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "46%",
+                height: "4.6%",
+                borderRadius: 50,
+                backgroundColor: "#000",
+              }}
+            />
+          </>
+        ) : (
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes={sizes}
+            style={{ objectFit: "cover" }}
+            priority={priority}
+          />
+        )}
       </Box>
 
-      <Box
-        sx={{
-          position: "absolute",
-          top: 22,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 90,
-          height: 22,
-          borderRadius: "20px",
-          backgroundColor: "#0d0d0d",
-          border: `1px solid ${LANDING_COLORS_DARK.border}`,
-        }}
-      />
+      {!videoSrc && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 22,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 90,
+            height: 22,
+            borderRadius: "20px",
+            backgroundColor: "#0d0d0d",
+            border: `1px solid ${LANDING_COLORS_DARK.border}`,
+          }}
+        />
+      )}
     </Box>
   );
 }

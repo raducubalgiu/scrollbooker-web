@@ -10,9 +10,13 @@ import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
 
 type LandingFooterProps = {
   registerHref?: string;
+  displayLogin?: boolean;
 };
 
-export default function LandingFooter({ registerHref }: LandingFooterProps) {
+export default function LandingFooter({
+  registerHref,
+  displayLogin = false,
+}: LandingFooterProps) {
   const t = useTranslations("footer");
   const LANDING_COLORS = useLandingColors();
 
@@ -32,19 +36,27 @@ export default function LandingFooter({ registerHref }: LandingFooterProps) {
             <LandingLogo height={20} />
           </Box>
 
-          <Stack direction="row" spacing={3} alignItems="center">
-            {/* <Typography
-              component={Link}
-              href={AppRoutes.login()}
-              variant="body2"
-              sx={{
-                color: LANDING_COLORS.textSecondary,
-                textDecoration: "none",
-                "&:hover": { color: LANDING_COLORS.textPrimary },
-              }}
-            >
-              {t("login")}
-            </Typography> */}
+          <Stack
+            direction="row"
+            spacing={3}
+            alignItems="center"
+            flexWrap="wrap"
+            useFlexGap
+          >
+            {displayLogin && (
+              <Typography
+                component={Link}
+                href={AppRoutes.login()}
+                variant="body2"
+                sx={{
+                  color: LANDING_COLORS.textSecondary,
+                  textDecoration: "none",
+                  "&:hover": { color: LANDING_COLORS.textPrimary },
+                }}
+              >
+                {t("login")}
+              </Typography>
+            )}
             <Typography
               component={Link}
               href={registerHref ?? AppRoutes.forBusiness()}

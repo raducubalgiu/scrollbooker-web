@@ -7,18 +7,21 @@ import { useLandingColors } from "../LandingThemeContext";
 import LandingLogo from "../components/LandingLogo";
 import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
 import { useTranslations } from "next-intl";
-import { trackRegisterCtaClick } from "@/utils/analytics";
+import { trackLoginCtaClick, trackRegisterCtaClick } from "@/utils/analytics";
 
 type LandingNavProps = {
   displayCta?: boolean;
+  displayAuth?: boolean;
   logo?: React.ReactNode;
 };
 
 export default function LandingNav({
   displayCta = false,
+  displayAuth = false,
   logo,
 }: LandingNavProps) {
   const t = useTranslations("forBusinessHero");
+  const tNav = useTranslations("nav");
   const LANDING_COLORS = useLandingColors();
 
   return (
@@ -52,14 +55,44 @@ export default function LandingNav({
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               <LandingLanguageSwitcher />
             </Box>
-            {/* <Button
-              component={Link}
-              href={AppRoutes.login()}
-              variant="text"
-              sx={{ color: "rgba(255,255,255,0.85)", px: { xs: 1.25, sm: 1.75 } }}
-            >
-              {t("login")}
-            </Button> */}
+            {displayAuth && (
+              <>
+                <Button
+                  component={Link}
+                  href={AppRoutes.login()}
+                  onClick={() => trackLoginCtaClick("nav")}
+                  variant="text"
+                  size="small"
+                  sx={{
+                    display: { xs: "none", sm: "inline-flex" },
+                    color: LANDING_COLORS.textPrimary,
+                    fontWeight: 600,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {tNav("login")}
+                </Button>
+                <Button
+                  component={Link}
+                  href={AppRoutes.register()}
+                  onClick={() =>
+                    trackRegisterCtaClick("nav", AppRoutes.register())
+                  }
+                  variant="contained"
+                  size="small"
+                  disableElevation
+                  sx={{
+                    backgroundColor: LANDING_COLORS.primary,
+                    color: "#fff",
+                    fontWeight: 700,
+                    whiteSpace: "nowrap",
+                    "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
+                  }}
+                >
+                  {tNav("register")}
+                </Button>
+              </>
+            )}
             {displayCta && (
               <Button
                 variant="contained"

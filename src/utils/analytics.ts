@@ -1,11 +1,11 @@
 import { track } from "@vercel/analytics";
 
-export function trackUserSubscribeToLaunch() {
-  track("user_subscribe_to_launch");
-}
-
 export function trackRegisterCtaClick(location: string, destination: string) {
   track("register_cta_click", { location, destination });
+}
+
+export function trackLoginCtaClick(location: string) {
+  track("login_cta_click", { location });
 }
 
 export function trackBusinessLeadSubmitted(

@@ -2,15 +2,18 @@
 
 import { Box } from "@mui/material";
 import { useLandingColors } from "./LandingThemeContext";
-import LandingAnnouncementBar from "./sections/LandingAnnouncementBar";
 import LandingNav from "./sections/LandingNav";
 import LandingHero from "./sections/LandingHero";
-import LandingSocialContrast from "./sections/LandingSocialContrast";
+import LandingHashtagMarquee from "./sections/LandingHashtagMarquee";
+import LandingSocialBento from "./sections/LandingSocialBento";
+import LandingNearMe from "./sections/LandingNearMe";
+import LandingProfiles from "./sections/LandingProfiles";
 import LandingBookingDemo from "./sections/LandingBookingDemo";
-import LandingForBusinessTeaser from "./sections/LandingForBusinessTeaser";
 import LandingGallery from "./sections/LandingGallery";
 import LandingMobileApps from "./sections/LandingMobileApps";
-import LandingCTA from "./sections/LandingCTA";
+import LandingForBusinessTeaser from "./sections/LandingForBusinessTeaser";
+import LandingFaq from "./sections/LandingFaq";
+import LandingJoinCta from "./sections/LandingJoinCta";
 import LandingFooter from "./sections/LandingFooter";
 
 export default function LandingPageModule() {
@@ -24,16 +27,19 @@ export default function LandingPageModule() {
         overflowX: "hidden",
       }}
     >
-      <LandingAnnouncementBar />
-      <LandingNav />
+      <LandingNav displayAuth />
       <LandingHero />
-      <LandingSocialContrast />
+      <LandingHashtagMarquee />
+      <LandingSocialBento />
+      <LandingNearMe />
+      <LandingProfiles />
       <LandingBookingDemo />
-      <LandingGallery />
+      <LandingGallery namespace="homeGallery" />
       <LandingMobileApps />
       <LandingForBusinessTeaser />
-      <LandingCTA />
-      <LandingFooter />
+      <LandingFaq />
+      <LandingJoinCta />
+      <LandingFooter displayLogin />
     </Box>
   );
 }

@@ -1,59 +1,234 @@
 {
   "metadata": {
-    "title": "ScrollBooker — Video-First Booking pentru Beauty",
-    "description": "ScrollBooker e rețeaua socială din care se rezervă: feed video, follow, like, comentarii, recenzii video — plus calendar, servicii și angajați administrate complet, într-un singur loc."
+    "title": "ScrollBooker — Feed-ul video pentru tot ce ține de beauty",
+    "description": "Scrollezi clipuri cu lucrări reale, dai like, comentezi, urmărești artiștii și saloanele preferate — iar când ceva îți place, vezi prețul și locația și rezervi pe loc."
   },
   "nav": {
     "login": "Autentificare",
-    "registerFull": "Înregistrează-ți afacerea",
-    "registerShort": "Înregistrare",
-    "forBusiness": "Vezi mai mult"
-  },
-  "announcementBar": {
-    "message": "Lansăm ScrollBooker în București — primele saloane înscrise au acces prioritar.",
-    "cta": "Vezi mai mult"
+    "register": "Creează cont"
   },
   "hero": {
-    "badge": "Lansăm în curând · București",
-    "titlePrefix": "Rezervările tale devin",
-    "titleHighlight": "sociale",
-    "titleSuffix": "",
-    "subtitle": "Urmărești afacerile care îți plac, descoperi conținut nou în feed, vezi recenzii video reale — și rezervi instant, direct din videoclip. ScrollBooker lansează în curând.",
-    "ctaButton": "Anunță-mă la lansare",
-    "imageAlt": "Feed-ul ScrollBooker — descoperire video, cu like-uri, comentarii și buton de rezervare instant",
-    "forBusinessPrefix": "Ai un salon, clinică sau alt business?",
-    "forBusinessLink": "Vezi mai mult"
-  },
-  "earlyAdopters": {
-    "modalTitle": "Fii primul care află",
-    "modalDescription": "ScrollBooker lansează în curând — rețeaua socială din care rezervi: urmărești afaceri, descoperi conținut nou în feed, vezi recenzii video reale și rezervi instant, direct din videoclip. Lasă-ne datele tale și te anunțăm de îndată ce aplicația este disponibilă.",
-    "firstNameLabel": "Prenume",
-    "lastNameLabel": "Nume",
-    "cityLabel": "Oraș",
-    "emailLabel": "Email",
-    "submit": "Anunță-mă la lansare",
-    "successTitle": "Te-ai înscris!",
-    "successSubtitle": "Îți vom trimite un email de îndată ce ScrollBooker este disponibil.",
-    "errorMessage": "A apărut o eroare. Încearcă din nou."
-  },
-  "socialContrast": {
-    "kicker": "De ce nu e doar o aplicație de programări",
-    "title": "Interacțiunea unei rețele sociale, cu rezervare instant inclusă",
-    "oldWayLabel": "O aplicație de programări obișnuită",
-    "newWayLabel": "ScrollBooker",
-    "oldWay": [
-      "O listă statică de afaceri, sortată sau filtrată",
-      "Cauți activ, doar când ai deja nevoie de o programare",
-      "Recenzii = text și un scor, atât",
-      "Zero motiv să mai deschizi aplicația între două programări"
+    "badge": "Beauty, dar pe scroll",
+    "words": [
+      "Scroll.",
+      "Like.",
+      "Follow."
     ],
-    "newWay": [
-      "Feed video vertical, ca pe TikTok — descoperi organic, nu doar cauți",
-      "Urmărești afacerile care îți plac, le vezi conținutul nou în feed",
-      "Aprecieri, comentarii, distribuiri — se formează o comunitate reală",
-      "Recenziile sunt clipuri video, nu doar stele — dovadă reală, care circulă ca reclamă organică pentru tine",
-      "Rezervare instant, direct din videoclip, fără să ieși din aplicație"
+    "highlight": "Rezervă.",
+    "subtitle": "ScrollBooker e feed-ul video pentru tot ce ține de beauty. Descoperi artiști și saloane din zona ta, îi urmărești, dai like și comentezi — iar când ceva îți place, rezervi sau le scrii direct.",
+    "primaryCta": "Intră în feed",
+    "secondaryCta": "Am deja cont",
+    "imageAlt": "Feed-ul ScrollBooker — clipuri video beauty cu like-uri, comentarii, follow și buton de rezervare",
+    "forBusinessPrefix": "Ai un salon sau lucrezi în beauty?",
+    "forBusinessLink": "ScrollBooker pentru business",
+    "reactions": {
+      "likes": "12,4K",
+      "comment": "Unde e salonul ăsta?!",
+      "follow": "Urmărește",
+      "distance": "1,2 km de tine",
+      "rating": "4,9",
+      "book": "Rezervă acum"
+    }
+  },
+  "marquee": {
+    "tags": [
+      "#nailart",
+      "#balayage",
+      "#fade",
+      "#lashlift",
+      "#makeup",
+      "#glowup",
+      "#barber",
+      "#browlamination",
+      "#skincare",
+      "#manichiură",
+      "#coafuri",
+      "#masaj"
     ]
+  },
+  "social": {
+    "kicker": "Social, nu catalog",
+    "title": "Tot ce iubești la social media. Doar că despre beauty.",
+    "subtitle": "Nu cauți într-o listă. Scrollezi, te inspiri, urmărești și reacționezi — exact ca pe aplicațiile pe care le folosești deja zilnic.",
+    "feed": {
+      "title": "Explore & Following",
+      "description": "Un feed video infinit cu lucrări reale de la artiști și saloane. Și un tab doar cu cei pe care îi urmărești."
+    },
+    "items": [
+      {
+        "title": "Like-uri & comentarii",
+        "description": "Reacționezi și întrebi direct sub clip."
+      },
+      {
+        "title": "Share",
+        "description": "Trimiți clipul prietenei: „Hai și noi aici!”"
+      },
+      {
+        "title": "Salvări",
+        "description": "Păstrezi look-urile preferate pentru mai târziu."
+      },
+      {
+        "title": "Follow",
+        "description": "Vezi primul clipurile noi ale artiștilor preferați."
+      },
+      {
+        "title": "Recenzii video",
+        "description": "Rezultate reale, filmate de clienți, nu doar stele."
+      }
+    ]
+  },
+  "nearMe": {
+    "kicker": "În zona mea",
+    "title": "Vezi ce e trending chiar lângă tine",
+    "subtitle": "Vrei inspirație din cartierul tău? Bifezi serviciile care te interesează, activezi „În zona mea” și feed-ul se umple pe loc cu clipuri de la artiști și saloane din apropiere.",
+    "steps": [
+      {
+        "title": "Deschizi filtrele",
+        "description": "Direct din feed, fără să schimbi ecranul."
+      },
+      {
+        "title": "Alegi serviciile",
+        "description": "Unul sau mai multe — de la manichiură la masaj."
+      },
+      {
+        "title": "Activezi „În zona mea”",
+        "description": "Vezi doar clipuri de la business-uri din apropierea ta."
+      }
+    ],
+    "optionalNote": "Filtrele sunt opționale — poți la fel de bine să scrollezi liber și să descoperi ce e nou.",
+    "demo": {
+      "title": "Filtre",
+      "servicesLabel": "Servicii",
+      "services": [
+        "Manichiură",
+        "Tuns",
+        "Extensii gene",
+        "Machiaj",
+        "Masaj",
+        "Pensat"
+      ],
+      "nearMeLabel": "În zona mea",
+      "nearMeHint": "Doar business-uri din apropiere",
+      "resultAll": "Feed: toate clipurile",
+      "resultServices": "Feed: {services}",
+      "resultNearMe": "aproape de tine"
+    }
+  },
+  "profiles": {
+    "kicker": "Profiluri",
+    "title": "Toată lumea are profil. Ca pe TikTok.",
+    "subtitle": "Și tu, și artiștii tăi preferați. Un profil spune totul dintr-o privire — conținut, comunitate și, la nevoie, programul.",
+    "imageAlt": "Profil de hair stylist în ScrollBooker, cu urmăritori, recenzii, clipuri și servicii",
+    "items": [
+      {
+        "title": "Profilul tău",
+        "description": "Urmăritori, persoane urmărite, clipurile apreciate și salvate — totul într-un singur loc."
+      },
+      {
+        "title": "Portofoliul artiștilor",
+        "description": "Toate clipurile lor, numărul de urmăritori, rating-ul și recenziile, pe un singur ecran."
+      },
+      {
+        "title": "Salonul, la un tap",
+        "description": "Vezi unde lucrează fiecare artist, dacă e deschis acum și cât de departe e de tine."
+      }
+    ]
+  },
+  "bookingDemo": {
+    "kicker": "Pasul următor",
+    "title": "Ți-a plăcut ce ai văzut? Mergi.",
+    "subtitle": "Pe fiecare clip ai tot ce-ți trebuie ca să treci de la inspirație la programare — fără să schimbi aplicația.",
+    "infoChips": [
+      "Prețuri",
+      "Locație & distanță",
+      "Recenzii",
+      "Program"
+    ],
+    "instantChip": "Instant Booking",
+    "instantTitle": "Rezervi direct din clip",
+    "instantDescription": "La business-urile cu rezervare online alegi serviciul, ziua și ora, apoi confirmi. Fără telefoane, fără să aștepți un răspuns.",
+    "contactChip": "Contact direct",
+    "contactTitle": "Scrii pe WhatsApp sau suni",
+    "contactDescription": "Unele business-uri preferă să stabilească programarea direct cu tine. Le scrii pe WhatsApp sau le suni cu un singur tap.",
+    "whatsapp": "WhatsApp",
+    "call": "Sună",
+    "flowCaption": "De la clip la programare, în patru pași",
+    "bookingFlowImageAlt": "Flux de rezervare direct dintr-o postare video: vezi un look în feed, alegi serviciul, alegi ora, confirmi rezervarea"
+  },
+  "homeGallery": {
+    "kicker": "Ce găsești în feed",
+    "title": "De la nail art la fade-uri perfecte",
+    "items": [
+      {
+        "label": "Păr & barbă",
+        "alt": "Barbershop modern, cu clienți la tuns"
+      },
+      {
+        "label": "Make-up",
+        "alt": "Make-up artist lucrând cu o clientă"
+      },
+      {
+        "label": "Sprâncene & gene",
+        "alt": "Aplicare extensii de gene, în cabinet"
+      },
+      {
+        "label": "Unghii",
+        "alt": "Manichiură, close-up pe unghii lucrate"
+      },
+      {
+        "label": "Cosmetică facială",
+        "alt": "Tratament facial cosmetic, într-un salon"
+      },
+      {
+        "label": "Masaj",
+        "alt": "Masaj terapeutic, într-un salon spa"
+      }
+    ]
+  },
+  "mobileApps": {
+    "kicker": "Aplicații mobile",
+    "title": "Curând și pe iOS și Android",
+    "subtitle": "Aplicațiile native, cu feed video pe tot ecranul, vin în curând. Până atunci, îți poți crea contul și poți explora ScrollBooker direct de pe web.",
+    "forPrefix": "pentru",
+    "soonChip": "Curând"
+  },
+  "faq": {
+    "kicker": "Întrebări frecvente",
+    "title": "Pe scurt, despre ScrollBooker",
+    "items": [
+      {
+        "question": "E ca TikTok?",
+        "answer": "Seamănă: feed video vertical, like-uri, comentarii, share, follow și profil propriu. Diferența e că tot ce vezi e un serviciu real, din zona ta, pe care îl poți rezerva."
+      },
+      {
+        "question": "Costă ceva să folosesc ScrollBooker?",
+        "answer": "Nu. Îți creezi contul, explorezi feed-ul, urmărești pe cine vrei și faci programări gratuit."
+      },
+      {
+        "question": "Ce înseamnă „În zona mea”?",
+        "answer": "Când activezi opțiunea, feed-ul îți arată doar clipuri de la business-uri aflate în apropierea ta. O poți combina cu filtrul de servicii sau poți să nu folosești deloc filtre."
+      },
+      {
+        "question": "Pot rezerva la orice business?",
+        "answer": "Business-urile care oferă Instant Booking pot fi rezervate direct din aplicație. Pentru celelalte ai butoane de WhatsApp și apel, ca să stabilești programarea direct cu ele."
+      },
+      {
+        "question": "În ce orașe este disponibil?",
+        "answer": "Începem cu București și ne extindem treptat."
+      }
+    ]
+  },
+  "joinCta": {
+    "kicker": "Gata de scroll?",
+    "title": "Feed-ul tău de beauty te așteaptă",
+    "subtitle": "Creează-ți contul în mai puțin de un minut, urmărește primii artiști și descoperă ce e nou în zona ta.",
+    "primary": "Intră în feed",
+    "secondary": "Autentificare"
+  },
+  "footer": {
+    "login": "Autentificare",
+    "registerBusiness": "Înregistrare business",
+    "forBusiness": "Pentru business"
   },
   "features": {
     "kicker": "De ce ScrollBooker",
@@ -101,11 +276,6 @@
       }
     ]
   },
-  "bookingDemo": {
-    "kicker": "Cum rezervă clienții tăi",
-    "title": "Rezervă la fel de simplu — direct dintr-un videoclip",
-    "bookingFlowImageAlt": "Flux de rezervare direct dintr-o postare video: vezi un look în feed, alegi serviciul, alegi ora, confirmi rezervarea"
-  },
   "adminShowcase": {
     "kicker": "Pentru echipa ta",
     "title": "Nu doar rezervări — administrarea completă a afacerii",
@@ -138,35 +308,32 @@
         "label": "Păr & barbă",
         "alt": "Barbershop modern, cu clienți la tuns"
       },
-      { "label": "Make-up", "alt": "Make-up artist lucrând cu o clientă" },
+      {
+        "label": "Make-up",
+        "alt": "Make-up artist lucrând cu o clientă"
+      },
       {
         "label": "Sprâncene & gene",
         "alt": "Aplicare extensii de gene, în cabinet"
       },
-      { "label": "Unghii", "alt": "Manichiură, close-up pe unghii lucrate" },
+      {
+        "label": "Unghii",
+        "alt": "Manichiură, close-up pe unghii lucrate"
+      },
       {
         "label": "Cosmetică facială",
         "alt": "Tratament facial cosmetic, într-un salon"
       },
-      { "label": "Masaj", "alt": "Masaj terapeutic, într-un salon spa" }
+      {
+        "label": "Masaj",
+        "alt": "Masaj terapeutic, într-un salon spa"
+      }
     ]
-  },
-  "mobileApps": {
-    "kicker": "Aplicații mobile",
-    "title": "Încă puțin — și ajungem și în buzunarul tău",
-    "subtitle": "Experiența nativă ScrollBooker, cu feed video full-screen, vine curând pe iOS și Android. Până atunci, tot ce ai nevoie ca să-ți pregătești afacerea funcționează deja, aici, pe web.",
-    "forPrefix": "pentru",
-    "soonChip": "Curând"
   },
   "cta": {
     "title": "Primele afaceri înscrise ajung primele în fața clienților",
     "subtitle": "Configurează-ți profilul acum și fii vizibil chiar din prima zi de lansare — înregistrarea durează câteva minute și nu costă nimic.",
     "button": "Înregistrează-ți afacerea",
     "buttonForBusiness": "Vezi mai mult"
-  },
-  "footer": {
-    "login": "Autentificare",
-    "registerBusiness": "Înregistrare business",
-    "forBusiness": "Vezi mai mult"
   }
 }
