@@ -15,7 +15,7 @@ const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
   minHeight: 120,
   padding: "12px 16px",
   borderRadius: 8,
-  background: theme.palette.secondary.main,
+  background: theme.palette.neutral.main,
   color: theme.palette.text.primary,
   border: "none",
   outline: "none",

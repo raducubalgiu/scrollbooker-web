@@ -38,7 +38,7 @@ function CalendarAvailabilityDay({
 		},
 		badge: {
 			"& .MuiBadge-badge": {
-				bgcolor: isAvailable ? "success.main" : "secondary.main",
+				bgcolor: isAvailable ? "success.main" : "neutral.main",
 				borderRadius: "50%",
 				transform: "translate(150%, -150%)",
 			},

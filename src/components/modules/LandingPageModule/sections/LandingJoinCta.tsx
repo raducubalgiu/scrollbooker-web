@@ -7,6 +7,7 @@ import {
   Container,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -16,7 +17,6 @@ import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { AppRoutes } from "@/utils/routes";
 import { trackLoginCtaClick, trackRegisterCtaClick } from "@/utils/analytics";
-import { useLandingColors } from "../LandingThemeContext";
 import { floatKeyframes, motionSafe } from "../landing.motion";
 
 const DECORATIONS = [
@@ -34,7 +34,7 @@ const DECORATIONS = [
 
 export default function LandingJoinCta() {
   const t = useTranslations("joinCta");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
 
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 10 } }}>
@@ -47,8 +47,8 @@ export default function LandingJoinCta() {
             px: { xs: 3, md: 8 },
             py: { xs: 8, md: 10 },
             textAlign: "center",
-            color: "#fff",
-            background: `linear-gradient(135deg, ${LANDING_COLORS.primary} 0%, ${LANDING_COLORS.accent} 100%)`,
+            color: palette.common.white,
+            background: `linear-gradient(135deg, ${palette.primary.main} 0%, ${palette.secondary.main} 100%)`,
           }}
         >
           {DECORATIONS.map(({ Icon, size, delay, ...position }, index) => (
@@ -59,7 +59,7 @@ export default function LandingJoinCta() {
                 position: "absolute",
                 ...position,
                 fontSize: size,
-                color: alpha("#fff", 0.22),
+                color: alpha(palette.common.white, 0.22),
                 display: { xs: index > 1 ? "none" : "block", md: "block" },
                 ...motionSafe(
                   `${floatKeyframes} 5s ease-in-out ${delay}s infinite`,
@@ -112,11 +112,11 @@ export default function LandingJoinCta() {
                 disableElevation
                 endIcon={<ArrowForwardRoundedIcon />}
                 sx={{
-                  backgroundColor: "#fff",
-                  color: "#111",
+                  backgroundColor: palette.common.white,
+                  color: palette.grey[900],
                   fontWeight: 800,
                   borderRadius: 50,
-                  "&:hover": { backgroundColor: alpha("#fff", 0.9) },
+                  "&:hover": { backgroundColor: alpha(palette.common.white, 0.9) },
                 }}
               >
                 {t("primary")}
@@ -128,13 +128,13 @@ export default function LandingJoinCta() {
                 variant="outlined"
                 size="large"
                 sx={{
-                  color: "#fff",
-                  borderColor: alpha("#fff", 0.6),
+                  color: palette.common.white,
+                  borderColor: alpha(palette.common.white, 0.6),
                   fontWeight: 700,
                   borderRadius: 50,
                   "&:hover": {
-                    borderColor: "#fff",
-                    backgroundColor: alpha("#fff", 0.1),
+                    borderColor: palette.common.white,
+                    backgroundColor: alpha(palette.common.white, 0.1),
                   },
                 }}
               >

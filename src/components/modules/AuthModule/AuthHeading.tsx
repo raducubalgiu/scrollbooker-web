@@ -39,14 +39,14 @@ const styles = {
     py: 0.75,
     borderRadius: 50,
     border: 1,
-    borderColor: (theme: Theme) => alpha(theme.palette.accent.main, 0.35),
-    bgcolor: (theme: Theme) => alpha(theme.palette.accent.main, 0.08),
+    borderColor: (theme: Theme) => alpha(theme.palette.secondary.main, 0.35),
+    bgcolor: (theme: Theme) => alpha(theme.palette.secondary.main, 0.08),
   },
   kickerDot: {
     width: 7,
     height: 7,
     borderRadius: "50%",
-    bgcolor: "accent.main",
+    bgcolor: "secondary.main",
   },
   title: {
     fontSize: { xs: "2.25rem", md: "2.75rem" },

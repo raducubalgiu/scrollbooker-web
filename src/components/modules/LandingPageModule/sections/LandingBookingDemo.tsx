@@ -1,6 +1,6 @@
 "use client";
 
-import { alpha, Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import BoltRoundedIcon from "@mui/icons-material/BoltRounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
@@ -11,7 +11,6 @@ import PlaceRoundedIcon from "@mui/icons-material/PlaceRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import ScheduleRoundedIcon from "@mui/icons-material/ScheduleRounded";
 import { useTranslations } from "next-intl";
-import { useLandingColors } from "../LandingThemeContext";
 
 const INFO_ICONS = [
   SellRoundedIcon,
@@ -22,15 +21,15 @@ const INFO_ICONS = [
 
 export default function LandingBookingDemo() {
   const t = useTranslations("bookingDemo");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const infoChips = t.raw("infoChips") as string[];
 
   const cardSx = {
     height: "100%",
     p: { xs: 3, md: 4 },
     borderRadius: 3,
-    border: `1px solid ${LANDING_COLORS.border}`,
-    backgroundColor: LANDING_COLORS.background,
+    border: `1px solid ${palette.divider}`,
+    backgroundColor: palette.background.default,
   };
 
   const chipSx = {
@@ -54,8 +53,8 @@ export default function LandingBookingDemo() {
     borderRadius: 50,
     fontWeight: 600,
     fontSize: "0.9rem",
-    border: `1px solid ${LANDING_COLORS.border}`,
-    color: LANDING_COLORS.textPrimary,
+    border: `1px solid ${palette.divider}`,
+    color: palette.text.primary,
   };
 
   return (
@@ -63,9 +62,9 @@ export default function LandingBookingDemo() {
       component="section"
       sx={{
         py: { xs: 8, md: 12 },
-        backgroundColor: LANDING_COLORS.surface,
-        borderTop: `1px solid ${LANDING_COLORS.border}`,
-        borderBottom: `1px solid ${LANDING_COLORS.border}`,
+        backgroundColor: palette.surface.main,
+        borderTop: `1px solid ${palette.divider}`,
+        borderBottom: `1px solid ${palette.divider}`,
       }}
     >
       <Container maxWidth="lg">
@@ -73,7 +72,7 @@ export default function LandingBookingDemo() {
           <Typography
             variant="overline"
             sx={{
-              color: LANDING_COLORS.primary,
+              color: palette.primary.main,
               fontWeight: 800,
               letterSpacing: 1.5,
             }}
@@ -83,7 +82,7 @@ export default function LandingBookingDemo() {
           <Typography
             variant="h2"
             sx={{
-              color: LANDING_COLORS.textPrimary,
+              color: palette.text.primary,
               fontWeight: 900,
               letterSpacing: "-0.03em",
             }}
@@ -92,7 +91,7 @@ export default function LandingBookingDemo() {
           </Typography>
           <Typography
             variant="body1"
-            sx={{ color: LANDING_COLORS.textSecondary, fontSize: "1.1rem" }}
+            sx={{ color: palette.text.secondary, fontSize: "1.1rem" }}
           >
             {t("subtitle")}
           </Typography>
@@ -109,12 +108,12 @@ export default function LandingBookingDemo() {
                   ...chipSx,
                   py: 0.75,
                   fontSize: "0.875rem",
-                  color: LANDING_COLORS.textPrimary,
-                  border: `1px solid ${LANDING_COLORS.border}`,
-                  backgroundColor: LANDING_COLORS.background,
+                  color: palette.text.primary,
+                  border: `1px solid ${palette.divider}`,
+                  backgroundColor: palette.background.default,
                 }}
               >
-                <Icon sx={{ fontSize: 16, color: LANDING_COLORS.primary }} />
+                <Icon sx={{ fontSize: 16, color: palette.primary.main }} />
                 {chip}
               </Box>
             );
@@ -125,13 +124,13 @@ export default function LandingBookingDemo() {
           <Grid size={{ xs: 12, md: 6 }}>
             <Stack
               spacing={2}
-              sx={{ ...cardSx, borderColor: LANDING_COLORS.primary }}
+              sx={{ ...cardSx, borderColor: palette.primary.main }}
             >
               <Box
                 sx={{
                   ...chipSx,
-                  backgroundColor: LANDING_COLORS.primary,
-                  color: "#fff",
+                  backgroundColor: palette.primary.main,
+                  color: palette.common.white,
                 }}
               >
                 <BoltRoundedIcon sx={{ fontSize: 16 }} />
@@ -139,13 +138,13 @@ export default function LandingBookingDemo() {
               </Box>
               <Typography
                 variant="h5"
-                sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 700 }}
+                sx={{ color: palette.text.primary, fontWeight: 700 }}
               >
                 {t("instantTitle")}
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.7 }}
+                sx={{ color: palette.text.secondary, lineHeight: 1.7 }}
               >
                 {t("instantDescription")}
               </Typography>
@@ -157,8 +156,8 @@ export default function LandingBookingDemo() {
               <Box
                 sx={{
                   ...chipSx,
-                  backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.08),
-                  color: LANDING_COLORS.textPrimary,
+                  backgroundColor: alpha(palette.text.primary, 0.08),
+                  color: palette.text.primary,
                 }}
               >
                 <ChatRoundedIcon sx={{ fontSize: 16 }} />
@@ -166,24 +165,24 @@ export default function LandingBookingDemo() {
               </Box>
               <Typography
                 variant="h5"
-                sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 700 }}
+                sx={{ color: palette.text.primary, fontWeight: 700 }}
               >
                 {t("contactTitle")}
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.7 }}
+                sx={{ color: palette.text.secondary, lineHeight: 1.7 }}
               >
                 {t("contactDescription")}
               </Typography>
               <Stack direction="row" spacing={1.5} sx={{ pt: 1 }}>
                 <Box sx={contactButtonSx}>
-                  <WhatsAppIcon sx={{ fontSize: 18, color: "#25D366" }} />
+                  <WhatsAppIcon sx={{ fontSize: 18, color: palette.whatsapp.main }} />
                   {t("whatsapp")}
                 </Box>
                 <Box sx={contactButtonSx}>
                   <PhoneRoundedIcon
-                    sx={{ fontSize: 18, color: LANDING_COLORS.primary }}
+                    sx={{ fontSize: 18, color: palette.primary.main }}
                   />
                   {t("call")}
                 </Box>

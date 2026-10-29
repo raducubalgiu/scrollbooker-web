@@ -85,7 +85,7 @@ const UploadVideoDesktopModule = () => {
 
             <Button
               variant="outlined"
-              color="secondary"
+              color="neutral"
               onClick={handleContainerClick}
               startIcon={<UploadIcon />}
               fullWidth

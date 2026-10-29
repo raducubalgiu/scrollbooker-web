@@ -33,7 +33,7 @@ const CreateOwnClientBottomBar = ({
         </Stack>
 
         <Stack direction="row" spacing={1.5}>
-          <Button variant="outlined" color="secondary" onClick={onReset}>
+          <Button variant="outlined" color="neutral" onClick={onReset}>
             Reset
           </Button>
           <Button

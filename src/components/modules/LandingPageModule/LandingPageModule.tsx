@@ -1,7 +1,6 @@
 "use client";
 
-import { Box } from "@mui/material";
-import { useLandingColors } from "./LandingThemeContext";
+import { Box, useTheme } from "@mui/material";
 import LandingNav from "./sections/LandingNav";
 import LandingHero from "./sections/LandingHero";
 import LandingHashtagMarquee from "./sections/LandingHashtagMarquee";
@@ -17,12 +16,12 @@ import LandingJoinCta from "./sections/LandingJoinCta";
 import LandingFooter from "./sections/LandingFooter";
 
 export default function LandingPageModule() {
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
 
   return (
     <Box
       sx={{
-        backgroundColor: LANDING_COLORS.background,
+        backgroundColor: palette.background.default,
         minHeight: "100dvh",
         overflowX: "hidden",
       }}

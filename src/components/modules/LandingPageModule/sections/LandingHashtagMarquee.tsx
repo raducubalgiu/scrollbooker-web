@@ -1,13 +1,12 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { useLandingColors } from "../LandingThemeContext";
 import { marqueeKeyframes, motionSafe } from "../landing.motion";
 
 export default function LandingHashtagMarquee() {
   const t = useTranslations("marquee");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const tags = t.raw("tags") as string[];
 
   return (
@@ -16,7 +15,7 @@ export default function LandingHashtagMarquee() {
       sx={{
         overflow: "hidden",
         py: { xs: 2, md: 2.5 },
-        background: `linear-gradient(90deg, ${LANDING_COLORS.primary}, ${LANDING_COLORS.accent})`,
+        background: `linear-gradient(90deg, ${palette.primary.main}, ${palette.secondary.main})`,
         transform: "rotate(-1.5deg) scale(1.02)",
         my: { xs: 1, md: 2 },
       }}
@@ -38,7 +37,7 @@ export default function LandingHashtagMarquee() {
               fontWeight: 900,
               letterSpacing: "-0.02em",
               whiteSpace: "nowrap",
-              color: index % 2 === 0 ? "#fff" : "transparent",
+              color: index % 2 === 0 ? palette.common.white : "transparent",
               WebkitTextStroke: index % 2 === 0 ? undefined : "1.5px #fff",
             }}
           >

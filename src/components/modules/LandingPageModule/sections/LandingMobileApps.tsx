@@ -1,10 +1,9 @@
 "use client";
 
-import { alpha, Box, Chip, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Chip, Container, Stack, Typography, useTheme } from "@mui/material";
 import AppleIcon from "@mui/icons-material/Apple";
 import AndroidRoundedIcon from "@mui/icons-material/AndroidRounded";
 import { useTranslations } from "next-intl";
-import { useLandingColors } from "../LandingThemeContext";
 
 const PLATFORMS = [
   {
@@ -21,7 +20,7 @@ const PLATFORMS = [
 
 export default function LandingMobileApps() {
   const t = useTranslations("mobileApps");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
 
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 12 }, position: "relative", overflow: "hidden" }}>
@@ -34,7 +33,7 @@ export default function LandingMobileApps() {
           width: 700,
           height: 700,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${LANDING_COLORS.primary}1a 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${palette.primary.main}1a 0%, transparent 70%)`,
           pointerEvents: "none",
         }}
       />
@@ -43,19 +42,19 @@ export default function LandingMobileApps() {
         <Stack spacing={2} alignItems="center" textAlign="center" sx={{ mb: 5 }}>
           <Typography
             variant="overline"
-            sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
+            sx={{ color: palette.primary.main, fontWeight: 700, letterSpacing: 1.5 }}
           >
             {t("kicker")}
           </Typography>
           <Typography
             variant="h2"
-            sx={{ color: LANDING_COLORS.textPrimary, maxWidth: 640 }}
+            sx={{ color: palette.text.primary, maxWidth: 640 }}
           >
             {t("title")}
           </Typography>
           <Typography
             variant="body1"
-            sx={{ color: LANDING_COLORS.textSecondary, maxWidth: 520 }}
+            sx={{ color: palette.text.secondary, maxWidth: 520 }}
           >
             {t("subtitle")}
           </Typography>
@@ -78,8 +77,8 @@ export default function LandingMobileApps() {
                 px: 3,
                 py: 2.25,
                 borderRadius: 3,
-                border: `1px solid ${LANDING_COLORS.border}`,
-                backgroundColor: LANDING_COLORS.surface,
+                border: `1px solid ${palette.divider}`,
+                backgroundColor: palette.surface.main,
               }}
             >
               <Box
@@ -90,8 +89,8 @@ export default function LandingMobileApps() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.06),
-                  color: LANDING_COLORS.textPrimary,
+                  backgroundColor: alpha(palette.text.primary, 0.06),
+                  color: palette.text.primary,
                   flexShrink: 0,
                 }}
               >
@@ -100,13 +99,13 @@ export default function LandingMobileApps() {
 
               <Box sx={{ flex: 1, minWidth: 0 }}>
                 <Typography
-                  sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 700 }}
+                  sx={{ color: palette.text.primary, fontWeight: 700 }}
                 >
                   {platform.store}
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: LANDING_COLORS.textSecondary }}
+                  sx={{ color: palette.text.secondary }}
                 >
                   {t("forPrefix")} {platform.name}
                 </Typography>
@@ -117,9 +116,9 @@ export default function LandingMobileApps() {
                 size="small"
                 sx={{
                   backgroundColor: "rgba(255,111,0,0.12)",
-                  color: LANDING_COLORS.primary,
+                  color: palette.primary.main,
                   fontWeight: 700,
-                  border: `1px solid ${LANDING_COLORS.primary}`,
+                  border: `1px solid ${palette.primary.main}`,
                 }}
               />
             </Stack>

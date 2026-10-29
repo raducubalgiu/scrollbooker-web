@@ -1,7 +1,6 @@
 "use client";
 
-import { Box } from "@mui/material";
-import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
+import { Box, useTheme } from "@mui/material";
 import { AppRoutes } from "@/utils/routes";
 import LandingNav from "@/components/modules/LandingPageModule/sections/LandingNav";
 import LandingFeatures from "@/components/modules/LandingPageModule/sections/LandingFeatures";
@@ -19,12 +18,12 @@ import ForBusinessHowItWorks from "./sections/ForBusinessHowItWorks";
 import ForBusinessBookingModes from "./sections/ForBusinessBookingModes";
 
 export default function ForBusinessPageModule() {
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
 
   return (
     <Box
       sx={{
-        backgroundColor: LANDING_COLORS.background,
+        backgroundColor: palette.background.default,
         minHeight: "100dvh",
         overflowX: "hidden",
       }}

@@ -43,7 +43,7 @@ const ServiceButton: React.FC<ServiceButtonProps> = ({
         aria-expanded={serviceOpen ? "true" : undefined}
         variant="outlined"
         size="large"
-        color={serviceId ? "primary" : "secondary"}
+        color={serviceId ? "primary" : "neutral"}
         disableElevation
         onClick={handleServiceClick}
         endIcon={<KeyboardArrowDownIcon />}

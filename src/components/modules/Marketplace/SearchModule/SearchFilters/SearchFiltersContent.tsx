@@ -30,7 +30,7 @@ const SearchFiltersContent = ({
 
       <Button
         variant="outlined"
-        color={hasDiscount ? "primary" : "secondary"}
+        color={hasDiscount ? "primary" : "neutral"}
         size="large"
         sx={{ mt: 2.5 }}
         startIcon={<LocalOfferOutlinedIcon />}
@@ -72,7 +72,7 @@ const SearchFiltersContent = ({
         <Button
           key={s.value}
           variant="outlined"
-          color={s.value === sort ? "primary" : "secondary"}
+          color={s.value === sort ? "primary" : "neutral"}
           size="large"
           sx={{ mr: 1, mb: 1 }}
           onClick={() => onSortChange(s.value)}

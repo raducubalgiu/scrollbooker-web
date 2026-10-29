@@ -49,7 +49,7 @@ const ServiceDomainButton: React.FC<ServiceDomainButtonProps> = ({
         aria-expanded={serviceDomainOpen ? "true" : undefined}
         variant="outlined"
         size="large"
-        color={serviceDomainId ? "primary" : "secondary"}
+        color={serviceDomainId ? "primary" : "neutral"}
         disableElevation
         onClick={handleServiceDomainClick}
         endIcon={<KeyboardArrowDownIcon />}

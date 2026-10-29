@@ -1,12 +1,11 @@
 "use client";
 
-import { alpha, Box, Button, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Button, Container, Stack, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { AppRoutes } from "@/utils/routes";
 import { trackRegisterCtaClick } from "@/utils/analytics";
-import { useLandingColors } from "../LandingThemeContext";
 
 type LandingCTAProps = {
   href?: string;
@@ -14,7 +13,7 @@ type LandingCTAProps = {
 
 export default function LandingCTA({ href }: LandingCTAProps) {
   const t = useTranslations("cta");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
 
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 10 } }}>
@@ -27,8 +26,8 @@ export default function LandingCTA({ href }: LandingCTAProps) {
             px: { xs: 3, md: 8 },
             py: { xs: 8, md: 10 },
             textAlign: "center",
-            color: "#fff",
-            background: `linear-gradient(135deg, ${LANDING_COLORS.primary} 0%, ${LANDING_COLORS.accent} 100%)`,
+            color: palette.common.white,
+            background: `linear-gradient(135deg, ${palette.primary.main} 0%, ${palette.secondary.main} 100%)`,
           }}
         >
           <Stack spacing={3} alignItems="center" sx={{ position: "relative" }}>
@@ -65,11 +64,11 @@ export default function LandingCTA({ href }: LandingCTAProps) {
               disableElevation
               endIcon={<ArrowForwardRoundedIcon />}
               sx={{
-                backgroundColor: "#fff",
-                color: "#111",
+                backgroundColor: palette.common.white,
+                color: palette.grey[900],
                 fontWeight: 800,
                 borderRadius: 50,
-                "&:hover": { backgroundColor: alpha("#fff", 0.9) },
+                "&:hover": { backgroundColor: alpha(palette.common.white, 0.9) },
               }}
             >
               {href ? t("button") : t("buttonForBusiness")}

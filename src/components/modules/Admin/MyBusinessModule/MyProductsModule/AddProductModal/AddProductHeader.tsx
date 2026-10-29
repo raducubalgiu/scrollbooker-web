@@ -58,7 +58,7 @@ const AddProductHeader = ({
 
           <Button
             variant="outlined"
-            color="secondary"
+            color="neutral"
             sx={styles.desktopOnly}
             onClick={onReset}
             disabled={isSavingProduct}

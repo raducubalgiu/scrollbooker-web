@@ -20,7 +20,7 @@ const styles = {
     height: { xs: 340, md: 620 },
     borderRadius: "50%",
     background: (theme: Theme) =>
-      `radial-gradient(circle, ${alpha(theme.palette.accent.main, 0.22)} 0%, transparent 70%)`,
+      `radial-gradient(circle, ${alpha(theme.palette.secondary.main, 0.22)} 0%, transparent 70%)`,
     pointerEvents: "none",
   },
   primaryGlow: {

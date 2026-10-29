@@ -19,7 +19,7 @@ type ContactActionButtonProps = {
   source: EngagementSourceEnum;
   bookLabel?: string;
   variant?: "contained" | "outlined";
-  color?: "primary" | "secondary";
+  color?: "primary" | "neutral";
   size?: "small" | "medium" | "large";
   fullWidth?: boolean;
   sx?: SxProps<Theme>;

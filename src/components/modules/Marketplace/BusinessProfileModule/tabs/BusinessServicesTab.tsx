@@ -116,7 +116,7 @@ const BusinessServicesTab = ({
               component={NextLink}
               href={bookingAllServicesHref}
               variant="outlined"
-              color="secondary"
+              color="neutral"
               fullWidth
               disableElevation
               sx={{ mt: 2.5 }}

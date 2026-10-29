@@ -70,7 +70,7 @@ const BookingContactButtons = ({
       {accepts_calls && (
         <Button
           variant="contained"
-          color={accepts_whatsapp ? "secondary" : "primary"}
+          color={accepts_whatsapp ? "neutral" : "primary"}
           disableElevation
           startIcon={<CallIcon />}
           onClick={handleCall}

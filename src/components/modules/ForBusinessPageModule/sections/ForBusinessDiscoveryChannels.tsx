@@ -1,13 +1,12 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Image from "next/image";
 import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { useTranslations } from "next-intl";
-import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
 
 const ICONS = [TravelExploreRoundedIcon, BadgeRoundedIcon, StarRoundedIcon];
 
@@ -15,7 +14,7 @@ type ChannelItem = { title: string; description: string };
 
 export default function ForBusinessDiscoveryChannels() {
   const t = useTranslations("forBusinessDiscovery");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const channels = t.raw("channels") as ChannelItem[];
 
   return (
@@ -24,16 +23,16 @@ export default function ForBusinessDiscoveryChannels() {
         <Stack spacing={1.5} sx={{ mb: 6, maxWidth: 680 }}>
           <Typography
             variant="overline"
-            sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
+            sx={{ color: palette.primary.main, fontWeight: 700, letterSpacing: 1.5 }}
           >
             {t("kicker")}
           </Typography>
-          <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 900, letterSpacing: "-0.03em" }}>
+          <Typography variant="h2" sx={{ color: palette.text.primary, fontWeight: 900, letterSpacing: "-0.03em" }}>
             {t("title")}
           </Typography>
           <Typography
             variant="body1"
-            sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.7 }}
+            sx={{ color: palette.text.secondary, lineHeight: 1.7 }}
           >
             {t("subtitle")}
           </Typography>
@@ -46,8 +45,8 @@ export default function ForBusinessDiscoveryChannels() {
             aspectRatio: "3200 / 2160",
             borderRadius: 3,
             overflow: "hidden",
-            border: `1px solid ${LANDING_COLORS.border}`,
-            backgroundColor: LANDING_COLORS.surface,
+            border: `1px solid ${palette.divider}`,
+            backgroundColor: palette.surface.main,
             mb: 5,
           }}
         >
@@ -72,8 +71,8 @@ export default function ForBusinessDiscoveryChannels() {
                     height: "100%",
                     p: 3,
                     borderRadius: 3,
-                    border: `1px solid ${LANDING_COLORS.border}`,
-                    backgroundColor: LANDING_COLORS.surface,
+                    border: `1px solid ${palette.divider}`,
+                    backgroundColor: palette.surface.main,
                   }}
                 >
                   <Box
@@ -85,17 +84,17 @@ export default function ForBusinessDiscoveryChannels() {
                       alignItems: "center",
                       justifyContent: "center",
                       backgroundColor: "rgba(255,111,0,0.12)",
-                      color: LANDING_COLORS.primary,
+                      color: palette.primary.main,
                     }}
                   >
                     <Icon fontSize="small" />
                   </Box>
-                  <Typography sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 600 }}>
+                  <Typography sx={{ color: palette.text.primary, fontWeight: 600 }}>
                     {channel.title}
                   </Typography>
                   <Typography
                     variant="body2"
-                    sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.6 }}
+                    sx={{ color: palette.text.secondary, lineHeight: 1.6 }}
                   >
                     {channel.description}
                   </Typography>
