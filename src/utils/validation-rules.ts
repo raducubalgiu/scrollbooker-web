@@ -79,3 +79,14 @@ export const max = (n: number) => {
     },
   };
 };
+
+export const passwordStrength = (message: string) => {
+  return {
+    validate: (value: string) =>
+      (value.length >= 8 &&
+        value.length <= 20 &&
+        /[A-Z]/.test(value) &&
+        /\d/.test(value)) ||
+      message,
+  };
+};

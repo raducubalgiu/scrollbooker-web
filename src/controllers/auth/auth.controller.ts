@@ -198,3 +198,53 @@ export const useDeleteAccount = () => {
     meta: { skipErrorToast: true },
   });
 };
+
+export const useForgotPassword = () => {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const response = await axios.post<ActionMessageResponse>(
+        `${BACKEND_URL}/auth/forgot-password`,
+        { email }
+      );
+      return response.data;
+    },
+    meta: { skipErrorToast: true },
+  });
+};
+
+export type ResetPasswordPayload = {
+  email: string;
+  code: string;
+  new_password: string;
+};
+
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: async (payload: ResetPasswordPayload) => {
+      const response = await axios.post<ActionMessageResponse>(
+        `${BACKEND_URL}/auth/reset-password`,
+        payload
+      );
+      return response.data;
+    },
+    meta: { skipErrorToast: true },
+  });
+};
+
+export type ChangePasswordPayload = {
+  current_password: string;
+  new_password: string;
+};
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: async (payload: ChangePasswordPayload) => {
+      const response = await axios.post<ActionMessageResponse>(
+        "/api/protected/auth/change-password",
+        payload
+      );
+      return response.data;
+    },
+    meta: { skipErrorToast: true },
+  });
+};

@@ -132,6 +132,8 @@ export default function SignInModule() {
             footerText={t("noAccount")}
             footerLinkText={t("register")}
             footerHref={AppRoutes.register()}
+            forgotPasswordLabel={t("forgotPassword")}
+            forgotPasswordHref={AppRoutes.forgotPassword()}
           />
         </Container>
       </Box>

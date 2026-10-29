@@ -76,6 +76,11 @@ export const AppRoutes = {
   // Auth
   login: () => "/auth/signin",
   register: () => "/auth/register",
+  forgotPassword: () => "/auth/forgot-password",
+  resetPassword: (email?: string) =>
+    email
+      ? `/auth/reset-password?email=${encodeURIComponent(email)}`
+      : "/auth/reset-password",
   registerBusiness: () => "/auth/register-business",
   getStarted: () => "/auth/get-started",
 
