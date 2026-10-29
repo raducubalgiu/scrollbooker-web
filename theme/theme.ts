@@ -35,6 +35,7 @@ declare module "@mui/material/styles" {
     auto: Palette["primary"];
     medical: Palette["primary"];
     whatsapp: Palette["primary"];
+    accent: Palette["primary"];
   }
 
   interface PaletteOptions {
@@ -47,6 +48,7 @@ declare module "@mui/material/styles" {
     medical?: PaletteOptions["primary"];
     auto?: PaletteOptions["primary"];
     whatsapp?: PaletteOptions["primary"];
+    accent?: PaletteOptions["primary"];
   }
 }
 
@@ -535,6 +537,9 @@ export const darkTheme = createTheme({
     whatsapp: {
       main: "#25D366",
     },
+    accent: {
+      main: "#FF2E7E",
+    },
   },
 
   typography: commonTypography,
@@ -573,6 +578,9 @@ export const lightTheme = createTheme({
     },
     whatsapp: {
       main: "#25D366",
+    },
+    accent: {
+      main: "#FF2E7E",
     },
   },
 

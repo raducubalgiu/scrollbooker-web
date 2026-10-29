@@ -54,7 +54,7 @@ const CollectBusinessValidationStep = () => {
       <Box sx={{ maxWidth: 800, mx: "auto", textAlign: "center" }}>
         <Stack alignItems="center" spacing={2} mb={6}>
           <CheckCircleOutlineIcon sx={{ fontSize: 70, color: "success.main" }} />
-          <Typography variant="h3" sx={{ fontWeight: 800 }}>
+          <Typography variant="h3" sx={{ fontWeight: 900, letterSpacing: "-0.035em" }}>
             {t("title")}
           </Typography>
           <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600 }}>

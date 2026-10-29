@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Button, Divider, Stack, Typography } from "@mui/material";
+import AuthHeading from "@/components/modules/AuthModule/AuthHeading";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 import { FormProvider, useForm } from "react-hook-form";
 import NextLink from "next/link";
 import PasswordInput from "@/components/core/Input/PasswordInput";
@@ -18,13 +20,16 @@ export type AuthFormValues = {
 };
 
 const oauthButtonSx = {
+  py: 1.4,
+  borderRadius: 50,
   borderColor: "divider",
+  bgcolor: "background.paper",
   color: "text.primary",
   textTransform: "none" as const,
-  fontWeight: 600,
+  fontWeight: 700,
   "&:hover": {
     borderColor: "text.secondary",
-    backgroundColor: "action.hover",
+    bgcolor: "background.paper",
   },
 };
 
@@ -89,15 +94,7 @@ export default function AuthForm({
 
   return (
     <>
-      <Stack
-        spacing={0.75}
-        sx={{ mb: 5, textAlign: { xs: "left", md: "center" } }}
-      >
-        <Typography variant="h3" sx={{ fontWeight: 800 }}>
-          {title}
-        </Typography>
-        <Typography color="text.secondary">{subtitle}</Typography>
-      </Stack>
+      <AuthHeading title={title} subtitle={subtitle} />
 
       <Stack spacing={1.5} sx={{ mb: 3 }}>
         <Button
@@ -163,17 +160,14 @@ export default function AuthForm({
             </Button>
           )}
 
-          <Button
-            variant="contained"
-            fullWidth
+          <AuthGradientButton
             loading={isSubmitting}
             disabled={isPhoneFlow}
             onClick={methods.handleSubmit(handleSubmit)}
-            disableElevation
             sx={{ mt: 1 }}
           >
             {submitLabel}
-          </Button>
+          </AuthGradientButton>
         </Stack>
       </FormProvider>
 
@@ -181,7 +175,7 @@ export default function AuthForm({
         direction="row"
         alignItems="center"
         justifyContent="center"
-        sx={{ mt: "auto", borderTop: 1, borderColor: "divider", pt: 1 }}
+        sx={{ mt: "auto", pt: 3 }}
       >
         <Typography color="text.secondary" variant="body2">
           {footerText}

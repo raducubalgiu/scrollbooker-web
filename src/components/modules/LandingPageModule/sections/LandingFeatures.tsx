@@ -33,7 +33,7 @@ export default function LandingFeatures() {
           >
             {t("kicker")}
           </Typography>
-          <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary }}>
+          <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 900, letterSpacing: "-0.03em" }}>
             {t("title")}
           </Typography>
         </Stack>

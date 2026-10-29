@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Container } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
@@ -11,8 +10,7 @@ import { AppRoutes } from "@/utils/routes";
 import AuthForm, {
   AuthFormValues,
 } from "@/components/modules/AuthModule/AuthForm";
-import TopBar from "@/components/core/TopBar/TopBar";
-import PageGlow from "@/components/core/PageGlow/PageGlow";
+import AuthLayout from "@/components/modules/AuthModule/AuthLayout";
 
 const identifierOptions = (t: ReturnType<typeof useTranslations<"signin">>) => [
   {
@@ -91,52 +89,25 @@ export default function SignInModule() {
   };
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        overflow: "hidden",
-        minHeight: "100dvh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <PageGlow />
-
-      <TopBar />
-
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          py: { xs: 3, md: 10 },
-          px: 1,
-        }}
-      >
-        <Container
-          maxWidth="sm"
-          sx={{ flex: 1, display: "flex", flexDirection: "column" }}
-        >
-          <AuthForm
-            title={t("title")}
-            subtitle={t("subtitle")}
-            identifierOptions={identifierOptions(t)}
-            passwordLabel={t("passwordLabel")}
-            passwordPlaceholder={t("passwordLabel")}
-            submitLabel={t("submit")}
-            isSubmitting={loading}
-            onSubmit={handleLogin}
-            orLabel={t("or")}
-            googleLabel={t("continueWithGoogle")}
-            onGoogleClick={handleGoogleSignIn}
-            footerText={t("noAccount")}
-            footerLinkText={t("register")}
-            footerHref={AppRoutes.register()}
-            forgotPasswordLabel={t("forgotPassword")}
-            forgotPasswordHref={AppRoutes.forgotPassword()}
-          />
-        </Container>
-      </Box>
-    </Box>
+    <AuthLayout>
+      <AuthForm
+        title={t("title")}
+        subtitle={t("subtitle")}
+        identifierOptions={identifierOptions(t)}
+        passwordLabel={t("passwordLabel")}
+        passwordPlaceholder={t("passwordLabel")}
+        submitLabel={t("submit")}
+        isSubmitting={loading}
+        onSubmit={handleLogin}
+        orLabel={t("or")}
+        googleLabel={t("continueWithGoogle")}
+        onGoogleClick={handleGoogleSignIn}
+        footerText={t("noAccount")}
+        footerLinkText={t("register")}
+        footerHref={AppRoutes.register()}
+        forgotPasswordLabel={t("forgotPassword")}
+        forgotPasswordHref={AppRoutes.forgotPassword()}
+      />
+    </AuthLayout>
   );
 }

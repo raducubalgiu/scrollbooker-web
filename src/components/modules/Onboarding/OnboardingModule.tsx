@@ -19,8 +19,8 @@ import {
   displayStepLabel,
   RegistrationStepEnum,
 } from "@/ts/enums/RegistrationStepEnum";
-import TopBar from "@/components/core/TopBar/TopBar";
-import PageGlow from "@/components/core/PageGlow/PageGlow";
+import BrandHeader from "@/components/core/BrandHeader/BrandHeader";
+import BrandGlow from "@/components/core/BrandGlow/BrandGlow";
 import { useTranslations } from "next-intl";
 
 import CollectEmailVerificationStep from "./shared/CollectEmailVerification";
@@ -51,6 +51,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
     RegistrationStepEnum.COLLECT_BUSINESS_SERVICES,
     RegistrationStepEnum.COLLECT_BUSINESS_SCHEDULES,
     RegistrationStepEnum.COLLECT_BUSINESS_HAS_EMPLOYEES,
+    RegistrationStepEnum.COLLECT_BUSINESS_INSTANT_BOOKING,
   ];
 
   const activeStepIndex = steps.findIndex((s) => s === step);
@@ -93,10 +94,11 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
 
   return (
     <Box sx={styles.outer}>
-      <PageGlow />
+      <BrandGlow />
 
-      <TopBar
-        rightContent={
+      <BrandHeader
+        maxWidth={false}
+        action={
           <Button
             size="small"
             color="inherit"
@@ -114,7 +116,10 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
           <Grid container sx={{ height: "100%" }} spacing={0}>
             {shouldDisplayStepper && (
               <Grid size={{ xs: 0, md: 3 }} sx={styles.leftColumnContainer}>
-                <Typography variant="h4" sx={{ mb: 6, fontWeight: 800 }}>
+                <Typography
+                  variant="h4"
+                  sx={{ mb: 6, fontWeight: 900, letterSpacing: "-0.03em" }}
+                >
                   {t("stepperTitle")}
                 </Typography>
 
@@ -157,6 +162,7 @@ const styles = {
     flexDirection: "column",
   },
   contentArea: {
+    position: "relative",
     flex: 1,
     minHeight: 0,
     overflow: "hidden",

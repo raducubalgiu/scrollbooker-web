@@ -92,7 +92,9 @@ const CollectBusinessInstantBookingStep = () => {
             }
             label={
               <Box sx={{ ml: 1 }}>
-                <Typography variant="body1">{t("yes")}</Typography>
+                <Typography variant="body1" sx={{ fontWeight: 700 }}>
+                  {t("yes")}
+                </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {t("yesDescription")}
                 </Typography>
@@ -109,7 +111,9 @@ const CollectBusinessInstantBookingStep = () => {
             }
             label={
               <Box sx={{ ml: 1 }}>
-                <Typography variant="body1">{t("no")}</Typography>
+                <Typography variant="body1" sx={{ fontWeight: 700 }}>
+                  {t("no")}
+                </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {t("noDescription")}
                 </Typography>

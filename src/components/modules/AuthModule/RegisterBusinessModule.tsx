@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Container } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { signIn, useSession } from "next-auth/react";
@@ -14,8 +13,7 @@ import { registerWithCredentials } from "@/controllers/auth/auth.service";
 import AuthForm, {
   AuthFormValues,
 } from "@/components/modules/AuthModule/AuthForm";
-import TopBar from "@/components/core/TopBar/TopBar";
-import PageGlow from "@/components/core/PageGlow/PageGlow";
+import AuthLayout from "@/components/modules/AuthModule/AuthLayout";
 
 const identifierOptions = (
   t: ReturnType<typeof useTranslations<"registerBusiness">>
@@ -94,51 +92,24 @@ export default function RegisterBusinessModule() {
   };
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        overflow: "hidden",
-        minHeight: "100dvh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <PageGlow />
-
-      <TopBar />
-
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          py: { xs: 3, md: 10 },
-          px: 1,
-        }}
-      >
-        <Container
-          maxWidth="sm"
-          sx={{ flex: 1, display: "flex", flexDirection: "column" }}
-        >
-          <AuthForm
-            title={t("title")}
-            subtitle={t("subtitle")}
-            identifierOptions={identifierOptions(t)}
-            passwordLabel={t("passwordLabel")}
-            passwordPlaceholder={t("passwordPlaceholder")}
-            submitLabel={t("submit")}
-            isSubmitting={loading}
-            onSubmit={onSubmit}
-            orLabel={t("or")}
-            googleLabel={t("continueWithGoogle")}
-            isGoogleLoading={googleLoading}
-            onGoogleClick={handleGoogleSignIn}
-            footerText={t("haveAccount")}
-            footerLinkText={t("login")}
-            footerHref={AppRoutes.login()}
-          />
-        </Container>
-      </Box>
-    </Box>
+    <AuthLayout>
+      <AuthForm
+        title={t("title")}
+        subtitle={t("subtitle")}
+        identifierOptions={identifierOptions(t)}
+        passwordLabel={t("passwordLabel")}
+        passwordPlaceholder={t("passwordPlaceholder")}
+        submitLabel={t("submit")}
+        isSubmitting={loading}
+        onSubmit={onSubmit}
+        orLabel={t("or")}
+        googleLabel={t("continueWithGoogle")}
+        isGoogleLoading={googleLoading}
+        onGoogleClick={handleGoogleSignIn}
+        footerText={t("haveAccount")}
+        footerLinkText={t("login")}
+        footerHref={AppRoutes.login()}
+      />
+    </AuthLayout>
   );
 }

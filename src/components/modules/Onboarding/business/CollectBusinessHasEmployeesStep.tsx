@@ -50,6 +50,7 @@ const CollectBusinessHasEmployeesStep = () => {
           control={<Radio sx={{ "& .MuiSvgIcon-root": { fontSize: 32.5 } }} />}
           label={t("yes")}
           labelPlacement="start"
+          slotProps={{ typography: { fontWeight: 700 } }}
           sx={styles.formControl}
         />
 
@@ -58,6 +59,7 @@ const CollectBusinessHasEmployeesStep = () => {
           control={<Radio sx={{ "& .MuiSvgIcon-root": { fontSize: 32.5 } }} />}
           label={t("no")}
           labelPlacement="start"
+          slotProps={{ typography: { fontWeight: 700 } }}
           sx={styles.formControl}
         />
       </RadioGroup>

@@ -1,5 +1,4 @@
 import {
-  Button,
   CircularProgress,
   Container,
   InputAdornment,
@@ -17,6 +16,8 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCollectUsernameMutation } from "@/controllers/onboarding/onboarding.controller";
 import { useTranslations } from "next-intl";
+import { onboardingTitleSx } from "../onboarding.styles";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 
 const CollectUsernameStep = () => {
   const t = useTranslations("onboarding.username");
@@ -69,7 +70,7 @@ const CollectUsernameStep = () => {
     >
       <Container maxWidth="sm">
         <Stack mb={2} gap={0.5}>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>
+          <Typography variant="h4" sx={onboardingTitleSx}>
             {t("title")}
           </Typography>
 
@@ -97,8 +98,7 @@ const CollectUsernameStep = () => {
           }}
         />
 
-        <Button
-          variant="contained"
+        <AuthGradientButton
           fullWidth
           loading={isLoadingSave || isLoadingSearch}
           disabled={isLoadingSearch || !data?.available}
@@ -122,7 +122,7 @@ const CollectUsernameStep = () => {
           sx={{ fontWeight: 600, p: 1.5, fontSize: 17 }}
         >
           {t("save")}
-        </Button>
+        </AuthGradientButton>
       </Container>
     </Stack>
   );
