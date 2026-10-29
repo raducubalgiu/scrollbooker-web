@@ -44,6 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     "/business/",
     "/booking/",
     "/employment-request",
+    "/cookies",
   ].some((p) => (p === "/" ? pathname === "/" : pathname.startsWith(p)));
 
   const isNoLayoutPage =

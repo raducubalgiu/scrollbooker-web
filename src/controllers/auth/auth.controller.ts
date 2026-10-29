@@ -175,6 +175,18 @@ export const useVerifyAccountPhoneNumber = () => {
   });
 };
 
+export const useDeactivateAccount = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axios.post<ActionMessageResponse>(
+        "/api/protected/auth/deactivate-account"
+      );
+      return response.data;
+    },
+    meta: { skipErrorToast: true },
+  });
+};
+
 export const useDeleteAccount = () => {
   return useMutation({
     mutationFn: async () => {

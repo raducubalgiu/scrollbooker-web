@@ -82,6 +82,9 @@ export const AppRoutes = {
   // Marketing
   forBusiness: () => "/for-business",
 
+  // Legal
+  cookies: () => "/cookies",
+
   // My Business
   myBusiness: () => "/admin/my-business",
   myDashboard: () => "/admin/my-business/dashboard",

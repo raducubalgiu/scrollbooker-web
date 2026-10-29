@@ -1,6 +1,8 @@
 import ProfileModule from "@/components/modules/Marketplace/ProfileModule/ProfileModule";
 import { get } from "@/utils/requests";
 import React from "react";
+import axios from "axios";
+import { notFound } from "next/navigation";
 import { UserProfile } from "@/ts/models/user/UserProfile";
 
 interface UserProfilePageProps {
@@ -19,11 +21,16 @@ export default async function UserProfilePage({
     throw new Error("Username param was not provided");
   }
 
-  const response = await get<UserProfile | null>({
+  const profileData = await get<UserProfile | null>({
     url: `/users/${username}/user-profile`,
-  });
-
-  const profileData = response.data;
+  })
+    .then((response) => response.data)
+    .catch((error) => {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        notFound();
+      }
+      throw error;
+    });
 
   if (!profileData) {
     throw new Error("An error occured when fetching profile data");

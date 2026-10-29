@@ -70,6 +70,18 @@ export default function LandingFooter({
               {registerHref ? t("registerBusiness") : t("forBusiness")}
             </Typography>
             <Typography
+              component={Link}
+              href={AppRoutes.cookies()}
+              variant="body2"
+              sx={{
+                color: LANDING_COLORS.textSecondary,
+                textDecoration: "none",
+                "&:hover": { color: LANDING_COLORS.textPrimary },
+              }}
+            >
+              {t("cookies")}
+            </Typography>
+            <Typography
               component="a"
               href="mailto:office@scrollbooker.com"
               variant="body2"

@@ -11,7 +11,6 @@ import { Theme } from "@mui/material/styles";
 import VolumeUpRoundedIcon from "@mui/icons-material/VolumeUpRounded";
 import VolumeOffRoundedIcon from "@mui/icons-material/VolumeOffRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
-import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PostOverlay from "./PostOverlay";
 import { Post } from "@/ts/models/social/Post";
@@ -69,7 +68,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
     duration,
     sliderProgress,
     isSeeking,
-    isEnded,
     isBuffering,
     hasError,
     handleTogglePlay,
@@ -90,13 +88,11 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
   );
 
   const isPausedCandidate =
-    isActive && !hasError && !isBuffering && !isPlaying && isReady && !isEnded;
+    isActive && !hasError && !isBuffering && !isPlaying && isReady;
   const showPausedOverlay = useDelayedTrue(
     isPausedCandidate,
     PAUSED_OVERLAY_DELAY_MS
   );
-  const showReplayOverlay =
-    isActive && !hasError && !isBuffering && !isPlaying && isEnded && isReady;
 
   if (isLoading) {
     return (
@@ -123,7 +119,7 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
         muted={!isActive || isMuted}
         poster={thumbnailUrl ?? undefined}
         preload={preload}
-        loop={false}
+        loop={true}
         style={videoStyles}
       />
 
@@ -147,18 +143,6 @@ export const PostVideoPlayer = React.memo(function PostVideoPlayer({
           </Box>
         ) : isBuffering && !isSeeking ? (
           <CircularProgress size={42} sx={{ color: "#fff" }} />
-        ) : showReplayOverlay ? (
-          <Box
-            sx={styles.stateCard}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleTogglePlay();
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <ReplayRoundedIcon sx={styles.stateIcon} />
-            <Typography sx={styles.stateTitle}>Revedeți acest clip</Typography>
-          </Box>
         ) : null}
       </Box>
 

@@ -102,7 +102,6 @@ export function useVideoPlayback({
   const [duration, setDuration] = useState(0);
   const [sliderProgress, setSliderProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
-  const [isEnded, setIsEnded] = useState(false);
   // isBuffering e intenționat separat de isPlaying/isReady, nu fuzionat
   // într-un singur status — un video poate fi "playing" ȚI "buffering"
   // simultan (blocare temporară la lipsă de date, fără evenimentul
@@ -135,7 +134,6 @@ export function useVideoPlayback({
     sliderProgressRef.current = 0;
     setIsReady(false);
     setIsPlaying(false);
-    setIsEnded(false);
     setDuration(0);
     setSliderProgress(0);
     setIsSeeking(false);
@@ -152,7 +150,6 @@ export function useVideoPlayback({
     sliderProgressRef.current = 0;
     setSliderProgress(0);
     setIsSeeking(false);
-    setIsEnded(false);
     setIsPlaying(false);
     setIsBuffering(false);
     if (containerRef.current) {
@@ -198,7 +195,6 @@ export function useVideoPlayback({
       const current = videoRef.current;
       if (
         !current ||
-        current.ended ||
         !current.paused ||
         !isActiveRef.current ||
         userPausedRef.current ||
@@ -323,11 +319,6 @@ export function useVideoPlayback({
       setIsReady(true);
       setIsBuffering(false);
     };
-    const onEnded = () => {
-      setIsEnded(true);
-      setIsPlaying(false);
-      setIsBuffering(false);
-    };
     const onError = () => {
       setHasError(true);
       setIsBuffering(false);
@@ -339,7 +330,6 @@ export function useVideoPlayback({
     video.addEventListener("loadeddata", onLoadedData);
     video.addEventListener("canplay", onCanPlay);
     video.addEventListener("canplaythrough", onCanPlayThrough);
-    video.addEventListener("ended", onEnded);
     video.addEventListener("error", onError);
 
     const attached = attachHlsSource(video, src, preload, hlsRef, {
@@ -363,7 +353,6 @@ export function useVideoPlayback({
       video.removeEventListener("loadeddata", onLoadedData);
       video.removeEventListener("canplay", onCanPlay);
       video.removeEventListener("canplaythrough", onCanPlayThrough);
-      video.removeEventListener("ended", onEnded);
       video.removeEventListener("error", onError);
       destroyHlsInstance();
       clearVideoSource();
@@ -429,7 +418,6 @@ export function useVideoPlayback({
     setHasError(false);
     setIsReady(false);
     setIsBuffering(true);
-    setIsEnded(false);
     sliderProgressRef.current = 0;
     setSliderProgress(0);
     if (containerRef.current) {
@@ -457,19 +445,6 @@ export function useVideoPlayback({
     const video = videoRef.current;
     if (!video || !isReady || hasError || !hasValidSource) return;
 
-    if (isEnded || video.ended) {
-      userPausedRef.current = false;
-      video.currentTime = 0;
-      setIsEnded(false);
-      setIsBuffering(true);
-      try {
-        await video.play();
-      } catch {
-        return;
-      }
-      return;
-    }
-
     if (video.paused) {
       userPausedRef.current = false;
       setIsBuffering(true);
@@ -483,7 +458,7 @@ export function useVideoPlayback({
       userPausedRef.current = true;
       video.pause();
     }
-  }, [hasError, hasValidSource, isEnded, isReady]);
+  }, [hasError, hasValidSource, isReady]);
 
   const handleToggleMute = useCallback((event: React.MouseEvent) => {
     event.stopPropagation();
@@ -532,7 +507,6 @@ export function useVideoPlayback({
       setSliderProgress(nextValue);
       isSeekingRef.current = false;
       setIsSeeking(false);
-      setIsEnded(false);
       setIsBuffering(true);
 
       if (shouldResume && isActive) {
@@ -557,7 +531,6 @@ export function useVideoPlayback({
     duration,
     sliderProgress,
     isSeeking,
-    isEnded,
     isBuffering,
     hasError,
     handleTogglePlay,

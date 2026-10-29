@@ -1,0 +1,137 @@
+{
+  "cookiesPolicy": {
+    "metadata": {
+      "title": "Politica de cookies — ScrollBooker",
+      "description": "Ce cookie-uri și alte tehnologii de stocare folosește ScrollBooker, de ce le folosim și cum le poți controla."
+    },
+    "title": "Politica de cookies",
+    "lastUpdated": "Ultima actualizare: {date}",
+    "date": "28 octombrie 2026",
+    "intro": "Această pagină explică ce cookie-uri și alte tehnologii de stocare folosește site-ul ScrollBooker, de ce le folosim și cum le poți controla. Folosim doar ce e necesar ca site-ul să funcționeze și ca să îți reținem preferințele. Nu folosim cookie-uri de publicitate sau de urmărire.",
+    "sections": {
+      "whatAre": {
+        "title": "Ce sunt cookie-urile",
+        "body": [
+          "Cookie-urile sunt fișiere text mici pe care un site le salvează în browserul tău. Ele permit site-ului să își amintească, de exemplu, că ești autentificat sau ce limbă ai ales.",
+          "Pe lângă cookie-uri, browserele oferă și alte spații de stocare, precum localStorage și sessionStorage. Le descriem mai jos pe cele pe care le folosim."
+        ]
+      },
+      "ourCookies": {
+        "title": "Cookie-urile pe care le folosim",
+        "intro": "Toate cookie-urile de mai jos sunt setate de ScrollBooker (cookie-uri proprii).",
+        "columns": {
+          "name": "Cookie",
+          "purpose": "Rol",
+          "duration": "Durată",
+          "category": "Tip"
+        },
+        "items": [
+          {
+            "name": "next-auth.session-token",
+            "purpose": "Te menține autentificat în contul tău.",
+            "duration": "30 de zile",
+            "category": "Strict necesar"
+          },
+          {
+            "name": "next-auth.csrf-token",
+            "purpose": "Protejează autentificarea împotriva cererilor falsificate (CSRF).",
+            "duration": "Sesiune",
+            "category": "Strict necesar"
+          },
+          {
+            "name": "next-auth.callback-url",
+            "purpose": "Reține pagina la care revii după autentificare.",
+            "duration": "Sesiune",
+            "category": "Strict necesar"
+          },
+          {
+            "name": "next-auth.state, next-auth.pkce.code_verifier",
+            "purpose": "Securizează autentificarea cu Google. Există doar în timpul procesului de autentificare.",
+            "duration": "15 minute",
+            "category": "Strict necesar"
+          },
+          {
+            "name": "sb-ui-color-mode",
+            "purpose": "Reține tema aleasă: luminoasă, întunecată sau a sistemului.",
+            "duration": "1 an",
+            "category": "Preferințe"
+          },
+          {
+            "name": "sb-ui-system-theme",
+            "purpose": "Reține tema sistemului tău, ca pagina să se afișeze direct în culorile corecte.",
+            "duration": "1 an",
+            "category": "Preferințe"
+          },
+          {
+            "name": "NEXT_LOCALE",
+            "purpose": "Reține limba aleasă (română sau engleză).",
+            "duration": "1 an",
+            "category": "Preferințe"
+          }
+        ],
+        "note": "Pe conexiuni securizate (HTTPS), numele cookie-urilor de autentificare pot începe cu „__Secure-” sau „__Host-”. Sunt prefixe de securitate puse de browser și nu schimbă rolul cookie-ului."
+      },
+      "storage": {
+        "title": "Alte tehnologii de stocare",
+        "columns": {
+          "name": "Cheie",
+          "purpose": "Rol",
+          "duration": "Durată"
+        },
+        "items": [
+          {
+            "name": "lastFeedUrl (sessionStorage)",
+            "purpose": "Reține unde ai rămas în feed, ca să te întorci în același loc.",
+            "duration": "Până închizi tab-ul"
+          },
+          {
+            "name": "mapbox.eventData (localStorage)",
+            "purpose": "Setat de Mapbox, furnizorul hărții din pagina de căutare, pentru contorizarea utilizării serviciului de hărți.",
+            "duration": "Până îl ștergi din browser"
+          }
+        ]
+      },
+      "thirdParties": {
+        "title": "Servicii terțe",
+        "items": [
+          {
+            "name": "Vercel Analytics și Speed Insights",
+            "description": "Ne ajută să vedem câte vizite primește site-ul și cât de repede se încarcă. Aceste servicii nu folosesc cookie-uri și nu te identifică personal."
+          },
+          {
+            "name": "Google",
+            "description": "Dacă alegi „Continuă cu Google”, autentificarea are loc pe site-ul Google. Cookie-urile Google sunt setate pe domeniul Google și sunt guvernate de politica Google."
+          },
+          {
+            "name": "Mapbox",
+            "description": "Afișează harta din pagina de căutare. Pentru detalii, consultă politica de confidențialitate Mapbox."
+          }
+        ]
+      },
+      "consent": {
+        "title": "De ce nu îți cerem acordul printr-un banner",
+        "body": [
+          "Cookie-urile strict necesare sunt indispensabile pentru funcționarea site-ului, de exemplu pentru autentificare și securitate. Cookie-urile de preferințe rețin doar alegeri pe care le faci tu, ca tema sau limba.",
+          "Potrivit legislației privind comunicațiile electronice, pentru aceste cookie-uri nu este necesar consimțământul tău. Dacă vom adăuga vreodată cookie-uri de alt tip, de exemplu de marketing, îți vom cere acordul înainte să le folosim."
+        ]
+      },
+      "manage": {
+        "title": "Cum poți controla cookie-urile",
+        "body": [
+          "Poți vedea și șterge cookie-urile din setările browserului. Poți bloca și setarea lor.",
+          "Dacă blochezi sau ștergi cookie-urile strict necesare, unele funcții nu vor mai merge. De exemplu, nu vei putea rămâne autentificat. Dacă ștergi cookie-urile de preferințe, site-ul revine la tema și limba implicite."
+        ]
+      },
+      "changes": {
+        "title": "Modificări ale acestei politici",
+        "body": [
+          "Putem actualiza această politică atunci când schimbăm tehnologiile folosite. Data ultimei actualizări apare la începutul paginii."
+        ]
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "Pentru întrebări despre această politică, ne poți scrie la <email>office@scrollbooker.com</email>."
+      }
+    }
+  }
+}
