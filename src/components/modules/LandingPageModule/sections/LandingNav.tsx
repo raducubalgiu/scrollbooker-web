@@ -41,9 +41,16 @@ export default function LandingNav({
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          sx={{ py: { xs: 1.5, md: 2 } }}
+          sx={{ py: { xs: 1.5, md: 2 }, minHeight: { xs: 60, md: 70 } }}
         >
-          <Box component={Link} href={AppRoutes.home()} sx={{ lineHeight: 0 }}>
+          <Box
+            component={Link}
+            href={AppRoutes.home()}
+            sx={{
+              lineHeight: 0,
+              "& svg": { height: { xs: 26, md: 30 }, width: "auto" },
+            }}
+          >
             {logo ?? <LandingLogo height={26} />}
           </Box>
 

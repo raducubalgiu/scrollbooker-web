@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Button, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
@@ -23,21 +23,22 @@ export default function LandingCTA({ href }: LandingCTAProps) {
           sx={{
             position: "relative",
             overflow: "hidden",
-            borderRadius: 5,
-            px: { xs: 4, md: 8 },
-            py: { xs: 6, md: 8 },
+            borderRadius: 6,
+            px: { xs: 3, md: 8 },
+            py: { xs: 8, md: 10 },
             textAlign: "center",
-            border: `1px solid ${LANDING_COLORS.border}`,
-            background: `radial-gradient(circle at 50% 0%, ${LANDING_COLORS.primary}26 0%, ${LANDING_COLORS.surface} 65%)`,
+            color: "#fff",
+            background: `linear-gradient(135deg, ${LANDING_COLORS.primary} 0%, ${LANDING_COLORS.accent} 100%)`,
           }}
         >
           <Stack spacing={3} alignItems="center" sx={{ position: "relative" }}>
             <Typography
-              variant="h2"
               sx={{
-                color: LANDING_COLORS.textPrimary,
-                maxWidth: 640,
-                letterSpacing: "-0.01em",
+                fontSize: { xs: "2.25rem", md: "3.25rem" },
+                fontWeight: 900,
+                lineHeight: 1.05,
+                letterSpacing: "-0.04em",
+                maxWidth: 720,
               }}
             >
               {t("title")}
@@ -45,9 +46,10 @@ export default function LandingCTA({ href }: LandingCTAProps) {
             <Typography
               variant="body1"
               sx={{
-                color: LANDING_COLORS.textSecondary,
                 maxWidth: 520,
                 fontWeight: 500,
+                fontSize: "1.1rem",
+                opacity: 0.9,
               }}
             >
               {t("subtitle")}
@@ -59,13 +61,15 @@ export default function LandingCTA({ href }: LandingCTAProps) {
                 trackRegisterCtaClick("cta", href ?? AppRoutes.forBusiness())
               }
               variant="contained"
+              size="large"
               disableElevation
               endIcon={<ArrowForwardRoundedIcon />}
               sx={{
-                backgroundColor: LANDING_COLORS.primary,
-                color: "#fff",
-                fontWeight: 700,
-                "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
+                backgroundColor: "#fff",
+                color: "#111",
+                fontWeight: 800,
+                borderRadius: 50,
+                "&:hover": { backgroundColor: alpha("#fff", 0.9) },
               }}
             >
               {href ? t("button") : t("buttonForBusiness")}

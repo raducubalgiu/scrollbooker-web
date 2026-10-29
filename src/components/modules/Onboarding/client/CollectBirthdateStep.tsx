@@ -7,6 +7,8 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCollectBirthdateMutation } from "@/controllers/onboarding/onboarding.controller";
 import { useTranslations } from "next-intl";
+import { onboardingTitleSx } from "../onboarding.styles";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 
 type BirthdateForm = {
   day: string;
@@ -76,7 +78,7 @@ const CollectBirthdateStep = () => {
         <Container maxWidth="sm">
           <Stack spacing={3}>
             <Stack spacing={1} textAlign="center">
-              <Typography variant="h4" fontWeight={700}>
+              <Typography variant="h4" sx={onboardingTitleSx}>
                 {t("title")}
               </Typography>
 
@@ -104,8 +106,7 @@ const CollectBirthdateStep = () => {
               />
             </Stack>
 
-            <Button
-              variant="contained"
+            <AuthGradientButton
               fullWidth
               loading={isPending}
               disabled={isPending}
@@ -113,7 +114,7 @@ const CollectBirthdateStep = () => {
               disableElevation
             >
               {t("save")}
-            </Button>
+            </AuthGradientButton>
 
             <Button
               onClick={() =>

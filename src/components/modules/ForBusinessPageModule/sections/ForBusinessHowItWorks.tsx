@@ -1,6 +1,6 @@
 "use client";
 
-import { alpha, Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useTranslations } from "next-intl";
 import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
@@ -33,7 +33,7 @@ export default function ForBusinessHowItWorks() {
           >
             {t("kicker")}
           </Typography>
-          <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary }}>
+          <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 900, letterSpacing: "-0.03em" }}>
             {t("title")}
           </Typography>
         </Stack>
@@ -44,10 +44,15 @@ export default function ForBusinessHowItWorks() {
               <Stack spacing={2}>
                 <Typography
                   sx={{
-                    fontSize: "2.75rem",
-                    fontWeight: 800,
-                    color: alpha(LANDING_COLORS.textPrimary, 0.12),
+                    fontSize: "3rem",
+                    fontWeight: 900,
+                    letterSpacing: "-0.04em",
                     lineHeight: 1,
+                    background: `linear-gradient(90deg, ${LANDING_COLORS.primary}, ${LANDING_COLORS.accent})`,
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    color: "transparent",
+                    alignSelf: "flex-start",
                   }}
                 >
                   {STEP_NUMBERS[index]}

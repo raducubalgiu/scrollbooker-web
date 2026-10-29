@@ -18,6 +18,8 @@ import { OnboardingResponse } from "@/ts/models/onboarding/Onboarding";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { onboardingTitleSx } from "../onboarding.styles";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
@@ -99,7 +101,7 @@ export default function CollectEmailVerificationStep() {
       <Container maxWidth="sm">
         <Stack spacing={{ xs: 2, md: 3 }}>
           <Stack spacing={1} textAlign="center">
-            <Typography variant="h4" fontWeight={700}>
+            <Typography variant="h4" sx={onboardingTitleSx}>
               {t("title")}
             </Typography>
 
@@ -125,8 +127,7 @@ export default function CollectEmailVerificationStep() {
             />
           </Box>
 
-          <Button
-            variant="contained"
+          <AuthGradientButton
             fullWidth
             loading={isVerifying}
             disabled={isVerifying || code.length !== 6}
@@ -135,7 +136,7 @@ export default function CollectEmailVerificationStep() {
             sx={{ py: 1.5, fontSize: 16, fontWeight: 600 }}
           >
             {t("verify")}
-          </Button>
+          </AuthGradientButton>
 
           <Stack alignItems="center" spacing={1}>
             <Typography color="text.secondary">{t("noEmail")}</Typography>

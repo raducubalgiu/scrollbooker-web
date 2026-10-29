@@ -2,9 +2,9 @@
 
 import React from "react";
 import NextLink from "next/link";
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
-import TopBar from "@/components/core/TopBar/TopBar";
-import PageGlow from "@/components/core/PageGlow/PageGlow";
+import { Button, Stack } from "@mui/material";
+import AuthLayout from "@/components/modules/AuthModule/AuthLayout";
+import AuthHeading from "@/components/modules/AuthModule/AuthHeading";
 
 type AuthPageShellProps = {
   title: string;
@@ -22,60 +22,25 @@ export default function AuthPageShell({
   children,
 }: AuthPageShellProps) {
   return (
-    <Box
-      sx={{
-        position: "relative",
-        overflow: "hidden",
-        minHeight: "100dvh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <PageGlow />
+    <AuthLayout>
+      <AuthHeading title={title} subtitle={subtitle} />
 
-      <TopBar />
+      {children}
 
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          py: { xs: 3, md: 10 },
-          px: 1,
-        }}
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ mt: "auto", pt: 3 }}
       >
-        <Container
-          maxWidth="sm"
-          sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+        <Button
+          component={NextLink}
+          href={footerHref}
+          sx={{ textTransform: "none", fontWeight: 600, px: 1.5 }}
         >
-          <Stack
-            spacing={0.75}
-            sx={{ mb: 5, textAlign: { xs: "left", md: "center" } }}
-          >
-            <Typography variant="h3" sx={{ fontWeight: 800 }}>
-              {title}
-            </Typography>
-            <Typography color="text.secondary">{subtitle}</Typography>
-          </Stack>
-
-          {children}
-
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-            sx={{ mt: "auto", borderTop: 1, borderColor: "divider", pt: 1 }}
-          >
-            <Button
-              component={NextLink}
-              href={footerHref}
-              sx={{ textTransform: "none", fontWeight: 600, px: 1.5 }}
-            >
-              {footerLinkText}
-            </Button>
-          </Stack>
-        </Container>
-      </Box>
-    </Box>
+          {footerLinkText}
+        </Button>
+      </Stack>
+    </AuthLayout>
   );
 }

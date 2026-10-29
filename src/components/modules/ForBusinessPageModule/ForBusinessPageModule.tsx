@@ -29,7 +29,19 @@ export default function ForBusinessPageModule() {
         overflowX: "hidden",
       }}
     >
-      <LandingNav logo={<ForBusinessLogo height={18} />} displayCta />
+      <LandingNav
+        logo={
+          <Box
+            sx={{
+              display: "flex",
+              "& img": { height: { xs: 22, md: 26 }, width: "auto" },
+            }}
+          >
+            <ForBusinessLogo height={26} />
+          </Box>
+        }
+        displayCta
+      />
       <ForBusinessHero />
       <ForBusinessBookingModes />
       <ForBusinessHowItWorks />

@@ -1,12 +1,13 @@
 "use client";
 
-import { Button, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
 import Input from "@/components/core/Input/Input";
 import AuthPageShell from "@/components/modules/AuthModule/AuthPageShell";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 import { useForgotPassword } from "@/controllers/auth/auth.controller";
 import { emailField, required } from "@/utils/validation-rules";
 import { AppRoutes } from "@/utils/routes";
@@ -56,16 +57,13 @@ export default function ForgotPasswordModule() {
             rules={{ ...required(), ...emailField() }}
           />
 
-          <Button
-            variant="contained"
-            fullWidth
+          <AuthGradientButton
             loading={isPending}
             onClick={methods.handleSubmit(handleSubmit)}
-            disableElevation
             sx={{ mt: 1 }}
           >
             {t("submit")}
-          </Button>
+          </AuthGradientButton>
         </Stack>
       </FormProvider>
     </AuthPageShell>

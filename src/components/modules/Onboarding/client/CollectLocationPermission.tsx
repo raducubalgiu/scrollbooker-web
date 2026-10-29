@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import { useCollectLocationPermissionMutation } from "@/controllers/onboarding/onboarding.controller";
 import { useTranslations } from "next-intl";
 import { useUserLocation } from "@/hooks/useUserLocation";
+import { onboardingTitleSx } from "../onboarding.styles";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 
 const CollectLocationPermission = () => {
   const t = useTranslations("onboarding.locationPermission");
@@ -59,22 +61,21 @@ const CollectLocationPermission = () => {
           </Stack>
 
           <Stack spacing={1}>
-            <Typography variant="h4" fontWeight={700}>
+            <Typography variant="h4" sx={onboardingTitleSx}>
               {t("title")}
             </Typography>
 
             <Typography color="text.secondary">{t("subtitle")}</Typography>
           </Stack>
 
-          <Button
-            variant="contained"
+          <AuthGradientButton
             fullWidth
             loading={isRequestingLocation || isPending}
             onClick={handleAllow}
             disableElevation
           >
             {t("allow")}
-          </Button>
+          </AuthGradientButton>
 
           <Button
             variant="text"

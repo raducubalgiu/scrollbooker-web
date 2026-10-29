@@ -9,6 +9,7 @@ import axios from "axios";
 import Input from "@/components/core/Input/Input";
 import PasswordInput from "@/components/core/Input/PasswordInput";
 import AuthPageShell from "@/components/modules/AuthModule/AuthPageShell";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 import {
   useForgotPassword,
   useResetPassword,
@@ -155,16 +156,13 @@ export default function ResetPasswordModule() {
             }}
           />
 
-          <Button
-            variant="contained"
-            fullWidth
+          <AuthGradientButton
             loading={isPending}
             onClick={methods.handleSubmit(handleSubmit)}
-            disableElevation
             sx={{ mt: 1 }}
           >
             {t("submit")}
-          </Button>
+          </AuthGradientButton>
 
           <Button
             size="small"

@@ -12,6 +12,8 @@ import { useSendPhoneVerificationCode } from "@/controllers/auth/auth.controller
 import { useCollectPhoneCodeVerification } from "@/controllers/onboarding/onboarding.controller";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { onboardingTitleSx } from "../onboarding.styles";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 
 const CollectBusinessPublicPhone = () => {
   const { update } = useSession();
@@ -85,7 +87,7 @@ const CollectBusinessPublicPhone = () => {
       <Container maxWidth="sm">
         <Stack spacing={3}>
           <Stack spacing={1} textAlign="center">
-            <Typography variant="h4" fontWeight={700}>
+            <Typography variant="h4" sx={onboardingTitleSx}>
               {step === "enterPhone" ? t("title") : t("phoneVerificationTitle")}
             </Typography>
 
@@ -151,8 +153,7 @@ const CollectBusinessPublicPhone = () => {
             )}
           </Box>
 
-          <Button
-            variant="contained"
+          <AuthGradientButton
             fullWidth
             loading={isLoading}
             disabled={isLoading || isDisabled}
@@ -163,7 +164,7 @@ const CollectBusinessPublicPhone = () => {
             {step === "enterPhone"
               ? t("phoneVerificationSendCode")
               : t("phoneVerificationVerify")}
-          </Button>
+          </AuthGradientButton>
 
           <Stack alignItems="center" spacing={1}>
             {step === "enterCode" ? (

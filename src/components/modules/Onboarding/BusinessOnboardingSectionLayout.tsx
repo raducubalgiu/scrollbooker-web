@@ -1,6 +1,8 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useTranslations } from "next-intl";
+import { onboardingTitleSx } from "./onboarding.styles";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 
 type BusinessOnboardingSectionLayoutProps = {
   title: string;
@@ -28,7 +30,7 @@ const BusinessOnboardingSectionLayout = ({
       <Box sx={styles.content}>
         <Box sx={{ my: "auto" }}>
           <Stack spacing={1} mb={2.5}>
-            <Typography variant="h4" fontWeight={700}>
+            <Typography variant="h4" sx={onboardingTitleSx}>
               {title}
             </Typography>
 
@@ -41,8 +43,8 @@ const BusinessOnboardingSectionLayout = ({
 
       {displayButton && (
         <Box sx={styles.buttonContainer}>
-          <Button
-            variant="contained"
+          <AuthGradientButton
+            fullWidth={false}
             loading={isLoading}
             disabled={isDisabled}
             onClick={onClick}
@@ -50,7 +52,7 @@ const BusinessOnboardingSectionLayout = ({
             sx={{ fontWeight: 700 }}
           >
             {t("saveAndContinue")}
-          </Button>
+          </AuthGradientButton>
         </Box>
       )}
     </Box>

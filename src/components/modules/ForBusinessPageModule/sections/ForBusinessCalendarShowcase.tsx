@@ -54,7 +54,13 @@ export default function ForBusinessCalendarShowcase() {
             </Typography>
             <Typography
               variant="h2"
-              sx={{ color: LANDING_COLORS.textPrimary, mt: 1.5, mb: 2 }}
+              sx={{
+                color: LANDING_COLORS.textPrimary,
+                fontWeight: 900,
+                letterSpacing: "-0.03em",
+                mt: 1.5,
+                mb: 2,
+              }}
             >
               {t("title")}
             </Typography>

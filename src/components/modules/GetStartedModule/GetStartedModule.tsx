@@ -1,12 +1,13 @@
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { getTranslations } from "next-intl/server";
 import { AppRoutes } from "@/utils/routes";
-import { LANDING_COLORS } from "@/components/modules/LandingPageModule/landing.constants";
-import LandingLogo from "@/components/modules/LandingPageModule/components/LandingLogo";
+import AuthLayout from "@/components/modules/AuthModule/AuthLayout";
+import AuthHeading from "@/components/modules/AuthModule/AuthHeading";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 
 type Step = { title: string; description: string };
 
@@ -15,151 +16,96 @@ export default async function GetStartedModule() {
   const steps = t.raw("steps") as Step[];
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        overflow: "hidden",
-        backgroundColor: LANDING_COLORS.background,
-        minHeight: "100dvh",
-      }}
-    >
-      <Box
+    <AuthLayout>
+      <Stack
+        component={Link}
+        href={AppRoutes.home()}
+        direction="row"
+        spacing={1}
+        alignItems="center"
         sx={{
-          position: "absolute",
-          top: "-20%",
-          right: "-10%",
-          width: 560,
-          height: 560,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${LANDING_COLORS.primary}33 0%, transparent 70%)`,
-          filter: "blur(10px)",
-          pointerEvents: "none",
+          color: "text.secondary",
+          textDecoration: "none",
+          mb: 4,
+          width: "fit-content",
+          "&:hover": { color: "text.primary" },
         }}
+      >
+        <ArrowBackRoundedIcon fontSize="small" />
+        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+          {t("back")}
+        </Typography>
+      </Stack>
+
+      <AuthHeading
+        kicker={t("kicker")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
 
-      <Container maxWidth="sm" sx={{ py: { xs: 6, md: 10 } }}>
-        <Stack
-          component={Link}
-          href={AppRoutes.home()}
-          direction="row"
-          spacing={1}
-          alignItems="center"
-          sx={{
-            color: LANDING_COLORS.textSecondary,
-            textDecoration: "none",
-            mb: 5,
-            width: "fit-content",
-            "&:hover": { color: LANDING_COLORS.textPrimary },
-          }}
-        >
-          <ArrowBackRoundedIcon fontSize="small" />
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-            {t("back")}
-          </Typography>
-        </Stack>
-
-        <Box sx={{ mb: 5 }}>
-          <LandingLogo height={24} color={LANDING_COLORS.textPrimary} />
-        </Box>
-
-        <Typography
-          variant="overline"
-          sx={{
-            color: LANDING_COLORS.primary,
-            fontWeight: 700,
-            letterSpacing: 1.5,
-          }}
-        >
-          {t("kicker")}
-        </Typography>
-        <Typography
-          variant="h2"
-          sx={{ color: LANDING_COLORS.textPrimary, mt: 1, mb: 1.5 }}
-        >
-          {t("title")}
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{ color: LANDING_COLORS.textSecondary, mb: 6, lineHeight: 1.7 }}
-        >
-          {t("subtitle")}
-        </Typography>
-
-        <Stack spacing={4} sx={{ mb: 5 }}>
-          {steps.map((step, index) => (
-            <Stack key={step.title} direction="row" spacing={2.5}>
-              <Box
-                sx={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: "50%",
-                  border: `1px solid ${LANDING_COLORS.primary}`,
-                  color: LANDING_COLORS.primary,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 700,
-                  flexShrink: 0,
-                }}
+      <Stack spacing={3.5} sx={{ mb: 5 }}>
+        {steps.map((step, index) => (
+          <Stack key={step.title} direction="row" spacing={2.5}>
+            <Box
+              sx={{
+                width: 38,
+                height: 38,
+                borderRadius: "50%",
+                border: 1,
+                borderColor: "primary.main",
+                color: "primary.main",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 800,
+                flexShrink: 0,
+              }}
+            >
+              {index + 1}
+            </Box>
+            <Box>
+              <Typography sx={{ fontWeight: 700 }}>{step.title}</Typography>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary", lineHeight: 1.6 }}
               >
-                {index + 1}
-              </Box>
-              <Box>
-                <Typography
-                  sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 600 }}
-                >
-                  {step.title}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.6 }}
-                >
-                  {step.description}
-                </Typography>
-              </Box>
-            </Stack>
-          ))}
-        </Stack>
+                {step.description}
+              </Typography>
+            </Box>
+          </Stack>
+        ))}
+      </Stack>
 
-        <Stack
-          direction="row"
-          spacing={1.5}
-          sx={{
-            p: 2.5,
-            borderRadius: 3,
-            border: `1px solid ${LANDING_COLORS.border}`,
-            backgroundColor: LANDING_COLORS.surface,
-            mb: 5,
-          }}
+      <Stack
+        direction="row"
+        spacing={1.5}
+        sx={{
+          p: 2.5,
+          borderRadius: 4,
+          border: 1,
+          borderColor: "divider",
+          bgcolor: "background.paper",
+          mb: 5,
+        }}
+      >
+        <InfoOutlinedIcon
+          fontSize="small"
+          sx={{ color: "text.secondary", mt: 0.2, flexShrink: 0 }}
+        />
+        <Typography
+          variant="body2"
+          sx={{ color: "text.secondary", lineHeight: 1.6 }}
         >
-          <InfoOutlinedIcon
-            fontSize="small"
-            sx={{ color: LANDING_COLORS.textSecondary, mt: 0.2, flexShrink: 0 }}
-          />
-          <Typography
-            variant="body2"
-            sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.6 }}
-          >
-            {t("approvalNote")}
-          </Typography>
-        </Stack>
+          {t("approvalNote")}
+        </Typography>
+      </Stack>
 
-        <Button
-          component={Link}
-          href={AppRoutes.registerBusiness()}
-          variant="contained"
-          fullWidth
-          disableElevation
-          endIcon={<ArrowForwardRoundedIcon />}
-          sx={{
-            backgroundColor: LANDING_COLORS.primary,
-            "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
-            py: 1.5,
-          }}
-        >
-          {t("cta")}
-        </Button>
-      </Container>
-    </Box>
+      <AuthGradientButton
+        href={AppRoutes.registerBusiness()}
+        endIcon={<ArrowForwardRoundedIcon />}
+      >
+        {t("cta")}
+      </AuthGradientButton>
+    </AuthLayout>
   );
 }

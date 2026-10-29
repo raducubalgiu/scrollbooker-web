@@ -1,6 +1,5 @@
 import { useCollectGenderMutation } from "@/controllers/onboarding/onboarding.controller";
 import {
-  Button,
   Container,
   FormControl,
   FormControlLabel,
@@ -13,6 +12,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useTranslations } from "next-intl";
+import { onboardingTitleSx } from "../onboarding.styles";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 
 const CollectGenderStep = () => {
   const t = useTranslations("onboarding.gender");
@@ -41,7 +42,7 @@ const CollectGenderStep = () => {
       <Container maxWidth="sm">
         <Stack spacing={3}>
           <Stack spacing={1}>
-            <Typography variant="h4" fontWeight={700}>
+            <Typography variant="h4" sx={onboardingTitleSx}>
               {t("title")}
             </Typography>
 
@@ -74,8 +75,7 @@ const CollectGenderStep = () => {
             </RadioGroup>
           </FormControl>
 
-          <Button
-            variant="contained"
+          <AuthGradientButton
             fullWidth
             loading={isPending}
             onClick={() =>
@@ -96,7 +96,7 @@ const CollectGenderStep = () => {
             disableElevation
           >
             {t("save")}
-          </Button>
+          </AuthGradientButton>
         </Stack>
       </Container>
     </Stack>

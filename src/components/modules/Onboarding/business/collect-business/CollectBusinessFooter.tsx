@@ -1,6 +1,7 @@
 import { Button, Stack } from "@mui/material";
 import React from "react";
 import { useTranslations } from "next-intl";
+import AuthGradientButton from "@/components/modules/AuthModule/AuthGradientButton";
 
 type CollectBusinessFooterProps = {
   isFirstStep: boolean;
@@ -37,15 +38,15 @@ const CollectBusinessFooter = ({
       <Button disabled={isFirstStep || isLoading} onClick={onHandleBack}>
         {t("back")}
       </Button>
-      <Button
-        variant="contained"
+      <AuthGradientButton
+        fullWidth={false}
         onClick={onHandleNext}
         loading={isLoading}
         disableElevation
         disabled={isDisabledNext}
       >
         {isLastStep ? t("finish") : t("continue")}
-      </Button>
+      </AuthGradientButton>
     </Stack>
   );
 };
