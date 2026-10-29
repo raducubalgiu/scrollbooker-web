@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, ButtonBase, IconButton, Typography, alpha } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -22,6 +22,8 @@ type MyCalendarMobileHeaderActionsProps = {
   onToggleBlocking: () => void;
   onPreviousWeek: () => void;
   onNextWeek: () => void;
+  isTodaySelected?: boolean;
+  onToday?: () => void;
 };
 
 const MyCalendarMobileHeaderActions = ({
@@ -37,6 +39,8 @@ const MyCalendarMobileHeaderActions = ({
   onToggleBlocking,
   onPreviousWeek,
   onNextWeek,
+  isTodaySelected = false,
+  onToday,
 }: MyCalendarMobileHeaderActionsProps) => {
   return (
     <Box sx={styles.row}>
@@ -71,13 +75,25 @@ const MyCalendarMobileHeaderActions = ({
         disabled={!hasFreeSlots}
         sx={{
           ...styles.blockButton,
-          bgcolor: isBlocking ? "error.main" : "action.hover",
-          opacity: isBlocking ? 0.2 : 1,
+          bgcolor: (theme) =>
+            isBlocking ? alpha(theme.palette.error.main, 0.15) : theme.palette.action.hover,
           color: isBlocking ? "error.main" : "text.primary",
         }}
       >
         <LockIcon sx={{ fontSize: 16 }} />
       </IconButton>
+
+      {onToday && (
+        <ButtonBase
+          onClick={onToday}
+          disabled={isTodaySelected}
+          sx={{ ...styles.todayButton, opacity: isTodaySelected ? 0.4 : 1 }}
+        >
+          <Typography variant="body2" fontWeight={600}>
+            Azi
+          </Typography>
+        </ButtonBase>
+      )}
 
       <IconButton
         onClick={onPreviousWeek}
@@ -129,6 +145,14 @@ const styles = {
   blockButton: {
     width: 40,
     height: 40,
+  },
+  todayButton: {
+    height: 36,
+    px: 1.75,
+    borderRadius: 10,
+    border: "1px solid",
+    borderColor: "divider",
+    color: "text.primary",
   },
   weekArrow: {
     width: 36,

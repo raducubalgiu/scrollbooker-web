@@ -162,6 +162,7 @@ export const EmployeesDayCalendar = () => {
         <CreateOwnClientModal
           open={createModal.open}
           businessId={session?.business_id ?? 0}
+          providerUserId={createModal.employeeId}
           initialSlot={createModal.slot}
           onClose={handleCloseCreateModal}
         />

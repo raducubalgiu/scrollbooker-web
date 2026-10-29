@@ -154,6 +154,7 @@ export const WeeklyCalendar = ({ session, schedules }: WeeklyCalendarProps) => {
         <CreateOwnClientModal
           open={createModal.open}
           businessId={session?.business_id ?? 0}
+          providerUserId={session?.user_id ?? null}
           initialSlot={createModal.slot}
           onClose={handleCloseCreateModal}
         />

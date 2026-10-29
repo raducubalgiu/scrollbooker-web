@@ -11,6 +11,10 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import dayjs from "@/lib/dayjs";
+import { useMutate } from "@/hooks/useHttp";
+import { AppointmentBusinessClientCreate } from "@/ts/models/booking/appointment/Appointment";
 import AddProductHeader from "@/components/modules/Admin/MyBusinessModule/MyProductsModule/AddProductModal/AddProductHeader";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { BusinessClient } from "@/ts/models/booking/businessClient/BusinessClient";
@@ -29,6 +33,7 @@ import { SelectedSlot, SelectedVariant } from "./createOwnClientTypes";
 type CreateOwnClientModalProps = {
   open: boolean;
   businessId: number;
+  providerUserId: number | null;
   initialSlot?: CalendarEventsSlot | null;
   onClose: () => void;
 };
@@ -51,6 +56,7 @@ const slotFromCalendarEvent = (
 const CreateOwnClientModal = ({
   open,
   businessId,
+  providerUserId,
   initialSlot,
   onClose,
 }: CreateOwnClientModalProps) => {
@@ -91,12 +97,54 @@ const CreateOwnClientModal = ({
   const isReadyToSave =
     !!selectedClient && selectedVariants.length > 0 && !!selectedSlot;
 
+  const { mutate: createAppointment, isPending: isSaving } =
+    useMutate<AppointmentBusinessClientCreate>({
+      key: ["create-own-client-appointment"],
+      url: "/api/protected/appointments/create-own-client-appointment",
+      options: {
+        onSuccess: () => {
+          toast.success("Programarea a fost creată.");
+          onClose();
+        },
+        onError: (error) => {
+          const detail = (error as AxiosError<{ detail?: unknown }>).response
+            ?.data?.detail;
+          toast.error(
+            typeof detail === "string"
+              ? detail
+              : "Programarea nu a putut fi creată."
+          );
+        },
+      },
+    });
+
   const handleSave = () => {
-    if (!isReadyToSave) {
+    if (!isReadyToSave || !selectedClient || !selectedSlot) {
       toast.error("Completează clientul, serviciile și intervalul.");
       return;
     }
-    toast.info("Salvarea programării va fi disponibilă în curând.");
+
+    if (!providerUserId) {
+      toast.error("Alege un interval din calendarul unui angajat.");
+      return;
+    }
+
+    const start = dayjs(selectedSlot.startUtc);
+    if (!start.isAfter(dayjs())) {
+      toast.error("Nu poți crea o programare în trecut.");
+      return;
+    }
+
+    createAppointment({
+      start_date: start.toISOString(),
+      end_date: start.add(totalDurationMinutes, "minute").toISOString(),
+      user_id: providerUserId,
+      business_client_id: selectedClient.id,
+      product_variants: selectedVariants.map((variant) => ({
+        id: variant.variantId,
+        offering: { user_id: providerUserId },
+      })),
+    });
   };
 
   const handleRemoveVariant = (variantId: number) => {
@@ -119,7 +167,7 @@ const CreateOwnClientModal = ({
               title="Programare nouă"
               desktopSaveLabel="Salvează programarea"
               mobileSaveLabel="Creează programarea"
-              isSavingProduct={false}
+              isSavingProduct={isSaving}
               onHandleClose={onClose}
               onReset={handleReset}
               onSaveProduct={handleSave}
@@ -213,7 +261,7 @@ const CreateOwnClientModal = ({
             <CreateOwnClientBottomBar
               totalPrice={totalPrice}
               totalDurationMinutes={totalDurationMinutes}
-              isReadyToSave={isReadyToSave}
+              isReadyToSave={isReadyToSave && !isSaving}
               onReset={handleReset}
               onConfirm={handleSave}
             />

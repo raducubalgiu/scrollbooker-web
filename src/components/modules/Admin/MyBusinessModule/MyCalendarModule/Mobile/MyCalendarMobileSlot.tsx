@@ -19,8 +19,6 @@ type MyCalendarMobileSlotProps = {
   onTap: (slot: CalendarEventsSlot) => void;
 };
 
-const MIN_TOUCH_HEIGHT = 44;
-
 const MyCalendarMobileSlot = ({
   slot,
   style,
@@ -36,10 +34,8 @@ const MyCalendarMobileSlot = ({
   const isCompact = height < 40;
   const isVeryCompact = height < 28;
   const isExternalBlock = slot.is_blocked && !!slot.info?.is_external;
-  const touchHeight = Math.max(height, MIN_TOUCH_HEIGHT);
 
   const showsAddIcon =
-    !isVeryCompact &&
     !slot.is_blocked &&
     !isChecked &&
     !(isBlocking && isFreeSlot) &&
@@ -49,32 +45,40 @@ const MyCalendarMobileSlot = ({
 
   const showsLeadingBar = slot.is_booked || slot.is_blocked || slot.is_last_minute;
 
-  const renderContent = () => {
-    if (isVeryCompact) return null;
+  const textSx = isVeryCompact ? styles.compactText : undefined;
+  const timeRange = `${slot.start_date_locale.slice(11, 16)} – ${slot.end_date_locale.slice(11, 16)}`;
 
+  const renderContent = () => {
     if (slot.is_blocked) {
       return (
-        <Typography variant="caption" fontWeight={700} color="text.primary" sx={styles.clamp2}>
-          {slot.info?.blocked_message || "Blocat"}
+        <Typography
+          variant="caption"
+          fontWeight={700}
+          color="text.primary"
+          sx={{ ...(isCompact ? styles.clamp1 : styles.clamp2), ...textSx }}
+        >
+          {slot.info?.blocked_message || "Slot blocat"}
         </Typography>
       );
     }
     if (isChecked) {
       return (
-        <Typography variant="caption" fontWeight={700} color="error.main">
+        <Typography
+          variant="caption"
+          fontWeight={700}
+          color="error.main"
+          sx={{ ...styles.clamp1, ...textSx }}
+        >
           În curs de blocare
         </Typography>
       );
-    }
-    if (isBlocking && isFreeSlot) {
-      return null;
     }
     if (slot.is_booked) {
       const title = slot.info?.customer?.fullname || "Rezervat";
       const servicesNames =
         slot.info?.products.map((p) => p.product_name).join(" • ") ?? "";
       const priceText = slot.info
-        ? `${slot.info.total_price_with_discount.toFixed(2)} ${slot.info.payment_currency.name}`
+        ? `${Number(slot.info.total_price_with_discount).toFixed(2)} ${slot.info.payment_currency.name}`
         : null;
       const subtitle = [servicesNames || null, priceText]
         .filter((v): v is string => !!v)
@@ -86,8 +90,12 @@ const MyCalendarMobileSlot = ({
             variant="caption"
             fontWeight={700}
             color="text.primary"
-            sx={isCompact ? styles.clamp1 : styles.clamp2}
+            sx={{ ...(isCompact ? styles.clamp1 : styles.clamp2), ...textSx }}
           >
+            <Box component="span" sx={styles.inlineTime}>
+              {timeRange}
+            </Box>
+            {" · "}
             {title}
           </Typography>
           {!isCompact && !!subtitle && (
@@ -112,6 +120,18 @@ const MyCalendarMobileSlot = ({
         </Typography>
       );
     }
+    if (isFreeSlot) {
+      return (
+        <Typography
+          variant="caption"
+          fontWeight={600}
+          color="text.secondary"
+          sx={{ ...styles.clamp1, ...textSx }}
+        >
+          {timeRange}
+        </Typography>
+      );
+    }
     return null;
   };
 
@@ -121,14 +141,21 @@ const MyCalendarMobileSlot = ({
       sx={[
         styles.root,
         {
-          height: touchHeight,
+          height,
           top: offsetY,
           backgroundColor: style.backgroundColor,
           borderColor: style.borderColor,
+          borderWidth: isFreeSlot ? 1 : 2,
         },
       ]}
     >
-      <Box sx={{ ...styles.inner, height, minHeight: height }}>
+      <Box
+        sx={{
+          ...styles.inner,
+          ...(isCompact && styles.innerCompact),
+          ...(isVeryCompact && styles.innerVeryCompact),
+        }}
+      >
         {showsLeadingBar && (
           <Box sx={{ ...styles.leadingBar, backgroundColor: style.lineColor }} />
         )}
@@ -136,23 +163,23 @@ const MyCalendarMobileSlot = ({
         <Box sx={styles.contentColumn}>
           {renderContent()}
 
-          {slot.is_blocked && !isVeryCompact && (
+          {isExternalBlock && !isCompact && (
             <Box sx={styles.footerRow}>
-              {isExternalBlock ? (
-                <Typography variant="caption" color="text.secondary">
-                  Din Google Calendar
-                </Typography>
-              ) : (
-                <Typography variant="caption" color="text.secondary">
-                  Slot blocat
-                </Typography>
-              )}
+              <Typography variant="caption" color="text.secondary">
+                Din Google Calendar
+              </Typography>
             </Box>
           )}
         </Box>
 
         {showCheckbox && (
-          <Box sx={{ ...styles.checkbox, opacity: isCheckboxEnabled ? 1 : 0.5 }}>
+          <Box
+            sx={{
+              ...styles.checkbox,
+              ...(isCompact && styles.checkboxCentered),
+              opacity: isCheckboxEnabled ? 1 : 0.5,
+            }}
+          >
             <Box
               sx={{
                 ...styles.checkboxBox,
@@ -171,7 +198,7 @@ const MyCalendarMobileSlot = ({
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              fontSize: Math.min(Math.max(height * 0.6, 16), 28),
+              fontSize: Math.min(Math.max(height * 0.6, 14), 28),
               color: "divider",
             }}
           />
@@ -200,11 +227,29 @@ const styles = {
   inner: {
     position: "relative",
     width: "100%",
+    height: "100%",
     display: "flex",
     alignItems: "flex-start",
     gap: 0.75,
     p: 1,
     boxSizing: "border-box",
+  },
+  innerCompact: {
+    alignItems: "center",
+    py: 0.25,
+  },
+  innerVeryCompact: {
+    py: 0,
+    px: 0.75,
+  },
+  inlineTime: {
+    fontSize: "0.85em",
+    fontWeight: 500,
+    color: "text.secondary",
+  },
+  compactText: {
+    fontSize: "0.6875rem",
+    lineHeight: 1.1,
   },
   leadingBar: {
     width: 4,
@@ -236,8 +281,12 @@ const styles = {
   },
   checkbox: {
     position: "absolute",
-    top: 0,
-    right: 0,
+    top: 6,
+    right: 6,
+  },
+  checkboxCentered: {
+    top: "50%",
+    transform: "translateY(-50%)",
   },
   checkboxBox: {
     width: 18,

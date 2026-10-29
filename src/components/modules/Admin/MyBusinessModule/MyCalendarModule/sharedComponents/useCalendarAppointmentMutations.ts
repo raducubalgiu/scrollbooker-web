@@ -18,7 +18,7 @@ export const useCalendarAppointmentMutations = ({
   const { mutate: handleBlock, isPending: isLoadingBlock } =
     useMutate<AppointmentBlockCreate>({
       key: ["block-appointments"],
-      url: "/api/appointments/block",
+      url: "/api/protected/appointments/create-block-appointments",
       options: {
         onSuccess: async () => {
           onBlockSuccess();
@@ -29,7 +29,7 @@ export const useCalendarAppointmentMutations = ({
   const { mutate: handleOwnClient, isPending: isLoadingOwnClient } =
     useMutate<AppointmentOwnClientCreate>({
       key: ["own-client-appointments"],
-      url: "/api/appointments/own-client",
+      url: "/api/protected/appointments/create-own-client-appointment",
       options: {
         onSuccess: async () => {
           onOwnClientSuccess();

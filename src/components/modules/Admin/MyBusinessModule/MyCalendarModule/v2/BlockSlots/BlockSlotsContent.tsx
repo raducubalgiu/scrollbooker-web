@@ -6,46 +6,43 @@ import {
   Button,
   Chip,
   Divider,
-  Drawer,
-  IconButton,
   Stack,
   TextField,
+  Theme,
   Typography,
+  alpha,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import dayjs from "dayjs";
 import {
   BLOCK_REASON_LABELS,
   BLOCK_REASON_OPTIONS,
   MyCalendarBlockReasonEnum,
-} from "./myCalendarBlockReasonEnum";
+} from "../../Mobile/myCalendarBlockReasonEnum";
 
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 50;
 
-type MyCalendarMobileBlockDrawerProps = {
-  open: boolean;
-  dayLabel: string;
-  selectedSlots: Set<string>;
+export type BlockSlotsContentProps = {
+  dayLabel?: string | undefined;
+  slotLabels: string[];
   isSaving: boolean;
   onConfirm: (message: string) => void;
-  onClose: () => void;
 };
 
-const MyCalendarMobileBlockDrawer = ({
-  open,
+export const getBlockSlotsTitle = (slotsCount: number) =>
+  slotsCount > 1 ? "Blochează sloturile selectate" : "Blochează slotul";
+
+const BlockSlotsContent = ({
   dayLabel,
-  selectedSlots,
+  slotLabels,
   isSaving,
   onConfirm,
-  onClose,
-}: MyCalendarMobileBlockDrawerProps) => {
+}: BlockSlotsContentProps) => {
   const [message, setMessage] = useState("");
-  const [selectedReason, setSelectedReason] = useState<MyCalendarBlockReasonEnum>(
-    MyCalendarBlockReasonEnum.OTHER
-  );
+  const [selectedReason, setSelectedReason] =
+    useState<MyCalendarBlockReasonEnum>(MyCalendarBlockReasonEnum.OTHER);
 
   const isOtherReason = selectedReason === MyCalendarBlockReasonEnum.OTHER;
   const trimmedMessage = message.trim();
@@ -62,11 +59,6 @@ const MyCalendarMobileBlockDrawer = ({
 
   const isButtonEnabled = (isOtherReason ? !messageError : true) && !isSaving;
 
-  const title =
-    selectedSlots.size > 1 ? "Blochează sloturile selectate" : "Blochează slotul";
-
-  const sortedSlots = Array.from(selectedSlots).sort();
-
   const handleConfirm = () => {
     const finalMessage = isOtherReason
       ? trimmedMessage
@@ -75,38 +67,18 @@ const MyCalendarMobileBlockDrawer = ({
   };
 
   return (
-    <Drawer
-      anchor="bottom"
-      open={open}
-      onClose={onClose}
-      slotProps={{ paper: { sx: styles.paper } }}
-    >
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ px: 2, py: 1.5 }}
-      >
-        <Typography variant="subtitle1" fontWeight={700}>
-          {title}
-        </Typography>
-        <IconButton onClick={onClose} size="small">
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </Stack>
-      <Divider />
-
-      <Box sx={{ overflowY: "auto", px: 2, py: 2, flex: 1 }}>
-        <Typography color="text.secondary" sx={{ mb: 2 }}>
-          {dayLabel}
-        </Typography>
+    <Box sx={styles.root}>
+      <Box sx={styles.body}>
+        {dayLabel && (
+          <Typography sx={{ mb: 2, fontWeight: 600 }}>{dayLabel}</Typography>
+        )}
 
         <Box sx={styles.pillsRow}>
-          {sortedSlots.map((raw) => (
+          {slotLabels.map((label, index) => (
             <Chip
-              key={raw}
-              icon={<AccessTimeIcon sx={{ fontSize: 14 }} />}
-              label={dayjs(raw).format("HH:mm")}
+              key={`${label}-${index}`}
+              icon={<AccessTimeIcon />}
+              label={label}
               size="small"
               sx={styles.pill}
             />
@@ -124,18 +96,15 @@ const MyCalendarMobileBlockDrawer = ({
               <Chip
                 key={reason}
                 label={BLOCK_REASON_LABELS[reason]}
+                {...(isSelected && { icon: <CheckIcon /> })}
+                variant="outlined"
                 onClick={() => {
                   if (isSaving) return;
                   setSelectedReason(reason);
-                  if (reason !== MyCalendarBlockReasonEnum.OTHER) setMessage("");
+                  if (reason !== MyCalendarBlockReasonEnum.OTHER)
+                    setMessage("");
                 }}
-                sx={{
-                  ...styles.reasonChip,
-                  bgcolor: isSelected ? "primary.light" : "transparent",
-                  color: isSelected ? "primary.main" : "text.primary",
-                  borderColor: isSelected ? "transparent" : "divider",
-                }}
-                variant={isSelected ? "filled" : "outlined"}
+                sx={isSelected ? styles.reasonSelected : styles.reason}
               />
             );
           })}
@@ -152,11 +121,20 @@ const MyCalendarMobileBlockDrawer = ({
               disabled={isSaving}
               onChange={(e) => setMessage(e.target.value.slice(0, MAX_LENGTH))}
             />
-            <Typography variant="caption" color="text.secondary" sx={{ display: "block", textAlign: "right", mt: 0.5 }}>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ display: "block", textAlign: "right", mt: 0.5 }}
+            >
               {message.length} / {MAX_LENGTH}
             </Typography>
             {messageError && (
-              <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mt: 0.5 }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={0.5}
+                sx={{ mt: 0.5 }}
+              >
                 <WarningAmberIcon sx={{ fontSize: 16, color: "error.main" }} />
                 <Typography variant="caption" color="error.main">
                   {messageError}
@@ -173,27 +151,32 @@ const MyCalendarMobileBlockDrawer = ({
           fullWidth
           variant="contained"
           color="error"
+          disableElevation
           disabled={!isButtonEnabled}
           loading={isSaving}
           onClick={handleConfirm}
-          sx={{ textTransform: "none", fontWeight: 700, borderRadius: 2 }}
         >
           Blochează
         </Button>
       </Box>
-    </Drawer>
+    </Box>
   );
 };
 
-export default MyCalendarMobileBlockDrawer;
+export default BlockSlotsContent;
 
 const styles = {
-  paper: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: "85vh",
+  root: {
     display: "flex",
     flexDirection: "column",
+    flex: 1,
+    minHeight: 0,
+  },
+  body: {
+    overflowY: "auto",
+    px: 2,
+    py: 2,
+    flex: 1,
   },
   pillsRow: {
     display: "flex",
@@ -202,14 +185,41 @@ const styles = {
     mb: 2.5,
   },
   pill: {
-    bgcolor: "action.hover",
+    height: 28,
+    px: 0.5,
+    fontWeight: 700,
+    color: "error.main",
+    bgcolor: (theme: Theme) => alpha(theme.palette.error.main, 0.08),
+    "& .MuiChip-icon": {
+      fontSize: 15,
+      color: "error.main",
+    },
   },
   reasonsRow: {
     display: "flex",
     flexWrap: "wrap",
     gap: 1,
   },
-  reasonChip: {
+  reason: {
+    height: 36,
+    px: 0.5,
     fontWeight: 500,
+    color: "text.primary",
+    borderColor: "divider",
+  },
+  reasonSelected: {
+    height: 36,
+    px: 0.5,
+    fontWeight: 600,
+    color: "primary.main",
+    borderColor: "primary.main",
+    bgcolor: (theme: Theme) => alpha(theme.palette.primary.main, 0.12),
+    "& .MuiChip-icon": {
+      fontSize: 18,
+      color: "primary.main",
+    },
+    "&&:hover": {
+      bgcolor: (theme: Theme) => alpha(theme.palette.primary.main, 0.18),
+    },
   },
 } as const;

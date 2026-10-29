@@ -1,11 +1,7 @@
 import { ProtectedPage } from "@/components/cutomized/Protected/ProtectedPage";
-import { WeeklyCalendar } from "@/components/modules/Admin/MyBusinessModule/MyCalendarModule/WeeklyCalendar/WeeklyCalendar";
-import { EmployeesDayCalendar } from "@/components/modules/Admin/MyBusinessModule/MyCalendarModule/EmployeesDayCalendar/EmployeesDayCalendar";
-import MyCalendarMobileScreen from "@/components/modules/Admin/MyBusinessModule/MyCalendarModule/Mobile/MyCalendarMobileScreen";
+import { CalendarScreen } from "@/components/modules/Admin/MyBusinessModule/MyCalendarModule/v2/CalendarScreen";
 import { authOptions } from "@/lib/auth/authOptions";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
-import { Schedule } from "@/ts/models/booking/schedule/Schedule";
-import { get } from "@/utils/requests";
 import { getServerSession } from "next-auth";
 import { JSX } from "react";
 
@@ -16,32 +12,7 @@ async function Calendar(): Promise<JSX.Element> {
     throw new Error("Session is expired");
   }
 
-  const { is_employee, has_employees } = session;
-
-  if (is_employee || !has_employees) {
-    const response = await get<Schedule[]>({
-      url: `/users/${session?.user_id}/schedules`,
-    });
-    const schedules = response.data;
-
-    if (!schedules) {
-      throw new Error("Schedules are not defined");
-    }
-
-    return (
-      <>
-        <MyCalendarMobileScreen session={session} />
-        <WeeklyCalendar session={session} schedules={schedules} />
-      </>
-    );
-  }
-
-  return (
-    <>
-      <MyCalendarMobileScreen session={session} />
-      <EmployeesDayCalendar />
-    </>
-  );
+  return <CalendarScreen session={session} />;
 }
 
 export default ProtectedPage(Calendar, PermissionEnum.MY_CALENDAR_VIEW);

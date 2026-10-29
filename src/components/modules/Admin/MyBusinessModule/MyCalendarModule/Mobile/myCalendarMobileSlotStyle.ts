@@ -56,7 +56,7 @@ export const resolveMobileSlotStyle = (
     lineColor: slot.is_blocked ? "transparent" : alpha(baseColor, 0.55),
     borderColor: isSpecialState
       ? alpha(baseColor, borderOpacity)
-      : alpha(theme.palette.divider, borderOpacity),
+      : theme.palette.divider,
     isBefore,
   };
 };
