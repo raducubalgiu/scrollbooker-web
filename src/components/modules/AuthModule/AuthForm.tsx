@@ -44,6 +44,8 @@ type AuthFormProps = {
   footerText: string;
   footerLinkText: string;
   footerHref: string;
+  forgotPasswordLabel?: string;
+  forgotPasswordHref?: string;
 };
 
 export default function AuthForm({
@@ -62,6 +64,8 @@ export default function AuthForm({
   footerText,
   footerLinkText,
   footerHref,
+  forgotPasswordLabel,
+  forgotPasswordHref,
 }: AuthFormProps) {
   const methods = useForm<AuthFormValues>({
     defaultValues: { identifier: "", password: "" },
@@ -142,6 +146,21 @@ export default function AuthForm({
               placeholder={passwordPlaceholder}
               size="medium"
             />
+          )}
+
+          {!isPhoneFlow && forgotPasswordLabel && forgotPasswordHref && (
+            <Button
+              component={NextLink}
+              href={forgotPasswordHref}
+              size="small"
+              sx={{
+                alignSelf: "flex-end",
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              {forgotPasswordLabel}
+            </Button>
           )}
 
           <Button

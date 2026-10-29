@@ -6,6 +6,8 @@ const AUTH_ROUTES = [
   "/auth/register",
   "/auth/register-business",
   "/auth/get-started",
+  "/auth/forgot-password",
+  "/auth/reset-password",
 ];
 const PUBLIC_ERROR_ROUTES = ["/unauthorized", "/not-found", "/_not-found"];
 
