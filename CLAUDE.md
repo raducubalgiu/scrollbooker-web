@@ -49,14 +49,23 @@ versa) silently breaks across light/dark mode — e.g. invisible dark-on-dark
 input text in a modal that hardcoded a dark surface while the input itself
 still inherited the theme's light-mode text color.
 
-**Exception: `LandingPageModule`** (the `/` marketing page and everything
-under `src/components/modules/LandingPageModule/`). It's deliberately
-exempt — see `landing.constants.ts`'s own comment: the landing page must
-always render dark regardless of the viewer's actual light/dark
-preference, which is precisely why it hardcodes `LANDING_COLORS` instead
-of reading `theme.ts`/`useTheme()` in the first place. Keep using
-`LANDING_COLORS` there; don't "fix" it onto the theme, and don't use this
-exception as precedent for hardcoding colors anywhere else.
+**No exceptions, landing included.** The marketing pages
+(`LandingPageModule`, `ForBusinessPageModule`) read `theme.palette` via
+`useTheme()` like everything else; the old `LANDING_COLORS` palette was
+removed. `/for-business` is forced to light through `LandingForcedTheme`,
+which swaps in `lightTheme`, so its components still just read the theme.
+
+Brand palette, as set in `theme/theme.ts`:
+
+- `primary` (`#FF6F00`): the brand orange. Main CTAs, logo, active states.
+- `secondary` (`#FF2E7E`): the brand pink, used sparingly as a signature.
+  The orange to pink gradient on hero CTAs and highlighted words, badge dots,
+  small accents, the secondary glow. Not for large surfaces.
+- `neutral`: the grey used for secondary buttons (`color="neutral"`) and
+  input/textarea fills. It used to live in `secondary`; keep it separate.
+- `surface`: the slightly raised card fill on marketing pages.
+- `rating`, `whatsapp`, `beauty`, `medical`, `auto`, `lastMinute`:
+  semantic and category colors. Never reuse them as brand accents.
 
 ## Project Overview
 

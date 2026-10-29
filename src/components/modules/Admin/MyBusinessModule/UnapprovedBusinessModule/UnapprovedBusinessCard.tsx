@@ -69,7 +69,7 @@ export default function UnapprovedBusinessCard({
       <Stack flexDirection="row" alignItems="center" gap={1} mt={3}>
         <Button
           variant="outlined"
-          color="secondary"
+          color="neutral"
           fullWidth
           onClick={() => {}}
           disableElevation

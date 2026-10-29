@@ -1,13 +1,12 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import DashboardCustomizeRoundedIcon from "@mui/icons-material/DashboardCustomizeRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import { useTranslations } from "next-intl";
-import { useLandingColors } from "../LandingThemeContext";
 
 const ICONS = [
   GroupsRoundedIcon,
@@ -20,7 +19,7 @@ type FeatureItem = { title: string; description: string };
 
 export default function LandingFeatures() {
   const t = useTranslations("features");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const items = t.raw("items") as FeatureItem[];
 
   return (
@@ -29,11 +28,11 @@ export default function LandingFeatures() {
         <Stack spacing={1.5} sx={{ mb: 6, maxWidth: 640 }}>
           <Typography
             variant="overline"
-            sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
+            sx={{ color: palette.primary.main, fontWeight: 700, letterSpacing: 1.5 }}
           >
             {t("kicker")}
           </Typography>
-          <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 900, letterSpacing: "-0.03em" }}>
+          <Typography variant="h2" sx={{ color: palette.text.primary, fontWeight: 900, letterSpacing: "-0.03em" }}>
             {t("title")}
           </Typography>
         </Stack>
@@ -50,8 +49,8 @@ export default function LandingFeatures() {
                   height: "100%",
                   p: 3,
                   borderRadius: 3,
-                  border: `1px solid ${LANDING_COLORS.border}`,
-                  backgroundColor: LANDING_COLORS.surface,
+                  border: `1px solid ${palette.divider}`,
+                  backgroundColor: palette.surface.main,
                   transition: "border-color 0.2s, transform 0.2s",
                   "&:hover": {
                     borderColor: "rgba(255,111,0,0.4)",
@@ -68,20 +67,20 @@ export default function LandingFeatures() {
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: "rgba(255,111,0,0.12)",
-                    color: LANDING_COLORS.primary,
+                    color: palette.primary.main,
                   }}
                 >
                   <Icon fontSize="small" />
                 </Box>
                 <Typography
                   variant="h6"
-                  sx={{ color: LANDING_COLORS.textPrimary }}
+                  sx={{ color: palette.text.primary }}
                 >
                   {feature.title}
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.7 }}
+                  sx={{ color: palette.text.secondary, lineHeight: 1.7 }}
                 >
                   {feature.description}
                 </Typography>

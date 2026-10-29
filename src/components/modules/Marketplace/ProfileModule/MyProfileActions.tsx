@@ -23,14 +23,14 @@ const MyProfileActions = ({
   return (
     <>
       <ProfileActionButton
-        color="secondary"
+        color="neutral"
         title="Editează profilul"
         onClick={onOpenEditModal}
       />
 
       {instantBooking && isBusinessOrEmployee ? (
         <ProfileActionButton
-          color="secondary"
+          color="neutral"
           title="Calendar"
           component={NextLink}
           href={AppRoutes.calendar()}
@@ -38,7 +38,7 @@ const MyProfileActions = ({
         />
       ) : (
         <ProfileActionButton
-          color="secondary"
+          color="neutral"
           title="Distribuie"
           onClick={onShare}
           startIcon={<IosShareIcon />}
@@ -49,7 +49,7 @@ const MyProfileActions = ({
         component={NextLink}
         href={AppRoutes.settings()}
         variant="contained"
-        color="secondary"
+        color="neutral"
         disableElevation
         aria-label="Setări"
         sx={styles.settingsButton}

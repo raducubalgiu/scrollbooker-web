@@ -84,14 +84,14 @@ const styles = {
     p: { xs: 1.5, sm: 2 },
     borderRadius: 5,
     mb: 1.5,
-    bgcolor: "secondary.main",
+    bgcolor: "neutral.main",
     cursor: "pointer",
     transition: "background-color 0.2s ease",
     textDecoration: "none !important",
     color: "text.primary",
 
     "&:hover": {
-      bgcolor: (theme: Theme) => alpha(theme.palette.secondary.dark, 0.4),
+      bgcolor: (theme: Theme) => alpha(theme.palette.neutral.dark, 0.4),
     },
   },
 };

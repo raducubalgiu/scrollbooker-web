@@ -60,7 +60,7 @@ const ProfileInfoOwnerSection = ({ owner }: ProfileInfoOwnerSectionProps) => {
 					href={AppRoutes.profile(owner.username, owner.profession)}
 					onClick={handleNavigateToProfile}
 					variant="outlined"
-					color="secondary"
+					color="neutral"
 					fullWidth
 					endIcon={<ChevronRight />}
 					disableElevation

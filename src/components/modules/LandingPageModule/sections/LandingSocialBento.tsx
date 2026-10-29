@@ -1,6 +1,6 @@
 "use client";
 
-import { alpha, Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import { useTranslations } from "next-intl";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
@@ -8,7 +8,6 @@ import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
-import { useLandingColors } from "../LandingThemeContext";
 import LandingVideo from "../components/LandingVideo";
 
 type SocialItem = { title: string; description: string };
@@ -23,28 +22,28 @@ const ICONS = [
 export default function LandingSocialBento() {
   const t = useTranslations("social");
   const tHero = useTranslations("hero");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const items = t.raw("items") as SocialItem[];
   const smallItems = items.slice(0, ICONS.length);
   const reviewItem = items[ICONS.length];
   const iconColors = [
-    LANDING_COLORS.accent,
-    LANDING_COLORS.primary,
-    LANDING_COLORS.accentAlt,
-    LANDING_COLORS.accent,
+    palette.secondary.main,
+    palette.primary.main,
+    palette.rating.main,
+    palette.secondary.main,
   ];
 
   const tileSx = {
     position: "relative",
     overflow: "hidden",
     borderRadius: 4,
-    border: `1px solid ${LANDING_COLORS.border}`,
-    backgroundColor: LANDING_COLORS.surface,
+    border: `1px solid ${palette.divider}`,
+    backgroundColor: palette.surface.main,
     p: { xs: 2.5, md: 3.5 },
     transition: "transform 0.2s, border-color 0.2s",
     "&:hover": {
       transform: "translateY(-4px) rotate(-0.5deg)",
-      borderColor: alpha(LANDING_COLORS.accent, 0.4),
+      borderColor: alpha(palette.secondary.main, 0.4),
     },
   };
 
@@ -55,7 +54,7 @@ export default function LandingSocialBento() {
           <Typography
             variant="overline"
             sx={{
-              color: LANDING_COLORS.accent,
+              color: palette.secondary.main,
               fontWeight: 800,
               letterSpacing: 1.5,
             }}
@@ -65,7 +64,7 @@ export default function LandingSocialBento() {
           <Typography
             variant="h2"
             sx={{
-              color: LANDING_COLORS.textPrimary,
+              color: palette.text.primary,
               fontWeight: 900,
               letterSpacing: "-0.03em",
             }}
@@ -74,7 +73,7 @@ export default function LandingSocialBento() {
           </Typography>
           <Typography
             variant="body1"
-            sx={{ color: LANDING_COLORS.textSecondary, fontSize: "1.1rem" }}
+            sx={{ color: palette.text.secondary, fontSize: "1.1rem" }}
           >
             {t("subtitle")}
           </Typography>
@@ -97,8 +96,8 @@ export default function LandingSocialBento() {
               gridRow: { md: "span 2" },
               minHeight: { xs: 380, md: 440 },
               border: "none",
-              background: `linear-gradient(135deg, ${LANDING_COLORS.primary} 0%, ${LANDING_COLORS.accent} 100%)`,
-              color: "#fff",
+              background: `linear-gradient(135deg, ${palette.primary.main} 0%, ${palette.secondary.main} 100%)`,
+              color: palette.common.white,
             }}
           >
             <Stack
@@ -110,7 +109,7 @@ export default function LandingSocialBento() {
                 py: 0.75,
                 mb: 3,
                 borderRadius: 50,
-                backgroundColor: alpha("#000", 0.2),
+                backgroundColor: alpha(palette.common.black, 0.2),
                 fontWeight: 800,
                 fontSize: "0.9rem",
               }}
@@ -153,7 +152,7 @@ export default function LandingSocialBento() {
                 overflow: "hidden",
                 border: "6px solid #0d0d0d",
                 transform: "rotate(8deg)",
-                boxShadow: `0 30px 60px -20px ${alpha("#000", 0.5)}`,
+                boxShadow: `0 30px 60px -20px ${alpha(palette.common.black, 0.5)}`,
               }}
             >
               <LandingVideo
@@ -170,7 +169,7 @@ export default function LandingSocialBento() {
                   width: "46%",
                   height: "4.6%",
                   borderRadius: 50,
-                  backgroundColor: "#000",
+                  backgroundColor: palette.common.black,
                 }}
               />
             </Box>
@@ -200,7 +199,7 @@ export default function LandingSocialBento() {
                 <Typography
                   variant="h6"
                   sx={{
-                    color: LANDING_COLORS.textPrimary,
+                    color: palette.text.primary,
                     fontWeight: 800,
                     mb: 0.75,
                   }}
@@ -209,7 +208,7 @@ export default function LandingSocialBento() {
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.6 }}
+                  sx={{ color: palette.text.secondary, lineHeight: 1.6 }}
                 >
                   {item.description}
                 </Typography>
@@ -226,8 +225,8 @@ export default function LandingSocialBento() {
                 ...tileSx,
                 gridColumn: { xs: "span 2", md: "span 4" },
                 border: "none",
-                backgroundColor: LANDING_COLORS.textPrimary,
-                color: LANDING_COLORS.background,
+                backgroundColor: palette.text.primary,
+                color: palette.background.default,
               }}
             >
               <Box
@@ -239,8 +238,8 @@ export default function LandingSocialBento() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#fff",
-                  background: `linear-gradient(135deg, ${LANDING_COLORS.accent}, ${LANDING_COLORS.primary})`,
+                  color: palette.common.white,
+                  background: `linear-gradient(135deg, ${palette.secondary.main}, ${palette.primary.main})`,
                 }}
               >
                 <VideocamRoundedIcon />
@@ -263,7 +262,7 @@ export default function LandingSocialBento() {
                 {Array.from({ length: 5 }).map((_, index) => (
                   <StarRoundedIcon
                     key={index}
-                    sx={{ color: LANDING_COLORS.accentAlt, fontSize: 28 }}
+                    sx={{ color: palette.rating.main, fontSize: 28 }}
                   />
                 ))}
               </Stack>

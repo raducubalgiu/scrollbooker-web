@@ -97,7 +97,7 @@ const CollectBusinessValidationStep = () => {
                 >
                   <Avatar
                     sx={{
-                      bgcolor: "secondary.main",
+                      bgcolor: "neutral.main",
                       color: "primary.main",
                       mb: 2,
                       width: 48,

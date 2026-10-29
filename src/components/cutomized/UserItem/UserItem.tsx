@@ -87,7 +87,7 @@ const UserItem = ({
 
           <Button
             variant={!is_follow ? "contained" : "outlined"}
-            color={is_follow ? "secondary" : "primary"}
+            color={is_follow ? "neutral" : "primary"}
             onClick={handleFollowClick}
             size="small"
             disableElevation

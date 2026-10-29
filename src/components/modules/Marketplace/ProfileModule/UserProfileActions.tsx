@@ -119,7 +119,7 @@ const UserProfileActions = ({
       <ProfileActionButton
         title={localFollow ? "Urmărești" : "Urmărește"}
         variant={localFollow ? "outlined" : "contained"}
-        color="secondary"
+        color="neutral"
         onClick={handleToggleFollow}
         disabled={isFollowing || isUnfollowing}
       />

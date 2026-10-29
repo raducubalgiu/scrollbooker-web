@@ -99,7 +99,7 @@ const UploadVideoMobileSelectStep = ({
           <Stack direction="row" gap={1.5}>
             <Button
               variant="contained"
-              color="secondary"
+              color="neutral"
               disableElevation
               fullWidth
               startIcon={<UploadIcon />}

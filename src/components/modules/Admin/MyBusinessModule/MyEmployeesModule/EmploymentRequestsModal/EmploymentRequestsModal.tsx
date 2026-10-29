@@ -94,7 +94,7 @@ export default function EmploymentRequestsModal({
             props: {
               onClick: () => setStepIndex((prev) => prev - 1),
               variant: "outlined" as const,
-              color: "secondary" as const,
+              color: "neutral" as const,
               disabled: isPending,
             },
           },
@@ -197,9 +197,9 @@ const styles = {
   stepper: {
     "& .MuiStepIcon-root": {
       fontSize: "2rem",
-      color: "secondary.main",
+      color: "neutral.main",
       fontWeight: 500,
-      "&.Mui-active": { color: "secondary.main" },
+      "&.Mui-active": { color: "neutral.main" },
       "&.Mui-completed": { color: "primary.main" },
     },
     "& .MuiStepLabel-label": {

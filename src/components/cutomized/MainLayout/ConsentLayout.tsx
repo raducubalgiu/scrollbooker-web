@@ -34,7 +34,7 @@ export default function ConsentLayout({
           height: 500,
           overflow: "auto",
           my: 2.5,
-          bgcolor: "secondary.main",
+          bgcolor: "neutral.main",
           borderRadius: 2,
         }}
       >

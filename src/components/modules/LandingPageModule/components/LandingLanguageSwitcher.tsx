@@ -1,16 +1,15 @@
 "use client";
 
 import { useTransition } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useLocale, useTranslations } from "next-intl";
 import { setUserLocale } from "@/i18n/locale";
 import { locales, type Locale } from "@/i18n/config";
-import { useLandingColors } from "../LandingThemeContext";
 
 export default function LandingLanguageSwitcher() {
   const locale = useLocale();
   const t = useTranslations("languageSwitcher");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const [isPending, startTransition] = useTransition();
 
   const handleChange = (next: Locale) => {
@@ -26,7 +25,7 @@ export default function LandingLanguageSwitcher() {
         display: "inline-flex",
         alignItems: "center",
         borderRadius: 50,
-        border: `1px solid ${LANDING_COLORS.border}`,
+        border: `1px solid ${palette.divider}`,
         p: "3px",
         opacity: isPending ? 0.6 : 1,
       }}
@@ -46,7 +45,7 @@ export default function LandingLanguageSwitcher() {
               borderRadius: 50,
               px: 1.25,
               py: 0.4,
-              backgroundColor: isActive ? LANDING_COLORS.primary : "transparent",
+              backgroundColor: isActive ? palette.primary.main : "transparent",
               transition: "background-color 0.15s",
             }}
           >
@@ -55,7 +54,7 @@ export default function LandingLanguageSwitcher() {
               sx={{
                 fontWeight: 700,
                 fontSize: "0.7rem",
-                color: isActive ? "#000" : LANDING_COLORS.textSecondary,
+                color: isActive ? palette.common.black : palette.text.secondary,
               }}
             >
               {t(code)}

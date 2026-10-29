@@ -363,7 +363,7 @@ const styles = {
     "& .MuiOutlinedInput-root": {
       minHeight: 56,
       borderRadius: "999px",
-      bgcolor: "secondary",
+      bgcolor: "neutral",
       "& fieldset": {
         borderColor: "divider",
       },

@@ -120,7 +120,7 @@ const styles = {
     minHeight: 220,
     maxHeight: { xs: 280, sm: 320 },
     overflow: "auto",
-    bgcolor: "secondary.main",
+    bgcolor: "neutral.main",
     borderRadius: 5,
     mt: 2,
   },

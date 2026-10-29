@@ -1,10 +1,9 @@
 "use client";
 
-import { alpha, Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { AppRoutes } from "@/utils/routes";
-import { useLandingColors } from "../LandingThemeContext";
 import LandingLogo from "../components/LandingLogo";
 import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
 
@@ -18,12 +17,12 @@ export default function LandingFooter({
   displayLogin = false,
 }: LandingFooterProps) {
   const t = useTranslations("footer");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
 
   return (
     <Box
       component="footer"
-      sx={{ borderTop: `1px solid ${LANDING_COLORS.border}`, py: 5 }}
+      sx={{ borderTop: `1px solid ${palette.divider}`, py: 5 }}
     >
       <Container maxWidth="lg">
         <Stack
@@ -49,9 +48,9 @@ export default function LandingFooter({
                 href={AppRoutes.login()}
                 variant="body2"
                 sx={{
-                  color: LANDING_COLORS.textSecondary,
+                  color: palette.text.secondary,
                   textDecoration: "none",
-                  "&:hover": { color: LANDING_COLORS.textPrimary },
+                  "&:hover": { color: palette.text.primary },
                 }}
               >
                 {t("login")}
@@ -62,9 +61,9 @@ export default function LandingFooter({
               href={registerHref ?? AppRoutes.forBusiness()}
               variant="body2"
               sx={{
-                color: LANDING_COLORS.textSecondary,
+                color: palette.text.secondary,
                 textDecoration: "none",
-                "&:hover": { color: LANDING_COLORS.textPrimary },
+                "&:hover": { color: palette.text.primary },
               }}
             >
               {registerHref ? t("registerBusiness") : t("forBusiness")}
@@ -74,9 +73,9 @@ export default function LandingFooter({
               href={AppRoutes.cookies()}
               variant="body2"
               sx={{
-                color: LANDING_COLORS.textSecondary,
+                color: palette.text.secondary,
                 textDecoration: "none",
-                "&:hover": { color: LANDING_COLORS.textPrimary },
+                "&:hover": { color: palette.text.primary },
               }}
             >
               {t("cookies")}
@@ -86,9 +85,9 @@ export default function LandingFooter({
               href="mailto:office@scrollbooker.com"
               variant="body2"
               sx={{
-                color: LANDING_COLORS.textSecondary,
+                color: palette.text.secondary,
                 textDecoration: "none",
-                "&:hover": { color: LANDING_COLORS.textPrimary },
+                "&:hover": { color: palette.text.primary },
               }}
             >
               office@scrollbooker.com
@@ -98,7 +97,7 @@ export default function LandingFooter({
 
           <Typography
             variant="body2"
-            sx={{ color: alpha(LANDING_COLORS.textPrimary, 0.4) }}
+            sx={{ color: alpha(palette.text.primary, 0.4) }}
           >
             © {new Date().getFullYear()} ScrollBooker
           </Typography>

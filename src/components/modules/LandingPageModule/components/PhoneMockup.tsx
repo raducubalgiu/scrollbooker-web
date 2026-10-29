@@ -2,8 +2,10 @@
 
 import { Box } from "@mui/material";
 import Image from "next/image";
-import { LANDING_COLORS_DARK } from "../landing.constants";
+import { darkTheme } from "../../../../../theme/theme";
 import LandingVideo from "./LandingVideo";
+
+const { palette } = darkTheme;
 
 type PhoneMockupProps = {
   src: string;
@@ -29,7 +31,7 @@ export default function PhoneMockup({
         mx: "auto",
         borderRadius: "44px",
         p: "12px",
-        backgroundColor: "#0d0d0d",
+        backgroundColor: palette.surface.main,
         border: "1px solid rgba(255,255,255,0.12)",
         boxShadow: `0 40px 100px -30px rgba(255,111,0,0.3), 0 0 0 1px rgba(255,255,255,0.04) inset`,
       }}
@@ -41,7 +43,7 @@ export default function PhoneMockup({
           aspectRatio: "1170 / 2532",
           borderRadius: "32px",
           overflow: "hidden",
-          backgroundColor: "#000",
+          backgroundColor: palette.common.black,
         }}
       >
         {videoSrc ? (
@@ -56,7 +58,7 @@ export default function PhoneMockup({
                 width: "46%",
                 height: "4.6%",
                 borderRadius: 50,
-                backgroundColor: "#000",
+                backgroundColor: palette.common.black,
               }}
             />
           </>
@@ -82,8 +84,8 @@ export default function PhoneMockup({
             width: 90,
             height: 22,
             borderRadius: "20px",
-            backgroundColor: "#0d0d0d",
-            border: `1px solid ${LANDING_COLORS_DARK.border}`,
+            backgroundColor: palette.surface.main,
+            border: `1px solid ${palette.divider}`,
           }}
         />
       )}

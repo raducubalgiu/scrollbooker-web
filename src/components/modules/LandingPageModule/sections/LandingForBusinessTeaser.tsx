@@ -7,6 +7,7 @@ import {
   Container,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import Link from "next/link";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
@@ -14,7 +15,6 @@ import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import PlaceRoundedIcon from "@mui/icons-material/PlaceRounded";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import { useTranslations } from "next-intl";
-import { useLandingColors } from "../LandingThemeContext";
 import { AppRoutes } from "@/utils/routes";
 
 type TeaserItem = { title: string; description: string };
@@ -23,7 +23,7 @@ const ICONS = [VideocamRoundedIcon, PlaceRoundedIcon, PeopleAltRoundedIcon];
 
 export default function LandingForBusinessTeaser() {
   const t = useTranslations("forBusinessTeaser");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const items = t.raw("items") as TeaserItem[];
 
   return (
@@ -34,8 +34,8 @@ export default function LandingForBusinessTeaser() {
             position: "relative",
             overflow: "hidden",
             borderRadius: 6,
-            border: `1px solid ${LANDING_COLORS.border}`,
-            backgroundColor: LANDING_COLORS.surface,
+            border: `1px solid ${palette.divider}`,
+            backgroundColor: palette.surface.main,
             px: { xs: 3, md: 6 },
             py: { xs: 5, md: 7 },
           }}
@@ -48,7 +48,7 @@ export default function LandingForBusinessTeaser() {
               width: { xs: 320, md: 520 },
               height: { xs: 320, md: 520 },
               borderRadius: "50%",
-              background: `radial-gradient(circle, ${alpha(LANDING_COLORS.primary, 0.22)} 0%, transparent 70%)`,
+              background: `radial-gradient(circle, ${alpha(palette.primary.main, 0.22)} 0%, transparent 70%)`,
               pointerEvents: "none",
             }}
           />
@@ -64,7 +64,7 @@ export default function LandingForBusinessTeaser() {
               <Typography
                 variant="overline"
                 sx={{
-                  color: LANDING_COLORS.primary,
+                  color: palette.primary.main,
                   fontWeight: 800,
                   letterSpacing: 1.5,
                 }}
@@ -74,7 +74,7 @@ export default function LandingForBusinessTeaser() {
               <Typography
                 variant="h2"
                 sx={{
-                  color: LANDING_COLORS.textPrimary,
+                  color: palette.text.primary,
                   fontWeight: 900,
                   letterSpacing: "-0.03em",
                   mt: 1.5,
@@ -84,7 +84,7 @@ export default function LandingForBusinessTeaser() {
                 {t("title")}
               </Typography>
               <Typography
-                sx={{ color: LANDING_COLORS.textSecondary, fontSize: "1.1rem" }}
+                sx={{ color: palette.text.secondary, fontSize: "1.1rem" }}
               >
                 {t("subtitle")}
               </Typography>
@@ -102,9 +102,9 @@ export default function LandingForBusinessTeaser() {
                 whiteSpace: "nowrap",
                 borderRadius: 50,
                 fontWeight: 800,
-                color: "#fff",
-                backgroundColor: LANDING_COLORS.primary,
-                "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
+                color: palette.common.white,
+                backgroundColor: palette.primary.main,
+                "&:hover": { backgroundColor: palette.primary.dark },
               }}
             >
               {t("button")}
@@ -128,12 +128,12 @@ export default function LandingForBusinessTeaser() {
                   sx={{
                     p: { xs: 2.5, md: 3 },
                     borderRadius: 4,
-                    border: `1px solid ${LANDING_COLORS.border}`,
-                    backgroundColor: LANDING_COLORS.background,
+                    border: `1px solid ${palette.divider}`,
+                    backgroundColor: palette.background.default,
                     transition: "transform 0.2s, border-color 0.2s",
                     "&:hover": {
                       transform: "translateY(-4px)",
-                      borderColor: alpha(LANDING_COLORS.primary, 0.5),
+                      borderColor: alpha(palette.primary.main, 0.5),
                     },
                   }}
                 >
@@ -151,15 +151,15 @@ export default function LandingForBusinessTeaser() {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "#fff",
-                        background: `linear-gradient(135deg, ${LANDING_COLORS.primary}, ${LANDING_COLORS.accent})`,
+                        color: palette.common.white,
+                        background: `linear-gradient(135deg, ${palette.primary.main}, ${palette.secondary.main})`,
                       }}
                     >
                       <Icon />
                     </Box>
                     <Typography
                       sx={{
-                        color: alpha(LANDING_COLORS.textPrimary, 0.12),
+                        color: alpha(palette.text.primary, 0.12),
                         fontSize: "2.5rem",
                         fontWeight: 900,
                         lineHeight: 1,
@@ -171,7 +171,7 @@ export default function LandingForBusinessTeaser() {
                   <Typography
                     variant="h6"
                     sx={{
-                      color: LANDING_COLORS.textPrimary,
+                      color: palette.text.primary,
                       fontWeight: 800,
                       mb: 0.75,
                     }}
@@ -181,7 +181,7 @@ export default function LandingForBusinessTeaser() {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: LANDING_COLORS.textSecondary,
+                      color: palette.text.secondary,
                       lineHeight: 1.6,
                     }}
                   >

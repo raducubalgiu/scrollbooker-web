@@ -1,13 +1,12 @@
 "use client";
 
-import { alpha, Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import { useTranslations } from "next-intl";
 import BoltRoundedIcon from "@mui/icons-material/BoltRounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import PaymentsRoundedIcon from "@mui/icons-material/PaymentsRounded";
-import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
 
 type BookingMode = {
   badge: string;
@@ -22,10 +21,10 @@ const NOTE_ICONS = [TuneRoundedIcon, PaymentsRoundedIcon];
 
 export default function ForBusinessBookingModes() {
   const t = useTranslations("forBusinessBookingModes");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const modes = t.raw("modes") as BookingMode[];
   const notes = t.raw("notes") as string[];
-  const modeColors = [LANDING_COLORS.primary, "#1DA851"];
+  const modeColors = [palette.primary.main, palette.whatsapp.dark];
 
   return (
     <Box
@@ -38,19 +37,19 @@ export default function ForBusinessBookingModes() {
           <Typography
             variant="overline"
             sx={{
-              color: LANDING_COLORS.primary,
+              color: palette.primary.main,
               fontWeight: 700,
               letterSpacing: 1.5,
             }}
           >
             {t("kicker")}
           </Typography>
-          <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 900, letterSpacing: "-0.03em" }}>
+          <Typography variant="h2" sx={{ color: palette.text.primary, fontWeight: 900, letterSpacing: "-0.03em" }}>
             {t("title")}
           </Typography>
           <Typography
             variant="body1"
-            sx={{ color: LANDING_COLORS.textSecondary, fontSize: "1.1rem" }}
+            sx={{ color: palette.text.secondary, fontSize: "1.1rem" }}
           >
             {t("subtitle")}
           </Typography>
@@ -65,7 +64,7 @@ export default function ForBusinessBookingModes() {
         >
           {modes.map((mode, index) => {
             const Icon = MODE_ICONS[index] ?? BoltRoundedIcon;
-            const color = modeColors[index] ?? LANDING_COLORS.primary;
+            const color = modeColors[index] ?? palette.primary.main;
 
             return (
               <Stack
@@ -73,9 +72,9 @@ export default function ForBusinessBookingModes() {
                 sx={{
                   p: { xs: 3, md: 4 },
                   borderRadius: 4,
-                  border: `1px solid ${index === 0 ? alpha(color, 0.45) : LANDING_COLORS.border}`,
+                  border: `1px solid ${index === 0 ? alpha(color, 0.45) : palette.divider}`,
                   backgroundColor:
-                    index === 0 ? alpha(color, 0.04) : LANDING_COLORS.surface,
+                    index === 0 ? alpha(color, 0.04) : palette.surface.main,
                 }}
               >
                 <Box
@@ -101,7 +100,7 @@ export default function ForBusinessBookingModes() {
                 <Typography
                   variant="h5"
                   sx={{
-                    color: LANDING_COLORS.textPrimary,
+                    color: palette.text.primary,
                     fontSize: { xs: "1.35rem", md: "1.6rem" },
                     fontWeight: 800,
                     mb: 1,
@@ -112,7 +111,7 @@ export default function ForBusinessBookingModes() {
                 <Typography
                   variant="body1"
                   sx={{
-                    color: LANDING_COLORS.textSecondary,
+                    color: palette.text.secondary,
                     lineHeight: 1.7,
                     mb: 3,
                   }}
@@ -139,7 +138,7 @@ export default function ForBusinessBookingModes() {
                           justifyContent: "center",
                           fontWeight: 700,
                           fontSize: "0.8rem",
-                          color: "#fff",
+                          color: palette.common.white,
                           backgroundColor: color,
                         }}
                       >
@@ -147,7 +146,7 @@ export default function ForBusinessBookingModes() {
                       </Box>
                       <Typography
                         sx={{
-                          color: LANDING_COLORS.textPrimary,
+                          color: palette.text.primary,
                           fontWeight: 600,
                         }}
                       >
@@ -163,7 +162,7 @@ export default function ForBusinessBookingModes() {
                   sx={{
                     mt: "auto",
                     pt: 2.5,
-                    borderTop: `1px solid ${LANDING_COLORS.border}`,
+                    borderTop: `1px solid ${palette.divider}`,
                   }}
                 >
                   <CheckCircleRoundedIcon
@@ -172,7 +171,7 @@ export default function ForBusinessBookingModes() {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: LANDING_COLORS.textSecondary,
+                      color: palette.text.secondary,
                       lineHeight: 1.6,
                     }}
                   >
@@ -200,11 +199,11 @@ export default function ForBusinessBookingModes() {
                 alignItems="center"
               >
                 <Icon
-                  sx={{ fontSize: 20, color: LANDING_COLORS.textSecondary }}
+                  sx={{ fontSize: 20, color: palette.text.secondary }}
                 />
                 <Typography
                   variant="body2"
-                  sx={{ color: LANDING_COLORS.textSecondary }}
+                  sx={{ color: palette.text.secondary }}
                 >
                   {note}
                 </Typography>

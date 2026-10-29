@@ -33,11 +33,11 @@ const gradientSx = (theme: Theme) => ({
   transition: "transform 0.15s, box-shadow 0.15s",
   "&:not(.Mui-disabled)": {
     color: theme.palette.common.white,
-    background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.accent.main})`,
-    boxShadow: `0 12px 32px -10px ${alpha(theme.palette.accent.main, 0.6)}`,
+    background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+    boxShadow: `0 12px 32px -10px ${alpha(theme.palette.secondary.main, 0.6)}`,
   },
   "&:not(.Mui-disabled):hover": {
     transform: "translateY(-2px)",
-    boxShadow: `0 16px 40px -10px ${alpha(theme.palette.accent.main, 0.75)}`,
+    boxShadow: `0 16px 40px -10px ${alpha(theme.palette.secondary.main, 0.75)}`,
   },
 });

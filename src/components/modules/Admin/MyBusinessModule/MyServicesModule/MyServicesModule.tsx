@@ -50,7 +50,7 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
       title: t("reset"),
       props: {
         variant: "outlined",
-        color: "secondary",
+        color: "neutral",
         disabled: isLoadingUpdate || !isDirty,
         onClick: resetSelection,
       },

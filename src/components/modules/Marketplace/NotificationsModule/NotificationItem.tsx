@@ -79,7 +79,7 @@ export default function NotificationItem({
           action: (
             <Button
               variant={sender?.is_follow ? "outlined" : "contained"}
-              color={sender?.is_follow ? "secondary" : "primary"}
+              color={sender?.is_follow ? "neutral" : "primary"}
               disableElevation
               onClick={handleFollow}
               onMouseDown={(e) => e.stopPropagation()}

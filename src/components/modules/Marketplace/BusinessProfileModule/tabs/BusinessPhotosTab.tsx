@@ -152,7 +152,7 @@ const BusinessPhotosTab = ({
               <Button
                 onClick={onFollow}
                 variant={is_follow ? "outlined" : "contained"}
-                color="secondary"
+                color="neutral"
                 disableElevation
                 sx={{
                   flexGrow: { xs: 1, md: 0 },
@@ -175,7 +175,7 @@ const BusinessPhotosTab = ({
                   />
                 }
                 variant="outlined"
-                color="secondary"
+                color="neutral"
                 sx={{
                   display: { xs: "none", md: "inline-flex" },
                   flexGrow: { xs: 1, md: 0 },

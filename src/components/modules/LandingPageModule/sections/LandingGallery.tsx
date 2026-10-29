@@ -1,10 +1,9 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useLandingColors } from "../LandingThemeContext";
 
 const IMAGE_SOURCES = [
   "https://images.unsplash.com/photo-1641318175316-795cd2db99f8?fm=jpg&q=80&w=900&auto=format&fit=crop",
@@ -25,7 +24,7 @@ export default function LandingGallery({
   namespace = "gallery",
 }: LandingGalleryProps) {
   const t = useTranslations(namespace);
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const items = t.raw("items") as GalleryItem[];
 
   return (
@@ -34,11 +33,11 @@ export default function LandingGallery({
         <Stack spacing={1.5} sx={{ mb: 6, maxWidth: 640 }}>
           <Typography
             variant="overline"
-            sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
+            sx={{ color: palette.primary.main, fontWeight: 700, letterSpacing: 1.5 }}
           >
             {t("kicker")}
           </Typography>
-          <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary }}>
+          <Typography variant="h2" sx={{ color: palette.text.primary }}>
             {t("title")}
           </Typography>
         </Stack>
@@ -51,7 +50,7 @@ export default function LandingGallery({
                   position: "relative",
                   borderRadius: 4,
                   overflow: "hidden",
-                  border: `1px solid ${LANDING_COLORS.border}`,
+                  border: `1px solid ${palette.divider}`,
                   aspectRatio: "4 / 3",
                 }}
               >
@@ -75,7 +74,7 @@ export default function LandingGallery({
                     position: "absolute",
                     left: 20,
                     bottom: 18,
-                    color: "#fff",
+                    color: palette.common.white,
                     fontWeight: 700,
                     fontSize: "1.1rem",
                   }}

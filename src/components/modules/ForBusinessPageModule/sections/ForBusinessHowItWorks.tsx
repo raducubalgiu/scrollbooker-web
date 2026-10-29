@@ -1,9 +1,8 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useTranslations } from "next-intl";
-import { useLandingColors } from "@/components/modules/LandingPageModule/LandingThemeContext";
 
 const STEP_NUMBERS = ["01", "02", "03"];
 
@@ -11,7 +10,7 @@ type Step = { title: string; description: string };
 
 export default function ForBusinessHowItWorks() {
   const t = useTranslations("forBusinessHowItWorks");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const steps = t.raw("steps") as Step[];
 
   return (
@@ -20,20 +19,20 @@ export default function ForBusinessHowItWorks() {
       component="section"
       sx={{
         py: { xs: 8, md: 12 },
-        backgroundColor: LANDING_COLORS.surface,
-        borderTop: `1px solid ${LANDING_COLORS.border}`,
-        borderBottom: `1px solid ${LANDING_COLORS.border}`,
+        backgroundColor: palette.surface.main,
+        borderTop: `1px solid ${palette.divider}`,
+        borderBottom: `1px solid ${palette.divider}`,
       }}
     >
       <Container maxWidth="lg">
         <Stack spacing={1.5} sx={{ mb: 6, maxWidth: 640 }}>
           <Typography
             variant="overline"
-            sx={{ color: LANDING_COLORS.primary, fontWeight: 700, letterSpacing: 1.5 }}
+            sx={{ color: palette.primary.main, fontWeight: 700, letterSpacing: 1.5 }}
           >
             {t("kicker")}
           </Typography>
-          <Typography variant="h2" sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 900, letterSpacing: "-0.03em" }}>
+          <Typography variant="h2" sx={{ color: palette.text.primary, fontWeight: 900, letterSpacing: "-0.03em" }}>
             {t("title")}
           </Typography>
         </Stack>
@@ -48,7 +47,7 @@ export default function ForBusinessHowItWorks() {
                     fontWeight: 900,
                     letterSpacing: "-0.04em",
                     lineHeight: 1,
-                    background: `linear-gradient(90deg, ${LANDING_COLORS.primary}, ${LANDING_COLORS.accent})`,
+                    background: `linear-gradient(90deg, ${palette.primary.main}, ${palette.secondary.main})`,
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
                     color: "transparent",
@@ -57,12 +56,12 @@ export default function ForBusinessHowItWorks() {
                 >
                   {STEP_NUMBERS[index]}
                 </Typography>
-                <Typography variant="h6" sx={{ color: LANDING_COLORS.textPrimary }}>
+                <Typography variant="h6" sx={{ color: palette.text.primary }}>
                   {step.title}
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: LANDING_COLORS.textSecondary, lineHeight: 1.7 }}
+                  sx={{ color: palette.text.secondary, lineHeight: 1.7 }}
                 >
                   {step.description}
                 </Typography>
@@ -74,7 +73,7 @@ export default function ForBusinessHowItWorks() {
                     display: { xs: "none", md: "block" },
                     height: 1,
                     mt: 4,
-                    background: `linear-gradient(90deg, ${LANDING_COLORS.border}, transparent)`,
+                    background: `linear-gradient(90deg, ${palette.divider}, transparent)`,
                   }}
                 />
               )}

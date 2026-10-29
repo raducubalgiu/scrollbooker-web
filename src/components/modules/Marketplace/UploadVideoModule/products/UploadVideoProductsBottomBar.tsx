@@ -30,7 +30,7 @@ const UploadVideoProductsBottomBar = ({
       <Stack direction="row" gap={1.5}>
         <Button
           variant="outlined"
-          color="secondary"
+          color="neutral"
           size="small"
           disabled={disabled}
           onClick={onReset}

@@ -7,6 +7,7 @@ import {
   Container,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -16,7 +17,6 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import PlaceRoundedIcon from "@mui/icons-material/PlaceRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import BoltRoundedIcon from "@mui/icons-material/BoltRounded";
-import { useLandingColors } from "../LandingThemeContext";
 import PhoneMockup from "../components/PhoneMockup";
 import FloatingReaction from "../components/FloatingReaction";
 import { fadeUpKeyframes, motionSafe } from "../landing.motion";
@@ -25,7 +25,7 @@ import { trackLoginCtaClick, trackRegisterCtaClick } from "@/utils/analytics";
 
 export default function LandingHero() {
   const t = useTranslations("hero");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const words = t.raw("words") as string[];
 
   const fadeUp = (index: number) =>
@@ -51,7 +51,7 @@ export default function LandingHero() {
           width: { xs: 360, md: 620 },
           height: { xs: 360, md: 620 },
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${alpha(LANDING_COLORS.accent, 0.28)} 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${alpha(palette.secondary.main, 0.28)} 0%, transparent 70%)`,
           pointerEvents: "none",
         }}
       />
@@ -63,7 +63,7 @@ export default function LandingHero() {
           width: { xs: 320, md: 560 },
           height: { xs: 320, md: 560 },
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${alpha(LANDING_COLORS.primary, 0.25)} 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${alpha(palette.primary.main, 0.25)} 0%, transparent 70%)`,
           pointerEvents: "none",
         }}
       />
@@ -83,8 +83,8 @@ export default function LandingHero() {
                 px: 1.75,
                 py: 0.75,
                 borderRadius: 50,
-                border: `1px solid ${alpha(LANDING_COLORS.accent, 0.35)}`,
-                backgroundColor: alpha(LANDING_COLORS.accent, 0.08),
+                border: `1px solid ${alpha(palette.secondary.main, 0.35)}`,
+                backgroundColor: alpha(palette.secondary.main, 0.08),
                 mb: 3,
                 ...fadeUp(0),
               }}
@@ -94,12 +94,12 @@ export default function LandingHero() {
                   width: 7,
                   height: 7,
                   borderRadius: "50%",
-                  backgroundColor: LANDING_COLORS.accent,
+                  backgroundColor: palette.secondary.main,
                 }}
               />
               <Typography
                 variant="body2"
-                sx={{ color: LANDING_COLORS.textPrimary, fontWeight: 700 }}
+                sx={{ color: palette.text.primary, fontWeight: 700 }}
               >
                 {t("badge")}
               </Typography>
@@ -108,7 +108,7 @@ export default function LandingHero() {
             <Typography
               component="h1"
               sx={{
-                color: LANDING_COLORS.textPrimary,
+                color: palette.text.primary,
                 fontSize: { xs: "3rem", sm: "4rem", md: "4.75rem" },
                 fontWeight: 900,
                 lineHeight: 1,
@@ -134,7 +134,7 @@ export default function LandingHero() {
                 sx={{
                   display: "inline-block",
                   pr: "0.05em",
-                  background: `linear-gradient(90deg, ${LANDING_COLORS.primary}, ${LANDING_COLORS.accent})`,
+                  background: `linear-gradient(90deg, ${palette.primary.main}, ${palette.secondary.main})`,
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
                   color: "transparent",
@@ -148,7 +148,7 @@ export default function LandingHero() {
             <Typography
               variant="body1"
               sx={{
-                color: LANDING_COLORS.textSecondary,
+                color: palette.text.secondary,
                 fontSize: { xs: "1.05rem", md: "1.2rem" },
                 lineHeight: 1.6,
                 maxWidth: 560,
@@ -176,16 +176,16 @@ export default function LandingHero() {
                 disableElevation
                 endIcon={<ArrowForwardRoundedIcon />}
                 sx={{
-                  background: `linear-gradient(90deg, ${LANDING_COLORS.primary}, ${LANDING_COLORS.accent})`,
-                  color: "#fff",
+                  background: `linear-gradient(90deg, ${palette.primary.main}, ${palette.secondary.main})`,
+                  color: palette.common.white,
                   whiteSpace: "nowrap",
                   fontWeight: 800,
                   borderRadius: 50,
-                  boxShadow: `0 12px 32px -10px ${alpha(LANDING_COLORS.accent, 0.6)}`,
+                  boxShadow: `0 12px 32px -10px ${alpha(palette.secondary.main, 0.6)}`,
                   transition: "transform 0.15s, box-shadow 0.15s",
                   "&:hover": {
                     transform: "translateY(-2px)",
-                    boxShadow: `0 16px 40px -10px ${alpha(LANDING_COLORS.accent, 0.75)}`,
+                    boxShadow: `0 16px 40px -10px ${alpha(palette.secondary.main, 0.75)}`,
                   },
                 }}
               >
@@ -198,11 +198,11 @@ export default function LandingHero() {
                 variant="outlined"
                 size="large"
                 sx={{
-                  color: LANDING_COLORS.textPrimary,
-                  borderColor: LANDING_COLORS.border,
+                  color: palette.text.primary,
+                  borderColor: palette.divider,
                   "&:hover": {
-                    borderColor: LANDING_COLORS.textSecondary,
-                    backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.04),
+                    borderColor: palette.text.secondary,
+                    backgroundColor: alpha(palette.text.primary, 0.04),
                   },
                   whiteSpace: "nowrap",
                   fontWeight: 600,
@@ -215,14 +215,14 @@ export default function LandingHero() {
 
             <Typography
               variant="body2"
-              sx={{ color: LANDING_COLORS.textSecondary, mt: 3 }}
+              sx={{ color: palette.text.secondary, mt: 3 }}
             >
               {t("forBusinessPrefix")}{" "}
               <Box
                 component={Link}
                 href={AppRoutes.forBusiness()}
                 sx={{
-                  color: LANDING_COLORS.primary,
+                  color: palette.primary.main,
                   fontWeight: 600,
                   textDecoration: "none",
                   "&:hover": { textDecoration: "underline" },
@@ -261,14 +261,14 @@ export default function LandingHero() {
 
             <FloatingReaction delay={0} sx={{ top: "7%", left: 0 }}>
               <AddRoundedIcon
-                sx={{ fontSize: 16, color: LANDING_COLORS.accent }}
+                sx={{ fontSize: 16, color: palette.secondary.main }}
               />
               {t("reactions.follow")}
             </FloatingReaction>
 
             <FloatingReaction delay={0.6} sx={{ top: "20%", right: 0 }}>
               <FavoriteRoundedIcon
-                sx={{ fontSize: 18, color: LANDING_COLORS.accent }}
+                sx={{ fontSize: 18, color: palette.secondary.main }}
               />
               {t("reactions.likes")}
             </FloatingReaction>
@@ -287,7 +287,7 @@ export default function LandingHero() {
                   height: 20,
                   borderRadius: "50%",
                   flexShrink: 0,
-                  background: `linear-gradient(135deg, ${LANDING_COLORS.accentAlt}, ${LANDING_COLORS.accent})`,
+                  background: `linear-gradient(135deg, ${palette.rating.main}, ${palette.secondary.main})`,
                 }}
               />
               {t("reactions.comment")}
@@ -298,14 +298,14 @@ export default function LandingHero() {
               sx={{ top: "58%", right: { xs: -4, md: -16 } }}
             >
               <PlaceRoundedIcon
-                sx={{ fontSize: 16, color: LANDING_COLORS.primary }}
+                sx={{ fontSize: 16, color: palette.primary.main }}
               />
               {t("reactions.distance")}
             </FloatingReaction>
 
             <FloatingReaction delay={2.4} sx={{ bottom: "18%", left: 0 }}>
               <StarRoundedIcon
-                sx={{ fontSize: 18, color: LANDING_COLORS.accentAlt }}
+                sx={{ fontSize: 18, color: palette.rating.main }}
               />
               {t("reactions.rating")}
             </FloatingReaction>

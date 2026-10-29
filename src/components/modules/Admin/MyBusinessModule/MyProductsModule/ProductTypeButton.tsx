@@ -34,7 +34,7 @@ const ProductTypeButton: React.FC<ProductTypeButtonProps> = ({
         aria-expanded={typeOpen ? "true" : undefined}
         variant="outlined"
         size="large"
-        color={type ? "primary" : "secondary"}
+        color={type ? "primary" : "neutral"}
         disableElevation
         onClick={handleTypeClick}
         endIcon={<KeyboardArrowDownIcon />}

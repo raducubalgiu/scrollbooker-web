@@ -1,13 +1,12 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import { useTranslations } from "next-intl";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { useLandingColors } from "../LandingThemeContext";
 import PhoneMockup from "../components/PhoneMockup";
 import FloatingReaction from "../components/FloatingReaction";
 
@@ -21,7 +20,7 @@ type ProfileItem = { title: string; description: string };
 
 export default function LandingProfiles() {
   const t = useTranslations("profiles");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const items = t.raw("items") as ProfileItem[];
 
   return (
@@ -55,7 +54,7 @@ export default function LandingProfiles() {
               sx={{ top: "9%", right: { xs: -4, md: -24 } }}
             >
               <CheckRoundedIcon
-                sx={{ fontSize: 18, color: LANDING_COLORS.accent }}
+                sx={{ fontSize: 18, color: palette.secondary.main }}
               />
               {t("video.following")}
             </FloatingReaction>
@@ -74,7 +73,7 @@ export default function LandingProfiles() {
             <Typography
               variant="overline"
               sx={{
-                color: LANDING_COLORS.accent,
+                color: palette.secondary.main,
                 fontWeight: 800,
                 letterSpacing: 1.5,
               }}
@@ -84,7 +83,7 @@ export default function LandingProfiles() {
             <Typography
               variant="h2"
               sx={{
-                color: LANDING_COLORS.textPrimary,
+                color: palette.text.primary,
                 fontWeight: 900,
                 letterSpacing: "-0.03em",
                 mt: 1.5,
@@ -96,7 +95,7 @@ export default function LandingProfiles() {
             <Typography
               variant="body1"
               sx={{
-                color: LANDING_COLORS.textSecondary,
+                color: palette.text.secondary,
                 fontSize: "1.1rem",
                 mb: 4,
               }}
@@ -119,8 +118,8 @@ export default function LandingProfiles() {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "#fff",
-                        background: `linear-gradient(135deg, ${LANDING_COLORS.primary}, ${LANDING_COLORS.accent})`,
+                        color: palette.common.white,
+                        background: `linear-gradient(135deg, ${palette.primary.main}, ${palette.secondary.main})`,
                       }}
                     >
                       <Icon fontSize="small" />
@@ -128,7 +127,7 @@ export default function LandingProfiles() {
                     <Box>
                       <Typography
                         sx={{
-                          color: LANDING_COLORS.textPrimary,
+                          color: palette.text.primary,
                           fontWeight: 800,
                         }}
                       >
@@ -137,7 +136,7 @@ export default function LandingProfiles() {
                       <Typography
                         variant="body2"
                         sx={{
-                          color: LANDING_COLORS.textSecondary,
+                          color: palette.text.secondary,
                           lineHeight: 1.6,
                         }}
                       >

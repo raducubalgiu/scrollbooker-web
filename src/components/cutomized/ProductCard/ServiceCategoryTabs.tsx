@@ -41,9 +41,9 @@ const ServiceCategoryTabs = ({
               fontWeight: isActive ? 700 : 500,
               textTransform: "none",
               color: "text.primary",
-              backgroundColor: isActive ? "secondary.main" : "transparent",
+              backgroundColor: isActive ? "neutral.main" : "transparent",
               "&:hover": {
-                backgroundColor: isActive ? "secondary.main" : "action.hover",
+                backgroundColor: isActive ? "neutral.main" : "action.hover",
               },
             }}
           >

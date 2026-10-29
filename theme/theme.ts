@@ -1,4 +1,9 @@
-import { alpha, createTheme, Theme } from "@mui/material/styles";
+import {
+  alpha,
+  createTheme,
+  SimplePaletteColorOptions,
+  Theme,
+} from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
   interface PaletteColor {
@@ -35,7 +40,6 @@ declare module "@mui/material/styles" {
     auto: Palette["primary"];
     medical: Palette["primary"];
     whatsapp: Palette["primary"];
-    accent: Palette["primary"];
   }
 
   interface PaletteOptions {
@@ -43,12 +47,11 @@ declare module "@mui/material/styles" {
     surface?: PaletteOptions["primary"];
     rating?: PaletteOptions["primary"];
     border?: PaletteOptions["primary"];
-    lastMinute: PaletteOptions["primary"];
+    lastMinute?: PaletteOptions["primary"];
     beauty?: PaletteOptions["primary"];
     medical?: PaletteOptions["primary"];
     auto?: PaletteOptions["primary"];
     whatsapp?: PaletteOptions["primary"];
-    accent?: PaletteOptions["primary"];
   }
 }
 
@@ -68,9 +71,16 @@ declare module "@mui/material/styles" {
   }
 }
 
+declare module "@mui/material/Button" {
+  interface ButtonPropsColorOverrides {
+    neutral: true;
+  }
+}
+
 declare module "@mui/material/IconButton" {
   interface IconButtonPropsColorOverrides {
     rating: true;
+    neutral: true;
   }
 }
 
@@ -81,6 +91,9 @@ declare module "@mui/material/SvgIcon" {
 }
 
 const defaultTheme = createTheme();
+
+const augmentColor = (mode: Mode, color: SimplePaletteColorOptions, name: string) =>
+  createTheme({ palette: { mode } }).palette.augmentColor({ color, name });
 type Mode = "dark" | "light";
 
 const commonTypography = {
@@ -366,7 +379,7 @@ const getComponents = (mode: Mode) => ({
   MuiCssBaseline: {
     styleOverrides: (theme: Theme) => ({
       "textarea, .MuiTextareaAutosize-root": {
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.neutral.main,
         borderRadius: 8,
         padding: "12px 16px",
         boxSizing: "border-box" as const,
@@ -391,14 +404,14 @@ const getComponents = (mode: Mode) => ({
           boxShadow: `0 0 0 4px ${alpha(theme.palette.primary.main, 0.12)}`,
         },
         "&:-webkit-autofill": {
-          WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
-          boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+          WebkitBoxShadow: `0 0 0 1000px ${theme.palette.neutral.main} inset`,
+          boxShadow: `0 0 0 1000px ${theme.palette.neutral.main} inset`,
           WebkitTextFillColor: theme.palette.text.primary,
           transition: "background-color 5000s ease-in-out 0s",
         },
         "&:-webkit-autofill:focus": {
-          WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
-          boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+          WebkitBoxShadow: `0 0 0 1000px ${theme.palette.neutral.main} inset`,
+          boxShadow: `0 0 0 1000px ${theme.palette.neutral.main} inset`,
           WebkitTextFillColor: theme.palette.text.primary,
         },
       },
@@ -414,7 +427,7 @@ const getComponents = (mode: Mode) => ({
         }),
       }),
       root: ({ theme }: { theme: Theme }) => ({
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.neutral.main,
         borderRadius: 14,
         transition: theme.transitions.create(["background-color"], {
           duration: theme.transitions.duration.short,
@@ -428,7 +441,7 @@ const getComponents = (mode: Mode) => ({
           ),
         },
         "&:not(.Mui-disabled).Mui-focused": {
-          backgroundColor: theme.palette.secondary.main,
+          backgroundColor: theme.palette.neutral.main,
         },
         "&:not(.Mui-disabled).Mui-focused .MuiOutlinedInput-notchedOutline": {
           borderColor: theme.palette.primary.main,
@@ -438,15 +451,15 @@ const getComponents = (mode: Mode) => ({
         },
         "& input:-webkit-autofill, & textarea:-webkit-autofill, & select:-webkit-autofill":
           {
-            WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
-            boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            WebkitBoxShadow: `0 0 0 1000px ${theme.palette.neutral.main} inset`,
+            boxShadow: `0 0 0 1000px ${theme.palette.neutral.main} inset`,
             WebkitTextFillColor: theme.palette.text.primary,
             transition: "background-color 5000s ease-in-out 0s",
           },
         "& input:-webkit-autofill:focus, & textarea:-webkit-autofill:focus, & select:-webkit-autofill:focus":
           {
-            WebkitBoxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
-            boxShadow: `0 0 0 1000px ${theme.palette.secondary.main} inset`,
+            WebkitBoxShadow: `0 0 0 1000px ${theme.palette.neutral.main} inset`,
+            boxShadow: `0 0 0 1000px ${theme.palette.neutral.main} inset`,
             WebkitTextFillColor: theme.palette.text.primary,
           },
       }),
@@ -507,12 +520,19 @@ export const darkTheme = createTheme({
     mode: "dark",
     primary: {
       main: "#FF6F00",
+      dark: "#E06400",
       100: "#FF8F00",
     },
     secondary: {
-      main: "#1C1C1C",
-      100: "#364045",
-      200: "#FFFDF9",
+      main: "#FF2E7E",
+    },
+    neutral: augmentColor(
+      "dark",
+      { main: "#1C1C1C", 100: "#364045", 200: "#FFFDF9" },
+      "neutral"
+    ),
+    surface: {
+      main: "#0A0A0A",
     },
     background: {
       default: "#000000",
@@ -536,9 +556,7 @@ export const darkTheme = createTheme({
     },
     whatsapp: {
       main: "#25D366",
-    },
-    accent: {
-      main: "#FF2E7E",
+      dark: "#1DA851",
     },
   },
 
@@ -551,11 +569,16 @@ export const lightTheme = createTheme({
     mode: "light",
     primary: {
       main: "#FF6F00",
+      dark: "#E06400",
       100: "#FF8F00",
       200: "#F0B90B",
     },
     secondary: {
-      main: "#F1F1F1",
+      main: "#FF2E7E",
+    },
+    neutral: augmentColor("light", { main: "#F1F1F1" }, "neutral"),
+    surface: {
+      main: "#F6F6F7",
     },
     background: {
       default: "#FFFFFF",
@@ -578,9 +601,7 @@ export const lightTheme = createTheme({
     },
     whatsapp: {
       main: "#25D366",
-    },
-    accent: {
-      main: "#FF2E7E",
+      dark: "#1DA851",
     },
   },
 

@@ -67,7 +67,7 @@ const styles = {
     maxHeight: { xs: 280, sm: 320 },
     my: 2.5,
     overflow: "auto",
-    bgcolor: "secondary.main",
+    bgcolor: "neutral.main",
     borderRadius: 5,
   },
   message: {

@@ -1,9 +1,8 @@
 "use client";
 
-import { alpha, Box, Button, Container, Stack } from "@mui/material";
+import { alpha, Box, Button, Container, Stack, useTheme } from "@mui/material";
 import Link from "next/link";
 import { AppRoutes } from "@/utils/routes";
-import { useLandingColors } from "../LandingThemeContext";
 import LandingLogo from "../components/LandingLogo";
 import LandingLanguageSwitcher from "../components/LandingLanguageSwitcher";
 import { useTranslations } from "next-intl";
@@ -22,7 +21,7 @@ export default function LandingNav({
 }: LandingNavProps) {
   const t = useTranslations("forBusinessHero");
   const tNav = useTranslations("nav");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
 
   return (
     <Box
@@ -31,9 +30,9 @@ export default function LandingNav({
         position: "sticky",
         top: 0,
         zIndex: 10,
-        borderBottom: `1px solid ${LANDING_COLORS.border}`,
+        borderBottom: `1px solid ${palette.divider}`,
         backdropFilter: "blur(12px)",
-        backgroundColor: alpha(LANDING_COLORS.background, 0.72),
+        backgroundColor: alpha(palette.background.default, 0.72),
       }}
     >
       <Container maxWidth="lg">
@@ -72,7 +71,7 @@ export default function LandingNav({
                   size="small"
                   sx={{
                     display: { xs: "none", sm: "inline-flex" },
-                    color: LANDING_COLORS.textPrimary,
+                    color: palette.text.primary,
                     fontWeight: 600,
                     whiteSpace: "nowrap",
                   }}
@@ -89,11 +88,11 @@ export default function LandingNav({
                   size="small"
                   disableElevation
                   sx={{
-                    backgroundColor: LANDING_COLORS.primary,
-                    color: "#fff",
+                    backgroundColor: palette.primary.main,
+                    color: palette.common.white,
                     fontWeight: 700,
                     whiteSpace: "nowrap",
-                    "&:hover": { backgroundColor: LANDING_COLORS.primaryDark },
+                    "&:hover": { backgroundColor: palette.primary.dark },
                   }}
                 >
                   {tNav("register")}

@@ -87,7 +87,7 @@ const SearchHeaderBar = ({
                 role="button"
                 tabIndex={0}
                 variant="text"
-                color="secondary"
+                color="neutral"
                 onClick={() => toggle(sectionKey)}
                 aria-haspopup={true}
                 aria-expanded={isSectionActive}
@@ -227,7 +227,7 @@ const styles = {
     bgcolor: (theme: Theme) =>
       isSectionActive
         ? theme.palette.mode === "dark"
-          ? "secondary.main"
+          ? "neutral.main"
           : "background.default"
         : "transparent",
     boxShadow: isSectionActive ? "0 2px 12px rgba(0,0,0,0.12)" : "none",
@@ -235,7 +235,7 @@ const styles = {
       bgcolor: (theme: Theme) =>
         isSectionActive
           ? theme.palette.mode === "dark"
-            ? "secondary.main"
+            ? "neutral.main"
             : "background.default"
           : "action.hover",
     },

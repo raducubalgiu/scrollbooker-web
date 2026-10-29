@@ -56,7 +56,7 @@ const ProductCardSelectActions = ({
           ) : (
             <Button
               variant="outlined"
-              color="secondary"
+              color="neutral"
               size="small"
               disableElevation
               onClick={(e) => {

@@ -1,8 +1,7 @@
 "use client";
 
-import { alpha, Box, Container, Stack, Typography } from "@mui/material";
+import { alpha, Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { useLandingColors } from "../LandingThemeContext";
 import PlaceRoundedIcon from "@mui/icons-material/PlaceRounded";
 import ToggleOnRoundedIcon from "@mui/icons-material/ToggleOnRounded";
 import PhoneMockup from "../components/PhoneMockup";
@@ -12,7 +11,7 @@ type NearMeStep = { title: string; description: string };
 
 export default function LandingNearMe() {
   const t = useTranslations("nearMe");
-  const LANDING_COLORS = useLandingColors();
+  const { palette } = useTheme();
   const steps = t.raw("steps") as NearMeStep[];
 
   return (
@@ -23,9 +22,9 @@ export default function LandingNearMe() {
         position: "relative",
         overflow: "hidden",
         py: { xs: 8, md: 12 },
-        backgroundColor: LANDING_COLORS.surface,
-        borderTop: `1px solid ${LANDING_COLORS.border}`,
-        borderBottom: `1px solid ${LANDING_COLORS.border}`,
+        backgroundColor: palette.surface.main,
+        borderTop: `1px solid ${palette.divider}`,
+        borderBottom: `1px solid ${palette.divider}`,
       }}
     >
       <Box
@@ -36,7 +35,7 @@ export default function LandingNearMe() {
           width: 520,
           height: 520,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${LANDING_COLORS.primary}26 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${palette.primary.main}26 0%, transparent 70%)`,
           pointerEvents: "none",
         }}
       />
@@ -51,7 +50,7 @@ export default function LandingNearMe() {
             <Typography
               variant="overline"
               sx={{
-                color: LANDING_COLORS.primary,
+                color: palette.primary.main,
                 fontWeight: 700,
                 letterSpacing: 1.5,
               }}
@@ -61,7 +60,7 @@ export default function LandingNearMe() {
             <Typography
               variant="h2"
               sx={{
-                color: LANDING_COLORS.textPrimary,
+                color: palette.text.primary,
                 fontWeight: 900,
                 letterSpacing: "-0.03em",
                 mt: 1.5,
@@ -72,7 +71,7 @@ export default function LandingNearMe() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ color: LANDING_COLORS.textSecondary, mb: 4, maxWidth: 560 }}
+              sx={{ color: palette.text.secondary, mb: 4, maxWidth: 560 }}
             >
               {t("subtitle")}
             </Typography>
@@ -89,8 +88,8 @@ export default function LandingNearMe() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      backgroundColor: LANDING_COLORS.primary,
-                      color: "#fff",
+                      backgroundColor: palette.primary.main,
+                      color: palette.common.white,
                       fontWeight: 700,
                       fontSize: "0.9rem",
                     }}
@@ -100,7 +99,7 @@ export default function LandingNearMe() {
                   <Box>
                     <Typography
                       sx={{
-                        color: LANDING_COLORS.textPrimary,
+                        color: palette.text.primary,
                         fontWeight: 700,
                       }}
                     >
@@ -108,7 +107,7 @@ export default function LandingNearMe() {
                     </Typography>
                     <Typography
                       variant="body2"
-                      sx={{ color: LANDING_COLORS.textSecondary }}
+                      sx={{ color: palette.text.secondary }}
                     >
                       {step.description}
                     </Typography>
@@ -120,12 +119,12 @@ export default function LandingNearMe() {
             <Typography
               variant="body2"
               sx={{
-                color: LANDING_COLORS.textSecondary,
+                color: palette.text.secondary,
                 px: 2,
                 py: 1.5,
                 borderRadius: 2,
-                border: `1px dashed ${LANDING_COLORS.border}`,
-                backgroundColor: alpha(LANDING_COLORS.textPrimary, 0.02),
+                border: `1px dashed ${palette.divider}`,
+                backgroundColor: alpha(palette.text.primary, 0.02),
                 maxWidth: 560,
               }}
             >
@@ -165,7 +164,7 @@ export default function LandingNearMe() {
               sx={{ bottom: "16%", right: { xs: -4, md: -16 } }}
             >
               <PlaceRoundedIcon
-                sx={{ fontSize: 16, color: LANDING_COLORS.primary }}
+                sx={{ fontSize: 16, color: palette.primary.main }}
               />
               {t("video.distance")}
             </FloatingReaction>
