@@ -18,8 +18,8 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {
   BLOCK_REASON_LABELS,
   BLOCK_REASON_OPTIONS,
-  MyCalendarBlockReasonEnum,
-} from "../../Mobile/myCalendarBlockReasonEnum";
+  BlockReasonEnum,
+} from "./blockReasonEnum";
 
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 50;
@@ -42,9 +42,9 @@ const BlockSlotsContent = ({
 }: BlockSlotsContentProps) => {
   const [message, setMessage] = useState("");
   const [selectedReason, setSelectedReason] =
-    useState<MyCalendarBlockReasonEnum>(MyCalendarBlockReasonEnum.OTHER);
+    useState<BlockReasonEnum>(BlockReasonEnum.OTHER);
 
-  const isOtherReason = selectedReason === MyCalendarBlockReasonEnum.OTHER;
+  const isOtherReason = selectedReason === BlockReasonEnum.OTHER;
   const trimmedMessage = message.trim();
 
   const messageError = isOtherReason
@@ -101,7 +101,7 @@ const BlockSlotsContent = ({
                 onClick={() => {
                   if (isSaving) return;
                   setSelectedReason(reason);
-                  if (reason !== MyCalendarBlockReasonEnum.OTHER)
+                  if (reason !== BlockReasonEnum.OTHER)
                     setMessage("");
                 }}
                 sx={isSelected ? styles.reasonSelected : styles.reason}

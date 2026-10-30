@@ -2,7 +2,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
   Schedule,
-  ScheduleBounds,
   ScheduleUpdate,
 } from "@/ts/models/booking/schedule/Schedule";
 
@@ -22,19 +21,6 @@ export const useGetSchedulesByUserId = (
       (options?.enabled ?? true) &&
       userId !== "undefined" &&
       userId !== "null",
-  });
-};
-
-export const useGetScheduleBounds = (options?: { enabled?: boolean }) => {
-  return useQuery({
-    queryKey: ["schedule-bounds"],
-    queryFn: async () => {
-      const response = await axios.get<ScheduleBounds>(
-        "/api/protected/schedules/bounds"
-      );
-      return response.data;
-    },
-    enabled: options?.enabled ?? true,
   });
 };
 

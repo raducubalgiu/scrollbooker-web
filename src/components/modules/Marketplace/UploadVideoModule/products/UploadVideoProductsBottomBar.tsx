@@ -21,7 +21,7 @@ const UploadVideoProductsBottomBar = ({
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      sx={{ width: "100%" }}
+      sx={{ width: "100%", mt: 2.5 }}
     >
       <Typography variant="caption" color="text.secondary">
         {selectedCount}/{MAX_SELECTED_PRODUCTS} servicii selectate
@@ -30,8 +30,7 @@ const UploadVideoProductsBottomBar = ({
       <Stack direction="row" gap={1.5}>
         <Button
           variant="outlined"
-          color="neutral"
-          size="small"
+          color="secondary"
           disabled={disabled}
           onClick={onReset}
         >
@@ -39,7 +38,6 @@ const UploadVideoProductsBottomBar = ({
         </Button>
         <Button
           variant="contained"
-          size="small"
           disableElevation
           disabled={disabled}
           onClick={onConfirm}

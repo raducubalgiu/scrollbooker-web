@@ -47,13 +47,11 @@ const PostLinkedProductsList = ({
           <Box key={prod.id}>
             <ProductCard
               product={prod}
-              isSelected={false}
-              showIcon={false}
-              instantBooking={instantBooking}
               shouldToggleDescription
-              onNavigateToBooking={(prod) => onNavigateToBooking(prod.id)}
+              {...(instantBooking && {
+                onBook: () => onNavigateToBooking(prod.id),
+              })}
               sx={{ borderColor: "transparent", p: 1.5 }}
-              onAdd={() => {}}
             />
 
             {i < products.length - 1 && <Divider sx={{ my: 1.5 }} />}

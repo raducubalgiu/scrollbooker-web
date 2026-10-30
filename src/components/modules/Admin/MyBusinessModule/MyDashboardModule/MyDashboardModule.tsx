@@ -36,12 +36,7 @@ export default function MyDashboardModule() {
   });
 
   return (
-    <MainLayout
-      title={t("title")}
-      showHeader
-      hideAction
-      sx={{ bgcolor: "background.paper", height: "100%" }}
-    >
+    <MainLayout title={t("title")} showHeader hideAction>
       <Tabs
         value={tab}
         onChange={(_, value) => setTab(value)}
@@ -79,7 +74,10 @@ export default function MyDashboardModule() {
             <Stack spacing={2.5}>
               {data.instant_booking ? (
                 <>
-                  <DashboardBookingDetails data={data} periodText={periodText} />
+                  <DashboardBookingDetails
+                    data={data}
+                    periodText={periodText}
+                  />
                   <DashboardBookingSources sources={data.sources} />
                 </>
               ) : (

@@ -425,3 +425,16 @@ Other things worth knowing, not necessarily needing action:
   pages clearly being SEO-oriented (`generateMetadata`, JSON-LD, canonical
   URLs) — may be intentional (not ready for indexing yet) or an oversight;
   worth asking before adding one speculatively.
+- **"Rezervă din nou" in appointment details is a pending decision, not
+  done.** `AppointmentDetailsActions` shows it for every status except
+  `IN_PROGRESS`, but `AppointmentDetailsContent` wires it to a no-op
+  (`onBookAgain={() => {}}`) — for customers on `/appointments/[id]` *and*
+  for business staff in the calendar's `AppointmentDetailsDialog`. Who
+  should see it and what it does is deliberately deferred. Options
+  discussed: hide it for staff (`isCustomer` only), wire the customer side
+  to the booking flow, and/or turn it into a staff "Programează din nou"
+  that prefills `CreateOwnClientModal` with the client + services. The
+  latter needs the backend to expose `business_client_id` on
+  `AppointmentResponse`, and should resolve services from the current
+  catalog by `product_variant_id` (not the stored snapshot price/duration).
+  Settle the rule with the user before changing it.

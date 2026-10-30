@@ -1,0 +1,28 @@
+import React from "react";
+import { Typography, SxProps, Theme } from "@mui/material";
+import dayjs from "dayjs";
+
+interface DesktopSlotTimeRangeProps {
+  startLocale: string;
+  endLocale: string;
+  sx?: SxProps<Theme>;
+}
+
+export const DesktopSlotTimeRange = ({
+  startLocale,
+  endLocale,
+  sx = {},
+}: DesktopSlotTimeRangeProps) => {
+  return (
+    <Typography
+      variant="caption"
+      sx={{
+        color: "text.secondary",
+        fontWeight: 500,
+        ...sx,
+      }}
+    >
+      {dayjs(startLocale).format("HH:mm")} - {dayjs(endLocale).format("HH:mm")}
+    </Typography>
+  );
+};

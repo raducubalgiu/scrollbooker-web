@@ -3,11 +3,6 @@ import axios from "axios";
 import {
   AvailableTimeslotsResponse,
 } from "@/ts/models/booking/availability/AvailableTimeSlot";
-import {
-  CalendarEventsBusinessResponse,
-  CalendarEventsResponse,
-  EmployeeAvailabilityResponse,
-} from "@/ts/models/booking/availability/CalendarEvents";
 import { BusinessCalendarEventsResponse } from "@/ts/models/booking/availability/BusinessCalendarEvents";
 
 export const BUSINESS_CALENDAR_EVENTS_KEY = "business-calendar-events";
@@ -112,81 +107,3 @@ export const useGetDailyTimeslots = ({
   });
 };
 
-export const useGetCalendarEvents = ({
-  businessId,
-  startDate,
-  endDate,
-  slotDuration,
-  employeeId,
-  enabled = true,
-}: {
-  businessId: number | undefined;
-  startDate: string;
-  endDate: string;
-  slotDuration: number;
-  employeeId?: number | undefined;
-  enabled?: boolean | undefined;
-}) => {
-  return useQuery({
-    queryKey: ["calendar-events", businessId, startDate, endDate, slotDuration, employeeId],
-    queryFn: async () => {
-      const response = await axios.get<CalendarEventsResponse>(
-        `/api/protected/availability/${businessId}/calendar-events`,
-        {
-          params: {
-            start_date: startDate,
-            end_date: endDate,
-            slot_duration: slotDuration,
-            employee_id: employeeId,
-          },
-        }
-      );
-      return response.data;
-    },
-    enabled: enabled && !!businessId,
-  });
-};
-
-export const useGetBusinessCalendarEventsByDay = ({
-  day,
-  slotDuration,
-  enabled = true,
-}: {
-  day: string;
-  slotDuration: number;
-  enabled?: boolean | undefined;
-}) => {
-  return useQuery({
-    queryKey: ["business-calendar-events-by-day", day, slotDuration],
-    queryFn: async () => {
-      const response = await axios.get<CalendarEventsBusinessResponse>(
-        "/api/protected/availability/calendar-events/business",
-        { params: { day, slot_duration: slotDuration } }
-      );
-      return response.data;
-    },
-    enabled,
-  });
-};
-
-export const useGetEmployeesDayAvailability = ({
-  day,
-  slotDuration,
-  enabled = true,
-}: {
-  day: string;
-  slotDuration: number;
-  enabled?: boolean | undefined;
-}) => {
-  return useQuery({
-    queryKey: ["employees-day-availability", day, slotDuration],
-    queryFn: async () => {
-      const response = await axios.get<EmployeeAvailabilityResponse[]>(
-        "/api/protected/availability/employees/day-availability",
-        { params: { day, slot_duration: slotDuration } }
-      );
-      return response.data;
-    },
-    enabled,
-  });
-};

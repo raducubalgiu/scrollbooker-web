@@ -2,8 +2,8 @@
 
 import React, { memo } from "react";
 import { Box } from "@mui/material";
-import CalendarEvent from "../../sharedComponents/CalendarEvent/CalendarEvent";
-import { CurrentTimeIndicator } from "../../sharedComponents/CurrentTimeIndicator";
+import DesktopEvent from "./DesktopEvent/DesktopEvent";
+import { DesktopCurrentTimeIndicator } from "./DesktopCurrentTimeIndicator";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { AppointmentBlockSlot } from "@/ts/models/booking/appointment/Appointment";
 import { CalendarBounds } from "../calendarSlots";
@@ -26,6 +26,7 @@ type DesktopEventsLayerProps = {
   businessShortDomain: string;
   onToggleSelectSlot: (columnKey: string, slot: CalendarEventsSlot) => void;
   onOpenCreateModal: (columnKey: string, slot: CalendarEventsSlot) => void;
+  onOpenDetails: (appointmentId: number) => void;
 };
 
 const DesktopEventsLayerComponent = ({
@@ -39,6 +40,7 @@ const DesktopEventsLayerComponent = ({
   businessShortDomain,
   onToggleSelectSlot,
   onOpenCreateModal,
+  onOpenDetails,
 }: DesktopEventsLayerProps) => {
   return (
     <>
@@ -55,7 +57,7 @@ const DesktopEventsLayerComponent = ({
           }}
         >
           {column.isToday && (
-            <CurrentTimeIndicator
+            <DesktopCurrentTimeIndicator
               minTimeStr={bounds.minTime}
               maxTimeStr={bounds.maxTime}
               slotDuration={slotDuration}
@@ -64,7 +66,7 @@ const DesktopEventsLayerComponent = ({
           )}
 
           {column.slots.map((slot) => (
-            <CalendarEvent
+            <DesktopEvent
               key={`slot-${column.key}-${slot.start_date_utc}-${slot.id ?? "free"}`}
               slot={slot}
               isBlocking={isBlocking}
@@ -83,6 +85,7 @@ const DesktopEventsLayerComponent = ({
               onOpenCreateModal={(s) => {
                 if (isInFuture(s.start_date_utc)) onOpenCreateModal(column.key, s);
               }}
+              onOpenDetails={onOpenDetails}
             />
           ))}
         </Box>

@@ -13,7 +13,7 @@ import { useGetCalendarSettings } from "@/controllers/booking/calendarSettings.c
 import { useGetAllEmployeesByOwner } from "@/controllers/booking/employee.controller";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { AppointmentBlockCreate } from "@/ts/models/booking/appointment/Appointment";
-import { useCalendarAppointmentMutations } from "../../sharedComponents/useCalendarAppointmentMutations";
+import { useCalendarAppointmentMutations } from "../useCalendarAppointmentMutations";
 import {
   buildDaySlots,
   getCalendarBounds,
@@ -359,6 +359,7 @@ export const useMobileCalendar = (session: Session) => {
     isEmployeeSheetOpen,
     isBlockSheetOpen,
     targetUserId,
+    employeeIdFilter,
     businessId,
     handleSelectDay,
     handlePreviousWeek,

@@ -5,6 +5,7 @@ import {
   Drawer,
   IconButton,
   Stack,
+  Theme,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -24,6 +25,7 @@ type ProductDetailDrawerProps = {
   instantBooking: boolean;
   onClose: () => void;
   onAdd: (item: SelectedBookingItem) => void;
+  requiresBookPermission?: boolean;
 };
 
 const ProductDetailDrawer = ({
@@ -32,6 +34,7 @@ const ProductDetailDrawer = ({
   instantBooking,
   onClose,
   onAdd,
+  requiresBookPermission = true,
 }: ProductDetailDrawerProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -41,11 +44,26 @@ const ProductDetailDrawer = ({
 
   if (!isMobile) return null;
 
+  const detailFooter = (
+    <ProductDetailFooter
+      currentVariant={currentVariant}
+      onHandleAdd={handleAddClick}
+    />
+  );
+  const footer = requiresBookPermission ? (
+    <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+      {detailFooter}
+    </Protected>
+  ) : (
+    detailFooter
+  );
+
   return (
     <Drawer
       anchor="bottom"
       open={open}
       onClose={onClose}
+      sx={styles.drawer}
       slotProps={{ paper: { sx: styles.paper } }}
     >
       <Stack direction="row" justifyContent="flex-end" sx={{ p: 1 }}>
@@ -63,14 +81,7 @@ const ProductDetailDrawer = ({
         />
       </Box>
 
-      {instantBooking && (
-        <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-          <ProductDetailFooter
-            currentVariant={currentVariant}
-            onHandleAdd={handleAddClick}
-          />
-        </Protected>
-      )}
+      {instantBooking && footer}
     </Drawer>
   );
 };
@@ -78,6 +89,9 @@ const ProductDetailDrawer = ({
 export default ProductDetailDrawer;
 
 const styles = {
+  drawer: {
+    zIndex: (theme: Theme) => theme.zIndex.modal + 2,
+  },
   paper: {
     height: "90vh",
     display: "flex",

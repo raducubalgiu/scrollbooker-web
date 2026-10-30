@@ -1,22 +1,20 @@
 import { Product, ProductUtils } from "@/ts/models/booking/product/Product";
 import { Box, Stack, SxProps, Theme, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingModule/BookingModule";
 import ProductCardInfo from "./ProductCardInfo";
-import ProductCardSelectActions from "./ProductCardSelectActions";
+import ProductCardSelectActions, {
+  ProductCardSelection,
+} from "./ProductCardSelectActions";
 import ProductCardEditableActions from "./ProductCardEditableActions";
 
 type ProductCardProps = {
   product: Product;
-  isSelected: boolean;
-  showIcon: boolean;
-  instantBooking?: boolean;
+  selection?: ProductCardSelection;
+  onBook?: () => void;
   shouldToggleDescription?: boolean;
   displayEditableActions?: boolean;
   isLoadingDelete?: boolean;
   onOpenDetail?: () => void;
-  onAdd: (item: SelectedBookingItem) => void;
-  onNavigateToBooking: (product: Product) => void;
   onEditProduct?: (productId: number) => void;
   onDeleteProduct?: (productId: number) => void;
   sx?: SxProps<Theme>;
@@ -24,15 +22,12 @@ type ProductCardProps = {
 
 const ProductCard = ({
   product,
-  isSelected,
-  showIcon,
-  instantBooking = true,
+  selection,
+  onBook,
   shouldToggleDescription = false,
   displayEditableActions = false,
   isLoadingDelete = false,
   onOpenDetail,
-  onAdd,
-  onNavigateToBooking,
   onEditProduct,
   onDeleteProduct,
   sx = {},
@@ -55,38 +50,6 @@ const ProductCard = ({
     ? `${durationText} • ${filtersText}`
     : durationText;
 
-  const onSelectProduct = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-
-    if (isSelected) {
-      onAdd({
-        productId: product.id,
-      } as SelectedBookingItem);
-      return;
-    }
-
-    const variants = product.variants || [];
-    if (variants.length > 1) {
-      onOpenDetail?.();
-      return;
-    }
-
-    const firstVariant = variants[0];
-
-    if (firstVariant) {
-      onAdd({
-        productId: product.id,
-        variantId: firstVariant.id,
-        variantDuration: firstVariant.duration,
-        offerings: firstVariant.offerings,
-        productName: product.name,
-        variantName: firstVariant.name,
-      });
-    }
-  };
-
   return (
     <Box
       sx={[styles.container, ...(Array.isArray(sx) ? sx : [sx])]}
@@ -107,14 +70,9 @@ const ProductCard = ({
           hasDifferentPrices={has_different_prices}
         />
 
-        <ProductCardSelectActions
-          isSelected={isSelected}
-          showIcon={showIcon}
-          instantBooking={instantBooking}
-          displayEditableActions={false}
-          onSelectProduct={onSelectProduct}
-          onNavigateToBooking={() => onNavigateToBooking(product)}
-        />
+        {!displayEditableActions && (
+          <ProductCardSelectActions selection={selection} onBook={onBook} />
+        )}
 
         <ProductCardEditableActions
           isLoadingDelete={isLoadingDelete}

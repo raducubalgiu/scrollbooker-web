@@ -65,6 +65,10 @@ export interface Product {
 }
 
 export const ProductUtils = {
+  getSoleVariant(product: Product): ProductVariant | null {
+    return product.variants.length === 1 ? product.variants[0] ?? null : null;
+  },
+
   getDurationText(minutes: number): string {
     if (minutes === 0) return "0min";
 

@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Avatar, Box, Theme, Typography } from "@mui/material";
-import { getCalendarTableBg } from "../../sharedComponents/calendarSurfaceColors";
+import { getCalendarTableBg } from "../calendarSurfaceColors";
 
 export type DesktopHeaderColumn =
   | { kind: "day"; key: string; dayName: string; dayNumber: string; isToday: boolean }
