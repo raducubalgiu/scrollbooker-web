@@ -160,3 +160,14 @@ export interface AppointmentOwnClientCreate {
   custom_product: AppointmentCustomProduct | null;
   product_variants: AppointmentProductVariantCreate[] | null;
 }
+
+export interface AppointmentBusinessClientCreate {
+  start_date: string;
+  end_date: string;
+  user_id: number;
+  business_client_id: number;
+  product_variants: {
+    id: number;
+    offering: { user_id: number };
+  }[];
+}

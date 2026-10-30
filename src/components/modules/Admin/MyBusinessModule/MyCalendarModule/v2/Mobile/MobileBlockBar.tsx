@@ -3,24 +3,24 @@
 import React from "react";
 import { Box, Button, Divider } from "@mui/material";
 
-type MyCalendarMobileBlockBarProps = {
+type MobileBlockBarProps = {
   isEnabled: boolean;
   onCancel: () => void;
   onBlockConfirm: () => void;
 };
 
-const MyCalendarMobileBlockBar = ({
+const MobileBlockBar = ({
   isEnabled,
   onCancel,
   onBlockConfirm,
-}: MyCalendarMobileBlockBarProps) => {
+}: MobileBlockBarProps) => {
   return (
     <Box sx={styles.container}>
       <Divider />
       <Box sx={styles.row}>
         <Button
           variant="outlined"
-          color="inherit"
+          color="secondary"
           fullWidth
           onClick={onCancel}
           sx={styles.button}
@@ -34,6 +34,7 @@ const MyCalendarMobileBlockBar = ({
           disabled={!isEnabled}
           onClick={onBlockConfirm}
           sx={styles.button}
+          disableElevation
         >
           Blochează
         </Button>
@@ -42,7 +43,7 @@ const MyCalendarMobileBlockBar = ({
   );
 };
 
-export default MyCalendarMobileBlockBar;
+export default MobileBlockBar;
 
 const styles = {
   container: {
@@ -56,6 +57,5 @@ const styles = {
   button: {
     textTransform: "none",
     fontWeight: 700,
-    borderRadius: 2,
   },
 } as const;

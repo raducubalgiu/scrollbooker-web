@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
   AvailableTimeslotsResponse,
@@ -8,6 +8,42 @@ import {
   CalendarEventsResponse,
   EmployeeAvailabilityResponse,
 } from "@/ts/models/booking/availability/CalendarEvents";
+import { BusinessCalendarEventsResponse } from "@/ts/models/booking/availability/BusinessCalendarEvents";
+
+export const BUSINESS_CALENDAR_EVENTS_KEY = "business-calendar-events";
+
+export const useGetBusinessCalendarEvents = ({
+  businessId,
+  startDate,
+  endDate,
+  employeeId,
+  enabled = true,
+}: {
+  businessId: number | undefined;
+  startDate: string;
+  endDate: string;
+  employeeId?: number | undefined;
+  enabled?: boolean | undefined;
+}) => {
+  return useQuery({
+    queryKey: [BUSINESS_CALENDAR_EVENTS_KEY, businessId, startDate, endDate, employeeId],
+    queryFn: async () => {
+      const response = await axios.get<BusinessCalendarEventsResponse>(
+        `/api/protected/businesses/${businessId}/calendar-events`,
+        {
+          params: {
+            start_date: startDate,
+            end_date: endDate,
+            employee_id: employeeId,
+          },
+        }
+      );
+      return response.data;
+    },
+    placeholderData: keepPreviousData,
+    enabled: enabled && !!businessId,
+  });
+};
 
 export const useGetAvailableDays = ({
   businessId,

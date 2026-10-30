@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Box, Fab, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Fab,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Session } from "next-auth";
@@ -13,8 +20,8 @@ import MyCalendarMobileHeaderActions from "./MyCalendarMobileHeaderActions";
 import MyCalendarMobileDayPager from "./MyCalendarMobileDayPager";
 import MyCalendarMobileTimeline from "./MyCalendarMobileTimeline";
 import MyCalendarMobileEmployeeSheet from "./MyCalendarMobileEmployeeSheet";
-import MyCalendarMobileBlockBar from "./MyCalendarMobileBlockBar";
-import MyCalendarMobileBlockDrawer from "./MyCalendarMobileBlockDrawer";
+import MyCalendarMobileBlockBar from "../v2/Mobile/MobileBlockBar";
+import BlockSlotsDialog from "../v2/BlockSlots/BlockSlotsDialog";
 import CreateOwnClientModal from "../sharedComponents/CreateOwnClientModal/CreateOwnClientModal";
 import CalendarSettingsModal from "../sharedComponents/CalendarSettings/CalendarSettingsModal";
 import {
@@ -35,8 +42,12 @@ const MyCalendarMobileScreen = ({ session }: MyCalendarMobileScreenProps) => {
   const c = useMyCalendarMobile(session);
 
   const dayBounds = useMemo(() => {
-    const scheduleStartMinutes = parseTimeStringToMinutes(c.daySchedule?.start_time);
-    const scheduleEndMinutes = parseTimeStringToMinutes(c.daySchedule?.end_time);
+    const scheduleStartMinutes = parseTimeStringToMinutes(
+      c.daySchedule?.start_time
+    );
+    const scheduleEndMinutes = parseTimeStringToMinutes(
+      c.daySchedule?.end_time
+    );
 
     const slotsStartMinutes = c.daySlots
       .map((s) => minutesFromDateTimeString(s.start_date_locale))
@@ -111,7 +122,10 @@ const MyCalendarMobileScreen = ({ session }: MyCalendarMobileScreenProps) => {
 
       <Box sx={{ flex: 1, overflowY: "auto", px: 1 }}>
         {c.isLoadingEvents && (
-          <Typography color="text.secondary" sx={{ textAlign: "center", py: 6 }}>
+          <Typography
+            color="text.secondary"
+            sx={{ textAlign: "center", py: 6 }}
+          >
             Se încarcă...
           </Typography>
         )}
@@ -140,7 +154,10 @@ const MyCalendarMobileScreen = ({ session }: MyCalendarMobileScreenProps) => {
         )}
 
         {!c.isLoadingEvents && !c.isCalendarEventsError && !dayBounds && (
-          <Typography color="text.secondary" sx={{ textAlign: "center", py: 6 }}>
+          <Typography
+            color="text.secondary"
+            sx={{ textAlign: "center", py: 6 }}
+          >
             Nu ai nici o rezervare
           </Typography>
         )}
@@ -175,10 +192,10 @@ const MyCalendarMobileScreen = ({ session }: MyCalendarMobileScreenProps) => {
         onClose={() => c.setIsEmployeeSheetOpen(false)}
       />
 
-      <MyCalendarMobileBlockDrawer
+      <BlockSlotsDialog
         open={c.isBlockSheetOpen}
         dayLabel={c.selectedDay.format("dddd, D MMMM")}
-        selectedSlots={c.pendingBlockSlots}
+        slotLabels={Array.from(c.pendingBlockSlots).sort().map((slot) => slot.slice(11, 16))}
         isSaving={c.isLoadingBlock}
         onConfirm={c.handleConfirmBlock}
         onClose={() => c.setIsBlockSheetOpen(false)}
@@ -187,6 +204,7 @@ const MyCalendarMobileScreen = ({ session }: MyCalendarMobileScreenProps) => {
       <CreateOwnClientModal
         open={c.isAddingOwnClient}
         businessId={c.businessId ?? 0}
+        providerUserId={c.targetUserId}
         initialSlot={c.ownClientSlot}
         onClose={c.handleCloseAddOwnClient}
       />
