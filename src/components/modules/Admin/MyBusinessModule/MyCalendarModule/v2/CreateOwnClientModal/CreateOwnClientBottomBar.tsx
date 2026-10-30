@@ -5,6 +5,7 @@ type CreateOwnClientBottomBarProps = {
   totalPrice: number;
   totalDurationMinutes: number;
   isReadyToSave: boolean;
+  isLoading: boolean;
   onReset: () => void;
   onConfirm: () => void;
 };
@@ -13,6 +14,7 @@ const CreateOwnClientBottomBar = ({
   totalPrice,
   totalDurationMinutes,
   isReadyToSave,
+  isLoading,
   onReset,
   onConfirm,
 }: CreateOwnClientBottomBarProps) => {
@@ -39,6 +41,7 @@ const CreateOwnClientBottomBar = ({
           <Button
             variant="contained"
             disableElevation
+            loading={isLoading}
             disabled={!isReadyToSave}
             onClick={onConfirm}
           >

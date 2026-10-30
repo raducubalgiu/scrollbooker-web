@@ -71,7 +71,7 @@ const AppointmentDetailsDialog = ({
       fullScreen={isMobile}
       dividers={false}
     >
-      {renderBody()}
+      <Box sx={{ p: 2.5 }}>{renderBody()}</Box>
     </Modal>
   );
 };

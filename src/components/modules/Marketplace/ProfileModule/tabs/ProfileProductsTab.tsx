@@ -111,12 +111,10 @@ const ProfileProductsTab = ({
               <ProductCard
                 key={product.id}
                 product={product}
-                isSelected={false}
-                showIcon={false}
-                instantBooking={instantBooking}
                 shouldToggleDescription
-                onAdd={() => {}}
-                onNavigateToBooking={() => handleNavigateToBooking(product)}
+                {...(instantBooking && {
+                  onBook: () => handleNavigateToBooking(product),
+                })}
               />
             ))}
           </Stack>

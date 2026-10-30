@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Dialog,
-  Divider,
-  Stack,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Dialog, Divider, Stack, useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
@@ -164,10 +158,10 @@ const CreateOwnClientModal = ({
 
   const handleSave = () => {
     if (!isReadyToSave || !selectedClient || !selectedSlot) {
-    if (durationMismatchMessage) {
-      toast.error(durationMismatchMessage);
-      return;
-    }
+      if (durationMismatchMessage) {
+        toast.error(durationMismatchMessage);
+        return;
+      }
 
       toast.error("Completează clientul, serviciile și intervalul.");
       return;
@@ -197,7 +191,9 @@ const CreateOwnClientModal = ({
   };
 
   const handleRemoveVariant = (variantId: number) => {
-    setSelectedVariants((prev) => prev.filter((v) => v.variantId !== variantId));
+    setSelectedVariants((prev) =>
+      prev.filter((v) => v.variantId !== variantId)
+    );
   };
 
   return (
@@ -317,7 +313,10 @@ const CreateOwnClientModal = ({
                     errorMessage={durationMismatchMessage}
                   />
 
-                  <CreateOwnClientNotesSection value={notes} onChange={setNotes} />
+                  <CreateOwnClientNotesSection
+                    value={notes}
+                    onChange={setNotes}
+                  />
                 </Stack>
               </Grid>
             </Grid>
@@ -326,6 +325,7 @@ const CreateOwnClientModal = ({
               totalPrice={totalPrice}
               totalDurationMinutes={totalDurationMinutes}
               isReadyToSave={isReadyToSave && !isSaving}
+              isLoading={isSaving}
               onReset={handleReset}
               onConfirm={handleSave}
             />

@@ -11,14 +11,16 @@ export type ProductsPickerContentProps = {
   products: UserProducts;
   isProductSelected: (product: Product) => boolean;
   isProductDisabled?: (product: Product) => boolean;
-  onProductClick: (product: Product, isSelected: boolean) => void;
+  onToggleProduct: (product: Product, isSelected: boolean) => void;
+  onOpenProduct?: (product: Product) => void;
 };
 
 const ProductsPickerContent = ({
   products,
   isProductSelected,
   isProductDisabled,
-  onProductClick,
+  onToggleProduct,
+  onOpenProduct,
 }: ProductsPickerContentProps) => {
   const services = products.data;
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -53,15 +55,18 @@ const ProductsPickerContent = ({
                   <ProductCard
                     key={product.id}
                     product={product}
-                    isSelected={isSelected}
-                    showIcon={true}
-                    instantBooking={false}
-                    displayEditableActions={false}
-                    onOpenDetail={() => {
-                      if (!isDisabled) onProductClick(product, isSelected);
+                    selection={{
+                      isSelected,
+                      disabled: isDisabled,
+                      onToggle: () => onToggleProduct(product, isSelected),
                     }}
-                    onAdd={() => {}}
-                    onNavigateToBooking={() => {}}
+                    onOpenDetail={() => {
+                      if (onOpenProduct) {
+                        onOpenProduct(product);
+                      } else if (!isDisabled) {
+                        onToggleProduct(product, isSelected);
+                      }
+                    }}
                     sx={[
                       isSelected ? styles.selectedCard : {},
                       isDisabled ? styles.disabledCard : {},

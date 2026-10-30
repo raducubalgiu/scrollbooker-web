@@ -94,6 +94,7 @@ const ProductsPicker = ({
       maxWidth="md"
       fullWidth
       customFooter={footer}
+      contentSx={{ py: 0 }}
     >
       <Box sx={styles.modalBody}>{body}</Box>
     </Modal>

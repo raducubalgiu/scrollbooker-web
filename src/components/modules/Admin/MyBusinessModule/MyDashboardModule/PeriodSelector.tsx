@@ -1,4 +1,4 @@
-import { Box, Chip, Stack } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { useTranslations } from "next-intl";
 import { DASHBOARD_PERIODS, DashboardPeriod } from "@/hooks/useDashboardPeriod";
 
@@ -28,14 +28,21 @@ export default function PeriodSelector({
           const isSelected = period === selectedPeriod;
 
           return (
-            <Chip
+            <Button
               key={period}
-              label={t(PERIOD_LABEL_KEYS[period])}
+              disableElevation
+              size="small"
+              variant={isSelected ? "contained" : "outlined"}
               onClick={() => onPeriodSelected(period)}
-              color={isSelected ? "primary" : "default"}
-              variant={isSelected ? "filled" : "outlined"}
-              sx={{ fontWeight: 600, flexShrink: 0 }}
-            />
+              sx={{
+                bgcolor: isSelected ? "primary.main" : "transparent",
+                color: isSelected ? "common.white" : "text.primary",
+                borderColor: isSelected ? "primary.main" : "divider",
+                borderWidth: 1,
+              }}
+            >
+              {t(PERIOD_LABEL_KEYS[period])}
+            </Button>
           );
         })}
       </Stack>

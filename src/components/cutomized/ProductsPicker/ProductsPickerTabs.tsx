@@ -3,17 +3,14 @@ import { Box, Theme } from "@mui/material";
 import { ScrollSyncResult } from "@/components/modules/Marketplace/BookingModule/useScrollSync";
 import { BusinessServicesWithProducts } from "@/ts/models/booking/product/Product";
 
-const TABS_HEIGHT = 56;
+const TABS_HEIGHT = 64;
 
 type ProductsPickerTabsProps = {
   services: BusinessServicesWithProducts[];
   sync: ScrollSyncResult;
 };
 
-const ProductsPickerTabs = ({
-  services,
-  sync,
-}: ProductsPickerTabsProps) => {
+const ProductsPickerTabs = ({ services, sync }: ProductsPickerTabsProps) => {
   return (
     <Box sx={styles.container}>
       <Box
@@ -86,17 +83,15 @@ const styles = {
     border: 0,
     outline: 0,
     background: "transparent",
-    px: 3,
-    py: 1.2,
+    px: { xs: 2, md: 2.5 },
+    py: { xs: 1.5, md: 1.75 },
     borderRadius: 999,
     whiteSpace: "nowrap" as const,
     cursor: "pointer",
     flexShrink: 0,
     fontSize: 15,
     fontWeight: 600,
-    color: isActive
-      ? theme.palette.primary.contrastText
-      : theme.palette.text.secondary,
+    color: isActive ? theme.palette.common.white : theme.palette.text.secondary,
     transition: "color 180ms ease",
   }),
 };

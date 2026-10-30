@@ -7,10 +7,12 @@ import ProductCard from "@/components/cutomized/ProductCard/ProductCard";
 import {
   BusinessServicesWithProducts,
   Product,
+  ProductUtils,
   UserProducts,
 } from "@/ts/models/booking/product/Product";
 import { useScrollSync } from "../../useScrollSync";
 import { SelectedBookingItem } from "../../BookingModule";
+import { toSelectedBookingItem } from "../../toSelectedBookingItem";
 import NotFound from "@/components/cutomized/NotFound/NotFound";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 
@@ -101,20 +103,34 @@ const ProductsStep = ({
               </Typography>
               <Stack spacing={2}>
                 {group.products.map((prod) => {
-                  const isSelected = selectedItems.some(
+                  const selectedItem = selectedItems.find(
                     (item) => item.productId === prod.id
                   );
+
+                  const handleToggle = () => {
+                    if (selectedItem) {
+                      onAdd(selectedItem);
+                      return;
+                    }
+                    const soleVariant = ProductUtils.getSoleVariant(prod);
+                    if (soleVariant) {
+                      onAdd(toSelectedBookingItem(prod, soleVariant));
+                    } else {
+                      onOpenDetail(prod);
+                    }
+                  };
 
                   return (
                     <ProductCard
                       key={prod.id}
                       product={prod}
-                      isSelected={isSelected}
-                      showIcon={true}
-                      instantBooking={instantBooking}
+                      {...(instantBooking && {
+                        selection: {
+                          isSelected: !!selectedItem,
+                          onToggle: handleToggle,
+                        },
+                      })}
                       onOpenDetail={() => onOpenDetail(prod)}
-                      onAdd={onAdd}
-                      onNavigateToBooking={() => {}}
                     />
                   );
                 })}

@@ -24,6 +24,7 @@ type ModalPropsType = DialogProps & {
   align?: "center" | "left";
   customFooter?: React.ReactNode;
   headerPadding?: SxProps<Theme> | undefined;
+  contentSx?: SxProps<Theme> | undefined;
 };
 
 type ModalTitlePropsType = {
@@ -37,7 +38,7 @@ type ModalTitlePropsType = {
 const ModalTitle = ({
   title,
   onClose,
-  fullScreen = false,
+  fullScreen: _fullScreen = false,
   align = "left",
   headerPadding,
   ...other
@@ -107,6 +108,7 @@ export default function Modal({
   align = "left",
   customFooter,
   headerPadding,
+  contentSx,
   ...others
 }: ModalPropsType) {
   const showFooter = actions.length > 0;
@@ -139,13 +141,15 @@ export default function Modal({
 
       <DialogContent
         dividers={dividers}
-        sx={{
-          pb: showFooter ? undefined : 0,
-          p: { xs: 0, lg: 3 },
-          flexGrow: 1,
-          overflowY: "auto",
-          WebkitOverflowScrolling: "touch",
-        }}
+        sx={[
+          {
+            pb: showFooter ? undefined : 0,
+            flexGrow: 1,
+            overflowY: "auto",
+            WebkitOverflowScrolling: "touch",
+          },
+          ...(Array.isArray(contentSx) ? contentSx : [contentSx]),
+        ]}
       >
         {children}
       </DialogContent>

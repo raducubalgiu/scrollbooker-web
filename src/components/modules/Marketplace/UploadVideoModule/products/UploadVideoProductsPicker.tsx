@@ -75,7 +75,7 @@ const UploadVideoProductsPicker = ({
         !isProductSelected(product) &&
         localSelectedProducts.length >= MAX_SELECTED_PRODUCTS
       }
-      onProductClick={handleToggleProduct}
+      onToggleProduct={handleToggleProduct}
       footer={
         <UploadVideoProductsBottomBar
           selectedCount={localSelectedProducts.length}

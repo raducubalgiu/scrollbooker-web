@@ -40,7 +40,7 @@ const BusinessDomainsTabs = ({
         >
           <Button
             variant="outlined"
-            color={areFiltersActive ? "primary" : "neutral"}
+            color={areFiltersActive ? "primary" : "secondary"}
             size="large"
             disableElevation
             startIcon={<TuneOutlinedIcon />}
@@ -50,7 +50,7 @@ const BusinessDomainsTabs = ({
           </Button>
           <Button
             variant="outlined"
-            color="neutral"
+            color="secondary"
             size="large"
             disableElevation
             startIcon={<MapOutlinedIcon />}

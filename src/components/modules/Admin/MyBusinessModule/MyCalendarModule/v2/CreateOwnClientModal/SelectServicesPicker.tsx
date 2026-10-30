@@ -80,7 +80,7 @@ const SelectServicesPicker = ({
     ]);
   };
 
-  const handleProductClick = (product: Product, isSelected: boolean) => {
+  const handleToggleProduct = (product: Product, isSelected: boolean) => {
     if (isSelected) {
       setPendingVariants((prev) =>
         prev.filter((item) => item.productId !== product.id)
@@ -88,15 +88,12 @@ const SelectServicesPicker = ({
       return;
     }
 
-    const [firstVariant, ...otherVariants] = product.variants;
-    if (!firstVariant) return;
-
-    if (otherVariants.length > 0) {
+    const soleVariant = ProductUtils.getSoleVariant(product);
+    if (soleVariant) {
+      addVariant(product, soleVariant);
+    } else {
       setVariantsProduct(product);
-      return;
     }
-
-    addVariant(product, firstVariant);
   };
 
   const handleAddFromDetail = (item: SelectedBookingItem) => {
@@ -116,7 +113,7 @@ const SelectServicesPicker = ({
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      sx={{ width: "100%" }}
+      sx={{ width: "100%", mt: 2.5 }}
     >
       <Typography variant="caption" color="text.secondary">
         {pendingVariants.length > 0
@@ -127,8 +124,7 @@ const SelectServicesPicker = ({
       <Stack direction="row" gap={1.5}>
         <Button
           variant="outlined"
-          color="neutral"
-          size="small"
+          color="secondary"
           disabled={pendingVariants.length === 0}
           onClick={() => setPendingVariants([])}
         >
@@ -136,7 +132,6 @@ const SelectServicesPicker = ({
         </Button>
         <Button
           variant="contained"
-          size="small"
           disableElevation
           disabled={pendingVariants.length === 0}
           onClick={() => onConfirm(pendingVariants)}
@@ -157,7 +152,8 @@ const SelectServicesPicker = ({
         isLoading={isLoading}
         onClose={onClose}
         isProductSelected={isProductSelected}
-        onProductClick={handleProductClick}
+        onToggleProduct={handleToggleProduct}
+        onOpenProduct={setVariantsProduct}
         footer={footer}
       />
 
