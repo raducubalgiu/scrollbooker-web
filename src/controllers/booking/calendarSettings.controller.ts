@@ -1,7 +1,10 @@
+import { BUSINESS_CALENDAR_EVENTS_KEY } from "@/controllers/booking/availability.controller";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import {
   AppointmentGapUpdate,
+  CalendarColorModeUpdate,
+  CalendarColorUpdate,
   SlotDurationUpdate,
   UserCalendarSettings,
 } from "@/ts/models/booking/schedule/CalendarSettings";
@@ -52,6 +55,47 @@ export const useUpdateAppointmentGap = () => {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(["calendar-settings", data.user_id], data);
+    },
+  });
+};
+
+export const useUpdateColorMode = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: CalendarColorModeUpdate) => {
+      const response = await axios.patch<UserCalendarSettings>(
+        "/api/protected/calendar-settings/color-mode",
+        payload
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["calendar-settings", data.user_id], data);
+    },
+  });
+};
+
+export const useUpdateCalendarColor = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      userId,
+      payload,
+    }: {
+      userId: number;
+      payload: CalendarColorUpdate;
+    }) => {
+      const response = await axios.patch<UserCalendarSettings>(
+        `/api/protected/users/${userId}/calendar-settings/color`,
+        payload
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["calendar-settings", data.user_id], data);
+      queryClient.invalidateQueries({ queryKey: [BUSINESS_CALENDAR_EVENTS_KEY] });
     },
   });
 };

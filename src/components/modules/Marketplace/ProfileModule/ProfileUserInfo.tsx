@@ -114,7 +114,7 @@ const ProfileUserInfo = ({
             <Typography sx={styles.username}>@{username}</Typography>
           </Stack>
 
-          <Stack flexDirection="row" alignItems="center" gap={1.5}>
+          <Stack flexDirection="row" alignItems="center" gap={1}>
             <Typography variant="body2" fontWeight={500} color="text.secondary">
               {profession}
             </Typography>
@@ -211,7 +211,7 @@ const styles = {
     gap: 1,
   },
   fullName: {
-    fontWeight: 700,
+    fontWeight: 600,
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -219,7 +219,7 @@ const styles = {
     minWidth: 0,
     letterSpacing: "-0.02em",
     fontSize: {
-      xs: "1.25rem",
+      xs: "1.15rem",
       sm: "1.5rem",
       md: "1.875rem",
       lg: "2.25rem",
@@ -236,18 +236,16 @@ const styles = {
     display: { xs: "none", sm: "block" },
   },
   ratingBadge: {
-    bgcolor: "action.hover",
-    px: 1,
     py: 0.2,
     borderRadius: 1.5,
   },
   star: {
-    fontSize: { xs: 17, md: 19 },
+    fontSize: 25,
   },
   rating: {
     fontWeight: 700,
     color: "text.primary",
-    fontSize: { xs: 14, md: 18 },
+    fontSize: { xs: 16, md: 18 },
   },
   scheduleButton: {
     display: "inline-flex",

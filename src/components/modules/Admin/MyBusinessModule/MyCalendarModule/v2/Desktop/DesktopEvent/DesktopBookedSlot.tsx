@@ -101,7 +101,9 @@ const styles = {
 
       let baseBrandColor = theme.palette.primary.main;
 
-      if (
+      if (slot.calendar_color) {
+        baseBrandColor = theme.palette.calendar[slot.calendar_color];
+      } else if (
         channel === AppointmentChannelEnum.OWN_CLIENT &&
         domain &&
         domain in theme.palette

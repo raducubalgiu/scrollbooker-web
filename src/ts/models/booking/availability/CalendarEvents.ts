@@ -1,3 +1,5 @@
+import { CalendarColorEnum } from "@/ts/enums/CalendarColorEnum";
+
 export interface CalendarEventsCustomer {
   id: number | null;
   fullname: string;
@@ -46,5 +48,6 @@ export interface CalendarEventsSlot {
   is_last_minute: boolean;
   last_minute_discount: number | null;
   info: CalendarEventsInfo | null;
+  calendar_color?: CalendarColorEnum | null;
 }
 

@@ -12,7 +12,7 @@ import { SelectedBookingItem } from "@/components/modules/Marketplace/BookingMod
 import ProductsPicker from "@/components/cutomized/ProductsPicker/ProductsPicker";
 import ProductDetailModal from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailModal";
 import ProductDetailDrawer from "@/components/cutomized/ProductCard/ProductDetailModal/ProductDetailDrawer";
-import { SelectedVariant } from "./createOwnClientTypes";
+import { SelectedVariant } from "../createOwnClientTypes";
 
 type SelectServicesPickerProps = {
   open: boolean;

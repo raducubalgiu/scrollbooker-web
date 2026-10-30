@@ -15,9 +15,10 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import dayjs from "@/lib/dayjs";
 import { ProductUtils } from "@/ts/models/booking/product/Product";
-import { SelectedSlot } from "./createOwnClientTypes";
+import { SelectedSlot } from "../createOwnClientTypes";
 
 type CreateOwnClientDateTimeSectionProps = {
+  step: number;
   selectedSlot: SelectedSlot | null;
   disabled: boolean;
   disabledLabel: string;
@@ -28,6 +29,7 @@ type CreateOwnClientDateTimeSectionProps = {
 };
 
 const CreateOwnClientDateTimeSection = ({
+  step,
   selectedSlot,
   disabled,
   disabledLabel,
@@ -40,7 +42,7 @@ const CreateOwnClientDateTimeSection = ({
     <Stack spacing={1.5}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography variant="subtitle1" fontWeight={700}>
-          3. Data și ora
+          {step}. Data și ora
         </Typography>
 
         {selectedSlot && (

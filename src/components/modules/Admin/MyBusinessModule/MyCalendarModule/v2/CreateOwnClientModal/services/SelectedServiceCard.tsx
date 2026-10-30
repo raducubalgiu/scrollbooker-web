@@ -3,7 +3,7 @@ import { Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { ProductUtils } from "@/ts/models/booking/product/Product";
 import { formatPrice } from "@/utils/formatPrice";
-import { SelectedVariant } from "./createOwnClientTypes";
+import { SelectedVariant } from "../createOwnClientTypes";
 
 type SelectedServiceCardProps = {
   variant: SelectedVariant;

@@ -86,6 +86,7 @@ const EditProductModal = ({
       type: product.type || ProductTypeEnum.SINGLE,
       sessions_count: product.sessions_count ?? null,
       validity_days: product.validity_days ?? null,
+      color: data.color,
       filters,
     };
 

@@ -4,6 +4,7 @@ import {
   SimplePaletteColorOptions,
   Theme,
 } from "@mui/material/styles";
+import { CalendarColorEnum } from "@/ts/enums/CalendarColorEnum";
 
 declare module "@mui/material/styles" {
   interface PaletteColor {
@@ -40,6 +41,7 @@ declare module "@mui/material/styles" {
     auto: Palette["primary"];
     medical: Palette["primary"];
     whatsapp: Palette["primary"];
+    calendar: Record<CalendarColorEnum, string>;
   }
 
   interface PaletteOptions {
@@ -52,6 +54,7 @@ declare module "@mui/material/styles" {
     medical?: PaletteOptions["primary"];
     auto?: PaletteOptions["primary"];
     whatsapp?: PaletteOptions["primary"];
+    calendar?: Record<CalendarColorEnum, string>;
   }
 }
 
@@ -561,6 +564,18 @@ export const darkTheme = createTheme({
       main: "#25D366",
       dark: "#1DA851",
     },
+    calendar: {
+      blue: "#60A5FA",
+      cyan: "#22D3EE",
+      teal: "#2DD4BF",
+      green: "#4ADE80",
+      lime: "#A3E635",
+      amber: "#FBBF24",
+      red: "#F87171",
+      pink: "#F472B6",
+      purple: "#C084FC",
+      slate: "#94A3B8",
+    },
   },
 
   typography: commonTypography,
@@ -605,6 +620,18 @@ export const lightTheme = createTheme({
     whatsapp: {
       main: "#25D366",
       dark: "#1DA851",
+    },
+    calendar: {
+      blue: "#3B82F6",
+      cyan: "#06B6D4",
+      teal: "#14B8A6",
+      green: "#22C55E",
+      lime: "#84CC16",
+      amber: "#F59E0B",
+      red: "#EF4444",
+      pink: "#EC4899",
+      purple: "#A855F7",
+      slate: "#64748B",
     },
   },
 

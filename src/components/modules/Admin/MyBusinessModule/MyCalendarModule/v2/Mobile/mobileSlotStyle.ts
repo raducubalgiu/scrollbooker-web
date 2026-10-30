@@ -22,7 +22,11 @@ export const resolveMobileSlotStyle = (
   let bgOpacity: number;
   let borderOpacity: number;
 
-  if (slot.is_booked && slot.info?.channel === "scroll_booker") {
+  if (slot.is_booked && slot.calendar_color) {
+    baseColor = theme.palette.calendar[slot.calendar_color];
+    bgOpacity = 0.2;
+    borderOpacity = 0.25;
+  } else if (slot.is_booked && slot.info?.channel === "scroll_booker") {
     baseColor = theme.palette.primary.main;
     bgOpacity = 0.2;
     borderOpacity = 0.25;

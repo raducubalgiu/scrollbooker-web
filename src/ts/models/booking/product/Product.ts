@@ -1,3 +1,4 @@
+import { CalendarColorEnum } from "@/ts/enums/CalendarColorEnum";
 import { SubFilter } from "../../nomenclatures/subFilter/SubFilter";
 import { Service } from "../../nomenclatures/service/Service";
 
@@ -56,6 +57,7 @@ export interface Product {
   type: string;
   sessions_count?: number | null;
   validity_days?: number | null;
+  color?: string | null;
   starting_offering: StartingOffering;
   has_different_prices: boolean;
   variants: ProductVariant[];
@@ -145,6 +147,7 @@ export interface ProductCreate {
   currency_id: number;
   can_be_booked: boolean;
   type: string;
+  color?: CalendarColorEnum | null;
   variants: ProductVariantCreate[];
 }
 
@@ -163,5 +166,6 @@ export interface ProductBaseInfoUpdate {
   type: string;
   sessions_count?: number | null;
   validity_days?: number | null;
+  color?: CalendarColorEnum | null;
   filters: ProductFilterCreate[];
 }

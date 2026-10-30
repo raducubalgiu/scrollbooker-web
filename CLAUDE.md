@@ -128,6 +128,9 @@ NEXT_PUBLIC_BE_BASE_ENDPOINT   # backend base URL — see "The `/api/v1` questio
 NEXT_PUBLIC_MAPBOX_TOKEN
 NEXT_PUBLIC_MAPBOX_STYLE_LIGHT
 NEXT_PUBLIC_MAPBOX_STYLE_DARK
+NEXT_PUBLIC_GOOGLE_CALENDAR_CLIENT_ID   # the Google Calendar OAuth *Web* client - the same one the backend
+                                       # exchanges codes with (GOOGLE_CALENDAR_CLIENT_ID) and iOS/Android use as
+                                       # serverClientID. Not the NextAuth sign-in client (GOOGLE_CLIENT_ID).
 NEXTAUTH_SECRET
 JWT_SECRET                     # must match the backend's JWT signing secret — this app verifies
                                 # the access token locally (jsonwebtoken) rather than trusting it blind

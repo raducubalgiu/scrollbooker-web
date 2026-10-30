@@ -2,6 +2,7 @@ import React from "react";
 import { Stack, TextField, Typography } from "@mui/material";
 
 type CreateOwnClientNotesSectionProps = {
+  step: number;
   value: string;
   onChange: (value: string) => void;
 };
@@ -9,13 +10,14 @@ type CreateOwnClientNotesSectionProps = {
 export const NOTES_MAX_LENGTH = 500;
 
 const CreateOwnClientNotesSection = ({
+  step,
   value,
   onChange,
 }: CreateOwnClientNotesSectionProps) => {
   return (
     <Stack spacing={1.5}>
       <Typography variant="subtitle1" fontWeight={700}>
-        4. Observații
+        {step}. Observații
       </Typography>
 
       <TextField

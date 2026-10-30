@@ -92,6 +92,13 @@ const MobileCalendar = ({ session }: MobileCalendarProps) => {
       <MobileCalendarHeaderActions
         showsEmployeeDropdown={c.showsEmployeeDropdown}
         ownAvatar={c.ownAvatar}
+        ownCalendarColor={c.ownCalendarColor}
+        ownFullname={c.ownFullname}
+        selectedEmployeeColor={
+          c.selectedEmployee
+            ? c.employeeColorsMap.get(c.selectedEmployee.id) ?? null
+            : null
+        }
         ownUsername={c.ownUsername}
         selectedEmployee={c.selectedEmployee}
         isBlocking={c.isBlocking}
@@ -173,6 +180,7 @@ const MobileCalendar = ({ session }: MobileCalendarProps) => {
         isLoading={c.isLoadingEmployees}
         selectedEmployeeId={c.resolvedSelectedEmployeeId}
         employeesAvailabilityMap={c.employeesAvailabilityMap}
+        employeeColorsMap={c.employeeColorsMap}
         onSelect={c.handleSelectEmployee}
         onClose={() => c.setIsEmployeeSheetOpen(false)}
       />
@@ -199,6 +207,7 @@ const MobileCalendar = ({ session }: MobileCalendarProps) => {
         employeeId={c.employeeIdFilter}
         initialSlot={c.ownClientSlot}
         onClose={c.handleCloseAddOwnClient}
+        onCreated={c.refetchCalendarEvents}
       />
 
       <CalendarSettingsModal

@@ -5,6 +5,11 @@ import {
   BusinessCalendarSchedule,
 } from "@/ts/models/booking/availability/BusinessCalendarEvents";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
+import {
+  CalendarColorEnum,
+  CalendarColorModeEnum,
+  toCalendarColor,
+} from "@/ts/enums/CalendarColorEnum";
 
 export const NOW_ROUNDING_MINUTES = 5;
 
@@ -114,7 +119,22 @@ const splitOnGrid = (
   return pieces;
 };
 
-const eventToSlot = (event: BusinessCalendarEvent): CalendarEventsSlot => ({
+export const resolveEventColor = (
+  event: BusinessCalendarEvent,
+  employee: BusinessCalendarEmployee,
+  colorMode: CalendarColorModeEnum
+): CalendarColorEnum | null =>
+  toCalendarColor(event.color) ??
+  toCalendarColor(
+    colorMode === CalendarColorModeEnum.EMPLOYEE
+      ? employee.calendar_color
+      : event.service_color
+  );
+
+const eventToSlot = (
+  event: BusinessCalendarEvent,
+  calendarColor: CalendarColorEnum | null
+): CalendarEventsSlot => ({
   id: event.id,
   start_date_locale: event.start_date_locale,
   end_date_locale: event.end_date_locale,
@@ -125,6 +145,7 @@ const eventToSlot = (event: BusinessCalendarEvent): CalendarEventsSlot => ({
   is_last_minute: false,
   last_minute_discount: null,
   info: event.info,
+  calendar_color: calendarColor,
 });
 
 const freeIntervalToSlot = (
@@ -156,6 +177,7 @@ export const buildDaySlots = ({
   slotDuration,
   gridStartMinutes,
   now,
+  colorMode = CalendarColorModeEnum.SERVICE,
 }: {
   employee: BusinessCalendarEmployee;
   date: string;
@@ -163,11 +185,14 @@ export const buildDaySlots = ({
   slotDuration: number;
   gridStartMinutes: number;
   now: CalendarNow;
+  colorMode?: CalendarColorModeEnum;
 }): CalendarEventsSlot[] => {
   const dayEvents = employee.events.filter(
     (event) => getEventIntervalOnDate(event, date) !== null
   );
-  const eventSlots = dayEvents.map(eventToSlot);
+  const eventSlots = dayEvents.map((event) =>
+    eventToSlot(event, resolveEventColor(event, employee, colorMode))
+  );
 
   const schedule = getScheduleForDate(employee.schedules, date);
   if (!schedule?.start_time || !schedule?.end_time || date < now.date) {

@@ -46,6 +46,7 @@ const buildBlankSeed = (
   serviceId: "",
   name: "",
   description: "",
+  color: null,
   filters: [],
   variants: [
     {

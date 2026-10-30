@@ -9,6 +9,7 @@ import {
   useGetBusinessCalendarEvents,
 } from "@/controllers/booking/availability.controller";
 import { useGetCalendarSettings } from "@/controllers/booking/calendarSettings.controller";
+import { CalendarColorModeEnum } from "@/ts/enums/CalendarColorEnum";
 import {
   AppointmentBlockCreate,
   AppointmentBlockSlot,
@@ -66,6 +67,8 @@ export const useDesktopCalendar = (session: Session) => {
   const [isBlockDialogOpen, setIsBlockDialogOpen] = useState(false);
 
   const { data: calendarSettings } = useGetCalendarSettings(session.user_id);
+  const colorMode =
+    calendarSettings?.color_mode ?? CalendarColorModeEnum.SERVICE;
   const hasAppliedDefaultDurationRef = useRef(false);
 
   useEffect(() => {
@@ -126,6 +129,7 @@ export const useDesktopCalendar = (session: Session) => {
         slotDuration,
         gridStartMinutes,
         now,
+        colorMode,
       }),
     });
 
@@ -139,7 +143,7 @@ export const useDesktopCalendar = (session: Session) => {
     if (!person) return [];
 
     return dates.map((date) => toColumn(date, person, date));
-  }, [data, bounds, employees, mode, dates, startDate, slotDuration, now]);
+  }, [data, bounds, employees, mode, dates, startDate, slotDuration, now, colorMode]);
 
   const headerColumns = useMemo<DesktopHeaderColumn[]>(() => {
     if (mode === "day") {
@@ -148,6 +152,7 @@ export const useDesktopCalendar = (session: Session) => {
         key: String(employee.id),
         fullname: employee.fullname ?? employee.username,
         avatar: employee.avatar,
+        calendarColor: employee.calendar_color,
       }));
     }
 
@@ -244,8 +249,7 @@ export const useDesktopCalendar = (session: Session) => {
 
   const handleCloseCreateModal = useCallback(() => {
     setCreateModal({ open: false, slot: null, userId: null });
-    invalidateCalendar();
-  }, [invalidateCalendar]);
+  }, []);
 
   const handleOpenBlockDialog = useCallback(() => {
     if (selectedSlotsToBlock.length > 0) setIsBlockDialogOpen(true);

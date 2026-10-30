@@ -14,6 +14,7 @@ import { useGetAllEmployeesByOwner } from "@/controllers/booking/employee.contro
 import { useGetMySelectedServices } from "@/controllers/nomenclature/service.controller";
 import { useCreateProduct } from "@/controllers/booking/product.controller";
 import { ProductTypeEnum } from "@/ts/enums/ProductTypeEnum";
+import { CalendarColorEnum } from "@/ts/enums/CalendarColorEnum";
 import {
   ProductCreate,
   ProductFilterCreate,
@@ -49,6 +50,7 @@ export interface ProductFormValues {
   serviceId: string;
   name: string;
   description: string | null;
+  color: CalendarColorEnum | null;
   variants: FormProductVariant[];
   filters: FormProductFilter[];
 }
@@ -58,6 +60,7 @@ const getCleanDefaultValues = (): ProductFormValues => ({
   serviceId: "",
   name: "",
   description: "",
+  color: null,
   variants: [],
   filters: [],
 });
@@ -178,6 +181,7 @@ const AddProductModal = ({
       currency_id: 1,
       can_be_booked: true,
       type: ProductTypeEnum.SINGLE,
+      color: data.color,
       variants: data.variants.map((v) => ({
         name: v.name.trim(),
         duration: Number(v.duration),

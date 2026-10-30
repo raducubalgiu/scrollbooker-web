@@ -1,3 +1,4 @@
+import { CalendarColorEnum } from "@/ts/enums/CalendarColorEnum";
 import dayjs from "@/lib/dayjs";
 import { Currency } from "../../nomenclatures/currency/Currency";
 import { BusinessCoordinates } from "../business/Business";
@@ -166,6 +167,7 @@ export interface AppointmentBusinessClientCreate {
   end_date: string;
   user_id: number;
   business_client_id: number;
+  color?: CalendarColorEnum | null;
   product_variants: {
     id: number;
     offering: { user_id: number };
