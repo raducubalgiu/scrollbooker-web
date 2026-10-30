@@ -59,6 +59,19 @@ interface CancelAppointmentParams {
   payload: AppointmentCancel;
 }
 
+export const APPOINTMENT_DETAILS_KEY = "appointment-details";
+
+export const useGetAppointmentById = (appointmentId: number | null) => {
+  return useQuery({
+    queryKey: [APPOINTMENT_DETAILS_KEY, appointmentId],
+    queryFn: () =>
+      axios
+        .get<Appointment>(`${APPOINTMENTS_PATH}/${appointmentId}`)
+        .then((response) => response.data),
+    enabled: appointmentId !== null,
+  });
+};
+
 export const useCancelAppointment = () => {
   const queryClient = useQueryClient();
 

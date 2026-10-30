@@ -1,4 +1,4 @@
-import { IconButton, Stack, TextField } from "@mui/material";
+import { IconButton, Stack, SxProps, TextField, Theme } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import React from "react";
@@ -8,6 +8,8 @@ type SearchBarProps = {
   placeholder: string;
   onChange: (value: string) => void;
   onReset: () => void;
+  autoFocus?: boolean;
+  sx?: SxProps<Theme>;
 };
 
 const SearchBar = ({
@@ -15,6 +17,8 @@ const SearchBar = ({
   placeholder,
   onChange,
   onReset,
+  autoFocus = true,
+  sx,
 }: SearchBarProps) => {
   return (
     <Stack
@@ -22,7 +26,7 @@ const SearchBar = ({
       alignItems="center"
       flex={1}
       gap={1}
-      sx={styles.container}
+      sx={[styles.container, ...(Array.isArray(sx) ? sx : [sx])]}
     >
       <SearchIcon
         sx={{
@@ -33,7 +37,7 @@ const SearchBar = ({
       />
 
       <TextField
-        autoFocus
+        autoFocus={autoFocus}
         fullWidth
         variant="standard"
         placeholder={placeholder}

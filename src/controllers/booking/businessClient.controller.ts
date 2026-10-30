@@ -3,7 +3,12 @@ import {
   BusinessClient,
   BusinessClientCreate,
 } from "@/ts/models/booking/businessClient/BusinessClient";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import axios from "axios";
 
 type GetBusinessClientsParams = {
@@ -41,6 +46,48 @@ export const useGetBusinessClients = ({
   return useQuery({
     queryKey: ["business-clients", businessId, query, page, limit],
     queryFn: doRequest,
+    enabled: isEnabled && !!businessId,
+  });
+};
+
+type GetInfiniteBusinessClientsParams = {
+  businessId: number;
+  query?: string;
+  limit?: number;
+  isEnabled?: boolean;
+};
+
+export const useInfiniteBusinessClients = ({
+  businessId,
+  query,
+  limit = 20,
+  isEnabled = true,
+}: GetInfiniteBusinessClientsParams) => {
+  const trimmedQuery = query?.trim() ?? "";
+
+  return useInfiniteQuery({
+    queryKey: ["business-clients", "infinite", businessId, trimmedQuery, limit],
+    queryFn: ({ pageParam }) => {
+      const searchParams = new URLSearchParams({
+        page: String(pageParam),
+        limit: String(limit),
+      });
+
+      if (trimmedQuery.length > 0) searchParams.append("query", trimmedQuery);
+
+      return axios
+        .get<PaginatedData<BusinessClient>>(
+          `/api/protected/businesses/${businessId}/clients?${searchParams.toString()}`
+        )
+        .then((response) => response.data);
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      const totalFetched = pages.flatMap((page) => page.results).length;
+      return totalFetched < lastPage.count && lastPage.results.length > 0
+        ? pages.length + 1
+        : undefined;
+    },
     enabled: isEnabled && !!businessId,
   });
 };

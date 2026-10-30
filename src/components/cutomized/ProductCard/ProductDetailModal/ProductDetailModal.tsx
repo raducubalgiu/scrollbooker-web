@@ -17,6 +17,7 @@ type ProductDetailModalProps = {
   instantBooking: boolean;
   onClose: () => void;
   onAdd: (item: SelectedBookingItem) => void;
+  requiresBookPermission?: boolean;
 };
 
 const ProductDetailModal = ({
@@ -25,6 +26,7 @@ const ProductDetailModal = ({
   instantBooking,
   onClose,
   onAdd,
+  requiresBookPermission = true,
 }: ProductDetailModalProps) => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
@@ -34,6 +36,20 @@ const ProductDetailModal = ({
 
   if (!isDesktop) return null;
 
+  const detailFooter = (
+    <ProductDetailFooter
+      currentVariant={currentVariant}
+      onHandleAdd={handleAddClick}
+    />
+  );
+  const footer = requiresBookPermission ? (
+    <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+      {detailFooter}
+    </Protected>
+  ) : (
+    detailFooter
+  );
+
   return (
     <Modal
       open={open}
@@ -41,16 +57,7 @@ const ProductDetailModal = ({
       maxWidth="md"
       fullWidth
       dividers={false}
-      customFooter={
-        instantBooking && (
-          <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
-            <ProductDetailFooter
-              currentVariant={currentVariant}
-              onHandleAdd={handleAddClick}
-            />
-          </Protected>
-        )
-      }
+      customFooter={instantBooking && footer}
     >
       <ProductDetailContent
         product={product}

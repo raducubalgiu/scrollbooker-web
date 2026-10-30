@@ -7,9 +7,9 @@ import {
   formatMinutesAsClock,
   generateTicks,
   minutesFromDateTimeString,
-} from "../../Mobile/myCalendarMobileGeometry";
-import { resolveMobileSlotStyle } from "../../Mobile/myCalendarMobileSlotStyle";
-import MyCalendarMobileSlot from "../../Mobile/MyCalendarMobileSlot";
+} from "./mobileGeometry";
+import { resolveMobileSlotStyle } from "./mobileSlotStyle";
+import MobileSlot from "./MobileSlot";
 
 const GUTTER_WIDTH = 56;
 export const ROW_HEIGHT = 128;
@@ -93,7 +93,7 @@ const MobileTimeline = ({
           const isExternalBlock = slot.is_blocked && !!slot.info?.is_external;
 
           return (
-            <MyCalendarMobileSlot
+            <MobileSlot
               key={`slot-${slot.start_date_utc}-${slot.id ?? "free"}`}
               slot={slot}
               style={resolveMobileSlotStyle(theme, slot, businessShortDomain)}

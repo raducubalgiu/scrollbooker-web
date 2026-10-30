@@ -40,7 +40,8 @@ const getScrollParent = (
 
 export const useScrollSync = (
   products: UserProducts,
-  offset: number
+  offset: number,
+  scrollRootRef?: RefObject<HTMLElement | null>
 ): ScrollSyncResult => {
   const [currentTab, setCurrentTab] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -139,11 +140,15 @@ export const useScrollSync = (
           }
         });
       },
-      { rootMargin: `-${offset}px 0px -60% 0px`, threshold: 0 }
+      {
+        root: scrollRootRef?.current ?? null,
+        rootMargin: `-${offset}px 0px -60% 0px`,
+        threshold: 0,
+      }
     );
     Object.values(sectionRefs.current).forEach((s) => s && observer.observe(s));
     return () => observer.disconnect();
-  }, [products, offset]);
+  }, [products, offset, scrollRootRef]);
 
   useLayoutEffect(() => {
     updateIndicator(currentTab);

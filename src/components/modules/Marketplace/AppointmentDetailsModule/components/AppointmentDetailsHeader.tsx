@@ -48,6 +48,31 @@ const AppointmentDetailsHeader = ({
       ? AppRoutes.profile(navigateUsername, navigateProfession)
       : "";
 
+  const personRow = (
+    <Stack flexDirection="row" alignItems="center" gap={2} my={5}>
+      {isCustomer ? (
+        <AvatarWithRating
+          avatar={user.avatar}
+          ratingsAverage={user.ratings_average}
+        />
+      ) : (
+        <Avatar src={customer.avatar ?? ""} sx={{ width: 70, height: 70 }}>
+          {customer.fullname.charAt(0).toUpperCase()}
+        </Avatar>
+      )}
+      <Box>
+        <Typography variant="h6" fontWeight={600}>
+          {isCustomer ? user.fullname : customer.fullname}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {isCustomer
+            ? `${user.profession} • ${user.ratings_count} recenzii`
+            : customer.profession}
+        </Typography>
+      </Box>
+    </Stack>
+  );
+
   return (
     <Box>
       <Chip
@@ -61,7 +86,7 @@ const AppointmentDetailsHeader = ({
             }
 
             const mainColor =
-              (theme.palette[colorKey as "success" | "error"] as any)?.main ||
+              theme.palette[colorKey as "success" | "error"]?.main ||
               theme.palette.grey[600];
             return alpha(mainColor, 0.12);
           },
@@ -72,7 +97,7 @@ const AppointmentDetailsHeader = ({
 
             const colorKey = AppointmentUtils.getStatusColor(status);
             return (
-              (theme.palette[colorKey as "success" | "error"] as any)?.dark ||
+              theme.palette[colorKey as "success" | "error"]?.dark ||
               theme.palette.text.primary
             );
           },
@@ -98,34 +123,16 @@ const AppointmentDetailsHeader = ({
         ({totalDurationText})
       </Typography>
 
-      <Link
-        href={profileUrl}
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
-        <Stack flexDirection="row" alignItems="center" gap={2} my={5}>
-          {isCustomer ? (
-            <AvatarWithRating
-              avatar={user.avatar}
-              ratingsAverage={user.ratings_average}
-            />
-          ) : (
-            <Avatar
-              src={customer.avatar ?? ""}
-              sx={{ width: 70, height: 70 }}
-            />
-          )}
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              {isCustomer ? user.fullname : customer.fullname}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {isCustomer
-                ? `${user.profession} • ${user.ratings_count} recenzii`
-                : customer.profession}
-            </Typography>
-          </Box>
-        </Stack>
-      </Link>
+      {profileUrl ? (
+        <Link
+          href={profileUrl}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {personRow}
+        </Link>
+      ) : (
+        personRow
+      )}
     </Box>
   );
 };

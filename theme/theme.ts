@@ -378,7 +378,7 @@ const getComponents = (mode: Mode) => ({
 
   MuiCssBaseline: {
     styleOverrides: (theme: Theme) => ({
-      "textarea, .MuiTextareaAutosize-root": {
+      "textarea:not(.MuiInputBase-input), .MuiTextareaAutosize-root:not(.MuiInputBase-input)": {
         backgroundColor: theme.palette.neutral.main,
         borderRadius: 8,
         padding: "12px 16px",
@@ -469,6 +469,9 @@ const getComponents = (mode: Mode) => ({
           padding: "14.5px 16px",
         },
       }),
+      multiline: {
+        padding: 0,
+      },
       inputSizeSmall: ({ theme }: { theme: Theme }) => ({
         padding: "8px 12px",
         [theme.breakpoints.up("md")]: {

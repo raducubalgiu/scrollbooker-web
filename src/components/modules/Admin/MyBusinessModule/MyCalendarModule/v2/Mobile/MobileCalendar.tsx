@@ -5,31 +5,32 @@ import { Box, Fab, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Session } from "next-auth";
-import { useRouter } from "next/navigation";
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
-import { AppRoutes } from "@/utils/routes";
-import MyCalendarMobileHeaderActions from "../../Mobile/MyCalendarMobileHeaderActions";
-import MyCalendarMobileDayPager from "../../Mobile/MyCalendarMobileDayPager";
+import MobileCalendarHeaderActions from "./MobileCalendarHeaderActions";
+import MobileDayPager from "./MobileDayPager";
 import MobileTimeline from "./MobileTimeline";
 import MobileTimelineSkeleton from "./MobileTimelineSkeleton";
-import MyCalendarMobileEmployeeSheet from "../../Mobile/MyCalendarMobileEmployeeSheet";
+import MobileEmployeeSheet from "./MobileEmployeeSheet";
 import MobileBlockBar from "./MobileBlockBar";
 import {
   minutesFromDateTimeString,
   parseTimeStringToMinutes,
-} from "../../Mobile/myCalendarMobileGeometry";
-import CreateOwnClientModal from "../../sharedComponents/CreateOwnClientModal/CreateOwnClientModal";
-import CalendarSettingsModal from "../../sharedComponents/CalendarSettings/CalendarSettingsModal";
+} from "./mobileGeometry";
+import CreateOwnClientModal from "../CreateOwnClientModal/CreateOwnClientModal";
+import CalendarSettingsModal from "../CalendarSettings/CalendarSettingsModal";
 import { useMobileCalendar } from "./useMobileCalendar";
 import BlockSlotsDialog from "../BlockSlots/BlockSlotsDialog";
+import AppointmentDetailsDialog from "../AppointmentDetailsDialog";
 
 type MobileCalendarProps = {
   session: Session;
 };
 
 const MobileCalendar = ({ session }: MobileCalendarProps) => {
-  const router = useRouter();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [detailsAppointmentId, setDetailsAppointmentId] = useState<
+    number | null
+  >(null);
 
   const c = useMobileCalendar(session);
 
@@ -88,7 +89,7 @@ const MobileCalendar = ({ session }: MobileCalendarProps) => {
         }
       />
 
-      <MyCalendarMobileHeaderActions
+      <MobileCalendarHeaderActions
         showsEmployeeDropdown={c.showsEmployeeDropdown}
         ownAvatar={c.ownAvatar}
         ownUsername={c.ownUsername}
@@ -105,7 +106,7 @@ const MobileCalendar = ({ session }: MobileCalendarProps) => {
         onToday={c.handleToday}
       />
 
-      <MyCalendarMobileDayPager
+      <MobileDayPager
         weekStart={c.currentWeekStart}
         selectedDay={c.selectedDay}
         availableDaysSet={c.availableDaysSet}
@@ -132,9 +133,7 @@ const MobileCalendar = ({ session }: MobileCalendarProps) => {
             isBlocking={c.isBlocking}
             pendingBlockSlots={c.pendingBlockSlots}
             onSlotTap={(slot) =>
-              c.handleSlotTap(slot, (id) =>
-                router.push(AppRoutes.appointmentDetails(id))
-              )
+              c.handleSlotTap(slot, setDetailsAppointmentId)
             }
           />
         )}
@@ -168,7 +167,7 @@ const MobileCalendar = ({ session }: MobileCalendarProps) => {
         </Fab>
       )}
 
-      <MyCalendarMobileEmployeeSheet
+      <MobileEmployeeSheet
         open={c.isEmployeeSheetOpen}
         employees={c.employees}
         isLoading={c.isLoadingEmployees}
@@ -187,10 +186,17 @@ const MobileCalendar = ({ session }: MobileCalendarProps) => {
         onClose={() => c.setIsBlockSheetOpen(false)}
       />
 
+      <AppointmentDetailsDialog
+        appointmentId={detailsAppointmentId}
+        onClose={() => setDetailsAppointmentId(null)}
+        onAppointmentChange={c.refetchCalendarEvents}
+      />
+
       <CreateOwnClientModal
         open={c.isAddingOwnClient}
         businessId={c.businessId ?? 0}
         providerUserId={c.targetUserId}
+        employeeId={c.employeeIdFilter}
         initialSlot={c.ownClientSlot}
         onClose={c.handleCloseAddOwnClient}
       />

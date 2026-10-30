@@ -15,12 +15,12 @@ import {
 } from "@/ts/models/booking/appointment/Appointment";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { BusinessCalendarEmployee } from "@/ts/models/booking/availability/BusinessCalendarEvents";
-import { createTimeRowMap } from "../../createTimeRowMap";
-import { useCalendarAppointmentMutations } from "../../sharedComponents/useCalendarAppointmentMutations";
+import { createTimeRowMap } from "./createTimeRowMap";
+import { useCalendarAppointmentMutations } from "../useCalendarAppointmentMutations";
 import {
   ROW_HEIGHT_LEVELS,
   RowHeightLevel,
-} from "../../sharedComponents/CalendarSettings/rowHeightLevels";
+} from "../CalendarSettings/rowHeightLevels";
 import {
   buildDaySlots,
   getCalendarBounds,
@@ -285,6 +285,7 @@ export const useDesktopCalendar = (session: Session) => {
   }, [selectedSlotsToBlock, data?.timezone]);
 
   return {
+    invalidateCalendar,
     mode,
     label,
     businessId,

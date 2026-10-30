@@ -7,7 +7,7 @@ import { CalendarNow, timeToMinutes } from "../calendarSlots";
 import {
   getCalendarPageBg,
   getCalendarTableBg,
-} from "../../sharedComponents/calendarSurfaceColors";
+} from "../calendarSurfaceColors";
 
 export type DesktopGridColumn = {
   key: string;

@@ -1,25 +1,26 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Box, Theme, Typography } from "@mui/material";
 import { Session } from "next-auth";
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
-import { CalendarHeader } from "../../sharedComponents/CalendarHeader";
-import CreateOwnClientModal from "../../sharedComponents/CreateOwnClientModal/CreateOwnClientModal";
-import BlockAppBar from "../../sharedComponents/BlockAppBar";
-import CalendarLoadingOverlay from "../../sharedComponents/CalendarLoadingOverlay";
+import { DesktopCalendarHeader } from "./DesktopCalendarHeader";
+import CreateOwnClientModal from "../CreateOwnClientModal/CreateOwnClientModal";
+import DesktopBlockBar from "./DesktopBlockBar";
+import DesktopLoadingOverlay from "./DesktopLoadingOverlay";
 import {
   getCalendarPageBg,
   getCalendarTableBg,
-} from "../../sharedComponents/calendarSurfaceColors";
-import { WeeklyCalendarSkeleton } from "../../WeeklyCalendar/WeeklyCalendarSkeleton";
-import { EmployeesDayCalendarSkeleton } from "../../EmployeesDayCalendar/EmployeesDayCalendarSkeleton";
-import { EMPLOYEE_COLUMN_MIN_WIDTH } from "../../EmployeesDayCalendar/employeesDayCalendarConstants";
+} from "../calendarSurfaceColors";
+import { DesktopWeekSkeleton } from "./DesktopWeekSkeleton";
+import { DesktopDaySkeleton } from "./DesktopDaySkeleton";
+import { EMPLOYEE_COLUMN_MIN_WIDTH } from "./desktopCalendarConstants";
 import { useDesktopCalendar } from "./useDesktopCalendar";
 import { DesktopColumnsHeader } from "./DesktopColumnsHeader";
 import { DesktopGridBackground } from "./DesktopGridBackground";
 import { DesktopEventsLayer } from "./DesktopEventsLayer";
 import BlockSlotsDialog from "../BlockSlots/BlockSlotsDialog";
+import AppointmentDetailsDialog from "../AppointmentDetailsDialog";
 
 type DesktopCalendarProps = {
   session: Session;
@@ -31,6 +32,9 @@ const AXIS_COLUMN_WIDTH = 90;
 export const DesktopCalendar = ({ session }: DesktopCalendarProps) => {
   const c = useDesktopCalendar(session);
 
+  const [detailsAppointmentId, setDetailsAppointmentId] = useState<
+    number | null
+  >(null);
   const headerScrollRef = useRef<HTMLDivElement>(null);
   const bodyScrollRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +50,7 @@ export const DesktopCalendar = ({ session }: DesktopCalendarProps) => {
   const gridMinWidth = AXIS_COLUMN_WIDTH + c.headerColumns.length * columnMinWidth;
 
   const header = (
-    <CalendarHeader
+    <DesktopCalendarHeader
       label={c.label}
       isBlocking={c.isBlocking}
       isLoading={c.isFetching}
@@ -76,7 +80,7 @@ export const DesktopCalendar = ({ session }: DesktopCalendarProps) => {
       <MainLayout hideAction showHeader={false} sx={{ bgcolor: getCalendarPageBg }}>
         <Box sx={{ width: "100%", boxSizing: "border-box" }}>
           {header}
-          {c.mode === "day" ? <EmployeesDayCalendarSkeleton /> : <WeeklyCalendarSkeleton />}
+          {c.mode === "day" ? <DesktopDaySkeleton /> : <DesktopWeekSkeleton />}
         </Box>
       </MainLayout>
     );
@@ -112,6 +116,11 @@ export const DesktopCalendar = ({ session }: DesktopCalendarProps) => {
           open={c.createModal.open}
           businessId={c.businessId ?? 0}
           providerUserId={c.createModal.userId}
+          employeeId={
+            session.is_employee || session.has_employees
+              ? c.createModal.userId ?? undefined
+              : undefined
+          }
           initialSlot={c.createModal.slot}
           onClose={c.handleCloseCreateModal}
         />
@@ -173,20 +182,27 @@ export const DesktopCalendar = ({ session }: DesktopCalendarProps) => {
                     const column = c.columns.find((item) => item.key === columnKey);
                     c.handleOpenCreateModal(slot, column?.userId ?? null);
                   }}
+                  onOpenDetails={setDetailsAppointmentId}
                 />
 
-                {c.isFetching && <CalendarLoadingOverlay />}
+                {c.isFetching && <DesktopLoadingOverlay />}
               </Box>
             </Box>
           </>
         )}
 
-        <BlockAppBar
+        <DesktopBlockBar
           isBlocking={c.isBlocking}
           isLoadingBlock={c.isLoadingBlock}
           selectedSlotsToBlock={c.selectedSlotsToBlock}
           onCancel={c.handleCloseBlocking}
           onBlock={c.handleOpenBlockDialog}
+        />
+
+        <AppointmentDetailsDialog
+          appointmentId={detailsAppointmentId}
+          onClose={() => setDetailsAppointmentId(null)}
+          onAppointmentChange={c.invalidateCalendar}
         />
 
         <BlockSlotsDialog
