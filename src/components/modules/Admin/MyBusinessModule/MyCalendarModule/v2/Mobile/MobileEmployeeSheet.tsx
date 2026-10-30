@@ -2,7 +2,6 @@
 
 import React from "react";
 import {
-  Avatar,
   Box,
   Divider,
   Drawer,
@@ -11,8 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import PersonIcon from "@mui/icons-material/Person";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
+import CalendarAvatar from "../CalendarAvatar";
 
 type MobileEmployeeSheetProps = {
   open: boolean;
@@ -20,6 +19,7 @@ type MobileEmployeeSheetProps = {
   isLoading: boolean;
   selectedEmployeeId: number | null;
   employeesAvailabilityMap: Map<number, boolean>;
+  employeeColorsMap: Map<number, string | null>;
   onSelect: (employeeId: number) => void;
   onClose: () => void;
 };
@@ -30,6 +30,7 @@ const MobileEmployeeSheet = ({
   isLoading,
   selectedEmployeeId,
   employeesAvailabilityMap,
+  employeeColorsMap,
   onSelect,
   onClose,
 }: MobileEmployeeSheetProps) => {
@@ -76,12 +77,12 @@ const MobileEmployeeSheet = ({
             return (
               <Box key={employee.id}>
                 <Box sx={styles.row} onClick={() => onSelect(employee.id)}>
-                  <Avatar
-                    {...(employee.avatar ? { src: employee.avatar } : {})}
+                  <CalendarAvatar
+                    src={employee.avatar}
+                    name={employee.fullname}
+                    calendarColor={employeeColorsMap.get(employee.id)}
                     sx={styles.avatar}
-                  >
-                    <PersonIcon />
-                  </Avatar>
+                  />
 
                   <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Typography variant="subtitle2" fontWeight={700} noWrap>

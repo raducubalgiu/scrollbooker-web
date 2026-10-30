@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Dialog, Divider, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Dialog, Stack, useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
@@ -10,21 +10,27 @@ import { useMutate } from "@/hooks/useHttp";
 import { AppointmentBusinessClientCreate } from "@/ts/models/booking/appointment/Appointment";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { BusinessClient } from "@/ts/models/booking/businessClient/BusinessClient";
-import CreateOwnClientClientSection from "./CreateOwnClientClientSection";
-import CreateOwnClientServicesSection from "./CreateOwnClientServicesSection";
-import CreateOwnClientDateTimeSection from "./CreateOwnClientDateTimeSection";
-import CreateOwnClientNotesSection from "./CreateOwnClientNotesSection";
-import CreateClientDialog from "./CreateClientDialog";
-import SelectClientDrawer from "./SelectClientDrawer";
-import CreateOwnClientMobileHeader from "./CreateOwnClientMobileHeader";
-import SelectDateTimeDrawer from "./SelectDateTimeDrawer";
-import SelectServicesPicker from "./SelectServicesPicker";
-import SelectDateTimeModal from "./SelectDateTimeModal";
-import CreateOwnClientMinimalHeader from "./CreateOwnClientMinimalHeader";
-import CreateOwnClientBottomBar from "./CreateOwnClientBottomBar";
-import ClientSelectionContent from "./ClientSelectionContent";
+import CreateOwnClientClientSection from "./client/CreateOwnClientClientSection";
+import CreateOwnClientServicesSection from "./services/CreateOwnClientServicesSection";
+import CreateOwnClientDateTimeSection from "./dateTime/CreateOwnClientDateTimeSection";
+import CreateOwnClientNotesSection from "./notes/CreateOwnClientNotesSection";
+import CreateOwnClientColorSection from "./color/CreateOwnClientColorSection";
+import { CalendarColorEnum } from "@/ts/enums/CalendarColorEnum";
+import CreateClientDialog from "./client/CreateClientDialog";
+import SelectClientDialog from "./client/SelectClientDialog";
+import CreateOwnClientMobileHeader from "./layout/CreateOwnClientMobileHeader";
+import SelectDateTimeDrawer from "./dateTime/SelectDateTimeDrawer";
+import SelectServicesPicker from "./services/SelectServicesPicker";
+import SelectDateTimeModal from "./dateTime/SelectDateTimeModal";
+import CreateOwnClientMinimalHeader from "./layout/CreateOwnClientMinimalHeader";
+import CreateOwnClientBottomBar from "./layout/CreateOwnClientBottomBar";
 import { ProductUtils } from "@/ts/models/booking/product/Product";
 import { SelectedSlot, SelectedVariant } from "./createOwnClientTypes";
+import { useSession } from "next-auth/react";
+import { useGetAllEmployeesByOwner } from "@/controllers/booking/employee.controller";
+import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
+import CreateOwnClientEmployeeSection from "./employee/CreateOwnClientEmployeeSection";
+import SelectEmployeeDialog from "./employee/SelectEmployeeDialog";
 
 type CreateOwnClientModalProps = {
   open: boolean;
@@ -33,9 +39,16 @@ type CreateOwnClientModalProps = {
   employeeId: number | undefined;
   initialSlot?: CalendarEventsSlot | null;
   onClose: () => void;
+  onCreated: () => void;
 };
 
-type ActiveDrawer = "client" | "newClient" | "services" | "dateTime" | null;
+type ActiveDrawer =
+  | "client"
+  | "newClient"
+  | "employee"
+  | "services"
+  | "dateTime"
+  | null;
 
 const slotFromCalendarEvent = (
   slot: CalendarEventsSlot | null | undefined
@@ -60,6 +73,7 @@ const CreateOwnClientModal = ({
   employeeId,
   initialSlot,
   onClose,
+  onCreated,
 }: CreateOwnClientModalProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -73,21 +87,62 @@ const CreateOwnClientModal = ({
   );
   const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
   const [notes, setNotes] = useState("");
+  const [color, setColor] = useState<CalendarColorEnum | null>(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
+    null
+  );
+
+  const { data: session } = useSession();
+  const canChooseEmployee = !!session?.has_employees && !session?.is_employee;
+
+  const { data: employees, isLoading: isLoadingEmployees } =
+    useGetAllEmployeesByOwner({
+      businessOwnerId: session?.business_owner_id ?? 0,
+      isEnabled: open && canChooseEmployee && !!session?.business_owner_id,
+    });
+
+  const selectedEmployee =
+    employees?.find((employee) => employee.id === selectedEmployeeId) ?? null;
+  const effectiveProviderId = canChooseEmployee
+    ? selectedEmployee?.id ?? null
+    : providerUserId;
+  const availabilityEmployeeId = canChooseEmployee
+    ? selectedEmployee?.id
+    : employeeId;
+  const step = (base: number) => (canChooseEmployee ? base + 1 : base);
 
   useEffect(() => {
     if (!open) return;
     setSelectedClient(null);
     setSelectedVariants([]);
     setNotes("");
+    setColor(null);
     setSelectedSlot(slotFromCalendarEvent(initialSlot));
-  }, [open, initialSlot]);
+    setSelectedEmployeeId(providerUserId);
+  }, [open, initialSlot, providerUserId]);
 
   const handleReset = () => {
     setSelectedClient(null);
     setSelectedVariants([]);
     setNotes("");
+    setColor(null);
     setSelectedSlot(slotFromCalendarEvent(initialSlot));
+    setSelectedEmployeeId(providerUserId);
   };
+
+  const handleSelectEmployee = (employee: BusinessEmployee) => {
+    if (employee.id !== selectedEmployeeId) {
+      setSelectedEmployeeId(employee.id);
+      setSelectedVariants([]);
+      setSelectedSlot(null);
+    }
+    setActiveDrawer(null);
+  };
+
+  const servicesDisabledMessage =
+    canChooseEmployee && !selectedEmployee
+      ? "Alege mai întâi angajatul, ca să vezi serviciile lui."
+      : null;
 
   const initialDay = initialSlot?.start_date_locale ?? null;
 
@@ -111,12 +166,12 @@ const CreateOwnClientModal = ({
   );
 
   const canPickDateTime =
-    selectedVariants.length > 0 && providerUserId !== null;
+    selectedVariants.length > 0 && effectiveProviderId !== null;
 
   const dateTimeDisabledLabel =
     selectedVariants.length === 0
       ? "Selectează mai întâi serviciile"
-      : "Deschide programarea din calendarul unui angajat";
+      : "Alege mai întâi angajatul";
 
   const slotDurationMinutes = selectedSlot
     ? getSlotDurationMinutes(selectedSlot)
@@ -142,6 +197,7 @@ const CreateOwnClientModal = ({
       options: {
         onSuccess: () => {
           toast.success("Programarea a fost creată.");
+          onCreated();
           onClose();
         },
         onError: (error) => {
@@ -167,8 +223,8 @@ const CreateOwnClientModal = ({
       return;
     }
 
-    if (!providerUserId) {
-      toast.error("Alege un interval din calendarul unui angajat.");
+    if (!effectiveProviderId) {
+      toast.error("Alege mai întâi angajatul.");
       return;
     }
 
@@ -181,11 +237,12 @@ const CreateOwnClientModal = ({
     createAppointment({
       start_date: start.toISOString(),
       end_date: dayjs(selectedSlot.endUtc).toISOString(),
-      user_id: providerUserId,
+      user_id: effectiveProviderId,
       business_client_id: selectedClient.id,
+      color,
       product_variants: selectedVariants.map((variant) => ({
         id: variant.variantId,
-        offering: { user_id: providerUserId },
+        offering: { user_id: effectiveProviderId },
       })),
     });
   };
@@ -233,13 +290,24 @@ const CreateOwnClientModal = ({
                 onAddClient={() => setActiveDrawer("newClient")}
               />
 
+              {canChooseEmployee && (
+                <CreateOwnClientEmployeeSection
+                  step={2}
+                  selectedEmployee={selectedEmployee}
+                  onOpenSelect={() => setActiveDrawer("employee")}
+                />
+              )}
+
               <CreateOwnClientServicesSection
+                step={step(2)}
                 selectedVariants={selectedVariants}
+                disabledMessage={servicesDisabledMessage}
                 onOpenSelect={() => setActiveDrawer("services")}
                 onRemoveVariant={handleRemoveVariant}
               />
 
               <CreateOwnClientDateTimeSection
+                step={step(3)}
                 selectedSlot={selectedSlot}
                 disabled={!canPickDateTime}
                 disabledLabel={dateTimeDisabledLabel}
@@ -249,7 +317,17 @@ const CreateOwnClientModal = ({
                 errorMessage={durationMismatchMessage}
               />
 
-              <CreateOwnClientNotesSection value={notes} onChange={setNotes} />
+              <CreateOwnClientNotesSection
+                step={step(4)}
+                value={notes}
+                onChange={setNotes}
+              />
+
+              <CreateOwnClientColorSection
+                step={step(5)}
+                value={color}
+                onChange={setColor}
+              />
             </Stack>
           </>
         ) : (
@@ -260,50 +338,37 @@ const CreateOwnClientModal = ({
             />
 
             <Grid container sx={{ flex: 1, overflow: "hidden" }}>
-              <Grid
-                size={5}
-                sx={{
-                  borderRight: "1px solid",
-                  borderColor: "divider",
-                  height: "100%",
-                  overflowY: "auto",
-                  p: 4,
-                }}
-              >
-                <CreateOwnClientClientSection
-                  selectedClient={selectedClient}
-                  onClearClient={() => setSelectedClient(null)}
-                  onAddClient={() => setActiveDrawer("newClient")}
-                >
-                  <ClientSelectionContent
-                    businessId={businessId}
-                    isActive={open && !isMobile}
-                    selectedClientId={selectedClient?.id ?? null}
-                    onSelectClient={setSelectedClient}
+              <Grid size={6} sx={[styles.column, styles.leftColumn]}>
+                <Stack spacing={3.5}>
+                  <CreateOwnClientClientSection
+                    selectedClient={selectedClient}
+                    onOpenSelect={() => setActiveDrawer("client")}
+                    onClearClient={() => setSelectedClient(null)}
+                    onAddClient={() => setActiveDrawer("newClient")}
                   />
-                </CreateOwnClientClientSection>
-              </Grid>
 
-              <Grid
-                size={7}
-                sx={{
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Stack sx={{ flex: 1, minHeight: 0, overflowY: "auto", p: 4 }}>
+                  {canChooseEmployee && (
+                    <CreateOwnClientEmployeeSection
+                      step={2}
+                      selectedEmployee={selectedEmployee}
+                      onOpenSelect={() => setActiveDrawer("employee")}
+                    />
+                  )}
+
                   <CreateOwnClientServicesSection
+                    step={step(2)}
                     selectedVariants={selectedVariants}
+                    disabledMessage={servicesDisabledMessage}
                     onOpenSelect={() => setActiveDrawer("services")}
                     onRemoveVariant={handleRemoveVariant}
                   />
                 </Stack>
+              </Grid>
 
-                <Divider />
-
-                <Stack spacing={3} sx={{ flexShrink: 0, p: 4 }}>
+              <Grid size={6} sx={styles.column}>
+                <Stack spacing={3.5}>
                   <CreateOwnClientDateTimeSection
+                    step={step(3)}
                     selectedSlot={selectedSlot}
                     disabled={!canPickDateTime}
                     disabledLabel={dateTimeDisabledLabel}
@@ -314,8 +379,15 @@ const CreateOwnClientModal = ({
                   />
 
                   <CreateOwnClientNotesSection
+                    step={step(4)}
                     value={notes}
                     onChange={setNotes}
+                  />
+
+                  <CreateOwnClientColorSection
+                    step={step(5)}
+                    value={color}
+                    onChange={setColor}
                   />
                 </Stack>
               </Grid>
@@ -336,11 +408,33 @@ const CreateOwnClientModal = ({
       <SelectServicesPicker
         open={activeDrawer === "services"}
         businessId={businessId}
-        employeeId={employeeId}
-        providerUserId={providerUserId}
+        employeeId={availabilityEmployeeId}
+        providerUserId={effectiveProviderId}
         selectedVariants={selectedVariants}
         onClose={() => setActiveDrawer(null)}
         onConfirm={handleChangeVariants}
+      />
+
+      {canChooseEmployee && (
+        <SelectEmployeeDialog
+          open={activeDrawer === "employee"}
+          employees={employees ?? []}
+          isLoading={isLoadingEmployees}
+          selectedEmployeeId={selectedEmployeeId}
+          onSelect={handleSelectEmployee}
+          onClose={() => setActiveDrawer(null)}
+        />
+      )}
+
+      <SelectClientDialog
+        open={activeDrawer === "client"}
+        businessId={businessId}
+        selectedClientId={selectedClient?.id ?? null}
+        onClose={() => setActiveDrawer(null)}
+        onSelectClient={(client) => {
+          setSelectedClient(client);
+          setActiveDrawer(null);
+        }}
       />
 
       <CreateClientDialog
@@ -355,22 +449,11 @@ const CreateOwnClientModal = ({
 
       {isMobile && (
         <>
-          <SelectClientDrawer
-            open={activeDrawer === "client"}
-            businessId={businessId}
-            selectedClientId={selectedClient?.id ?? null}
-            onClose={() => setActiveDrawer(null)}
-            onSelectClient={(client) => {
-              setSelectedClient(client);
-              setActiveDrawer(null);
-            }}
-          />
-
           {canPickDateTime && (
             <SelectDateTimeDrawer
               open={activeDrawer === "dateTime"}
               businessId={businessId}
-              employeeId={employeeId}
+              employeeId={availabilityEmployeeId}
               totalDurationMinutes={totalDurationMinutes}
               selectedSlot={selectedSlot}
               initialDay={initialDay}
@@ -387,7 +470,7 @@ const CreateOwnClientModal = ({
             <SelectDateTimeModal
               open={activeDrawer === "dateTime"}
               businessId={businessId}
-              employeeId={employeeId}
+              employeeId={availabilityEmployeeId}
               totalDurationMinutes={totalDurationMinutes}
               selectedSlot={selectedSlot}
               initialDay={initialDay}
@@ -402,3 +485,15 @@ const CreateOwnClientModal = ({
 };
 
 export default CreateOwnClientModal;
+
+const styles = {
+  column: {
+    height: "100%",
+    overflowY: "auto",
+    p: 4,
+  },
+  leftColumn: {
+    borderRight: "1px solid",
+    borderColor: "divider",
+  },
+};

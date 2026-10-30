@@ -68,3 +68,10 @@ export function formatDistance(
   if (distanceKm % 1 < 0.05) return `${Math.trunc(distanceKm)}km`;
   return `${distanceKm.toFixed(1)}km`;
 }
+
+export function getInitials(name: string | null | undefined): string {
+  const words = (name ?? "").trim().split(/\s+/).filter(Boolean);
+  const first = words[0]?.charAt(0) ?? "";
+  const last = words.length > 1 ? words[words.length - 1]?.charAt(0) ?? "" : "";
+  return `${first}${last}`.toUpperCase();
+}

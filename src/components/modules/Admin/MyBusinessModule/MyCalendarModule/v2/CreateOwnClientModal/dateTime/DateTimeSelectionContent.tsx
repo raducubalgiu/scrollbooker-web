@@ -15,8 +15,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import EventBusyOutlinedIcon from "@mui/icons-material/EventBusyOutlined";
 import dayjs from "@/lib/dayjs";
 import { AvailableTimeSlot } from "@/ts/models/booking/availability/AvailableTimeSlot";
-import MobileDayPager from "../Mobile/MobileDayPager";
-import { SelectedSlot } from "./createOwnClientTypes";
+import MobileDayPager from "../../Mobile/MobileDayPager";
+import { SelectedSlot } from "../createOwnClientTypes";
 import { useOwnClientTimeslots } from "./useOwnClientTimeslots";
 
 export type DateTimeSelectionContentProps = {

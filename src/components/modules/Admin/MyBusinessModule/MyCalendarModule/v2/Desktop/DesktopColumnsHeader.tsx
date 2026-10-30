@@ -1,10 +1,17 @@
 import React, { memo } from "react";
-import { Avatar, Box, Theme, Typography } from "@mui/material";
+import { Box, Theme, Typography } from "@mui/material";
+import CalendarAvatar from "../CalendarAvatar";
 import { getCalendarTableBg } from "../calendarSurfaceColors";
 
 export type DesktopHeaderColumn =
   | { kind: "day"; key: string; dayName: string; dayNumber: string; isToday: boolean }
-  | { kind: "employee"; key: string; fullname: string; avatar: string | null };
+  | {
+      kind: "employee";
+      key: string;
+      fullname: string;
+      avatar: string | null;
+      calendarColor: string | null;
+    };
 
 type DesktopColumnsHeaderProps = {
   columns: DesktopHeaderColumn[];
@@ -40,7 +47,12 @@ const DesktopColumnsHeaderComponent = ({
             </>
           ) : (
             <>
-              <Avatar src={column.avatar ?? ""} sx={styles.avatar} />
+              <CalendarAvatar
+                src={column.avatar}
+                name={column.fullname}
+                calendarColor={column.calendarColor}
+                sx={styles.avatar}
+              />
               <Typography variant="subtitle2" noWrap sx={styles.fullname}>
                 {column.fullname}
               </Typography>

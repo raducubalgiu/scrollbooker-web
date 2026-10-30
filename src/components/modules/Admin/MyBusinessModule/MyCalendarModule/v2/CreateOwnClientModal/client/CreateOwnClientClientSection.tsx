@@ -11,8 +11,7 @@ type CreateOwnClientClientSectionProps = {
   selectedClient: BusinessClient | null;
   onClearClient: () => void;
   onAddClient: () => void;
-  onOpenSelect?: () => void;
-  children?: React.ReactNode;
+  onOpenSelect: () => void;
 };
 
 const CreateOwnClientClientSection = ({
@@ -20,21 +19,7 @@ const CreateOwnClientClientSection = ({
   onClearClient,
   onAddClient,
   onOpenSelect,
-  children,
 }: CreateOwnClientClientSectionProps) => {
-  const renderPicker = () => {
-    if (children) return children;
-
-    return (
-      <ButtonBase onClick={onOpenSelect} sx={styles.searchTrigger}>
-        <SearchIcon sx={{ color: "text.secondary", fontSize: 22 }} />
-        <Typography color="text.secondary" noWrap>
-          Caută după nume sau telefon
-        </Typography>
-      </ButtonBase>
-    );
-  };
-
   return (
     <Stack spacing={1.5}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -52,11 +37,16 @@ const CreateOwnClientClientSection = ({
         </Button>
       </Stack>
 
-      {selectedClient && !children && (
+      {selectedClient ? (
         <SelectedClientCard client={selectedClient} onClear={onClearClient} />
+      ) : (
+        <ButtonBase onClick={onOpenSelect} sx={styles.searchTrigger}>
+          <SearchIcon sx={{ color: "text.secondary", fontSize: 22 }} />
+          <Typography color="text.secondary" noWrap>
+            Caută după nume sau telefon
+          </Typography>
+        </ButtonBase>
       )}
-
-      {(!selectedClient || children) && renderPicker()}
     </Stack>
   );
 };

@@ -1,17 +1,20 @@
 "use client";
 
 import React from "react";
-import { Avatar, Box, ButtonBase, IconButton, Typography, alpha } from "@mui/material";
+import { Box, ButtonBase, IconButton, Typography, alpha } from "@mui/material";
+import CalendarAvatar from "../CalendarAvatar";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LockIcon from "@mui/icons-material/Lock";
-import PersonIcon from "@mui/icons-material/Person";
 import { BusinessEmployee } from "@/ts/models/booking/business/BusinessEmployee";
 
 type MobileCalendarHeaderActionsProps = {
   showsEmployeeDropdown: boolean;
   ownAvatar: string | null;
+  ownCalendarColor: string | null;
+  ownFullname: string | null;
+  selectedEmployeeColor: string | null;
   ownUsername: string;
   selectedEmployee: BusinessEmployee | undefined;
   isBlocking: boolean;
@@ -29,6 +32,9 @@ type MobileCalendarHeaderActionsProps = {
 const MobileCalendarHeaderActions = ({
   showsEmployeeDropdown,
   ownAvatar,
+  ownCalendarColor,
+  ownFullname,
+  selectedEmployeeColor,
   ownUsername,
   selectedEmployee,
   isBlocking,
@@ -46,12 +52,12 @@ const MobileCalendarHeaderActions = ({
     <Box sx={styles.row}>
       {showsEmployeeDropdown ? (
         <Box sx={styles.chip} onClick={onOpenEmployeeSheet}>
-          <Avatar
-            {...(selectedEmployee?.avatar ? { src: selectedEmployee.avatar } : {})}
+          <CalendarAvatar
+            src={selectedEmployee?.avatar}
+            name={selectedEmployee?.fullname}
+            calendarColor={selectedEmployeeColor}
             sx={styles.avatar}
-          >
-            <PersonIcon fontSize="small" />
-          </Avatar>
+          />
           <Typography variant="body2" noWrap sx={{ minWidth: 0 }}>
             {selectedEmployee?.fullname ?? "Selectează angajat"}
           </Typography>
@@ -59,9 +65,12 @@ const MobileCalendarHeaderActions = ({
         </Box>
       ) : (
         <Box sx={styles.chip}>
-          <Avatar {...(ownAvatar ? { src: ownAvatar } : {})} sx={styles.avatar}>
-            <PersonIcon fontSize="small" />
-          </Avatar>
+          <CalendarAvatar
+            src={ownAvatar}
+            name={ownFullname}
+            calendarColor={ownCalendarColor}
+            sx={styles.avatar}
+          />
           <Typography variant="body2" noWrap sx={{ minWidth: 0 }}>
             {ownUsername}
           </Typography>

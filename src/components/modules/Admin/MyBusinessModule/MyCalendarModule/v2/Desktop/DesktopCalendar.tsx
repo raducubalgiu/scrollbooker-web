@@ -123,6 +123,7 @@ export const DesktopCalendar = ({ session }: DesktopCalendarProps) => {
           }
           initialSlot={c.createModal.slot}
           onClose={c.handleCloseCreateModal}
+          onCreated={c.invalidateCalendar}
         />
 
         <Box sx={{ pt: c.isExpanded ? 2.5 : 0 }}>{header}</Box>

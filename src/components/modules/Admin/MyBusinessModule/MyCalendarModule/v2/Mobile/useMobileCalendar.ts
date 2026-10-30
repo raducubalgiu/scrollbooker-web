@@ -10,6 +10,7 @@ import {
   useGetBusinessCalendarEvents,
 } from "@/controllers/booking/availability.controller";
 import { useGetCalendarSettings } from "@/controllers/booking/calendarSettings.controller";
+import { CalendarColorModeEnum } from "@/ts/enums/CalendarColorEnum";
 import { useGetAllEmployeesByOwner } from "@/controllers/booking/employee.controller";
 import { CalendarEventsSlot } from "@/ts/models/booking/availability/CalendarEvents";
 import { AppointmentBlockCreate } from "@/ts/models/booking/appointment/Appointment";
@@ -66,6 +67,8 @@ export const useMobileCalendar = (session: Session) => {
 
   const { data: calendarSettings } = useGetCalendarSettings(userId);
   const slotDuration = calendarSettings?.slot_duration_minutes ?? 60;
+  const colorMode =
+    calendarSettings?.color_mode ?? CalendarColorModeEnum.SERVICE;
 
   const { data: employees, isLoading: isLoadingEmployees } =
     useGetAllEmployeesByOwner({
@@ -145,8 +148,17 @@ export const useMobileCalendar = (session: Session) => {
       slotDuration,
       gridStartMinutes: timeToMinutes(bounds.minTime),
       now,
+      colorMode,
     });
-  }, [calendarEvents, calendarEmployee, dayStr, slotDuration, now]);
+  }, [calendarEvents, calendarEmployee, dayStr, slotDuration, now, colorMode]);
+
+  const employeeColorsMap = useMemo(() => {
+    const map = new Map<number, string | null>();
+    [...(allEmployeesDay?.employees ?? []), ...(calendarEvents?.employees ?? [])].forEach(
+      (employee) => map.set(employee.id, employee.calendar_color)
+    );
+    return map;
+  }, [allEmployeesDay, calendarEvents]);
 
   const employeesAvailabilityMap = useMemo(() => {
     const map = new Map<number, boolean>();
@@ -324,8 +336,7 @@ export const useMobileCalendar = (session: Session) => {
 
   const handleCloseAddOwnClient = useCallback(() => {
     setIsAddingOwnClient(false);
-    refetchCalendarEvents();
-  }, [refetchCalendarEvents]);
+  }, []);
 
   return {
     showsEmployeeDropdown,
@@ -334,6 +345,9 @@ export const useMobileCalendar = (session: Session) => {
     handleToday,
     ownUsername: session.username ?? "",
     ownAvatar: session.avatar ?? null,
+    ownCalendarColor: calendarEmployee?.calendar_color ?? null,
+    ownFullname: calendarEmployee?.fullname ?? session.username ?? null,
+    employeeColorsMap,
     businessShortDomain: calendarEvents?.business_short_domain,
     employees,
     isLoadingEmployees,

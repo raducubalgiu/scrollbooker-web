@@ -1,7 +1,14 @@
+import {
+  CalendarColorEnum,
+  CalendarColorModeEnum,
+} from "@/ts/enums/CalendarColorEnum";
+
 export interface UserCalendarSettings {
   user_id: number;
   slot_duration_minutes: number;
   appointment_gap_minutes: number;
+  calendar_color: CalendarColorEnum | null;
+  color_mode: CalendarColorModeEnum;
 }
 
 export interface SlotDurationUpdate {
@@ -10,4 +17,12 @@ export interface SlotDurationUpdate {
 
 export interface AppointmentGapUpdate {
   appointment_gap_minutes: number;
+}
+
+export interface CalendarColorUpdate {
+  calendar_color: CalendarColorEnum | null;
+}
+
+export interface CalendarColorModeUpdate {
+  color_mode: CalendarColorModeEnum;
 }

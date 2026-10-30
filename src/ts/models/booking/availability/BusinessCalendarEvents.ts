@@ -13,6 +13,8 @@ export interface BusinessCalendarEvent {
   start_date_utc: string;
   end_date_utc: string;
   is_blocked: boolean;
+  color: string | null;
+  service_color: string | null;
   info: CalendarEventsInfo;
 }
 
@@ -22,6 +24,7 @@ export interface BusinessCalendarEmployee {
   username: string;
   avatar: string | null;
   profession: string;
+  calendar_color: string | null;
   schedules: BusinessCalendarSchedule[];
   events: BusinessCalendarEvent[];
 }

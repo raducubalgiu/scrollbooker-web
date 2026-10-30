@@ -5,7 +5,8 @@ import { maxField, minField, required } from "@/utils/validation-rules";
 import { Box, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useEffect, useMemo } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+import CalendarColorPicker from "@/components/cutomized/CalendarColorPicker/CalendarColorPicker";
 import { useGetFiltersByService } from "@/controllers/nomenclature/filter.controller";
 import { FormProductFilter } from "./AddProductModal";
 
@@ -18,7 +19,7 @@ const ProductGeneralInfo = ({
   selectedDomainId,
   serviceDomainServices,
 }: ProductGeneralInfoProps) => {
-  const { setValue, watch, getValues } = useFormContext();
+  const { control, setValue, watch, getValues } = useFormContext();
   const selectedServiceId = watch("serviceId");
 
   const isRequired = required();
@@ -122,6 +123,22 @@ const ProductGeneralInfo = ({
         />
 
         <Input name="description" label="Descriere" multiline rows={1} />
+
+        <Box sx={{ pt: 1 }}>
+          <Typography variant="subtitle2" fontWeight={600} mb={1}>
+            Culoare în calendar
+          </Typography>
+          <Controller
+            name="color"
+            control={control}
+            render={({ field }) => (
+              <CalendarColorPicker
+                value={field.value ?? null}
+                onChange={field.onChange}
+              />
+            )}
+          />
+        </Box>
 
         {!!filters?.length && (
           <Box sx={{ py: 2 }}>

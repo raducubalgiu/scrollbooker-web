@@ -40,6 +40,7 @@ const buildSeedValues = (
   serviceId: "",
   name: "",
   description: "",
+  color: null,
   filters: [],
   variants: [
     {
