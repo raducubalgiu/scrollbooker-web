@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "./auth/authOptions";
 import { LOG } from "@/utils/logger";
+import { deviceHeadersFromRequest } from "./auth/deviceHeaders";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT;
 
@@ -39,6 +40,7 @@ async function forwardJson(
   session: Session
 ) {
   const headers = new AxiosHeaders({
+    ...deviceHeadersFromRequest(req.headers),
     Authorization: `Bearer ${session.accessToken}`,
     Language: "RO",
     "X-B3-SpanId": randomHex(),
@@ -75,7 +77,10 @@ async function forwardMultipart(
 
   const beResponse = await fetch(`${BASE_URL}${path}${req.nextUrl.search}`, {
     method: method.toUpperCase(),
-    headers: { Authorization: `Bearer ${session.accessToken}` },
+    headers: {
+      ...deviceHeadersFromRequest(req.headers),
+      Authorization: `Bearer ${session.accessToken}`,
+    },
     body: formData,
   });
 

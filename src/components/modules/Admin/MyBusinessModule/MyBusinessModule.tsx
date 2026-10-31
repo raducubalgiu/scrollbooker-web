@@ -13,6 +13,7 @@ import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
+import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 
 import MyBusinessCard from "./MyBusinessCard";
 import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
@@ -54,6 +55,13 @@ const MyBusinessModule = ({ session }: MyBusinessModuleProps) => {
         icon: <PersonOffOutlinedIcon />,
         href: AppRoutes.unfinishedRegistrations(),
         permission: PermissionEnum.UNFINISHED_REGISTRATIONS_VIEW,
+      },
+      {
+        title: "Probleme semnalate",
+        description: "Rapoartele trimise de utilizatori",
+        icon: <ReportProblemOutlinedIcon />,
+        href: AppRoutes.reportedProblems(),
+        permission: PermissionEnum.PROBLEMS_VIEW,
       },
       {
         title: "Afaceri în aprobare",

@@ -102,6 +102,7 @@ export const AppRoutes = {
   calendar: () => "/admin/calendar",
   approve: () => "/admin/businesses/approve",
   unfinishedRegistrations: () => "/admin/unfinished-registrations",
+  reportedProblems: () => "/admin/reported-problems",
 
   // Settings
   display: () => "/settings/display",

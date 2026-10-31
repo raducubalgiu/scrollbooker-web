@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src/ --debug",
+    "test:e2e": "playwright test",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -45,8 +46,10 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.64.1",
     "@types/hls.js": "^0.13.3",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.60.0",
@@ -56,6 +59,7 @@
     "eslint-plugin-import": "^2.32.0",
     "husky": "^8.0.3",
     "lint-staged": "^16.4.0",
+    "pg": "^8.23.1",
     "typescript": "^5"
   },
   "lint-staged": {
