@@ -31,6 +31,11 @@ const ACCOUNT_ITEMS: AccountListItem[] = [
     href: AppRoutes.accountPassword(),
   },
   {
+    title: "Dispozitive conectate",
+    description: "Vezi unde ești conectat și deconectează dispozitivele",
+    href: AppRoutes.accountConnectedDevices(),
+  },
+  {
     title: "Dezactivează sau șterge contul",
     description: "Dezactivează temporar sau șterge definitiv contul",
     href: AppRoutes.deactivateDeleteAccount(),

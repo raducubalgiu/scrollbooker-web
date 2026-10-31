@@ -1,5 +1,12 @@
-import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken, JWT } from "next-auth/jwt";
+import { deviceHeadersFromRequest } from "@/lib/auth/deviceHeaders";
+import { needsRefresh, refreshSessionToken } from "@/lib/auth/refreshSession";
+import {
+  applySessionCookieUpdate,
+  prepareSessionCookieUpdate,
+  SessionCookieUpdate,
+} from "@/lib/auth/sessionCookie";
 
 const AUTH_ROUTES = [
   "/auth/signin",
@@ -10,6 +17,24 @@ const AUTH_ROUTES = [
   "/auth/reset-password",
 ];
 const PUBLIC_ERROR_ROUTES = ["/unauthorized", "/not-found", "/_not-found"];
+
+const GATED_ROUTE_PREFIXES = [
+  "/unauthorized",
+  "/auth",
+  "/onboarding",
+  "/feed",
+  "/search",
+  "/search-users",
+  "/notifications",
+  "/appointments",
+  "/booking",
+  "/business",
+  "/employment-request",
+  "/upload-video",
+  "/user",
+  "/admin",
+  "/settings",
+];
 
 function isAuthRoute(pathname: string) {
   return AUTH_ROUTES.some((route) => pathname === route);
@@ -23,95 +48,116 @@ function isPublicOrErrorRoute(pathname: string) {
   return PUBLIC_ERROR_ROUTES.includes(pathname);
 }
 
-export default withAuth(
-  function middleware(req) {
-    const token = req.nextauth.token;
-    const { pathname } = req.nextUrl;
+function isGatedRoute(pathname: string) {
+  return (
+    pathname === "/" ||
+    GATED_ROUTE_PREFIXES.some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+    )
+  );
+}
 
-    const isAuth = isAuthRoute(pathname);
-    const isOnboarding = isOnboardingRoute(pathname);
-    const isPublicOrError = isPublicOrErrorRoute(pathname);
-    // Landing page-ul ("/") — tratat separat de AUTH_ROUTES, nu inclus în el:
-    // dacă l-am pune acolo, un user validat care ajunge pe "/" ar lua
-    // ramura "isAuth || isOnboarding → redirect spre /" de mai jos și s-ar
-    // redirecționa către el însuși (buclă). Landing-ul trebuie vizibil doar
-    // pentru vizitatorii nelogați — un user logat nu mai are ce căuta pe el.
-    const isHome = pathname === "/";
+async function resolveSession(
+  req: NextRequest
+): Promise<{ token: JWT | null; cookieUpdate?: SessionCookieUpdate }> {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET as string });
+  if (!token || !needsRefresh(token)) return { token };
 
-    /**
-     * 1. User nelogat
-     */
-    if (!token) {
-      if (isAuth || isHome) {
-        return NextResponse.next();
-      }
+  const outcome = await refreshSessionToken(
+    token,
+    deviceHeadersFromRequest(req.headers)
+  );
+  if (outcome.kind === "unavailable") return { token };
 
-      const signInUrl = new URL("/auth/signin", req.url);
-      signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname);
-      return NextResponse.redirect(signInUrl);
+  const nextToken = outcome.kind === "refreshed" ? outcome.token : null;
+  return {
+    token: nextToken,
+    cookieUpdate: await prepareSessionCookieUpdate(req, nextToken),
+  };
+}
+
+function gate(
+  req: NextRequest,
+  token: JWT | null,
+  next: () => NextResponse
+): NextResponse {
+  const { pathname } = req.nextUrl;
+
+  const isAuth = isAuthRoute(pathname);
+  const isOnboarding = isOnboardingRoute(pathname);
+  const isPublicOrError = isPublicOrErrorRoute(pathname);
+  // Landing page-ul ("/") — tratat separat de AUTH_ROUTES, nu inclus în el:
+  // dacă l-am pune acolo, un user validat care ajunge pe "/" ar lua
+  // ramura "isAuth || isOnboarding → redirect spre /" de mai jos și s-ar
+  // redirecționa către el însuși (buclă). Landing-ul trebuie vizibil doar
+  // pentru vizitatorii nelogați — un user logat nu mai are ce căuta pe el.
+  const isHome = pathname === "/";
+
+  /**
+   * 1. User nelogat
+   */
+  if (!token) {
+    if (isAuth || isHome) {
+      return next();
     }
 
-    /**
-     * 2. Excepție pentru pagini publice/eroare (ex: /unauthorized)
-     * Dacă userul e logat, îi permitem să vadă aceste pagini indiferent de starea onboarding-ului
-     */
-    if (isPublicOrError) {
-      return NextResponse.next();
-    }
-
-    /**
-     * 3. User logat, dar onboarding nefinalizat (is_validated === false)
-     */
-    if (token.is_validated === false) {
-      if (isOnboarding) {
-        return NextResponse.next();
-      }
-      // Redirect către onboarding (asigură-te că app/onboarding/page.tsx sau sub-rutele există)
-      return NextResponse.redirect(new URL("/onboarding", req.url));
-    }
-
-    /**
-     * 4. User logat și validat (is_validated === true)
-     * Landing page-ul nu mai are sens pentru el — îl trimitem direct spre
-     * /feed, la fel ca și când ar reveni pe o pagină de auth/onboarding.
-     */
-    if (token.is_validated === true) {
-      if (isAuth || isOnboarding || isHome) {
-        return NextResponse.redirect(new URL("/feed", req.url));
-      }
-      return NextResponse.next();
-    }
-
-    if (!isOnboarding && !isPublicOrError) {
-      return NextResponse.redirect(new URL("/onboarding", req.url));
-    }
-
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: () => true,
-    },
+    const signInUrl = new URL("/auth/signin", req.url);
+    signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname);
+    return NextResponse.redirect(signInUrl);
   }
-);
+
+  /**
+   * 2. Excepție pentru pagini publice/eroare (ex: /unauthorized)
+   * Dacă userul e logat, îi permitem să vadă aceste pagini indiferent de starea onboarding-ului
+   */
+  if (isPublicOrError) {
+    return next();
+  }
+
+  /**
+   * 3. User logat, dar onboarding nefinalizat (is_validated === false)
+   */
+  if (token.is_validated === false) {
+    if (isOnboarding) {
+      return next();
+    }
+    // Redirect către onboarding (asigură-te că app/onboarding/page.tsx sau sub-rutele există)
+    return NextResponse.redirect(new URL("/onboarding", req.url));
+  }
+
+  /**
+   * 4. User logat și validat (is_validated === true)
+   * Landing page-ul nu mai are sens pentru el — îl trimitem direct spre
+   * /feed, la fel ca și când ar reveni pe o pagină de auth/onboarding.
+   */
+  if (token.is_validated === true) {
+    if (isAuth || isOnboarding || isHome) {
+      return NextResponse.redirect(new URL("/feed", req.url));
+    }
+    return next();
+  }
+
+  if (!isOnboarding && !isPublicOrError) {
+    return NextResponse.redirect(new URL("/onboarding", req.url));
+  }
+
+  return next();
+}
+
+export default async function middleware(req: NextRequest) {
+  const { token, cookieUpdate } = await resolveSession(req);
+  const next = () => NextResponse.next({ request: { headers: req.headers } });
+
+  const response = isGatedRoute(req.nextUrl.pathname)
+    ? gate(req, token, next)
+    : next();
+
+  if (cookieUpdate) applySessionCookieUpdate(response, cookieUpdate);
+  return response;
+}
 
 export const config = {
-  matcher: [
-    "/",
-    "/unauthorized",
-    "/auth/:path*",
-    "/onboarding/:path*",
-    "/feed/:path*",
-    "/search/:path*",
-    "/search-users/:path*",
-    "/notifications/:path*",
-    "/appointments/:path*",
-    "/booking/:path*",
-    "/business/:path*",
-    "/employment-request/:path*",
-    "/upload-video/:path*",
-    "/user/:path*",
-    "/admin/:path*",
-    "/settings/:path*",
-  ],
+  runtime: "nodejs",
+  // Toate paginile și proxy-ul /api/protected, ca refresh-ul să rescrie cookie-ul înainte de orice getServerSession.
+  matcher: ["/((?!_next/static|_next/image|api/auth|.*\\..*).*)"],
 };

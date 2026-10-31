@@ -20,7 +20,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import HeaderMobile from "@/components/core/HeaderMobile/HeaderMobile";
 import { AppRoutes } from "@/utils/routes";
-import { signOut } from "next-auth/react";
+import { logout } from "@/controllers/auth/auth.controller";
 
 const SettingsModule = () => {
   const theme = useTheme();
@@ -101,7 +101,7 @@ const SettingsModule = () => {
 
         <Divider />
 
-        <ListItemButton onClick={() => signOut()} sx={styles.logoutItem}>
+        <ListItemButton onClick={() => logout()} sx={styles.logoutItem}>
           <ListItemIcon sx={styles.listIcon}>
             <LogoutIcon color="error" />
           </ListItemIcon>

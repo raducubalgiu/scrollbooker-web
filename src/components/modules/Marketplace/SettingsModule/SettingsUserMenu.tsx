@@ -2,7 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { logout } from "@/controllers/auth/auth.controller";
 import {
   Avatar,
   Box,
@@ -114,7 +115,7 @@ const SettingsUserMenu = () => {
 
                   <Divider />
 
-                  <MenuItem onClick={() => signOut()} sx={styles.menuItem}>
+                  <MenuItem onClick={() => logout()} sx={styles.menuItem}>
                     <ListItemIcon>
                       <LogoutIcon color="error" />
                     </ListItemIcon>

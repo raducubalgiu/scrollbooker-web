@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { signOut, SignOutParams } from "next-auth/react";
 import {
   AuthTokens,
   PhoneVerificationSendRequest,
@@ -16,6 +17,7 @@ import {
   AccountPhoneVerificationCheckRequest,
   AccountPhoneVerificationResponse,
 } from "@/ts/models/user/AccountInfo";
+import { UserSession } from "@/ts/models/auth/UserSession";
 
 type UpdateUserInfoPayload = Partial<
   Pick<UserInfo, "fullname" | "avatar" | "profession">
@@ -26,6 +28,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT;
 export const authQueryKeys = {
   userInfo: ["auth", "user-info"] as const,
   accountInfo: ["account-info"] as const,
+  sessions: ["auth", "sessions"] as const,
 };
 
 export const useUserInfo = () => {
@@ -246,5 +249,48 @@ export const useChangePassword = () => {
       return response.data;
     },
     meta: { skipErrorToast: true },
+  });
+};
+
+export const logout = async (options?: SignOutParams<true>) => {
+  await axios.post("/api/protected/auth/logout").catch(() => undefined);
+  await signOut(options);
+};
+
+export const useUserSessions = () => {
+  return useQuery({
+    queryKey: authQueryKeys.sessions,
+    queryFn: async () => {
+      const response = await axios.get<UserSession[]>(
+        "/api/protected/auth/sessions"
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useRevokeSession = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (sessionId: string) => {
+      await axios.delete(`/api/protected/auth/sessions/${sessionId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authQueryKeys.sessions });
+    },
+  });
+};
+
+export const useRevokeOtherSessions = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      await axios.delete("/api/protected/auth/sessions");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authQueryKeys.sessions });
+    },
   });
 };
