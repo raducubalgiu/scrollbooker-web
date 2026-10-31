@@ -1,3 +1,4 @@
+import { ProblemStatus } from "@/ts/models/nomenclature/Problem";
 import { NotificationTypeEnum } from "@/ts/enums/NotificationTypeEnum";
 import { UserMini } from "./UserMini";
 
@@ -82,6 +83,12 @@ export interface BusinessValidationNotificationData {
   reason: string | null;
 }
 
+export interface ProblemStatusChangedNotificationData {
+  problem_id: number;
+  status: ProblemStatus;
+  message: string | null;
+}
+
 export type NotificationDataMap = {
   [NotificationTypeEnum.FOLLOW]: FollowNotificationData;
   [NotificationTypeEnum.LIKE_POST]: LikePostNotificationData;
@@ -97,6 +104,7 @@ export type NotificationDataMap = {
   [NotificationTypeEnum.EMPLOYMENT_REQUEST_ACCEPTED]: EmploymentRequestAcceptedNotificationData;
   [NotificationTypeEnum.EMPLOYMENT_REQUEST_DENIED]: EmploymentRequestDeniedNotificationData;
   [NotificationTypeEnum.BUSINESS_VALIDATION]: BusinessValidationNotificationData;
+  [NotificationTypeEnum.PROBLEM_STATUS_CHANGED]: ProblemStatusChangedNotificationData;
 };
 
 type NotificationByType<T extends NotificationTypeEnum> = {

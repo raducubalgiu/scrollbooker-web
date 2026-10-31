@@ -20,6 +20,7 @@ export enum NotificationTypeEnum {
 
   // ── App-level ─────────────────────────────────────────────
   BUSINESS_VALIDATION = "business_validation",
+  PROBLEM_STATUS_CHANGED = "problem_status_changed",
 }
 
 export function notificationTypefromKey(

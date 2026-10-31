@@ -105,10 +105,26 @@ dev` under `NODE_ENV=development` — it builds a **dev-mode** container,
 - Production build: `npm run build`
 - Start a built app: `npm start`
 - Lint: `npm run lint` (`eslint src/ --debug`)
-- **No test suite exists** — no Jest/Vitest/Playwright config, no test
-  script in `package.json`, zero `*.test.*`/`*.spec.*` files found. Same
-  gap as iOS's effectively-empty test target; don't assume any behavior
-  here is regression-tested.
+- **E2E tests (Playwright)**: `npm run test:e2e`. Only auth is covered so
+  far (`e2e/auth/`: login/logout, register + email verification, token
+  refresh incl. parallel refresh, connected devices, change/reset
+  password, middleware gating); there are no unit/component tests. The
+  run is self-contained and local-only (no CI yet):
+  `e2e/scripts/start-backend.sh` drops and recreates a
+  `scroll_booker_e2e` database in the local `postgres` Docker container,
+  migrates it, and starts the sibling `../scrollbooker-backend` on
+  `:8001` with `ENVIRONMENT=e2e` (rate limits off, emails written to
+  `e2e/.outbox/emails.jsonl` instead of being sent). Playwright then
+  starts a second `next dev` on `:3001` with `NEXT_DIST_DIR=.next-e2e`,
+  so it never collides with a dev server already running on `:3000`.
+  Needs the local Docker `postgres` container up and the backend's
+  `.venv`. Helpers live in `e2e/support/` — `devices.ts` opens one
+  browser context per "device", signs in through the NextAuth API, and
+  can force the access token to expire by re-encoding the session cookie
+  (so refresh is tested without waiting 15 minutes). Fill forms only
+  after `openForm()` — in dev mode hydration wipes anything typed before
+  it. Browser-side calls (register, reset password) hit the backend
+  directly, so the e2e backend's `ALLOWED_ORIGINS` must include `:3001`.
 - Pre-commit: Husky (`.husky/pre-commit`) runs `lint-staged`, which runs
   `eslint --fix` on staged `.ts(x)`/`.js(x)` files. `eslint.config.mjs`
   extends `next/core-web-vitals` + `next/typescript` and hard-errors on

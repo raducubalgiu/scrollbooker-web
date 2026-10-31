@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ReportProblemModule from "@/components/modules/Marketplace/SettingsModule/ReportProblemModule";
+import ReportProblemModule from "@/components/modules/Marketplace/SettingsModule/ReportProblemModule/ReportProblemModule";
 
 export const metadata: Metadata = {
   title: "Raportează o problemă",

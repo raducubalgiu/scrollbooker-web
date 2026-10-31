@@ -42,3 +42,9 @@ next-env.d.ts
 
 # landing raw recordings
 public/landing/videos/*.mov
+
+# e2e
+/.next-e2e/
+/e2e/.outbox/
+/test-results/
+/playwright-report/

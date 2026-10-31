@@ -20,6 +20,7 @@ import {
   AppointmentRescheduledNotificationData,
   AppointmentReviewedNotificationData,
   BusinessValidationNotificationData,
+  ProblemStatusChangedNotificationData,
   CommentPostNotificationData,
   EmploymentRequestNotificationData,
   LikePostNotificationData,
@@ -39,6 +40,7 @@ import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import WorkIcon from "@mui/icons-material/Work";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import BuildCircleIcon from "@mui/icons-material/BuildCircle";
 import dayjs from "@/lib/dayjs";
 
 type NotificationItemProps = {
@@ -270,6 +272,17 @@ export default function NotificationItem({
         };
       }
 
+      case NotificationTypeEnum.PROBLEM_STATUS_CHANGED: {
+        const problem = data as ProblemStatusChangedNotificationData;
+        const headline =
+          problem.status === "resolved"
+            ? "Problema raportată de tine a fost rezolvată. Mulțumim!"
+            : "Am închis problema raportată de tine.";
+        return {
+          text: problem.message ? `${headline} ${problem.message}` : headline,
+        };
+      }
+
       default:
         return { text: "Notificare nouă primită." };
     }
@@ -327,6 +340,12 @@ export default function NotificationItem({
       case NotificationTypeEnum.BUSINESS_VALIDATION:
         return { icon: <VerifiedIcon sx={iconStyles} />, color: "#4caf50" };
 
+      case NotificationTypeEnum.PROBLEM_STATUS_CHANGED:
+        return {
+          icon: <BuildCircleIcon sx={iconStyles} />,
+          color: "success.main",
+        };
+
       default:
         return null;
     }
@@ -358,6 +377,9 @@ export default function NotificationItem({
       case NotificationTypeEnum.REPOST:
       case NotificationTypeEnum.MENTION_POST:
         return null;
+
+      case NotificationTypeEnum.PROBLEM_STATUS_CHANGED:
+        return AppRoutes.reportProblem();
 
       default:
         return sender?.username

@@ -21,6 +21,7 @@ import BeenhereOutlinedIcon from "@mui/icons-material/BeenhereOutlined";
 import AddModeratorOutlinedIcon from "@mui/icons-material/AddModeratorOutlined";
 import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOutlined";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
+import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
@@ -47,7 +48,7 @@ type AdminRoutesProps = {
   isCollapsed: boolean;
   onNavigate: (
     route: string,
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => void;
 };
 
@@ -121,6 +122,12 @@ const NOMENCLATURES_ROUTES: NavigationItem[] = [
     route: AppRoutes.unfinishedRegistrations(),
     icon: <PersonOffOutlinedIcon />,
     permission: PermissionEnum.UNFINISHED_REGISTRATIONS_VIEW,
+  },
+  {
+    label: "Probleme semnalate",
+    route: AppRoutes.reportedProblems(),
+    icon: <ReportProblemOutlinedIcon />,
+    permission: PermissionEnum.PROBLEMS_VIEW,
   },
   {
     label: "Roluri și permisiuni",
