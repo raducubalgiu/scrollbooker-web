@@ -4,8 +4,11 @@ import { map } from "lodash";
 import { LOG } from "@/utils/logger";
 import { AuthTokens, UserInfo, UserRegister } from "@/ts/models/auth/auth";
 import { Permission } from "@/ts/models/user/Permission";
+import { browserDeviceHeaders } from "@/lib/auth/deviceHeaders";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BE_BASE_ENDPOINT;
+
+type DeviceHeaders = Record<string, string>;
 
 export type DecodedAccessToken = {
   id: number;
@@ -22,14 +25,25 @@ function extractBackendDetail(error: unknown): string | undefined {
   return typeof detail === "string" ? detail : undefined;
 }
 
+// Register deschide o sesiune pe backend, dar web-ul se loghează imediat din nou prin NextAuth, deci aceasta ar rămâne orfană.
+async function endRegistrationSession(accessToken: string) {
+  await axios
+    .post(`${BACKEND_URL}/auth/logout`, null, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+    .catch(() => undefined);
+}
+
 export async function registerWithCredentials(
   registerPayload: UserRegister
 ): Promise<AuthTokens> {
   try {
     const response = await axios.post<AuthTokens>(
       `${BACKEND_URL}/auth/register`,
-      registerPayload
+      registerPayload,
+      { headers: browserDeviceHeaders() }
     );
+    await endRegistrationSession(response.data.access_token);
     return response.data;
   } catch (error: unknown) {
     const axiosError = error as {
@@ -54,13 +68,19 @@ export async function registerWithCredentials(
 
 export async function loginWithCredentials(
   username: string,
-  password: string
+  password: string,
+  deviceHeaders?: DeviceHeaders
 ): Promise<AuthTokens> {
   try {
     const response = await axios.post<AuthTokens>(
       `${BACKEND_URL}/auth/login`,
       new URLSearchParams({ username, password }),
-      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+      {
+        headers: {
+          ...deviceHeaders,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
     );
     return response.data;
   } catch (error: unknown) {
@@ -121,17 +141,21 @@ export async function fetchUserInfo(token: string): Promise<UserInfo> {
 }
 
 export async function refreshAccessToken(
-  refreshToken: string
+  refreshToken: string,
+  deviceHeaders?: DeviceHeaders
 ): Promise<AuthTokens> {
-  const response = await axios.post<AuthTokens>(`${BACKEND_URL}/auth/refresh`, {
-    refresh_token: refreshToken,
-  });
+  const response = await axios.post<AuthTokens>(
+    `${BACKEND_URL}/auth/refresh`,
+    { refresh_token: refreshToken },
+    { headers: deviceHeaders ?? {} }
+  );
   return response.data;
 }
 
 export async function signInWithGoogle(
   idToken: string,
-  roleName?: string
+  roleName?: string,
+  deviceHeaders?: DeviceHeaders
 ): Promise<AuthTokens | null> {
   try {
     const response = await axios.post<AuthTokens>(
@@ -139,7 +163,8 @@ export async function signInWithGoogle(
       {
         id_token: idToken,
         role_name: roleName,
-      }
+      },
+      { headers: deviceHeaders ?? {} }
     );
     return response.data;
   } catch (error: unknown) {

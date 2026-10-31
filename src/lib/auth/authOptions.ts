@@ -4,16 +4,19 @@ import { AuthOptions, User } from "next-auth";
 import { LOG } from "@/utils/logger";
 import { SECOND } from "@/utils/date-utils";
 import { JWT } from "next-auth/jwt";
+import { headers } from "next/headers";
 import {
   fetchUserInfo,
   fetchUserPermissions,
   loginWithCredentials,
-  refreshAccessToken,
   signInWithGoogle,
   verifyAccessToken,
 } from "@/controllers/auth/auth.service";
+import { deviceHeadersFromRequest } from "./deviceHeaders";
+import { buildRefreshedJwt } from "./refreshSession";
+import { SESSION_MAX_AGE } from "./sessionCookie";
 
-const THIRTY_DAYS = 30 * 24 * 60 * 60;
+const currentDeviceHeaders = async () => deviceHeadersFromRequest(await headers());
 
 // Trei id-uri de provider Google distincte (nu unul singur) pentru că cele
 // trei pagini au semantici diferite și signIn() de mai jos nu are acces la
@@ -54,37 +57,6 @@ function buildGoogleProfile(profile: {
   };
 }
 
-async function buildRefreshedJwt(refreshToken: string): Promise<JWT> {
-  const refreshed = await refreshAccessToken(refreshToken);
-
-  const decoded = await verifyAccessToken(refreshed.access_token);
-  if (!decoded?.exp) throw new Error("Invalid refreshed token");
-
-  const [permissions, userInfo] = await Promise.all([
-    fetchUserPermissions(refreshed.access_token),
-    fetchUserInfo(refreshed.access_token),
-  ]);
-
-  return {
-    accessToken: refreshed.access_token,
-    refreshToken: refreshed.refresh_token,
-    accessTokenExpires: decoded.exp * 1000,
-    user_id: userInfo.id,
-    username: userInfo.username,
-    profession: userInfo.profession,
-    is_validated: userInfo.is_validated,
-    registration_step: userInfo.registration_step,
-    permissions: permissions,
-    avatar: userInfo.avatar,
-    business_id: userInfo.business_id,
-    business_owner_id: userInfo.business_owner_id,
-    business_type_id: userInfo.business_type_id,
-    has_employees: userInfo.has_employees,
-    instant_booking: userInfo.instant_booking,
-    is_employee: userInfo.is_employee,
-  };
-}
-
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
@@ -101,7 +73,11 @@ export const authOptions: AuthOptions = {
 
         if (!username || !password) throw new Error("generic");
 
-        const auth = await loginWithCredentials(username, password);
+        const auth = await loginWithCredentials(
+          username,
+          password,
+          await currentDeviceHeaders()
+        );
 
         const decoded = await verifyAccessToken(auth.access_token);
         if (!decoded) throw new Error("generic");
@@ -142,10 +118,10 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET as string,
   session: {
     strategy: "jwt",
-    maxAge: THIRTY_DAYS,
+    maxAge: SESSION_MAX_AGE,
   },
   jwt: {
-    maxAge: THIRTY_DAYS,
+    maxAge: SESSION_MAX_AGE,
   },
   callbacks: {
     async signIn({ user, account }) {
@@ -154,7 +130,11 @@ export const authOptions: AuthOptions = {
           return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
         }
 
-        const auth = await signInWithGoogle(account.id_token, "business");
+        const auth = await signInWithGoogle(
+          account.id_token,
+          "business",
+          await currentDeviceHeaders()
+        );
         if (!auth) {
           return `${REGISTER_BUSINESS_PATH}?error=google_failed`;
         }
@@ -186,7 +166,11 @@ export const authOptions: AuthOptions = {
           return `${REGISTER_PATH}?error=google_failed`;
         }
 
-        const auth = await signInWithGoogle(account.id_token, "client");
+        const auth = await signInWithGoogle(
+          account.id_token,
+          "client",
+          await currentDeviceHeaders()
+        );
         if (!auth) {
           return `${REGISTER_PATH}?error=google_failed`;
         }
@@ -220,7 +204,11 @@ export const authOptions: AuthOptions = {
         // ("role_name is required for new account registration"),
         // signInWithGoogle îl prinde și întoarce null; e exact comportamentul
         // dorit aici, pagina de login nu trebuie să creeze conturi noi.
-        const auth = await signInWithGoogle(account.id_token);
+        const auth = await signInWithGoogle(
+          account.id_token,
+          undefined,
+          await currentDeviceHeaders()
+        );
         if (!auth) {
           return `${LOGIN_PATH}?error=google_failed`;
         }
@@ -242,7 +230,10 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user, trigger, session }): Promise<JWT> {
       if (trigger === "update" && session) {
         try {
-          const refreshed = await buildRefreshedJwt(token.refreshToken);
+          const refreshed = await buildRefreshedJwt(
+            token.refreshToken,
+            await currentDeviceHeaders()
+          );
           return { ...token, ...refreshed };
         } catch (error: unknown) {
           const errorMessage =
@@ -279,25 +270,10 @@ export const authOptions: AuthOptions = {
           permissions: permissions,
         };
       }
+      // Refresh-ul se face doar în middleware: getServerSession din Server Components și route handlers
+      // nu poate rescrie cookie-ul, iar un refresh token rotit și nesalvat e tratat de backend ca furt.
       if (token) {
-        const expireInMillis = token.accessTokenExpires;
-
-        // return previous token if the access token has not expired yet
-        if (expireInMillis > new Date().getTime()) {
-          return token;
-        }
-
-        try {
-          const refreshed = await buildRefreshedJwt(token.refreshToken);
-          return { ...token, ...refreshed, error: undefined };
-        } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : String(error);
-          LOG.error(
-            "Error updating token with fresh user info: " + errorMessage
-          );
-          return { ...token, error: "RefreshAccessTokenError" as const };
-        }
+        return token;
       }
 
       LOG.error("Session token does not contain a valid token!");

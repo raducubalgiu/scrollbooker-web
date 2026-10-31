@@ -4,7 +4,7 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CheckIcon from "@mui/icons-material/Check";
-import { signOut } from "next-auth/react";
+import { logout } from "@/controllers/auth/auth.controller";
 import {
   ClickAwayListener,
   List,
@@ -138,7 +138,7 @@ const DrawerPopper = ({
             </ListItem>
 
             <ListItem disablePadding sx={{ px: 0 }}>
-              <ListItemButton onClick={() => signOut()} sx={styles.button}>
+              <ListItemButton onClick={() => logout()} sx={styles.button}>
                 <ListItemIcon>
                   <LogoutIcon color="error" />
                 </ListItemIcon>

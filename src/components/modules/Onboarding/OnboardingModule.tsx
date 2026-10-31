@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { signOut } from "next-auth/react";
+import { logout } from "@/controllers/auth/auth.controller";
 
 import {
   displayStepLabel,
@@ -103,7 +103,7 @@ export default function OnboardingModule({ session }: OnboardingModuleProps) {
             size="small"
             color="inherit"
             startIcon={<LogoutIcon fontSize="small" />}
-            onClick={() => signOut()}
+            onClick={() => logout()}
             sx={{ textTransform: "none", color: "text.secondary" }}
           >
             {t("logout")}

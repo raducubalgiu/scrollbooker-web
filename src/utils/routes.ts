@@ -109,6 +109,7 @@ export const AppRoutes = {
   accountInfo: () => "/settings/account/info",
   accountInfoPhoneVerification: () => "/settings/account/info/phone-verification",
   accountPassword: () => "/settings/account/password",
+  accountConnectedDevices: () => "/settings/account/connected-devices",
   deactivateDeleteAccount: () => "/settings/account/deactivate-delete",
   deleteAccount: () => "/settings/account/deactivate-delete/delete",
   reportProblem: () => "/settings/report-a-problem",

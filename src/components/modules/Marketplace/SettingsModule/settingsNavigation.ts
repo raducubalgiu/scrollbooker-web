@@ -1,6 +1,7 @@
 import type { SvgIconComponent } from "@mui/icons-material";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
 import BedtimeOutlinedIcon from "@mui/icons-material/BedtimeOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
@@ -30,6 +31,11 @@ export const SETTINGS_NAV_SECTIONS: SettingsNavSection[] = [
         title: "Parolă",
         href: AppRoutes.accountPassword(),
         icon: LockOutlinedIcon,
+      },
+      {
+        title: "Dispozitive conectate",
+        href: AppRoutes.accountConnectedDevices(),
+        icon: DevicesOutlinedIcon,
       },
       {
         title: "Dezactivează sau șterge contul",
@@ -66,6 +72,7 @@ const PAGE_TITLES: Record<string, string> = {
   [AppRoutes.accountInfo()]: "Informații cont",
   [AppRoutes.accountInfoPhoneVerification()]: "Verifică numărul de telefon",
   [AppRoutes.accountPassword()]: "Parolă",
+  [AppRoutes.accountConnectedDevices()]: "Dispozitive conectate",
   [AppRoutes.deactivateDeleteAccount()]: "Dezactivează sau șterge contul",
   [AppRoutes.deleteAccount()]: "Șterge contul permanent",
   [AppRoutes.display()]: "Afișare",
