@@ -49,7 +49,7 @@ const ProductCardSelectActions = ({
     <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
       <Button
         variant="outlined"
-        color="neutral"
+        color="secondary"
         size="small"
         disableElevation
         onClick={(e) => {

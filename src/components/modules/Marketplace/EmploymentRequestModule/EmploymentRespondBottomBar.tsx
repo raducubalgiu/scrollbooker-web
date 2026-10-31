@@ -19,7 +19,7 @@ const EmploymentRespondBottomBar = ({
     <Stack flexDirection="row" alignItems="center" gap={1} mt={2.5}>
       <Button
         variant="outlined"
-        color="neutral"
+        color="secondary"
         fullWidth
         disabled={disabled}
         loading={isPendingDeny}

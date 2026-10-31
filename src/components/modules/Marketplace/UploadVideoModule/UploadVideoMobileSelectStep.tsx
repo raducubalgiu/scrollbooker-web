@@ -88,7 +88,7 @@ const UploadVideoMobileSelectStep = ({
             <VideoLibraryOutlinedIcon sx={styles.placeholderIcon} />
             <Typography sx={styles.placeholderText}>
               Alege un videoclip din galeria telefonului pentru a începe o
-              postare nouă
+              postare nouă. Durata maximă este de 1 minut.
             </Typography>
           </Stack>
         )}

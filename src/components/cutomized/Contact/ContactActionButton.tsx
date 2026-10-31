@@ -9,6 +9,8 @@ import { useRecordContactClick } from "@/controllers/social/engagement.controlle
 import { ContactClickTypeEnum } from "@/ts/enums/ContactClickTypeEnum";
 import { EngagementSourceEnum } from "@/ts/enums/EngagementSourceEnum";
 import ContactChoiceDialog from "./ContactChoiceDialog";
+import Protected from "../Protected/Protected";
+import { PermissionEnum } from "@/ts/enums/PermissionsEnum";
 
 type ContactActionButtonProps = {
   instantBooking: boolean;
@@ -44,17 +46,19 @@ const ContactActionButton = ({
 
   if (instantBooking) {
     return (
-      <Button
-        variant={variant}
-        color={color}
-        disableElevation
-        fullWidth={fullWidth}
-        size={size}
-        onClick={onBookNow}
-        sx={sx}
-      >
-        {bookLabel}
-      </Button>
+      <Protected permission={PermissionEnum.BOOK_BUTTON_VIEW}>
+        <Button
+          variant={variant}
+          color={color}
+          disableElevation
+          fullWidth={fullWidth}
+          size={size}
+          onClick={onBookNow}
+          sx={sx}
+        >
+          {bookLabel}
+        </Button>
+      </Protected>
     );
   }
 

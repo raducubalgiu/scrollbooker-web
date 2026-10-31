@@ -65,7 +65,7 @@ export default function MyBusinessDescriptionTab({
           title: "Renunță",
           props: {
             variant: "outlined",
-            color: "neutral",
+            color: "secondary",
             onClick: handleCancel,
             disabled: isPending,
           },

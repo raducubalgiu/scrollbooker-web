@@ -94,7 +94,7 @@ export default function EmploymentRequestsModal({
             props: {
               onClick: () => setStepIndex((prev) => prev - 1),
               variant: "outlined" as const,
-              color: "neutral" as const,
+              color: "secondary" as const,
               disabled: isPending,
             },
           },

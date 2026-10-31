@@ -1,10 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Theme, Typography } from "@mui/material";
 import React from "react";
+
+type BadgeColor = string | ((theme: Theme) => string);
 
 type PostBadgeProps = {
   label: string;
-  bgcolor: string;
-  color: string;
+  bgcolor: BadgeColor;
+  color: BadgeColor;
 };
 
 const PostBadge = ({ label, bgcolor, color }: PostBadgeProps) => (

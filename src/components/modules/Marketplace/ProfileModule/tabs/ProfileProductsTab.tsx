@@ -123,7 +123,7 @@ const ProfileProductsTab = ({
             userProducts.total_count && (
             <Button
               variant="outlined"
-              color="neutral"
+              color="secondary"
               fullWidth
               disableElevation
               sx={{ mt: 2.5 }}
