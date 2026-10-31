@@ -66,7 +66,7 @@ export default function EmploymentRespondConsentModal({
           >
             <Button
               variant="outlined"
-              color="neutral"
+              color="secondary"
               onClick={onClose}
               disabled={isLoadingAccept}
               loading={isLoadingAccept}

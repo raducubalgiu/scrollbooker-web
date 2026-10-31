@@ -34,7 +34,7 @@ const PostDeleteConfirmContent = ({
       <Button
         fullWidth
         variant="outlined"
-        color="neutral"
+        color="secondary"
         disabled={isLoading}
         onClick={onCancel}
       >

@@ -175,7 +175,7 @@ const BusinessPhotosTab = ({
                   />
                 }
                 variant="outlined"
-                color="neutral"
+                color="secondary"
                 sx={{
                   display: { xs: "none", md: "inline-flex" },
                   flexGrow: { xs: 1, md: 0 },

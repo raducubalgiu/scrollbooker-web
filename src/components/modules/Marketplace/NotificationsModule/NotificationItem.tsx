@@ -79,7 +79,7 @@ export default function NotificationItem({
           action: (
             <Button
               variant={sender?.is_follow ? "outlined" : "contained"}
-              color={sender?.is_follow ? "neutral" : "primary"}
+              color={sender?.is_follow ? "secondary" : "primary"}
               disableElevation
               onClick={handleFollow}
               onMouseDown={(e) => e.stopPropagation()}
@@ -182,9 +182,7 @@ export default function NotificationItem({
           action: (
             <Button
               component={NextLink}
-              href={AppRoutes.appointmentDetails(
-                rescheduleData.appointment_id
-              )}
+              href={AppRoutes.appointmentDetails(rescheduleData.appointment_id)}
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigate?.();
@@ -384,73 +382,73 @@ export default function NotificationItem({
   const itemContent = (
     <>
       <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          flex={1}
-          gap={2}
-        >
-          <Stack direction="row" alignItems="center" gap={2} sx={{ flex: 1 }}>
-            <Badge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              badgeContent={
-                badgeConfig ? (
-                  <Box
-                    sx={{
-                      width: 22,
-                      height: 22,
-                      borderRadius: "50%",
-                      backgroundColor: badgeConfig.color,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "2px solid #fff",
-                      boxShadow: "0px 1px 3px rgba(0,0,0,0.15)",
-                    }}
-                  >
-                    {badgeConfig.icon}
-                  </Box>
-                ) : null
-              }
-            >
-              <Avatar
-                sx={styles.avatar}
-                src={sender?.avatar ?? ""}
-                alt={sender?.fullname || "System"}
-              />
-            </Badge>
-
-            <Box sx={{ flex: 1 }}>
-              {sender?.fullname && (
-                <Typography
-                  sx={{ fontWeight: 600, fontSize: { xs: 15, lg: 17 } }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        flex={1}
+        gap={2}
+      >
+        <Stack direction="row" alignItems="center" gap={2} sx={{ flex: 1 }}>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            badgeContent={
+              badgeConfig ? (
+                <Box
+                  sx={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: "50%",
+                    backgroundColor: badgeConfig.color,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "2px solid #fff",
+                    boxShadow: "0px 1px 3px rgba(0,0,0,0.15)",
+                  }}
                 >
-                  {sender.fullname}
-                </Typography>
-              )}
-              <Typography
-                color="text.secondary"
-                sx={{
-                  fontSize: { xs: "0.875rem", sm: "1rem" },
-                  wordBreak: "break-word",
-                }}
-              >
-                {content.text}
-              </Typography>
-            </Box>
-          </Stack>
-
-          {content.image ? (
-            <Box
-              component="img"
-              src={content.image}
-              alt="Preview conținut"
-              sx={styles.postCover}
+                  {badgeConfig.icon}
+                </Box>
+              ) : null
+            }
+          >
+            <Avatar
+              sx={styles.avatar}
+              src={sender?.avatar ?? ""}
+              alt={sender?.fullname || "System"}
             />
-          ) : content.action ? (
-            <Box onMouseDown={(e) => e.stopPropagation()}>{content.action}</Box>
-          ) : null}
+          </Badge>
+
+          <Box sx={{ flex: 1 }}>
+            {sender?.fullname && (
+              <Typography
+                sx={{ fontWeight: 600, fontSize: { xs: 15, lg: 17 } }}
+              >
+                {sender.fullname}
+              </Typography>
+            )}
+            <Typography
+              color="text.secondary"
+              sx={{
+                fontSize: { xs: "0.875rem", sm: "1rem" },
+                wordBreak: "break-word",
+              }}
+            >
+              {content.text}
+            </Typography>
+          </Box>
+        </Stack>
+
+        {content.image ? (
+          <Box
+            component="img"
+            src={content.image}
+            alt="Preview conținut"
+            sx={styles.postCover}
+          />
+        ) : content.action ? (
+          <Box onMouseDown={(e) => e.stopPropagation()}>{content.action}</Box>
+        ) : null}
       </Stack>
     </>
   );

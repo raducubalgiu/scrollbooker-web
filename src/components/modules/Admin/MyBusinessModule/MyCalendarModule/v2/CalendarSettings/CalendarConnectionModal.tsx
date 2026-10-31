@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { Alert, Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
 import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -26,7 +33,9 @@ type CalendarConnectionModalProps = {
 
 const connectErrorMessage = (error: unknown) => {
   const status = axios.isAxiosError(error) ? error.response?.status : undefined;
-  const detail = axios.isAxiosError(error) ? String(error.response?.data?.detail ?? "") : "";
+  const detail = axios.isAxiosError(error)
+    ? String(error.response?.data?.detail ?? "")
+    : "";
   if (status === 400 && detail.includes("email")) {
     return "Nu am putut citi adresa de email a contului Google. Permite accesul la email și încearcă din nou.";
   }
@@ -42,8 +51,9 @@ const connectErrorMessage = (error: unknown) => {
   return "Conectarea cu Google Calendar a eșuat.";
 };
 
-export const isCalendarConnected = (connection: CalendarConnection | null | undefined) =>
-  connection?.status === "active";
+export const isCalendarConnected = (
+  connection: CalendarConnection | null | undefined
+) => connection?.status === "active";
 
 const CalendarConnectionModal = ({
   open,
@@ -53,9 +63,15 @@ const CalendarConnectionModal = ({
   const [isConfirmingDisconnect, setIsConfirmingDisconnect] = useState(false);
   const [isAuthorizing, setIsAuthorizing] = useState(false);
 
-  const { data: connection, isLoading, isError } = useGetMyCalendarConnection({ enabled: open });
-  const { mutate: connect, isPending: isConnecting } = useConnectGoogleCalendar();
-  const { mutate: disconnect, isPending: isDisconnecting } = useDisconnectGoogleCalendar();
+  const {
+    data: connection,
+    isLoading,
+    isError,
+  } = useGetMyCalendarConnection({ enabled: open });
+  const { mutate: connect, isPending: isConnecting } =
+    useConnectGoogleCalendar();
+  const { mutate: disconnect, isPending: isDisconnecting } =
+    useDisconnectGoogleCalendar();
   const { isReady, isConfigured, requestServerAuthCode } =
     useGoogleCalendarCodeClient();
 
@@ -119,7 +135,11 @@ const CalendarConnectionModal = ({
           </Box>
           <Box sx={{ minWidth: 0 }}>
             <Typography fontWeight={700}>Google Calendar</Typography>
-            <Typography variant="body2" color={isConnected ? "success.main" : "text.secondary"} noWrap>
+            <Typography
+              variant="body2"
+              color={isConnected ? "success.main" : "text.secondary"}
+              noWrap
+            >
               {isConnected
                 ? `Conectat${connection?.google_account_email ? ` · ${connection.google_account_email}` : ""}`
                 : "Neconectat"}
@@ -128,12 +148,14 @@ const CalendarConnectionModal = ({
         </Stack>
 
         <Typography variant="body2" color="text.secondary">
-          Conectează-ți contul Google Calendar pentru a sincroniza automat programările.
+          Conectează-ți contul Google Calendar pentru a sincroniza automat
+          programările.
         </Typography>
 
         {isConnected && connection?.last_synced_at && (
           <Typography variant="caption" color="text.secondary">
-            Ultima sincronizare: {dayjs(connection.last_synced_at).format("D MMM YYYY, HH:mm")}
+            Ultima sincronizare:{" "}
+            {dayjs(connection.last_synced_at).format("D MMM YYYY, HH:mm")}
           </Typography>
         )}
 
@@ -151,17 +173,21 @@ const CalendarConnectionModal = ({
 
         {!canConnect && !isConnected && (
           <Alert severity="info">
-            Business-ul tău are angajați, iar programările sunt primite de ei. Fiecare angajat își conectează propriul cont Google Calendar.
+            Business-ul tău are angajați, iar programările sunt primite de ei.
+            Fiecare angajat își conectează propriul cont Google Calendar.
           </Alert>
         )}
 
         {!isConfigured && (
-          <Alert severity="info">Integrarea Google Calendar nu este configurată.</Alert>
+          <Alert severity="info">
+            Integrarea Google Calendar nu este configurată.
+          </Alert>
         )}
 
         {isConfirmingDisconnect && (
           <Alert severity="warning">
-            Sigur vrei să deconectezi Google Calendar? Programările nu se vor mai sincroniza.
+            Sigur vrei să deconectezi Google Calendar? Programările nu se vor
+            mai sincroniza.
           </Alert>
         )}
       </Stack>
@@ -174,7 +200,7 @@ const CalendarConnectionModal = ({
         <Button
           fullWidth
           variant="outlined"
-          color="neutral"
+          color="secondary"
           disabled={isBusy}
           onClick={() => setIsConfirmingDisconnect(false)}
         >
@@ -209,10 +235,9 @@ const CalendarConnectionModal = ({
       variant="contained"
       disableElevation
       loading={isAuthorizing || isConnecting}
-      disabled={
-        isBusy || isLoading || !isConfigured || !isReady || !canConnect
-      }
+      disabled={isBusy || isLoading || !isConfigured || !isReady || !canConnect}
       onClick={handleConnect}
+      sx={{ mt: 1.5 }}
     >
       Conectează Google Calendar
     </Button>

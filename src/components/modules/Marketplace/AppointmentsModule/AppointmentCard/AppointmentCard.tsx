@@ -5,10 +5,13 @@ import NextLink from "next/link";
 import {
   Box,
   Stack,
-  Typography,
+  Theme,
   ListItem,
   ListItemButton,
+  alpha,
 } from "@mui/material";
+import PostBadge from "@/components/cutomized/Post/PostBadge";
+import { getAppointmentChannelLabel } from "@/ts/models/booking/appointment/AppointmentChannelEnum";
 import {
   Appointment,
   AppointmentUtils,
@@ -45,9 +48,20 @@ export default function AppointmentCard({
           }}
         >
           <Stack sx={{ width: "100%" }}>
-            <Typography color={statusColor} sx={{ fontWeight: 600 }}>
-              {statusLabel}
-            </Typography>
+            <Stack direction="row" spacing={0.75} alignItems="center">
+              <PostBadge
+                label={statusLabel}
+                bgcolor={statusBadgeColors[statusColor].bgcolor}
+                color={statusBadgeColors[statusColor].color}
+              />
+              {!appointment.is_customer && (
+                <PostBadge
+                  label={getAppointmentChannelLabel(appointment.channel)}
+                  bgcolor="action.selected"
+                  color="text.primary"
+                />
+              )}
+            </Stack>
 
             <Box sx={{ height: 24 }} />
 
@@ -101,3 +115,25 @@ export default function AppointmentCard({
     </ListItem>
   );
 }
+
+const statusBadgeColors: Record<
+  ReturnType<typeof AppointmentUtils.getStatusColor>,
+  { bgcolor: (theme: Theme) => string; color: (theme: Theme) => string }
+> = {
+  success: {
+    bgcolor: (theme) => alpha(theme.palette.success.main, 0.15),
+    color: (theme) => theme.palette.success.main,
+  },
+  error: {
+    bgcolor: (theme) => alpha(theme.palette.error.main, 0.12),
+    color: (theme) => theme.palette.error.main,
+  },
+  warning: {
+    bgcolor: (theme) => alpha(theme.palette.warning.main, 0.15),
+    color: (theme) => theme.palette.warning.main,
+  },
+  default: {
+    bgcolor: (theme) => theme.palette.action.selected,
+    color: (theme) => theme.palette.text.secondary,
+  },
+};

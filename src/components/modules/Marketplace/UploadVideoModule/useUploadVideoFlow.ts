@@ -6,12 +6,36 @@ import { PostCreate } from "@/ts/models/social/PostCreate";
 import { Product } from "@/ts/models/booking/product/Product";
 import { GenderTypeEnum } from "@/ts/enums/GenderTypeEnum";
 import { AppRoutes } from "@/utils/routes";
+import { toast } from "react-toastify";
 
 type CloudflareDirectUploadResponse = {
   provider_uid: string;
   upload_url: string;
   watermark: string | null;
   scheduled_deletion: string | null;
+};
+
+export const MAX_VIDEO_DURATION_SECONDS = 60;
+
+const readVideoDuration = (file: File): Promise<number | null> =>
+  new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      resolve(Number.isFinite(video.duration) ? video.duration : null);
+    };
+    video.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(null);
+    };
+    video.src = url;
+  });
+
+const formatDuration = (seconds: number) => {
+  const total = Math.round(seconds);
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
 };
 
 const getErrorMessage = (error: unknown, fallback: string): string => {
@@ -48,12 +72,22 @@ export const useUploadVideoFlow = () => {
   }, []);
 
   const handleVideoChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file) {
-        setSelectedVideo(file);
-        setVideoPreview(URL.createObjectURL(file));
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const input = event.target;
+      const file = input.files?.[0];
+      input.value = "";
+      if (!file) return;
+
+      const duration = await readVideoDuration(file);
+      if (duration !== null && duration > MAX_VIDEO_DURATION_SECONDS) {
+        toast.error(
+          `Clipul are ${formatDuration(duration)}. Poți încărca doar clipuri de maximum 1 minut.`
+        );
+        return;
       }
+
+      setSelectedVideo(file);
+      setVideoPreview(URL.createObjectURL(file));
     },
     []
   );
@@ -75,7 +109,10 @@ export const useUploadVideoFlow = () => {
       const { data: uploadData } =
         await axios.post<CloudflareDirectUploadResponse>(
           "/api/protected/cloudflare/upload",
-          { meta: { name: selectedVideo.name } }
+          {
+            max_duration_seconds: MAX_VIDEO_DURATION_SECONDS,
+            meta: { name: selectedVideo.name },
+          }
         );
 
       const formData = new FormData();

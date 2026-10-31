@@ -49,6 +49,11 @@ export function useSelectedServicesSelection({
     setSelectedServices(new Set(defaultServiceIds));
   }, [defaultServiceIds]);
 
+  const removedServiceIds = useMemo(
+    () => defaultServiceIds.filter((id) => !selectedServices.has(id)),
+    [defaultServiceIds, selectedServices]
+  );
+
   const isDirty = useMemo(() => {
     if (selectedServices.size !== defaultServiceIds.length) return true;
     return defaultServiceIds.some((id) => !selectedServices.has(id));
@@ -61,6 +66,7 @@ export function useSelectedServicesSelection({
     toggleService,
     resetSelection,
     isDirty,
+    removedServiceIds,
     hasSelection: selectedServices.size > 0,
   };
 }

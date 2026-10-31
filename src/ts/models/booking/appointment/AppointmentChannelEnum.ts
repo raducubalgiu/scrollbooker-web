@@ -23,16 +23,10 @@ export function getAppointmentChannelLabel(
   const key = (channel ?? "").toString().toLowerCase();
   switch (key) {
     case AppointmentChannelEnum.SCROLL_BOOKER:
-      return "Scroll Booker";
+      return "Rezervare online";
     case AppointmentChannelEnum.OWN_CLIENT:
-      return "Client propriu";
+      return "Din calendar";
     default:
       return key ? key.charAt(0).toUpperCase() + key.slice(1) : "";
   }
-}
-
-export namespace AppointmentChannelEnum {
-  export const all: AppointmentChannelEnum[] = Object.values(
-    AppointmentChannelEnum
-  ).filter((v): v is AppointmentChannelEnum => typeof v === "string");
 }

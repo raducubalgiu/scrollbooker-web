@@ -29,7 +29,7 @@ export default function ConfirmationModal({
       title: "Renunță",
       props: {
         onClick: onClose,
-        color: "neutral",
+        color: "secondary",
         variant: "outlined",
         disabled: isLoading,
       },

@@ -51,7 +51,7 @@ const AvailabilityTimeSlots = ({
           {onGoToNextAvailableDay && (
             <Button
               variant="outlined"
-              color="neutral"
+              color="secondary"
               size="large"
               onClick={onGoToNextAvailableDay}
             >

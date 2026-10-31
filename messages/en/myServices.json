@@ -4,6 +4,11 @@
     "reset": "Reset",
     "save": "Save",
     "saveSuccess": "Services saved successfully!",
-    "saveError": "An error occurred: {message}"
+    "saveError": "An error occurred: {message}",
+    "servicesWithProductsTitle": "You can't remove these categories",
+    "servicesWithProductsDescription": "The following service categories have services assigned. Delete those services first, then you can remove the categories.",
+    "productsCount": "{count, plural, one {# service} other {# services}}",
+    "understood": "Got it",
+    "goToProducts": "Go to services"
   }
 }

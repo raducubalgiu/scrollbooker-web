@@ -2,7 +2,8 @@
 
 import MainLayout from "@/components/cutomized/MainLayout/MainLayout";
 import MainLayoutFooterActions from "@/components/cutomized/MainLayout/MainLayoutFooterActions";
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { ActionButtonType } from "@/components/core/ActionButton/ActionButton";
 import { Session } from "next-auth";
 import MyServicesSkeleton from "./MyServicesSkeleton";
@@ -11,6 +12,7 @@ import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
 import { useUpdateMySelectedServices } from "@/controllers/nomenclature/service.controller";
 import { useSelectedServicesSelection } from "@/hooks/useSelectedServicesSelection";
+import ServicesWithProductsModal from "./ServicesWithProductsModal";
 
 type MyServicesModule = {
   session: Session;
@@ -27,7 +29,12 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
     toggleService,
     resetSelection,
     isDirty,
+    removedServiceIds,
   } = useSelectedServicesSelection({ businessId });
+
+  const [blockedServiceIds, setBlockedServiceIds] = useState<number[] | null>(
+    null
+  );
 
   const { mutate, isPending: isLoadingUpdate } = useUpdateMySelectedServices();
 
@@ -41,6 +48,18 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
         onSuccess: () => {
           toast.success(t("saveSuccess"));
         },
+        onError: (error) => {
+          const detail = axios.isAxiosError(error)
+            ? String(error.response?.data?.detail ?? "")
+            : "";
+
+          if (detail.includes("associated products")) {
+            setBlockedServiceIds(removedServiceIds);
+            return;
+          }
+
+          toast.error(t("saveError", { message: detail || error.message }));
+        },
       }
     );
   };
@@ -50,7 +69,7 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
       title: t("reset"),
       props: {
         variant: "outlined",
-        color: "neutral",
+        color: "secondary",
         disabled: isLoadingUpdate || !isDirty,
         onClick: resetSelection,
       },
@@ -79,6 +98,15 @@ export const MyServicesModule = ({ session }: MyServicesModule) => {
           serviceDomains={serviceDomains}
           selectedServices={selectedServices}
           onToggleService={toggleService}
+        />
+      )}
+
+      {blockedServiceIds && (
+        <ServicesWithProductsModal
+          open
+          businessId={Number(session.business_id)}
+          removedServiceIds={blockedServiceIds}
+          onClose={() => setBlockedServiceIds(null)}
         />
       )}
     </MainLayout>

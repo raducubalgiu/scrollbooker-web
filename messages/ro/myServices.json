@@ -4,6 +4,11 @@
     "reset": "Reset",
     "save": "Salvează",
     "saveSuccess": "Serviciile au fost salvate cu succes!",
-    "saveError": "A apărut o eroare: {message}"
+    "saveError": "A apărut o eroare: {message}",
+    "servicesWithProductsTitle": "Nu poți elimina aceste categorii",
+    "servicesWithProductsDescription": "Următoarele categorii de servicii au servicii asociate. Șterge mai întâi serviciile, apoi poți elimina categoriile.",
+    "productsCount": "{count, plural, one {# serviciu} few {# servicii} other {# de servicii}}",
+    "understood": "Am înțeles",
+    "goToProducts": "Mergi la servicii"
   }
 }

@@ -61,7 +61,7 @@ const PostLinkedProductsList = ({
       {!isLoadingLinkedProducts && products && products.length > 0 && (
         <Button
           variant="outlined"
-          color="neutral"
+          color="secondary"
           size="small"
           sx={{ mt: 2.5, mx: 1.5, alignSelf: "flex-start" }}
           onClick={() => onNavigateToBooking(null)}
